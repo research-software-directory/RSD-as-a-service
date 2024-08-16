@@ -7,14 +7,14 @@
 // 003-create-relations-for-software.sql
 
 export type NewTestimonial = {
-  id: string | null
-  position?: number
-  software: string,
-  message: string|null,
-  source: string|null,
-}
+	id: string | null;
+	position?: number;
+	software: string;
+	message: string | null;
+	source: string | null;
+};
 
 export type Testimonial = NewTestimonial & {
-  id: string
-  position: number
-}
+	id: string;
+	position: number;
+};

@@ -5,25 +5,24 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export type CategoryID = string // NOSONAR ignore: typescript:S6564
+export type CategoryID = string; // NOSONAR ignore: typescript:S6564
 
 export type CategoryProperties = {
-  icon?: string
-  is_highlight?: boolean
-  subtitle?: string
-  description?: string
-  tree_level_labels?: string[]
-}
+	icon?: string;
+	is_highlight?: boolean;
+	subtitle?: string;
+	description?: string;
+	tree_level_labels?: string[];
+};
 
 export type CategoryEntry = {
-  id: CategoryID
-  parent: CategoryID | null
-  community: string | null
-  short_name: string
-  name: string
-  properties: CategoryProperties
-  provenance_iri: string | null
-}
+	id: CategoryID;
+	parent: CategoryID | null;
+	community: string | null;
+	short_name: string;
+	name: string;
+	properties: CategoryProperties;
+	provenance_iri: string | null;
+};
 
-
-export type CategoryPath = CategoryEntry[]
+export type CategoryPath = CategoryEntry[];

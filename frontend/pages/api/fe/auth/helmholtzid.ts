@@ -14,91 +14,98 @@
  */
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type {NextApiRequest, NextApiResponse} from 'next'
-import logger from '~/utils/logger'
-import {RedirectToProps, getRedirectUrl} from '~/auth/api/authHelpers'
-import {getAuthEndpoint} from '~/auth/api/authEndpoint'
-import {Provider, ApiError} from '.'
+import type {NextApiRequest, NextApiResponse} from 'next';
+import logger from '~/utils/logger';
+import {RedirectToProps, getRedirectUrl} from '~/auth/api/authHelpers';
+import {getAuthEndpoint} from '~/auth/api/authEndpoint';
+import {Provider, ApiError} from '.';
 
-type Data = Provider | ApiError
+type Data = Provider | ApiError;
 
 const claims = {
-  id_token:{
-    schac_home_organization: null,
-    name: null,
-    email: null
-  }
-}
+	id_token: {
+		schac_home_organization: null,
+		name: null,
+		email: null,
+	},
+};
 
 async function helmholtzRedirectProps() {
-  // extract wellknow url from env
-  const wellknownUrl = process.env.HELMHOLTZID_WELL_KNOWN_URL ?? null
-  if (wellknownUrl) {
-    // get (cached) authorisation endpoint from wellknown url
-    const authorization_endpoint = await getAuthEndpoint(wellknownUrl,'helmholtzid')
-    if (authorization_endpoint) {
-      // construct all props needed for redirectUrl
-      // use default values if env not provided
-      const props: RedirectToProps = {
-        authorization_endpoint,
-        client_id: process.env.HELMHOLTZID_CLIENT_ID ?? 'rsd-dev',
-        redirect_uri: process.env.HELMHOLTZID_REDIRECT ?? 'http://localhost/auth/login/helmholtzid',
-        scope: process.env.HELMHOLTZID_SCOPES ?? 'openid+profile+email+eduperson_principal_name',
-        response_mode: process.env.HELMHOLTZID_RESPONSE_MODE ?? 'query',
-        claims
-      }
-      return props
-    } else {
-      const message = 'authorization_endpoint is missing'
-      logger(`api/fe/auth/helmholtzid: ${message}`, 'error')
-      throw new Error(message)
-    }
-  } else {
-    const message = 'HELMHOLTZID_WELL_KNOWN_URL is missing'
-    logger(`api/fe/auth/helmholtzid: ${message}`, 'error')
-    throw new Error(message)
-  }
+	// extract wellknow url from env
+	const wellknownUrl = process.env.HELMHOLTZID_WELL_KNOWN_URL ?? null;
+	if (wellknownUrl) {
+		// get (cached) authorisation endpoint from wellknown url
+		const authorization_endpoint = await getAuthEndpoint(
+			wellknownUrl,
+			'helmholtzid',
+		);
+		if (authorization_endpoint) {
+			// construct all props needed for redirectUrl
+			// use default values if env not provided
+			const props: RedirectToProps = {
+				authorization_endpoint,
+				client_id: process.env.HELMHOLTZID_CLIENT_ID ?? 'rsd-dev',
+				redirect_uri:
+					process.env.HELMHOLTZID_REDIRECT ??
+					'http://localhost/auth/login/helmholtzid',
+				scope:
+					process.env.HELMHOLTZID_SCOPES ??
+					'openid+profile+email+eduperson_principal_name',
+				response_mode: process.env.HELMHOLTZID_RESPONSE_MODE ?? 'query',
+				claims,
+			};
+			return props;
+		} else {
+			const message = 'authorization_endpoint is missing';
+			logger(`api/fe/auth/helmholtzid: ${message}`, 'error');
+			throw new Error(message);
+		}
+	} else {
+		const message = 'HELMHOLTZID_WELL_KNOWN_URL is missing';
+		logger(`api/fe/auth/helmholtzid: ${message}`, 'error');
+		throw new Error(message);
+	}
 }
 
 export async function helmholtzInfo() {
-  // extract all props from env and wellknow endpoint
-  const redirectProps = await helmholtzRedirectProps()
-  if (redirectProps) {
-    // create return url and the name to use in login button
-    const redirectUrl = getRedirectUrl(redirectProps)
-    // provide redirectUrl and name/label
-    return {
-      name: 'Helmholtz ID',
-      redirectUrl,
-      html: `
+	// extract all props from env and wellknow endpoint
+	const redirectProps = await helmholtzRedirectProps();
+	if (redirectProps) {
+		// create return url and the name to use in login button
+		const redirectUrl = getRedirectUrl(redirectProps);
+		// provide redirectUrl and name/label
+		return {
+			name: 'Helmholtz ID',
+			redirectUrl,
+			html: `
         Sign in with Helmholtz ID is enabled for all members of the <strong>Helmholtz Research Foundation</strong>.
-      `
-    }
-  }
-  return null
+      `,
+		};
+	}
+	return null;
 }
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
+	req: NextApiRequest,
+	res: NextApiResponse<Data>,
 ) {
-  try {
-    // extract all props from env and wellknow endpoint
-    // and create return url and the name to use in login button
-    const loginInfo = await helmholtzInfo()
-    if (loginInfo) {
-      res.status(200).json(loginInfo)
-    } else {
-      res.status(400).json({
-        status: 400,
-        message: 'loginInfo missing'
-      })
-    }
-  } catch (e: any) {
-    logger(`api/fe/auth/helmholtzid: ${e?.message}`, 'error')
-    res.status(500).json({
-      status: 500,
-      message: e?.message
-    })
-  }
+	try {
+		// extract all props from env and wellknow endpoint
+		// and create return url and the name to use in login button
+		const loginInfo = await helmholtzInfo();
+		if (loginInfo) {
+			res.status(200).json(loginInfo);
+		} else {
+			res.status(400).json({
+				status: 400,
+				message: 'loginInfo missing',
+			});
+		}
+	} catch (e: any) {
+		logger(`api/fe/auth/helmholtzid: ${e?.message}`, 'error');
+		res.status(500).json({
+			status: 500,
+			message: e?.message,
+		});
+	}
 }

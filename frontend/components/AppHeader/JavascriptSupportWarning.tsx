@@ -5,21 +5,22 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Alert from '@mui/material/Alert'
+import Alert from '@mui/material/Alert';
 
 export default function JavascriptSupportWarning() {
-  return (
-    <noscript>
-      <Alert
-        severity="warning"
-        sx={{
-          width: '100vw',
-          justifyContent: 'center',
-          marginTop: '1rem',
-          zIndex:9
-        }}>
-          Limited functionality: Your browser does not support JavaScript.
-      </Alert>
-    </noscript>
-  )
+	return (
+		<noscript>
+			<Alert
+				severity="warning"
+				sx={{
+					width: '100vw',
+					justifyContent: 'center',
+					marginTop: '1rem',
+					zIndex: 9,
+				}}
+			>
+				Limited functionality: Your browser does not support JavaScript.
+			</Alert>
+		</noscript>
+	);
 }

@@ -3,11 +3,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import mockKeywordsList from './org_project_keywords_filter.json'
+import mockKeywordsList from './org_project_keywords_filter.json';
 
 export default function useOrgProjectKeywordsList() {
-  // console.log('useOrgProjectKeywordsList...default mock')
-  return {
-    keywordsList:mockKeywordsList
-  }
+	// console.log('useOrgProjectKeywordsList...default mock')
+	return {
+		keywordsList: mockKeywordsList,
+	};
 }

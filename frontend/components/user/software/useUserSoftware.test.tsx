@@ -5,66 +5,53 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render, screen} from '@testing-library/react'
-import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
+import {render, screen} from '@testing-library/react';
+import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext';
 
-import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
+import {mockResolvedValueOnce} from '~/utils/jest/mockFetch';
 
-import useUserSoftware from './useUserSoftware'
-import softwareByMaintainer from './__mocks__/softwareByMaintainer.json'
-
+import useUserSoftware from './useUserSoftware';
+import softwareByMaintainer from './__mocks__/softwareByMaintainer.json';
 
 function WithUserSoftwareHook() {
-  const {loading, software} = useUserSoftware()
+	const {loading, software} = useUserSoftware();
 
-  if (loading) {
-    return (
-      <div>Loading...</div>
-    )
-  }
+	if (loading) {
+		return <div>Loading...</div>;
+	}
 
-  return (
-    <div>
-      {JSON.stringify(software,null,2)}
-    </div>
-  )
+	return <div>{JSON.stringify(software, null, 2)}</div>;
 }
 
 beforeEach(() => {
-  // reset mock counters
-  jest.clearAllMocks()
-})
-
+	// reset mock counters
+	jest.clearAllMocks();
+});
 
 it('shows loader', () => {
-  render(
-    <WithUserSoftwareHook />
-  )
-  screen.getByText('Loading...')
-  // screen.debug()
-})
+	render(<WithUserSoftwareHook />);
+	screen.getByText('Loading...');
+	// screen.debug()
+});
 
-it('resolves no software', async() => {
+it('resolves no software', async () => {
+	mockResolvedValueOnce([]);
 
-  mockResolvedValueOnce([])
+	render(
+		<WithAppContext options={{session: mockSession}}>
+			<WithUserSoftwareHook />
+		</WithAppContext>,
+	);
+	await screen.findByText('[]');
+});
 
-  render(
-    <WithAppContext options={{session:mockSession}}>
-      <WithUserSoftwareHook />
-    </WithAppContext>
-  )
-  await screen.findByText('[]')
-})
+it('resolves software', async () => {
+	mockResolvedValueOnce(softwareByMaintainer);
 
-it('resolves software', async() => {
-
-  mockResolvedValueOnce(softwareByMaintainer)
-
-  render(
-    <WithAppContext options={{session:mockSession}}>
-      <WithUserSoftwareHook />
-    </WithAppContext>
-  )
-  await screen.findByText(RegExp(softwareByMaintainer[0].id))
-})
-
+	render(
+		<WithAppContext options={{session: mockSession}}>
+			<WithUserSoftwareHook />
+		</WithAppContext>,
+	);
+	await screen.findByText(RegExp(softwareByMaintainer[0].id));
+});

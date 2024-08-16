@@ -4,15 +4,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export type ModalProps = {
-  open: boolean
-  pos?: number
-}
+	open: boolean;
+	pos?: number;
+};
 
 export type DeleteModalProps = ModalProps & {
-  displayName?: string
-}
+	displayName?: string;
+};
 
 export type ModalStates<T> = {
-  edit: T,
-  delete: DeleteModalProps
-}
+	edit: T;
+	delete: DeleteModalProps;
+};

@@ -6,13 +6,19 @@
 
 // DEFAULT MOCK with terms accepted
 export function useUserAgreements() {
-  return {
-    loading: false,
-    agree_terms: true,
-    notice_privacy_statement: true,
-    public_orcid_profile: true,
-    setAgreeTerms: (props:any) => { return props },
-    setPrivacyStatement:(props:any) => { return props },
-    setPublicOrcidProfile:(props:any) => { return props }
-  }
+	return {
+		loading: false,
+		agree_terms: true,
+		notice_privacy_statement: true,
+		public_orcid_profile: true,
+		setAgreeTerms: (props: any) => {
+			return props;
+		},
+		setPrivacyStatement: (props: any) => {
+			return props;
+		},
+		setPublicOrcidProfile: (props: any) => {
+			return props;
+		},
+	};
 }

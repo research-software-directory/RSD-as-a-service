@@ -9,77 +9,83 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import FilterHeader from '~/components/filter/FilterHeader'
-import KeywordsFilter, {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
-import ProgrammingLanguagesFilter, {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
-import LicensesFilter, {LicensesFilterOption} from '~/components/filter/LicensesFilter'
-import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
-import OrderSoftwareBy, {OrderHighlightsBy} from './OrderSoftwareBy'
+import FilterHeader from '~/components/filter/FilterHeader';
+import KeywordsFilter, {
+	KeywordFilterOption,
+} from '~/components/filter/KeywordsFilter';
+import ProgrammingLanguagesFilter, {
+	LanguagesFilterOption,
+} from '~/components/filter/ProgrammingLanguagesFilter';
+import LicensesFilter, {
+	LicensesFilterOption,
+} from '~/components/filter/LicensesFilter';
+import useSoftwareOverviewParams from '../useSoftwareOverviewParams';
+import OrderSoftwareBy, {OrderHighlightsBy} from './OrderSoftwareBy';
 
 type SoftwareFilterProps = {
-  keywords: string[]
-  keywordsList: KeywordFilterOption[]
-  languages: string[]
-  languagesList: LanguagesFilterOption[]
-  licenses: string[]
-  licensesList: LicensesFilterOption[]
-  orderBy: string,
-  filterCnt: number,
-  highlightsOnly?: boolean
-}
+	keywords: string[];
+	keywordsList: KeywordFilterOption[];
+	languages: string[];
+	languagesList: LanguagesFilterOption[];
+	licenses: string[];
+	licensesList: LicensesFilterOption[];
+	orderBy: string;
+	filterCnt: number;
+	highlightsOnly?: boolean;
+};
 
 export default function SoftwareFilters({
-  keywords,
-  keywordsList,
-  languages,
-  languagesList,
-  licenses,
-  licensesList,
-  filterCnt,
-  orderBy,
-  highlightsOnly = false
-}:SoftwareFilterProps) {
-  const {resetFilters,handleQueryChange} = useSoftwareOverviewParams()
+	keywords,
+	keywordsList,
+	languages,
+	languagesList,
+	licenses,
+	licensesList,
+	filterCnt,
+	orderBy,
+	highlightsOnly = false,
+}: SoftwareFilterProps) {
+	const {resetFilters, handleQueryChange} = useSoftwareOverviewParams();
 
-  function clearDisabled() {
-    if (filterCnt && filterCnt > 0) return false
-    return true
-  }
+	function clearDisabled() {
+		if (filterCnt && filterCnt > 0) return false;
+		return true;
+	}
 
-  return (
-    <>
-      <FilterHeader
-        filterCnt={filterCnt}
-        disableClear={clearDisabled()}
-        resetFilters={resetFilters}
-      />
-      {/* Order by */}
-      {highlightsOnly && <OrderHighlightsBy orderBy={orderBy} />}
-      {!highlightsOnly && <OrderSoftwareBy orderBy={orderBy} />}
-      {/* Keywords */}
-      <div>
-        <KeywordsFilter
-          keywords={keywords}
-          keywordsList={keywordsList}
-          handleQueryChange={handleQueryChange}
-        />
-      </div>
-      {/* Programming Languages */}
-      <div>
-        <ProgrammingLanguagesFilter
-          prog_lang={languages}
-          languagesList={languagesList}
-          handleQueryChange={handleQueryChange}
-        />
-      </div>
-      {/* Licenses */}
-      <div>
-        <LicensesFilter
-          licenses={licenses}
-          licensesList={licensesList}
-          handleQueryChange={handleQueryChange}
-        />
-      </div>
-    </>
-  )
+	return (
+		<>
+			<FilterHeader
+				filterCnt={filterCnt}
+				disableClear={clearDisabled()}
+				resetFilters={resetFilters}
+			/>
+			{/* Order by */}
+			{highlightsOnly && <OrderHighlightsBy orderBy={orderBy} />}
+			{!highlightsOnly && <OrderSoftwareBy orderBy={orderBy} />}
+			{/* Keywords */}
+			<div>
+				<KeywordsFilter
+					keywords={keywords}
+					keywordsList={keywordsList}
+					handleQueryChange={handleQueryChange}
+				/>
+			</div>
+			{/* Programming Languages */}
+			<div>
+				<ProgrammingLanguagesFilter
+					prog_lang={languages}
+					languagesList={languagesList}
+					handleQueryChange={handleQueryChange}
+				/>
+			</div>
+			{/* Licenses */}
+			<div>
+				<LicensesFilter
+					licenses={licenses}
+					licensesList={licensesList}
+					handleQueryChange={handleQueryChange}
+				/>
+			</div>
+		</>
+	);
 }

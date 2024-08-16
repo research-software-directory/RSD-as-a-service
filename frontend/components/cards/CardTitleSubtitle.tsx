@@ -6,25 +6,24 @@
 // SPDX-License-Identifier: Apache-2.0
 
 type CardTitleSubtitleProps = {
-  title: string
-  subtitle: string | null
-}
+	title: string;
+	subtitle: string | null;
+};
 
-export default function CardTitleSubtitle({title,subtitle}:CardTitleSubtitleProps) {
-  return (
-    <>
-      <h2
-        title={title}
-        className="text-xl font-medium line-clamp-1 my-1"
-      >
-        {title}
-      </h2>
-      {subtitle ?
-        <p className="text-base-700 line-clamp-3 break-words my-2">
-          {subtitle}
-        </p>
-        : null
-      }
-    </>
-  )
+export default function CardTitleSubtitle({
+	title,
+	subtitle,
+}: CardTitleSubtitleProps) {
+	return (
+		<>
+			<h2 title={title} className="text-xl font-medium line-clamp-1 my-1">
+				{title}
+			</h2>
+			{subtitle ?
+				<p className="text-base-700 line-clamp-3 break-words my-2">
+					{subtitle}
+				</p>
+			:	null}
+		</>
+	);
 }

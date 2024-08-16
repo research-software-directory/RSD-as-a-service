@@ -3,12 +3,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import communitiesByMaintainer from './communitiesByMaintainer.json'
+import communitiesByMaintainer from './communitiesByMaintainer.json';
 
 export default function useUserCommunities() {
-
-  return {
-    communities: communitiesByMaintainer,
-    loading: false
-  }
+	return {
+		communities: communitiesByMaintainer,
+		loading: false,
+	};
 }

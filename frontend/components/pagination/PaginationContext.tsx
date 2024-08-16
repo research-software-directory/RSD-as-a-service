@@ -5,108 +5,108 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createContext, useContext, useState} from 'react'
-import {rowsPerPageOptions} from '~/config/pagination'
-import {useUserSettings} from '~/config/UserSettingsContext'
+import {createContext, useContext, useState} from 'react';
+import {rowsPerPageOptions} from '~/config/pagination';
+import {useUserSettings} from '~/config/UserSettingsContext';
 
 type Pagination = {
-  count: number,
-  page: number,
-  rows: number,
-  rowsOptions: number[],
-  labelRowsPerPage: string
-}
+	count: number;
+	page: number;
+	rows: number;
+	rowsOptions: number[];
+	labelRowsPerPage: string;
+};
 
 export type PaginationContextProps = {
-  pagination: Pagination,
-  setPagination: (state:Pagination)=>void
-}
+	pagination: Pagination;
+	setPagination: (state: Pagination) => void;
+};
 
 export const initState = {
-  count: 0,
-  page: 0,
-  rows: rowsPerPageOptions[0],
-  rowsOptions: rowsPerPageOptions,
-  labelRowsPerPage:'Items'
-}
+	count: 0,
+	page: 0,
+	rows: rowsPerPageOptions[0],
+	rowsOptions: rowsPerPageOptions,
+	labelRowsPerPage: 'Items',
+};
 
 const PaginationContext = createContext<PaginationContextProps>({
-  pagination: initState,
-  setPagination: ()=>{}
-})
+	pagination: initState,
+	setPagination: () => {},
+});
 
 export function PaginationProvider(props: any) {
-  const state={
-    ...initState,
-    ...props?.pagination
-  }
-  // need to use initState if initPagination NOT PROVIDED
-  const [pagination, setPagination] = useState<Pagination>(state)
+	const state = {
+		...initState,
+		...props?.pagination,
+	};
+	// need to use initState if initPagination NOT PROVIDED
+	const [pagination, setPagination] = useState<Pagination>(state);
 
-  // console.group('PaginationProvider')
-  // console.log('props...', props)
-  // console.log('state...', state)
-  // console.log('pagination...', pagination)
-  // console.groupEnd()
+	// console.group('PaginationProvider')
+	// console.log('props...', props)
+	// console.log('state...', state)
+	// console.log('pagination...', pagination)
+	// console.groupEnd()
 
-  return <PaginationContext.Provider
-    value={{pagination,setPagination}}
-    {...props}
-  />
+	return (
+		<PaginationContext.Provider
+			value={{pagination, setPagination}}
+			{...props}
+		/>
+	);
 }
-
 
 export function usePaginationContext() {
-  const {setPageRows} = useUserSettings()
-  const {pagination, setPagination} = useContext(PaginationContext)
+	const {setPageRows} = useUserSettings();
+	const {pagination, setPagination} = useContext(PaginationContext);
 
-  // console.group('usePaginationContext')
-  // console.log('pagination...', pagination)
-  // console.log('search...', search)
-  // console.groupEnd()
+	// console.group('usePaginationContext')
+	// console.log('pagination...', pagination)
+	// console.log('search...', search)
+	// console.groupEnd()
 
-  function setPage(page:number){
-    setPagination({
-      ...pagination,
-      page
-    })
-  }
+	function setPage(page: number) {
+		setPagination({
+			...pagination,
+			page,
+		});
+	}
 
-  function setCount(count:number){
-    if (count === 0){
-      setPagination({
-        ...pagination,
-        // reset page to 0 too
-        page:0,
-        count,
-      })
-    }else{
-      setPagination({
-        ...pagination,
-        count,
-      })
-    }
-  }
+	function setCount(count: number) {
+		if (count === 0) {
+			setPagination({
+				...pagination,
+				// reset page to 0 too
+				page: 0,
+				count,
+			});
+		} else {
+			setPagination({
+				...pagination,
+				count,
+			});
+		}
+	}
 
-  function setRows(rows:number){
-    // save number of rows in user settings (saves to cookie too)
-    setPageRows(rows)
+	function setRows(rows: number) {
+		// save number of rows in user settings (saves to cookie too)
+		setPageRows(rows);
 
-    setPagination({
-      ...pagination,
-      // reset to first page
-      page: 0,
-      rows
-    })
-  }
+		setPagination({
+			...pagination,
+			// reset to first page
+			page: 0,
+			rows,
+		});
+	}
 
-  return {
-    ...pagination,
-    setPage,
-    setRows,
-    setCount
-  }
+	return {
+		...pagination,
+		setPage,
+		setRows,
+		setCount,
+	};
 }
 
-
-export default PaginationContext
+export default PaginationContext;

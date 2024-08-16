@@ -7,46 +7,42 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
-import ContentLoader from '~/components/layout/ContentLoader'
-import NoContent from '~/components/layout/NoContent'
-import ProjectOverviewList from '~/components/projects/overview/list/ProjectOverviewList'
-import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
-import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
-import useUserProjects from './useUserProjects'
+import Link from 'next/link';
+import ContentLoader from '~/components/layout/ContentLoader';
+import NoContent from '~/components/layout/NoContent';
+import ProjectOverviewList from '~/components/projects/overview/list/ProjectOverviewList';
+import OverviewListItem from '~/components/software/overview/list/OverviewListItem';
+import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent';
+import useUserProjects from './useUserProjects';
 
 export default function UserProjects() {
-  const {loading, projects} = useUserProjects()
+	const {loading, projects} = useUserProjects();
 
-  // if loading show loader
-  if (loading) return (
-    <ContentLoader />
-  )
+	// if loading show loader
+	if (loading) return <ContentLoader />;
 
-  if (projects.length===0){
-    return <NoContent />
-  }
+	if (projects.length === 0) {
+		return <NoContent />;
+	}
 
-  return (
-    <div>
-      <ProjectOverviewList>
-        {projects.map(item => {
-          return (
-            <OverviewListItem
-              key={item.id}
-            >
-              <Link
-                data-testid="project-list-item"
-                key={item.id}
-                href={`/projects/${item.slug}`}
-                className='flex-1 flex hover:text-inherit'
-              >
-                <ProjectListItemContent {...item} />
-              </Link>
-            </OverviewListItem>
-          )
-        })}
-      </ProjectOverviewList>
-    </div>
-  )
+	return (
+		<div>
+			<ProjectOverviewList>
+				{projects.map(item => {
+					return (
+						<OverviewListItem key={item.id}>
+							<Link
+								data-testid="project-list-item"
+								key={item.id}
+								href={`/projects/${item.slug}`}
+								className="flex-1 flex hover:text-inherit"
+							>
+								<ProjectListItemContent {...item} />
+							</Link>
+						</OverviewListItem>
+					);
+				})}
+			</ProjectOverviewList>
+		</div>
+	);
 }

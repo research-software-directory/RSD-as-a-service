@@ -5,14 +5,13 @@
 
 // import {createContext, useContext, useState} from 'react'
 
-import {rowsPerPageOptions} from '../pagination'
+import {rowsPerPageOptions} from '../pagination';
 
-export function useUserSettings(){
-  return {
-    rsd_page_layout: 'masonry',
-    rsd_page_rows: rowsPerPageOptions[0],
-    setPageLayout: jest.fn(),
-    setPageRows: jest.fn()
-  }
+export function useUserSettings() {
+	return {
+		rsd_page_layout: 'masonry',
+		rsd_page_rows: rowsPerPageOptions[0],
+		setPageLayout: jest.fn(),
+		setPageRows: jest.fn(),
+	};
 }
-

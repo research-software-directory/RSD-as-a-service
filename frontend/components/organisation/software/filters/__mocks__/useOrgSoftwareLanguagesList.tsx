@@ -3,11 +3,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import mockLanguageList from './org_software_languages_filter.json'
+import mockLanguageList from './org_software_languages_filter.json';
 
 export default function useOrgSoftwareLanguagesList() {
-  // console.log('useOrgSoftwareLanguagesList...default mock')
-  return {
-    languagesList:mockLanguageList
-  }
+	// console.log('useOrgSoftwareLanguagesList...default mock')
+	return {
+		languagesList: mockLanguageList,
+	};
 }

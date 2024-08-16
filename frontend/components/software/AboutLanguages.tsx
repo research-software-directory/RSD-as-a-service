@@ -9,12 +9,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Code from '@mui/icons-material/Code'
+import Code from '@mui/icons-material/Code';
 
-import {sortOnNumProp} from '~/utils/sortFn'
-import logger from '~/utils/logger'
-import {CodePlatform, ProgramingLanguages} from '~/types/SoftwareTypes'
-import AboutLanguageItem from './AboutLanguageItem'
+import {sortOnNumProp} from '~/utils/sortFn';
+import logger from '~/utils/logger';
+import {CodePlatform, ProgramingLanguages} from '~/types/SoftwareTypes';
+import AboutLanguageItem from './AboutLanguageItem';
 
 /**
  * Calculate programming languages percentages.
@@ -24,85 +24,104 @@ import AboutLanguageItem from './AboutLanguageItem'
  * @returns
  */
 function calculateStats(languages: ProgramingLanguages) {
-  try {
-    // extract language keys
-    const keys = Object.keys(languages)
+	try {
+		// extract language keys
+		const keys = Object.keys(languages);
 
-    let total = 0, totPct=0, totVal=0, totLang=[]
-    // calculate total
-    keys.forEach((key) => {
-      total+=languages[key]
-    })
-    // calculate stats
-    const stats: {language: string, val: number, pct: number}[] = []
-    keys.forEach(key => {
-      const pct = Math.round((languages[key] / total) * 100)
-      if (pct > 0) {
-        totPct += pct
-        totVal += languages[key]
-        totLang.push(key)
-        stats.push({language: key, val: languages[key], pct: pct})
-      }
-    })
+		let total = 0,
+			totPct = 0,
+			totVal = 0,
+			totLang = [];
+		// calculate total
+		keys.forEach(key => {
+			total += languages[key];
+		});
+		// calculate stats
+		const stats: {language: string; val: number; pct: number}[] = [];
+		keys.forEach(key => {
+			const pct = Math.round((languages[key] / total) * 100);
+			if (pct > 0) {
+				totPct += pct;
+				totVal += languages[key];
+				totLang.push(key);
+				stats.push({language: key, val: languages[key], pct: pct});
+			}
+		});
 
-    // order stats by percentage before adding 'Other'
-    stats.sort((a, b) => {
-      return a.pct !== b.pct ? b.pct - a.pct : a.language.localeCompare(b.language)
-    })
+		// order stats by percentage before adding 'Other'
+		stats.sort((a, b) => {
+			return a.pct !== b.pct ?
+					b.pct - a.pct
+				:	a.language.localeCompare(b.language);
+		});
 
-    // do we need Other category?
-    if (totPct < 100 && (keys.length - totLang.length > 1)) {
-      // add other to stats
-      stats.push({language: 'Other', val: total - totVal, pct: 100 - totPct})
-    }
-    return stats
-  } catch (e:any) {
-    logger(`AboutLanguages: Failed to calculateStats. Error: ${e.message}`, 'error')
-    return []
-  }
+		// do we need Other category?
+		if (totPct < 100 && keys.length - totLang.length > 1) {
+			// add other to stats
+			stats.push({
+				language: 'Other',
+				val: total - totVal,
+				pct: 100 - totPct,
+			});
+		}
+		return stats;
+	} catch (e: any) {
+		logger(
+			`AboutLanguages: Failed to calculateStats. Error: ${e.message}`,
+			'error',
+		);
+		return [];
+	}
 }
 
-export default function AboutLanguages({languages, platform}:
-  { languages: ProgramingLanguages, platform: CodePlatform }) {
-  let label = 'Programming language'
+export default function AboutLanguages({
+	languages,
+	platform,
+}: {
+	languages: ProgramingLanguages;
+	platform: CodePlatform;
+}) {
+	let label = 'Programming language';
 
-  // don't render section if no languages
-  if (typeof languages == 'undefined' || languages === null) return null
+	// don't render section if no languages
+	if (typeof languages == 'undefined' || languages === null) return null;
 
-  let stats = []
-  if (platform === 'gitlab') {
-    // GitLab api stats already in %
-    // we only map and sort by %
-    stats = Object.keys(languages)
-      .map(key => ({
-        language: key,
-        val: languages[key],
-        pct: Math.round(languages[key])
-      }))
-      .sort((a,b)=>sortOnNumProp(a,b,'pct','desc'))
-  } else {
-    stats = calculateStats(languages)
-  }
+	let stats = [];
+	if (platform === 'gitlab') {
+		// GitLab api stats already in %
+		// we only map and sort by %
+		stats = Object.keys(languages)
+			.map(key => ({
+				language: key,
+				val: languages[key],
+				pct: Math.round(languages[key]),
+			}))
+			.sort((a, b) => sortOnNumProp(a, b, 'pct', 'desc'));
+	} else {
+		stats = calculateStats(languages);
+	}
 
-  // don't render if stats failed
-  if (typeof stats == 'undefined' || stats.length == 0) {
-    return null
-  } else if (stats.length > 1) {
-    label += 's'
-  }
+	// don't render if stats failed
+	if (typeof stats == 'undefined' || stats.length == 0) {
+		return null;
+	} else if (stats.length > 1) {
+		label += 's';
+	}
 
-  return (
-    <>
-      <div className="pt-8 pb-2">
-        <Code color="primary" />
-        <span className="text-primary pl-2">{label}</span>
-      </div>
-      <ul className="py-1">
-        {/* show only stat selection pct > 0 and exclude other category */}
-        {stats?.map((props) => {
-          return <AboutLanguageItem key={props.language} {...props} />
-        })}
-      </ul>
-    </>
-  )
+	return (
+		<>
+			<div className="pt-8 pb-2">
+				<Code color="primary" />
+				<span className="text-primary pl-2">{label}</span>
+			</div>
+			<ul className="py-1">
+				{/* show only stat selection pct > 0 and exclude other category */}
+				{stats?.map(props => {
+					return (
+						<AboutLanguageItem key={props.language} {...props} />
+					);
+				})}
+			</ul>
+		</>
+	);
 }

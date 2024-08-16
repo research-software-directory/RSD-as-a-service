@@ -3,61 +3,57 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render,screen, waitFor, waitForElementToBeRemoved} from '@testing-library/react'
-import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
+import {
+	render,
+	screen,
+	waitFor,
+	waitForElementToBeRemoved,
+} from '@testing-library/react';
+import {mockResolvedValueOnce} from '~/utils/jest/mockFetch';
 
-import useProjectToEdit from './useProjectToEdit'
+import useProjectToEdit from './useProjectToEdit';
 
-import projectItem from '../../../../__tests__/__mocks__/projectItem.json'
-import urlForProject from './__mocks__/urlForProject.json'
-import fundingOrganisations from './__mocks__/fundingOrganisations.json'
-import researchDomainByProject from './__mocks__/researchDomainByProject.json'
-import projectKeywords from './__mocks__/projectKeywords.json'
-
+import projectItem from '../../../../__tests__/__mocks__/projectItem.json';
+import urlForProject from './__mocks__/urlForProject.json';
+import fundingOrganisations from './__mocks__/fundingOrganisations.json';
+import researchDomainByProject from './__mocks__/researchDomainByProject.json';
+import projectKeywords from './__mocks__/projectKeywords.json';
 
 beforeEach(() => {
-  jest.clearAllMocks()
-})
+	jest.clearAllMocks();
+});
 
 function WithUseProjectToEdit() {
-  const {loading,project} = useProjectToEdit({
-    slug:'test-slug',
-    token:'TEST-TOKEN'
-  })
+	const {loading, project} = useProjectToEdit({
+		slug: 'test-slug',
+		token: 'TEST-TOKEN',
+	});
 
-  if (loading) {
-    return (
-      <div>Loading...</div>
-    )
-  }
+	if (loading) {
+		return <div>Loading...</div>;
+	}
 
-  return (
-    <div>
-      {JSON.stringify(project,null,2)}
-    </div>
-  )
+	return <div>{JSON.stringify(project, null, 2)}</div>;
 }
 
 it('useProjectToEdit returns at least project title', async () => {
-  // resolve project item
-  mockResolvedValueOnce([projectItem])
-  // resolve links
-  mockResolvedValueOnce(urlForProject)
-  // resolve getOrganisationsOfProject
-  mockResolvedValueOnce(fundingOrganisations)
-  // resolve getResearchDomainsForProject
-  mockResolvedValueOnce(researchDomainByProject)
-  // resolve getKeywordsForProject
-  mockResolvedValueOnce(projectKeywords)
+	// resolve project item
+	mockResolvedValueOnce([projectItem]);
+	// resolve links
+	mockResolvedValueOnce(urlForProject);
+	// resolve getOrganisationsOfProject
+	mockResolvedValueOnce(fundingOrganisations);
+	// resolve getResearchDomainsForProject
+	mockResolvedValueOnce(researchDomainByProject);
+	// resolve getKeywordsForProject
+	mockResolvedValueOnce(projectKeywords);
 
-  render(
-    <WithUseProjectToEdit />
-  )
+	render(<WithUseProjectToEdit />);
 
-  waitForElementToBeRemoved(screen.getByText(/Loading.../))
+	waitForElementToBeRemoved(screen.getByText(/Loading.../));
 
-  await waitFor(() => {
-    // check project title is in document
-    const projectTitle = screen.getByText(new RegExp(projectItem.title))
-  })
-})
+	await waitFor(() => {
+		// check project title is in document
+		const projectTitle = screen.getByText(new RegExp(projectItem.title));
+	});
+});

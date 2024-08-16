@@ -8,16 +8,17 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import keywordCountForSoftware from './keywordCountForSoftware.json'
+import keywordCountForSoftware from './keywordCountForSoftware.json';
 
 // this is always frontend call
-export async function searchForSoftwareKeyword(
-  {searchFor}: { searchFor: string }
-) {
-  try {
-    return keywordCountForSoftware
-  } catch (e: any) {
-    return []
-  }
+export async function searchForSoftwareKeyword({
+	searchFor,
+}: {
+	searchFor: string;
+}) {
+	try {
+		return keywordCountForSoftware;
+	} catch (e: any) {
+		return [];
+	}
 }
-

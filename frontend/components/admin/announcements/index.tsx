@@ -7,23 +7,19 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import AnnouncementsForm from './AnnouncementsForm'
-import ContentLoader from '~/components/layout/ContentLoader'
-import useAnnouncement from './useAnnouncement'
+import AnnouncementsForm from './AnnouncementsForm';
+import ContentLoader from '~/components/layout/ContentLoader';
+import useAnnouncement from './useAnnouncement';
 
 export default function AnnouncementsPage() {
-  const {loading,announcement} = useAnnouncement()
+	const {loading, announcement} = useAnnouncement();
 
-  // console.group('AnnouncementsPage')
-  // console.log('loading...', loading)
-  // console.log('announcement...', announcement)
-  // console.groupEnd()
+	// console.group('AnnouncementsPage')
+	// console.log('loading...', loading)
+	// console.log('announcement...', announcement)
+	// console.groupEnd()
 
-  if (loading) return (
-    <ContentLoader />
-  )
+	if (loading) return <ContentLoader />;
 
-  return (
-    <AnnouncementsForm data={announcement} />
-  )
+	return <AnnouncementsForm data={announcement} />;
 }

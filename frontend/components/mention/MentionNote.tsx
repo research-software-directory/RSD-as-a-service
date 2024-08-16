@@ -5,9 +5,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export default function MentionNote({note}: { note: string | null }) {
-  if (note) {
-    return <div className="mt-2 text-sm opacity-70">{note}</div>
-  }
-  return null
+export default function MentionNote({note}: {note: string | null}) {
+	if (note) {
+		return <div className="mt-2 text-sm opacity-70">{note}</div>;
+	}
+	return null;
 }

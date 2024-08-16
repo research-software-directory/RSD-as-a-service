@@ -9,49 +9,73 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from '@mui/material/Link'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import Link from '@mui/material/Link';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 type EditSectionTitleProps = {
-  title: string,
-  subtitle?: string,
-  children?: any,
-  hlevel?: number,
-  infoLink?: string,
-  className?: string
-}
+	title: string;
+	subtitle?: string;
+	children?: any;
+	hlevel?: number;
+	infoLink?: string;
+	className?: string;
+};
 
-export default function EditSectionTitle({title, subtitle = '', children, hlevel = 2, infoLink, className='font-medium'}:EditSectionTitleProps) {
+export default function EditSectionTitle({
+	title,
+	subtitle = '',
+	children,
+	hlevel = 2,
+	infoLink,
+	className = 'font-medium',
+}: EditSectionTitleProps) {
+	const HeadingTag: any = `h${hlevel}`;
 
-  const HeadingTag: any = `h${hlevel}`
+	function getSubtitle() {
+		if (subtitle) {
+			return (
+				<p
+					className="mb-4"
+					dangerouslySetInnerHTML={{__html: subtitle}}
+				></p>
+			);
+		}
+	}
 
-  function getSubtitle() {
-    if (subtitle) {
-      return (
-        <p className="mb-4"
-          dangerouslySetInnerHTML={{__html: subtitle}}>
-        </p>
-      )
-    }
-  }
+	if (children) {
+		return (
+			<>
+				<div className="flex">
+					<HeadingTag className={`flex-1 ${className ?? ''}`}>
+						{title}{' '}
+						{infoLink && (
+							<Link
+								href={infoLink}
+								target="_blank"
+								rel="noreferrer"
+							>
+								<InfoOutlinedIcon fontSize="small" />
+							</Link>
+						)}
+					</HeadingTag>
+					{children}
+				</div>
+				{getSubtitle()}
+			</>
+		);
+	}
 
-  if (children) {
-    return (
-      <>
-        <div className="flex">
-          <HeadingTag className={`flex-1 ${className ?? ''}`}>{title} {infoLink && <Link href={infoLink} target="_blank" rel="noreferrer"><InfoOutlinedIcon fontSize="small"/></Link>}</HeadingTag>
-          {children}
-        </div>
-        {getSubtitle()}
-      </>
-    )
-  }
-
-  return (
-    <>
-      <HeadingTag className={`${className ?? ''}`}>{title} {infoLink && <Link href={infoLink} target="_blank" rel="noreferrer"><InfoOutlinedIcon fontSize="small"/></Link>}</HeadingTag>
-      {getSubtitle()}
-    </>
-  )
-
+	return (
+		<>
+			<HeadingTag className={`${className ?? ''}`}>
+				{title}{' '}
+				{infoLink && (
+					<Link href={infoLink} target="_blank" rel="noreferrer">
+						<InfoOutlinedIcon fontSize="small" />
+					</Link>
+				)}
+			</HeadingTag>
+			{getSubtitle()}
+		</>
+	);
 }

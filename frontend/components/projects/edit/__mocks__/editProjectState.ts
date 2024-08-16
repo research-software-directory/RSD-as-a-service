@@ -4,17 +4,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {EditProjectState} from '../editProjectContext'
+import {EditProjectState} from '../editProjectContext';
 
 // MOCK project state
 const projectState: EditProjectState = {
-  pageIndex: 0,
-  project: {
-    id: 'test-id',
-    slug: 'test-slug',
-    title: 'Test project'
-  }
-}
+	pageIndex: 0,
+	project: {
+		id: 'test-id',
+		slug: 'test-slug',
+		title: 'Test project',
+	},
+};
 
-
-export default projectState
+export default projectState;

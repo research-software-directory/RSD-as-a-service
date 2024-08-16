@@ -6,51 +6,60 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
-import {SoftwareReleaseInfo, getReleasesForOrganisation} from './apiOrganisationReleases'
+import {useEffect, useState} from 'react';
+import {
+	SoftwareReleaseInfo,
+	getReleasesForOrganisation,
+} from './apiOrganisationReleases';
 
 export type ReleaseCountByYear = {
-  release_year: number
-  release_cnt: number
-}
+	release_year: number;
+	release_cnt: number;
+};
 
 export type UseSoftwareReleaseProps = {
-  organisation_id?: string,
-  release_year?: string,
-  token: string
-}
+	organisation_id?: string;
+	release_year?: string;
+	token: string;
+};
 
+export default function useSoftwareRelease({
+	organisation_id,
+	release_year,
+	token,
+}: UseSoftwareReleaseProps) {
+	const [loading, setLoading] = useState(true);
+	const [releases, setReleases] = useState<SoftwareReleaseInfo[]>([]);
 
-export default function useSoftwareRelease({organisation_id,release_year,token}:UseSoftwareReleaseProps) {
-  const [loading, setLoading] = useState(true)
-  const [releases, setReleases] = useState<SoftwareReleaseInfo[]>([])
+	// console.group('useSoftwareRelease')
+	// console.log('loading...', loading)
+	// console.log('organisation_id...', organisation_id)
+	// console.log('releases...', releases)
+	// console.log('token...', token)
+	// console.groupEnd()
 
-  // console.group('useSoftwareRelease')
-  // console.log('loading...', loading)
-  // console.log('organisation_id...', organisation_id)
-  // console.log('releases...', releases)
-  // console.log('token...', token)
-  // console.groupEnd()
+	useEffect(() => {
+		async function getReleases() {
+			setLoading(true);
+			// make request
+			const releases = await getReleasesForOrganisation({
+				organisation_id,
+				release_year,
+				token,
+			});
+			// update releases
+			if (releases) setReleases(releases);
+			// set loading is done
+			setLoading(false);
+		}
 
-  useEffect(() => {
-    async function getReleases() {
-      setLoading(true)
-      // make request
-      const releases = await getReleasesForOrganisation({organisation_id,release_year,token})
-      // update releases
-      if (releases) setReleases(releases)
-      // set loading is done
-      setLoading(false)
-    }
+		if (organisation_id && release_year) {
+			getReleases();
+		}
+	}, [organisation_id, release_year, token]);
 
-    if (organisation_id && release_year) {
-      getReleases()
-    }
-
-  },[organisation_id,release_year,token])
-
-  return {
-    loading,
-    releases
-  }
+	return {
+		loading,
+		releases,
+	};
 }

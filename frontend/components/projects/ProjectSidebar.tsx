@@ -6,52 +6,47 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {KeywordForProject, ProjectLink, ResearchDomain} from '~/types/Project'
-import {ProjectOrganisationProps} from '~/types/Organisation'
-import ProjectStatus from './ProjectStatus'
-import ProjectFunding from './ProjectFunding'
-import ProjectLinks from './ProjectLinks'
-import ProjectKeywords from './ProjectKeywords'
-import ResearchDomains from './ResearchDomains'
+import {KeywordForProject, ProjectLink, ResearchDomain} from '~/types/Project';
+import {ProjectOrganisationProps} from '~/types/Organisation';
+import ProjectStatus from './ProjectStatus';
+import ProjectFunding from './ProjectFunding';
+import ProjectLinks from './ProjectLinks';
+import ProjectKeywords from './ProjectKeywords';
+import ResearchDomains from './ResearchDomains';
 
 type ProjectSidebarProps = {
-  date_start: string | null
-  date_end: string | null
-  grant_id: string | null
-  researchDomains: ResearchDomain[],
-  keywords: KeywordForProject[],
-  links: ProjectLink[]
-  fundingOrganisations: ProjectOrganisationProps[]
-}
+	date_start: string | null;
+	date_end: string | null;
+	grant_id: string | null;
+	researchDomains: ResearchDomain[];
+	keywords: KeywordForProject[];
+	links: ProjectLink[];
+	fundingOrganisations: ProjectOrganisationProps[];
+};
 
-export default function ProjectSidebar({date_start, date_end, grant_id, links, researchDomains,
-  keywords, fundingOrganisations}: ProjectSidebarProps) {
+export default function ProjectSidebar({
+	date_start,
+	date_end,
+	grant_id,
+	links,
+	researchDomains,
+	keywords,
+	fundingOrganisations,
+}: ProjectSidebarProps) {
+	return (
+		<aside className="bg-base-200 p-6 mb-4">
+			<ProjectStatus date_start={date_start} date_end={date_end} />
 
-  return (
-    <aside className="bg-base-200 p-6 mb-4">
+			<ProjectFunding
+				grant_id={grant_id}
+				fundingOrganisations={fundingOrganisations}
+			/>
 
-      <ProjectStatus
-        date_start={date_start}
-        date_end={date_end}
-      />
+			<ProjectLinks links={links} />
 
-      <ProjectFunding
-        grant_id={grant_id}
-        fundingOrganisations={fundingOrganisations}
-      />
+			<ResearchDomains domains={researchDomains} />
 
-      <ProjectLinks
-        links={links}
-      />
-
-      <ResearchDomains
-        domains={researchDomains}
-      />
-
-      <ProjectKeywords
-        keywords={keywords}
-      />
-
-    </aside>
-  )
+			<ProjectKeywords keywords={keywords} />
+		</aside>
+	);
 }

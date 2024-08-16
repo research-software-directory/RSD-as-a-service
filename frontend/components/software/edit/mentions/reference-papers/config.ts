@@ -6,14 +6,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {findMention} from '~/components/mention/config'
-import config from '~/components/mention/ImportMentions/config'
+import {findMention} from '~/components/mention/config';
+import config from '~/components/mention/ImportMentions/config';
 
 export const cfgReferencePapers = {
-  title: 'Reference papers',
-  findMention: {
-    ...findMention,
-    title: 'Add reference paper'
-  },
-  doiInput: config.doiInput
-}
+	title: 'Reference papers',
+	findMention: {
+		...findMention,
+		title: 'Add reference paper',
+	},
+	doiInput: config.doiInput,
+};

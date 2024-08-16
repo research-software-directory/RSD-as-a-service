@@ -3,37 +3,37 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {getMentionsForSoftware} from '~/utils/editMentions'
-import {getCitationsBySoftware} from './citations/apiCitationsBySoftware'
-import {getReferencePapersForSoftware} from './reference-papers/apiReferencePapers'
+import {getMentionsForSoftware} from '~/utils/editMentions';
+import {getCitationsBySoftware} from './citations/apiCitationsBySoftware';
+import {getReferencePapersForSoftware} from './reference-papers/apiReferencePapers';
 
-export async function getSoftwareMention(software:string,token:string){
-  try{
-    const [reference_papers,citations,output] = await Promise.all([
-      getReferencePapersForSoftware({
-        software,
-        token
-      }),
-      getCitationsBySoftware({
-        software,
-        token
-      }),
-      getMentionsForSoftware({
-        software,
-        token
-      }),
-    ])
-    // debugger
-    return {
-      reference_papers,
-      citations,
-      output,
-    }
-  }catch(e:any){
-    return {
-      reference_papers: [],
-      citations: [],
-      output: [],
-    }
-  }
+export async function getSoftwareMention(software: string, token: string) {
+	try {
+		const [reference_papers, citations, output] = await Promise.all([
+			getReferencePapersForSoftware({
+				software,
+				token,
+			}),
+			getCitationsBySoftware({
+				software,
+				token,
+			}),
+			getMentionsForSoftware({
+				software,
+				token,
+			}),
+		]);
+		// debugger
+		return {
+			reference_papers,
+			citations,
+			output,
+		};
+	} catch (e: any) {
+		return {
+			reference_papers: [],
+			citations: [],
+			output: [],
+		};
+	}
 }

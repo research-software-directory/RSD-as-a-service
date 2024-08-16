@@ -5,54 +5,55 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {getMaintainersOfOrganisation} from './apiOrganisationMaintainers'
-import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
+import {getMaintainersOfOrganisation} from './apiOrganisationMaintainers';
+import {mockResolvedValueOnce} from '~/utils/jest/mockFetch';
 
-const mockResponse = [{
-  maintainer: 'test-maintainer-id',
-  name: ['Organisation name'],
-  email: ['test@email.com'],
-  affiliation: ['Test affiliation'],
-  is_primary: false
-}]
+const mockResponse = [
+	{
+		maintainer: 'test-maintainer-id',
+		name: ['Organisation name'],
+		email: ['test@email.com'],
+		affiliation: ['Test affiliation'],
+		is_primary: false,
+	},
+];
 
 const mockProps = {
-  organisation: 'Organisation name',
-  token: 'TEST-TOKEN',
-  frontend: true
-}
+	organisation: 'Organisation name',
+	token: 'TEST-TOKEN',
+	frontend: true,
+};
 
 beforeEach(() => {
-  jest.clearAllMocks()
-})
+	jest.clearAllMocks();
+});
 
-it('calls api with proper params', async() => {
-  const expectedUrl = `/api/v1/rpc/maintainers_of_organisation?organisation_id=${mockProps.organisation}`
-  const expectedHeaders = {
-    'headers': {
-      'Authorization': `Bearer ${mockProps.token}`,
-      'Content-Type': 'application/json'
-    },
-    'method': 'GET'
-  }
-  mockResolvedValueOnce(mockResponse, {
-    status: 200,
-    statusText: 'OK'
-  })
+it('calls api with proper params', async () => {
+	const expectedUrl = `/api/v1/rpc/maintainers_of_organisation?organisation_id=${mockProps.organisation}`;
+	const expectedHeaders = {
+		headers: {
+			Authorization: `Bearer ${mockProps.token}`,
+			'Content-Type': 'application/json',
+		},
+		method: 'GET',
+	};
+	mockResolvedValueOnce(mockResponse, {
+		status: 200,
+		statusText: 'OK',
+	});
 
-  await getMaintainersOfOrganisation(mockProps)
+	await getMaintainersOfOrganisation(mockProps);
 
-  expect(global.fetch).toBeCalledTimes(1)
-  expect(global.fetch).toBeCalledWith(expectedUrl, expectedHeaders)
-})
+	expect(global.fetch).toBeCalledTimes(1);
+	expect(global.fetch).toBeCalledWith(expectedUrl, expectedHeaders);
+});
 
-it('returns [] on error', async() => {
+it('returns [] on error', async () => {
+	mockResolvedValueOnce(mockResponse, {
+		status: 400,
+		statusText: 'Bad request',
+	});
 
-  mockResolvedValueOnce(mockResponse, {
-    status: 400,
-    statusText: 'Bad request'
-  })
-
-  const resp = await getMaintainersOfOrganisation(mockProps)
-  expect(resp).toEqual([])
-})
+	const resp = await getMaintainersOfOrganisation(mockProps);
+	expect(resp).toEqual([]);
+});

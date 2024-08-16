@@ -6,38 +6,45 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
-import ContentInTheMiddle from '../../components/layout/ContentInTheMiddle'
-import {useEffect} from 'react'
-import {useState} from 'react'
+import Link from 'next/link';
+import ContentInTheMiddle from '../../components/layout/ContentInTheMiddle';
+import {useEffect} from 'react';
+import {useState} from 'react';
 
 export default function LoginFailed() {
-  const [errorMessage, setErrorMessage] = useState<string>()
+	const [errorMessage, setErrorMessage] = useState<string>();
 
-  useEffect(() => {
-    const errorCookie = document.cookie.split(';')
-      .find(cookie => cookie.trim().startsWith('rsd_login_failure_message='))
+	useEffect(() => {
+		const errorCookie = document.cookie
+			.split(';')
+			.find(cookie =>
+				cookie.trim().startsWith('rsd_login_failure_message='),
+			);
 
-    if (errorCookie) {
-      setErrorMessage(errorCookie.replace('rsd_login_failure_message=', ''))
-      document.cookie = 'rsd_login_failure_message=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/login/failed; SameSite=Lax'
-    }
-  }, [])
+		if (errorCookie) {
+			setErrorMessage(
+				errorCookie.replace('rsd_login_failure_message=', ''),
+			);
+			document.cookie =
+				'rsd_login_failure_message=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/login/failed; SameSite=Lax';
+		}
+	}, []);
 
-  return (
-    <ContentInTheMiddle>
-      <div className="border p-12">
-        <h1>Login failed</h1>
-        <p className="py-8">
-          Unfortunately, something went wrong during the login process.
-        </p>
-        {errorMessage && <p className="pb-8 text-error">
-          {errorMessage}
-        </p>}
-        <Link href="/" passHref>
-          Homepage
-        </Link>
-      </div>
-    </ContentInTheMiddle>
-  )
+	return (
+		<ContentInTheMiddle>
+			<div className="border p-12">
+				<h1>Login failed</h1>
+				<p className="py-8">
+					Unfortunately, something went wrong during the login
+					process.
+				</p>
+				{errorMessage && (
+					<p className="pb-8 text-error">{errorMessage}</p>
+				)}
+				<Link href="/" passHref>
+					Homepage
+				</Link>
+			</div>
+		</ContentInTheMiddle>
+	);
 }

@@ -3,13 +3,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import mockProjectsByMaintainer from './projectsByMaintainer.json'
+import mockProjectsByMaintainer from './projectsByMaintainer.json';
 
 export default function useUserProjects() {
-
-  return {
-    projects: mockProjectsByMaintainer,
-    count: mockProjectsByMaintainer.length,
-    loading: false
-  }
+	return {
+		projects: mockProjectsByMaintainer,
+		count: mockProjectsByMaintainer.length,
+		loading: false,
+	};
 }

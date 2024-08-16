@@ -6,19 +6,17 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ReactNode} from 'react'
-import AppHeader from '~/components/AppHeader'
-import AppFooter from '~/components/AppFooter'
-import MainContent from './MainContent'
+import {ReactNode} from 'react';
+import AppHeader from '~/components/AppHeader';
+import AppFooter from '~/components/AppFooter';
+import MainContent from './MainContent';
 
-export default function DefaultLayout({children}:{children:ReactNode}) {
-  return (
-    <>
-      <AppHeader />
-      <MainContent>
-        {children}
-      </MainContent>
-      <AppFooter/>
-    </>
-  )
+export default function DefaultLayout({children}: {children: ReactNode}) {
+	return (
+		<>
+			<AppHeader />
+			<MainContent>{children}</MainContent>
+			<AppFooter />
+		</>
+	);
 }

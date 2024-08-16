@@ -3,13 +3,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import mockOrganisations from '../../../../__tests__/__mocks__/organisationsOverview.json'
+import mockOrganisations from '../../../../__tests__/__mocks__/organisationsOverview.json';
 
 // DEAFULT MOCK
 export default function useOrganisations(token: string) {
-  // console.log('useOrganisations...default MOCK')
-  return {
-    loading:false,
-    organisations:mockOrganisations
-  }
+	// console.log('useOrganisations...default MOCK')
+	return {
+		loading: false,
+		organisations: mockOrganisations,
+	};
 }

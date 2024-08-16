@@ -3,14 +3,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import logger from './logger'
+import logger from './logger';
 
 export function getHostnameFromUrl(link: string) {
-  try {
-    const url = new URL(link)
-    return url.hostname
-  } catch (e:any) {
-    logger(`getHostname...${e.message}`, 'error')
-    return null
-  }
+	try {
+		const url = new URL(link);
+		return url.hostname;
+	} catch (e: any) {
+		logger(`getHostname...${e.message}`, 'error');
+		return null;
+	}
 }

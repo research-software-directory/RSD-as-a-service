@@ -5,28 +5,35 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react'
-import {useCategoryTree} from '~/utils/categories'
-import {SidebarHeadline} from '../typography/SidebarHeadline'
-import {CategoryPath} from '~/types/Category'
-import {CategoryTreeLevel} from '~/components/category/CategoryTree'
+import React from 'react';
+import {useCategoryTree} from '~/utils/categories';
+import {SidebarHeadline} from '../typography/SidebarHeadline';
+import {CategoryPath} from '~/types/Category';
+import {CategoryTreeLevel} from '~/components/category/CategoryTree';
 
 type CategoriesWithHeadlinesProps = {
-  categories: CategoryPath[]
-}
+	categories: CategoryPath[];
+};
 
-export const CategoriesWithHeadlines = ({categories}: CategoriesWithHeadlinesProps) => {
-  const tree = useCategoryTree(categories)
+export const CategoriesWithHeadlines = ({
+	categories,
+}: CategoriesWithHeadlinesProps) => {
+	const tree = useCategoryTree(categories);
 
-  return tree.map(node => {
-    const category = node.getValue()
-    const children = node.children()
+	return tree.map(node => {
+		const category = node.getValue();
+		const children = node.children();
 
-    return <React.Fragment key={category.short_name}>
-      <SidebarHeadline iconName={category.properties.icon} title={category.name} />
-      <div className='ml-4'>
-        <CategoryTreeLevel items={children} />
-      </div>
-    </React.Fragment>
-  })
-}
+		return (
+			<React.Fragment key={category.short_name}>
+				<SidebarHeadline
+					iconName={category.properties.icon}
+					title={category.name}
+				/>
+				<div className="ml-4">
+					<CategoryTreeLevel items={children} />
+				</div>
+			</React.Fragment>
+		);
+	});
+};

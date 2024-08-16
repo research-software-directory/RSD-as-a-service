@@ -7,44 +7,52 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
-import OrderBy from '~/components/filter/OrderBy'
+import useSoftwareOverviewParams from '../useSoftwareOverviewParams';
+import OrderBy from '~/components/filter/OrderBy';
 
 export const softwareOrderOptions = [
-  {key: 'contributor_cnt', label: 'Contributors', direction:'desc.nullslast'},
-  {key: 'mention_cnt', label: 'Mentions', direction:'desc.nullslast'},
-  {key: 'brand_name', label: 'Name', direction: 'asc.nullslast'},
-]
+	{
+		key: 'contributor_cnt',
+		label: 'Contributors',
+		direction: 'desc.nullslast',
+	},
+	{key: 'mention_cnt', label: 'Mentions', direction: 'desc.nullslast'},
+	{key: 'brand_name', label: 'Name', direction: 'asc.nullslast'},
+];
 
 export const highlightOrderOptions = [
-  {key: 'position', label: 'Featured latest', direction: 'asc.nullslast'},
-  {key: 'contributor_cnt', label: 'Contributors', direction:'desc.nullslast'},
-  {key: 'mention_cnt', label: 'Mentions', direction:'desc.nullslast'},
-  {key: 'brand_name', label: 'Name', direction: 'asc.nullslast'},
-]
+	{key: 'position', label: 'Featured latest', direction: 'asc.nullslast'},
+	{
+		key: 'contributor_cnt',
+		label: 'Contributors',
+		direction: 'desc.nullslast',
+	},
+	{key: 'mention_cnt', label: 'Mentions', direction: 'desc.nullslast'},
+	{key: 'brand_name', label: 'Name', direction: 'asc.nullslast'},
+];
 
 type OrderByProps = {
-  orderBy: string
-}
+	orderBy: string;
+};
 
 export function OrderHighlightsBy({orderBy}: OrderByProps) {
-  const {handleQueryChange} = useSoftwareOverviewParams()
-  return (
-    <OrderBy
-      order={orderBy}
-      options={highlightOrderOptions}
-      handleQueryChange={handleQueryChange}
-    />
-  )
+	const {handleQueryChange} = useSoftwareOverviewParams();
+	return (
+		<OrderBy
+			order={orderBy}
+			options={highlightOrderOptions}
+			handleQueryChange={handleQueryChange}
+		/>
+	);
 }
 
 export default function OrderSoftwareBy({orderBy}: OrderByProps) {
-  const {handleQueryChange} = useSoftwareOverviewParams()
-  return (
-    <OrderBy
-      order={orderBy}
-      options={softwareOrderOptions}
-      handleQueryChange={handleQueryChange}
-    />
-  )
+	const {handleQueryChange} = useSoftwareOverviewParams();
+	return (
+		<OrderBy
+			order={orderBy}
+			options={softwareOrderOptions}
+			handleQueryChange={handleQueryChange}
+		/>
+	);
 }

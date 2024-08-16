@@ -3,23 +3,21 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import OrganisationSettingsAboutPage from './about-page'
-import OrganisationMaintainers from './maintainers'
-import OrganisationGeneralSettings from './general'
-import {useRouter} from 'next/router'
-
+import OrganisationSettingsAboutPage from './about-page';
+import OrganisationMaintainers from './maintainers';
+import OrganisationGeneralSettings from './general';
+import {useRouter} from 'next/router';
 
 export default function SettingsPageContent() {
-  const router = useRouter()
-  const settings = router.query['settings']?.toString() ?? ''
+	const router = useRouter();
+	const settings = router.query['settings']?.toString() ?? '';
 
-  switch (settings) {
-    case 'about':
-      return <OrganisationSettingsAboutPage />
-    case 'maintainers':
-      return <OrganisationMaintainers />
-    default:
-      return <OrganisationGeneralSettings/>
-  }
-
+	switch (settings) {
+		case 'about':
+			return <OrganisationSettingsAboutPage />;
+		case 'maintainers':
+			return <OrganisationMaintainers />;
+		default:
+			return <OrganisationGeneralSettings />;
+	}
 }

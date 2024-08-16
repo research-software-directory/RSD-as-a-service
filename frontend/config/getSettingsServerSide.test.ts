@@ -5,24 +5,24 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
+import {mockResolvedValueOnce} from '~/utils/jest/mockFetch';
 
-import {getSettingsServerSide} from './getSettingsServerSide'
+import {getSettingsServerSide} from './getSettingsServerSide';
 
-import defaultSettings from '~/config/defaultSettings.json'
+import defaultSettings from '~/config/defaultSettings.json';
 
-const mockReq:any = jest.fn()
+const mockReq: any = jest.fn();
 
 it('returns settings SSR', async () => {
-  // resolve getPageLinks
-  mockResolvedValueOnce([])
-  // resolve getRsdSettings
-  mockResolvedValueOnce(defaultSettings)
+	// resolve getPageLinks
+	mockResolvedValueOnce([]);
+	// resolve getRsdSettings
+	mockResolvedValueOnce(defaultSettings);
 
-  const resp = await getSettingsServerSide(mockReq, {})
+	const resp = await getSettingsServerSide(mockReq, {});
 
-  expect(resp).toEqual({
-    ...defaultSettings,
-    pages: []
-  })
-})
+	expect(resp).toEqual({
+		...defaultSettings,
+		pages: [],
+	});
+});

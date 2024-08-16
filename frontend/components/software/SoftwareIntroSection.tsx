@@ -5,47 +5,44 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import ContentHeader from '../layout/ContentHeader'
-import SoftwareStatCounter from './SoftwareStatCounter'
+import ContentHeader from '../layout/ContentHeader';
+import SoftwareStatCounter from './SoftwareStatCounter';
 
 type SoftwareIntroSectionProps = {
-  brand_name: string,
-  short_statement: string,
-  counts: {
-    mention_cnt: number,
-    contributor_cnt: number
-  }
-}
+	brand_name: string;
+	short_statement: string;
+	counts: {
+		mention_cnt: number;
+		contributor_cnt: number;
+	};
+};
 
-export default function SoftwareIntroSection(props:SoftwareIntroSectionProps) {
-  const {brand_name,short_statement,counts} = props
-  function getMentionsLabel() {
-    if (counts?.mention_cnt === 1) {
-      return 'mention'
-    }
-    return 'mentions'
-  }
+export default function SoftwareIntroSection(props: SoftwareIntroSectionProps) {
+	const {brand_name, short_statement, counts} = props;
+	function getMentionsLabel() {
+		if (counts?.mention_cnt === 1) {
+			return 'mention';
+		}
+		return 'mentions';
+	}
 
-  function getContributorsLabel() {
-    if (counts?.contributor_cnt === 1) {
-      return 'contributor'
-    }
-    return 'contributors'
-  }
+	function getContributorsLabel() {
+		if (counts?.contributor_cnt === 1) {
+			return 'contributor';
+		}
+		return 'contributors';
+	}
 
-  return (
-    <ContentHeader
-      title={brand_name}
-      subtitle={short_statement}
-    >
-      <SoftwareStatCounter
-        label={getMentionsLabel()}
-        value={counts?.mention_cnt}
-      />
-      <SoftwareStatCounter
-        label={getContributorsLabel()}
-        value={counts?.contributor_cnt}
-      />
-    </ContentHeader>
-  )
+	return (
+		<ContentHeader title={brand_name} subtitle={short_statement}>
+			<SoftwareStatCounter
+				label={getMentionsLabel()}
+				value={counts?.mention_cnt}
+			/>
+			<SoftwareStatCounter
+				label={getContributorsLabel()}
+				value={counts?.contributor_cnt}
+			/>
+		</ContentHeader>
+	);
 }

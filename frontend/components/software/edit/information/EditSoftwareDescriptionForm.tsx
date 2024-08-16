@@ -3,10 +3,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {FormProvider, useForm} from 'react-hook-form'
-import EditSoftwareDescriptionInputs from './EditSoftwareDescriptionInputs'
-import {EditSoftwareDescriptionProps} from './useSoftwareTable'
-
+import {FormProvider, useForm} from 'react-hook-form';
+import EditSoftwareDescriptionInputs from './EditSoftwareDescriptionInputs';
+import {EditSoftwareDescriptionProps} from './useSoftwareTable';
 
 /**
  * Implement FormProvider (shared form context) of react-hook-form.
@@ -14,26 +13,31 @@ import {EditSoftwareDescriptionProps} from './useSoftwareTable'
  * @param param0
  * @returns
  */
-export default function EditSoftwareDescriptionForm({data}:{data:EditSoftwareDescriptionProps}) {
-  const methods = useForm<EditSoftwareDescriptionProps>({
-    mode: 'onChange',
-    defaultValues: {
-      ...data
-    }
-  })
-  return (
-    <FormProvider {...methods}>
-      <form
-        data-testid="software-information-form"
-        id="software-information"
-      >
-        {/* hidden inputs */}
-        <input type="hidden"
-          {...methods.register('id', {required:'id is required'})}
-        />
-        {/* autosave input components collection */}
-        <EditSoftwareDescriptionInputs />
-      </form>
-    </FormProvider>
-  )
+export default function EditSoftwareDescriptionForm({
+	data,
+}: {
+	data: EditSoftwareDescriptionProps;
+}) {
+	const methods = useForm<EditSoftwareDescriptionProps>({
+		mode: 'onChange',
+		defaultValues: {
+			...data,
+		},
+	});
+	return (
+		<FormProvider {...methods}>
+			<form
+				data-testid="software-information-form"
+				id="software-information"
+			>
+				{/* hidden inputs */}
+				<input
+					type="hidden"
+					{...methods.register('id', {required: 'id is required'})}
+				/>
+				{/* autosave input components collection */}
+				<EditSoftwareDescriptionInputs />
+			</form>
+		</FormProvider>
+	);
 }

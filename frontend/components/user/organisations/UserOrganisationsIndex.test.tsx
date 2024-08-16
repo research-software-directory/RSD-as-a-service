@@ -5,75 +5,78 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render, screen} from '@testing-library/react'
-import {WithAppContext} from '~/utils/jest/WithAppContext'
+import {render, screen} from '@testing-library/react';
+import {WithAppContext} from '~/utils/jest/WithAppContext';
 
-import UserOrganisations from './index'
+import UserOrganisations from './index';
 
 // MOCKS
-import organisationByMaintainer from './__mocks__/organisationsByMaintainer.json'
+import organisationByMaintainer from './__mocks__/organisationsByMaintainer.json';
 
-const mockGetOrganisationsForMaintainer = jest.fn(props => Promise.resolve([] as any))
-const mockUseUserOrganisations = jest.fn()
+const mockGetOrganisationsForMaintainer = jest.fn(props =>
+	Promise.resolve([] as any),
+);
+const mockUseUserOrganisations = jest.fn();
 
 jest.mock('./useUserOrganisations', () => ({
-  __esModule: true,
-  default: jest.fn(props=>mockUseUserOrganisations(props)),
-  getOrganisationsForMaintainer: jest.fn(props => mockGetOrganisationsForMaintainer(props))
-}))
+	__esModule: true,
+	default: jest.fn(props => mockUseUserOrganisations(props)),
+	getOrganisationsForMaintainer: jest.fn(props =>
+		mockGetOrganisationsForMaintainer(props),
+	),
+}));
 
 describe('components/user/organisations/index.tsx', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
 
-  it('render loader', () => {
-    // return loading
-    mockUseUserOrganisations.mockReturnValue({
-      loading: true,
-      organisations: []
-    })
+	it('render loader', () => {
+		// return loading
+		mockUseUserOrganisations.mockReturnValue({
+			loading: true,
+			organisations: [],
+		});
 
-    render(
-      <WithAppContext>
-        <UserOrganisations />
-      </WithAppContext>
-    )
+		render(
+			<WithAppContext>
+				<UserOrganisations />
+			</WithAppContext>,
+		);
 
-    screen.getByRole('progressbar')
-  })
+		screen.getByRole('progressbar');
+	});
 
-  it('render nothing to show message', () => {
-    // return loading
-    mockUseUserOrganisations.mockReturnValue({
-      loading: false,
-      organisations: []
-    })
+	it('render nothing to show message', () => {
+		// return loading
+		mockUseUserOrganisations.mockReturnValue({
+			loading: false,
+			organisations: [],
+		});
 
-    render(
-      <WithAppContext>
-        <UserOrganisations />
-      </WithAppContext>
-    )
+		render(
+			<WithAppContext>
+				<UserOrganisations />
+			</WithAppContext>,
+		);
 
-    screen.getByText('nothing to show')
-  })
+		screen.getByText('nothing to show');
+	});
 
-  it('render organisation cards', () => {
-    // return loading
-    mockUseUserOrganisations.mockReturnValue({
-      loading: false,
-      organisations: organisationByMaintainer,
-    })
+	it('render organisation cards', () => {
+		// return loading
+		mockUseUserOrganisations.mockReturnValue({
+			loading: false,
+			organisations: organisationByMaintainer,
+		});
 
-    render(
-      <WithAppContext>
-        <UserOrganisations />
-      </WithAppContext>
-    )
+		render(
+			<WithAppContext>
+				<UserOrganisations />
+			</WithAppContext>,
+		);
 
-    const organisations = screen.getAllByTestId('organisation-list-item')
-    expect(organisations.length).toEqual(organisationByMaintainer.length)
-  })
-
-})
+		const organisations = screen.getAllByTestId('organisation-list-item');
+		expect(organisations.length).toEqual(organisationByMaintainer.length);
+	});
+});

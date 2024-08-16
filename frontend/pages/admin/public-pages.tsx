@@ -5,59 +5,58 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Head from 'next/head'
-import {GetServerSidePropsContext} from 'next'
+import Head from 'next/head';
+import {GetServerSidePropsContext} from 'next';
 
-import {app} from '../../config/app'
-import DefaultLayout from '~/components/layout/DefaultLayout'
-import {getPageLinks} from '~/components/admin/pages/useMarkdownPages'
-import {RsdLink} from '~/config/rsdSettingsReducer'
-import EditMarkdownPages from '~/components/admin/pages/edit'
-import RsdAdminContent from '~/auth/RsdAdminContent'
-import {adminPages} from '~/components/admin/AdminNav'
+import {app} from '../../config/app';
+import DefaultLayout from '~/components/layout/DefaultLayout';
+import {getPageLinks} from '~/components/admin/pages/useMarkdownPages';
+import {RsdLink} from '~/config/rsdSettingsReducer';
+import EditMarkdownPages from '~/components/admin/pages/edit';
+import RsdAdminContent from '~/auth/RsdAdminContent';
+import {adminPages} from '~/components/admin/AdminNav';
 
 type AdminPagesProps = {
-  links: RsdLink[]
-}
+	links: RsdLink[];
+};
 
-const pageTitle = `${adminPages['pages'].title} | Admin page | ${app.title}`
+const pageTitle = `${adminPages['pages'].title} | Admin page | ${app.title}`;
 
-export default function AdminPublicPages({links}:AdminPagesProps) {
+export default function AdminPublicPages({links}: AdminPagesProps) {
+	// console.group('AdminPublicPages')
+	// console.log('links...', links)
+	// console.groupEnd()
 
-  // console.group('AdminPublicPages')
-  // console.log('links...', links)
-  // console.groupEnd()
-
-  return (
-    <DefaultLayout>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
-      <RsdAdminContent>
-        <EditMarkdownPages links={links} />
-      </RsdAdminContent>
-    </DefaultLayout>
-  )
+	return (
+		<DefaultLayout>
+			<Head>
+				<title>{pageTitle}</title>
+			</Head>
+			<RsdAdminContent>
+				<EditMarkdownPages links={links} />
+			</RsdAdminContent>
+		</DefaultLayout>
+	);
 }
 
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
-export async function getServerSideProps(context:GetServerSidePropsContext) {
-  try{
-    const {req} = context
-    const token = req?.cookies['rsd_token']
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+	try {
+		const {req} = context;
+		const token = req?.cookies['rsd_token'];
 
-    // get links to all pages server side
-    const links = await getPageLinks({is_published: false, token})
+		// get links to all pages server side
+		const links = await getPageLinks({is_published: false, token});
 
-    return {
-      // passed to the page component as props
-      props: {
-        links
-      },
-    }
-  }catch(e){
-    return {
-      notFound: true,
-    }
-  }
+		return {
+			// passed to the page component as props
+			props: {
+				links,
+			},
+		};
+	} catch (e) {
+		return {
+			notFound: true,
+		};
+	}
 }

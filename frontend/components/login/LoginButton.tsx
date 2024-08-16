@@ -10,67 +10,63 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
-import Link from 'next/link'
+import {useState} from 'react';
+import Link from 'next/link';
 
-import {useSession} from '~/auth'
-import useLoginProviders from '~/auth/api/useLoginProviders'
-import useUserMenuItems from '~/config/useUserMenuItems'
-import UserMenu from '~/components/layout/UserMenu'
-import LoginDialog from './LoginDialog'
+import {useSession} from '~/auth';
+import useLoginProviders from '~/auth/api/useLoginProviders';
+import useUserMenuItems from '~/config/useUserMenuItems';
+import UserMenu from '~/components/layout/UserMenu';
+import LoginDialog from './LoginDialog';
 
 export default function LoginButton() {
-  const providers = useLoginProviders()
-  const {status} = useSession()
-  const menuItems = useUserMenuItems()
-  const [open, setOpen] = useState(false)
+	const providers = useLoginProviders();
+	const {status} = useSession();
+	const menuItems = useUserMenuItems();
+	const [open, setOpen] = useState(false);
 
-  // console.group('LoginButton')
-  // console.log('status...', status)
-  // console.log('menuItems...', menuItems)
-  // console.groupEnd()
+	// console.group('LoginButton')
+	// console.log('status...', status)
+	// console.log('menuItems...', menuItems)
+	// console.groupEnd()
 
-  if (status === 'loading') {
-    return null
-  }
+	if (status === 'loading') {
+		return null;
+	}
 
-  if (status === 'authenticated') {
-    // const menuItems = getUserMenuItems(session.user?.role)
-    // we show user menu with the avatar and user specific options
-    return (
-      <UserMenu menuOptions={menuItems}/>
-    )
-  }
+	if (status === 'authenticated') {
+		// const menuItems = getUserMenuItems(session.user?.role)
+		// we show user menu with the avatar and user specific options
+		return <UserMenu menuOptions={menuItems} />;
+	}
 
-  // when there are multiple providers
-  // we show modal with the list of login options
-  if (providers && providers.length > 1) {
-    return (
-      <div className="whitespace-nowrap ml-2">
-        <button
-          tabIndex={0}
-          onClick={()=>setOpen(true)}
-        >
-          Sign in
-        </button>
-        <LoginDialog
-          providers={providers}
-          open={open}
-          onClose={()=>setOpen(false)}
-        />
-      </div>
-    )
-  }
+	// when there are multiple providers
+	// we show modal with the list of login options
+	if (providers && providers.length > 1) {
+		return (
+			<div className="whitespace-nowrap ml-2">
+				<button tabIndex={0} onClick={() => setOpen(true)}>
+					Sign in
+				</button>
+				<LoginDialog
+					providers={providers}
+					open={open}
+					onClose={() => setOpen(false)}
+				/>
+			</div>
+		);
+	}
 
-  // If there is only 1 provider we
-  // link redirect directly to Sign in button
-  return (
-    <Link
-      href={providers[0]?.redirectUrl ?? ''}
-      className="whitespace-nowrap ml-2" tabIndex={0}
-      passHref
-    >
-      Sign in
-    </Link>
-  )
+	// If there is only 1 provider we
+	// link redirect directly to Sign in button
+	return (
+		<Link
+			href={providers[0]?.redirectUrl ?? ''}
+			className="whitespace-nowrap ml-2"
+			tabIndex={0}
+			passHref
+		>
+			Sign in
+		</Link>
+	);
 }

@@ -24,8 +24,8 @@
  * For other libs injecting css into app further investigation is needed.
  */
 
-import crypto from 'crypto'
-import {IncomingMessage, ServerResponse} from 'http'
+import crypto from 'crypto';
+import {IncomingMessage, ServerResponse} from 'http';
 
 // default policies
 let sharedPolicy = `
@@ -36,57 +36,59 @@ let sharedPolicy = `
   img-src 'self' data: https://*;
   base-uri 'none';
   object-src 'none';
-`
+`;
 // default script def - use unsafe-inline for backward compatibilty
 // https://developer.chrome.com/docs/lighthouse/best-practices/csp-xss/?utm_source=lighthouse&utm_medium=devtools#ensure-csp-is-backwards-compatible
-let sharedScript = 'script-src \'self\' '
+let sharedScript = "script-src 'self' ";
 
 function defaultNonce() {
-  if (crypto) return crypto.randomUUID()
-  return '5ef14870-46fd-11ed-b878-0242ac120002'
+	if (crypto) return crypto.randomUUID();
+	return '5ef14870-46fd-11ed-b878-0242ac120002';
 }
 
 function monitoringScripts() {
-  if (process.env.MATOMO_URL) {
-    return ` ${process.env.MATOMO_URL}`
-  }
-  return ''
+	if (process.env.MATOMO_URL) {
+		return ` ${process.env.MATOMO_URL}`;
+	}
+	return '';
 }
 
 function devScript() {
-  if (process.env.NODE_ENV !== 'production') {
-    // enable script eval in development
-    return ' \'unsafe-eval\''
-  }
-  return ''
+	if (process.env.NODE_ENV !== 'production') {
+		// enable script eval in development
+		return " 'unsafe-eval'";
+	}
+	return '';
 }
 
 export function nonceContentSecurity() {
-  const nonce = crypto.randomUUID()
-  // append default, monitoring scripts and dev script
-  let scriptSrc = `script-src 'nonce-${nonce}' 'strict-dynamic'${monitoringScripts()}${devScript()} 'unsafe-inline' https:`
-  // combine shared policies with script policy
-  const policy = `${sharedPolicy.replace(/\s{2,}/g, ' ').trim()} ${scriptSrc}`
-  // console.log('shaContentSecurity...', policy)
-  return {
-    policy,
-    nonce
-  }
+	const nonce = crypto.randomUUID();
+	// append default, monitoring scripts and dev script
+	let scriptSrc = `script-src 'nonce-${nonce}' 'strict-dynamic'${monitoringScripts()}${devScript()} 'unsafe-inline' https:`;
+	// combine shared policies with script policy
+	const policy = `${sharedPolicy.replace(/\s{2,}/g, ' ').trim()} ${scriptSrc}`;
+	// console.log('shaContentSecurity...', policy)
+	return {
+		policy,
+		nonce,
+	};
 }
 
 // RUNS only on server side as it needs server response object to append response header
-export function setContentSecurityPolicyHeader(res?: ServerResponse<IncomingMessage>) {
-  // if server response object is not present returns default nonce value
-  if (!res) return defaultNonce()
-  // get policy to use and nonce to return
-  const {policy, nonce} = nonceContentSecurity()
-  // append to response header
-  if (process.env.NODE_ENV === 'production') {
-    res.setHeader('Content-Security-Policy', policy)
-  } else {
-    // report only in development
-    res.setHeader('Content-Security-Policy-Report-Only', policy)
-  }
-  // return nonce
-  return nonce
+export function setContentSecurityPolicyHeader(
+	res?: ServerResponse<IncomingMessage>,
+) {
+	// if server response object is not present returns default nonce value
+	if (!res) return defaultNonce();
+	// get policy to use and nonce to return
+	const {policy, nonce} = nonceContentSecurity();
+	// append to response header
+	if (process.env.NODE_ENV === 'production') {
+		res.setHeader('Content-Security-Policy', policy);
+	} else {
+		// report only in development
+		res.setHeader('Content-Security-Policy-Report-Only', policy);
+	}
+	// return nonce
+	return nonce;
 }

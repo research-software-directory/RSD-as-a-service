@@ -7,29 +7,29 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import ProtectedContent from '../../auth/ProtectedContent'
-import AppHeader from '~/components/AppHeader'
-import PageContainer from '~/components/layout/PageContainer'
-import AppFooter from '~/components/AppFooter'
+import ProtectedContent from '../../auth/ProtectedContent';
+import AppHeader from '~/components/AppHeader';
+import PageContainer from '~/components/layout/PageContainer';
+import AppFooter from '~/components/AppFooter';
 
-import AddProjectCard from '../../components/projects/add/AddProjectCard'
-import UserAgreementModal from '~/components/user/settings/UserAgreementModal'
+import AddProjectCard from '../../components/projects/add/AddProjectCard';
+import UserAgreementModal from '~/components/user/settings/UserAgreementModal';
 
 /**
  * Add new project. This page enables creation of project with 2 fields:
  * title and subtitle. All "action" is stored in AddSoftwareModal
  */
 export default function AddSoftware() {
-  return (
-    <>
-      <AppHeader />
-      <ProtectedContent>
-        <PageContainer className="flex-1 px-4 py-6 lg:py-12">
-          <UserAgreementModal />
-          <AddProjectCard />
-        </PageContainer>
-      </ProtectedContent>
-      <AppFooter />
-    </>
-  )
+	return (
+		<>
+			<AppHeader />
+			<ProtectedContent>
+				<PageContainer className="flex-1 px-4 py-6 lg:py-12">
+					<UserAgreementModal />
+					<AddProjectCard />
+				</PageContainer>
+			</ProtectedContent>
+			<AppFooter />
+		</>
+	);
 }

@@ -6,20 +6,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {findMention} from '~/components/mention/config'
-import config from '~/components/mention/ImportMentions/config'
+import {findMention} from '~/components/mention/config';
+import config from '~/components/mention/ImportMentions/config';
 
 export const cfgMention = {
-  title: 'Mentions',
-  findMention: {
-    ...findMention,
-    title: 'Add related output'
-  },
-  doiInput: config.doiInput,
-  builkImport: {
-    title: 'Import',
-  },
-  newItem: {
-    title: 'Create',
-  }
-}
+	title: 'Mentions',
+	findMention: {
+		...findMention,
+		title: 'Add related output',
+	},
+	doiInput: config.doiInput,
+	builkImport: {
+		title: 'Import',
+	},
+	newItem: {
+		title: 'Create',
+	},
+};

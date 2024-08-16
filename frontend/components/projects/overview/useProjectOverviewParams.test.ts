@@ -3,75 +3,74 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import useProjectOverviewParams from './useProjectOverviewParams'
+import useProjectOverviewParams from './useProjectOverviewParams';
 
 // mock userSettings hook
-jest.mock('~/config/UserSettingsContext')
+jest.mock('~/config/UserSettingsContext');
 
 // mock next router
-const mockBack = jest.fn()
-const mockReplace = jest.fn()
-const mockPush = jest.fn()
+const mockBack = jest.fn();
+const mockReplace = jest.fn();
+const mockPush = jest.fn();
 
 jest.mock('next/router', () => ({
-  useRouter: () => ({
-    back: mockBack,
-    replace: mockReplace,
-    push: mockPush,
-    pathname: '/projects',
-    query: {
-      rows: 12,
-      page: 1,
-    }
-  })
-}))
-
+	useRouter: () => ({
+		back: mockBack,
+		replace: mockReplace,
+		push: mockPush,
+		pathname: '/projects',
+		query: {
+			rows: 12,
+			page: 1,
+		},
+	}),
+}));
 
 beforeEach(() => {
-  jest.resetAllMocks()
-})
+	jest.resetAllMocks();
+});
 
 it('handlesQueryChange with search param', () => {
-  // extract function
-  const {handleQueryChange} = useProjectOverviewParams()
+	// extract function
+	const {handleQueryChange} = useProjectOverviewParams();
 
-  // call it with random param
-  handleQueryChange('search', 'test-value')
+	// call it with random param
+	handleQueryChange('search', 'test-value');
 
-  expect(mockPush).toBeCalledTimes(1)
-  expect(mockPush).toBeCalledWith(
-    '/projects?search=test-value&page=1&rows=12',
-    '/projects?search=test-value&page=1&rows=12',
-    {'scroll': false}
-  )
-})
+	expect(mockPush).toBeCalledTimes(1);
+	expect(mockPush).toBeCalledWith(
+		'/projects?search=test-value&page=1&rows=12',
+		'/projects?search=test-value&page=1&rows=12',
+		{scroll: false},
+	);
+});
 
 it('handlesQueryChange for pagination', () => {
-  // extract function
-  const {handleQueryChange} = useProjectOverviewParams()
+	// extract function
+	const {handleQueryChange} = useProjectOverviewParams();
 
-  // call it with random param
-  handleQueryChange('page', '2')
+	// call it with random param
+	handleQueryChange('page', '2');
 
-  expect(mockPush).toBeCalledTimes(1)
-  expect(mockPush).toBeCalledWith(
-    '/projects?page=2&rows=12',
-    '/projects?page=2&rows=12',
-    {'scroll': true}
-  )
-})
+	expect(mockPush).toBeCalledTimes(1);
+	expect(mockPush).toBeCalledWith(
+		'/projects?page=2&rows=12',
+		'/projects?page=2&rows=12',
+		{scroll: true},
+	);
+});
 
 it('resetFilters calls push without any params', () => {
-  // extract function
-  const {resetFilters} = useProjectOverviewParams()
+	// extract function
+	const {resetFilters} = useProjectOverviewParams();
 
-  // call it with random param
-  resetFilters()
+	// call it with random param
+	resetFilters();
 
-  expect(mockPush).toBeCalledTimes(1)
-  expect(mockPush).toBeCalledWith(
-    '/projects?order=impact_cnt',
-    '/projects?order=impact_cnt',
-    {'scroll': false}
-  )
-})
+	expect(mockPush).toBeCalledTimes(1);
+	expect(mockPush).toBeCalledWith(
+		'/projects?order=impact_cnt',
+		'/projects?order=impact_cnt',
+		{scroll: false},
+	);
+});

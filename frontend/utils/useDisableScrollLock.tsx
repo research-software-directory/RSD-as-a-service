@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import useMediaQuery from '@mui/material/useMediaQuery'
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 /**
  * Hook to decide if we need to disable scroll lock on pop-over menus.
@@ -16,6 +16,6 @@ import useMediaQuery from '@mui/material/useMediaQuery'
  * @returns boolean
  */
 export default function useDisableScrollLock() {
-  const disable = useMediaQuery('(max-width:30rem)')
-  return disable
+	const disable = useMediaQuery('(max-width:30rem)');
+	return disable;
 }

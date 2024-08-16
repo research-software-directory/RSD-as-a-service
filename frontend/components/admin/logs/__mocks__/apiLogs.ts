@@ -5,35 +5,41 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ApiParams} from '~/utils/postgrestUrl'
-import {BackendLog} from '../useLogs'
+import {ApiParams} from '~/utils/postgrestUrl';
+import {BackendLog} from '../useLogs';
 
-export async function getLogs({page, rows, token, searchFor, orderBy}: ApiParams<BackendLog, keyof BackendLog>) {
-  try {
-    return {
-      count: 0,
-      logs: []
-    }
-  } catch (e: any) {
-    return {
-      count: 0,
-      logs: []
-    }
-  }
+export async function getLogs({
+	page,
+	rows,
+	token,
+	searchFor,
+	orderBy,
+}: ApiParams<BackendLog, keyof BackendLog>) {
+	try {
+		return {
+			count: 0,
+			logs: [],
+		};
+	} catch (e: any) {
+		return {
+			count: 0,
+			logs: [],
+		};
+	}
 }
 
-export async function deleteLogById({id,token}:{id:string, token:string}){
-  try{
-    return {
-      status:200,
-      message: 'OK'
-    }
-  }catch(e:any){
-    return {
-      status: 500,
-      message: 'Server error'
-    }
-  }
+export async function deleteLogById({id, token}: {id: string; token: string}) {
+	try {
+		return {
+			status: 200,
+			message: 'OK',
+		};
+	} catch (e: any) {
+		return {
+			status: 500,
+			message: 'Server error',
+		};
+	}
 }
 
 /**
@@ -42,9 +48,17 @@ export async function deleteLogById({id,token}:{id:string, token:string}){
  * @param @object{days?,limit?,token}
  * @returns
  */
-export async function deleteLogsOlderThan({days=30,limit=1000,token}:{token:string,days?:number,limit?:number}){
-  return {
-    status: 200,
-    message: 0,
-  }
+export async function deleteLogsOlderThan({
+	days = 30,
+	limit = 1000,
+	token,
+}: {
+	token: string;
+	days?: number;
+	limit?: number;
+}) {
+	return {
+		status: 200,
+		message: 0,
+	};
 }

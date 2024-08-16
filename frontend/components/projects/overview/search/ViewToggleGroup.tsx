@@ -5,40 +5,43 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import ViewListIcon from '@mui/icons-material/ViewList'
-import ViewModuleIcon from '@mui/icons-material/ViewModule'
-import ToggleButton from '@mui/material/ToggleButton'
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
+import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
-export type ProjectLayoutType = 'list'|'grid'
+export type ProjectLayoutType = 'list' | 'grid';
 
 type ViewToggleGroupProps = {
-  layout: ProjectLayoutType
-  onSetView: (view:ProjectLayoutType)=>void
-}
+	layout: ProjectLayoutType;
+	onSetView: (view: ProjectLayoutType) => void;
+};
 
-export default function ViewToggleGroup({layout,onSetView}:ViewToggleGroupProps) {
-  return (
-    <ToggleButtonGroup
-      data-testid="card-layout-options"
-      orientation="horizontal"
-      value={layout}
-      size="small"
-      exclusive
-      onChange={(e, view) => onSetView(view)}
-      sx={{
-        backgroundColor: 'background.paper',
-      }}
-    >
-      {/* <ToggleButton value="masonry" aria-label="masonry">
+export default function ViewToggleGroup({
+	layout,
+	onSetView,
+}: ViewToggleGroupProps) {
+	return (
+		<ToggleButtonGroup
+			data-testid="card-layout-options"
+			orientation="horizontal"
+			value={layout}
+			size="small"
+			exclusive
+			onChange={(e, view) => onSetView(view)}
+			sx={{
+				backgroundColor: 'background.paper',
+			}}
+		>
+			{/* <ToggleButton value="masonry" aria-label="masonry">
         <ViewQuiltIcon />
       </ToggleButton> */}
-      <ToggleButton value="grid" aria-label="grid">
-        <ViewModuleIcon />
-      </ToggleButton>
-      <ToggleButton value="list" aria-label="list">
-        <ViewListIcon />
-      </ToggleButton>
-    </ToggleButtonGroup>
-  )
+			<ToggleButton value="grid" aria-label="grid">
+				<ViewModuleIcon />
+			</ToggleButton>
+			<ToggleButton value="list" aria-label="list">
+				<ViewListIcon />
+			</ToggleButton>
+		</ToggleButtonGroup>
+	);
 }

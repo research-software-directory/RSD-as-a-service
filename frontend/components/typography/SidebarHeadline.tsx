@@ -3,15 +3,19 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Icon} from './Icon'
+import {Icon} from './Icon';
 
 type SidebarHeadlineProps = {
-  iconName?: string
-  title: string
-}
+	iconName?: string;
+	title: string;
+};
 export const SidebarHeadline = ({iconName, title}: SidebarHeadlineProps) => {
-  return <div className="pt-8 pb-2">
-    {iconName && <Icon className="mr-2" color="primary" name={iconName}/>}
-    <span className="text-primary">{title}</span>
-  </div>
-}
+	return (
+		<div className="pt-8 pb-2">
+			{iconName && (
+				<Icon className="mr-2" color="primary" name={iconName} />
+			)}
+			<span className="text-primary">{title}</span>
+		</div>
+	);
+};

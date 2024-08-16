@@ -3,16 +3,19 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {MutableRefObject} from 'react'
+import {MutableRefObject} from 'react';
 
 type StickyHeaderBorderProps = {
-  headerRef: MutableRefObject<any>
-  setClasses: (classes:string)=>void
-}
+	headerRef: MutableRefObject<any>;
+	setClasses: (classes: string) => void;
+};
 
 // MOCKED useStickyHeaderBorder hook
-export default function useStickyHeaderBorder({headerRef,setClasses}:StickyHeaderBorderProps) {
-  return {
-    el: headerRef?.current ?? undefined
-  }
+export default function useStickyHeaderBorder({
+	headerRef,
+	setClasses,
+}: StickyHeaderBorderProps) {
+	return {
+		el: headerRef?.current ?? undefined,
+	};
 }

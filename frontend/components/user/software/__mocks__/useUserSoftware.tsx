@@ -3,15 +3,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Session} from '~/auth'
+import {Session} from '~/auth';
 
-
-import mockSoftwareByMaintainer from './softwareByMaintainer.json'
+import mockSoftwareByMaintainer from './softwareByMaintainer.json';
 
 export default function useUserSoftware() {
-
-  return {
-    software: mockSoftwareByMaintainer,
-    loading: false
-  }
+	return {
+		software: mockSoftwareByMaintainer,
+		loading: false,
+	};
 }

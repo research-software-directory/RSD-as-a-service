@@ -3,12 +3,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render,screen} from '@testing-library/react'
-import {WrappedComponentWithProps} from '../../utils/jest/WrappedComponents'
-import AppFooter from './'
+import {render, screen} from '@testing-library/react';
+import {WrappedComponentWithProps} from '../../utils/jest/WrappedComponents';
+import AppFooter from './';
 
-it('should render footer with role contentinfo',()=>{
-  render(WrappedComponentWithProps(AppFooter))
-  const footer = screen.getByRole('contentinfo')
-  expect(footer).toBeInTheDocument()
-})
+it('should render footer with role contentinfo', () => {
+	render(WrappedComponentWithProps(AppFooter));
+	const footer = screen.getByRole('contentinfo');
+	expect(footer).toBeInTheDocument();
+});

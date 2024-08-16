@@ -3,155 +3,160 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {fireEvent, render, screen, waitFor, within} from '@testing-library/react'
-import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
+import {
+	fireEvent,
+	render,
+	screen,
+	waitFor,
+	within,
+} from '@testing-library/react';
+import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext';
 
-import ImportMentionsIndex from './index'
-import {Session} from '~/auth'
-import MuiSnackbarProvider from '~/components/snackbar/MuiSnackbarProvider'
+import ImportMentionsIndex from './index';
+import {Session} from '~/auth';
+import MuiSnackbarProvider from '~/components/snackbar/MuiSnackbarProvider';
 
 // MOCK useValidateInputList - use default mock
-jest.mock('./apiImportMentions')
+jest.mock('./apiImportMentions');
 
 const testSession = {
-  ...mockSession,
-  user: {
-    ...mockSession.user,
-    role: 'rsd_admin'
-  }
-} as Session
+	...mockSession,
+	user: {
+		...mockSession.user,
+		role: 'rsd_admin',
+	},
+} as Session;
 
-
-const mockOnSuccess = jest.fn()
+const mockOnSuccess = jest.fn();
 
 const mockProps = {
-  table: 'mention_for_software',
-  entityId: 'software-id',
-  onSuccess: mockOnSuccess
-} as any
+	table: 'mention_for_software',
+	entityId: 'software-id',
+	onSuccess: mockOnSuccess,
+} as any;
 
 const mockDoiList = [
-  '10.5270/esa-nzfsox4',
-  '10.1555/mars.2006.0005',
-  '10.23943/princeton/9780691209258.003.0001'
-]
+	'10.5270/esa-nzfsox4',
+	'10.1555/mars.2006.0005',
+	'10.23943/princeton/9780691209258.003.0001',
+];
 
 beforeEach(() => {
-  jest.resetAllMocks()
-})
-
+	jest.resetAllMocks();
+});
 
 describe('components/mention/ImportMentions/index.tsx', () => {
+	it('validates provided doi list', async () => {
+		render(
+			<WithAppContext options={{session: testSession}}>
+				<ImportMentionsIndex {...mockProps} />
+			</WithAppContext>,
+		);
 
-  it('validates provided doi list', async() => {
+		// has import button
+		const importBtn = screen.getByRole('button', {name: 'Import'});
 
-    render(
-      <WithAppContext options={{session: testSession}}>
-        <ImportMentionsIndex {...mockProps} />
-      </WithAppContext>
-    )
+		fireEvent.click(importBtn);
 
-    // has import button
-    const importBtn = screen.getByRole('button',{name: 'Import'})
+		// shows dialog
+		const importDialog = screen.getByRole('dialog', {
+			name: 'Import publications',
+		});
 
-    fireEvent.click(importBtn)
+		// has two buttons
+		const btns = within(importDialog).getAllByRole('button');
+		expect(btns.length).toBe(2);
 
-    // shows dialog
-    const importDialog = screen.getByRole('dialog',{name: 'Import publications'})
+		// Next button is disabled
+		expect(btns[1]).toBeDisabled();
 
-    // has two buttons
-    const btns = within(importDialog).getAllByRole('button')
-    expect(btns.length).toBe(2)
+		// input DOI's
+		const input = screen.getByRole('textbox');
+		fireEvent.change(input, {target: {value: mockDoiList.join('\n')}});
 
-    // Next button is disabled
-    expect(btns[1]).toBeDisabled()
+		// check Next in enabled
+		expect(btns[1]).toBeEnabled();
 
-    // input DOI's
-    const input = screen.getByRole('textbox')
-    fireEvent.change(input,{target:{value:mockDoiList.join('\n')}})
+		// click next
+		fireEvent.click(btns[1]);
 
-    // check Next in enabled
-    expect(btns[1]).toBeEnabled()
+		// shows Import button after succefol validation
+		await screen.findByRole('button', {name: 'Import'});
 
-    // click next
-    fireEvent.click(btns[1])
+		// reports all doi items we provided
+		const reportItems = screen.getAllByTestId('import-mention-report-item');
+		expect(reportItems.length).toEqual(mockDoiList.length);
 
-    // shows Import button after succefol validation
-    await screen.findByRole('button',{name:'Import'})
+		// cancel button
+		const cancel = screen.getByRole('button', {name: 'Cancel'});
+		fireEvent.click(cancel);
+		// validate dialog is removed
+		expect(importDialog).not.toBeInTheDocument();
+		// screen.debug()
+	});
 
-    // reports all doi items we provided
-    const reportItems = screen.getAllByTestId('import-mention-report-item')
-    expect(reportItems.length).toEqual(mockDoiList.length)
+	it('imports provided doi list', async () => {
+		render(
+			<WithAppContext options={{session: testSession}}>
+				<MuiSnackbarProvider>
+					<ImportMentionsIndex {...mockProps} />
+				</MuiSnackbarProvider>
+			</WithAppContext>,
+		);
 
-    // cancel button
-    const cancel = screen.getByRole('button', {name: 'Cancel'})
-    fireEvent.click(cancel)
-    // validate dialog is removed
-    expect(importDialog).not.toBeInTheDocument()
-    // screen.debug()
-  })
+		// has import button
+		const importBtn = screen.getByRole('button', {name: 'Import'});
 
-  it('imports provided doi list', async() => {
+		fireEvent.click(importBtn);
 
-    render(
-      <WithAppContext options={{session: testSession}}>
-        <MuiSnackbarProvider>
-          <ImportMentionsIndex {...mockProps} />
-        </MuiSnackbarProvider>
-      </WithAppContext>
-    )
+		// shows dialog
+		const importDialog = screen.getByRole('dialog', {
+			name: 'Import publications',
+		});
 
-    // has import button
-    const importBtn = screen.getByRole('button',{name: 'Import'})
+		// has two buttons
+		const btns = within(importDialog).getAllByRole('button');
+		expect(btns.length).toBe(2);
 
-    fireEvent.click(importBtn)
+		// Next button is disabled
+		expect(btns[1]).toBeDisabled();
 
-    // shows dialog
-    const importDialog = screen.getByRole('dialog',{name: 'Import publications'})
+		// input DOI's
+		const input = screen.getByRole('textbox');
+		fireEvent.change(input, {target: {value: mockDoiList.join('\n')}});
 
-    // has two buttons
-    const btns = within(importDialog).getAllByRole('button')
-    expect(btns.length).toBe(2)
+		// check Next in enabled
+		expect(btns[1]).toBeEnabled();
 
-    // Next button is disabled
-    expect(btns[1]).toBeDisabled()
+		// click next
+		fireEvent.click(btns[1]);
 
-    // input DOI's
-    const input = screen.getByRole('textbox')
-    fireEvent.change(input,{target:{value:mockDoiList.join('\n')}})
+		// shows Import button after succefol validation
+		await screen.findByRole('button', {name: 'Import'});
 
-    // check Next in enabled
-    expect(btns[1]).toBeEnabled()
+		// reports all doi items we provided
+		const reportItems = screen.getAllByTestId('import-mention-report-item');
+		expect(reportItems.length).toEqual(mockDoiList.length);
 
-    // click next
-    fireEvent.click(btns[1])
+		// has select to import buttons
+		// const switches = screen.getAllByTestId('switch-toggle-button')
+		const switches = screen.getAllByRole('checkbox');
+		expect(switches.length).toEqual(switches.length);
 
-    // shows Import button after succefol validation
-    await screen.findByRole('button',{name:'Import'})
+		// deselect first item
+		fireEvent.click(switches[0]);
+		expect(switches[0]).not.toBeChecked();
 
-    // reports all doi items we provided
-    const reportItems = screen.getAllByTestId('import-mention-report-item')
-    expect(reportItems.length).toEqual(mockDoiList.length)
+		// Import button
+		const impBtn = screen.getByRole('button', {name: 'Import'});
+		fireEvent.click(impBtn);
 
-    // has select to import buttons
-    // const switches = screen.getAllByTestId('switch-toggle-button')
-    const switches = screen.getAllByRole('checkbox')
-    expect(switches.length).toEqual(switches.length)
-
-    // deselect first item
-    fireEvent.click(switches[0])
-    expect(switches[0]).not.toBeChecked()
-
-    // Import button
-    const impBtn = screen.getByRole('button', {name: 'Import'})
-    fireEvent.click(impBtn)
-
-    await waitFor(() => {
-      // calls onSuccess fn
-      expect(mockProps.onSuccess).toBeCalledTimes(1)
-      // shows snackbar success message
-      screen.getByTestId('SuccessOutlinedIcon')
-      // screen.debug()
-    })
-  })
-})
+		await waitFor(() => {
+			// calls onSuccess fn
+			expect(mockProps.onSuccess).toBeCalledTimes(1);
+			// shows snackbar success message
+			screen.getByTestId('SuccessOutlinedIcon');
+			// screen.debug()
+		});
+	});
+});

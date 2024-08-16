@@ -7,35 +7,32 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useSession} from '~/auth'
-import UserAgreementModal from '~/components/user/settings/UserAgreementModal'
-import useOrganisationContext from '../context/useOrganisationContext'
-import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
-import SettingsNav from './SettingsNav'
-import SettingsPageContent from './SettingsPageContent'
-import ProtectedContent from '~/components/layout/ProtectedContent'
-
+import {useSession} from '~/auth';
+import UserAgreementModal from '~/components/user/settings/UserAgreementModal';
+import useOrganisationContext from '../context/useOrganisationContext';
+import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded';
+import SettingsNav from './SettingsNav';
+import SettingsPageContent from './SettingsPageContent';
+import ProtectedContent from '~/components/layout/ProtectedContent';
 
 export default function OrganisationSettings() {
-  const {isMaintainer} = useOrganisationContext()
-  const {status,user} = useSession()
+	const {isMaintainer} = useOrganisationContext();
+	const {status, user} = useSession();
 
-  return (
-    <ProtectedContent
-      status={status}
-      role={user?.role}
-      isMaintainer={isMaintainer}
-    >
-      <UserAgreementModal />
-      <div className="flex-1 grid grid-cols-[1fr,4fr] gap-4">
-        <BaseSurfaceRounded
-          className="mb-12 p-4"
-        >
-          <SettingsNav />
-        </BaseSurfaceRounded>
-        {/* dynamic load of settings page */}
-        <SettingsPageContent />
-      </div>
-    </ProtectedContent>
-  )
+	return (
+		<ProtectedContent
+			status={status}
+			role={user?.role}
+			isMaintainer={isMaintainer}
+		>
+			<UserAgreementModal />
+			<div className="flex-1 grid grid-cols-[1fr,4fr] gap-4">
+				<BaseSurfaceRounded className="mb-12 p-4">
+					<SettingsNav />
+				</BaseSurfaceRounded>
+				{/* dynamic load of settings page */}
+				<SettingsPageContent />
+			</div>
+		</ProtectedContent>
+	);
 }

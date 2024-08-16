@@ -7,54 +7,62 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Alert from '@mui/material/Alert'
-import AlertTitle from '@mui/material/AlertTitle'
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
-import {TeamMember} from '~/types/Project'
-import SortableList from '~/components/layout/SortableList'
-import SortableTeamMemberItem from './SortableTeamMemberItem'
+import {TeamMember} from '~/types/Project';
+import SortableList from '~/components/layout/SortableList';
+import SortableTeamMemberItem from './SortableTeamMemberItem';
 
 type TeamMemberListProps = {
-	members: TeamMember[],
-	onEdit: (member: TeamMember, pos: number) => void
-  onDelete: (pos: number) => void
-  onSorted: (members:TeamMember[])=>void
-}
+	members: TeamMember[];
+	onEdit: (member: TeamMember, pos: number) => void;
+	onDelete: (pos: number) => void;
+	onSorted: (members: TeamMember[]) => void;
+};
 
+export default function SortableTeamMemberList({
+	members,
+	onEdit,
+	onDelete,
+	onSorted,
+}: TeamMemberListProps) {
+	// show message when no members
+	if (members.length === 0) {
+		return (
+			<Alert
+				data-testid="no-team-member-alert"
+				severity="warning"
+				sx={{marginTop: '0.5rem'}}
+			>
+				<AlertTitle sx={{fontWeight: 500}}>No team members</AlertTitle>
+				Add team member using the <strong>search form!</strong>
+			</Alert>
+		);
+	}
 
-export default function SortableTeamMemberList({members, onEdit, onDelete, onSorted}: TeamMemberListProps) {
-  // show message when no members
-  if (members.length === 0) {
-    return (
-      <Alert
-        data-testid="no-team-member-alert"
-        severity="warning" sx={{marginTop: '0.5rem'}}>
-        <AlertTitle sx={{fontWeight:500}}>No team members</AlertTitle>
-        Add team member using the <strong>search form!</strong>
-		  </Alert>
-    )
-  }
+	function onEditMember(pos: number) {
+		const member = members[pos];
+		onEdit(member, pos);
+	}
 
-  function onEditMember(pos: number) {
-    const member = members[pos]
-    onEdit(member,pos)
-  }
+	function onRenderItem(item: TeamMember, index: number) {
+		return (
+			<SortableTeamMemberItem
+				key={item.id ?? index}
+				pos={index}
+				item={item}
+				onEdit={onEditMember}
+				onDelete={onDelete}
+			/>
+		);
+	}
 
-  function onRenderItem(item:TeamMember,index:number) {
-    return <SortableTeamMemberItem
-      key={item.id ?? index}
-      pos={index}
-      item={item}
-      onEdit={onEditMember}
-      onDelete={onDelete}
-    />
-  }
-
-  return (
-    <SortableList
-      items={members}
-      onSorted={onSorted}
-      onRenderItem={onRenderItem}
-    />
-  )
+	return (
+		<SortableList
+			items={members}
+			onSorted={onSorted}
+			onRenderItem={onRenderItem}
+		/>
+	);
 }

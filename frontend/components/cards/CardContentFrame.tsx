@@ -5,10 +5,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export default function CardContentFrame({children}:{children:JSX.Element[]}) {
-  return (
-    <div className="h-[66%] flex flex-col p-4 relative">
-      {children}
-    </div>
-  )
+export default function CardContentFrame({
+	children,
+}: {
+	children: JSX.Element[];
+}) {
+	return <div className="h-[66%] flex flex-col p-4 relative">{children}</div>;
 }

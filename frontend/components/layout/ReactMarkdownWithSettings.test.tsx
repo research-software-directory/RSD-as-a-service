@@ -3,15 +3,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render, screen} from '@testing-library/react'
+import {render, screen} from '@testing-library/react';
 
-import ReactMarkdownWithSettings from './ReactMarkdownWithSettings'
+import ReactMarkdownWithSettings from './ReactMarkdownWithSettings';
 
 it('renders makrdown component', () => {
-  const markdown = '# Test page one'
-  render(<ReactMarkdownWithSettings
-    markdown={markdown}
-  />)
-  const content = screen.getByText(markdown)
-  expect(content).toBeInTheDocument()
-})
+	const markdown = '# Test page one';
+	render(<ReactMarkdownWithSettings markdown={markdown} />);
+	const content = screen.getByText(markdown);
+	expect(content).toBeInTheDocument();
+});

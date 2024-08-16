@@ -5,21 +5,23 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render, screen} from '@testing-library/react'
+import {render, screen} from '@testing-library/react';
 
-import {WithAppContext} from '~/utils/jest/WithAppContext'
-import CommitsChart, {CommitsChartProps} from './CommitsChart'
+import {WithAppContext} from '~/utils/jest/WithAppContext';
+import CommitsChart, {CommitsChartProps} from './CommitsChart';
 
 // MOCK useResizeObserver
-jest.mock('~/components/charts/d3LineChart/useResizeObserver')
+jest.mock('~/components/charts/d3LineChart/useResizeObserver');
 
 // MOCK NoDataAvailableChart
 // NOTE! this component causes unexpected errors during test!?!
 // further investigation required
 jest.mock('~/components/charts/d3LineChart/NoDataAvailableChart', () => ({
-  __esModule: true,
-  default: jest.fn(({text}) =><div data-testid="no-data-chart-message">{text}</div>)
-}))
+	__esModule: true,
+	default: jest.fn(({text}) => (
+		<div data-testid="no-data-chart-message">{text}</div>
+	)),
+}));
 
 // const mockPrepareDataForSoftwarePage = jest.fn(props => ({
 //   lineData: [],
@@ -30,78 +32,82 @@ jest.mock('~/components/charts/d3LineChart/NoDataAvailableChart', () => ({
 //   prepareDataForSoftwarePage: jest.fn(props=>mockPrepareDataForSoftwarePage(props))
 // }))
 
-const mockProps:CommitsChartProps = {
-  repository_url: null,
-  commit_history: undefined,
-  commit_history_scraped_at: undefined,
-  className: undefined
-}
+const mockProps: CommitsChartProps = {
+	repository_url: null,
+	commit_history: undefined,
+	commit_history_scraped_at: undefined,
+	className: undefined,
+};
 
 it('renders "missing repository_url" message', () => {
-  mockProps.repository_url=null
-  // missing repository_url message
-  const expectMessage='We cannot display the activity graph, because we do not know the repository url.'
-  // render
-  render(
-    <WithAppContext>
-      <CommitsChart {...mockProps} />
-    </WithAppContext>
-  )
+	mockProps.repository_url = null;
+	// missing repository_url message
+	const expectMessage =
+		'We cannot display the activity graph, because we do not know the repository url.';
+	// render
+	render(
+		<WithAppContext>
+			<CommitsChart {...mockProps} />
+		</WithAppContext>,
+	);
 
-  const message = screen.getByTestId('no-data-chart-message')
-  expect(message).toHaveTextContent(expectMessage)
-  // screen.debug()
-})
+	const message = screen.getByTestId('no-data-chart-message');
+	expect(message).toHaveTextContent(expectMessage);
+	// screen.debug()
+});
 
 it('renders "did not scrape repo yet" message', () => {
-  mockProps.repository_url = 'https://some.repo.url.com'
-  mockProps.commit_history_scraped_at = undefined
-  // missing repository_url message
-  const expectMessage='We did not scrape the commit history of this repository yet.'
-  // render
-  render(
-    <WithAppContext>
-      <CommitsChart {...mockProps} />
-    </WithAppContext>
-  )
+	mockProps.repository_url = 'https://some.repo.url.com';
+	mockProps.commit_history_scraped_at = undefined;
+	// missing repository_url message
+	const expectMessage =
+		'We did not scrape the commit history of this repository yet.';
+	// render
+	render(
+		<WithAppContext>
+			<CommitsChart {...mockProps} />
+		</WithAppContext>,
+	);
 
-  const message = screen.getByTestId('no-data-chart-message')
-  expect(message).toHaveTextContent(expectMessage)
-  // screen.debug()
-})
+	const message = screen.getByTestId('no-data-chart-message');
+	expect(message).toHaveTextContent(expectMessage);
+	// screen.debug()
+});
 
 it('renders "reposotory is empty" message', () => {
-  mockProps.repository_url = 'https://some.repo.url.com'
-  mockProps.commit_history_scraped_at = new Date().toISOString()
-  mockProps.commit_history = {}
-  // missing repository_url message
-  const expectMessage='We cannot display this graph because the repository is empty.'
-  // render
-  render(
-    <WithAppContext>
-      <CommitsChart {...mockProps} />
-    </WithAppContext>
-  )
+	mockProps.repository_url = 'https://some.repo.url.com';
+	mockProps.commit_history_scraped_at = new Date().toISOString();
+	mockProps.commit_history = {};
+	// missing repository_url message
+	const expectMessage =
+		'We cannot display this graph because the repository is empty.';
+	// render
+	render(
+		<WithAppContext>
+			<CommitsChart {...mockProps} />
+		</WithAppContext>,
+	);
 
-  const message = screen.getByTestId('no-data-chart-message')
-  expect(message).toHaveTextContent(expectMessage)
-  // screen.debug()
-})
+	const message = screen.getByTestId('no-data-chart-message');
+	expect(message).toHaveTextContent(expectMessage);
+	// screen.debug()
+});
 
 it('renders "we cannot read the commit history" message', () => {
-  mockProps.repository_url = 'https://some.repo.url.com'
-  mockProps.commit_history_scraped_at = new Date().toISOString()
-  mockProps.commit_history = undefined
-  // missing repository_url message
-  const expectMessage='We cannot display this graph because we cannot read the commit history.'
-  // render
-  render(
-    <WithAppContext>
-      <CommitsChart {...mockProps} />
-    </WithAppContext>
-  )
+	mockProps.repository_url = 'https://some.repo.url.com';
+	mockProps.commit_history_scraped_at = new Date().toISOString();
+	mockProps.commit_history = undefined;
+	// missing repository_url message
+	const expectMessage =
+		'We cannot display this graph because we cannot read the commit history.';
+	// render
+	render(
+		<WithAppContext>
+			<CommitsChart {...mockProps} />
+		</WithAppContext>,
+	);
 
-  const message = screen.getByTestId('no-data-chart-message')
-  expect(message).toHaveTextContent(expectMessage)
-  // screen.debug()
-})
+	const message = screen.getByTestId('no-data-chart-message');
+	expect(message).toHaveTextContent(expectMessage);
+	// screen.debug()
+});

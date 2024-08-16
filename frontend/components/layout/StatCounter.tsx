@@ -4,26 +4,29 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export default function StatCounter({label,value}:{label:string,value:number|undefined}) {
-
-  if (typeof value!=='undefined' && label){
-    return (
-      <div className="text-center">
-        <div
-          style={{
-            fontSize: '3.5rem',
-            fontWeight: '200',
-            lineHeight: 1.25
-          }}
-        >
-          {value}
-        </div>
-        <div>
-          {label}
-        </div>
-      </div>
-    )
-  }
-  // return nothing if values not provided
-  return null
+export default function StatCounter({
+	label,
+	value,
+}: {
+	label: string;
+	value: number | undefined;
+}) {
+	if (typeof value !== 'undefined' && label) {
+		return (
+			<div className="text-center">
+				<div
+					style={{
+						fontSize: '3.5rem',
+						fontWeight: '200',
+						lineHeight: 1.25,
+					}}
+				>
+					{value}
+				</div>
+				<div>{label}</div>
+			</div>
+		);
+	}
+	// return nothing if values not provided
+	return null;
 }

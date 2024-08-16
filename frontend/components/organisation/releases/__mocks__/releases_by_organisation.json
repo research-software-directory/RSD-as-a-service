@@ -1,79 +1,79 @@
 [
-  {
-    "organisation_id": "0c544eda-0885-4f94-9795-42b22baf7053",
-    "software_id": "02a39f97-3a27-4ef4-9eec-85caf1579d2b",
-    "software_slug": "software-northwest-sex-chris-withdrawal",
-    "software_name": "Software: Northwest sex Chris withdrawal",
-    "release_doi": null,
-    "release_tag": "9.6.3",
-    "release_date": null,
-    "release_year": 2025,
-    "release_authors": "Teresa Schumm"
-  },
-  {
-    "organisation_id": "0c544eda-0885-4f94-9795-42b22baf7053",
-    "software_id": "02a39f97-3a27-4ef4-9eec-85caf1579d2b",
-    "software_slug": "software-northwest-sex-chris-withdrawal",
-    "software_name": "Software: Northwest sex Chris withdrawal",
-    "release_doi": null,
-    "release_tag": null,
-    "release_date": null,
-    "release_year": 2025,
-    "release_authors": null
-  },
-  {
-    "organisation_id": "0c544eda-0885-4f94-9795-42b22baf7053",
-    "software_id": "0ebaba3e-5dbc-4e29-9c26-2b4e184feead",
-    "software_slug": "software-engineer-gibraltar-web-green",
-    "software_name": "Software: engineer Gibraltar Web green",
-    "release_doi": null,
-    "release_tag": "9.6.3",
-    "release_date": null,
-    "release_year": 2025,
-    "release_authors": "Teresa Schumm"
-  },
-  {
-    "organisation_id": "0c544eda-0885-4f94-9795-42b22baf7053",
-    "software_id": "39209170-68d4-4d4a-bca1-09556ec41a3d",
-    "software_slug": "software-country",
-    "software_name": "Software: Country",
-    "release_doi": null,
-    "release_tag": "6.3.4",
-    "release_date": null,
-    "release_year": 2025,
-    "release_authors": "Miss Edna Lueilwitz"
-  },
-  {
-    "organisation_id": "0c544eda-0885-4f94-9795-42b22baf7053",
-    "software_id": "39209170-68d4-4d4a-bca1-09556ec41a3d",
-    "software_slug": "software-country",
-    "software_name": "Software: Country",
-    "release_doi": null,
-    "release_tag": null,
-    "release_date": null,
-    "release_year": 2025,
-    "release_authors": null
-  },
-  {
-    "organisation_id": "0c544eda-0885-4f94-9795-42b22baf7053",
-    "software_id": "ac38caf6-fa32-4201-a634-889a5da5479e",
-    "software_slug": "software-newton-nod-gee",
-    "software_name": "Software: newton nod gee",
-    "release_doi": null,
-    "release_tag": null,
-    "release_date": null,
-    "release_year": 2025,
-    "release_authors": null
-  },
-  {
-    "organisation_id": "0c544eda-0885-4f94-9795-42b22baf7053",
-    "software_id": "d8d1a400-d18a-4fa9-a701-a25c8dbc9f5f",
-    "software_slug": "software-joule-mazda",
-    "software_name": "Software: joule Mazda",
-    "release_doi": null,
-    "release_tag": null,
-    "release_date": null,
-    "release_year": 2025,
-    "release_authors": null
-  }
+	{
+		"organisation_id": "0c544eda-0885-4f94-9795-42b22baf7053",
+		"software_id": "02a39f97-3a27-4ef4-9eec-85caf1579d2b",
+		"software_slug": "software-northwest-sex-chris-withdrawal",
+		"software_name": "Software: Northwest sex Chris withdrawal",
+		"release_doi": null,
+		"release_tag": "9.6.3",
+		"release_date": null,
+		"release_year": 2025,
+		"release_authors": "Teresa Schumm"
+	},
+	{
+		"organisation_id": "0c544eda-0885-4f94-9795-42b22baf7053",
+		"software_id": "02a39f97-3a27-4ef4-9eec-85caf1579d2b",
+		"software_slug": "software-northwest-sex-chris-withdrawal",
+		"software_name": "Software: Northwest sex Chris withdrawal",
+		"release_doi": null,
+		"release_tag": null,
+		"release_date": null,
+		"release_year": 2025,
+		"release_authors": null
+	},
+	{
+		"organisation_id": "0c544eda-0885-4f94-9795-42b22baf7053",
+		"software_id": "0ebaba3e-5dbc-4e29-9c26-2b4e184feead",
+		"software_slug": "software-engineer-gibraltar-web-green",
+		"software_name": "Software: engineer Gibraltar Web green",
+		"release_doi": null,
+		"release_tag": "9.6.3",
+		"release_date": null,
+		"release_year": 2025,
+		"release_authors": "Teresa Schumm"
+	},
+	{
+		"organisation_id": "0c544eda-0885-4f94-9795-42b22baf7053",
+		"software_id": "39209170-68d4-4d4a-bca1-09556ec41a3d",
+		"software_slug": "software-country",
+		"software_name": "Software: Country",
+		"release_doi": null,
+		"release_tag": "6.3.4",
+		"release_date": null,
+		"release_year": 2025,
+		"release_authors": "Miss Edna Lueilwitz"
+	},
+	{
+		"organisation_id": "0c544eda-0885-4f94-9795-42b22baf7053",
+		"software_id": "39209170-68d4-4d4a-bca1-09556ec41a3d",
+		"software_slug": "software-country",
+		"software_name": "Software: Country",
+		"release_doi": null,
+		"release_tag": null,
+		"release_date": null,
+		"release_year": 2025,
+		"release_authors": null
+	},
+	{
+		"organisation_id": "0c544eda-0885-4f94-9795-42b22baf7053",
+		"software_id": "ac38caf6-fa32-4201-a634-889a5da5479e",
+		"software_slug": "software-newton-nod-gee",
+		"software_name": "Software: newton nod gee",
+		"release_doi": null,
+		"release_tag": null,
+		"release_date": null,
+		"release_year": 2025,
+		"release_authors": null
+	},
+	{
+		"organisation_id": "0c544eda-0885-4f94-9795-42b22baf7053",
+		"software_id": "d8d1a400-d18a-4fa9-a701-a25c8dbc9f5f",
+		"software_slug": "software-joule-mazda",
+		"software_name": "Software: joule Mazda",
+		"release_doi": null,
+		"release_tag": null,
+		"release_date": null,
+		"release_year": 2025,
+		"release_authors": null
+	}
 ]

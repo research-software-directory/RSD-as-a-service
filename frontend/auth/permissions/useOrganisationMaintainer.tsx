@@ -5,56 +5,59 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect,useState} from 'react'
-import {useSession} from '../index'
-import {isOrganisationMaintainer} from './isMaintainerOfOrganisation'
-
+import {useEffect, useState} from 'react';
+import {useSession} from '../index';
+import {isOrganisationMaintainer} from './isMaintainerOfOrganisation';
 
 type UseOrganisationMaintainerProps = {
-  organisation: string
-}
+	organisation: string;
+};
 
-export default function useOrganisationMaintainer({organisation}: UseOrganisationMaintainerProps) {
-  const {user,token} = useSession()
-  const [isMaintainer,setIsMaintainer] = useState(false)
-  const [loading,setLoading] = useState(true)
+export default function useOrganisationMaintainer({
+	organisation,
+}: UseOrganisationMaintainerProps) {
+	const {user, token} = useSession();
+	const [isMaintainer, setIsMaintainer] = useState(false);
+	const [loading, setLoading] = useState(true);
 
-  // console.group('useOrganisationMaintainer')
-  // console.log('organisation...', organisation)
-  // console.log('user...', user)
-  // console.log('token...', token)
-  // console.log('status...', status)
-  // console.log('isMaintainer...', isMaintainer)
-  // console.log('loading...', loading)
-  // console.groupEnd()
+	// console.group('useOrganisationMaintainer')
+	// console.log('organisation...', organisation)
+	// console.log('user...', user)
+	// console.log('token...', token)
+	// console.log('status...', status)
+	// console.log('isMaintainer...', isMaintainer)
+	// console.log('loading...', loading)
+	// console.groupEnd()
 
-  useEffect(() => {
-    let abort = false
-    async function organisationMaintainer() {
-      // console.log('organisationMaintainer...abort...',abort)
-      const isMaintainer = await isOrganisationMaintainer({
-        organisation,
-        account: user?.account,
-        role: user?.role,
-        token
-      })
-      // console.log('abort...',abort)
-      // console.log('organisationMaintainer...isMaintainer...',isMaintainer)
-      if (abort) return
-      setIsMaintainer(isMaintainer)
-      setLoading(false)
-    }
-    if (organisation && user?.account && user?.role && token != '') {
-      organisationMaintainer()
-    } else if (abort === false) {
-      setIsMaintainer(false)
-      setLoading(false)
-    }
-    return ()=>{abort=true}
-  },[organisation,user?.account,user?.role,token,loading,isMaintainer])
+	useEffect(() => {
+		let abort = false;
+		async function organisationMaintainer() {
+			// console.log('organisationMaintainer...abort...',abort)
+			const isMaintainer = await isOrganisationMaintainer({
+				organisation,
+				account: user?.account,
+				role: user?.role,
+				token,
+			});
+			// console.log('abort...',abort)
+			// console.log('organisationMaintainer...isMaintainer...',isMaintainer)
+			if (abort) return;
+			setIsMaintainer(isMaintainer);
+			setLoading(false);
+		}
+		if (organisation && user?.account && user?.role && token != '') {
+			organisationMaintainer();
+		} else if (abort === false) {
+			setIsMaintainer(false);
+			setLoading(false);
+		}
+		return () => {
+			abort = true;
+		};
+	}, [organisation, user?.account, user?.role, token, loading, isMaintainer]);
 
-  return {
-    loading,
-    isMaintainer
-  }
+	return {
+		loading,
+		isMaintainer,
+	};
 }

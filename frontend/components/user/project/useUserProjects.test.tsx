@@ -5,66 +5,53 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render, screen} from '@testing-library/react'
-import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
+import {render, screen} from '@testing-library/react';
+import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext';
 
-import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
+import {mockResolvedValueOnce} from '~/utils/jest/mockFetch';
 
-import useUserProjects from './useUserProjects'
-import projectsByMaintainer from './__mocks__/projectsByMaintainer.json'
-
+import useUserProjects from './useUserProjects';
+import projectsByMaintainer from './__mocks__/projectsByMaintainer.json';
 
 function WithUserProjectsHook() {
-  const {loading, projects} = useUserProjects()
+	const {loading, projects} = useUserProjects();
 
-  if (loading) {
-    return (
-      <div>Loading...</div>
-    )
-  }
+	if (loading) {
+		return <div>Loading...</div>;
+	}
 
-  return (
-    <div>
-      {JSON.stringify(projects,null,2)}
-    </div>
-  )
+	return <div>{JSON.stringify(projects, null, 2)}</div>;
 }
 
 beforeEach(() => {
-  // reset mock counters
-  jest.clearAllMocks()
-})
-
+	// reset mock counters
+	jest.clearAllMocks();
+});
 
 it('shows loader', () => {
-  render(
-    <WithUserProjectsHook />
-  )
-  screen.getByText('Loading...')
-  // screen.debug()
-})
+	render(<WithUserProjectsHook />);
+	screen.getByText('Loading...');
+	// screen.debug()
+});
 
-it('resolves no projects', async() => {
+it('resolves no projects', async () => {
+	mockResolvedValueOnce([]);
 
-  mockResolvedValueOnce([])
+	render(
+		<WithAppContext options={{session: mockSession}}>
+			<WithUserProjectsHook />
+		</WithAppContext>,
+	);
+	await screen.findByText('[]');
+});
 
-  render(
-    <WithAppContext options={{session:mockSession}}>
-      <WithUserProjectsHook />
-    </WithAppContext>
-  )
-  await screen.findByText('[]')
-})
+it('resolves projects', async () => {
+	mockResolvedValueOnce(projectsByMaintainer);
 
-it('resolves projects', async() => {
-
-  mockResolvedValueOnce(projectsByMaintainer)
-
-  render(
-    <WithAppContext options={{session:mockSession}}>
-      <WithUserProjectsHook />
-    </WithAppContext>
-  )
-  await screen.findByText(RegExp(projectsByMaintainer[0].id))
-})
-
+	render(
+		<WithAppContext options={{session: mockSession}}>
+			<WithUserProjectsHook />
+		</WithAppContext>,
+	);
+	await screen.findByText(RegExp(projectsByMaintainer[0].id));
+});

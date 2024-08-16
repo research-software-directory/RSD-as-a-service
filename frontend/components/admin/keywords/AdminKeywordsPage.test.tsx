@@ -3,30 +3,28 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render, screen} from '@testing-library/react'
-import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
+import {render, screen} from '@testing-library/react';
+import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext';
 
-import AdminKeywordsIndexPage from '~/components/admin/keywords/index'
-import {Session} from '~/auth'
+import AdminKeywordsIndexPage from '~/components/admin/keywords/index';
+import {Session} from '~/auth';
 
 const testSession = {
-  ...mockSession,
-  user: {
-    ...mockSession.user,
-    role: 'rsd_admin'
-  }
-} as Session
+	...mockSession,
+	user: {
+		...mockSession.user,
+		role: 'rsd_admin',
+	},
+} as Session;
 
 describe('components/admin/keywords/index.tsx', () => {
-
-  it('shows progressbar initialy', () => {
-
-    render(
-      <WithAppContext options={{session: testSession}}>
-        <AdminKeywordsIndexPage />
-      </WithAppContext>
-    )
-    screen.getByRole('progressbar')
-    // screen.debug()
-  })
-})
+	it('shows progressbar initialy', () => {
+		render(
+			<WithAppContext options={{session: testSession}}>
+				<AdminKeywordsIndexPage />
+			</WithAppContext>,
+		);
+		screen.getByRole('progressbar');
+		// screen.debug()
+	});
+});

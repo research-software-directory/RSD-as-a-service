@@ -4,27 +4,25 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
+import {useRouter} from 'next/router';
 
-import CommunityAboutPage from './about-page'
-import CommunityMaintainers from './maintainers'
-import CommunityGeneralSettings from './general'
-import CommunityCategories from './categories'
-
+import CommunityAboutPage from './about-page';
+import CommunityMaintainers from './maintainers';
+import CommunityGeneralSettings from './general';
+import CommunityCategories from './categories';
 
 export default function CommunitySettingsContent() {
-  const router = useRouter()
-  const tab = router.query['tab']?.toString() ?? ''
+	const router = useRouter();
+	const tab = router.query['tab']?.toString() ?? '';
 
-  switch (tab) {
-    case 'about':
-      return <CommunityAboutPage />
-    case 'maintainers':
-      return <CommunityMaintainers />
-    case 'categories':
-      return <CommunityCategories />
-    default:
-      return <CommunityGeneralSettings/>
-  }
-
+	switch (tab) {
+		case 'about':
+			return <CommunityAboutPage />;
+		case 'maintainers':
+			return <CommunityMaintainers />;
+		case 'categories':
+			return <CommunityCategories />;
+		default:
+			return <CommunityGeneralSettings />;
+	}
 }

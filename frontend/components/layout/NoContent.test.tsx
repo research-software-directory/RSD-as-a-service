@@ -3,16 +3,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render, screen} from '@testing-library/react'
+import {render, screen} from '@testing-library/react';
 
-import NoContent from './NoContent'
+import NoContent from './NoContent';
 
 it('renders component', () => {
-  const testMsg = 'This is test message'
+	const testMsg = 'This is test message';
 
-  render(<NoContent message={testMsg} />)
+	render(<NoContent message={testMsg} />);
 
-  const msg = screen.getByText(testMsg)
-  expect(msg).toBeInTheDocument()
-
-})
+	const msg = screen.getByText(testMsg);
+	expect(msg).toBeInTheDocument();
+});

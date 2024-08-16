@@ -7,11 +7,17 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export default function HelperTextWithCounter({message,count}:{message:string|undefined|JSX.Element,count:string}) {
-  return (
-    <>
-      <span className="mr-2">{message}</span>
-      <span>{count}</span>
-    </>
-  )
+export default function HelperTextWithCounter({
+	message,
+	count,
+}: {
+	message: string | undefined | JSX.Element;
+	count: string;
+}) {
+	return (
+		<>
+			<span className="mr-2">{message}</span>
+			<span>{count}</span>
+		</>
+	);
 }

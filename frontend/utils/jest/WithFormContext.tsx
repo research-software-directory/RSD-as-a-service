@@ -6,13 +6,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useForm, FormProvider} from 'react-hook-form'
+import {useForm, FormProvider} from 'react-hook-form';
 
 type WithFormContextProps = {
-  children: any
-  mode?: any,
-  defaultValues?: any
-}
+	children: any;
+	mode?: any;
+	defaultValues?: any;
+};
 
 /**
  * Wraps the component with FormProvider.
@@ -22,14 +22,14 @@ type WithFormContextProps = {
  * @param children, mode
  * @returns React.JSX.Element
  */
-export function WithFormContext({children,mode='onChange',defaultValues}:WithFormContextProps) {
-  const methods = useForm({
-    mode,
-    defaultValues
-  })
-  return (
-    <FormProvider { ...methods }>
-      {children}
-    </FormProvider>
-  )
+export function WithFormContext({
+	children,
+	mode = 'onChange',
+	defaultValues,
+}: WithFormContextProps) {
+	const methods = useForm({
+		mode,
+		defaultValues,
+	});
+	return <FormProvider {...methods}>{children}</FormProvider>;
 }

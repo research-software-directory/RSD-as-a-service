@@ -3,60 +3,59 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render, screen, fireEvent} from '@testing-library/react'
-import IconBtnMenuOnAction from './IconBtnMenuOnAction'
+import {render, screen, fireEvent} from '@testing-library/react';
+import IconBtnMenuOnAction from './IconBtnMenuOnAction';
 
-const mockAction=jest.fn()
+const mockAction = jest.fn();
 const mockProps = {
-  options: [{
-    key: 'key 1',
-    type: 'action' as any,
-    label: 'Option 1',
-    disabled: false,
-    action: {
-      type: 'TEST_1',
-      payload:'TEST_PAYLOAD_1'
-    }
-  },{
-    key:'key 2',
-    type: 'action',
-    label: 'Option 2',
-    disabled: false,
-    action: {
-      type: 'TEST_2',
-      payload:'TEST_PAYLOAD_2'
-    }
-  }],
-  onAction: mockAction
-}
+	options: [
+		{
+			key: 'key 1',
+			type: 'action' as any,
+			label: 'Option 1',
+			disabled: false,
+			action: {
+				type: 'TEST_1',
+				payload: 'TEST_PAYLOAD_1',
+			},
+		},
+		{
+			key: 'key 2',
+			type: 'action',
+			label: 'Option 2',
+			disabled: false,
+			action: {
+				type: 'TEST_2',
+				payload: 'TEST_PAYLOAD_2',
+			},
+		},
+	],
+	onAction: mockAction,
+};
 
 it('renders component with two options', () => {
+	render(<IconBtnMenuOnAction {...mockProps} />);
 
-  render(<IconBtnMenuOnAction {...mockProps} />)
+	const moreBtn = screen.getByTestId('icon-menu-button');
+	expect(moreBtn).toBeInTheDocument();
 
-  const moreBtn = screen.getByTestId('icon-menu-button')
-  expect(moreBtn).toBeInTheDocument()
+	fireEvent.click(moreBtn);
 
-  fireEvent.click(moreBtn)
-
-  const options = screen.getAllByRole('menuitem')
-  expect(options.length).toEqual(mockProps.options.length)
-
-})
+	const options = screen.getAllByRole('menuitem');
+	expect(options.length).toEqual(mockProps.options.length);
+});
 
 it('calls action on item click', () => {
+	render(<IconBtnMenuOnAction {...mockProps} />);
 
-  render(<IconBtnMenuOnAction {...mockProps} />)
+	const moreBtn = screen.getByTestId('icon-menu-button');
+	expect(moreBtn).toBeInTheDocument();
 
-  const moreBtn = screen.getByTestId('icon-menu-button')
-  expect(moreBtn).toBeInTheDocument()
+	fireEvent.click(moreBtn);
 
-  fireEvent.click(moreBtn)
+	const options = screen.getAllByRole('menuitem');
+	fireEvent.click(options[0]);
 
-  const options = screen.getAllByRole('menuitem')
-  fireEvent.click(options[0])
-
-  expect(mockAction).toBeCalledTimes(1)
-  expect(mockAction).toHaveBeenCalledWith(mockProps.options[0].action)
-
-})
+	expect(mockAction).toBeCalledTimes(1);
+	expect(mockAction).toHaveBeenCalledWith(mockProps.options[0].action);
+});

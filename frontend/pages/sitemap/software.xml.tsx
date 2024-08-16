@@ -3,30 +3,30 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {GetServerSidePropsContext} from 'next'
+import {GetServerSidePropsContext} from 'next';
 
-import {getSoftwareSitemap} from '~/components/seo/getSoftwareSitemap'
-import {getDomain} from '~/utils/getDomain'
+import {getSoftwareSitemap} from '~/components/seo/getSoftwareSitemap';
+import {getDomain} from '~/utils/getDomain';
 
 export default function RobotsTxt() {
-  // getServerSideProps will create response
+	// getServerSideProps will create response
 }
 
-export async function getServerSideProps(context:GetServerSidePropsContext) {
-  const {req,res} = context
-  // extract domain info from request headers
-  const domain = getDomain(req)
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+	const {req, res} = context;
+	// extract domain info from request headers
+	const domain = getDomain(req);
 
-  // generate the XML sitemap for software
-  const content = await getSoftwareSitemap(domain)
+	// generate the XML sitemap for software
+	const content = await getSoftwareSitemap(domain);
 
-  res.setHeader('Content-Type', 'text/xml; charset=UTF-8')
+	res.setHeader('Content-Type', 'text/xml; charset=UTF-8');
 
-  // send XML to the browser
-  res.write(content)
-  res.end()
+	// send XML to the browser
+	res.write(content);
+	res.end();
 
-  return {
-    props: {},
-  }
+	return {
+		props: {},
+	};
 }

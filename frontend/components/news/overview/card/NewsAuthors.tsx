@@ -3,20 +3,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-type PublicationDateProps={
-  author:string|null
-  className?:string
-}
+type PublicationDateProps = {
+	author: string | null;
+	className?: string;
+};
 
-export default function NewsAuthors({author, className}:PublicationDateProps) {
-  if (author){
-    return (
-      <span
-        className={`line-clamp-1 text-sm text-base-content-disabled font-medium tracking-widest ${className ?? ''}`}
-      >
-        {author}
-      </span>
-    )
-  }
-  return null
+export default function NewsAuthors({author, className}: PublicationDateProps) {
+	if (author) {
+		return (
+			<span
+				className={`line-clamp-1 text-sm text-base-content-disabled font-medium tracking-widest ${className ?? ''}`}
+			>
+				{author}
+			</span>
+		);
+	}
+	return null;
 }

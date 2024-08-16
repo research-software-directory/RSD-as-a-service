@@ -5,15 +5,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-const maxRows=50
+const maxRows = 50;
 
 const config = {
-  orcidInput: {
-    label: 'Provide one ORCID per line',
-    helperText: 'Provide one ORCID per line',
-    maxRowsErrorMsg: 'Maximum number of items exceeded',
-    maxRows,
-  }
-}
+	orcidInput: {
+		label: 'Provide one ORCID per line',
+		helperText: 'Provide one ORCID per line',
+		maxRowsErrorMsg: 'Maximum number of items exceeded',
+		maxRows,
+	},
+};
 
-export default config
+export default config;

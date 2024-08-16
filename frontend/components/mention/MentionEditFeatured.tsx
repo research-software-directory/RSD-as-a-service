@@ -7,43 +7,47 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {MentionTitle} from './MentionItemBase'
-import {MentionItemProps} from '~/types/Mention'
-import ImageAsBackground from '../layout/ImageAsBackground'
-import MentionAuthors from './MentionAuthors'
-import MentionPublisherItem from './MentionPublisherItem'
-import MentionEditButtons from './MentionEditButtons'
+import {MentionTitle} from './MentionItemBase';
+import {MentionItemProps} from '~/types/Mention';
+import ImageAsBackground from '../layout/ImageAsBackground';
+import MentionAuthors from './MentionAuthors';
+import MentionPublisherItem from './MentionPublisherItem';
+import MentionEditButtons from './MentionEditButtons';
 
 type MentionListItem = {
-  item: MentionItemProps
-}
+	item: MentionItemProps;
+};
 
 export default function MentionEditFeatured({item}: MentionListItem) {
-  return (
-    <article className="mb-8 md:flex">
-      <ImageAsBackground className="flex-1 min-h-[6rem]" src={item.image_url} alt={item.title ?? 'image'} />
-      <div className="flex flex-col py-4 px-0 md:py-0 md:px-6 md:flex-1 lg:flex-[2]">
-        <MentionTitle
-          title={item.title ?? ''}
-          url={item.url}
-          role="list"
-          className="font-medium pb-1 line-clamp-5"
-        />
-        <MentionAuthors
-          authors={item.authors}
-          className="text-sm max-h-[9rem] overflow-y-auto overflow-x-hidden"
-        />
-        <MentionPublisherItem
-          publisher={item?.publisher ?? ''}
-          page={item?.page ?? ''}
-          publication_year={item.publication_year}
-          journal = {item.journal}
-          className="text-sm"
-        />
-      </div>
-      <nav>
-        <MentionEditButtons item={item}/>
-      </nav>
-    </article>
-  )
+	return (
+		<article className="mb-8 md:flex">
+			<ImageAsBackground
+				className="flex-1 min-h-[6rem]"
+				src={item.image_url}
+				alt={item.title ?? 'image'}
+			/>
+			<div className="flex flex-col py-4 px-0 md:py-0 md:px-6 md:flex-1 lg:flex-[2]">
+				<MentionTitle
+					title={item.title ?? ''}
+					url={item.url}
+					role="list"
+					className="font-medium pb-1 line-clamp-5"
+				/>
+				<MentionAuthors
+					authors={item.authors}
+					className="text-sm max-h-[9rem] overflow-y-auto overflow-x-hidden"
+				/>
+				<MentionPublisherItem
+					publisher={item?.publisher ?? ''}
+					page={item?.page ?? ''}
+					publication_year={item.publication_year}
+					journal={item.journal}
+					className="text-sm"
+				/>
+			</div>
+			<nav>
+				<MentionEditButtons item={item} />
+			</nav>
+		</article>
+	);
 }

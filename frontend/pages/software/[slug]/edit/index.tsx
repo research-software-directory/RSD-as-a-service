@@ -5,24 +5,24 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {GetServerSidePropsContext} from 'next/types'
+import {GetServerSidePropsContext} from 'next/types';
 
 export default function SoftwareEditPage() {
-  // REDIRECT to /edit/information location (default edit page)
+	// REDIRECT to /edit/information location (default edit page)
 }
 
 // REDIRECT to /edit/information location (default edit page)
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
-export async function getServerSideProps(context:GetServerSidePropsContext) {
-  const {params} = context
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+	const {params} = context;
 
-  const slug = params?.slug?.toString() ?? ''
-  // Redirect to /edit/information location as default
-  return {
-    redirect: {
-      destination: `/software/${slug}/edit/information`,
-      permanent: false,
-    },
-  }
+	const slug = params?.slug?.toString() ?? '';
+	// Redirect to /edit/information location as default
+	return {
+		redirect: {
+			destination: `/software/${slug}/edit/information`,
+			permanent: false,
+		},
+	};
 }

@@ -3,13 +3,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {NextResponse} from 'next/server'
-import type {NextRequest} from 'next/server'
+import {NextResponse} from 'next/server';
+import type {NextRequest} from 'next/server';
 
 export function middleware(request: NextRequest) {
-  return NextResponse.redirect(request.url + '/software')
+	return NextResponse.redirect(request.url + '/software');
 }
 
 export const config = {
-  matcher: '/communities/:path/',
-}
+	matcher: '/communities/:path/',
+};

@@ -5,25 +5,24 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {RORItem} from '~/utils/getROR'
-import TypeIcon from '~/components/icons/TypeIcon'
+import {RORItem} from '~/utils/getROR';
+import TypeIcon from '~/components/icons/TypeIcon';
 
-export default function RorType({meta}:{meta:RORItem|null}) {
-  try {
-    if (meta === null) return null
+export default function RorType({meta}: {meta: RORItem | null}) {
+	try {
+		if (meta === null) return null;
 
-    return (
-      <>
-        {meta.types.map(item => (
-          <div key={item} className="flex gap-2">
-            <TypeIcon />
-            <span>{item}</span>
-          </div>
-        ))}
-      </>
-
-    )
-  } catch (e) {
-    return null
-  }
+		return (
+			<>
+				{meta.types.map(item => (
+					<div key={item} className="flex gap-2">
+						<TypeIcon />
+						<span>{item}</span>
+					</div>
+				))}
+			</>
+		);
+	} catch (e) {
+		return null;
+	}
 }

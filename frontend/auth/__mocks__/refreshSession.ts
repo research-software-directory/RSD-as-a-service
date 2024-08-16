@@ -3,10 +3,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Session} from '..'
-import {mockSession} from '~/utils/jest/WithAppContext'
+import {Session} from '..';
+import {mockSession} from '~/utils/jest/WithAppContext';
 
 export async function refreshSession(): Promise<Session | null> {
-  // return default mocked session
-  return mockSession
+	// return default mocked session
+	return mockSession;
 }

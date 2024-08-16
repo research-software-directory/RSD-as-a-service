@@ -4,25 +4,29 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react';
 
-import {Provider} from 'pages/api/fe/auth'
+import {Provider} from 'pages/api/fe/auth';
 
 export default function useLoginProviders() {
-  const [providers, setProviders] = useState<Provider[]>([])
+	const [providers, setProviders] = useState<Provider[]>([]);
 
-  useEffect(() => {
-    let abort = false
+	useEffect(() => {
+		let abort = false;
 
-    if (abort === false) {
-      setProviders([{
-        name: 'test provider',
-        redirectUrl: 'https://test-login-redirect.com'
-      }])
-    }
+		if (abort === false) {
+			setProviders([
+				{
+					name: 'test provider',
+					redirectUrl: 'https://test-login-redirect.com',
+				},
+			]);
+		}
 
-    return () => { abort = true }
-  }, [])
+		return () => {
+			abort = true;
+		};
+	}, []);
 
-  return providers
+	return providers;
 }

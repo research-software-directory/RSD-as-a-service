@@ -6,33 +6,31 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import EditSection from '~/components/layout/EditSection'
-import ContentLoader from '~/components/layout/ContentLoader'
-import CitationsByType from '~/components/software/edit/mentions/citations/CitationsByType'
-import {useProjectMentionContext} from '../ProjectMentionContext'
-import ProjectCitationInfo from './ProjectCitationInfo'
+import EditSection from '~/components/layout/EditSection';
+import ContentLoader from '~/components/layout/ContentLoader';
+import CitationsByType from '~/components/software/edit/mentions/citations/CitationsByType';
+import {useProjectMentionContext} from '../ProjectMentionContext';
+import ProjectCitationInfo from './ProjectCitationInfo';
 
 export default function ProjectCitationsTab() {
-  /**
-   * Get loading state and loaded mention items from software mention context.
-   */
-  const {loading,citation} = useProjectMentionContext()
+	/**
+	 * Get loading state and loaded mention items from software mention context.
+	 */
+	const {loading, citation} = useProjectMentionContext();
 
-  // console.group('ProjectCitationsTab')
-  // console.log('loading...', loading)
-  // console.log('citation...', citation)
-  // console.groupEnd()
+	// console.group('ProjectCitationsTab')
+	// console.log('loading...', loading)
+	// console.log('citation...', citation)
+	// console.groupEnd()
 
-  return (
-    <EditSection className='pt-4 pb-8'>
-      <ProjectCitationInfo />
-      <div className="py-2" />
-      {/* render citations by type */}
-      {loading ?
-        <ContentLoader />
-        :
-        <CitationsByType mentions={citation} />
-      }
-    </EditSection>
-  )
+	return (
+		<EditSection className="pt-4 pb-8">
+			<ProjectCitationInfo />
+			<div className="py-2" />
+			{/* render citations by type */}
+			{loading ?
+				<ContentLoader />
+			:	<CitationsByType mentions={citation} />}
+		</EditSection>
+	);
 }

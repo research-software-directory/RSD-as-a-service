@@ -3,80 +3,87 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createContext, useEffect, useReducer} from 'react'
+import {createContext, useEffect, useReducer} from 'react';
 
-import {Action, EditProjectActionType, editProjectReducer} from './editProjectReducer'
+import {
+	Action,
+	EditProjectActionType,
+	editProjectReducer,
+} from './editProjectReducer';
 
 export type ProjectInfo = {
-  id: string,
-  slug: string,
-  title: string
-}
+	id: string;
+	slug: string;
+	title: string;
+};
 
 export type EditProjectState = {
-  // step: EditProjectStep | undefined,
-  pageIndex: number,
-  project: ProjectInfo,
-  // loading: boolean
-}
+	// step: EditProjectStep | undefined,
+	pageIndex: number;
+	project: ProjectInfo;
+	// loading: boolean
+};
 
 export const initialState: EditProjectState = {
-  // loading first page/step by default
-  // step: editProjectSteps[0],
-  pageIndex: 0,
-  project: {
-    id: '',
-    slug: '',
-    title:''
-  },
-  // loading:true
-}
+	// loading first page/step by default
+	// step: editProjectSteps[0],
+	pageIndex: 0,
+	project: {
+		id: '',
+		slug: '',
+		title: '',
+	},
+	// loading:true
+};
 
 export type EditProjectContextProps = {
-  state: EditProjectState,
-  dispatch: (action:Action) => void
-}
-
+	state: EditProjectState;
+	dispatch: (action: Action) => void;
+};
 
 const EditProjectContext = createContext<EditProjectContextProps>({
-  state: initialState,
-  dispatch: (action)=>{}
-})
+	state: initialState,
+	dispatch: action => {},
+});
 
 export function EditProjectProvider(props: any) {
-  const [state, dispatch] = useReducer(editProjectReducer, props?.state ?? initialState)
+	const [state, dispatch] = useReducer(
+		editProjectReducer,
+		props?.state ?? initialState,
+	);
 
-  // console.group('EditProjectProvider')
-  // console.log('props...', props)
-  // console.log('state...', state)
-  // console.groupEnd()
+	// console.group('EditProjectProvider')
+	// console.log('props...', props)
+	// console.log('state...', state)
+	// console.groupEnd()
 
-  useEffect(() => {
-    // The prokect context is used on dynamic edit project page.
-    // Basic project information is loaded server side on each change
-    // of dynamic page. NOTE! useReducer state runs in a different context
-    // AND takes only initial props.state. In order to ensure latest state
-    // loaded on server side is passed into the context we need to update
-    // the context state using dispatch/reducer functions.
-    if (props?.state && props.state.pageIndex) {
-      if (props.state.pageIndex !== state.pageIndex) {
-        // debugger
-        dispatch({
-          type: EditProjectActionType.UPDATE_STATE,
-          payload: props.state
-        })
-      }
-    }
-  },[props?.state, state.pageIndex])
+	useEffect(() => {
+		// The prokect context is used on dynamic edit project page.
+		// Basic project information is loaded server side on each change
+		// of dynamic page. NOTE! useReducer state runs in a different context
+		// AND takes only initial props.state. In order to ensure latest state
+		// loaded on server side is passed into the context we need to update
+		// the context state using dispatch/reducer functions.
+		if (props?.state && props.state.pageIndex) {
+			if (props.state.pageIndex !== state.pageIndex) {
+				// debugger
+				dispatch({
+					type: EditProjectActionType.UPDATE_STATE,
+					payload: props.state,
+				});
+			}
+		}
+	}, [props?.state, state.pageIndex]);
 
-  return (
-    <EditProjectContext.Provider value={{
-      state,
-      dispatch
-    }}
-    {...props}
-    />
-  )
+	return (
+		<EditProjectContext.Provider
+			value={{
+				state,
+				dispatch,
+			}}
+			{...props}
+		/>
+	);
 }
 
-export default EditProjectContext
+export default EditProjectContext;

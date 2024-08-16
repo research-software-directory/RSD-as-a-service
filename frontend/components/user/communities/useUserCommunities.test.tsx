@@ -5,66 +5,53 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render, screen} from '@testing-library/react'
-import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
+import {render, screen} from '@testing-library/react';
+import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext';
 
-import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
+import {mockResolvedValueOnce} from '~/utils/jest/mockFetch';
 
-import useUserCommunities from './useUserCommunities'
-import communitiesByMaintainer from './__mocks__/communitiesByMaintainer.json'
-
+import useUserCommunities from './useUserCommunities';
+import communitiesByMaintainer from './__mocks__/communitiesByMaintainer.json';
 
 function WithUserCommunitiesHook() {
-  const {loading, communities} = useUserCommunities()
+	const {loading, communities} = useUserCommunities();
 
-  if (loading) {
-    return (
-      <div>Loading...</div>
-    )
-  }
+	if (loading) {
+		return <div>Loading...</div>;
+	}
 
-  return (
-    <div>
-      {JSON.stringify(communities,null,2)}
-    </div>
-  )
+	return <div>{JSON.stringify(communities, null, 2)}</div>;
 }
 
 beforeEach(() => {
-  // reset mock counters
-  jest.clearAllMocks()
-})
-
+	// reset mock counters
+	jest.clearAllMocks();
+});
 
 it('shows loader', () => {
-  render(
-    <WithUserCommunitiesHook />
-  )
-  screen.getByText('Loading...')
-  // screen.debug()
-})
+	render(<WithUserCommunitiesHook />);
+	screen.getByText('Loading...');
+	// screen.debug()
+});
 
-it('resolves no communities', async() => {
+it('resolves no communities', async () => {
+	mockResolvedValueOnce([]);
 
-  mockResolvedValueOnce([])
+	render(
+		<WithAppContext options={{session: mockSession}}>
+			<WithUserCommunitiesHook />
+		</WithAppContext>,
+	);
+	await screen.findByText('[]');
+});
 
-  render(
-    <WithAppContext options={{session:mockSession}}>
-      <WithUserCommunitiesHook />
-    </WithAppContext>
-  )
-  await screen.findByText('[]')
-})
+it('resolves communities', async () => {
+	mockResolvedValueOnce(communitiesByMaintainer);
 
-it('resolves communities', async() => {
-
-  mockResolvedValueOnce(communitiesByMaintainer)
-
-  render(
-    <WithAppContext options={{session:mockSession}}>
-      <WithUserCommunitiesHook />
-    </WithAppContext>
-  )
-  await screen.findByText(RegExp(communitiesByMaintainer[0].id))
-})
-
+	render(
+		<WithAppContext options={{session: mockSession}}>
+			<WithUserCommunitiesHook />
+		</WithAppContext>,
+	);
+	await screen.findByText(RegExp(communitiesByMaintainer[0].id));
+});

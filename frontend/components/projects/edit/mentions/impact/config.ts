@@ -5,18 +5,18 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {findMention} from '~/components/mention/config'
+import {findMention} from '~/components/mention/config';
 
 export const cfgImpact = {
-  title: 'Impact',
-  findMention: {
-    ...findMention,
-    title: 'Add impact',
-  },
-  builkImport: {
-    title: 'Import',
-  },
-  newItem: {
-    title: 'Create',
-  }
-}
+	title: 'Impact',
+	findMention: {
+		...findMention,
+		title: 'Add impact',
+	},
+	builkImport: {
+		title: 'Import',
+	},
+	newItem: {
+		title: 'Create',
+	},
+};

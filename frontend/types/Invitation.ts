@@ -4,8 +4,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export type Invitation = {
-    id: string,
-    created_at: string,
-    expires_at: string,
-    type: 'software' | 'project' | 'organisation'
-}
+	id: string;
+	created_at: string;
+	expires_at: string;
+	type: 'software' | 'project' | 'organisation';
+};

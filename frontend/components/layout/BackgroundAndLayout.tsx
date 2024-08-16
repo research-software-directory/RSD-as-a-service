@@ -6,22 +6,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ReactNode} from 'react'
-import AppHeader from '~/components/AppHeader'
-import AppFooter from '~/components/AppFooter'
-import MainContent from './MainContent'
-import PageBackground from './PageBackground'
+import {ReactNode} from 'react';
+import AppHeader from '~/components/AppHeader';
+import AppFooter from '~/components/AppFooter';
+import MainContent from './MainContent';
+import PageBackground from './PageBackground';
 
-export default function BackgrounAndLayout({children}:{children:ReactNode}) {
-  return (
-    <>
-      <AppHeader />
-      <PageBackground>
-        <MainContent>
-          {children}
-        </MainContent>
-      </PageBackground>
-      <AppFooter/>
-    </>
-  )
+export default function BackgrounAndLayout({children}: {children: ReactNode}) {
+	return (
+		<>
+			<AppHeader />
+			<PageBackground>
+				<MainContent>{children}</MainContent>
+			</PageBackground>
+			<AppFooter />
+		</>
+	);
 }

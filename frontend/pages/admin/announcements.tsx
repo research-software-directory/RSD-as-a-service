@@ -7,26 +7,25 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Head from 'next/head'
+import Head from 'next/head';
 
-import {app} from '../../config/app'
-import DefaultLayout from '~/components/layout/DefaultLayout'
-import AdminPageWithNav from '~/components/admin/AdminPageWithNav'
-import {adminPages} from '~/components/admin/AdminNav'
-import AnnouncementsPage from '~/components/admin/announcements/index'
+import {app} from '../../config/app';
+import DefaultLayout from '~/components/layout/DefaultLayout';
+import AdminPageWithNav from '~/components/admin/AdminPageWithNav';
+import {adminPages} from '~/components/admin/AdminNav';
+import AnnouncementsPage from '~/components/admin/announcements/index';
 
-const pageTitle = `${adminPages['announcements'].title} | Admin page | ${app.title}`
+const pageTitle = `${adminPages['announcements'].title} | Admin page | ${app.title}`;
 
-export default function AdminAnnouncementsPage(props:any) {
-
-  return (
-    <DefaultLayout>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
-      <AdminPageWithNav title={adminPages['announcements'].title}>
-        <AnnouncementsPage {...props} />
-      </AdminPageWithNav>
-    </DefaultLayout>
-  )
+export default function AdminAnnouncementsPage(props: any) {
+	return (
+		<DefaultLayout>
+			<Head>
+				<title>{pageTitle}</title>
+			</Head>
+			<AdminPageWithNav title={adminPages['announcements'].title}>
+				<AnnouncementsPage {...props} />
+			</AdminPageWithNav>
+		</DefaultLayout>
+	);
 }

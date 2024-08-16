@@ -5,39 +5,40 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ChangeEvent,MouseEvent} from 'react'
-import TablePagination from '@mui/material/TablePagination'
+import {ChangeEvent, MouseEvent} from 'react';
+import TablePagination from '@mui/material/TablePagination';
 
-import {usePaginationContext} from './PaginationContext'
+import {usePaginationContext} from './PaginationContext';
 
 export default function Pagination() {
-  const {count,page,rows,rowsOptions,labelRowsPerPage,setPage,setRows} = usePaginationContext()
+	const {count, page, rows, rowsOptions, labelRowsPerPage, setPage, setRows} =
+		usePaginationContext();
 
-  // next/previous page button
-  function handlePageChange(
-    event: MouseEvent<HTMLButtonElement> | null,
-    newPage: number,
-  ) {
-    setPage(newPage)
-  }
+	// next/previous page button
+	function handlePageChange(
+		event: MouseEvent<HTMLButtonElement> | null,
+		newPage: number,
+	) {
+		setPage(newPage);
+	}
 
-  // change number of cards per page
-  function handleItemsPerPage(
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
-    setRows(parseInt(event.target.value))
-  }
+	// change number of cards per page
+	function handleItemsPerPage(
+		event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+	) {
+		setRows(parseInt(event.target.value));
+	}
 
-  return (
-    <TablePagination
-      component="nav"
-      count={count}
-      page={page}
-      labelRowsPerPage={labelRowsPerPage}
-      onPageChange={handlePageChange}
-      rowsPerPage={rows}
-      rowsPerPageOptions={rowsOptions}
-      onRowsPerPageChange={handleItemsPerPage}
-    />
-  )
+	return (
+		<TablePagination
+			component="nav"
+			count={count}
+			page={page}
+			labelRowsPerPage={labelRowsPerPage}
+			onPageChange={handlePageChange}
+			rowsPerPage={rows}
+			rowsPerPageOptions={rowsOptions}
+			onRowsPerPageChange={handleItemsPerPage}
+		/>
+	);
 }

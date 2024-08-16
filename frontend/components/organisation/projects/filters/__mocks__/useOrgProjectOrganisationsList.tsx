@@ -3,11 +3,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import mockOrganisationList from './org_project_participating_organisations_filter.json'
+import mockOrganisationList from './org_project_participating_organisations_filter.json';
 
 export default function useOrgProjectOrganisationList() {
-  // console.log('useOrgProjectOrganisationList...default mock')
-  return {
-    organisationList: mockOrganisationList
-  }
+	// console.log('useOrgProjectOrganisationList...default mock')
+	return {
+		organisationList: mockOrganisationList,
+	};
 }

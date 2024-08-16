@@ -3,8 +3,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Session} from '.'
-import logger from '../utils/logger'
+import {Session} from '.';
+import logger from '../utils/logger';
 
 /**
  * Refresh session by calling node api refresh endpoint.
@@ -13,30 +13,30 @@ import logger from '../utils/logger'
  * and the token validation requires a secret key (only available on the server).
  */
 export async function refreshSession(): Promise<Session | null> {
-  try {
-    const url = '/api/fe/token/refresh'
-    const resp = await fetch(url)
+	try {
+		const url = '/api/fe/token/refresh';
+		const resp = await fetch(url);
 
-    // console.group('refreshSession')
-    // console.log('url...', url)
-    // console.log('status...', resp.status)
-    // console.log('text...', resp.statusText)
-    // console.groupEnd()
+		// console.group('refreshSession')
+		// console.log('url...', url)
+		// console.log('status...', resp.status)
+		// console.log('text...', resp.statusText)
+		// console.groupEnd()
 
-    if (resp.status === 200) {
-      const data = await resp.json()
-      if (data?.session) {
-        return data.session
-      }
-      return null
-    } else {
-      logger(`refreshSession failed:" ${resp.statusText}`, 'error')
-      return null
-    }
-  } catch (e: any) {
-    logger(`refreshSession failed:" ${e?.message}`, 'error')
-    return null
-  }
+		if (resp.status === 200) {
+			const data = await resp.json();
+			if (data?.session) {
+				return data.session;
+			}
+			return null;
+		} else {
+			logger(`refreshSession failed:" ${resp.statusText}`, 'error');
+			return null;
+		}
+	} catch (e: any) {
+		logger(`refreshSession failed:" ${e?.message}`, 'error');
+		return null;
+	}
 }
 
-export default refreshSession
+export default refreshSession;

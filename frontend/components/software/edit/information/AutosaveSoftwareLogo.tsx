@@ -9,176 +9,178 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ChangeEvent} from 'react'
-import Button from '@mui/material/Button'
-import DeleteIcon from '@mui/icons-material/Delete'
-import {useFormContext} from 'react-hook-form'
+import {ChangeEvent} from 'react';
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import {useFormContext} from 'react-hook-form';
 
-import {softwareInformation as config} from '../editSoftwareConfig'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
-import {allowedImageMimeTypes, handleFileUpload} from '~/utils/handleFileUpload'
-import {useSession} from '~/auth'
-import useSnackbar from '~/components/snackbar/useSnackbar'
-import {EditSoftwareItem} from '~/types/SoftwareTypes'
-import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
-import {patchSoftwareTable} from './patchSoftwareTable'
+import {softwareInformation as config} from '../editSoftwareConfig';
+import EditSectionTitle from '~/components/layout/EditSectionTitle';
+import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder';
+import {
+	allowedImageMimeTypes,
+	handleFileUpload,
+} from '~/utils/handleFileUpload';
+import {useSession} from '~/auth';
+import useSnackbar from '~/components/snackbar/useSnackbar';
+import {EditSoftwareItem} from '~/types/SoftwareTypes';
+import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage';
+import {patchSoftwareTable} from './patchSoftwareTable';
 
 export default function AutosaveSoftwareLogo() {
-  const {token} = useSession()
-  const {showWarningMessage, showErrorMessage} = useSnackbar()
-  const {watch, setValue} = useFormContext<EditSoftwareItem>()
+	const {token} = useSession();
+	const {showWarningMessage, showErrorMessage} = useSnackbar();
+	const {watch, setValue} = useFormContext<EditSoftwareItem>();
 
-  const [
-    form_id, form_image_id, form_image_b64, form_image_mime_type
-  ] = watch([
-    'id', 'image_id', 'image_b64', 'image_mime_type'
-  ])
+	const [form_id, form_image_id, form_image_b64, form_image_mime_type] =
+		watch(['id', 'image_id', 'image_b64', 'image_mime_type']);
 
-  function imageUrl() {
-    if (form_image_b64 && form_image_b64.length > 10) {
-      return form_image_b64
-    }
-    if (form_image_id && form_image_id.length > 10) {
-      return getImageUrl(form_image_id)
-    }
-    return null
-  }
+	function imageUrl() {
+		if (form_image_b64 && form_image_b64.length > 10) {
+			return form_image_b64;
+		}
+		if (form_image_id && form_image_id.length > 10) {
+			return getImageUrl(form_image_id);
+		}
+		return null;
+	}
 
-  async function saveImage(image_b64: string, mime_type: string) {
-    let resp
-    // split base64 to use only encoded content
-    const data = image_b64.split(',')[1]
-    if (form_image_id) {
-      const patch = await patchSoftwareTable({
-        id: form_id,
-        data: {
-          image_id: null
-        },
-        token
-      })
-      if (patch.status === 200) {
-        // try to remove old image
-        // but don't wait for results
-        const del = await deleteImage({
-          id: form_image_id,
-          token
-        })
-      }
-    }
-    // add new image to db
-    resp = await upsertImage({
-      data,
-      mime_type,
-      token
-    })
-    if (resp.status !== 201) {
-      showErrorMessage(`Failed to save image. ${resp.message}`)
-      return
-    }
-    const patch = await patchSoftwareTable({
-      id:form_id,
-      data: {
-        image_id:resp.message
-      },
-      token
-    })
-    if (patch.status === 200) {
-      // update local value
-      setValue('image_id', resp.message)
-      // debugger
-    } else {
-      showErrorMessage(`Failed to save image. ${resp.message}`)
-    }
-  }
+	async function saveImage(image_b64: string, mime_type: string) {
+		let resp;
+		// split base64 to use only encoded content
+		const data = image_b64.split(',')[1];
+		if (form_image_id) {
+			const patch = await patchSoftwareTable({
+				id: form_id,
+				data: {
+					image_id: null,
+				},
+				token,
+			});
+			if (patch.status === 200) {
+				// try to remove old image
+				// but don't wait for results
+				const del = await deleteImage({
+					id: form_image_id,
+					token,
+				});
+			}
+		}
+		// add new image to db
+		resp = await upsertImage({
+			data,
+			mime_type,
+			token,
+		});
+		if (resp.status !== 201) {
+			showErrorMessage(`Failed to save image. ${resp.message}`);
+			return;
+		}
+		const patch = await patchSoftwareTable({
+			id: form_id,
+			data: {
+				image_id: resp.message,
+			},
+			token,
+		});
+		if (patch.status === 200) {
+			// update local value
+			setValue('image_id', resp.message);
+			// debugger
+		} else {
+			showErrorMessage(`Failed to save image. ${resp.message}`);
+		}
+	}
 
-  async function removeImage() {
-    // remove image
-    const resp = await patchSoftwareTable({
-      id: form_id,
-      data: {
-        image_id: null,
-      },
-      token
-    })
-    if (resp.status === 200) {
-      // clear all image values in the form
-      if (form_image_b64) setValue('image_b64', null)
-      if (form_image_mime_type) setValue('image_mime_type', null)
-      if (form_image_id) {
-        // try to remove old image
-        // but don't wait for results
-        const del = await deleteImage({
-          id: form_image_id,
-          token
-        })
-        setValue('image_id', null)
-      }
-    } else {
-      showErrorMessage(`Failed to remove image. ${resp.message}`)
-      return
-    }
-  }
+	async function removeImage() {
+		// remove image
+		const resp = await patchSoftwareTable({
+			id: form_id,
+			data: {
+				image_id: null,
+			},
+			token,
+		});
+		if (resp.status === 200) {
+			// clear all image values in the form
+			if (form_image_b64) setValue('image_b64', null);
+			if (form_image_mime_type) setValue('image_mime_type', null);
+			if (form_image_id) {
+				// try to remove old image
+				// but don't wait for results
+				const del = await deleteImage({
+					id: form_image_id,
+					token,
+				});
+				setValue('image_id', null);
+			}
+		} else {
+			showErrorMessage(`Failed to remove image. ${resp.message}`);
+			return;
+		}
+	}
 
-  async function onFileUpload(e:ChangeEvent<HTMLInputElement>|undefined) {
-    if (typeof e !== 'undefined') {
-      const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
-      if (status === 200 && image_b64 && image_mime_type) {
-        saveImage(image_b64, image_mime_type)
-      } else if (status===413) {
-        showWarningMessage(message)
-      } else {
-        showErrorMessage(message)
-      }
-    }
-  }
+	async function onFileUpload(e: ChangeEvent<HTMLInputElement> | undefined) {
+		if (typeof e !== 'undefined') {
+			const {status, message, image_b64, image_mime_type} =
+				await handleFileUpload(e);
+			if (status === 200 && image_b64 && image_mime_type) {
+				saveImage(image_b64, image_mime_type);
+			} else if (status === 413) {
+				showWarningMessage(message);
+			} else {
+				showErrorMessage(message);
+			}
+		}
+	}
 
-  function renderImageAttributes() {
-    // debugger
-    if (form_image_b64 === null && form_image_id === null) {
-      return null
-    }
-    return (
-      <Button
-        startIcon={<DeleteIcon />}
-        onClick={removeImage}
-        aria-label="Delete logo"
-      >
-        Delete logo
-      </Button>
-    )
-  }
+	function renderImageAttributes() {
+		// debugger
+		if (form_image_b64 === null && form_image_id === null) {
+			return null;
+		}
+		return (
+			<Button
+				startIcon={<DeleteIcon />}
+				onClick={removeImage}
+				aria-label="Delete logo"
+			>
+				Delete logo
+			</Button>
+		);
+	}
 
-  return (
-    <>
-      <EditSectionTitle
-        title={config.logo.label}
-        subtitle={config.logo.help}
-      />
+	return (
+		<>
+			<EditSectionTitle
+				title={config.logo.label}
+				subtitle={config.logo.help}
+			/>
 
-      <label htmlFor='upload-software-logo'
-        style={{cursor: 'pointer'}}
-        title="Click to upload a logo"
-      >
-        <ImageWithPlaceholder
-          placeholder="Click to upload a logo < 2MB"
-          src={imageUrl()}
-          alt={'logo'}
-          bgSize={'contain'}
-          bgPosition={'left center'}
-          className="w-full h-[9rem]"
-        />
-      </label>
+			<label
+				htmlFor="upload-software-logo"
+				style={{cursor: 'pointer'}}
+				title="Click to upload a logo"
+			>
+				<ImageWithPlaceholder
+					placeholder="Click to upload a logo < 2MB"
+					src={imageUrl()}
+					alt={'logo'}
+					bgSize={'contain'}
+					bgPosition={'left center'}
+					className="w-full h-[9rem]"
+				/>
+			</label>
 
-      <input
-        id="upload-software-logo"
-        type="file"
-        accept={allowedImageMimeTypes}
-        onChange={onFileUpload}
-        style={{display:'none'}}
-      />
+			<input
+				id="upload-software-logo"
+				type="file"
+				accept={allowedImageMimeTypes}
+				onChange={onFileUpload}
+				style={{display: 'none'}}
+			/>
 
-      {renderImageAttributes()}
-    </>
-  )
+			{renderImageAttributes()}
+		</>
+	);
 }

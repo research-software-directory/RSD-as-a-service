@@ -5,31 +5,33 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render,screen, fireEvent} from '@testing-library/react'
-import {WrappedComponentWithProps} from '../../utils/jest/WrappedComponents'
+import {render, screen, fireEvent} from '@testing-library/react';
+import {WrappedComponentWithProps} from '../../utils/jest/WrappedComponents';
 
-import UserMenu from './UserMenu'
-import {userMenuItems} from '~/config/menuItems'
+import UserMenu from './UserMenu';
+import {userMenuItems} from '~/config/menuItems';
 
 it('should render userMenu', () => {
-  render(WrappedComponentWithProps(UserMenu))
-  const userMenu = screen.queryByTestId('user-menu-button')
-  expect(userMenu).toBeInTheDocument()
-  // screen.debug()
-})
+	render(WrappedComponentWithProps(UserMenu));
+	const userMenu = screen.queryByTestId('user-menu-button');
+	expect(userMenu).toBeInTheDocument();
+	// screen.debug()
+});
 
-it('should have userMenu options',async()=>{
-  render(WrappedComponentWithProps(UserMenu, {
-    props: {menuOptions: userMenuItems}
-  }))
-  const menuButton = screen.queryByTestId('user-menu-button')
-  // click on the button to display menu options
-  expect(menuButton).toBeInTheDocument()
-  fireEvent.click(menuButton as HTMLElement)
-  // select all menu options
-  const menuOptions = screen.queryAllByTestId('user-menu-option')
-  // assert same length as defined in config/userMenuItems
-  const menuItems = userMenuItems.filter(item=>item?.type!=='divider')
-  expect(menuOptions.length).toEqual(menuItems.length)
-  // screen.debug()
-})
+it('should have userMenu options', async () => {
+	render(
+		WrappedComponentWithProps(UserMenu, {
+			props: {menuOptions: userMenuItems},
+		}),
+	);
+	const menuButton = screen.queryByTestId('user-menu-button');
+	// click on the button to display menu options
+	expect(menuButton).toBeInTheDocument();
+	fireEvent.click(menuButton as HTMLElement);
+	// select all menu options
+	const menuOptions = screen.queryAllByTestId('user-menu-option');
+	// assert same length as defined in config/userMenuItems
+	const menuItems = userMenuItems.filter(item => item?.type !== 'divider');
+	expect(menuOptions.length).toEqual(menuItems.length);
+	// screen.debug()
+});

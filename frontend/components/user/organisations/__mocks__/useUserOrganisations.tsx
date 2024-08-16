@@ -3,12 +3,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import organisationsByMaintainer from './organisationsByMaintainer.json'
+import organisationsByMaintainer from './organisationsByMaintainer.json';
 
 export default function useUserOrganisations() {
-
-  return {
-    organisations: organisationsByMaintainer,
-    loading: false
-  }
+	return {
+		organisations: organisationsByMaintainer,
+		loading: false,
+	};
 }

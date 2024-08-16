@@ -3,16 +3,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {SoftwareMentionProvider} from './SoftwareMentionContext'
-import SoftwareMentionTabs from './SoftwareMentionTabs'
+import {SoftwareMentionProvider} from './SoftwareMentionContext';
+import SoftwareMentionTabs from './SoftwareMentionTabs';
 
 export default function SoftwareMentionsPage() {
-
-  return (
-    <article>
-      <SoftwareMentionProvider>
-        <SoftwareMentionTabs />
-      </SoftwareMentionProvider>
-    </article>
-  )
+	return (
+		<article>
+			<SoftwareMentionProvider>
+				<SoftwareMentionTabs />
+			</SoftwareMentionProvider>
+		</article>
+	);
 }

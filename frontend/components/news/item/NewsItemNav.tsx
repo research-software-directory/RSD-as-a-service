@@ -3,18 +3,18 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import NewsItemBreadcrumbs from './NewsItemBreadcrumbs'
+import NewsItemBreadcrumbs from './NewsItemBreadcrumbs';
 
 type NewsItemHeaderProps = {
-  slug: string,
-  children: JSX.Element|JSX.Element[],
-}
+	slug: string;
+	children: JSX.Element | JSX.Element[];
+};
 
-export default function NewsItemNav({slug,children}:NewsItemHeaderProps) {
-  return (
-    <section className="flex md:gap-8 items-baseline py-4">
-      <NewsItemBreadcrumbs slug={[slug]} />
-      {children}
-    </section>
-  )
+export default function NewsItemNav({slug, children}: NewsItemHeaderProps) {
+	return (
+		<section className="flex md:gap-8 items-baseline py-4">
+			<NewsItemBreadcrumbs slug={[slug]} />
+			{children}
+		</section>
+	);
 }

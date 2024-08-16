@@ -3,93 +3,95 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {fireEvent, render, screen, waitFor, waitForElementToBeRemoved} from '@testing-library/react'
-import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
+import {
+	fireEvent,
+	render,
+	screen,
+	waitFor,
+	waitForElementToBeRemoved,
+} from '@testing-library/react';
+import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext';
 
-import AdminAnnoucementsPage from '~/components/admin/announcements/index'
-import {Session} from '~/auth'
+import AdminAnnoucementsPage from '~/components/admin/announcements/index';
+import {Session} from '~/auth';
 
 // MOCKS
-import {mockAnnoucement} from './__mocks__/apiAnnouncement'
+import {mockAnnoucement} from './__mocks__/apiAnnouncement';
 // api mock
-jest.mock('~/components/admin/announcements/apiAnnouncement')
+jest.mock('~/components/admin/announcements/apiAnnouncement');
 
 const testSession = {
-  ...mockSession,
-  user: {
-    ...mockSession.user,
-    role: 'rsd_admin'
-  }
-} as Session
-
+	...mockSession,
+	user: {
+		...mockSession.user,
+		role: 'rsd_admin',
+	},
+} as Session;
 
 describe('components/admin/announcements/index.tsx', () => {
+	beforeEach(() => {
+		jest.resetAllMocks();
+	});
 
-  beforeEach(() => {
-    jest.resetAllMocks()
-  })
+	it('shows progressbar initialy', () => {
+		render(
+			<WithAppContext options={{session: testSession}}>
+				<AdminAnnoucementsPage />
+			</WithAppContext>,
+		);
+		screen.getByRole('progressbar');
+		// screen.debug()
+	});
 
-  it('shows progressbar initialy', () => {
-    render(
-      <WithAppContext options={{session: testSession}}>
-        <AdminAnnoucementsPage />
-      </WithAppContext>
-    )
-    screen.getByRole('progressbar')
-    // screen.debug()
-  })
+	it('shows announcement returned from api', async () => {
+		render(
+			<WithAppContext options={{session: testSession}}>
+				<AdminAnnoucementsPage />
+			</WithAppContext>,
+		);
+		// wait for loader to be removed
+		await waitForElementToBeRemoved(screen.getByRole('progressbar'));
 
+		// get switch
+		const visible = screen.getByRole('checkbox');
+		// validate is ON
+		expect(visible).toBeChecked();
+		// get text
+		const announcement = screen.getByRole<HTMLInputElement>('textbox');
+		// validate text returmed from mocked api
+		expect(announcement.value).toEqual(mockAnnoucement.text);
 
-  it('shows announcement returned from api', async() => {
-    render(
-      <WithAppContext options={{session: testSession}}>
-        <AdminAnnoucementsPage />
-      </WithAppContext>
-    )
-    // wait for loader to be removed
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+		const saveBtn = screen.getByRole('button', {name: 'Save'});
+		expect(saveBtn).toBeDisabled();
+		// screen.debug()
+	});
 
-    // get switch
-    const visible = screen.getByRole('checkbox')
-    // validate is ON
-    expect(visible).toBeChecked()
-    // get text
-    const announcement = screen.getByRole<HTMLInputElement>('textbox')
-    // validate text returmed from mocked api
-    expect(announcement.value).toEqual(mockAnnoucement.text)
+	it('can turn off announcement', async () => {
+		render(
+			<WithAppContext options={{session: testSession}}>
+				<AdminAnnoucementsPage />
+			</WithAppContext>,
+		);
+		// wait for loader to be removed
+		await waitForElementToBeRemoved(screen.getByRole('progressbar'));
 
-    const saveBtn = screen.getByRole('button', {name: 'Save'})
-    expect(saveBtn).toBeDisabled()
-    // screen.debug()
-  })
+		// get switch
+		const visible = screen.getByRole('checkbox');
+		// validate is ON
+		expect(visible).toBeChecked();
 
-  it('can turn off announcement', async () => {
+		// initially save button is disabled
+		const saveBtn = screen.getByRole('button', {name: 'Save'});
+		expect(saveBtn).toBeDisabled();
 
-    render(
-      <WithAppContext options={{session: testSession}}>
-        <AdminAnnoucementsPage />
-      </WithAppContext>
-    )
-    // wait for loader to be removed
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+		// uncheck visible switch
+		fireEvent.click(visible);
 
-    // get switch
-    const visible = screen.getByRole('checkbox')
-    // validate is ON
-    expect(visible).toBeChecked()
-
-    // initially save button is disabled
-    const saveBtn = screen.getByRole('button', {name: 'Save'})
-    expect(saveBtn).toBeDisabled()
-
-    // uncheck visible switch
-    fireEvent.click(visible)
-
-    await waitFor(() => {
-      // save button should be enabled
-      expect(saveBtn).toBeEnabled()
-      // click on save button
-      fireEvent.click(saveBtn)
-    })
-  })
-})
+		await waitFor(() => {
+			// save button should be enabled
+			expect(saveBtn).toBeEnabled();
+			// click on save button
+			fireEvent.click(saveBtn);
+		});
+	});
+});

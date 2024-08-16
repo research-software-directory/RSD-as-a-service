@@ -6,56 +6,59 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
+import Link from 'next/link';
 
-import LogoAvatar from '~/components/layout/LogoAvatar'
+import LogoAvatar from '~/components/layout/LogoAvatar';
 
 export type CommunityItemProps = Readonly<{
-  slug: string
-  name: string
-  logo_url: string | null
-}>
+	slug: string;
+	name: string;
+	logo_url: string | null;
+}>;
 
-export default function CommunityItem({slug, name, logo_url}: CommunityItemProps) {
+export default function CommunityItem({
+	slug,
+	name,
+	logo_url,
+}: CommunityItemProps) {
+	function renderLogo() {
+		return (
+			<LogoAvatar
+				name={name}
+				src={logo_url ?? undefined}
+				sx={{
+					'& img': {
+						// height: 'auto',
+						maxHeight: '100%',
+						// width: 'auto',
+						maxWidth: '100%',
+						// we need to fit this one properly
+						objectFit: 'scale-down',
+					},
+				}}
+			/>
+		);
+	}
 
-  function renderLogo() {
-    return (
-      <LogoAvatar
-        name={name}
-        src={logo_url ?? undefined}
-        sx={{
-          '& img': {
-            // height: 'auto',
-            maxHeight: '100%',
-            // width: 'auto',
-            maxWidth: '100%',
-            // we need to fit this one properly
-            objectFit: 'scale-down'
-          }
-        }}
-      />
-    )
-  }
+	if (slug) {
+		// internal RSD link to community
+		return (
+			<Link
+				href={`/communities/${slug}/software`}
+				title={name}
+				className="flex flex-col items-center"
+				rel="noreferrer"
+				passHref
+			>
+				{renderLogo()}
+			</Link>
+		);
+	}
 
-  if (slug) {
-    // internal RSD link to community
-    return (
-      <Link href={`/communities/${slug}/software`}
-        title={name}
-        className="flex flex-col items-center" rel="noreferrer"
-        passHref
-      >
-        {renderLogo()}
-      </Link>
-    )
-  }
-
-  // should never happen
-  return (
-    <div
-      title={name}
-      className="flex">
-      {renderLogo()}
-    </div>
-  )
+	// should never happen
+	return (
+		<div title={name} className="flex">
+			{renderLogo()}
+		</div>
+	);
 }

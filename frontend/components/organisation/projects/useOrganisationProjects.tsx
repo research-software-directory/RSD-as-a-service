@@ -5,91 +5,114 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect,useMemo,useState} from 'react'
+import {useEffect, useMemo, useState} from 'react';
 
-import {useSession} from '~/auth'
-import {ProjectOfOrganisation} from '~/types/Organisation'
-import {decodeJsonParam} from '~/utils/extractQueryParam'
-import {getProjectsForOrganisation} from '../apiOrganisations'
-import useProjectParams from './useProjectParams'
-import useOrganisationContext from '../context/useOrganisationContext'
-import {getProjectOrderOptions} from './filters/OrgOrderProjectsBy'
-
+import {useSession} from '~/auth';
+import {ProjectOfOrganisation} from '~/types/Organisation';
+import {decodeJsonParam} from '~/utils/extractQueryParam';
+import {getProjectsForOrganisation} from '../apiOrganisations';
+import useProjectParams from './useProjectParams';
+import useOrganisationContext from '../context/useOrganisationContext';
+import {getProjectOrderOptions} from './filters/OrgOrderProjectsBy';
 
 type State = {
-  count: number,
-  data: ProjectOfOrganisation[]
-}
+	count: number;
+	data: ProjectOfOrganisation[];
+};
 
 export default function useOrganisationProjects() {
-  const {token} = useSession()
-  const {id,isMaintainer} = useOrganisationContext()
-  const {search, keywords_json, domains_json, organisations_json, project_status, order, page, rows} = useProjectParams()
-  // we need to memo orderOptions array to avoid useEffect dependency loop
-  const orderOptions = useMemo(()=>getProjectOrderOptions(isMaintainer),[isMaintainer])
+	const {token} = useSession();
+	const {id, isMaintainer} = useOrganisationContext();
+	const {
+		search,
+		keywords_json,
+		domains_json,
+		organisations_json,
+		project_status,
+		order,
+		page,
+		rows,
+	} = useProjectParams();
+	// we need to memo orderOptions array to avoid useEffect dependency loop
+	const orderOptions = useMemo(
+		() => getProjectOrderOptions(isMaintainer),
+		[isMaintainer],
+	);
 
-  const [state, setState] = useState<State>({
-    count: 0,
-    data: []
-  })
-  const [loading, setLoading] = useState(true)
+	const [state, setState] = useState<State>({
+		count: 0,
+		data: [],
+	});
+	const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let abort = false
-    let orderBy='slug.asc'
+	useEffect(() => {
+		let abort = false;
+		let orderBy = 'slug.asc';
 
-    async function getProjects() {
-      if (id) {
-        // set loding done
-        setLoading(true)
+		async function getProjects() {
+			if (id) {
+				// set loding done
+				setLoading(true);
 
-        if (order) {
-          // extract order direction from definitions
-          const orderInfo = orderOptions.find(item=>item.key===order)
-          // ordering options require "stable" secondary order
-          // to ensure proper pagination. We use slug for this purpose
-          if (orderInfo) orderBy=`${order}.${orderInfo.direction},slug.asc`
-        }
+				if (order) {
+					// extract order direction from definitions
+					const orderInfo = orderOptions.find(
+						item => item.key === order,
+					);
+					// ordering options require "stable" secondary order
+					// to ensure proper pagination. We use slug for this purpose
+					if (orderInfo)
+						orderBy = `${order}.${orderInfo.direction},slug.asc`;
+				}
 
-        const projects: State = await getProjectsForOrganisation({
-          organisation:id,
-          searchFor: search ?? undefined,
-          project_status: project_status ?? undefined,
-          keywords: decodeJsonParam(keywords_json,null),
-          domains: decodeJsonParam(domains_json,null),
-          organisations: decodeJsonParam(organisations_json,null),
-          order: orderBy ?? undefined,
-          // api works with zero
-          page:page ? page-1 : 0,
-          rows,
-          isMaintainer,
-          token
-        })
-        // abort
-        if (abort) return
-        // set state
-        setState(projects)
-        // set loding done
-        setLoading(false)
-      }
-    }
+				const projects: State = await getProjectsForOrganisation({
+					organisation: id,
+					searchFor: search ?? undefined,
+					project_status: project_status ?? undefined,
+					keywords: decodeJsonParam(keywords_json, null),
+					domains: decodeJsonParam(domains_json, null),
+					organisations: decodeJsonParam(organisations_json, null),
+					order: orderBy ?? undefined,
+					// api works with zero
+					page: page ? page - 1 : 0,
+					rows,
+					isMaintainer,
+					token,
+				});
+				// abort
+				if (abort) return;
+				// set state
+				setState(projects);
+				// set loding done
+				setLoading(false);
+			}
+		}
 
-    if (id) {
-      getProjects()
-    }
+		if (id) {
+			getProjects();
+		}
 
-    return () => { abort = true }
+		return () => {
+			abort = true;
+		};
+	}, [
+		search,
+		keywords_json,
+		domains_json,
+		organisations_json,
+		order,
+		page,
+		rows,
+		id,
+		token,
+		isMaintainer,
+		orderOptions,
+		project_status,
+	]);
 
-  }, [
-    search, keywords_json, domains_json,
-    organisations_json, order, page, rows,
-    id, token, isMaintainer, orderOptions,
-    project_status
-  ])
-
-  return {
-    projects:state.data,
-    count:state.count,
-    loading
-  }
+	return {
+		projects: state.data,
+		count: state.count,
+		loading,
+	};
 }

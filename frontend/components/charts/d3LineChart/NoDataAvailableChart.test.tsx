@@ -4,27 +4,27 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render,screen,within} from '@testing-library/react'
-import {WithAppContext} from '~/utils/jest/WithAppContext'
+import {render, screen, within} from '@testing-library/react';
+import {WithAppContext} from '~/utils/jest/WithAppContext';
 
-import NoDataAvailableChart from './NoDataAvailableChart'
+import NoDataAvailableChart from './NoDataAvailableChart';
 
 // MOCK resize obzerver hook
-jest.mock('./useResizeObserver')
+jest.mock('./useResizeObserver');
 
 it('renders no data chart message', () => {
-  const noDataMsg = 'This is test message'
+	const noDataMsg = 'This is test message';
 
-  render(
-    <WithAppContext>
-      <NoDataAvailableChart text={noDataMsg} />
-    </WithAppContext>
-  )
+	render(
+		<WithAppContext>
+			<NoDataAvailableChart text={noDataMsg} />
+		</WithAppContext>,
+	);
 
-  // check for main chart group with id d3-line-chart
-  const svgGroup = screen.getByTestId('no-data-chart')
-  expect(svgGroup).toBeInTheDocument()
+	// check for main chart group with id d3-line-chart
+	const svgGroup = screen.getByTestId('no-data-chart');
+	expect(svgGroup).toBeInTheDocument();
 
-  const message = within(svgGroup).getAllByText(noDataMsg)
-  expect(message.length).toBeGreaterThan(0)
-})
+	const message = within(svgGroup).getAllByText(noDataMsg);
+	expect(message.length).toBeGreaterThan(0);
+});

@@ -4,16 +4,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {TabKey, organistionTabItems} from './OrganisationTabItems'
+import {TabKey, organistionTabItems} from './OrganisationTabItems';
 
-export default function useSelectedTab(tab_id: TabKey|null): TabKey {
-  // default tab is software
-  let selected:TabKey = 'software'
+export default function useSelectedTab(tab_id: TabKey | null): TabKey {
+	// default tab is software
+	let selected: TabKey = 'software';
 
-  // if tab provided use it
-  if (tab_id !== null && organistionTabItems.hasOwnProperty(tab_id)) {
-    selected = tab_id
-  }
+	// if tab provided use it
+	if (tab_id !== null && organistionTabItems.hasOwnProperty(tab_id)) {
+		selected = tab_id;
+	}
 
-  return selected
+	return selected;
 }

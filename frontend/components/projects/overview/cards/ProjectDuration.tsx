@@ -5,19 +5,22 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {getMonthYearDate} from '~/utils/dateFn'
+import {getMonthYearDate} from '~/utils/dateFn';
 
 type ProjectDurationProps = {
-  date_start: string | null
-  date_end: string | null
-}
+	date_start: string | null;
+	date_end: string | null;
+};
 
-export default function ProjectDuration({date_start,date_end}:ProjectDurationProps) {
-  return (
-    <div className="text-sm text-base-content-secondary">
-      <span>{date_start ? getMonthYearDate(date_start) : 'N/A'}</span>
-      &nbsp;-&nbsp;
-      <span>{date_end ? getMonthYearDate(date_end) : 'N/A'}</span>
-    </div>
-  )
+export default function ProjectDuration({
+	date_start,
+	date_end,
+}: ProjectDurationProps) {
+	return (
+		<div className="text-sm text-base-content-secondary">
+			<span>{date_start ? getMonthYearDate(date_start) : 'N/A'}</span>
+			&nbsp;-&nbsp;
+			<span>{date_end ? getMonthYearDate(date_end) : 'N/A'}</span>
+		</div>
+	);
 }

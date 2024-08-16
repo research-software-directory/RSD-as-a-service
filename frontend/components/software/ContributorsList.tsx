@@ -6,124 +6,141 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
-import Button from '@mui/material/Button'
-import LaunchIcon from '@mui/icons-material/Launch'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import {useState} from 'react';
+import Button from '@mui/material/Button';
+import LaunchIcon from '@mui/icons-material/Launch';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
-import {getImageUrl} from '~/utils/editImage'
-import {getDisplayName, getDisplayInitials} from '~/utils/getDisplayName'
-import {Profile} from '~/types/Contributor'
-import PersonalInfo from './PersonalInfo'
-import useContributorList from './useContributorList'
-import ContributorAvatar from './ContributorAvatar'
+import {getImageUrl} from '~/utils/editImage';
+import {getDisplayName, getDisplayInitials} from '~/utils/getDisplayName';
+import {Profile} from '~/types/Contributor';
+import PersonalInfo from './PersonalInfo';
+import useContributorList from './useContributorList';
+import ContributorAvatar from './ContributorAvatar';
 
-type GetMoreIconButtonProps={
-  showAll: boolean
-  showLess: boolean
-  onShowAll: ()=>void
-  onShowLess: ()=>void
+type GetMoreIconButtonProps = {
+	showAll: boolean;
+	showLess: boolean;
+	onShowAll: () => void;
+	onShowLess: () => void;
+};
+
+function ShowButton({
+	showAll,
+	showLess,
+	onShowAll,
+	onShowLess,
+}: GetMoreIconButtonProps) {
+	// console.group('ShowToggleButton')
+	// console.log('showAll...', showAll)
+	// console.log('showLess...',showLess)
+	// console.groupEnd()
+	// show all button
+	if (showAll === true) {
+		return (
+			<div className="flex justify-start">
+				<Button
+					title="Show all items"
+					aria-label="Show all items"
+					onClick={onShowAll}
+					size="large"
+					startIcon={<ExpandMoreIcon />}
+				>
+					Show all
+				</Button>
+			</div>
+		);
+	}
+	// show top X items definied by limit
+	if (showLess === true) {
+		return (
+			<div className="flex justify-start">
+				<Button
+					title="Show less items"
+					aria-label="Show less items"
+					onClick={onShowLess}
+					size="large"
+					startIcon={<ExpandLessIcon />}
+				>
+					Show less
+				</Button>
+			</div>
+		);
+	}
+	// do not render button
+	return null;
 }
 
-function ShowButton({showAll,showLess,onShowAll,onShowLess}:GetMoreIconButtonProps){
-  // console.group('ShowToggleButton')
-  // console.log('showAll...', showAll)
-  // console.log('showLess...',showLess)
-  // console.groupEnd()
-  // show all button
-  if (showAll===true){
-    return (
-      <div className="flex justify-start">
-        <Button
-          title='Show all items'
-          aria-label="Show all items"
-          onClick={onShowAll}
-          size="large"
-          startIcon = {<ExpandMoreIcon />}
-        >
-          Show all
-        </Button>
-      </div>
-    )
-  }
-  // show top X items definied by limit
-  if (showLess===true){
-    return (
-      <div className="flex justify-start">
-        <Button
-          title='Show less items'
-          aria-label="Show less items"
-          onClick={onShowLess}
-          size="large"
-          startIcon = {<ExpandLessIcon />}
-        >
-          Show less
-        </Button>
-      </div>
-    )
-  }
-  // do not render button
-  return null
-}
+export default function ContributorsList({
+	contributors,
+	section = 'software',
+}: {
+	contributors: Profile[];
+	section: 'software' | 'projects';
+}) {
+	// show top 12 items
+	const topItems = 12;
+	const [limit, setLimit] = useState(topItems);
+	const {persons, hasMore} = useContributorList({
+		items: contributors,
+		limit,
+	});
+	// do not render component if no data
+	if (persons?.length === 0) return null;
 
-export default function ContributorsList({contributors,section='software'}: { contributors: Profile[],section:'software'|'projects'}) {
-  // show top 12 items
-  const topItems = 12
-  const [limit,setLimit] = useState(topItems)
-  const {persons,hasMore} = useContributorList({
-    items:contributors,
-    limit
-  })
-  // do not render component if no data
-  if (persons?.length === 0) return null
+	// console.group('ContributorsList')
+	// console.log('contributors...', contributors)
+	// console.log('persons...', persons)
+	// console.log('limit...',limit)
+	// console.log('hasMore...',hasMore)
+	// console.groupEnd()
 
-  // console.group('ContributorsList')
-  // console.log('contributors...', contributors)
-  // console.log('persons...', persons)
-  // console.log('limit...',limit)
-  // console.log('hasMore...',hasMore)
-  // console.groupEnd()
-
-  return (
-    <>
-      <div className="gap-4 mt-12 md:grid md:grid-cols-2 hd:grid-cols-3 2xl:mt-0">
-        {persons.map(item => {
-          const displayName = getDisplayName(item)
-          const avatarUrl = getImageUrl(item.avatar_id) ?? ''
-          if (displayName) {
-            return (
-              <div key={displayName} className="flex py-4 pr-4 md:pr-8 2xl:pr-12 2xl:pb-8">
-                <ContributorAvatar
-                  avatarUrl={avatarUrl}
-                  displayName={displayName}
-                  displayInitials={getDisplayInitials(item)}
-                />
-                <div className='flex-1'>
-                  <div className="text-xl font-medium">
-                    {item?.public_orcid_profile ?
-                      <a href={`/profile/${item.public_orcid_profile}/${section}`} className="flex gap-2 items-center">
-                        {displayName} <LaunchIcon sx={{width:'1rem'}}/>
-                      </a>
-                      :
-                      <span>{displayName}</span>
-                    }
-                  </div>
-                  <PersonalInfo {...item} />
-                </div>
-              </div>
-            )
-          }
-          return null
-        })
-        }
-      </div>
-      <ShowButton
-        showAll={hasMore}
-        showLess={contributors.length > topItems}
-        onShowAll={()=>setLimit(contributors.length)}
-        onShowLess={()=>setLimit(topItems)}
-      />
-    </>
-  )
+	return (
+		<>
+			<div className="gap-4 mt-12 md:grid md:grid-cols-2 hd:grid-cols-3 2xl:mt-0">
+				{persons.map(item => {
+					const displayName = getDisplayName(item);
+					const avatarUrl = getImageUrl(item.avatar_id) ?? '';
+					if (displayName) {
+						return (
+							<div
+								key={displayName}
+								className="flex py-4 pr-4 md:pr-8 2xl:pr-12 2xl:pb-8"
+							>
+								<ContributorAvatar
+									avatarUrl={avatarUrl}
+									displayName={displayName}
+									displayInitials={getDisplayInitials(item)}
+								/>
+								<div className="flex-1">
+									<div className="text-xl font-medium">
+										{item?.public_orcid_profile ?
+											<a
+												href={`/profile/${item.public_orcid_profile}/${section}`}
+												className="flex gap-2 items-center"
+											>
+												{displayName}{' '}
+												<LaunchIcon
+													sx={{width: '1rem'}}
+												/>
+											</a>
+										:	<span>{displayName}</span>}
+									</div>
+									<PersonalInfo {...item} />
+								</div>
+							</div>
+						);
+					}
+					return null;
+				})}
+			</div>
+			<ShowButton
+				showAll={hasMore}
+				showLess={contributors.length > topItems}
+				onShowAll={() => setLimit(contributors.length)}
+				onShowLess={() => setLimit(topItems)}
+			/>
+		</>
+	);
 }

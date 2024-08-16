@@ -7,53 +7,59 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useRef, useCallback} from 'react'
-import Button from '@mui/material/Button'
-import SaveIcon from '@mui/icons-material/Save'
+import {useEffect, useRef, useCallback} from 'react';
+import Button from '@mui/material/Button';
+import SaveIcon from '@mui/icons-material/Save';
 
 type SubmitButtonProps = {
-  formId: string
-  disabled: boolean
+	formId: string;
+	disabled: boolean;
 };
 
-export default function SubmitButtonWithListener({disabled,formId}: SubmitButtonProps) {
-  const btnRef = useRef<any>()
+export default function SubmitButtonWithListener({
+	disabled,
+	formId,
+}: SubmitButtonProps) {
+	const btnRef = useRef<any>();
 
-  const handleCtrlEnter = useCallback((event: KeyboardEvent) => {
-    if (event.key == 'Enter' && event.ctrlKey && disabled===false) {
-      btnRef.current.click()
-    }
-  }, [disabled])
+	const handleCtrlEnter = useCallback(
+		(event: KeyboardEvent) => {
+			if (event.key == 'Enter' && event.ctrlKey && disabled === false) {
+				btnRef.current.click();
+			}
+		},
+		[disabled],
+	);
 
-  // console.group('SubmitButtonWithListener')
-  // console.log('disabled...', disabled)
-  // console.groupEnd()
+	// console.group('SubmitButtonWithListener')
+	// console.log('disabled...', disabled)
+	// console.groupEnd()
 
-  useEffect(() => {
-    window.addEventListener('keydown', handleCtrlEnter)
-    return () => {
-      window.removeEventListener('keydown', handleCtrlEnter)
-    }
-  },[handleCtrlEnter])
+	useEffect(() => {
+		window.addEventListener('keydown', handleCtrlEnter);
+		return () => {
+			window.removeEventListener('keydown', handleCtrlEnter);
+		};
+	}, [handleCtrlEnter]);
 
-  return (
-    <Button
-      ref={btnRef}
-      type="submit"
-      id="save-button"
-      variant="contained"
-      tabIndex={0}
-      form={formId}
-      sx={{
-        // overwrite tailwind preflight.css for submit type
-        '&[type="submit"]:not(.Mui-disabled)': {
-          backgroundColor: 'primary.main',
-        },
-      }}
-      endIcon={<SaveIcon />}
-      disabled={disabled}
-    >
-      Save
-    </Button>
-  )
+	return (
+		<Button
+			ref={btnRef}
+			type="submit"
+			id="save-button"
+			variant="contained"
+			tabIndex={0}
+			form={formId}
+			sx={{
+				// overwrite tailwind preflight.css for submit type
+				'&[type="submit"]:not(.Mui-disabled)': {
+					backgroundColor: 'primary.main',
+				},
+			}}
+			endIcon={<SaveIcon />}
+			disabled={disabled}
+		>
+			Save
+		</Button>
+	);
 }

@@ -8,44 +8,41 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import OrderBy from '~/components/filter/OrderBy'
-import useSoftwareParams from '~/components/organisation/software/filters/useSoftwareParams'
-import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
-import useFilterQueryChange from '~/components/filter/useFilterQueryChange'
-import {useCommunityContext} from '../../context'
+import OrderBy from '~/components/filter/OrderBy';
+import useSoftwareParams from '~/components/organisation/software/filters/useSoftwareParams';
+import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy';
+import useFilterQueryChange from '~/components/filter/useFilterQueryChange';
+import {useCommunityContext} from '../../context';
 
 const adminOrderOptions = [
-  {key: 'is_published', label: 'Not published', direction: 'asc.nullslast'},
-]
+	{key: 'is_published', label: 'Not published', direction: 'asc.nullslast'},
+];
 
-export function getSoftwareOrderOptions(isMaintainer:boolean) {
-  if (isMaintainer) {
-    const order = [
-      ...softwareOrderOptions,
-      ...adminOrderOptions
-    ]
-    return order
-  } else {
-    return softwareOrderOptions
-  }
+export function getSoftwareOrderOptions(isMaintainer: boolean) {
+	if (isMaintainer) {
+		const order = [...softwareOrderOptions, ...adminOrderOptions];
+		return order;
+	} else {
+		return softwareOrderOptions;
+	}
 }
 
 export default function OrderCommunitySoftwareBy() {
-  const {isMaintainer} = useCommunityContext()
-  let {order} = useSoftwareParams()
-  const {handleQueryChange} = useFilterQueryChange()
-  const orderOptions = getSoftwareOrderOptions(isMaintainer)
+	const {isMaintainer} = useCommunityContext();
+	let {order} = useSoftwareParams();
+	const {handleQueryChange} = useFilterQueryChange();
+	const orderOptions = getSoftwareOrderOptions(isMaintainer);
 
-  const allowedOrderings = orderOptions.map(o => o.key)
-  if (order === null || !allowedOrderings.includes(order)) {
-    order = 'mention_cnt'
-  }
+	const allowedOrderings = orderOptions.map(o => o.key);
+	if (order === null || !allowedOrderings.includes(order)) {
+		order = 'mention_cnt';
+	}
 
-  return (
-    <OrderBy
-      order={order}
-      options={orderOptions}
-      handleQueryChange={handleQueryChange}
-    />
-  )
+	return (
+		<OrderBy
+			order={order}
+			options={orderOptions}
+			handleQueryChange={handleQueryChange}
+		/>
+	);
 }

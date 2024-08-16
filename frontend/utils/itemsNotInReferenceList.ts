@@ -9,21 +9,28 @@
  * @param param0
  * @returns items not in reference list
  */
-export function itemsNotInReferenceList<T>({list, referenceList, key}:
-  {list: T[], referenceList: T[], key: keyof T}) {
-  if (list.length > 0) {
-    // items not present in refrence list should be removed from db
-    const itemsNotInReferenceList = list.filter(item => {
-      const lId = item[key]
-      // if item cannot be found in reference
-      return !referenceList.some(item => {
-        const rId = item[key]
-        // compare inital item with items in saveList
-        return lId === rId
-      })
-    })
+export function itemsNotInReferenceList<T>({
+	list,
+	referenceList,
+	key,
+}: {
+	list: T[];
+	referenceList: T[];
+	key: keyof T;
+}) {
+	if (list.length > 0) {
+		// items not present in refrence list should be removed from db
+		const itemsNotInReferenceList = list.filter(item => {
+			const lId = item[key];
+			// if item cannot be found in reference
+			return !referenceList.some(item => {
+				const rId = item[key];
+				// compare inital item with items in saveList
+				return lId === rId;
+			});
+		});
 
-    return itemsNotInReferenceList
-  }
-  return []
+		return itemsNotInReferenceList;
+	}
+	return [];
 }

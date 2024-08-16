@@ -3,63 +3,60 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {fireEvent, render, screen, within} from '@testing-library/react'
-import {useForm} from 'react-hook-form'
+import {fireEvent, render, screen, within} from '@testing-library/react';
+import {useForm} from 'react-hook-form';
 
-import ControlledSelect, {ControlledSelectProps} from './ControlledSelect'
+import ControlledSelect, {ControlledSelectProps} from './ControlledSelect';
 
 const mockOptions = [
-  {label:'option 1', value:'option-1'},
-  {label:'option 2', value:'option-2'},
-]
+	{label: 'option 1', value: 'option-1'},
+	{label: 'option 2', value: 'option-2'},
+];
 
-const mockProps:ControlledSelectProps = {
-  name: 'Test name',
-  label: 'test label',
-  options: mockOptions,
-  disabled: false,
-  defaultValue: undefined,
-  control: undefined,
-  rules: undefined,
-  helperTextMessage:'Test help message'
-}
-
+const mockProps: ControlledSelectProps = {
+	name: 'Test name',
+	label: 'test label',
+	options: mockOptions,
+	disabled: false,
+	defaultValue: undefined,
+	control: undefined,
+	rules: undefined,
+	helperTextMessage: 'Test help message',
+};
 
 function WithFormControl() {
-  const {control} = useForm()
-  mockProps.control = control
-  return (
-    <ControlledSelect {...mockProps} />
-  )
+	const {control} = useForm();
+	mockProps.control = control;
+	return <ControlledSelect {...mockProps} />;
 }
 
 it('renders component with options', () => {
-  render(<WithFormControl />)
+	render(<WithFormControl />);
 
-  const select = screen.getByRole('button')
-  fireEvent.mouseDown(select)
+	const select = screen.getByRole('button');
+	fireEvent.mouseDown(select);
 
-  const options = screen.getAllByRole('option')
-  expect(options.length).toEqual(mockOptions.length)
-})
+	const options = screen.getAllByRole('option');
+	expect(options.length).toEqual(mockOptions.length);
+});
 
 it('select second option', () => {
-  render(<WithFormControl />)
+	render(<WithFormControl />);
 
-  // select wrapper/group
-  const selectGroup = screen.getByTestId('controlled-select')
-  expect(selectGroup).toBeInTheDocument()
+	// select wrapper/group
+	const selectGroup = screen.getByTestId('controlled-select');
+	expect(selectGroup).toBeInTheDocument();
 
-  // select button - for expanding
-  const select = within(selectGroup).getByRole('button')
-  fireEvent.mouseDown(select)
+	// select button - for expanding
+	const select = within(selectGroup).getByRole('button');
+	fireEvent.mouseDown(select);
 
-  const options = screen.getAllByRole('option')
-  // expect(options.length).toEqual(mockOptions.length)
-  fireEvent.click(options[1])
-  // select hidden input
-  const input = screen.getByRole('textbox', {
-    hidden:true
-  })
-  expect(input).toHaveValue(mockOptions[1].value)
-})
+	const options = screen.getAllByRole('option');
+	// expect(options.length).toEqual(mockOptions.length)
+	fireEvent.click(options[1]);
+	// select hidden input
+	const input = screen.getByRole('textbox', {
+		hidden: true,
+	});
+	expect(input).toHaveValue(mockOptions[1].value);
+});

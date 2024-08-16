@@ -4,17 +4,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {EditSoftwareProvider} from '~/components/software/edit/editSoftwareContext'
+import {EditSoftwareProvider} from '~/components/software/edit/editSoftwareContext';
 
 /**
  * Wraps tested component with the EditProjectProvider (context)
  * @param param0
  * @returns
  */
-export function WithSoftwareContext(props?:any) {
-  return (
-    <EditSoftwareProvider
-      {...props}
-    />
-  )
+export function WithSoftwareContext(props?: any) {
+	return <EditSoftwareProvider {...props} />;
 }

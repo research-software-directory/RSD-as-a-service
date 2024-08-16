@@ -3,27 +3,28 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {CustomLink} from '~/config/rsdSettingsReducer'
+import {CustomLink} from '~/config/rsdSettingsReducer';
 
-export default function CustomLinks({links=[]}:{links:CustomLink[]}) {
-  // if no custom markdown pages return null
-  if (links.length === 0) return null
+export default function CustomLinks({links = []}: {links: CustomLink[]}) {
+	// if no custom markdown pages return null
+	if (links.length === 0) return null;
 
-  // render links to markdown pages
-  return (
-    <>
-      {links.map(link => {
-        return (
-          <a
-            key={link.url}
-            href={link.url}
-            className="hover:text-primary"
-            target={link.target}
-            rel="noreferrer">
-            {link.label}
-          </a>
-        )
-      })}
-    </>
-  )
+	// render links to markdown pages
+	return (
+		<>
+			{links.map(link => {
+				return (
+					<a
+						key={link.url}
+						href={link.url}
+						className="hover:text-primary"
+						target={link.target}
+						rel="noreferrer"
+					>
+						{link.label}
+					</a>
+				);
+			})}
+		</>
+	);
 }

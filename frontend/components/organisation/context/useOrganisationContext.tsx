@@ -3,21 +3,22 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext} from 'react'
+import {useContext} from 'react';
 
-import OrganisationContext from './OrganisationContext'
+import OrganisationContext from './OrganisationContext';
 
 export default function useOrganisationContext() {
-  const {organisation, isMaintainer, updateOrganisation} = useContext(OrganisationContext)
-  // console.group('useOrganisationContext')
-  // console.log('organisation...', organisation)
-  // console.log('isMaintainer....', isMaintainer)
-  // console.log('loading....', loading)
-  // console.groupEnd()
+	const {organisation, isMaintainer, updateOrganisation} =
+		useContext(OrganisationContext);
+	// console.group('useOrganisationContext')
+	// console.log('organisation...', organisation)
+	// console.log('isMaintainer....', isMaintainer)
+	// console.log('loading....', loading)
+	// console.groupEnd()
 
-  return {
-    ...organisation,
-    isMaintainer,
-    updateOrganisation
-  }
+	return {
+		...organisation,
+		isMaintainer,
+		updateOrganisation,
+	};
 }

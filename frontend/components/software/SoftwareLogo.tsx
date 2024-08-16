@@ -5,25 +5,29 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {getImageUrl} from '~/utils/editImage'
-import ImageWithPlaceholder from '../layout/ImageWithPlaceholder'
+import {getImageUrl} from '~/utils/editImage';
+import ImageWithPlaceholder from '../layout/ImageWithPlaceholder';
 
-export default function SoftwareLogo(
-  {image_id, brand_name}: {image_id:string, brand_name:string}
-) {
-  const image_path = getImageUrl(image_id)
+export default function SoftwareLogo({
+	image_id,
+	brand_name,
+}: {
+	image_id: string;
+	brand_name: string;
+}) {
+	const image_path = getImageUrl(image_id);
 
-  if (image_path !== null ){
-    return (
-      <ImageWithPlaceholder
-        alt={`Logo of ${brand_name}`}
-        bgSize={'contain'}
-        bgPosition={'left center'}
-        src={image_path}
-        className="h-[9rem]"
-      />
-    )
-  }
-  // else return nothing
-  return null
+	if (image_path !== null) {
+		return (
+			<ImageWithPlaceholder
+				alt={`Logo of ${brand_name}`}
+				bgSize={'contain'}
+				bgPosition={'left center'}
+				src={image_path}
+				className="h-[9rem]"
+			/>
+		);
+	}
+	// else return nothing
+	return null;
 }

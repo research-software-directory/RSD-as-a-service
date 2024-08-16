@@ -3,10 +3,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export default function EditSection({children,className=''}:{children:any,className?:string}) {
-  return (
-    <section className={`flex-1 ${className}`}>
-      {children}
-    </section>
-  )
+export default function EditSection({
+	children,
+	className = '',
+}: {
+	children: any;
+	className?: string;
+}) {
+	return <section className={`flex-1 ${className}`}>{children}</section>;
 }

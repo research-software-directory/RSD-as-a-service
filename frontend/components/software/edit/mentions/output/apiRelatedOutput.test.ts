@@ -5,96 +5,94 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
+import {mockResolvedValueOnce} from '~/utils/jest/mockFetch';
 
 import {
-  findPublicationByTitle,
-  addNewMentionToSoftware,
-  addToMentionForSoftware,
-  removeMentionForSoftware
-} from './apiRelatedOutput'
-import mentionForSoftware from './__mocks__/outputForSoftware.json'
+	findPublicationByTitle,
+	addNewMentionToSoftware,
+	addToMentionForSoftware,
+	removeMentionForSoftware,
+} from './apiRelatedOutput';
+import mentionForSoftware from './__mocks__/outputForSoftware.json';
 
 beforeEach(() => {
-  jest.clearAllMocks()
-})
+	jest.clearAllMocks();
+});
 
 it('findPublicationByTitle', async () => {
-  const props = {
-    id: 'test-software-id',
-    searchFor: 'Test search',
-    token: 'TEST-TOKEN'
-  }
+	const props = {
+		id: 'test-software-id',
+		searchFor: 'Test search',
+		token: 'TEST-TOKEN',
+	};
 
-  const expectedUrl = `/api/fe/mention/software?id=${props.id}&search=${encodeURIComponent(props.searchFor)}`
-  const expectBody = {
-    'headers': {
-      'Authorization': `Bearer ${props.token}`,
-      'Content-Type': 'application/json'
-    },
-    'method': 'GET'
-  }
+	const expectedUrl = `/api/fe/mention/software?id=${props.id}&search=${encodeURIComponent(props.searchFor)}`;
+	const expectBody = {
+		headers: {
+			Authorization: `Bearer ${props.token}`,
+			'Content-Type': 'application/json',
+		},
+		method: 'GET',
+	};
 
-  mockResolvedValueOnce([])
+	mockResolvedValueOnce([]);
 
-  const resp = await findPublicationByTitle(props)
+	const resp = await findPublicationByTitle(props);
 
-  expect(global.fetch).toBeCalledTimes(1)
-  expect(global.fetch).toBeCalledWith(expectedUrl, expectBody)
-
-})
+	expect(global.fetch).toBeCalledTimes(1);
+	expect(global.fetch).toBeCalledWith(expectedUrl, expectBody);
+});
 
 it('addNewMentionToSoftware', async () => {
-  const props = {
-    software: 'test-software-id',
-    item: mentionForSoftware[0] as any,
-    token: 'TEST-TOKEN'
-  }
+	const props = {
+		software: 'test-software-id',
+		item: mentionForSoftware[0] as any,
+		token: 'TEST-TOKEN',
+	};
 
-  // resolve
-  mockResolvedValueOnce([mentionForSoftware[0]])
+	// resolve
+	mockResolvedValueOnce([mentionForSoftware[0]]);
 
-  const resp = await addNewMentionToSoftware(props)
+	const resp = await addNewMentionToSoftware(props);
 
-  expect(resp).toEqual({
-    status: 200,
-    message: mentionForSoftware[0]
-  })
-})
+	expect(resp).toEqual({
+		status: 200,
+		message: mentionForSoftware[0],
+	});
+});
 
 it('addToMentionForSoftware', async () => {
-  const props = {
-    software: 'test-software-id',
-    mention: mentionForSoftware[0] as any,
-    token: 'TEST-TOKEN'
-  }
+	const props = {
+		software: 'test-software-id',
+		mention: mentionForSoftware[0] as any,
+		token: 'TEST-TOKEN',
+	};
 
-  // resolve
-  mockResolvedValueOnce([])
+	// resolve
+	mockResolvedValueOnce([]);
 
-  const resp = await addToMentionForSoftware(props)
+	const resp = await addToMentionForSoftware(props);
 
-  expect(resp).toEqual({
-    status: 200,
-    message: props.mention
-  })
-})
+	expect(resp).toEqual({
+		status: 200,
+		message: props.mention,
+	});
+});
 
 it('removeMentionForSoftware', async () => {
-  const props = {
-    software: 'test-software-id',
-    mention: mentionForSoftware[0] as any,
-    token: 'TEST-TOKEN'
-  }
+	const props = {
+		software: 'test-software-id',
+		mention: mentionForSoftware[0] as any,
+		token: 'TEST-TOKEN',
+	};
 
-  // resolve
-  mockResolvedValueOnce([])
+	// resolve
+	mockResolvedValueOnce([]);
 
-  const resp = await removeMentionForSoftware(props)
+	const resp = await removeMentionForSoftware(props);
 
-  expect(resp).toEqual({
-    status: 200,
-    message: props.mention
-  })
-})
-
+	expect(resp).toEqual({
+		status: 200,
+		message: props.mention,
+	});
+});

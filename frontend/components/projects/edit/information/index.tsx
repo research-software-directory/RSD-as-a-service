@@ -4,31 +4,29 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useSession} from '~/auth'
-import ContentLoader from '~/components/layout/ContentLoader'
-import useProjectContext from '../useProjectContext'
-import useProjectToEdit from './useProjectToEdit'
-import ProjectInformationForm from './ProjectInformationForm'
+import {useSession} from '~/auth';
+import ContentLoader from '~/components/layout/ContentLoader';
+import useProjectContext from '../useProjectContext';
+import useProjectToEdit from './useProjectToEdit';
+import ProjectInformationForm from './ProjectInformationForm';
 
 export default function EditProjectInformation() {
-  const {token} = useSession()
-  const {project:{slug}} = useProjectContext()
-  const {project} = useProjectToEdit({slug,token})
+	const {token} = useSession();
+	const {
+		project: {slug},
+	} = useProjectContext();
+	const {project} = useProjectToEdit({slug, token});
 
-  // console.group('EditProjectInformation')
-  // console.log('token...', token)
-  // console.log('slug...', slug)
-  // console.log('loading...', loading)
-  // console.log('project...', project)
-  // console.groupEnd()
+	// console.group('EditProjectInformation')
+	// console.log('token...', token)
+	// console.log('slug...', slug)
+	// console.log('loading...', loading)
+	// console.log('project...', project)
+	// console.groupEnd()
 
-  if (project) {
-    return (
-      <ProjectInformationForm editProject={project} />
-    )
-  }
+	if (project) {
+		return <ProjectInformationForm editProject={project} />;
+	}
 
-  return (
-    <ContentLoader />
-  )
+	return <ContentLoader />;
 }

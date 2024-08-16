@@ -6,24 +6,22 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import MentionItemBase from './MentionItemBase'
-import {MentionItemProps} from '~/types/Mention'
-import MentionEditButtons from './MentionEditButtons'
+import MentionItemBase from './MentionItemBase';
+import {MentionItemProps} from '~/types/Mention';
+import MentionEditButtons from './MentionEditButtons';
 
 type MentionListItem = {
-  pos: number
-  item: MentionItemProps
-}
+	pos: number;
+	item: MentionItemProps;
+};
 
 export default function MentionEditItem({item, pos}: MentionListItem) {
-  return (
-    <MentionItemBase
-      item={item}
-      pos={pos}
-      nav={
-        <MentionEditButtons item={item}/>
-      }
-      role="list"
-    />
-  )
+	return (
+		<MentionItemBase
+			item={item}
+			pos={pos}
+			nav={<MentionEditButtons item={item} />}
+			role="list"
+		/>
+	);
 }

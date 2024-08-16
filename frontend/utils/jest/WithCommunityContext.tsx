@@ -6,17 +6,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {CommunityProvider} from '~/components/communities/context/index'
+import {CommunityProvider} from '~/components/communities/context/index';
 
 /**
  * Wraps tested component with the EditProjectProvider (context)
  * @param param0
  * @returns
  */
-export function WithCommunityContext(props?:any) {
-  return (
-    <CommunityProvider
-      {...props}
-    />
-  )
+export function WithCommunityContext(props?: any) {
+	return <CommunityProvider {...props} />;
 }

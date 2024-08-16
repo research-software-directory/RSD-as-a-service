@@ -3,22 +3,26 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import NoContent from '~/components/layout/NoContent'
-import {CommunityListProps} from '../apiCommunities'
-import CommunityListItem from './CommunityListItem'
+import NoContent from '~/components/layout/NoContent';
+import {CommunityListProps} from '../apiCommunities';
+import CommunityListItem from './CommunityListItem';
 
-
-export default function CommunitiesList({items}:{items:CommunityListProps[]}) {
-  if (typeof items == 'undefined' || items.length===0){
-    return <NoContent />
-  }
-  return (
-    <section
-      data-testid="communities-overview-list"
-      className="flex-1 my-12 flex flex-col gap-2">
-      {items.map((item) => (
-        <CommunityListItem key={item.slug} community={item} />
-      ))}
-    </section>
-  )
+export default function CommunitiesList({
+	items,
+}: {
+	items: CommunityListProps[];
+}) {
+	if (typeof items == 'undefined' || items.length === 0) {
+		return <NoContent />;
+	}
+	return (
+		<section
+			data-testid="communities-overview-list"
+			className="flex-1 my-12 flex flex-col gap-2"
+		>
+			{items.map(item => (
+				<CommunityListItem key={item.slug} community={item} />
+			))}
+		</section>
+	);
 }

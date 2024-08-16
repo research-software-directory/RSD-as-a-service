@@ -6,9 +6,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export const maintainers = {
-  title:'Maintainers',
-  inviteLink: {
-    title: 'Invite Maintainer',
-    subtitle: 'Create invite link <strong>per person</strong> and send an e-mail or share directly.'
-  }
-}
+	title: 'Maintainers',
+	inviteLink: {
+		title: 'Invite Maintainer',
+		subtitle:
+			'Create invite link <strong>per person</strong> and send an e-mail or share directly.',
+	},
+};

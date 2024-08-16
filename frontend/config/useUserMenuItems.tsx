@@ -3,20 +3,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {userMenuItems} from './menuItems'
-import {useSession} from '~/auth'
-import useRsdSettings from './useRsdSettings'
+import {userMenuItems} from './menuItems';
+import {useSession} from '~/auth';
+import useRsdSettings from './useRsdSettings';
 
-export default function useUserMenuItems(){
-  const {user} = useSession()
-  const {host} = useRsdSettings()
+export default function useUserMenuItems() {
+	const {user} = useSession();
+	const {host} = useRsdSettings();
 
-  const items = userMenuItems.filter(item=>{
-    if (item.active){
-      return item.active({role: user?.role, modules: host.modules})
-    }
-    return true
-  })
+	const items = userMenuItems.filter(item => {
+		if (item.active) {
+			return item.active({role: user?.role, modules: host.modules});
+		}
+		return true;
+	});
 
-  return items
+	return items;
 }

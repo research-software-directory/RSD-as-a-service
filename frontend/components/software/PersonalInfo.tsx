@@ -6,22 +6,30 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import OrcidLink from '../layout/OrcidLink'
+import OrcidLink from '../layout/OrcidLink';
 
 type PersonalInfoProps = {
-  role?: string | null
-  affiliation?: string | null
-  orcid?: string | null
-}
+	role?: string | null;
+	affiliation?: string | null;
+	orcid?: string | null;
+};
 
-export default function PersonalInfo({role, affiliation, orcid}:PersonalInfoProps) {
-  if(!(role || affiliation || orcid)) return null
+export default function PersonalInfo({
+	role,
+	affiliation,
+	orcid,
+}: PersonalInfoProps) {
+	if (!(role || affiliation || orcid)) return null;
 
-  return (
-    <div>
-      {role && <div>{role}</div>}
-      {affiliation && <div>{affiliation}</div>}
-      {orcid && <div><OrcidLink orcid={orcid} /></div>}
-    </div>
-  )
+	return (
+		<div>
+			{role && <div>{role}</div>}
+			{affiliation && <div>{affiliation}</div>}
+			{orcid && (
+				<div>
+					<OrcidLink orcid={orcid} />
+				</div>
+			)}
+		</div>
+	);
 }

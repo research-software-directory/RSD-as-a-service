@@ -10,20 +10,18 @@
 // import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
 // import FlareIcon from '@mui/icons-material/Flare'
 // import CampaignIcon from '@mui/icons-material/Campaign'
-import AutoAwesome from '@mui/icons-material/AutoAwesome'
+import AutoAwesome from '@mui/icons-material/AutoAwesome';
 
-export default function FeaturedIcon(){
-  return (
-    <span
-      title="Featured item"
-    >
-      <AutoAwesome
-        sx={{
-          width: '3rem',
-          height: '3rem',
-          opacity: '0.9'
-        }}
-      />
-    </span>
-  )
+export default function FeaturedIcon() {
+	return (
+		<span title="Featured item">
+			<AutoAwesome
+				sx={{
+					width: '3rem',
+					height: '3rem',
+					opacity: '0.9',
+				}}
+			/>
+		</span>
+	);
 }

@@ -5,10 +5,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export default function CardImageFrame({children}:{children:JSX.Element}) {
-  return (
-    <div className="h-[34%] flex overflow-hidden relative bg-base-100">
-      {children}
-    </div>
-  )
+export default function CardImageFrame({children}: {children: JSX.Element}) {
+	return (
+		<div className="h-[34%] flex overflow-hidden relative bg-base-100">
+			{children}
+		</div>
+	);
 }

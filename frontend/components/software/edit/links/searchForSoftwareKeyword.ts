@@ -8,40 +8,43 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import logger from '~/utils/logger'
-import {Keyword} from '~/components/keyword/FindKeyword'
-import {getBaseUrl} from '~/utils/fetchHelpers'
-
+import logger from '~/utils/logger';
+import {Keyword} from '~/components/keyword/FindKeyword';
+import {getBaseUrl} from '~/utils/fetchHelpers';
 
 // this is always frontend call
-export async function searchForSoftwareKeyword(
-  {searchFor}: { searchFor: string }
-) {
-  try {
-    const searchForEncoded = encodeURIComponent(searchFor)
-    const baseUrl = getBaseUrl()
-    let query = ''
-    if (searchForEncoded) {
-      query = `keyword=ilike.*${searchForEncoded}*&order=cnt.desc.nullslast,keyword.asc&limit=30`
-    } else {
-      query = 'order=cnt.desc.nullslast,keyword.asc&limit=30'
-    }
-    // GET top 30 matches
-    const url = `${baseUrl}/rpc/keyword_count_for_software?${query}`
-    const resp = await fetch(url, {
-      method: 'GET'
-    })
+export async function searchForSoftwareKeyword({
+	searchFor,
+}: {
+	searchFor: string;
+}) {
+	try {
+		const searchForEncoded = encodeURIComponent(searchFor);
+		const baseUrl = getBaseUrl();
+		let query = '';
+		if (searchForEncoded) {
+			query = `keyword=ilike.*${searchForEncoded}*&order=cnt.desc.nullslast,keyword.asc&limit=30`;
+		} else {
+			query = 'order=cnt.desc.nullslast,keyword.asc&limit=30';
+		}
+		// GET top 30 matches
+		const url = `${baseUrl}/rpc/keyword_count_for_software?${query}`;
+		const resp = await fetch(url, {
+			method: 'GET',
+		});
 
-    if (resp.status === 200) {
-      const json: Keyword[] = await resp.json()
-      return json
-    }
-    // return extractReturnMessage(resp, project ?? '')
-    logger(`searchForSoftwareKeyword: ${resp.status} ${resp.statusText}`, 'warn')
-    return []
-  } catch (e: any) {
-    logger(`searchForSoftwareKeyword: ${e?.message}`, 'error')
-    return []
-  }
+		if (resp.status === 200) {
+			const json: Keyword[] = await resp.json();
+			return json;
+		}
+		// return extractReturnMessage(resp, project ?? '')
+		logger(
+			`searchForSoftwareKeyword: ${resp.status} ${resp.statusText}`,
+			'warn',
+		);
+		return [];
+	} catch (e: any) {
+		logger(`searchForSoftwareKeyword: ${e?.message}`, 'error');
+		return [];
+	}
 }
-

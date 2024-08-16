@@ -6,13 +6,17 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export default function ProjectOverviewList({children}: { children: JSX.Element | JSX.Element[]}) {
-  return (
-    <section
-      data-testid="project-overview-list"
-      className="flex-1 flex flex-col gap-2 mt-2"
-    >
-      {children}
-    </section>
-  )
+export default function ProjectOverviewList({
+	children,
+}: {
+	children: JSX.Element | JSX.Element[];
+}) {
+	return (
+		<section
+			data-testid="project-overview-list"
+			className="flex-1 flex flex-col gap-2 mt-2"
+		>
+			{children}
+		</section>
+	);
 }

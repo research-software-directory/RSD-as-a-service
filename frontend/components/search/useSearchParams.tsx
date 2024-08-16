@@ -3,13 +3,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
+import {useRouter} from 'next/router';
 
-import {ssrBasicParams} from '~/utils/extractQueryParam'
-import {QueryParams,buildFilterUrl} from '~/utils/postgrestUrl'
-import {useUserSettings} from '~/config/UserSettingsContext'
+import {ssrBasicParams} from '~/utils/extractQueryParam';
+import {QueryParams, buildFilterUrl} from '~/utils/postgrestUrl';
+import {useUserSettings} from '~/config/UserSettingsContext';
 
-type RsdViews='organisations'|'communities'|'news'
+type RsdViews = 'organisations' | 'communities' | 'news';
 
 /**
  * Hook to extract basic query parameters rows, page and search from the url.
@@ -17,55 +17,55 @@ type RsdViews='organisations'|'communities'|'news'
  * @param view the route of the overview page (organisations | communities | news)
  * @returns handleQueryChange and resetFilters methods.
  */
-export default function useSearchParams(view:RsdViews){
-  const router = useRouter()
-  const {rsd_page_rows, setPageRows} = useUserSettings()
+export default function useSearchParams(view: RsdViews) {
+	const router = useRouter();
+	const {rsd_page_rows, setPageRows} = useUserSettings();
 
-  function createUrl(key: string, value: string | string[]) {
-    const params: QueryParams = {
-      // take existing params from url (query)
-      // basic params are search, page and rows
-      ...ssrBasicParams(router.query),
-      // overwrite with new value
-      [key]: value,
-    }
-    // on each param change we reset page
-    if (key !== 'page') {
-      params['page'] = 1
-    }
-    if (typeof params['rows'] === 'undefined' || params['rows'] === null) {
-      // use value from user settings if none provided
-      params['rows'] = rsd_page_rows
-    }
-    // construct url with all query params
-    const url = buildFilterUrl(params,view)
-    return url
-  }
+	function createUrl(key: string, value: string | string[]) {
+		const params: QueryParams = {
+			// take existing params from url (query)
+			// basic params are search, page and rows
+			...ssrBasicParams(router.query),
+			// overwrite with new value
+			[key]: value,
+		};
+		// on each param change we reset page
+		if (key !== 'page') {
+			params['page'] = 1;
+		}
+		if (typeof params['rows'] === 'undefined' || params['rows'] === null) {
+			// use value from user settings if none provided
+			params['rows'] = rsd_page_rows;
+		}
+		// construct url with all query params
+		const url = buildFilterUrl(params, view);
+		return url;
+	}
 
-  function handleQueryChange(key: string, value: string | string[]) {
-    const url = createUrl(key, value)
+	function handleQueryChange(key: string, value: string | string[]) {
+		const url = createUrl(key, value);
 
-    if (key === 'rows'){
-      // save number of rows in user settings (saves to cookie too)
-      setPageRows(parseInt(value.toString()))
-    }
-    if (key === 'page') {
-      // when changing page we scroll to top
-      router.push(url, url, {scroll: true})
-    } else {
-      // update page url but keep scroll position
-      router.push(url, url, {scroll: false})
-    }
-  }
+		if (key === 'rows') {
+			// save number of rows in user settings (saves to cookie too)
+			setPageRows(parseInt(value.toString()));
+		}
+		if (key === 'page') {
+			// when changing page we scroll to top
+			router.push(url, url, {scroll: true});
+		} else {
+			// update page url but keep scroll position
+			router.push(url, url, {scroll: false});
+		}
+	}
 
-  function resetFilters() {
-    // remove params from url and keep scroll position
-    router.push(router.pathname, router.pathname, {scroll: false})
-  }
+	function resetFilters() {
+		// remove params from url and keep scroll position
+		router.push(router.pathname, router.pathname, {scroll: false});
+	}
 
-  return {
-    handleQueryChange,
-    resetFilters,
-    createUrl
-  }
+	return {
+		handleQueryChange,
+		resetFilters,
+		createUrl,
+	};
 }

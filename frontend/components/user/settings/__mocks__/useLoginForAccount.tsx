@@ -4,10 +4,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export function useLoginForAccount() {
-  return {
-    loading:false,
-    accounts:[],
-    orcidLogin: undefined,
-    deleteLogin: jest.fn()
-  }
+	return {
+		loading: false,
+		accounts: [],
+		orcidLogin: undefined,
+		deleteLogin: jest.fn(),
+	};
 }

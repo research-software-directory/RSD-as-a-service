@@ -9,73 +9,78 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useFormContext} from 'react-hook-form'
-import {EditSoftwareItem} from '~/types/SoftwareTypes'
+import {useFormContext} from 'react-hook-form';
+import {EditSoftwareItem} from '~/types/SoftwareTypes';
 
-import EditSection from '~/components/layout/EditSection'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import AutosaveSoftwareTextField from '~/components/software/edit/information/AutosaveSoftwareTextField'
-import {config} from './config'
-import AutosaveRepositoryUrl from './AutosaveRepositoryUrl'
-import AutosaveConceptDoi from './AutosaveConceptDoi'
-import AutosaveSoftwareCategories from './AutosaveSoftwareCategories'
-import AutosaveSoftwareKeywords from './AutosaveSoftwareKeywords'
-import AutosaveSoftwareLicenses from './AutosaveSoftwareLicenses'
-import SoftwareLinksInfo from './SoftwareLinksInfo'
-import {ReorderedCategories, useReorderedCategories} from '~/utils/categories'
+import EditSection from '~/components/layout/EditSection';
+import EditSectionTitle from '~/components/layout/EditSectionTitle';
+import AutosaveSoftwareTextField from '~/components/software/edit/information/AutosaveSoftwareTextField';
+import {config} from './config';
+import AutosaveRepositoryUrl from './AutosaveRepositoryUrl';
+import AutosaveConceptDoi from './AutosaveConceptDoi';
+import AutosaveSoftwareCategories from './AutosaveSoftwareCategories';
+import AutosaveSoftwareKeywords from './AutosaveSoftwareKeywords';
+import AutosaveSoftwareLicenses from './AutosaveSoftwareLicenses';
+import SoftwareLinksInfo from './SoftwareLinksInfo';
+import {ReorderedCategories, useReorderedCategories} from '~/utils/categories';
 
 export default function EditSoftwareMetadataInputs() {
-  // use form context to interact with form data
-  const {watch} = useFormContext<EditSoftwareItem>()
-  // watch form data changes
-  const [id, get_started_url, categoryForSoftwareIds] = watch(['id', 'get_started_url', 'categoryForSoftwareIds'])
+	// use form context to interact with form data
+	const {watch} = useFormContext<EditSoftwareItem>();
+	// watch form data changes
+	const [id, get_started_url, categoryForSoftwareIds] = watch([
+		'id',
+		'get_started_url',
+		'categoryForSoftwareIds',
+	]);
 
-  const reorderedCategories: ReorderedCategories = useReorderedCategories(null)
+	const reorderedCategories: ReorderedCategories =
+		useReorderedCategories(null);
 
-  // console.group('EditSoftwareMetadataInputs')
-  // console.log('editSoftware...', editSoftware)
-  // console.log('formData...', formData)
-  // console.groupEnd()
+	// console.group('EditSoftwareMetadataInputs')
+	// console.log('editSoftware...', editSoftware)
+	// console.log('formData...', formData)
+	// console.groupEnd()
 
-  return (
-    <EditSection className='xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem] py-4'>
-      <div className="overflow-hidden">
-        <EditSectionTitle
-          title='Software URLs'
-          subtitle='Links to the source code repository of your software and a webpage explaining how to use it.'
-        />
-        <AutosaveRepositoryUrl />
-        <div className="py-3"></div>
-        <AutosaveSoftwareTextField
-          software_id={id}
-          options={{
-            name: 'get_started_url',
-            label: config.get_started_url.label,
-            useNull: true,
-            defaultValue: get_started_url,
-            helperTextMessage: config.get_started_url.help,
-            helperTextCnt: `${get_started_url?.length || 0}/${config.get_started_url.validation.maxLength.value}`,
-          }}
-          rules={config.get_started_url.validation}
-        />
-        <div className="py-2"></div>
-        <AutosaveConceptDoi />
-        <div className="py-2"></div>
-        <AutosaveSoftwareLicenses />
-        <div className="py-2"></div>
-        <AutosaveSoftwareKeywords />
-        {/* add white space at the bottom */}
-        {/* <div className="py-4"></div> */}
-        {/* dynamically shown if enabled/used */}
-        <AutosaveSoftwareCategories
-          softwareId={id}
-          reorderedCategories={reorderedCategories}
-          associatedCategoryIds={categoryForSoftwareIds}
-        />
-      </div>
-      <div className="min-w-[21rem]">
-        <SoftwareLinksInfo reorderedCategories={reorderedCategories}/>
-      </div>
-    </EditSection>
-  )
+	return (
+		<EditSection className="xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem] py-4">
+			<div className="overflow-hidden">
+				<EditSectionTitle
+					title="Software URLs"
+					subtitle="Links to the source code repository of your software and a webpage explaining how to use it."
+				/>
+				<AutosaveRepositoryUrl />
+				<div className="py-3"></div>
+				<AutosaveSoftwareTextField
+					software_id={id}
+					options={{
+						name: 'get_started_url',
+						label: config.get_started_url.label,
+						useNull: true,
+						defaultValue: get_started_url,
+						helperTextMessage: config.get_started_url.help,
+						helperTextCnt: `${get_started_url?.length || 0}/${config.get_started_url.validation.maxLength.value}`,
+					}}
+					rules={config.get_started_url.validation}
+				/>
+				<div className="py-2"></div>
+				<AutosaveConceptDoi />
+				<div className="py-2"></div>
+				<AutosaveSoftwareLicenses />
+				<div className="py-2"></div>
+				<AutosaveSoftwareKeywords />
+				{/* add white space at the bottom */}
+				{/* <div className="py-4"></div> */}
+				{/* dynamically shown if enabled/used */}
+				<AutosaveSoftwareCategories
+					softwareId={id}
+					reorderedCategories={reorderedCategories}
+					associatedCategoryIds={categoryForSoftwareIds}
+				/>
+			</div>
+			<div className="min-w-[21rem]">
+				<SoftwareLinksInfo reorderedCategories={reorderedCategories} />
+			</div>
+		</EditSection>
+	);
 }

@@ -5,35 +5,36 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Button from '@mui/material/Button'
-import AddIcon from '@mui/icons-material/Add'
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 
-import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
-import {newMentionItem} from '~/utils/editMentions'
-import {cfgImpact as config} from './config'
-import CreateMentionInfoPanel from '~/components/mention/CreateMentionInfoPanel'
+import useEditMentionReducer from '~/components/mention/useEditMentionReducer';
+import {newMentionItem} from '~/utils/editMentions';
+import {cfgImpact as config} from './config';
+import CreateMentionInfoPanel from '~/components/mention/CreateMentionInfoPanel';
 
 export default function AddImpact() {
-  const {setEditModal} = useEditMentionReducer()
+	const {setEditModal} = useEditMentionReducer();
 
-  function onNewImpact() {
-    const item = newMentionItem()
-    setEditModal(item)
-  }
+	function onNewImpact() {
+		const item = newMentionItem();
+		setEditModal(item);
+	}
 
-  return (
-    <>
-      <h3 className="pt-4 pb-2 text-lg">{config.newItem.title}</h3>
-      <CreateMentionInfoPanel>
-        <div className="pt-4">
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={onNewImpact}>
-          Create
-          </Button>
-        </div>
-      </CreateMentionInfoPanel>
-    </>
-  )
+	return (
+		<>
+			<h3 className="pt-4 pb-2 text-lg">{config.newItem.title}</h3>
+			<CreateMentionInfoPanel>
+				<div className="pt-4">
+					<Button
+						variant="contained"
+						startIcon={<AddIcon />}
+						onClick={onNewImpact}
+					>
+						Create
+					</Button>
+				</div>
+			</CreateMentionInfoPanel>
+		</>
+	);
 }

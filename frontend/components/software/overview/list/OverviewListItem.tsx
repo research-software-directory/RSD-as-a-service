@@ -6,18 +6,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
 type OverviewListItemProps = {
-  children: JSX.Element | JSX.Element[],
-  className?: string
-}
+	children: JSX.Element | JSX.Element[];
+	className?: string;
+};
 
 export default function OverviewListItem({
-  children,
-  className=''
+	children,
+	className = '',
 }: OverviewListItemProps) {
-  return (
-    <div className={`flex-1 flex items-center transition shadow-sm border bg-base-100 rounded hover:shadow-lg ${className ?? ''}`}
-    >
-      {children}
-    </div>
-  )
+	return (
+		<div
+			className={`flex-1 flex items-center transition shadow-sm border bg-base-100 rounded hover:shadow-lg ${className ?? ''}`}
+		>
+			{children}
+		</div>
+	);
 }

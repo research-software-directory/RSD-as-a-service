@@ -6,40 +6,45 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useSession} from '~/auth'
-import ImportMentions from '~/components/mention/ImportMentions/index'
-import ImportMentionsInfoPanel from '~/components/mention/ImportMentions/ImportMentionsInfoPanel'
-import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
-import useProjectContext from '~/components/projects/edit/useProjectContext'
-import {getMentionsForProject} from '~/utils/getProjects'
-import {useProjectMentionContext} from '../ProjectMentionContext'
-import {cfgImpact as config} from './config'
+import {useSession} from '~/auth';
+import ImportMentions from '~/components/mention/ImportMentions/index';
+import ImportMentionsInfoPanel from '~/components/mention/ImportMentions/ImportMentionsInfoPanel';
+import useEditMentionReducer from '~/components/mention/useEditMentionReducer';
+import useProjectContext from '~/components/projects/edit/useProjectContext';
+import {getMentionsForProject} from '~/utils/getProjects';
+import {useProjectMentionContext} from '../ProjectMentionContext';
+import {cfgImpact as config} from './config';
 
 export default function ImportProjectImpact() {
-  const {project} = useProjectContext()
-  const {setMentions, setLoading} = useEditMentionReducer()
-  const {token} = useSession()
-  const {setImpactCnt} = useProjectMentionContext()
+	const {project} = useProjectContext();
+	const {setMentions, setLoading} = useEditMentionReducer();
+	const {token} = useSession();
+	const {setImpactCnt} = useProjectMentionContext();
 
-  async function reloadImpact() {
-    setLoading(true)
-    const data = await getMentionsForProject({project: project.id,table:'impact_for_project',token: token})
-    setMentions(data)
-    setImpactCnt(data?.length ?? 0)
-    setLoading(false)
-  }
+	async function reloadImpact() {
+		setLoading(true);
+		const data = await getMentionsForProject({
+			project: project.id,
+			table: 'impact_for_project',
+			token: token,
+		});
+		setMentions(data);
+		setImpactCnt(data?.length ?? 0);
+		setLoading(false);
+	}
 
-  return (
-    <>
-      <h3 className="pt-4 pb-2 text-lg">{config.builkImport.title}</h3>
-      <ImportMentionsInfoPanel>
-        <div className="pt-4">
-          <ImportMentions
-            table="impact_for_project"
-            entityId={project.id!}
-            onSuccess={reloadImpact} />
-        </div>
-      </ImportMentionsInfoPanel>
-    </>
-  )
+	return (
+		<>
+			<h3 className="pt-4 pb-2 text-lg">{config.builkImport.title}</h3>
+			<ImportMentionsInfoPanel>
+				<div className="pt-4">
+					<ImportMentions
+						table="impact_for_project"
+						entityId={project.id!}
+						onSuccess={reloadImpact}
+					/>
+				</div>
+			</ImportMentionsInfoPanel>
+		</>
+	);
 }

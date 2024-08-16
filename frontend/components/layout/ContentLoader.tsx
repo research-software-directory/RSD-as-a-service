@@ -3,13 +3,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import ContentInTheMiddle from './ContentInTheMiddle'
-import CircularProgress from '@mui/material/CircularProgress'
+import ContentInTheMiddle from './ContentInTheMiddle';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function ContentLoader() {
-  return (
-    <ContentInTheMiddle>
-      <CircularProgress />
-    </ContentInTheMiddle>
-  )
+	return (
+		<ContentInTheMiddle>
+			<CircularProgress />
+		</ContentInTheMiddle>
+	);
 }

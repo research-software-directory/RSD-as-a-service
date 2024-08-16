@@ -3,11 +3,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import mockStatusList from './org_project_status_filter.json'
+import mockStatusList from './org_project_status_filter.json';
 
 export default function useOrgProjectStatusList() {
-  // console.log('useOrgProjectStatusList...default mock')
-  return {
-    statusList: mockStatusList
-  }
+	// console.log('useOrgProjectStatusList...default mock')
+	return {
+		statusList: mockStatusList,
+	};
 }

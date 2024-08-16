@@ -7,63 +7,63 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext} from 'react'
-import Input from '@mui/material/Input'
-import InputAdornment from '@mui/material/InputAdornment'
-import ClearIcon from '@mui/icons-material/Clear'
+import {useContext} from 'react';
+import Input from '@mui/material/Input';
+import InputAdornment from '@mui/material/InputAdornment';
+import ClearIcon from '@mui/icons-material/Clear';
 
-import SearchContext from './SearchContext'
+import SearchContext from './SearchContext';
 
 export default function Searchbox() {
-  const {searchInput,setSearchInput,placeholder,setSearchFor} = useContext(SearchContext)
+	const {searchInput, setSearchInput, placeholder, setSearchFor} =
+		useContext(SearchContext);
 
-  return (
-    <Input
-      id="search-input"
-      autoComplete='off'
-      placeholder={placeholder}
-      value={searchInput}
-      sx={{
-        flex:1,
-        minWidth: '15rem'
-      }}
-      onChange={({target})=>{
-        setSearchInput(target.value)
-      }}
-      onKeyDown={(event)=>{
-        // pass search value on enter
-        if (event.key.toLowerCase()==='enter'){
-          setSearchFor(searchInput)
-        }
-      }}
-      // DEPRECATED
-      // onKeyPress={(event)=>{
-      //   // pass search value on enter
-      //   if (event.key.toLowerCase()==='enter'){
-      //     setSearchFor(searchInput)
-      //   }
-      // }}
-      /* Icon search for the input */
-      // startAdornment={
-      //   <InputAdornment position="start">
-      //     <SearchIcon
-      //       sx={{cursor: 'pointer'}}
-      //       onClick={() => setSearchFor(searchInput)} />
-      //   </InputAdornment>
-      // }
-      endAdornment={
-        <InputAdornment position="start">
-          {searchInput ?
-            <ClearIcon
-              sx={{cursor:'pointer'}}
-              onClick={()=>{
-                setSearchInput('')
-              }}
-            />
-            :null
-          }
-        </InputAdornment>
-      }
-    />
-  )
+	return (
+		<Input
+			id="search-input"
+			autoComplete="off"
+			placeholder={placeholder}
+			value={searchInput}
+			sx={{
+				flex: 1,
+				minWidth: '15rem',
+			}}
+			onChange={({target}) => {
+				setSearchInput(target.value);
+			}}
+			onKeyDown={event => {
+				// pass search value on enter
+				if (event.key.toLowerCase() === 'enter') {
+					setSearchFor(searchInput);
+				}
+			}}
+			// DEPRECATED
+			// onKeyPress={(event)=>{
+			//   // pass search value on enter
+			//   if (event.key.toLowerCase()==='enter'){
+			//     setSearchFor(searchInput)
+			//   }
+			// }}
+			/* Icon search for the input */
+			// startAdornment={
+			//   <InputAdornment position="start">
+			//     <SearchIcon
+			//       sx={{cursor: 'pointer'}}
+			//       onClick={() => setSearchFor(searchInput)} />
+			//   </InputAdornment>
+			// }
+			endAdornment={
+				<InputAdornment position="start">
+					{searchInput ?
+						<ClearIcon
+							sx={{cursor: 'pointer'}}
+							onClick={() => {
+								setSearchInput('');
+							}}
+						/>
+					:	null}
+				</InputAdornment>
+			}
+		/>
+	);
 }

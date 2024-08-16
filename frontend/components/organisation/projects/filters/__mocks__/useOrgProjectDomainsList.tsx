@@ -3,12 +3,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import mockDomainsList from './mockProjectDomainsList.json'
+import mockDomainsList from './mockProjectDomainsList.json';
 
 export default function useOrgProjectDomainsFilter() {
-  // console.log('useOrgProjectDomainsFilter...default mock')
-  return {
-    domainsList: mockDomainsList
-  }
-
+	// console.log('useOrgProjectDomainsFilter...default mock')
+	return {
+		domainsList: mockDomainsList,
+	};
 }
