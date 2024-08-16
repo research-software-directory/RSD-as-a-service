@@ -5,6 +5,9 @@
 
 module.exports = [
 	{
+		ignores: ['.next/', 'coverage/'],
+	},
+	{
 		rules: {
 			'no-debugger': 'warn',
 			'no-console': 'warn',
