@@ -29,8 +29,8 @@ jobs:
       - name: "install node v20.10 and cash yarn"
         uses: actions/setup-node@v4
         with:
-          node-version: 20.10
-          cache: 'yarn'
+          node-version: "20.10"
+          cache: "yarn"
           cache-dependency-path: frontend/yarn.lock
       - name: "install dependencies"
         working-directory: frontend
