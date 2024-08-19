@@ -8,7 +8,7 @@
 
 // used to support fetch with Jest
 import 'whatwg-fetch'
-// specific
+// custom matchers for jest
 import '@testing-library/jest-dom'
 
 // retry 2 times

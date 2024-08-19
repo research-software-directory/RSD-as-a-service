@@ -18,7 +18,7 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   // moduleDirectories: ['./node_modules', './frontend'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'jest-environment-jsdom',
+  testEnvironment: 'jsdom',
   // use only files with *.test.js
   testMatch: [
     '**/*.test.{js,jsx,ts,tsx}'
