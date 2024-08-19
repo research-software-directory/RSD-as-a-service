@@ -22,7 +22,8 @@ import {projectInformation as config} from './config'
 import {patchProjectTable} from './patchProjectInfo'
 import {upsertImage,deleteImage} from '~/utils/editImage'
 import {ChangeEvent} from 'react'
-import {allowedImageMimeTypes, handleFileUpload} from '~/utils/handleFileUpload'
+import {handleFileUpload} from '~/utils/handleFileUpload'
+import ImageInput from '~/components/form/ImageInput'
 
 export default function AutosaveProjectImage() {
   const {token} = useSession()
@@ -211,12 +212,9 @@ export default function AutosaveProjectImage() {
         />
       </label>
 
-      <input
+      <ImageInput
         id="upload-avatar-image"
-        type="file"
-        accept={allowedImageMimeTypes}
         onChange={onFileUpload}
-        style={{display:'none'}}
       />
 
       {renderImageAttributes()}
