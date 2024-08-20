@@ -28,6 +28,10 @@ const mockProps = {
   onSuccess: jest.fn()
 }
 
+beforeEach(()=>{
+  jest.clearAllMocks()
+})
+
 it('add custom page', async() => {
   render(
     <WithAppContext options={{session:mockSession}}>
@@ -55,11 +59,20 @@ it('add custom page', async() => {
   const saveBtn = screen.getByRole('button', {
     name: 'Save'
   })
+  expect(saveBtn).toBeEnabled()
+  fireEvent.click(saveBtn)
+
   await waitFor(() => {
-    expect(saveBtn).toBeEnabled()
-    // click to save
-    fireEvent.click(saveBtn)
     // validate call
     expect(mockAddMarkdownPage).toBeCalledTimes(1)
+    expect(mockAddMarkdownPage).toBeCalledWith({
+      'page':{
+        'is_published': false,
+        'position': 1,
+        'slug': 'test-title',
+        'title': 'Test title',
+      },
+      'token': 'TEST_TOKEN',
+    })
   })
 })

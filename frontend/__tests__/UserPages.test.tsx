@@ -16,6 +16,7 @@ import mockSoftwareByMaintainer from '~/components/user/software/__mocks__/softw
 import mockProjectsByMaintainer from '~/components/user/project/__mocks__/projectsByMaintainer.json'
 import mockOrganisationsByMaintainer from '~/components/user/organisations/__mocks__/organisationsByMaintainer.json'
 import mockCommunitiesByMaintainer from '~/components/user/communities/__mocks__/communitiesByMaintainer.json'
+import {UserPageId} from '~/components/user/UserNavItems'
 // use DEFAULT MOCK for login providers list
 // required when AppHeader component is used
 jest.mock('~/auth/api/useLoginProviders')
@@ -27,8 +28,6 @@ jest.mock('~/components/user/settings/useLoginForAccount')
 jest.mock('~/components/user/project/useUserProjects')
 // MOCK user software list
 jest.mock('~/components/user/software/useUserSoftware')
-// MOCK user software list
-jest.mock('~/components/user/software/useUserSoftware')
 // MOCK user organisation list
 jest.mock('~/components/user/organisations/useUserOrganisations')
 // MOCK user communities list
@@ -36,14 +35,16 @@ jest.mock('~/components/user/communities/useUserCommunities')
 
 // MOCKS
 const mockProps = {
-  section: 'software',
+  section: 'software' as UserPageId,
   counts: {
     software_cnt: 0,
     project_cnt: 0,
     organisation_cnt: 0,
     community_cnt: 0
   },
-  orcidAuthLink:null
+  orcidAuthLink:null,
+  rsd_page_rows: 12,
+  showSearch: false
 }
 
 describe('pages/user/[section].tsx', () => {
@@ -93,6 +94,7 @@ describe('pages/user/[section].tsx', () => {
   })
 
   it('renders user software section', async() => {
+
     mockProps.section = 'software'
 
     render(
@@ -102,8 +104,9 @@ describe('pages/user/[section].tsx', () => {
     )
 
     // validate software cards are shown
-    const software = screen.getAllByTestId('software-list-item')
+    const software = await screen.findAllByTestId('software-list-item')
     expect(software.length).toEqual(mockSoftwareByMaintainer.length)
+
   })
 
   it('renders user projects section', async() => {
@@ -116,7 +119,7 @@ describe('pages/user/[section].tsx', () => {
     )
 
     // validate project cards are shown
-    const project = screen.getAllByTestId('project-list-item')
+    const project = await screen.findAllByTestId('project-list-item')
     expect(project.length).toEqual(mockProjectsByMaintainer.length)
   })
 
@@ -130,7 +133,7 @@ describe('pages/user/[section].tsx', () => {
     )
 
     // validate project cards are shown
-    const project = screen.getAllByTestId('organisation-list-item')
+    const project = await screen.findAllByTestId('organisation-list-item')
     expect(project.length).toEqual(mockOrganisationsByMaintainer.length)
   })
 
@@ -143,8 +146,8 @@ describe('pages/user/[section].tsx', () => {
       </WithAppContext>
     )
 
-    // validate project cards are shown
-    const project = screen.getAllByTestId('community-list-item')
+    // validate community cards are shown
+    const project = await screen.findAllByTestId('community-list-item')
     expect(project.length).toEqual(mockCommunitiesByMaintainer.length)
   })
 

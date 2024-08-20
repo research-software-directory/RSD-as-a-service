@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,7 +19,11 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   // moduleDirectories: ['./node_modules', './frontend'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'jest-environment-jsdom',
+  testEnvironment: 'jsdom',
+  // increase default timeout from 5 to 10sec
+  testTimeout: 10 * 1000,
+  // reduce maximum of parallel tests
+  maxWorkers: '50%',
   // use only files with *.test.js
   testMatch: [
     '**/*.test.{js,jsx,ts,tsx}'

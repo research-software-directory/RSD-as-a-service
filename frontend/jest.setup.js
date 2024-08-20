@@ -1,20 +1,20 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 // used to support fetch with Jest
 import 'whatwg-fetch'
-// specific
+// custom matchers for jest
 import '@testing-library/jest-dom'
 
 // retry 2 times
-jest.retryTimes(2, {
-  logErrorsBeforeRetry: false
-})
+// jest.retryTimes(1, {
+//   logErrorsBeforeRetry: false
+// })
 
 // TODO! investigate other options beside mocking
 // MOCK REACT-MARKDOWN library as it fails to load in current setup
