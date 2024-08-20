@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -75,9 +75,8 @@ export function handleFileUpload({target}: { target: any }): Promise<HandleFileU
 export function showDialogAndGetFile(): Promise<HandleFileUploadResponse> {
   return new Promise((res, rej) => {
     try {
-      const id = 'handle-input-and-file-upload-element'
       const input = document.createElement('input')
-      input.id = id
+      input.id = 'handle-file-upload-element'
       input.type = 'file'
       input.name = 'file-input-element'
       input.accept = allowedImageMimeTypes
@@ -86,6 +85,11 @@ export function showDialogAndGetFile(): Promise<HandleFileUploadResponse> {
         handleFileUpload(e)
           .then(resp => res(resp))
           .catch(err=>rej(err))
+          .finally(()=>{
+            // remove input element
+            // after file upload
+            input.remove()
+          })
       }
       // click on input element
       input.click()

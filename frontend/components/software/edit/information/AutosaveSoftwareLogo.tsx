@@ -14,14 +14,15 @@ import Button from '@mui/material/Button'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useFormContext} from 'react-hook-form'
 
-import {softwareInformation as config} from '../editSoftwareConfig'
+import {useSession} from '~/auth'
+import {EditSoftwareItem} from '~/types/SoftwareTypes'
+import {handleFileUpload} from '~/utils/handleFileUpload'
+import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
-import {allowedImageMimeTypes, handleFileUpload} from '~/utils/handleFileUpload'
-import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {EditSoftwareItem} from '~/types/SoftwareTypes'
-import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
+import ImageInput from '~/components/form/ImageInput'
+import {softwareInformation as config} from '../editSoftwareConfig'
 import {patchSoftwareTable} from './patchSoftwareTable'
 
 export default function AutosaveSoftwareLogo() {
@@ -170,12 +171,9 @@ export default function AutosaveSoftwareLogo() {
         />
       </label>
 
-      <input
+      <ImageInput
         id="upload-software-logo"
-        type="file"
-        accept={allowedImageMimeTypes}
         onChange={onFileUpload}
-        style={{display:'none'}}
       />
 
       {renderImageAttributes()}
