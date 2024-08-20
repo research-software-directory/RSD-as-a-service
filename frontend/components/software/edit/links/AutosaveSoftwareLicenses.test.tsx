@@ -240,10 +240,8 @@ it('can add license from list', async() => {
   const combo = screen.getByRole('combobox')
   fireEvent.change(combo, {target: {value: newLicense.name}})
 
-  // find Add option
-  const addLicense = await screen.findByRole('option', {
-    title: newLicense.license
-  })
+  // only option should be newLicense
+  const addLicense = await screen.findByRole('option')
   // select to add new license
   fireEvent.click(addLicense)
 
