@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,15 +21,6 @@ const mockProps = {
   organisation: mockOrganisation,
   isMaintainer: false
 }
-
-const mockUseOrganisationMaintainer = jest.fn((props) => ({
-  loading: false,
-  isMaintainer: true
-}))
-jest.mock('~/auth/permissions//useOrganisationMaintainer', ()=>({
-  __esModule: true,
-  default: jest.fn((props)=>mockUseOrganisationMaintainer(props))
-}))
 
 // MOCK patchOrganisationTable
 const mockPatchOrganisationTable = jest.fn((props) => Promise.resolve({status: 200, statusText: 'OK'}))
@@ -59,10 +50,8 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
 
   it('renders 403 when authorised but not maintainer', () => {
     // but it is not maintainer of this organisation
-    mockUseOrganisationMaintainer.mockReturnValue({
-      loading: false,
-      isMaintainer: false
-    })
+    mockProps.isMaintainer = false
+
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
@@ -76,11 +65,14 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
   })
 
   it('renders settings with proper company name', () => {
-    // but it is not maintainer of this organisation
-    mockUseOrganisationMaintainer.mockReturnValue({
-      loading: false,
-      isMaintainer: true
-    })
+
+    if (mockSession.user){
+      mockSession.user.role = 'rsd_user'
+      mockSession.status = 'authenticated'
+    }
+
+    mockProps.isMaintainer = true
+
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
@@ -98,16 +90,14 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
 
   })
 
-  it('renders slug, is_tenant, description when rsd_admin', () => {
-    // it is maintainer of this organisation
-    mockUseOrganisationMaintainer.mockReturnValue({
-      loading: false,
-      isMaintainer: true
-    })
-
+  it('renders slug, is_tenant when rsd_admin', () => {
     if (mockSession.user) {
       mockSession.user.role = 'rsd_admin'
+      mockSession.status = 'authenticated'
     }
+
+    mockProps.isMaintainer = true
+
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
@@ -125,20 +115,12 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
     // is_tenant switch
     const tenantSwitch = screen.getByTestId('controlled-switch')
     expect(tenantSwitch).toBeInTheDocument()
-
-    // description / about section
-    // const descriptionInput = container.querySelector('#markdown-textarea')
-    // expect(descriptionInput).toBeInTheDocument()
   })
 
   it('updates name and slug onBlur', () => {
-    // it is maintainer of this organisation
-    mockUseOrganisationMaintainer.mockReturnValue({
-      loading: false,
-      isMaintainer: true
-    })
     if (mockSession.user) {
       mockSession.user.role = 'rsd_admin'
+      mockSession.status = 'authenticated'
     }
     const {container} = render(
       <WithAppContext options={{session: mockSession}}>
@@ -182,21 +164,5 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
       'id': mockProps.organisation.id,
       'token': mockSession.token
     })
-
-    // UPDATE description
-    // const descriptionValue='This is simple test'
-    // const descriptionInput = container.querySelector('#markdown-textarea') as any
-    // // change & blur
-    // fireEvent.change(descriptionInput, {target: {value:descriptionValue}})
-    // fireEvent.blur(descriptionInput)
-    // // validate
-    // expect(mockPatchOrganisationTable).toBeCalledTimes(3)
-    // expect(mockPatchOrganisationTable).toBeCalledWith({
-    //   'data': {
-    //     'description': descriptionValue,
-    //   },
-    //   'id': mockProps.organisation.id,
-    //   'token': mockSession.token
-    // })
   })
 })
