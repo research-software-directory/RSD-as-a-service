@@ -30,20 +30,16 @@ This repo contains the new RSD-as-a-service implementation. The service can be f
 | (5/5) checklist                    | [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6336/badge)](https://bestpractices.coreinfrastructure.org/projects/6336) |
 | overall                            | [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8B%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-yellow)](https://fair-software.eu) |
 | **Other best practices**           | &nbsp; |
-| Contributor covenant               | [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md) |
+| Contributor covenant               | [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md) |
+| Contribution guidelines             | [![Contributor Guidelines](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CONTRIBUTING.md) |
+| **Tests**                          | &nbsp; |
 | Citation metadata consistency      | [![cffconvert](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/cff_validate.yml/badge.svg)](https://github.com/nlesc/python-template/actions/workflows/cffconvert.yml) | 
 | Linting and codestyle              | [![Linting and codestyle](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/prettier-check-frontend.yml/badge.svg)](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/prettier-check-frontend.yml) |
-| **Tests**                          | &nbsp; |
-| Frontend                           | [![Frontend tests](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/frontend_tests.yml/badge.svg)](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/frontend_tests.yml) | 
+| Frontend                           | [![Frontend tests](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/frontend_tests.yml/badge.svg)](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/frontend_tests.yml) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rsd-frontend&metric=coverage)](https://sonarcloud.io/summary/overall?id=rsd-frontend) | 
 | Backend                            | [![Backend tests](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/backend_tests.yml/badge.svg)](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/backend_tests.yml) |
-| Authentication                     | [![Authentication tests](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/authentication_tests.yml/badge.svg)](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/authentication_tests.yml) | 
-| Scrapers                           | [![Scraper tests](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/scrapers_tests.yml/badge.svg)](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/scrapers_tests.yml) | 
+| Authentication                     | [![Authentication tests](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/authentication_tests.yml/badge.svg)](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/authentication_tests.yml) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=nl.research-software%3Aauthentication&metric=coverage)](https://sonarcloud.io/summary/overall?id=nl.research-software%3Aauthentication) | 
+| Scrapers                           | [![Scraper tests](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/scrapers_tests.yml/badge.svg)](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/scrapers_tests.yml) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=nl.research-software%3Ascrapers&metric=coverage)](https://sonarcloud.io/summary/overall?id=nl.research-software%3Ascrapers) | 
 | End-to-end                         | [![E2E tests Chrome](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/e2e_tests_chrome.yml/badge.svg)](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/e2e_tests_chrome.yml) |
-| **Test coverage**                  | &nbsp; |
-| Frontend                           | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rsd-frontend&metric=coverage)](https://sonarcloud.io/summary/overall?id=rsd-frontend) | 
-| Backend                            | &nbsp; |
-| Authentication                     | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=nl.research-software%3Aauthentication&metric=coverage)](https://sonarcloud.io/summary/overall?id=nl.research-software%3Aauthentication) |
-| Scrapers                           | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=nl.research-software%3Ascrapers&metric=coverage)](https://sonarcloud.io/summary/overall?id=nl.research-software%3Ascrapers) |
 
 ## How to build and run the RSD
 
