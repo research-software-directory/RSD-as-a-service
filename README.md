@@ -31,7 +31,7 @@ This repo contains the new RSD-as-a-service implementation. The service can be f
 | overall                            | [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8B%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-yellow)](https://fair-software.eu) |
 | **Other best practices**           | &nbsp; |
 | Contributor covenant               | [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md) |
-| Contribution guidelines             | [![Contributor Guidelines](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CONTRIBUTING.md) |
+| Contribution guidelines             | [![Contribution Guidelines](https://img.shields.io/badge/Contribution%20Guidelines-4baaaa.svg)](CONTRIBUTING.md) |
 | **Tests**                          | &nbsp; |
 | Citation metadata consistency      | [![cffconvert](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/cff_validate.yml/badge.svg)](https://github.com/nlesc/python-template/actions/workflows/cffconvert.yml) | 
 | Linting and codestyle              | [![Linting and codestyle](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/prettier-check-frontend.yml/badge.svg)](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/prettier-check-frontend.yml) |
