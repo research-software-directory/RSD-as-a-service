@@ -38,7 +38,9 @@ CREATE TABLE repository_url (
 	scraping_disabled_reason VARCHAR(200)
 );
 
-
+-- NOTE! When changing package_manager_type
+-- please update packageManagerSettings const
+-- in the frontend file apiPackageManager.ts
 CREATE TYPE package_manager_type AS ENUM (
 	'anaconda',
 	'chocolatey',

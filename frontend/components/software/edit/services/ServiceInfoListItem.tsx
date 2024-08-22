@@ -50,7 +50,7 @@ export function ServiceInfoListItem({title,scraped_at,last_error,url,platform,sc
 
   function getStatusMsg(){
     if (scraping_disabled_reason !== null) {
-      return (<span className="text-error">{`This harvester was disabled by the admins for the following reason: ${scraping_disabled_reason}`}</span>)
+      return (<span className="text-error">{`DISABLED (${scraping_disabled_reason})`}</span>)
     }
 
     if (last_error) return (

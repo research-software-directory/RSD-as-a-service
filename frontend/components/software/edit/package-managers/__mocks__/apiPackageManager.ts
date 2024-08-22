@@ -126,3 +126,8 @@ export async function getPackageManagerTypeFromUrl(url:string) {
     return 'other' as PackageManagerTypes
   }
 }
+
+export function getPackageManagerServices(pm_key:PackageManagerTypes|null){
+  // just return no services
+  return []
+}

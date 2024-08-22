@@ -165,22 +165,15 @@ export async function getPackageManagers({software, token}: { software: string, 
   }
 }
 
-export async function postPackageManager({data, token}: { data: NewPackageManager, token: string }) {
+export async function postPackageManager({data, token}: {data: NewPackageManager, token: string }) {
   try {
     let url = `${getBaseUrl()}/package_manager`
 
-    if (data.id) {
-      const query=`id=eq.${data.id}`
-      url = `${getBaseUrl()}/package_manager?${query}`
-    }
-
-    // make request
+    // ELSE add new package manager
     const resp = await fetch(url,{
       method: 'POST',
       headers: {
         ...createJsonHeaders(token),
-        // UPSERT=merging also works with POST method
-        'Prefer': 'resolution=merge-duplicates'
       },
       body: JSON.stringify(data)
     })
@@ -189,6 +182,37 @@ export async function postPackageManager({data, token}: { data: NewPackageManage
 
   } catch (e: any) {
     logger(`postPackageManager failed. ${e.message}`, 'error')
+    return {
+      status: 500,
+      message: e.message
+    }
+  }
+}
+
+type UpdatePackageManager = {
+  id: string,
+  package_manager: PackageManagerTypes | null,
+  download_count_scraping_disabled_reason: string | null,
+  reverse_dependency_count_scraping_disabled_reason: string | null,
+}
+
+export async function patchPackageManager({data, token}: { data: UpdatePackageManager, token: string }) {
+  try {
+    const query=`id=eq.${data.id}`
+    const url = `${getBaseUrl()}/package_manager?${query}`
+    // make request
+    const resp = await fetch(url,{
+      method: 'PATCH',
+      headers: {
+        ...createJsonHeaders(token),
+      },
+      body: JSON.stringify(data)
+    })
+
+    return extractReturnMessage(resp)
+
+  } catch (e: any) {
+    logger(`patchPackageManager failed. ${e.message}`, 'error')
     return {
       status: 500,
       message: e.message
@@ -228,7 +252,7 @@ export async function patchPackageManagers({items, token}: { items: PackageManag
   }
 }
 
-async function patchPackageManagerItem({id,key,value,token}:
+export async function patchPackageManagerItem({id,key,value,token}:
   { id:string,key:string,value:any,token:string }) {
   try {
     const url = `/api/v1/package_manager?id=eq.${id}`
@@ -310,4 +334,15 @@ export async function getPackageManagerTypeFromUrl(url:string) {
   } catch (e: any) {
     return 'other' as PackageManagerTypes
   }
+}
+
+export function getPackageManagerServices(pm_key:PackageManagerTypes|null){
+  // no services if no key
+  if (pm_key===null) return []
+  // return services if key found
+  if (Object.hasOwn(packageManagerSettings,pm_key)===true){
+    return packageManagerSettings[pm_key].services
+  }
+  // no services if key not found
+  return []
 }
