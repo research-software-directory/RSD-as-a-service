@@ -24,10 +24,10 @@ Based on the features in the legacy application and the current requirements we 
 
 ### Locally running frontend in dev mode
 
-- install dependencies `yarn install`
+- install dependencies `npm install`
 - create `.env.local` file. Use `.env.example` from the project root as template.
 - run all app modules `docker compose up`
-- open another terminal and run `yarn dev` to start frontend in development mode
+- open another terminal and run `npm run dev` to start frontend in development mode
 
 ### Frontend dev mode via Docker
 
@@ -66,7 +66,7 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up
 
 For oAuth implementation we need env variables. From the project root directory, copy `.env.example` file to `frontend/.env.local` and provide the values See [next documentation page for more info](https://nextjs.org/docs/basic-features/environment-variables).
 
-- `.env.local` contains secrets when running frontend in local development (yarn dev). This file is not in the repo. You will need to create it and add secrets to it. There is one difference from basic .env file.
+- `.env.local` contains secrets when running frontend in local development (`npm run dev`). This file is not in the repo. You will need to create it and add secrets to it. There is one difference from basic .env file.
 
 ```env
 # postgREST api
@@ -143,7 +143,7 @@ In addition to MUI-5, the team prefers to use Tailwind CSS for global applicatio
 
 ```bash
 # install dev dependencies
-npm i -D tailwindcss@latest postcss@latest autoprefixer@latest
+npm install --save-dev tailwindcss@latest postcss@latest autoprefixer@latest
 ```
 
 Steps performed:
@@ -174,18 +174,18 @@ The setup is performed according to [official Next documentation](https://nextjs
 
 ### Unit testing scripts
 
-- `yarn test:watch`: to run test in watch mode. The tests will run on each change in the test/component file(s)
-- `yarn test:coverage`: to run tests and show the test coverage report. This script is used in GH action.
-- `yarn test:memlimit`: for minimal memory consumption. When basic test scripts **yarn test** and **yarn test:coverage** causing the memory overflow on your machine use this script to limit the number of concurrent workers and memory usage.
-- `yarn test:memory`: for examining memory usage during the tests. In node version 18 (and 16) some changes are made in V8 engine memory management that cause the memory leaks when running tests with Jest. See [issue](https://github.com/facebook/jest/issues/11956)
+- `npm run test:watch`: to run test in watch mode. The tests will run on each change in the test/component file(s)
+- `npm run test:coverage`: to run tests and show the test coverage report. This script is used in GH action.
+- `npm run test:memlimit`: for minimal memory consumption. When basic test scripts **npm run test** and **npm run test:coverage** causing the memory overflow on your machine use this script to limit the number of concurrent workers and memory usage.
+- `npm run test:memory`: for examining memory usage during the tests. In node version 18 (and 16) some changes are made in V8 engine memory management that cause the memory leaks when running tests with Jest. See [issue](https://github.com/facebook/jest/issues/11956)
 
 ### Setup steps performed
 
 ```bash
 # install dependencies
-yarn add -D jest jest-environment-jsdom @testing-library/react @testing-library/jest-dom
+npm install --save-dev jest jest-environment-jsdom @testing-library/react @testing-library/jest-dom
 # install whatwg-fetch to address next-auth fetch requests on node js (node-fetch)
-yarn add -D whatwg-fetch
+npm install --save-dev whatwg-fetch
 
 ```
 
@@ -215,40 +215,40 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Updates and upgrades
 
-Upgrading minor version changes can be usually done using `yarn outdated` and `yarn upgrade`. Major updates are more demanding and might require changes in the source code.
+Upgrading minor version changes can be usually done using `npm outdated` and `npm update`. Major updates are more demanding and might require changes in the source code.
 
-Since RSD went live in August 2022 we started using exact versions in the package.json to avoid unexpected upgrades. This means that we manually check for outdated packages and perform "controlled" upgrades. At the same time we run security audits using `yarn audit`.
+Since RSD went live in August 2022 we started using exact versions in the package.json to avoid unexpected upgrades. This means that we manually check for outdated packages and perform "controlled" upgrades. At the same time we run security audits using `npm audit`.
 
 ### Next and React
 
 ```bash
 # upgrade next, react and typescript
-yarn add next@latest react@latest react-dom@latest eslint-config-next@latest typescript
+npm install next@latest react@latest react-dom@latest eslint-config-next@latest typescript
 # upgrade types
-yarn add -D @types/node @types/react @types/react-dom
+npm install --save-dev @types/node @types/react @types/react-dom
 ```
 
 ### Material UI
 
 ```bash
 # upgrade material ui
-yarn add @mui/material @mui/icons-material @emotion/react @emotion/server @emotion/styled
+npm install @mui/material @mui/icons-material @emotion/react @emotion/server @emotion/styled
 ```
 
 ### Testing
 
 ```bash
 # react testing lib
-yarn add -D @testing-library/react@latest @testing-library/jest-dom@latest jest@latest jest-environment-jsdom@latest @types/jest@latest
+npm install --save-dev @testing-library/react@latest @testing-library/jest-dom@latest jest@latest jest-environment-jsdom@latest @types/jest@latest
 ```
 
 ### Others
 
 ```bash
 # cookie for tokens
-yarn add cookie
+npm install cookie
 # type
-yarn add -D @types/cookie
+npm install --save-dev @types/cookie
 ```
 
 ## Maintenance
@@ -257,11 +257,11 @@ For the maintenance we use [unimported](https://github.com/smeijer/unimported#re
 
 ```bash
 # execute in the frontend folder
-yarn unimported
+npx unimported
 ```
 
 - Removing unused files:
-Based on report validate that file are unused/not needed. To validate always run `yarn test` and `yarn build` to confirm that test are working and application can be build
+Based on report validate that file are unused/not needed. To validate always run `npm run test` and `npm run build` to confirm that test are working and application can be build
 
 - Example report
 

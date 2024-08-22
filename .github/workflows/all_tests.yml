@@ -15,21 +15,21 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - name: "install node v20.10 and cash yarn"
+      - name: "install node v20.10 and cache npm"
         uses: actions/setup-node@v4
         with:
           node-version: 20.10
-          cache: 'yarn'
-          cache-dependency-path: frontend/yarn.lock
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
       - name: "install dependencies"
         working-directory: frontend
-        run: yarn install --frozen-lockfile
+        run: npm ci
       - name: "run unit test"
         working-directory: frontend
-        run: yarn test:coverage
+        run: npm run test:coverage
       - name: "run build test"
         working-directory: frontend
-        run: yarn build
+        run: npm run build
 
   api-tests:
     runs-on: ubuntu-22.04

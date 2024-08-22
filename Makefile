@@ -36,8 +36,8 @@ start: clean
 install: clean
 	docker compose build database backend auth codemeta scrapers nginx   # exclude frontend and wait for the build to finish
 	docker compose up --scale scrapers=0 --detach
-	cd frontend && yarn install
-	cd documentation && yarn install
+	cd frontend && npm install
+	cd documentation && npm install
 	# Sleep 10 seconds to be sure that docker compose up is running
 	sleep 10
 	docker compose up --scale data-generation=1 --detach
@@ -61,7 +61,7 @@ data:
 # Helper commands
 # -
 dev-docs:
-	cd documentation && yarn dev
+	cd documentation && npm run dev
 
 frontend/.env.local: .env
 	@echo "Creating frontend/.env.local"
@@ -73,7 +73,7 @@ dev: frontend/.env.local
 	docker compose build # build all services
 	docker compose up --scale data-generation=1 --scale scrapers=0 --scale frontend=0 --detach
 	# open http://localhost:3000 to see the application running
-	cd frontend && yarn dev
+	cd frontend && npm run dev
 
 # run end-to-end test locally
 e2e-tests:
