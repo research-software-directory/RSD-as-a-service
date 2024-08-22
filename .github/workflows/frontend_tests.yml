@@ -26,21 +26,21 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: "install node v20.10 and cash yarn"
+      - name: "install node v20.10 and cache npm"
         uses: actions/setup-node@v4
         with:
           node-version: 20.10
-          cache: 'yarn'
-          cache-dependency-path: frontend/yarn.lock
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
       - name: "install dependencies"
         working-directory: frontend
-        run: yarn install --frozen-lockfile
+        run: npm ci
       - name: "run eslint check"
         working-directory: frontend
-        run: yarn lint
+        run: npm run lint
       - name: "run unit test"
         working-directory: frontend
-        run: yarn test:coverage
+        run: npm run test:coverage
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
         with:
@@ -56,4 +56,4 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: "run build test"
         working-directory: frontend
-        run: yarn build
+        run: npm run build
