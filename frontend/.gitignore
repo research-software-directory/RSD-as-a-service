@@ -8,20 +8,7 @@
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-.idea
-**/target
-**.iml
-
-**/nbactions.xml
-**/nb-configuration.xml
-
-# .vscode
-**/launch.json
-
 node_modules
-
-.pnp
-.pnp.js
 
 # testing
 coverage
@@ -55,5 +42,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 .history
-
-**.tar
