@@ -82,7 +82,6 @@ export const softwareInformation = {
   }
 }
 
-export type SoftwareInformationConfig = typeof softwareInformation
 
 export const contributorInformation = {
   findContributor: {
@@ -164,8 +163,6 @@ export const contributorInformation = {
   }
 }
 
-export type ContributorInformationConfig = typeof contributorInformation
-
 
 export const organisationInformation = {
   title: 'Participating organisations',
@@ -238,7 +235,6 @@ export const testimonialInformation = {
   }
 }
 
-export type TestimonialInformationConfig = typeof testimonialInformation
 
 export const mentionInformation = {
   sectionTitle: 'Mentions',

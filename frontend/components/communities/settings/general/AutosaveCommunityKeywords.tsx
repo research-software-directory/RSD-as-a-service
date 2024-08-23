@@ -20,11 +20,6 @@ import {searchForCommunityKeyword} from './searchForCommunityKeyword'
 import config from './config'
 import {useCommunityContext} from '../../context'
 
-export type SoftwareKeywordsProps={
-  software_id:string,
-  concept_doi?:string
-}
-
 export default function AutosaveCommunityKeywords(){
   const {token} = useSession()
   const {showErrorMessage, showInfoMessage} = useSnackbar()

@@ -202,12 +202,4 @@ export type RelatedSoftwareOfProject = SearchSoftware & {
   status: Status
 }
 
-export type RelatedTools = {
-  origin: string,
-  software: RelatedSoftwareOfSoftware
-}
 
-export type SoftwareForSoftware = {
-  origin: string,
-  relation: string
-}

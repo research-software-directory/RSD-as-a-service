@@ -18,8 +18,6 @@ import {splitName} from './getDisplayName'
 import dataciteItem from './__mocks__/dataciteItem.json'
 export type DataciteRecord = typeof dataciteItem
 export type DatacitePerson = typeof dataciteItem.creators[0]
-export type DataciteSubject = typeof dataciteItem.subjects[0]
-export type DataciteRightsList = typeof dataciteItem.rightsList[0]
 
 const baseUrl = 'https://api.datacite.org/application/vnd.datacite.datacite+json/'
 

@@ -105,11 +105,6 @@ export const packageManagerSettings = {
 
 export type PackageManagerTypes = keyof typeof packageManagerSettings
 
-export type PackageManagerInfoProps = {
-  name: string,
-  icon: string | null,
-  hostname: string[]
-}
 
 export type NewPackageManager = {
   id: string|null
@@ -119,9 +114,6 @@ export type NewPackageManager = {
   position: number
 }
 
-export type UpdateManagerProps = NewPackageManager &{
-  id: string,
-}
 
 export type PackageManager = NewPackageManager & {
   id: string,
