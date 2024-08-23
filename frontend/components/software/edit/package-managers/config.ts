@@ -25,12 +25,12 @@ export const config = {
       }
     },
     download_scraping_disabled:{
-      label: 'Why download count scraping is disabled?',
+      label: 'Reason to disable download count service',
       help: (service:boolean)=> {
         if (service===false){
-          return 'Download count scraping service is not available.'
+          return 'Download count service is not available.'
         }
-        return 'Type the reason for disabling download count scraper.'
+        return 'Explain why download count scraper is disabled'
       },
       validation: {
         maxLength: {
@@ -40,12 +40,12 @@ export const config = {
       }
     },
     reverse_dependency_scraping_disabled:{
-      label: 'Why reverse dependency count scraping is disabled?',
+      label: 'Reason to disable reverse dependency count service',
       help: (service:boolean)=> {
         if (service===false){
           return 'Reverse dependency count service is not available.'
         }
-        return 'Type the reason for disabling reverse dependency count scraper.'
+        return 'Explain why reverse dependency count scraper is disabled'
       },
       validation: {
         maxLength: {
