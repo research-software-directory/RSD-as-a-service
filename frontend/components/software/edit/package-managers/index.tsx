@@ -25,18 +25,20 @@ type EditPackManModal = {
   open: boolean,
   manager: NewPackageManager | PackageManager
   pos?: number
+  edit: boolean
 }
 
 export default function PackageManagers() {
-  const {token} = useSession()
+  const {token,user} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {software} = useSoftwareContext()
-
-  const {loading, managers, saveManager,sortManagers,deleteManager} = usePackageManagers({
+  const {loading, managers, saveManager,updateManager,sortManagers,deleteManager} = usePackageManagers({
     software: software.id,
     token
   })
   const [modal, setModal] = useState<EditPackManModal>()
+  // only admin can edit PM item
+  const isAdmin = user?.role === 'rsd_admin'
 
   // console.group('PackageManagers')
   // console.log('loading...', loading)
@@ -67,8 +69,21 @@ export default function PackageManagers() {
 
     setModal({
       open: true,
-      manager: newPM
+      manager: newPM,
+      edit: false
     })
+  }
+
+  async function onEdit(pos:number){
+    const item = managers[pos]
+    if (item) {
+      setModal({
+        open: true,
+        pos,
+        manager: item,
+        edit: true
+      })
+    }
   }
 
   async function onSorted(newList:PackageManager[]) {
@@ -90,8 +105,15 @@ export default function PackageManagers() {
     }
   }
 
-  async function savePackageManager({data}: { data: NewPackageManager | PackageManager }) {
-    const resp = await saveManager(data)
+  async function savePackageManager(data: NewPackageManager | PackageManager) {
+    let resp
+    if (data.id){
+      // update if id present
+      resp = await updateManager(data as PackageManager)
+    }else{
+      // create new
+      resp = await saveManager(data)
+    }
     if (resp.status !== 200) {
       showErrorMessage(`Failed to save ${data.url}. ${resp.message}`)
     } else {
@@ -122,7 +144,7 @@ export default function PackageManagers() {
               managers={managers}
               onSorted={onSorted}
               onDelete={onDelete}
-              // onEdit={onEdit}
+              onEdit={isAdmin ? onEdit : undefined}
             />
           </div>
           <PackageManagersInfo />
@@ -132,6 +154,7 @@ export default function PackageManagers() {
         modal &&
         <EditPackageManagerModal
           open={modal.open}
+          isAdmin={isAdmin}
           package_manager={modal.manager}
           onCancel={() => {
             setModal(undefined)

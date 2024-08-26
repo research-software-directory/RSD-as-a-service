@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useCallback, useEffect, useState} from 'react'
 import {
   NewPackageManager, PackageManager, deletePackageManager,
-  getPackageManagers, patchPackageManagers, postPackageManager
+  getPackageManagers, patchPackageManager, patchPackageManagers, postPackageManager
 } from './apiPackageManager'
 
 export default function usePackageManagers({token, software}: { token: string, software: string }) {
@@ -33,6 +33,26 @@ export default function usePackageManagers({token, software}: { token: string, s
   async function saveManager(data: NewPackageManager) {
     const resp = await postPackageManager({
       data,
+      token
+    })
+    // debugger
+    if (resp.status == 200) {
+      // reload package managers
+      await getManagers()
+    }
+    return resp
+  }
+
+  async function updateManager(data: PackageManager) {
+    // update only following props
+    const patchData = {
+      package_manager: data.package_manager,
+      download_count_scraping_disabled_reason: data.download_count_scraping_disabled_reason,
+      reverse_dependency_count_scraping_disabled_reason: data.reverse_dependency_count_scraping_disabled_reason
+    }
+    const resp = await patchPackageManager({
+      id: data.id,
+      data: patchData,
       token
     })
     // debugger
@@ -86,6 +106,7 @@ export default function usePackageManagers({token, software}: { token: string, s
     managers,
     loading,
     saveManager,
+    updateManager,
     sortManagers,
     deleteManager
   }
