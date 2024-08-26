@@ -28,10 +28,6 @@ import ImportLicensesFromDoi from './ImportLicensesFromDoi'
 import EditLicenseModal from './EditLicenseModal'
 import {config} from './config'
 
-export type SoftwareLicensesProps = {
-  items: AutocompleteOption<License>[]
-  concept_doi?: string
-}
 
 type LicenseModalProps={
   open: boolean,

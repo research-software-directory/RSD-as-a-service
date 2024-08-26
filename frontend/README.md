@@ -3,9 +3,9 @@ SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 SPDX-FileCopyrightText: 2021 - 2023 dv4all
 SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -37,13 +37,12 @@ First, add the folders that contain the custom configuration to the `docker-comp
 
 ```yml
 services:
- frontend:
-#   .....
-  volumes:
-    - ./frontend:/app
-    # Replace the following directory with the custom deployment directory
-    - ./deployment/rsd:/app/public
-
+  frontend:
+    #   .....
+    volumes:
+      - ./frontend:/app
+      # Replace the following directory with the custom deployment directory
+      - ./deployment/rsd:/app/public
 ```
 
 You can start the frontend in dev mode inside Docker using the `Makefile`. The command will make sure that the created Docker container uses a user with the same user id and group id as your local account. This ensures that you will be the owner of all files that are written via mounted volumes to your drive (mainly everything in the `frontend/.next` and `frontend/node_modules` folders).
@@ -81,32 +80,32 @@ It can be useful to intercept HTTP requests made by the Next.js server in order 
 
 ```javascript
 function replaceFetch(originalFetch: any) {
-	const newFetch = async function(url: any, conf: any) {
-		const tik = Date.now();
-		const resp = await originalFetch(url, conf);
-		const tok = Date.now();
-		console.log(`${tok - tik} ms for URL: ${url}`);
-		return resp;
-	}
+  const newFetch = async function (url: any, conf: any) {
+    const tik = Date.now();
+    const resp = await originalFetch(url, conf);
+    const tok = Date.now();
+    console.log(`${tok - tik} ms for URL: ${url}`);
+    return resp;
+  };
 
-	global.fetch = newFetch;
+  global.fetch = newFetch;
 }
 
 // @ts-ignore
 if (!global.originalFetch) {
-	const originalFetch = global.fetch;
-	// @ts-ignore
-	global.originalFetch = originalFetch;
+  const originalFetch = global.fetch;
+  // @ts-ignore
+  global.originalFetch = originalFetch;
 
-	replaceFetch(originalFetch);
+  replaceFetch(originalFetch);
 }
 
 // because Next.js overwrites global.fetch again...
 setInterval(() => {
-	// @ts-ignore
-	const originalFetch = global.originalFetch;
+  // @ts-ignore
+  const originalFetch = global.originalFetch;
 
-	replaceFetch(originalFetch);
+  replaceFetch(originalFetch);
 }, 10);
 ```
 
@@ -253,82 +252,84 @@ npm install --save-dev @types/cookie
 
 ## Maintenance
 
-For the maintenance we use [unimported](https://github.com/smeijer/unimported#readme). It will show a list of unused files and dependencies. Additional exclude definitions, specific to this project, are in `unimportedrc.json`. Unimported is able to identify next and use pages folder as entry points.
+For the maintenance we use [knip](https://knip.dev/overview/getting-started). It will show a list of unused files, dependencies, exported functions and types. Exclude definitions, specific to this project, are in `knip.jsonc`. Knip is able to identify next and use pages folder as entry points.
+
+### Unused files
 
 ```bash
 # execute in the frontend folder
-npx unimported
+npm run knip:files
 ```
 
-- Removing unused files:
-Based on report validate that file are unused/not needed. To validate always run `npm run test` and `npm run build` to confirm that test are working and application can be build
+Based on report validate that file are unused/not needed. To validate always run `npm run test` and `npm run build` to confirm that test are working and application can be build.
 
 - Example report
 
 ```bash
-RSD-as-a-service/frontend$ npx unimported
+> rsd-frontend@2.16.0 knip:files
+> knip --include files
 
-       summary               unimported v1.29.2 (next)
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-       entry file 1        : ./pages/_app.tsx
-       entry file 2        : ./pages/_document.tsx
-       entry file 3        : ./pages/admin/keywords.tsx
-       entry file 4        : ./pages/admin/orcid-users.tsx
-       entry file 5        : ./pages/admin/organisations.tsx
-       entry file 6        : ./pages/admin/public-pages.tsx
-       entry file 7        : ./pages/admin/rsd-contributors.tsx
-       entry file 8        : ./pages/admin/rsd-users.tsx
-       entry file 9        : ./pages/admin/software-highlights.tsx
-       entry file 10       : ./pages/api/fe/auth/helmholtzid.ts
-       entry file 11       : ./pages/api/fe/auth/index.ts
-       entry file 12       : ./pages/api/fe/auth/local.ts
-       entry file 13       : ./pages/api/fe/auth/orcid.ts
-       entry file 14       : ./pages/api/fe/auth/surfconext.ts
-       entry file 15       : ./pages/api/fe/cite/index.ts
-       entry file 16       : ./pages/api/fe/index.ts
-       entry file 17       : ./pages/api/fe/mention/impact.ts
-       entry file 18       : ./pages/api/fe/mention/output.ts
-       entry file 19       : ./pages/api/fe/mention/software.ts
-       entry file 20       : ./pages/api/fe/token/refresh.ts
-       entry file 21       : ./pages/cookies.tsx
-       entry file 22       : ./pages/index.tsx
-       entry file 23       : ./pages/invite/organisation/[id].tsx
-       entry file 24       : ./pages/invite/project/[id].tsx
-       entry file 25       : ./pages/invite/software/[id].tsx
-       entry file 26       : ./pages/login/failed.tsx
-       entry file 27       : ./pages/login/local.tsx
-       entry file 28       : ./pages/logout.tsx
-       entry file 29       : ./pages/organisations/[...slug].tsx
-       entry file 30       : ./pages/organisations/index.tsx
-       entry file 31       : ./pages/page/[slug].tsx
-       entry file 32       : ./pages/projects/[slug]/edit/[page].tsx
-       entry file 33       : ./pages/projects/[slug]/edit/index.tsx
-       entry file 34       : ./pages/projects/[slug]/index.tsx
-       entry file 35       : ./pages/projects/add.tsx
-       entry file 36       : ./pages/projects/index.tsx
-       entry file 37       : ./pages/robots.txt.tsx
-       entry file 38       : ./pages/sitemap/organisations.xml.tsx
-       entry file 39       : ./pages/sitemap/projects.xml.tsx
-       entry file 40       : ./pages/sitemap/software.xml.tsx
-       entry file 41       : ./pages/software/[slug]/edit/[page].tsx
-       entry file 42       : ./pages/software/[slug]/edit/index.tsx
-       entry file 43       : ./pages/software/[slug]/index.tsx
-       entry file 44       : ./pages/software/add.tsx
-       entry file 45       : ./pages/software/index.tsx
-       entry file 46       : ./pages/user/[section].tsx
+types/Invitation.ts
+utils/getUnusedInvitations.ts
+components/layout/MasonryGrid.tsx
+components/layout/StatCounter.tsx
+components/home/rsd/HomeSectionTitle.tsx
+components/projects/edit/mentions/citations/NoCitationItems.tsx
 
-       unresolved imports  : 0
-       unused dependencies : 0
-       unimported files    : 5
-
-
-─────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────
-     │ 5 unimported files
-─────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────
-   1 │ components/admin/organisations/OrganisationsPage.tsx
-   2 │ components/projects/edit/editProjectSteps.tsx
-   3 │ utils/nextRouterWithLink.ts
-   4 │ utils/useMentionsForSoftware.tsx
-   5 │ utils/useOrganisationSoftware.tsx
-─────┴─────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ```
+
+### Unused exports
+
+Show unused exported functions. **Note! This functions could be used in the file itself.**
+
+```bash
+npm run knip:exports
+```
+
+Based on report validate that types are unused/not needed. To validate always run `npm run test` and `npm run build` to confirm that test are working and application can be build.
+
+- Example report
+
+```bash
+> rsd-frontend@2.16.0 knip:exports
+> knip --include exports
+
+getExpInMs                      function  auth/index.tsx:136:17
+getWaitInMs                     function  auth/index.tsx:150:17
+initSession                     unknown   auth/index.tsx:48:14
+isMaintainerOfCommunity         function  auth/permissions/isMaintainerOfCommunity.ts:40:23
+getCommunitiesOfMaintainer      function  auth/permissions/isMaintainerOfCommunity.ts:65:23
+default                         unknown   auth/permissions/isMaintainerOfCommunity.ts:91:8
+getMaintainerOrganisations      function  auth/permissions/isMaintainerOfOrganisation.ts:69:23
+```
+
+### Unused types
+
+Show unused exported types.
+
+```bash
+npm run knip:types
+```
+
+Based on report validate that types are unused/not needed. To validate always run `npm run test` and `npm run build` to confirm that test are working and application can be build.
+
+- Example report
+
+```bash
+> rsd-frontend@2.16.0 knip:types
+> knip --include types
+
+OrganisationCount             type  components/admin/organisations/apiOrganisation.tsx:21:13
+SoftwareKeywordsProps         type  components/communities/settings/general/AutosaveCommunityKeywords.tsx:23:13
+ReleaseCountByYear            type  components/organisation/releases/useSoftwareReleases.tsx:12:13
+NewKeyword                    type  components/projects/edit/information/searchForKeyword.ts:14:13
+Name                          type  components/software/edit/contributors/FindContributor.tsx:21:13
+ContributorInformationConfig  type  components/software/edit/editSoftwareConfig.tsx:167:13
+TestimonialInformationConfig  type  components/software/edit/editSoftwareConfig.tsx:241:13
+SoftwareInformationConfig     type  components/software/edit/editSoftwareConfig.tsx:85:13
+
+```
+
+### Other knip reports
+
+[Knip](https://knip.dev/) can report more irregularities in the project. Run `npm run knip` to get complete report. However, to validate always run `npm run test` and `npm run build` to confirm that test are working and application can be build.

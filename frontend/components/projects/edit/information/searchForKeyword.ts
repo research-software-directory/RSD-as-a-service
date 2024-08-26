@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import logger from '../../../../utils/logger'
+import logger from '~/utils/logger'
 
 export type Keyword = {
   id: string,
@@ -11,10 +13,6 @@ export type Keyword = {
   cnt: number | null
 }
 
-export type NewKeyword = {
-  id: null,
-  keyword: string
-}
 
 // this is always frontend call
 export async function searchForProjectKeyword({searchFor}:

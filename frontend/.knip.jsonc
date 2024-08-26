@@ -1,0 +1,25 @@
+{
+  "ignore":[
+    // ignore mocks as some are not imported/used yet but can be in the future
+    "**/__mocks__/**",
+    // ignore jest setup file
+    "jest.setup.js",
+    // these are "required" in next.config.js but knip does not see that :-(
+    "next.headers.js",
+    "next.rewrites.js"
+  ],
+  // see https://knip.dev/reference/configuration#ignoreexportsusedinfile
+  "ignoreExportsUsedInFile": {
+    "interface": true,
+    "type": true
+  },
+  // see https://knip.dev/reference/configuration#includeentryexports
+  "includeEntryExports": true,
+  // see https://knip.dev/guides/handling-issues#unreachable-code
+  "ignoreDependencies": [
+    // ignore tailwind plugin
+    "@tailwindcss/typography",
+    // ignore sharp used in next standalone mode
+    "sharp"
+  ]
+}

@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
@@ -10,12 +11,6 @@ export type AuthHeader = {
   Authorization?: string;
 }
 
-export type ApiErrorMsg = {
-  'hint': string | null
-  'details': string | null
-  'code': string
-  'message': string
-}
 
 export function createJsonHeaders(token?: string): AuthHeader {
   if (token) {

@@ -18,13 +18,6 @@ import {upsertImage} from '~/utils/editImage'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 
-export type OrganisationCount = {
-  id: string,
-  keyword: string,
-  software_cnt: number,
-  projects_cnt: number
-}
-
 export type RemoveOrganisationProps = {
   uuid: string,
   logo_id: string | null

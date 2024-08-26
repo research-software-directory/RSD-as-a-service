@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -54,20 +54,6 @@ export type Profile = Person & {
 
 export type SourceType = 'RSD' | 'ORCID'
 
-export type SearchPerson = {
-  given_names: string
-  family_names: string
-  email_address: string | null
-  orcid: string | null
-  // NOTE! added on 2022-02-11
-  affiliation?: string | null
-  // ORCID delivers array of institutions
-  institution?: string[] | null
-  display_name?: string | null
-  source: SourceType
-  // RSD entry provides avatar
-  avatar_id?: string | null
-}
 
 export const Person = [
   'id',

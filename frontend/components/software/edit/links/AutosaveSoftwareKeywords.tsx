@@ -25,10 +25,6 @@ import {searchForSoftwareKeyword} from './searchForSoftwareKeyword'
 import ImportKeywordsFromDoi from './ImportKeywordsFromDoi'
 import {config} from './config'
 
-export type SoftwareKeywordsProps={
-  software_id:string,
-  concept_doi?:string
-}
 
 export default function AutosaveSoftwareKeywords(){
   const {token} = useSession()
