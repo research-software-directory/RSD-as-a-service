@@ -7,7 +7,7 @@
 
 CREATE TABLE team_member (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	project UUID references project (id) NOT NULL,
+	project UUID REFERENCES project (id) NOT NULL,
 	is_contact_person BOOLEAN NOT NULL DEFAULT FALSE,
 	email_address VARCHAR(200),
 	family_names VARCHAR(200) NOT NULL,

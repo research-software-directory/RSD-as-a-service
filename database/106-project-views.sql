@@ -6,6 +6,42 @@
 --
 -- SPDX-License-Identifier: Apache-2.0
 
+CREATE FUNCTION delete_project(id UUID)
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY DEFINER
+VOLATILE
+AS
+$$
+BEGIN
+	IF id IS NULL THEN
+		RAISE EXCEPTION USING MESSAGE = 'Please provide the ID of the project to delete';
+	END IF;
+
+	IF
+		(SELECT rolsuper FROM pg_roles WHERE rolname = SESSION_USER) IS DISTINCT FROM TRUE
+		AND
+		(SELECT CURRENT_SETTING('request.jwt.claims', FALSE)::json->>'role') IS DISTINCT FROM 'rsd_admin'
+	THEN
+		RAISE EXCEPTION USING MESSAGE = 'You are not allowed to delete this project';
+	END IF;
+
+	DELETE FROM impact_for_project WHERE impact_for_project.project = delete_project.id;
+	DELETE FROM invite_maintainer_for_project WHERE invite_maintainer_for_project.project = delete_project.id;
+	DELETE FROM keyword_for_project WHERE keyword_for_project.project = delete_project.id;
+	DELETE FROM maintainer_for_project WHERE maintainer_for_project.project = delete_project.id;
+	DELETE FROM output_for_project WHERE output_for_project.project = delete_project.id;
+	DELETE FROM project_for_organisation WHERE project_for_organisation.project = delete_project.id;
+	DELETE FROM project_for_project WHERE project_for_project.origin = delete_project.id OR project_for_project.relation = delete_project.id;
+	DELETE FROM research_domain_for_project WHERE research_domain_for_project.project = delete_project.id;
+	DELETE FROM software_for_project WHERE software_for_project.project = delete_project.id;
+	DELETE FROM team_member WHERE team_member.project = delete_project.id;
+	DELETE FROM url_for_project WHERE url_for_project.project = delete_project.id;
+
+	DELETE FROM project WHERE project.id = delete_project.id;
+END
+$$;
+
 -- UNIQUE CITATIONS BY PROJECT ID
 -- Scraped citation using output as reference
 CREATE FUNCTION citation_by_project() RETURNS TABLE (

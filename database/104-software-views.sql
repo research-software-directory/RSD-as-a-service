@@ -8,6 +8,49 @@
 --
 -- SPDX-License-Identifier: Apache-2.0
 
+CREATE FUNCTION delete_software(id UUID)
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY DEFINER
+VOLATILE
+AS
+$$
+BEGIN
+	IF id IS NULL THEN
+		RAISE EXCEPTION USING MESSAGE = 'Please provide the ID of the software to delete';
+	END IF;
+
+	IF
+		(SELECT rolsuper FROM pg_roles WHERE rolname = SESSION_USER) IS DISTINCT FROM TRUE
+		AND
+		(SELECT CURRENT_SETTING('request.jwt.claims', FALSE)::json->>'role') IS DISTINCT FROM 'rsd_admin'
+	THEN
+		RAISE EXCEPTION USING MESSAGE = 'You are not allowed to delete this software';
+	END IF;
+
+	DELETE FROM category_for_software WHERE category_for_software.software_id = delete_software.id;
+	DELETE FROM contributor WHERE contributor.software = delete_software.id;
+	DELETE FROM invite_maintainer_for_software WHERE invite_maintainer_for_software.software = delete_software.id;
+	DELETE FROM keyword_for_software WHERE keyword_for_software.software = delete_software.id;
+	DELETE FROM license_for_software WHERE license_for_software.software = delete_software.id;
+	DELETE FROM maintainer_for_software WHERE maintainer_for_software.software = delete_software.id;
+	DELETE FROM mention_for_software WHERE mention_for_software.software = delete_software.id;
+	DELETE FROM package_manager WHERE package_manager.software = delete_software.id;
+	DELETE FROM reference_paper_for_software WHERE reference_paper_for_software.software = delete_software.id;
+	DELETE FROM release WHERE release.software = delete_software.id;
+	DELETE FROM repository_url WHERE repository_url.software = delete_software.id;
+	DELETE FROM software_for_community WHERE software_for_community.software = delete_software.id;
+	DELETE FROM software_for_organisation WHERE software_for_organisation.software = delete_software.id;
+	DELETE FROM software_for_project WHERE software_for_project.software = delete_software.id;
+	DELETE FROM software_for_software WHERE software_for_software.origin = delete_software.id OR software_for_software.relation = delete_software.id;
+	DELETE FROM software_highlight WHERE software_highlight.software = delete_software.id;
+	DELETE FROM testimonial WHERE testimonial.software = delete_software.id;
+
+	DELETE FROM software WHERE software.id = delete_software.id;
+END
+$$;
+
+
 CREATE FUNCTION reference_papers_to_scrape()
 RETURNS TABLE (
 	id UUID,

@@ -4,6 +4,43 @@
 --
 -- SPDX-License-Identifier: Apache-2.0
 
+CREATE FUNCTION delete_organisation(id UUID)
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY DEFINER
+VOLATILE
+AS
+$$
+DECLARE child_id UUID;
+DECLARE child_ids UUID[];
+BEGIN
+	IF id IS NULL THEN
+		RAISE EXCEPTION USING MESSAGE = 'Please provide the ID of the organisation to delete';
+	END IF;
+
+	IF
+		(SELECT rolsuper FROM pg_roles WHERE rolname = SESSION_USER) IS DISTINCT FROM TRUE
+		AND
+		(SELECT CURRENT_SETTING('request.jwt.claims', FALSE)::json->>'role') IS DISTINCT FROM 'rsd_admin'
+	THEN
+		RAISE EXCEPTION USING MESSAGE = 'You are not allowed to delete this organisation';
+	END IF;
+
+	child_ids := ARRAY_REMOVE(ARRAY_AGG((SELECT organisation.id FROM organisation WHERE organisation.parent = delete_organisation.id)), NULL);
+
+	FOREACH child_id IN ARRAY child_ids LOOP
+		PERFORM delete_organisation(child_id);
+	END LOOP;
+
+	DELETE FROM invite_maintainer_for_organisation WHERE invite_maintainer_for_organisation.organisation = delete_organisation.id;
+	DELETE FROM maintainer_for_organisation WHERE maintainer_for_organisation.organisation = delete_organisation.id;
+	DELETE FROM project_for_organisation WHERE project_for_organisation.organisation = delete_organisation.id;
+	DELETE FROM software_for_organisation WHERE software_for_organisation.organisation = delete_organisation.id;
+
+	DELETE FROM organisation WHERE organisation.id = delete_organisation.id;
+END
+$$;
+
 -- Project info by organisation
 -- we filter this view at least by organisation_id (uuid)
 CREATE FUNCTION projects_by_organisation(organisation_id UUID) RETURNS TABLE (

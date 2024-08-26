@@ -4,6 +4,36 @@
 --
 -- SPDX-License-Identifier: Apache-2.0
 
+CREATE FUNCTION delete_community(id UUID)
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY DEFINER
+VOLATILE
+AS
+$$
+BEGIN
+	IF id IS NULL THEN
+		RAISE EXCEPTION USING MESSAGE = 'Please provide the ID of the community to delete';
+	END IF;
+
+	IF
+		(SELECT rolsuper FROM pg_roles WHERE rolname = SESSION_USER) IS DISTINCT FROM TRUE
+		AND
+		(SELECT CURRENT_SETTING('request.jwt.claims', FALSE)::json->>'role') IS DISTINCT FROM 'rsd_admin'
+	THEN
+		RAISE EXCEPTION USING MESSAGE = 'You are not allowed to delete this community';
+	END IF;
+
+	DELETE FROM category WHERE category.community = delete_community.id;
+	DELETE FROM invite_maintainer_for_community WHERE invite_maintainer_for_community.community = delete_community.id;
+	DELETE FROM keyword_for_community WHERE keyword_for_community.community = delete_community.id;
+	DELETE FROM maintainer_for_community WHERE maintainer_for_community.community = delete_community.id;
+	DELETE FROM software_for_community WHERE software_for_community.community = delete_community.id;
+
+	DELETE FROM community WHERE community.id = delete_community.id;
+END
+$$;
+
 -- Software count by community
 -- BY DEFAULT we return count of approved software
 -- IF public is FALSE we return approved software that is not published too

@@ -61,7 +61,7 @@ CREATE TYPE package_manager_type AS ENUM (
 
 CREATE TABLE package_manager (
 	id UUID PRIMARY KEY,
-	software UUID references software (id) NOT NULL,
+	software UUID REFERENCES software (id) NOT NULL,
 	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://'),
 	package_manager package_manager_type NOT NULL DEFAULT 'other',
 	download_count BIGINT,
@@ -108,7 +108,7 @@ CREATE TRIGGER sanitise_update_package_manager BEFORE UPDATE ON package_manager 
 
 CREATE TABLE license_for_software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	software UUID references software (id) NOT NULL,
+	software UUID REFERENCES software (id) NOT NULL,
 	license VARCHAR(100) NOT NULL,
 	name VARCHAR(200) NULL,
 	reference VARCHAR(200) NULL CHECK (reference ~ '^https?://'),
@@ -147,7 +147,7 @@ CREATE TRIGGER sanitise_update_license_for_software BEFORE UPDATE ON license_for
 
 CREATE TABLE contributor (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	software UUID references software (id) NOT NULL,
+	software UUID REFERENCES software (id) NOT NULL,
 	is_contact_person BOOLEAN NOT NULL DEFAULT FALSE,
 	email_address VARCHAR(200),
 	family_names VARCHAR(200) NOT NULL,
