@@ -46,13 +46,13 @@ export default function usePackageManagers({token, software}: { token: string, s
   async function updateManager(data: PackageManager) {
     // update only following props
     const patchData = {
-      id: data.id,
       package_manager: data.package_manager,
       download_count_scraping_disabled_reason: data.download_count_scraping_disabled_reason,
       reverse_dependency_count_scraping_disabled_reason: data.reverse_dependency_count_scraping_disabled_reason
     }
     const resp = await patchPackageManager({
-      data:patchData,
+      id: data.id,
+      data: patchData,
       token
     })
     // debugger

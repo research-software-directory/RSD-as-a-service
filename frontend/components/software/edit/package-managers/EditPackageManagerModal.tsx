@@ -81,10 +81,14 @@ export default function EditPackageManagerModal({open, onCancel, onSubmit, packa
         shouldDirty: true
       })
     }
-    if (typeof errors['url'] === 'undefined' && url?.length > 5) {
+    if (typeof errors['url'] === 'undefined' &&
+      url?.length > 5 &&
+      // only for new items
+      package_manager?.id === null
+    ) {
       fetchPackageManagerType()
     }
-  },[url,setValue,errors])
+  },[url,setValue,errors,package_manager?.id])
 
   const packageManagerServices = getPackageManagerServices(package_manager_form)
 
@@ -97,7 +101,6 @@ export default function EditPackageManagerModal({open, onCancel, onSubmit, packa
   // console.log('packageManagerOptions...', packageManagerOptions)
   // console.log('packageManagerServices...', packageManagerServices)
   // console.groupEnd()
-
 
   function handleCancel() {
     // reset form

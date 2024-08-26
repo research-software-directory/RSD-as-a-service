@@ -190,15 +190,14 @@ export async function postPackageManager({data, token}: {data: NewPackageManager
 }
 
 type UpdatePackageManager = {
-  id: string,
   package_manager: PackageManagerTypes | null,
   download_count_scraping_disabled_reason: string | null,
   reverse_dependency_count_scraping_disabled_reason: string | null,
 }
 
-export async function patchPackageManager({data, token}: { data: UpdatePackageManager, token: string }) {
+export async function patchPackageManager({id, data, token}: {id:string, data: UpdatePackageManager, token: string }) {
   try {
-    const query=`id=eq.${data.id}`
+    const query=`id=eq.${id}`
     const url = `${getBaseUrl()}/package_manager?${query}`
     // make request
     const resp = await fetch(url,{

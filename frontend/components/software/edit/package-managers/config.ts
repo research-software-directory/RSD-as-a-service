@@ -55,7 +55,7 @@ export const config = {
       }
     },
     package_manager:{
-      label: 'Detected platform',
+      label: 'Platform',
       help: 'The platform is detected from the url. Only RSD admin can change this value.',
     }
   }
