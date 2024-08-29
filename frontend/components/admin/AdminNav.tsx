@@ -28,6 +28,8 @@ import BugReportIcon from '@mui/icons-material/BugReport'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import Diversity3Icon from '@mui/icons-material/Diversity3'
 import CategoryIcon from '@mui/icons-material/Category'
+import TerminalIcon from '@mui/icons-material/Terminal'
+import ListAltIcon from '@mui/icons-material/ListAlt'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 
@@ -61,6 +63,18 @@ export const adminPages = {
     subtitle: '',
     icon: <AccountCircleIcon />,
     path: '/admin/rsd-contributors',
+  },
+  software: {
+    title: 'Software',
+    subtitle: '',
+    icon: <TerminalIcon />,
+    path: '/admin/software',
+  },
+  projects: {
+    title: 'Projects',
+    subtitle: '',
+    icon: <ListAltIcon />,
+    path: '/admin/projects',
   },
   organisations: {
     title: 'Organisations',

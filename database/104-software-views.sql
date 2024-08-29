@@ -37,6 +37,7 @@ BEGIN
 	DELETE FROM mention_for_software WHERE mention_for_software.software = delete_software.id;
 	DELETE FROM package_manager WHERE package_manager.software = delete_software.id;
 	DELETE FROM reference_paper_for_software WHERE reference_paper_for_software.software = delete_software.id;
+	DELETE FROM release_version WHERE release_version.release_id = delete_software.id;
 	DELETE FROM release WHERE release.software = delete_software.id;
 	DELETE FROM repository_url WHERE repository_url.software = delete_software.id;
 	DELETE FROM software_for_community WHERE software_for_community.software = delete_software.id;

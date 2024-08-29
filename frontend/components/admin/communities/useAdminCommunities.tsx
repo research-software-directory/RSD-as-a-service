@@ -3,24 +3,25 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useSession} from '~/auth'
-import useSnackbar from '~/components/snackbar/useSnackbar'
-import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
-import {addCommunity as addCommunityToRsd, deleteCommunityById} from './apiCommunities'
 import {useCallback, useEffect, useState} from 'react'
-import {EditCommunityProps} from './AddCommunityModal'
+
+import {useSession} from '~/auth'
+import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 import {deleteImage, upsertImage} from '~/utils/editImage'
+import useSnackbar from '~/components/snackbar/useSnackbar'
 import {CommunityListProps, getCommunityList} from '~/components/communities/apiCommunities'
+import {addCommunity as addCommunityToRsd, deleteCommunityById} from './apiCommunities'
+import {EditCommunityProps} from './AddCommunityModal'
 
 export function useAdminCommunities(){
   const {token} = useSession()
-  const {showErrorMessage} = useSnackbar()
+  const {showErrorMessage, showSuccessMessage} = useSnackbar()
   const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find community by name')
   const [communities, setCommunities] = useState<CommunityListProps[]>([])
   const [loading, setLoading] = useState(true)
 
   const loadCommunities = useCallback(async() => {
-    setLoading(true)
+    // setLoading(true)
     const {communities, count} = await getCommunityList({
       token,
       searchFor,
@@ -105,6 +106,8 @@ export function useAdminCommunities(){
       }
       // reload list
       loadCommunities()
+      // confirm deletion
+      showSuccessMessage('Community deleted from RSD')
     }
   // we do not include showErrorMessage in order to avoid loop
   // eslint-disable-next-line react-hooks/exhaustive-deps

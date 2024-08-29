@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,20 +18,25 @@ import WarningIcon from '@mui/icons-material/Warning'
 type ConfirmDeleteModalProps = {
   open: boolean,
   title: string,
-  body: JSX.Element,
+  body: JSX.Element | JSX.Element[],
   onCancel: () => void,
-  onDelete: () => void
+  onDelete: () => void,
+  // when passed it is used to require additional confirmation
+  // to enable delete button
+  removeDisabled?: boolean
 }
+
 
 export default function ConfirmDeleteModal({
   open = false, title = 'Remove',
   body = <p>Are you sure you want to remove <strong>this item</strong>?</p>,
-  onCancel, onDelete}: ConfirmDeleteModalProps
+  onCancel, onDelete, removeDisabled = false
+}: ConfirmDeleteModalProps
 ) {
   const smallScreen = useMediaQuery('(max-width:600px)')
-  // console.group('DeleteContributorModal')
+  // console.group('ConfirmDeleteModal')
   // console.log('open...', open)
-  // console.log('contributor...', displayName)
+  // console.log('actions...', actions)
   // console.groupEnd()
   return (
     <Dialog
@@ -66,6 +71,7 @@ export default function ConfirmDeleteModal({
       <DialogActions sx={{
         padding: '1rem 1.5rem',
       }}>
+
         <Button
           onClick={onCancel}
           color="secondary"
@@ -73,9 +79,10 @@ export default function ConfirmDeleteModal({
             marginRight: '1rem',
           }}
         >
-            Cancel
+          Cancel
         </Button>
         <Button
+          disabled={removeDisabled}
           type="button"
           variant="contained"
           color="error"
@@ -84,10 +91,9 @@ export default function ConfirmDeleteModal({
           }
           onClick={onDelete}
         >
-            Remove
+          Remove
         </Button>
       </DialogActions>
-
     </Dialog>
   )
 }

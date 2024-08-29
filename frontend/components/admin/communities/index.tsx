@@ -35,12 +35,14 @@ export default function AdminCommunities() {
             <Searchbox />
             <Pagination />
           </div>
-          <CommunityList
-            communities={communities}
-            loading={loading}
-            page={page}
-            onDeleteItem={deleteCommunity}
-          />
+          <div className="pt-6">
+            <CommunityList
+              communities={communities}
+              loading={loading}
+              page={page}
+              onDeleteItem={deleteCommunity}
+            />
+          </div>
         </div>
         <div className="flex items-start justify-end">
           <Button

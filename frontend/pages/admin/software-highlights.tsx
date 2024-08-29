@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -13,7 +13,7 @@ import AdminPageWithNav from '~/components/admin/AdminPageWithNav'
 import {adminPages} from '~/components/admin/AdminNav'
 import AdminSoftwareHighlight from '~/components/admin/software-highlights/index'
 
-const pageTitle = `${adminPages['organisations'].title} | Admin page | ${app.title}`
+const pageTitle = `${adminPages['softwareHighlights'].title} | Admin page | ${app.title}`
 
 export default function AdminSoftwareHighlightsPage() {
 

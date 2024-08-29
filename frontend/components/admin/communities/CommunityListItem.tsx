@@ -5,8 +5,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
-
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -25,18 +23,6 @@ type OrganisationItemProps = {
 }
 
 export default function CommunityListItem({item, onDelete}: OrganisationItemProps) {
-
-  function isDeletedDisabled(){
-    // if any of software in community
-    if (item.software_cnt && item?.software_cnt > 0 ) return true
-    if (item.rejected_cnt && item?.rejected_cnt > 0 ) return true
-    if (item.pending_cnt && item?.pending_cnt > 0 ) return true
-    // if keywords are defined
-    if (item.keywords && item.keywords?.length > 0 ) return true
-    // otherwise it can be deleted
-    return false
-  }
-
   return (
     <ListItem
       data-testid="admin-community-item"
@@ -53,7 +39,7 @@ export default function CommunityListItem({item, onDelete}: OrganisationItemProp
             <EditIcon />
           </IconButton>
           <IconButton
-            disabled={isDeletedDisabled()}
+            // disabled={isDeletedDisabled()}
             edge="end"
             aria-label="delete"
             onClick={() => {

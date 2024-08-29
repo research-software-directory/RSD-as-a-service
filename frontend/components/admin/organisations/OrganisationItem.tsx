@@ -1,11 +1,9 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
-
-import {useRouter} from 'next/router'
 
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
@@ -24,7 +22,6 @@ type OrganisationItemProps = {
 }
 
 export default function OrganisationItem({item, onDelete}: OrganisationItemProps) {
-  const router = useRouter()
   return (
     <ListItem
       data-testid="admin-organisation-item"
@@ -41,7 +38,7 @@ export default function OrganisationItem({item, onDelete}: OrganisationItemProps
             <EditIcon />
           </IconButton>
           <IconButton
-            disabled={item.software_cnt > 0 || item.project_cnt > 0}
+            // disabled={item.software_cnt > 0 || item.project_cnt > 0}
             edge="end"
             aria-label="delete"
             onClick={() => {
@@ -55,6 +52,7 @@ export default function OrganisationItem({item, onDelete}: OrganisationItemProps
       sx={{
         // this makes space for buttons
         paddingRight:'6.5rem',
+        paddingLeft: '0'
       }}
     >
       <ListItemAvatar>

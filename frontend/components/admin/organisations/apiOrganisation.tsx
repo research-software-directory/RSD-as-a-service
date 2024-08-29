@@ -87,7 +87,7 @@ export function useOrganisations(token: string) {
   const [loading, setLoading] = useState(true)
 
   const loadOrganisations = useCallback(async() => {
-    setLoading(true)
+    // setLoading(true)
     const {organisations, count} = await getOrganisations({
       token,
       searchFor,
@@ -164,9 +164,11 @@ export function useOrganisations(token: string) {
     })
     if (resp.status !== 200) {
       showErrorMessage(`Failed to remove organisation. ${resp.message}`)
+    }else{
+      showSuccessMessage('Organisation deleted from RSD!')
+      // reload organisations
+      loadOrganisations()
     }
-    // reload organisations
-    loadOrganisations()
   }
 
   return {
