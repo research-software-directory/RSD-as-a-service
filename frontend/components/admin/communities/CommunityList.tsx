@@ -27,9 +27,9 @@ export default function CommunityList({communities,loading,page,onDeleteItem}:Or
     open: false
   })
 
-  if (loading && !page) return <ContentLoader />
+  if (loading && !page) return <div className="py-6"><ContentLoader /></div>
 
-  if (communities.length===0) return <NoCommunityAlert />
+  if (communities.length===0) return <div className="py-6"><NoCommunityAlert /></div>
 
   return (
     <>

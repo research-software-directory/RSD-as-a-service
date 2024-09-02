@@ -37,14 +37,12 @@ it('renders organisation item', () => {
       onDelete = {mockOnDelete}
     />
   )
-
   // organisation name
   screen.getByText(mockOrganisationItem.name)
-  // edit icon button
-  screen.getByTestId('EditIcon')
   // delete icon button
   screen.getByTestId('DeleteIcon')
-  // screen.debug()
+  // edit link
+  screen.getByRole<HTMLLinkElement>('link')
 })
 
 it('can DELETE organisation with zero software and projects', () => {
@@ -107,6 +105,6 @@ it('can EDIT organisation with software or projects', () => {
   )
 
   // edit link
-  const editBtn = screen.getByRole<HTMLLinkElement>('link',{name:'edit'})
+  const editBtn = screen.getByRole<HTMLLinkElement>('link')
   expect(editBtn.href).toEqual(editLink)
 })

@@ -35,7 +35,7 @@ export default function AdminCommunities() {
             <Searchbox />
             <Pagination />
           </div>
-          <div className="pt-6">
+          <div className="pt-2">
             <CommunityList
               communities={communities}
               loading={loading}

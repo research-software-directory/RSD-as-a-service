@@ -14,7 +14,7 @@ export default function AdminSoftware() {
         <Searchbox />
         <Pagination />
       </div>
-      <div className="pt-6">
+      <div className="pt-4">
         <SoftwareList/>
       </div>
     </section>

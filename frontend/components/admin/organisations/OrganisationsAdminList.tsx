@@ -27,7 +27,7 @@ export default function OrganisationsAdminList({organisations,loading,page,onDel
     open: false
   })
 
-  if (loading && !page) return <ContentLoader />
+  if (loading && !page) return <div className="py-6"><ContentLoader /></div>
 
   if (organisations.length === 0){
     return (
@@ -83,37 +83,6 @@ export default function OrganisationsAdminList({organisations,loading,page,onDel
         />
         : null
       }
-      {/* <ConfirmDeleteModal
-        open={modal.open}
-        title="Remove organisation"
-        body={
-          <>
-            <p>
-              Are you sure you want to delete this organisation?
-            </p>
-            <p className="py-4">
-              <strong>{modal?.organisation?.name}</strong>
-            </p>
-            <p>
-              This will remove organisation from all related RSD entries too!
-            </p>
-          </>
-        }
-        onCancel={() => {
-          setModal({
-            open: false
-          })
-        }}
-        onDelete={() => {
-          onDeleteOrganisation({
-            uuid: modal?.organisation?.id ?? '',
-            logo_id: modal?.organisation?.logo_id ?? null
-          })
-          setModal({
-            open: false
-          })
-        }}
-      /> */}
     </>
   )
 }

@@ -14,7 +14,7 @@ export default function AdminProjects() {
         <Searchbox />
         <Pagination />
       </div>
-      <div className="pt-6">
+      <div className="pt-4">
         <AdminProjectsList/>
       </div>
     </section>

@@ -13,7 +13,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import {deleteProjectById, getProjectItems, GetProjectListParams} from './apiAdminProjects'
 
 // always use this order for admin list: not published first and smaller update date (not updated recently)
-const orderBy = 'is_published, updated_at, title'
+const orderBy = 'is_published,updated_at,title'
 
 export default function useAdminProjects(){
   const {token} = useSession()

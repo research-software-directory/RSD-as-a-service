@@ -13,7 +13,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import {deleteSoftwareById, getSoftwareItems, GetSoftwareListParams} from './apiAdminSoftware'
 
 // always use this order for admin list: not published first and smaller update date (not updated recently)
-const orderBy = 'is_published, updated_at, brand_name'
+const orderBy = 'is_published,updated_at,brand_name'
 
 export function useAdminSoftware(){
   const {token} = useSession()

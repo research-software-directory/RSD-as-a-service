@@ -23,7 +23,8 @@ export default function AdminProjectListItem({project,onDelete}:ProjectListItemP
       {/* standard project list item with link */}
       <Link
         data-testid="project-grid-card"
-        href={`/project/${project.slug}`}
+        title="Click to edit project"
+        href={`/projects/${project.slug}/edit/information`}
         className="flex-1 flex hover:text-inherit"
       >
         <ProjectListItemContent
@@ -41,12 +42,13 @@ export default function AdminProjectListItem({project,onDelete}:ProjectListItemP
       </Link>
 
       {/* admin menu */}
-      <div className="flex w-12 ml-4">
+      <div className="flex mr-4">
         <IconButton
           title = "Delete project"
           edge="end"
           aria-label="delete"
           onClick={onDelete}
+          sx={{margin: '0rem'}}
         >
           <DeleteIcon />
         </IconButton>

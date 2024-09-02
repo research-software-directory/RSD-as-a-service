@@ -23,7 +23,8 @@ export default function AdminSoftwareListItem({software,onDelete}:SoftwareListIt
       {/* standard software list item with link */}
       <Link
         data-testid="software-grid-card"
-        href={`/software/${software.slug}`}
+        title="Click to edit software"
+        href={`/software/${software.slug}/edit/information`}
         className="flex-1 flex hover:text-inherit"
       >
         <SoftwareListItemContent
@@ -41,12 +42,13 @@ export default function AdminSoftwareListItem({software,onDelete}:SoftwareListIt
       </Link>
 
       {/* admin menu */}
-      <div className="flex w-12 ml-4">
+      <div className="flex mx-4">
         <IconButton
           title = "Delete software"
           edge="end"
           aria-label="delete"
           onClick={onDelete}
+          sx={{margin: '0rem'}}
         >
           <DeleteIcon />
         </IconButton>

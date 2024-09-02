@@ -27,7 +27,7 @@ export default function OrganisationsAdminPage() {
           <Searchbox />
           <Pagination />
         </div>
-        <div className="pt-6">
+        <div className="pt-1">
           <OrganisationsAdminList
             page={page}
             loading={loading}

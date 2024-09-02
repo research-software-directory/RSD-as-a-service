@@ -5,6 +5,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import Link from 'next/link'
+
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -15,6 +17,7 @@ import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import Avatar from '@mui/material/Avatar'
 import {getImageUrl} from '~/utils/editImage'
+
 
 type OrganisationItemProps = {
   item: OrganisationList,
@@ -28,60 +31,61 @@ export default function OrganisationItem({item, onDelete}: OrganisationItemProps
       key={item.id}
       secondaryAction={
         <>
-          {/* onEdit we open organisation settings */}
           <IconButton
-            edge="end"
-            aria-label="edit"
-            sx={{marginRight: '1rem'}}
-            href={`/organisations/${item.rsd_path}?tab=settings`}
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            // disabled={item.software_cnt > 0 || item.project_cnt > 0}
+            title="Delete organisation"
             edge="end"
             aria-label="delete"
             onClick={() => {
               onDelete()
             }}
+            sx={{margin: '0rem'}}
           >
             <DeleteIcon />
           </IconButton>
         </>
       }
+      className="transition shadow-sm border bg-base-100 rounded hover:shadow-lg"
       sx={{
         // this makes space for buttons
-        paddingRight:'6.5rem',
-        paddingLeft: '0'
+        padding:'0.5rem 4.5rem 0.5rem 1rem',
+        margin: '0.5rem 0rem'
       }}
     >
-      <ListItemAvatar>
-        <Avatar
-          alt={item.name ?? ''}
-          src={getImageUrl(item.logo_id) ?? undefined}
-          sx={{
-            width: '4rem',
-            height: '4rem',
-            fontSize: '1.5rem',
-            marginRight: '1rem',
-            '& img': {
-              height:'auto'
-            }
-          }}
-          variant="square"
-        >
-          {item.name.slice(0,3)}
-        </Avatar>
-      </ListItemAvatar>
-      <ListItemText
-        primary={item.name}
-        secondary={
-          <>
-            <span>Software: {item.software_cnt ?? 0}</span>
-            <span className="ml-4">Projects: {item.project_cnt ?? 0}</span>
-          </>
-        }
-      />
+      {/* open organisation settings for edit */}
+      <Link
+        data-test-id="edit-organisation"
+        title="Click to edit organisation settings"
+        href={`/organisations/${item.rsd_path}?tab=settings`}
+        className="flex-1 flex justify-center items-center hover:text-inherit"
+      >
+        <ListItemAvatar>
+          <Avatar
+            alt={item.name ?? ''}
+            src={getImageUrl(item.logo_id) ?? undefined}
+            sx={{
+              width: '4rem',
+              height: '4rem',
+              fontSize: '1.5rem',
+              marginRight: '1rem',
+              '& img': {
+                height:'auto'
+              }
+            }}
+            variant="square"
+          >
+            {item.name.slice(0,3)}
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={item.name}
+          secondary={
+            <>
+              <span>Software: {item.software_cnt ?? 0}</span>
+              <span className="ml-4">Projects: {item.project_cnt ?? 0}</span>
+            </>
+          }
+        />
+      </Link>
     </ListItem>
   )
 }
