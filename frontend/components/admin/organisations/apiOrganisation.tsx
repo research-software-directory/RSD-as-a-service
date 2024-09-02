@@ -35,7 +35,7 @@ async function getOrganisations({page, rows, token, searchFor, orderBy}: getOrga
   try {
     // NOTE 1! selectList need to include all colums used in filtering
     // NOTE 2! ensure selectList uses identical props as defined in OrganisationList type
-    const selectList = 'id,parent,name,website,is_tenant,rsd_path,logo_id,ror_id,software_cnt,project_cnt,score'
+    const selectList = 'id,parent,name,website,is_tenant,rsd_path,logo_id,ror_id,software_cnt,project_cnt'
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
       query+=`&or=(name.ilike.*${searchFor}*,website.ilike.*${searchFor}*,ror_id.ilike.*${searchFor}*)`
@@ -43,7 +43,7 @@ async function getOrganisations({page, rows, token, searchFor, orderBy}: getOrga
     if (orderBy) {
       query+=`&order=${orderBy}`
     } else {
-      query+='&order=score.asc,name.asc'
+      query+='&order=name.asc'
     }
     // complete url
     const url = `${getBaseUrl()}/rpc/organisations_overview?select=${selectList}&parent=is.null?${query}`
@@ -87,7 +87,7 @@ export function useOrganisations(token: string) {
   const [loading, setLoading] = useState(true)
 
   const loadOrganisations = useCallback(async() => {
-    setLoading(true)
+    // setLoading(true)
     const {organisations, count} = await getOrganisations({
       token,
       searchFor,
@@ -164,9 +164,11 @@ export function useOrganisations(token: string) {
     })
     if (resp.status !== 200) {
       showErrorMessage(`Failed to remove organisation. ${resp.message}`)
+    }else{
+      showSuccessMessage('Organisation deleted from RSD!')
+      // reload organisations
+      loadOrganisations()
     }
-    // reload organisations
-    loadOrganisations()
   }
 
   return {

@@ -22,7 +22,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.List;
 
 @ExtendWith({SetupAllTests.class})
-
 public class AuthenticationIntegrationTest {
 
 	@Test

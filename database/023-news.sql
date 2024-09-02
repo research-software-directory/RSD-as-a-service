@@ -1,5 +1,6 @@
 -- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -53,7 +54,7 @@ CREATE TRIGGER sanitise_update_news BEFORE UPDATE ON news FOR EACH ROW EXECUTE P
 -- IMAGES FOR NEWS items
 CREATE TABLE image_for_news (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	news UUID references news (id) NOT NULL,
+	news UUID REFERENCES news (id) NOT NULL,
 	image_id VARCHAR(40) REFERENCES image(id) NOT NULL,
 	position VARCHAR(25) DEFAULT 'card',
 	created_at TIMESTAMPTZ NOT NULL,

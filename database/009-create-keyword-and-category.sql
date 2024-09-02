@@ -37,16 +37,16 @@ CREATE TRIGGER sanitise_update_keyword BEFORE UPDATE ON keyword FOR EACH ROW EXE
 
 
 CREATE TABLE keyword_for_software (
-	software UUID references software (id),
-	keyword UUID references keyword (id),
+	software UUID REFERENCES software (id),
+	keyword UUID REFERENCES keyword (id),
 	PRIMARY KEY (software, keyword)
 );
 
 CREATE INDEX keyword_for_software_keyword_idx ON keyword_for_software(keyword);
 
 CREATE TABLE keyword_for_project (
-	project UUID references project (id),
-	keyword UUID references keyword (id),
+	project UUID REFERENCES project (id),
+	keyword UUID REFERENCES keyword (id),
 	PRIMARY KEY (project, keyword)
 );
 
@@ -103,8 +103,8 @@ CREATE INDEX category_community_idx ON category(community);
 
 
 CREATE TABLE category_for_software (
-	software_id UUID references software (id),
-	category_id UUID references category (id),
+	software_id UUID REFERENCES software (id),
+	category_id UUID REFERENCES category (id),
 	PRIMARY KEY (software_id, category_id)
 );
 

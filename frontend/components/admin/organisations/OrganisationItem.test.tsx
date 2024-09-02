@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -37,18 +37,16 @@ it('renders organisation item', () => {
       onDelete = {mockOnDelete}
     />
   )
-
   // organisation name
   screen.getByText(mockOrganisationItem.name)
-  // edit icon button
-  screen.getByTestId('EditIcon')
   // delete icon button
   screen.getByTestId('DeleteIcon')
-  // screen.debug()
+  // edit link
+  screen.getByRole<HTMLLinkElement>('link')
 })
 
 it('can DELETE organisation with zero software and projects', () => {
-  // ensuren zero counts
+  // ensure zero counts
   mockOrganisationItem.software_cnt = 0
   mockOrganisationItem.project_cnt=0
 
@@ -69,10 +67,10 @@ it('can DELETE organisation with zero software and projects', () => {
   // screen.debug(deleteBtn)
 })
 
-it('canNOT DELETE organisation with software or projects', () => {
+it('can DELETE organisation with software or projects', () => {
   // ensuren zero counts
   mockOrganisationItem.software_cnt = 1
-  mockOrganisationItem.project_cnt = 0
+  mockOrganisationItem.project_cnt = 1
 
   render(
     <OrganisationItem
@@ -83,11 +81,11 @@ it('canNOT DELETE organisation with software or projects', () => {
 
   // delete icon button
   const deleteBtn = screen.getByRole('button',{name:'delete'})
-  expect(deleteBtn).toBeDisabled()
+  // expect(deleteBtn).toBeDisabled()
 
   // check calling
   fireEvent.click(deleteBtn)
-  expect(mockOnDelete).toBeCalledTimes(0)
+  expect(mockOnDelete).toBeCalledTimes(1)
 
   // screen.debug(deleteBtn)
 })
@@ -107,6 +105,6 @@ it('can EDIT organisation with software or projects', () => {
   )
 
   // edit link
-  const editBtn = screen.getByRole<HTMLLinkElement>('link',{name:'edit'})
+  const editBtn = screen.getByRole<HTMLLinkElement>('link')
   expect(editBtn.href).toEqual(editLink)
 })

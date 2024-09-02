@@ -7,18 +7,13 @@
 
 import {useState} from 'react'
 import List from '@mui/material/List'
-
-import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
-import ContentLoader from '~/components/layout/ContentLoader'
-import {OrganisationList} from '~/types/Organisation'
-import {RemoveOrganisationProps} from './apiOrganisation'
-import OrganisationItem from './OrganisationItem'
 import Alert from '@mui/material/Alert'
 
-type DeleteOrganisationModal = {
-  open: boolean,
-  organisation?: OrganisationList
-}
+import {OrganisationList} from '~/types/Organisation'
+import ContentLoader from '~/components/layout/ContentLoader'
+import {RemoveOrganisationProps} from './apiOrganisation'
+import OrganisationItem from './OrganisationItem'
+import RemoveOrganisationModal, {OrganisationModalProps} from './RemoveOrganisationModal'
 
 type OrganisationsAdminListProps = {
   organisations: OrganisationList[]
@@ -28,15 +23,15 @@ type OrganisationsAdminListProps = {
 }
 
 export default function OrganisationsAdminList({organisations,loading,page,onDeleteOrganisation}:OrganisationsAdminListProps) {
-  const [modal, setModal] = useState<DeleteOrganisationModal>({
+  const [modal, setModal] = useState<OrganisationModalProps>({
     open: false
   })
 
-  if (loading && !page) return <ContentLoader />
+  if (loading && !page) return <div className="py-6"><ContentLoader /></div>
 
   if (organisations.length === 0){
     return (
-      <Alert severity="info" sx={{margin:'1.5rem 0rem'}}>
+      <Alert severity="info">
         No organisation to show.
       </Alert>
     )
@@ -46,7 +41,7 @@ export default function OrganisationsAdminList({organisations,loading,page,onDel
     if (organisation) {
       setModal({
         open: true,
-        organisation
+        item: organisation
       })
     }
   }
@@ -68,31 +63,26 @@ export default function OrganisationsAdminList({organisations,loading,page,onDel
           })
         }
       </List>
-      <ConfirmDeleteModal
-        open={modal.open}
-        title="Remove organisation"
-        body={
-          <>
-            <p>
-              Are you sure you want to delete organisation <strong>{modal?.organisation?.name}</strong>?
-            </p>
-          </>
-        }
-        onCancel={() => {
-          setModal({
-            open: false
-          })
-        }}
-        onDelete={() => {
-          onDeleteOrganisation({
-            uuid: modal?.organisation?.id ?? '',
-            logo_id: modal?.organisation?.logo_id ?? null
-          })
-          setModal({
-            open: false
-          })
-        }}
-      />
+      {modal?.open ?
+        <RemoveOrganisationModal
+          item = {modal?.item}
+          onCancel={() => {
+            setModal({
+              open: false
+            })
+          }}
+          onDelete={() => {
+            onDeleteOrganisation({
+              uuid: modal?.item?.id ?? '',
+              logo_id: modal?.item?.logo_id ?? null
+            })
+            setModal({
+              open: false
+            })
+          }}
+        />
+        : null
+      }
     </>
   )
 }

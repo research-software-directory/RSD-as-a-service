@@ -8,16 +8,12 @@
 import {useState} from 'react'
 import List from '@mui/material/List'
 
-import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import ContentLoader from '~/components/layout/ContentLoader'
 import {CommunityListProps} from '~/components/communities/apiCommunities'
 import CommunityListItem from './CommunityListItem'
 import NoCommunityAlert from './NoCommunityAlert'
+import RemoveCommunityModal, {CommunityModalProps} from './RemoveCommunityModal'
 
-type DeleteOrganisationModal = {
-  open: boolean,
-  item?: CommunityListProps
-}
 
 type OrganisationsAdminListProps = {
   communities: CommunityListProps[]
@@ -27,13 +23,13 @@ type OrganisationsAdminListProps = {
 }
 
 export default function CommunityList({communities,loading,page,onDeleteItem}:OrganisationsAdminListProps) {
-  const [modal, setModal] = useState<DeleteOrganisationModal>({
+  const [modal, setModal] = useState<CommunityModalProps>({
     open: false
   })
 
-  if (loading && !page) return <ContentLoader />
+  if (loading && !page) return <div className="py-6"><ContentLoader /></div>
 
-  if (communities.length===0) return <NoCommunityAlert />
+  if (communities.length===0) return <div className="py-6"><NoCommunityAlert /></div>
 
   return (
     <>
@@ -55,29 +51,25 @@ export default function CommunityList({communities,loading,page,onDeleteItem}:Or
           })
         }
       </List>
-      <ConfirmDeleteModal
-        open={modal.open}
-        title="Remove community"
-        body={
-          <>
-            <p>
-              Are you sure you want to delete community <strong>{modal?.item?.name}</strong>?
-            </p>
-          </>
-        }
-        onCancel={() => {
-          setModal({
-            open: false
-          })
-        }}
-        onDelete={() => {
-          // call remove method if id present
-          if (modal.item && modal.item?.id) onDeleteItem(modal.item?.id,modal.item?.logo_id)
-          setModal({
-            open: false
-          })
-        }}
-      />
+      {
+        modal.open ?
+          <RemoveCommunityModal
+            item = {modal.item}
+            onCancel={() => {
+              setModal({
+                open: false
+              })
+            }}
+            onDelete={() => {
+            // call remove method if id present
+              if (modal.item && modal.item?.id) onDeleteItem(modal.item?.id,modal.item?.logo_id)
+              setModal({
+                open: false
+              })
+            }}
+          />
+          : null
+      }
     </>
   )
 }

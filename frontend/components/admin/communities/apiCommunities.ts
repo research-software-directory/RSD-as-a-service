@@ -3,8 +3,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 
 export type Community={
   id?:string,
@@ -76,14 +76,16 @@ export async function addCommunity({data,token}:{data:Community,token:string}) {
 
 export async function deleteCommunityById({id,token}:{id:string,token:string}) {
   try {
-    const query = `community?id=eq.${id}`
-    const url = `/api/v1/${query}`
+    const url = `${getBaseUrl()}/rpc/delete_community`
 
     const resp = await fetch(url,{
-      method: 'DELETE',
+      method: 'POST',
       headers: {
         ...createJsonHeaders(token)
-      }
+      },
+      body: JSON.stringify({
+        id
+      })
     })
     return extractReturnMessage(resp, '')
   } catch (e: any) {

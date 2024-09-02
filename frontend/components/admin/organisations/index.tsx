@@ -27,12 +27,14 @@ export default function OrganisationsAdminPage() {
           <Searchbox />
           <Pagination />
         </div>
-        <OrganisationsAdminList
-          page={page}
-          loading={loading}
-          organisations={organisations}
-          onDeleteOrganisation={removeOrganisation}
-        />
+        <div className="pt-1">
+          <OrganisationsAdminList
+            page={page}
+            loading={loading}
+            organisations={organisations}
+            onDeleteOrganisation={removeOrganisation}
+          />
+        </div>
       </div>
       <AddOrganisation onAddOrganisationToRsd={addOrganisation} />
     </section>
