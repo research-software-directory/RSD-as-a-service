@@ -9,21 +9,15 @@ it('PromisePool class works correctly', async () => {
   const promisePool: PromisePool = new PromisePool(2)
   const messages: string[] = []
   await Promise.all([
-    promisePool.submit<string>(() => new Promise(res => {
-      res('first')
-    }))
+    promisePool.submit<string>(() => Promise.resolve('first'))
       .then(result => messages.push(result)),
     promisePool.submit<string>(() => new Promise(res => {
       setTimeout(() => res('fourth'), 200)
     }))
       .then(result => messages.push(result)),
-    promisePool.submit<string>(() => new Promise(res => {
-      res('second')
-    }))
+    promisePool.submit<string>(() => Promise.resolve('second'))
       .then(result => messages.push(result)),
-    promisePool.submit<string>(() => new Promise(res => {
-      res('third')
-    }))
+    promisePool.submit<string>(() => Promise.resolve('third'))
       .then(result => messages.push(result)),
   ])
 

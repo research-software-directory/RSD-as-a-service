@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {MentionItemProps} from '~/types/Mention'
-import {crossrefItemToMentionItem, getCrossrefItemByDoi} from './getCrossref'
+import {crossrefItemToMentionItem} from './getCrossref'
 import {dataCiteGraphQLItemToMentionItem, getDataciteItemByDoiGraphQL, getDataciteItemsByDoiGraphQL} from './getDataCite'
 import logger from './logger'
 import {getOpenalexItemByDoi, getOpenalexItemsByDoi, openalexItemToMentionItem} from '~/utils/getOpenalex'
