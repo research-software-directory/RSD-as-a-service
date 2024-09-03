@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,11 +18,11 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import {useForm} from 'react-hook-form'
 
 import ControlledTextField from '../../../form/ControlledTextField'
-import {testimonialInformation as config} from '../editSoftwareConfig'
 import {NewTestimonial, Testimonial} from '../../../../types/Testimonial'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 
 type EditTestimonialModalProps = {
+  config: any,
   open: boolean,
   onCancel: () => void,
   onSubmit: ({data, pos}: { data: Testimonial|NewTestimonial, pos?: number }) => void,
@@ -31,7 +33,7 @@ type EditTestimonialModalProps = {
 
 const formId='edit-testimonial-modal'
 
-export default function EditTestimonialModal({open, onCancel, onSubmit, testimonial, pos}: EditTestimonialModalProps) {
+export default function EditTestimonialModal({config,open,onCancel,onSubmit,testimonial,pos}: EditTestimonialModalProps) {
   const smallScreen = useMediaQuery('(max-width:600px)')
   const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<Testimonial|NewTestimonial>({
     mode: 'onChange',
@@ -83,9 +85,9 @@ export default function EditTestimonialModal({open, onCancel, onSubmit, testimon
         <input type="hidden"
           {...register('id')}
         />
-        <input type="hidden"
+        {/* <input type="hidden"
           {...register('software')}
-        />
+        /> */}
         <input type="hidden"
           {...register('position')}
         />

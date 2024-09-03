@@ -1,28 +1,35 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
-import {NewTestimonial, Testimonial} from '../types/Testimonial'
-import logger from './logger'
+import logger from '~/utils/logger'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
+import {NewTestimonial, Testimonial} from '~/types/Testimonial'
 
+export type NewSoftwareTestimonial = NewTestimonial & {
+  software: string
+}
 
-export async function getTestimonialsForSoftware({software, frontend, token}:
-  {software: string, frontend?: boolean, token?: string}) {
+export type SoftwareTestimonial = NewSoftwareTestimonial & {
+  id: string
+  position: number
+}
+
+export async function getTestimonialsForSoftware({software, token}:
+  {software: string, token?: string}) {
   try {
 
-    let url = `${process.env.POSTGREST_URL}/testimonial?software=eq.${software}&order=position.asc`
-    if (frontend === true) {
-      url = `/api/v1/testimonial?software=eq.${software}&order=position.asc`
-    }
+    let url = `${getBaseUrl()}/testimonial?software=eq.${software}&order=position.asc`
 
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)
     })
     if (resp.status === 200) {
-      const data: Testimonial[] = await resp.json()
+      const data: SoftwareTestimonial[] = await resp.json()
       // update position to reflect array
       return data.map((item, pos) => {
         return {
@@ -41,9 +48,9 @@ export async function getTestimonialsForSoftware({software, frontend, token}:
   }
 }
 
-export async function postTestimonial({testimonial, token}: { testimonial: NewTestimonial, token: string }) {
+export async function postTestimonial({testimonial, token}: { testimonial: NewSoftwareTestimonial, token: string }) {
   try {
-    const url = '/api/v1/testimonial'
+    const url = `${getBaseUrl()}/testimonial`
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
@@ -80,9 +87,9 @@ export async function postTestimonial({testimonial, token}: { testimonial: NewTe
 }
 
 
-export async function patchTestimonial({testimonial, token}: { testimonial: Testimonial, token: string }) {
+export async function patchTestimonial({testimonial, token}: { testimonial: SoftwareTestimonial, token: string }) {
   try {
-    const url = `/api/v1/testimonial?id=eq.${testimonial.id}`
+    const url = `${getBaseUrl()}/testimonial?id=eq.${testimonial.id}`
     const resp = await fetch(url, {
       method: 'PATCH',
       headers: {
@@ -102,9 +109,11 @@ export async function patchTestimonial({testimonial, token}: { testimonial: Test
 
 export async function patchTestimonialPositions({testimonials, token}: { testimonials: Testimonial[], token: string }) {
   try {
+    // if the array is empty return
+    if (testimonials.length === 0) return {status:200,message:'OK'}
     // create all requests
     const requests = testimonials.map(testimonial => {
-      const url = `/api/v1/testimonial?id=eq.${testimonial.id}`
+      const url = `${getBaseUrl()}/testimonial?id=eq.${testimonial.id}`
       return fetch(url, {
         method: 'PATCH',
         headers: {
@@ -132,7 +141,7 @@ export async function patchTestimonialPositions({testimonials, token}: { testimo
 
 export async function deleteTestimonialById({id, token}: { id: string, token: string }) {
   try {
-    const url = `/api/v1/testimonial?id=eq.${id}`
+    const url = `${getBaseUrl()}/testimonial?id=eq.${id}`
     const resp = await fetch(url, {
       method: 'DELETE',
       headers: {

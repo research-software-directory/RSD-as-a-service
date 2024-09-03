@@ -26,6 +26,7 @@ import {MentionItemProps} from '~/types/Mention'
 import {Person} from '~/types/Contributor'
 import {ProjectOrganisationProps} from '~/types/Organisation'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
+import {Testimonial} from '~/types/Testimonial'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import EditPageButton from '~/components/layout/EditPageButton'
@@ -42,6 +43,8 @@ import RelatedSoftwareSection from '~/components/software/RelatedSoftwareSection
 import ProjectInfo from '~/components/projects/ProjectInfo'
 import RelatedProjectsSection from '~/components/projects/RelatedProjectsSection'
 import MentionsSection from '~/components/mention/MentionsSection'
+import {getTestimonialsForProject} from '~/components/projects/edit/testimonials/apiProjectTestimonial'
+import TestimonialSection from '~/components/software/TestimonialsSection'
 
 export interface ProjectPageProps extends ScriptProps{
   slug: string
@@ -53,6 +56,7 @@ export interface ProjectPageProps extends ScriptProps{
   links: ProjectLink[],
   output: MentionItemProps[],
   impact: MentionItemProps[],
+  testimonials: Testimonial[]
   team: Person[],
   relatedSoftware: SoftwareOverviewItemProps[],
   relatedProjects: RelatedProject[]
@@ -61,13 +65,13 @@ export interface ProjectPageProps extends ScriptProps{
 export default function ProjectPage(props: ProjectPageProps) {
   const {slug, project, isMaintainer, organisations,
     researchDomains, keywords, links, output, impact, team,
-    relatedSoftware, relatedProjects
+    relatedSoftware, relatedProjects, testimonials
   } = props
 
   if (!project?.title){
     return <NoContent />
   }
-  // console.log('ProjectPage...output...', output)
+  // console.log('ProjectPage...testimonials...', testimonials)
   return (
     <>
       {/* Page Head meta tags */}
@@ -124,6 +128,10 @@ export default function ProjectPage(props: ProjectPageProps) {
           mentions={output}
         />
       </DarkThemeSection>
+      {/* Testimonials (uses software components) */}
+      <TestimonialSection
+        testimonials={testimonials}
+      />
       {/* Team (uses software components) */}
       <ContributorsSection
         title="Team"
@@ -168,6 +176,7 @@ export async function getServerSideProps(context:any) {
       keywords,
       output,
       impact,
+      testimonials,
       team,
       relatedSoftware,
       relatedProjects,
@@ -181,6 +190,9 @@ export async function getServerSideProps(context:any) {
       getMentionsForProject({project: project.id, token, table:'output_for_project'}),
       // Impact
       getImpactByProject({project: project.id, token}),
+      // testimonials
+      getTestimonialsForProject({project:project.id,token}),
+      // Team
       getTeamForProject({project: project.id, token}),
       getRelatedSoftwareForProject({project: project.id, token, frontend: false}),
       getRelatedProjectsForProject({project: project.id, token, frontend: false}),
@@ -201,6 +213,7 @@ export async function getServerSideProps(context:any) {
         keywords,
         output,
         impact,
+        testimonials,
         team,
         relatedSoftware,
         relatedProjects,
