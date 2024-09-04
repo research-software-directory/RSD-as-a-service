@@ -5,10 +5,15 @@
 
 package nl.esciencecenter.rsd.scraper.doi;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.net.URI;
@@ -21,7 +26,16 @@ import java.util.UUID;
 
 public class PostgrestMentionRepository {
 
+	private static final Gson GSON = new GsonBuilder()
+			.serializeNulls()
+			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+			.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
+			.registerTypeAdapter(ZonedDateTime.class, (JsonSerializer<ZonedDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
+			.registerTypeAdapter(Doi.class, (JsonSerializer<Doi>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
+			.create();
+
 	private final String backendUrl;
+
 
 	public PostgrestMentionRepository(String backendUrl) {
 		this.backendUrl = Objects.requireNonNull(backendUrl);
@@ -44,6 +58,10 @@ public class PostgrestMentionRepository {
 		}
 
 		return result;
+	}
+
+	public static JsonArray toRsdJsonArray(Collection<ExternalMentionRecord> mentions) {
+		return GSON.toJsonTree(mentions).getAsJsonArray();
 	}
 
 	static RsdMentionIds parseSingleRsdIds(String json) {
