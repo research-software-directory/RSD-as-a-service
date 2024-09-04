@@ -12,3 +12,4 @@
 5-59/6 * * * * /opt/java/openjdk/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.doi.MainCitations > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
 2-59/6 * * * * /opt/java/openjdk/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.ror.MainRor > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
 * * * * * /opt/java/openjdk/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.aggregator.MainAggregator > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
+15 1 * * * /opt/java/openjdk/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.nassa.MainNassa > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
