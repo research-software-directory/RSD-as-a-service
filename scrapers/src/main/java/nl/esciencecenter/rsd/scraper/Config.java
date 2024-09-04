@@ -197,4 +197,8 @@ public class Config {
 	public static Optional<String> librariesIoKey() {
 		return getOptionalEnv("LIBRARIES_IO_ACCESS_TOKEN");
 	}
+
+	public static boolean isNassaScraperEnabled() {
+		return "true".equals(System.getenv("ENABLE_NASSA_SCRAPER"));
+	}
 }
