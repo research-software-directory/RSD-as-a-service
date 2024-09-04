@@ -28,8 +28,15 @@ import java.util.UUID;
 public class PostgrestMentionRepository implements MentionRepository {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PostgrestMentionRepository.class);
+	private static final Gson GSON = new GsonBuilder()
+			.serializeNulls()
+			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+			.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
+			.registerTypeAdapter(ZonedDateTime.class, (JsonSerializer<ZonedDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
+			.create();
 
 	private final String backendUrl;
+
 
 	public PostgrestMentionRepository(String backendUrl) {
 		this.backendUrl = Objects.requireNonNull(backendUrl);
@@ -53,6 +60,10 @@ public class PostgrestMentionRepository implements MentionRepository {
 				}.getType());
 	}
 
+	public static JsonArray toRsdJsonArray(Collection<MentionRecord> mentions) {
+		return GSON.toJsonTree(mentions).getAsJsonArray();
+	}
+
 	@Override
 	public Collection<MentionRecord> leastRecentlyScrapedMentions(int limit) {
 		String data = Utils.getAsAdmin(backendUrl + "/mention?doi=not.is.null&order=scraped_at.asc.nullsfirst&limit=" + limit);
@@ -66,17 +77,10 @@ public class PostgrestMentionRepository implements MentionRepository {
 
 	@Override
 	public void save(Collection<MentionRecord> mentions) {
-		Gson gson = new GsonBuilder()
-				.serializeNulls()
-				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-				.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
-				.registerTypeAdapter(ZonedDateTime.class, (JsonSerializer<ZonedDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
-				.create();
-
 		LOGGER.info("Will save {} mentions", mentions.size());
 
 		for (MentionRecord mention : mentions) {
-			String scrapedMentionJson = gson.toJson(mention);
+			String scrapedMentionJson = GSON.toJson(mention);
 			String onConflictFilter;
 
 			if (mention.doi != null) {

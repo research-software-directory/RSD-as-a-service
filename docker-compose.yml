@@ -149,9 +149,9 @@ services:
       - database
       - backend
       - auth
-    # volumes:
+    volumes:
     #   - ./deployment/hmz/styles:/app/public/styles
-    #   - ./deployment/hmz/data:/app/public/data
+      - ./deployment/rsd/data:/app/public/data
     #   - ./deployment/hmz/images:/app/public/images
     networks:
       - net
@@ -162,13 +162,14 @@ services:
     environment:
       # it uses values from .env file
       - POSTGREST_URL
-      - PGRST_JWT_SECRET
       - MAX_REQUESTS_GITHUB
       - MAX_REQUESTS_GITLAB
+      - MAX_REQUESTS_DOI
       - MAX_REQUESTS_ROR
+      - ENABLE_NASSA_SCRAPER
+      - PGRST_JWT_SECRET
       - API_CREDENTIALS_GITHUB
       - ZENODO_ACCESS_TOKEN
-      - MAX_REQUESTS_DOI
       - CROSSREF_CONTACT_EMAIL
       - LIBRARIES_IO_ACCESS_TOKEN
     depends_on:
