@@ -41,6 +41,8 @@ export async function validateInputList(doiList: string[], mentions: MentionItem
 
   // create DOI list of valid entries eligible for futher processing
   const validDois: string[] = doiList
+    // filter out lines with white space only
+    .filter(input => input.trim().length > 0)
     // validate that input is of type="doi"
     .map(input => extractSearchTerm(input))
     // filter valid DOI type entries
