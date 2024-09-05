@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {MentionItemProps} from '~/types/Mention'
-import {crossrefItemToMentionItem, getCrossrefItemByDoi} from './getCrossref'
+import {crossrefItemToMentionItem} from './getCrossref'
 import {dataCiteGraphQLItemToMentionItem, getDataciteItemByDoiGraphQL, getDataciteItemsByDoiGraphQL} from './getDataCite'
 import logger from './logger'
 import {getOpenalexItemByDoi, getOpenalexItemsByDoi, openalexItemToMentionItem} from '~/utils/getOpenalex'
@@ -75,7 +75,8 @@ export async function getUrlFromDoiOrg(doi: string) {
 
 
 async function getItemFromCrossref(doi: string) {
-  const resp = await getCrossrefItemByDoi(doi)
+  const mentionResponse = await fetch(`/api/fe/mention/crossref?doi=${doi}`)
+  const resp = await mentionResponse.json()
   // debugger
   if (resp.status === 200) {
     const mention = crossrefItemToMentionItem(resp.message)

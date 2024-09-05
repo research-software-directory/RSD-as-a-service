@@ -130,6 +130,7 @@ services:
       - AZURE_LOGIN_PROMPT
       - AZURE_DISPLAY_NAME
       - AZURE_DESCRIPTION_HTML
+      - CROSSREF_CONTACT_EMAIL
     expose:
       - 3000
     depends_on:
