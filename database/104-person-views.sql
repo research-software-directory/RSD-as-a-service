@@ -1,6 +1,6 @@
--- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
--- SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -100,4 +100,29 @@ INNER JOIN
 	project ON team_member.project = project.id
 LEFT JOIN
 	public_profile() ON public_profile.orcid = team_member.orcid
+$$;
+
+--ROLES ALREADY IN RSD
+--Use this to suggest roles in the modal
+CREATE FUNCTION suggested_roles() RETURNS
+VARCHAR[] LANGUAGE sql STABLE AS
+$$
+	SELECT
+    ARRAY_AGG("role")
+  FROM (
+		SELECT
+			"role"
+		FROM
+			contributor
+		WHERE
+			"role" IS NOT NULL
+		UNION
+		SELECT
+			"role"
+		FROM
+			team_member
+		WHERE
+		"role" IS NOT NULL
+  ) roles
+;
 $$;

@@ -74,7 +74,7 @@ export default function ControlledTextField<T>({options, control, rules}:Control
             minRows={options?.maxRows ?? undefined}
             maxRows={options?.maxRows ?? undefined}
             rows={options?.rows ?? undefined}
-            error={error ? true: false}
+            error={error ? true : false}
             label={options?.label ?? 'Label not provided'}
             type={options?.type ?? 'text'}
             fullWidth={options?.fullWidth ?? true }

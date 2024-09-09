@@ -14,23 +14,40 @@ import IconButton from '@mui/material/IconButton'
 import {getImageUrl} from '~/utils/editImage'
 import {getDisplayInitials, getDisplayName} from '~/utils/getDisplayName'
 import ImageInput from '~/components/form/ImageInput'
+import ContentLoader from '../layout/ContentLoader'
 
 type AvatarOptionsProps = {
   given_names: string
   family_names: string
   avatar_id: string | null
-  avatar_b64: string | null
   avatar_options: string[]
   onSelectAvatar: (avatar_id:string)=>void
   onNoAvatar:()=>void
   onFileUpload:(e:ChangeEvent<HTMLInputElement>|undefined)=>void
+  loading: boolean
 }
 
 export default function AvatarOptions(props: AvatarOptionsProps) {
-  const {given_names, family_names, avatar_id, avatar_b64, avatar_options} = props
+  const {given_names, family_names, avatar_id, avatar_options, loading} = props
   const {onFileUpload, onNoAvatar, onSelectAvatar} = props
+
+  let avatar:string|undefined
+  if (avatar_id){
+    if (avatar_id?.startsWith('data:')===true){
+      avatar = avatar_id
+    }else{
+      avatar = getImageUrl(avatar_id) ?? undefined
+    }
+  }
+
+  // console.group('AvatarOptions')
+  // console.log('avatar_id...', avatar_id)
+  // console.log('avatar_b64...', avatar_b64)
+  // console.log('avatar...', avatar)
+  // console.groupEnd()
+
   return (
-    <div className="grid grid-cols-2 gap-8">
+    <div className="grid grid-cols-[1fr,3fr] gap-4">
       <div>
         <label htmlFor="upload-avatar-image"
           title="Click to upload new image"
@@ -44,7 +61,7 @@ export default function AvatarOptions(props: AvatarOptionsProps) {
         >
           <Avatar
             alt={getDisplayName({given_names, family_names}) ?? 'Unknown'}
-            src={avatar_b64 ?? getImageUrl(avatar_id) ?? ''}
+            src={avatar}
             sx={{
               width: '8rem',
               height: '8rem',
@@ -63,40 +80,53 @@ export default function AvatarOptions(props: AvatarOptionsProps) {
       </div>
       <div>
         <h3 className="text-sm text-base-content-disabled pb-4">Avatar options</h3>
-        <Box
-          sx={{
-            flex: 1,
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems:'flex-start',
-            justifyContent: 'flex-start',
-            gap:'0.25rem',
-            maxHeight: '10rem',
-            overflow: 'auto'
-          }}
-        >
-          {avatar_options.map(img => {
-            return (
-              <IconButton
-                title="Use this image"
-                key={img}
-                onClick={()=>onSelectAvatar(img)}
-              >
-                <img
-                  src={getImageUrl(img) ?? ''}
-                  alt="avatar"
-                  className="w-[2.5rem] h-[2.5rem] rounded-full"
-                />
-              </IconButton>
-            )
-          })}
-          <IconButton
-            title="No image"
-            onClick={onNoAvatar}
+        {loading ?
+          <div className="flex h-24">
+            <ContentLoader />
+          </div>
+          :
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems:'flex-start',
+              justifyContent: 'flex-start',
+              gap:'0.25rem',
+              maxHeight: '10rem',
+              overflow: 'auto'
+            }}
           >
-            {getDisplayInitials({given_names, family_names})}
-          </IconButton>
-        </Box>
+            {avatar_options.map(img => {
+              let image = img
+              if (img.startsWith('data:')===false){
+                image = getImageUrl(img) ?? ''
+              }
+              return (
+                <IconButton
+                  title="Use this image"
+                  key={img}
+                  onClick={()=>onSelectAvatar(img)}
+                >
+                  <img
+                    src={image}
+                    alt="avatar"
+                    className="w-[2.5rem] h-[2.5rem] rounded-full"
+                  />
+                </IconButton>
+              )
+            })}
+            <IconButton
+              data-testid="no-image-btn"
+              title="No image"
+              onClick={onNoAvatar}
+            >
+              <span className="w-[2.5rem] h-[2.5rem]">
+                {getDisplayInitials({given_names, family_names})}
+              </span>
+            </IconButton>
+          </Box>
+        }
       </div>
     </div>
   )
