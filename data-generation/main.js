@@ -151,6 +151,26 @@ function generateTestimonials(ids) {
 				software: id,
 				message: faker.hacker.phrase(),
 				source: faker.person.fullName(),
+				position: index + 1,
+			});
+		}
+	}
+
+	return result;
+}
+
+function generateProjectTestimonials(ids) {
+	const result = [];
+
+	for (const id of ids) {
+		// each project will get 0, 1 or 2 testimonials
+		const numberOfTestimonials = faker.number.int({max: 3, min: 0});
+		for (let index = 0; index < numberOfTestimonials; index++) {
+			result.push({
+				project: id,
+				message: faker.hacker.phrase(),
+				source: faker.person.fullName(),
+				position: index + 1,
 			});
 		}
 	}
@@ -1019,6 +1039,7 @@ const projectPromise = postToBackend('/project', generateProjects())
 		idsProjects = pjArray.map(sw => sw['id']);
 		postToBackend('/team_member', await generateTeamMembers(idsProjects, peopleWithOrcid));
 		postToBackend('/url_for_project', generateUrlsForProjects(idsProjects));
+		postToBackend('/testimonial_for_project', generateProjectTestimonials(idsProjects));
 		postToBackend('/keyword_for_project', generateKeywordsForEntity(idsProjects, idsKeywords, 'project'));
 		postToBackend('/output_for_project', generateMentionsForEntity(idsProjects, idsMentions, 'project'));
 		postToBackend('/impact_for_project', generateMentionsForEntity(idsProjects, idsMentions, 'project'));

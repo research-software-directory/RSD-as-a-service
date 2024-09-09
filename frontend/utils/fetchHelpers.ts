@@ -6,6 +6,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import logger from './logger'
+
 export type AuthHeader = {
   'Content-Type': string;
   Authorization?: string;
@@ -25,52 +27,60 @@ export function createJsonHeaders(token?: string): AuthHeader {
 }
 
 export async function extractReturnMessage(resp: Response, dataId?: string) {
-  // OK
-  if ([200, 201, 204, 206].includes(resp.status)) {
+  try{
+    // OK
+    if ([200, 201, 204, 206].includes(resp.status)) {
     // just return id
-    return {
-      status: 200,
-      message: dataId ?? 'OK'
+      return {
+        status: 200,
+        message: dataId ?? 'OK'
+      }
     }
-  }
-  // not authorized, 404 seem to be returned in some cases
-  if ([401, 403, 404].includes(resp.status)) {
-    return {
-      status: resp.status,
-      message: `
+    // not authorized, 404 seem to be returned in some cases
+    if ([401, 403, 404].includes(resp.status)) {
+      return {
+        status: resp.status,
+        message: `
           ${resp.statusText}.
           You might not have sufficient privileges to edit this item.
           Please contact site administrators.
         `
+      }
     }
-  }
-  // extract custom PostgREST error message
-  let errMsg: string|null = null
-  if (resp.json) {
-    const json = await resp.json()
-    errMsg = json.message
-  }
-  if ([409].includes(resp.status)) {
-    return {
-      status: resp.status,
-      message: `
+    // extract custom PostgREST error message
+    let errMsg: string|null = null
+    if (resp.json) {
+      const json = await resp.json()
+      errMsg = json.message
+    }
+    if ([409].includes(resp.status)) {
+      return {
+        status: resp.status,
+        message: `
           ${resp.statusText}:
           ${errMsg ?? 'duplicate key value violates unique constraint.'}
         `
+      }
     }
-  }
-  if (errMsg) {
+    if (errMsg) {
+      return {
+        status: resp.status,
+        message: errMsg
+      }
+    }
     return {
       status: resp.status,
-      message: errMsg
-    }
-  }
-  return {
-    status: resp.status,
-    message: `
+      message: `
         ${resp.statusText}.
         Please contact site administrators.
       `
+    }
+  }catch(e:any){
+    logger(`extractReturnMessage: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: `Error extractReturnMessage: ${e.message}`
+    }
   }
 }
 

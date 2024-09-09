@@ -16,6 +16,7 @@ import TerminalIcon from '@mui/icons-material/Terminal'
 import ContentLoader from '~/components/layout/ContentLoader'
 import JoinInnerIcon from '@mui/icons-material/JoinInner'
 import AddCommentIcon from '@mui/icons-material/AddComment'
+import ThreePIcon from '@mui/icons-material/ThreeP'
 
 // use dynamic imports
 const ProjectInformation = dynamic(() => import('./information'),{
@@ -36,6 +37,10 @@ const RelatedProjects = dynamic(() => import('./related-projects'),{
 const RelatedSoftware = dynamic(() => import('./related-software'),{
   loading: ()=><ContentLoader />
 })
+const ProjectTestimonials = dynamic(() => import('./testimonials'),{
+  loading: ()=><ContentLoader />
+})
+
 const ProjectMaintainers = dynamic(() => import('./maintainers'),{
   loading: ()=><ContentLoader />
 })
@@ -75,6 +80,13 @@ export const editProjectPage: EditProjectPageProps[] = [
     label: 'Mentions',
     icon: <AddCommentIcon />,
     render: () => <ProjectMentions />,
+    status: ''
+  },
+  {
+    id: 'testimonials',
+    label: 'Testimonials',
+    icon: <ThreePIcon />,
+    render: () => <ProjectTestimonials />,
     status: ''
   },
   {

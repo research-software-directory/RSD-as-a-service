@@ -235,7 +235,6 @@ export const testimonialInformation = {
   }
 }
 
-
 export const mentionInformation = {
   sectionTitle: 'Mentions',
   mentionType: {

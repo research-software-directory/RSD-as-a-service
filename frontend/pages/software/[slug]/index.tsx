@@ -47,7 +47,7 @@ import {
 import logger from '~/utils/logger'
 import {getDisplayName} from '~/utils/getDisplayName'
 import {getContributorsForSoftware} from '~/utils/editContributors'
-import {getTestimonialsForSoftware} from '~/utils/editTestimonial'
+
 import {getRelatedSoftwareForSoftware} from '~/utils/editRelatedSoftware'
 import {getMentionsBySoftware} from '~/utils/editMentions'
 import {getParticipatingOrganisations} from '~/utils/editOrganisation'
@@ -69,6 +69,7 @@ import {getReferencePapersForSoftware} from '~/components/software/edit/mentions
 import {PackageManager, getPackageManagers} from '~/components/software/edit/package-managers/apiPackageManager'
 import {CommunitiesOfSoftware} from '~/components/software/edit/communities/apiSoftwareCommunities'
 import CategoriesSection from '~/components/software/CategoriesSection'
+import {getTestimonialsForSoftware} from '~/components/software/edit/testimonials/apiSoftwareTestimonial'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -289,7 +290,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // mentions
       getMentionsBySoftware({software:software.id,token}),
       // testimonials
-      getTestimonialsForSoftware({software:software.id,frontend: false,token}),
+      getTestimonialsForSoftware({software:software.id,token}),
       // contributors
       getContributorsForSoftware({software:software.id,token}),
       // relatedTools

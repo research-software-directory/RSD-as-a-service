@@ -9,48 +9,48 @@
 import {fireEvent, render, screen, waitFor, waitForElementToBeRemoved, within} from '@testing-library/react'
 
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
-import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
-import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
+import {WithProjectContext} from '~/utils/jest/WithProjectContext'
+import {initialState as projectState} from '~/components/projects/edit/editProjectContext'
 
 import SoftwareTestimonials from './index'
-import {testimonialInformation as config} from '../editSoftwareConfig'
+import config from './config'
 
 // MOCKS
-import mockTestimonials from './__mocks__/testimonials.json'
+import mockTestimonials from './__mocks__/project_testimonials.json'
 
 // Mock editTestimonial api calls
-const mockGetTestimonialsForSoftware = jest.fn(props => Promise.resolve(mockTestimonials))
+const mockGetTestimonialsForProject = jest.fn(props => Promise.resolve(mockTestimonials))
 const mockPostTestimonial = jest.fn(({testimonial}) => {
   return Promise.resolve({
     status: 201,
     message: testimonial
   })
 })
-const mockDeleteTestimonialById = jest.fn(props => Promise.resolve([] as any))
+const mockDeleteProjectTestimonial = jest.fn(props => Promise.resolve([] as any))
 const mockPatchTestimonialPositions = jest.fn(props => Promise.resolve([] as any))
-jest.mock('./apiSoftwareTestimonial', () => ({
-  getTestimonialsForSoftware: jest.fn(props => mockGetTestimonialsForSoftware(props)),
-  postTestimonial: jest.fn(props => mockPostTestimonial(props)),
-  deleteTestimonialById: jest.fn(props => mockDeleteTestimonialById(props)),
+jest.mock('./apiProjectTestimonial', () => ({
+  getTestimonialsForProject: jest.fn(props => mockGetTestimonialsForProject(props)),
+  addProjectTestimonial: jest.fn(props => mockPostTestimonial(props)),
+  deleteProjectTestimonial: jest.fn(props => mockDeleteProjectTestimonial(props)),
   patchTestimonialPositions: jest.fn(props => mockPatchTestimonialPositions(props)),
 }))
 
-describe('frontend/components/software/edit/testimonials/index.tsx', () => {
+describe('frontend/components/projects/edit/testimonials/index.tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
   it('renders no testimonials message', async() => {
     // required prop
-    softwareState.software.id = 'test-software-id'
+    projectState.project.id = 'test-project-id'
     // return no items
-    mockGetTestimonialsForSoftware.mockResolvedValueOnce([])
+    mockGetTestimonialsForProject.mockResolvedValueOnce([])
 
     render(
       <WithAppContext options={{session:mockSession}}>
-        <WithSoftwareContext state={softwareState}>
+        <WithProjectContext state={projectState}>
           <SoftwareTestimonials />
-        </WithSoftwareContext>
+        </WithProjectContext>
       </WithAppContext>
     )
 
@@ -62,15 +62,15 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
 
   it('renders mocked testimonials', async() => {
     // required prop
-    softwareState.software.id = 'test-software-id'
+    projectState.project.id = 'test-project-id'
     // return no items
-    mockGetTestimonialsForSoftware.mockResolvedValueOnce(mockTestimonials)
+    mockGetTestimonialsForProject.mockResolvedValueOnce(mockTestimonials)
 
     render(
       <WithAppContext options={{session:mockSession}}>
-        <WithSoftwareContext state={softwareState}>
+        <WithProjectContext state={projectState}>
           <SoftwareTestimonials />
-        </WithSoftwareContext>
+        </WithProjectContext>
       </WithAppContext>
     )
 
@@ -86,9 +86,9 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
 
   it('can add testimonial', async() => {
     // required prop
-    softwareState.software.id = 'test-software-id'
+    projectState.project.id = 'test-project-id'
     // return no items
-    mockGetTestimonialsForSoftware.mockResolvedValueOnce([])
+    mockGetTestimonialsForProject.mockResolvedValueOnce([])
 
     const newItem = {
       message: 'This is test message',
@@ -97,9 +97,9 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
 
     render(
       <WithAppContext options={{session:mockSession}}>
-        <WithSoftwareContext state={softwareState}>
+        <WithProjectContext state={projectState}>
           <SoftwareTestimonials />
-        </WithSoftwareContext>
+        </WithProjectContext>
       </WithAppContext>
     )
 
@@ -144,7 +144,7 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
           'id': null,
           'message': newItem.message,
           'position': 1,
-          'software': softwareState.software.id,
+          'project': projectState.project.id,
           'source': newItem.source,
         },
         'token': 'TEST_TOKEN'
@@ -154,15 +154,15 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
 
   it('can edit testimonial', async() => {
     // required prop
-    softwareState.software.id = 'test-software-id'
+    projectState.project.id = 'test-project-id'
     // return no items
-    mockGetTestimonialsForSoftware.mockResolvedValueOnce(mockTestimonials)
+    mockGetTestimonialsForProject.mockResolvedValueOnce(mockTestimonials)
 
     render(
       <WithAppContext options={{session:mockSession}}>
-        <WithSoftwareContext state={softwareState}>
+        <WithProjectContext state={projectState}>
           <SoftwareTestimonials />
-        </WithSoftwareContext>
+        </WithProjectContext>
       </WithAppContext>
     )
 
@@ -203,15 +203,15 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
 
   it('can delete testimonial', async () => {
     // required prop
-    softwareState.software.id = 'test-software-id'
+    projectState.project.id = 'test-project-id'
     // return no items
-    mockGetTestimonialsForSoftware.mockResolvedValueOnce(mockTestimonials)
+    mockGetTestimonialsForProject.mockResolvedValueOnce(mockTestimonials)
     // mock delete response
-    mockDeleteTestimonialById.mockResolvedValueOnce({
+    mockDeleteProjectTestimonial.mockResolvedValueOnce({
       status: 200,
       message: 'OK'
     })
-    // mock patch respose
+    // mock patch response
     mockPatchTestimonialPositions.mockResolvedValueOnce({
       status: 200,
       message: 'OK'
@@ -219,9 +219,9 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
 
     render(
       <WithAppContext options={{session: mockSession}}>
-        <WithSoftwareContext state={softwareState}>
+        <WithProjectContext state={projectState}>
           <SoftwareTestimonials />
-        </WithSoftwareContext>
+        </WithProjectContext>
       </WithAppContext>
     )
 
@@ -249,8 +249,8 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
     // validate api calls
     await waitFor(() => {
       // validate delete testimonial api
-      expect(mockDeleteTestimonialById).toBeCalledTimes(1)
-      expect(mockDeleteTestimonialById).toBeCalledWith({
+      expect(mockDeleteProjectTestimonial).toBeCalledTimes(1)
+      expect(mockDeleteProjectTestimonial).toBeCalledWith({
         'id': mockTestimonials[0].id,
         'token': mockSession.token,
       })

@@ -2,6 +2,7 @@
 -- SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 dv4all
+-- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -45,3 +46,33 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_team_member BEFORE UPDATE ON team_member FOR EACH ROW EXECUTE PROCEDURE sanitise_update_team_member();
+
+
+CREATE TABLE testimonial_for_project (
+	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+	project UUID REFERENCES project (id) NOT NULL,
+	message VARCHAR(500) NOT NULL,
+	source VARCHAR(200) NOT NULL,
+	position INTEGER
+);
+
+CREATE FUNCTION sanitise_insert_testimonial_for_project() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.id = gen_random_uuid();
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_insert_testimonial_for_project BEFORE INSERT ON testimonial_for_project FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_testimonial_for_project();
+
+
+CREATE FUNCTION sanitise_update_testimonial_for_project() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.id = OLD.id;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_update_testimonial_for_project BEFORE UPDATE ON testimonial_for_project FOR EACH ROW EXECUTE PROCEDURE sanitise_update_testimonial_for_project();
