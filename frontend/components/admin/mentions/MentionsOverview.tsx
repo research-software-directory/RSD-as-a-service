@@ -52,7 +52,7 @@ export default function MentionsOverview() {
     if (searchTypeTerm.type === 'doi') {
       return `doi=eq.${termEscaped}`
     }
-    return `or=(title.ilike.*${termEscaped}*,authors.ilike.*${termEscaped}*,journal.ilike.*${termEscaped}*,url.ilike.*${termEscaped}*,note.ilike.*${termEscaped}*,external_id.ilike.*${termEscaped}*)`
+    return `or=(title.ilike.*${termEscaped}*,authors.ilike.*${termEscaped}*,journal.ilike.*${termEscaped}*,url.ilike.*${termEscaped}*,note.ilike.*${termEscaped}*,openalex_id.ilike.*${termEscaped}*)`
   }
 
   function sanitiseSearch(search: string): string | undefined {

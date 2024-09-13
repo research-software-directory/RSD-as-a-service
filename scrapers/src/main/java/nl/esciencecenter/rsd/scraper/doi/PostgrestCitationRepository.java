@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,32 +11,30 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Utils;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
-import java.util.TreeSet;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
- * This class provides access to the citation related tables via the Postgrest API.  
+ * This class provides access to the citation related tables via the Postgrest API.
  */
 public class PostgrestCitationRepository {
 
-	// The base URL of the backend. 
+	// The base URL of the backend.
 	private final String backendUrl;
-	
+
 	public PostgrestCitationRepository(String backendUrl) {
 		this.backendUrl = Objects.requireNonNull(backendUrl);
 	}
 
 	/**
 	 * Retrieve the least recently scraped reference papers from the database.
-	 *    
+	 *
 	 * @param limit the maximum number of references to return
-	 * @return A collection of citation data representing these reference papers. 
+	 * @return A collection of citation data representing these reference papers.
 	 */
 	public Collection<CitationData> leastRecentlyScrapedCitations(int limit) {
 		String oneHourAgoFilter = Utils.atLeastOneHourAgoFilter("citations_scraped_at");
@@ -45,23 +43,23 @@ public class PostgrestCitationRepository {
 		return parseJson(data);
 	}
 
-	public void saveCitations(String backendUrl, UUID idCitedMention, Collection<UUID> citingMentions, ZonedDateTime scrapedAt) {
-		String jsonPatch = "{\"citations_scraped_at\": \"%s\"}".formatted(scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+	public void saveCitations(String backendUrl, UUID idCitedMention, Collection<UUID> citingMentions, Instant scrapedAt) {
+		String jsonPatch = "{\"citations_scraped_at\": \"%s\"}".formatted(scrapedAt.toString());
 		Utils.patchAsAdmin(backendUrl + "/mention?id=eq." + idCitedMention.toString(), jsonPatch);
 
 		JsonArray jsonArray = new JsonArray();
 
-                // We sometimes encouter duplicate citations which may lead to the operation to fail.
+		// We sometimes encounter duplicate citations which may lead to the operation to fail.
 		HashSet<String> seen = new HashSet<>();
 
 		for (UUID citingMention : citingMentions) {
 
 			if (citingMention != null) {
- 				String citationID = citingMention.toString();
+				String citationID = citingMention.toString();
 
 				if (!seen.contains(citationID)) {
 					seen.add(citationID);
-	  				JsonObject jsonObject = new JsonObject();
+					JsonObject jsonObject = new JsonObject();
 					jsonObject.addProperty("mention", idCitedMention.toString());
 					jsonObject.addProperty("citation", citationID);
 					jsonArray.add(jsonObject);
@@ -75,23 +73,26 @@ public class PostgrestCitationRepository {
 	}
 
 	private Collection<CitationData> parseJson(String data) {
-		
+
 		JsonArray array = JsonParser.parseString(data).getAsJsonArray();
 		Collection<CitationData> result = new ArrayList<>();
 
 		for (JsonElement jsonElement : array) {
 			JsonObject jsonObject = jsonElement.getAsJsonObject();
 			UUID id = UUID.fromString(jsonObject.getAsJsonPrimitive("id").getAsString());
-			String doi = jsonObject.getAsJsonPrimitive("doi").getAsString();
+			String doiString = Utils.stringOrNull(jsonObject.get("doi"));
+			Doi doi = doiString == null ? null : Doi.fromString(doiString);
+			String openalexIdString = Utils.stringOrNull(jsonObject.get("openalex_id"));
+			OpenalexId openalexId = openalexIdString == null ? null : OpenalexId.fromString(openalexIdString);
 
-			Collection<String> knownDois = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-			JsonArray doisArray = jsonObject.getAsJsonArray("known_dois");
+			Collection<Doi> knownDois = new HashSet<>();
+			JsonArray doisArray = jsonObject.getAsJsonArray("known_citing_dois");
 
 			for (JsonElement element : doisArray) {
-				knownDois.add(element.getAsString());
+				knownDois.add(Doi.fromString(element.getAsString()));
 			}
 
-			result.add(new CitationData(id, doi, knownDois));
+			result.add(new CitationData(id, doi, openalexId, knownDois));
 		}
 
 		return result;

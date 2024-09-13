@@ -127,7 +127,7 @@ public class Utils {
 			Thread.currentThread().interrupt();
 			throw new RuntimeException(e);
 		} catch (IOException e) {
-			LOGGER.warn("An error occurred sending a request to {}", uri, e);
+			LOGGER.error("An error occurred sending a request to {}", uri, e);
 			throw new RuntimeException(e);
 		}
 
@@ -188,7 +188,9 @@ public class Utils {
 				.timeout(DEFAULT_TIMEOUT)
 				.header("Content-Type", "application/json")
 				.header("Authorization", "Bearer " + jwtString);
-		if (extraHeaders != null && extraHeaders.length > 0) builder.headers(extraHeaders);
+		if (extraHeaders != null && extraHeaders.length > 0) {
+			builder.headers(extraHeaders);
+		}
 		HttpRequest request = builder.build();
 		HttpResponse<String> response;
 
@@ -276,15 +278,18 @@ public class Utils {
 		return "%s/%s?%s=eq.%s".formatted(baseuri, tableName, primaryKeyName, primaryKey);
 	}
 
-	public static String patchAsAdmin(String uri, String json) {
+	public static String patchAsAdmin(String uri, String json, String... extraHeaders) {
 		String jwtString = adminJwt();
-		HttpRequest request = HttpRequest.newBuilder()
+		HttpRequest.Builder builder = HttpRequest.newBuilder()
 				.method("PATCH", HttpRequest.BodyPublishers.ofString(json))
 				.uri(URI.create(uri))
 				.timeout(Duration.ofSeconds(30))
 				.header("Content-Type", "application/json")
-				.header("Authorization", "Bearer " + jwtString)
-				.build();
+				.header("Authorization", "Bearer " + jwtString);
+		if (extraHeaders != null && extraHeaders.length > 0) {
+			builder.headers(extraHeaders);
+		}
+		HttpRequest request = builder.build();
 		HttpResponse<String> response;
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());

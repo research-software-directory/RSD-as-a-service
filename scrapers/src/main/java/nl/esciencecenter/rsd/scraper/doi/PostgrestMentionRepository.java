@@ -5,29 +5,21 @@
 
 package nl.esciencecenter.rsd.scraper.doi;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializer;
-import com.google.gson.reflect.TypeToken;
 import nl.esciencecenter.rsd.scraper.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 
-public class PostgrestMentionRepository implements MentionRepository {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(PostgrestMentionRepository.class);
+public class PostgrestMentionRepository {
 
 	private final String backendUrl;
 
@@ -35,102 +27,119 @@ public class PostgrestMentionRepository implements MentionRepository {
 		this.backendUrl = Objects.requireNonNull(backendUrl);
 	}
 
-	static Collection<MentionRecord> parseJson(String data) {
-		return new GsonBuilder()
-				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-				.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, typeOfT, context) -> Instant.parse(json.getAsString()))
-				.registerTypeAdapter(ZonedDateTime.class, (JsonDeserializer<ZonedDateTime>) (json, typeOfT, context) -> ZonedDateTime.parse(json.getAsString()))
-				.registerTypeAdapter(URI.class, (JsonDeserializer<URI>) (json, typeOfT, context) -> {
-					try {
-						return URI.create(json.getAsString());
-					} catch (IllegalArgumentException e) {
-						LOGGER.warn("Could not create a URI of {} ", json.getAsString());
-						return null;
-					}
-				})
-				.create()
-				.fromJson(data, new TypeToken<Collection<MentionRecord>>() {
-				}.getType());
-	}
+	static Collection<RsdMentionIds> parseMultipleRsdIds(String json) {
+		Collection<RsdMentionIds> result = new ArrayList<>();
 
-	@Override
-	public Collection<MentionRecord> leastRecentlyScrapedMentions(int limit) {
-		String data = Utils.getAsAdmin(backendUrl + "/mention?doi=not.is.null&order=scraped_at.asc.nullsfirst&limit=" + limit);
-		return parseJson(data);
-	}
+		JsonArray rootArray = JsonParser.parseString(json).getAsJsonArray();
+		for (JsonElement jsonElement : rootArray) {
 
-	@Override
-	public Collection<MentionRecord> mentionData(Collection<String> dois) {
-		throw new UnsupportedOperationException();
-	}
+			JsonObject arrayEntry = jsonElement.getAsJsonObject();
+			UUID id = UUID.fromString(arrayEntry.getAsJsonPrimitive("id").getAsString());
+			String doiString = Utils.stringOrNull(arrayEntry.get("doi"));
+			Doi doi = doiString == null ? null : Doi.fromString(doiString);
+			String openalexIdString = Utils.stringOrNull(arrayEntry.get("openalex_id"));
+			OpenalexId openalexId = openalexIdString == null ? null : OpenalexId.fromString(openalexIdString);
 
-	@Override
-	public void save(Collection<MentionRecord> mentions) {
-		Gson gson = new GsonBuilder()
-				.serializeNulls()
-				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-				.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
-				.registerTypeAdapter(ZonedDateTime.class, (JsonSerializer<ZonedDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
-				.create();
-
-		LOGGER.info("Will save {} mentions", mentions.size());
-
-		for (MentionRecord mention : mentions) {
-			String scrapedMentionJson = gson.toJson(mention);
-			String onConflictFilter;
-
-			if (mention.doi != null) {
-				onConflictFilter = "doi";
-			} else {
-				onConflictFilter = "external_id,source";
-			}
-
-			String uri = "%s/mention?on_conflict=%s&select=id".formatted(backendUrl, onConflictFilter);
-			String response;
-
-			try {
-				LOGGER.debug("Saving mention: {} / {} / {}", mention.doi, mention.externalId, mention.source);
-				response = Utils.postAsAdmin(uri, scrapedMentionJson, "Prefer", "resolution=merge-duplicates,return=representation");
-
-				JsonArray responseAsArray = JsonParser.parseString(response).getAsJsonArray();
-				// Used in MainCitations, do not remove
-				mention.id = UUID.fromString(responseAsArray.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString());
-
-			} catch (RuntimeException e) {
-
-				LOGGER.warn("Failed to save mention: {} / {} / {}", mention.doi, mention.externalId, mention.source, e);
-
-				String metadataMessage = "Failed to save mention: DOI %s, external ID %s, source %s".formatted(mention.doi, mention.externalId, mention.source);
-				RuntimeException exceptionWithMetadata = new RuntimeException(metadataMessage, e);
-				if (mention.doi == null) {
-					Utils.saveExceptionInDatabase("Mention scraper", "mention", null, exceptionWithMetadata);
-				} else {
-					// We will try to update the scraped_at field, so that it goes back into the queue for being scraped
-					// Note that this operation in itself may also fail.
-					try {
-						String existingMentionResponse = Utils.getAsAdmin("%s/mention?doi=eq.%s&select=id".formatted(backendUrl, mention.doi));
-						JsonArray array = JsonParser.parseString(existingMentionResponse).getAsJsonArray();
-						if (array.size() == 1) {
-							String id = array.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
-							Utils.saveErrorMessageInDatabase(null,
-									"mention",
-									null,
-									id,
-									"id",
-									ZonedDateTime.now(),
-									"scraped_at");
-
-							Utils.saveExceptionInDatabase("Mention scraper", "mention", UUID.fromString(id), exceptionWithMetadata);
-						} else {
-							Utils.saveExceptionInDatabase("Mention scraper", "mention", null, exceptionWithMetadata);
-						}
-					} catch (Exception e2) {
-						LOGGER.warn("Failed to save exception in database", e2);
-					}
-				}
-
-			}
-
+			result.add(new RsdMentionIds(id, doi, openalexId));
 		}
+
+		return result;
+	}
+
+	static RsdMentionIds parseSingleRsdIds(String json) {
+		JsonObject root = JsonParser.parseString(json).getAsJsonArray().get(0).getAsJsonObject();
+
+		UUID id = UUID.fromString(root.getAsJsonPrimitive("id").getAsString());
+		String doiString = Utils.stringOrNull(root.get("doi"));
+		Doi doi = doiString == null ? null : Doi.fromString(doiString);
+		String openalexIdString = Utils.stringOrNull(root.get("openalex_id"));
+		OpenalexId openalexId = openalexIdString == null ? null : OpenalexId.fromString(openalexIdString);
+
+		return new RsdMentionIds(id, doi, openalexId);
+	}
+
+	public Collection<RsdMentionIds> leastRecentlyScrapedMentions(int limit) {
+		String data = Utils.getAsAdmin(backendUrl + "/mention?doi=not.is.null&order=scraped_at.asc.nullsfirst&select=id,doi,openalex_id&limit=" + limit);
+		return parseMultipleRsdIds(data);
+	}
+
+	public void saveScrapedAt(RsdMentionIds ids, Instant scrapedAt) {
+		JsonObject root = new JsonObject();
+		root.addProperty("scraped_at", scrapedAt.toString());
+		Utils.patchAsAdmin(backendUrl + "/mention?select=id,doi,openalex_id&id=eq." + ids.id(), root.toString(), "Prefer", "return=representation");
+	}
+
+	public RsdMentionIds updateMention(RsdMentionRecord mention, boolean updateOpenAlexId) {
+		JsonObject root = createJsonFromMentionData(mention.content(), updateOpenAlexId);
+		root.addProperty("scraped_at", mention.scrapedAt().toString());
+		String response = Utils.patchAsAdmin(backendUrl + "/mention?select=id,doi,openalex_id&id=eq." + mention.id(), root.toString(), "Prefer", "return=representation");
+		return parseSingleRsdIds(response);
+	}
+
+	public RsdMentionIds createMentionIfNotExistsOnDoiAndGetIds(ExternalMentionRecord mention, Instant scrapedAt) {
+		Doi doi = mention.doi();
+		Objects.requireNonNull(doi);
+		Collection<RsdMentionIds> mentionsWithDoi = parseMultipleRsdIds(Utils.getAsAdmin(backendUrl + "/mention?select=id,doi,openalex_id&doi=eq." + doi.toUrlEncodedString()));
+		if (mentionsWithDoi.size() == 1) {
+			return mentionsWithDoi.iterator().next();
+		}
+
+		return createNewMention(mention, scrapedAt, false);
+	}
+
+	public RsdMentionIds createOrUpdateMentionWithOpenalexId(ExternalMentionRecord mention, Instant scrapedAt) {
+		OpenalexId openalexId = Objects.requireNonNull(mention.openalexId());
+		Doi doi = mention.doi();
+
+		String query = "/mention?select=id,doi,openalex_id";
+		if (mention.doi() != null) {
+			query += "&or=(openalex_id.eq.%s,doi.eq.%s)".formatted(openalexId.toUrlEncodedString(), doi.toUrlEncodedString());
+		} else {
+			query += "&openalex_id=eq.%s".formatted(openalexId.toUrlEncodedString());
+		}
+		String existingMentionsResponse = Utils.getAsAdmin(backendUrl + query);
+		Collection<RsdMentionIds> existingIds = parseMultipleRsdIds(existingMentionsResponse);
+
+		if (existingIds.size() > 1) {
+			throw new RuntimeException("Multiple entries with DOI %s or OpenAlex id %s exist, they should be merged".formatted(openalexId, mention.doi()));
+		}
+		if (existingIds.size() == 1) {
+			UUID id = existingIds.iterator().next().id();
+			return updateMention(new RsdMentionRecord(id, mention, scrapedAt), true);
+		}
+
+		return createNewMention(mention, scrapedAt, true);
+	}
+
+	private RsdMentionIds createNewMention(ExternalMentionRecord mention, Instant scrapedAt, boolean setOpenAlexId) {
+		JsonObject root = createJsonFromMentionData(mention, setOpenAlexId);
+		root.addProperty("scraped_at", scrapedAt.toString());
+		String response = Utils.postAsAdmin(backendUrl + "/mention?select=id,doi,openalex_id", root.toString(), "Prefer", "return=representation");
+		return parseSingleRsdIds(response);
+	}
+
+	static JsonObject createJsonFromMentionData(ExternalMentionRecord mention, boolean setOpenAlexId) {
+		JsonObject root = new JsonObject();
+		Doi doi = mention.doi();
+		root.addProperty("doi", doi == null ? null : mention.doi().toString());
+		ZonedDateTime doiRegistrationDate = mention.doiRegistrationDate();
+		root.addProperty("doi_registration_date", doiRegistrationDate == null ? null : doiRegistrationDate.toString());
+		if (setOpenAlexId) {
+			root.addProperty("openalex_id", mention.openalexId().toString());
+		}
+		URI url = mention.url();
+		root.addProperty("url", url == null ? null : mention.url().toString());
+		root.addProperty("title", mention.title());
+		root.addProperty("authors", mention.authors());
+		root.addProperty("publisher", mention.publisher());
+		root.addProperty("publication_year", mention.publicationYear());
+		root.addProperty("journal", mention.journal());
+		root.addProperty("page", mention.page());
+		root.addProperty("mention_type", mention.mentionType().name());
+		root.addProperty("source", mention.source());
+		root.addProperty("version", mention.version());
+		root.addProperty("source", mention.source());
+
+		return root;
 	}
 }

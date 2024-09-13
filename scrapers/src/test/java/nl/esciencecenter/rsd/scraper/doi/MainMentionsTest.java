@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -43,7 +43,7 @@ public class MainMentionsTest {
 				  }
 				]""";
 
-		Map<String, String> doiToSource = MainMentions.parseJsonSources(validDoiSourceData);
+		Map<String, String> doiToSource = MainMentions.parseJsonDoiSources(validDoiSourceData);
 		Assertions.assertEquals(6, doiToSource.size());
 		Assertions.assertEquals("EIDR", doiToSource.get("10.5240/B1FA-0EEC-C316-3316-3A73-L"));
 		Assertions.assertEquals("Invalid DOI", doiToSource.get("notADoi"));

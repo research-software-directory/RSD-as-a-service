@@ -187,7 +187,7 @@ fill the `provenance_iri` column. Further read [Linked Data](https://en.wikipedi
 
 ## Mentions
 
-In this section, admins can search for mentions and edit them. If you enter a DOI or UUID, we search on that field only. Otherwise, we search on title, authors, journal, URL, note and external ID (like an OpenAlex ID).
+In this section, admins can search for mentions and edit them. If you enter a DOI or UUID, we search on that field only. Otherwise, we search on title, authors, journal, URL, note and OpenAlex ID.
 
 :::warning
 Edit mentions with care: they might be referenced to in multiple places. If you want to fully change a mention attached to e.g. a software page, you should delete it there and create a new one instead of editing it.

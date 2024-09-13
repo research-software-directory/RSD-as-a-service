@@ -9,6 +9,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import nl.esciencecenter.rsd.scraper.Config;
@@ -17,9 +18,9 @@ import nl.esciencecenter.rsd.scraper.Utils;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.TreeMap;
 import java.util.UUID;
 
 public class PostgrestReleaseRepository {
@@ -35,7 +36,7 @@ public class PostgrestReleaseRepository {
 		return parseJson(data);
 	}
 
-	public void saveReleaseContent(Collection<ReleaseData> releaseData, Map<String, Collection<MentionRecord>> conceptDoiToDois, Map<String, UUID> versionDoiToMentionId) {
+	public void saveReleaseContent(Collection<ReleaseData> releaseData, Map<Doi, Collection<ExternalMentionRecord>> conceptDoiToDois, Map<Doi, UUID> versionDoiToMentionId) {
 		// First update the releases_scraped_at column.
 		JsonArray releasesBody = new JsonArray();
 		Instant now = Instant.now();
@@ -49,31 +50,35 @@ public class PostgrestReleaseRepository {
 
 
 		// Then update the release_version table.
-		// For each scraped or existing version as a mention, we need to know its id of the mention table and the ids of the software to which it belongs.
-		Map<String, Collection<UUID>> conceptDoiToSoftwareIds = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+		// For each scraped or existing version as a mention, we need to know its id of the mention table and the ids (plural, because multiple software entries can have the same concept DOI) of the software to which it belongs.
+		Map<Doi, Collection<UUID>> conceptDoiToSoftwareIds = new HashMap<>();
 		for (ReleaseData release : releaseData) {
 			Collection<UUID> softwareIds = conceptDoiToSoftwareIds.computeIfAbsent(release.conceptDoi, k -> new ArrayList<>());
 			softwareIds.add(release.softwareId);
 		}
 
-		Map<String, String> versionDoiToConceptDoi = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-		for (Map.Entry<String, Collection<MentionRecord>> conceptDoiToDoisEntry : conceptDoiToDois.entrySet()) {
-			String conceptDoi = conceptDoiToDoisEntry.getKey();
-			Collection<MentionRecord> versionDois = conceptDoiToDoisEntry.getValue();
-			for (MentionRecord version : versionDois) {
-				versionDoiToConceptDoi.put(version.doi, conceptDoi);
+		Map<Doi, Doi> versionDoiToConceptDoi = new HashMap<>();
+		for (Map.Entry<Doi, Collection<ExternalMentionRecord>> conceptDoiToDoisEntry : conceptDoiToDois.entrySet()) {
+			Doi conceptDoi = conceptDoiToDoisEntry.getKey();
+			Collection<ExternalMentionRecord> versionDois = conceptDoiToDoisEntry.getValue();
+			for (ExternalMentionRecord version : versionDois) {
+				versionDoiToConceptDoi.put(version.doi(), conceptDoi);
 			}
 		}
 
 		JsonArray coupling = new JsonArray();
-		for (Map.Entry<String, String> entry : versionDoiToConceptDoi.entrySet()) {
-			String versionDoi = entry.getKey();
-			String conceptDoi = entry.getValue();
+		for (Map.Entry<Doi, Doi> entry : versionDoiToConceptDoi.entrySet()) {
+			Doi versionDoi = entry.getKey();
+			Doi conceptDoi = entry.getValue();
 			Collection<UUID> softwareIds = conceptDoiToSoftwareIds.get(conceptDoi);
 			for (UUID softwareId : softwareIds) {
 				JsonObject couple = new JsonObject();
+				UUID mentionId = versionDoiToMentionId.get(versionDoi);
+				if (mentionId == null) {
+					continue;
+				}
 				couple.addProperty("release_id", softwareId.toString());
-				couple.addProperty("mention_id", versionDoiToMentionId.get(versionDoi).toString());
+				couple.addProperty("mention_id", mentionId.toString());
 				coupling.add(couple);
 			}
 		}
@@ -82,8 +87,10 @@ public class PostgrestReleaseRepository {
 	}
 
 	Collection<ReleaseData> parseJson(String data) {
+		JsonDeserializer<Doi> doiDeserializer = (json, type, context) -> Doi.fromString(json.getAsJsonPrimitive().getAsString());
 		Gson gson = new GsonBuilder()
 				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+				.registerTypeAdapter(Doi.class, doiDeserializer)
 				.create();
 		TypeToken<Collection<ReleaseData>> typeToken = new TypeToken<>() {
 		};
