@@ -65,8 +65,8 @@ function buildSearchQuery(searchFor: string) {
   const given_names = names[0]
   const family_names = names.length > 1 ? names.slice(1).join(' ') : null
   if (family_names) {
-    return `q=given-names:${given_names}+AND+family-name:${family_names}~*`
+    return `q=given-names:${given_names}+AND+family-name:${family_names}*`
   }
   // just try the term on both
-  return `q=given-names:${searchFor}~*+OR+family-name:${searchFor}~*`
+  return `q=given-names:${searchFor}*+OR+family-name:${searchFor}*`
 }
