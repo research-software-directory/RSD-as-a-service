@@ -111,7 +111,7 @@ export default function AvatarOptions(props: AvatarOptionsProps) {
                   <img
                     src={image}
                     alt="avatar"
-                    className="w-[2.5rem] h-[2.5rem] rounded-full"
+                    className="w-[2.5rem] h-[2.5rem] rounded-full object-cover"
                   />
                 </IconButton>
               )
@@ -121,7 +121,7 @@ export default function AvatarOptions(props: AvatarOptionsProps) {
               title="No image"
               onClick={onNoAvatar}
             >
-              <span className="w-[2.5rem] h-[2.5rem]">
+              <span className="w-[2.5rem] h-[2.5rem] rounded-full object-cover">
                 {getDisplayInitials({given_names, family_names})}
               </span>
             </IconButton>

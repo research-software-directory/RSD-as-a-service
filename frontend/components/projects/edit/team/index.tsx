@@ -92,6 +92,10 @@ export default function ProjectTeam() {
     if (person && project?.id) {
       // extract person props as much as possible (use null if not found)
       const member:Person = getPropsFromObject(person, PersonProps, true)
+      // use first avatar (if exists)
+      member.avatar_id = person.avatar_options[0] ?? null
+      // use affiliation (if exists)
+      member.affiliation = person.affiliation_options[0] ?? null
       // flag contact person to false
       member.is_contact_person = false
       // add position

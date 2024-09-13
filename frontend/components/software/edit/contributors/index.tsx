@@ -96,6 +96,10 @@ export default function SoftwareContributors() {
     if (person && software?.id) {
       // extract person props as much as possible (use null if not found)
       const contributor:Person = getPropsFromObject(person, PersonProps, true)
+      // use first avatar (if exists)
+      contributor.avatar_id = person.avatar_options[0] ?? null
+      // use affiliation (if exists)
+      contributor.affiliation = person.affiliation_options[0] ?? null
       // flag contact person to false
       contributor.is_contact_person = false
       // add position

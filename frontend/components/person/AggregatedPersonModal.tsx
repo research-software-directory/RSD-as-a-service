@@ -226,8 +226,13 @@ export default function AggregatedPersonModal({
   )
 
   function isSaveDisabled() {
+    // if not valid -> save disabled
     if (isValid === false) return true
+    // if valid and new entry (id===null) -> save enabled
+    if (formData.id === null) return false
+    // if valid and edit (id!=null) but not dirty/touched -> save disabled
     if (isDirty === false) return true
+    // else -> save enabled
     return false
   }
 }
