@@ -97,7 +97,7 @@ export default function useTeamMembers() {
         // update team member id
         member.id = resp.message
 
-        if (member.is_contact_person==true){
+        if (member.is_contact_person===true){
           const newList = [
             ...resetContactPersons(member,members,token),
             member
@@ -214,7 +214,7 @@ export default function useTeamMembers() {
       // try to remove member avatar
       // without waiting for result
       if (member.avatar_id) {
-        const del = await deleteImage({
+        deleteImage({
           id: member.avatar_id,
           token
         })

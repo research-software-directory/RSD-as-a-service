@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -22,15 +22,15 @@ const styles = {
   cursor: 'default'
 }
 
-// inital contributors order is on family names
-const initalOrder:OrderByProps<RsdContributor, keyof RsdContributor> = {
+// initial contributors order is on family names
+const initialOrder:OrderByProps<RsdContributor, keyof RsdContributor> = {
   column: 'family_names',
   direction: 'asc'
 }
 
 export default function ContributorsTable() {
   const {token} = useSession()
-  const [orderBy, setOrderBy] = useState<OrderByProps<RsdContributor, keyof RsdContributor>>(initalOrder)
+  const [orderBy, setOrderBy] = useState<OrderByProps<RsdContributor, keyof RsdContributor>>(initialOrder)
   const {loading, columns, contributors} = useContributors({token,orderBy})
 
   // console.group('ContributorsTable')
@@ -84,6 +84,10 @@ export default function ContributorsTable() {
         data={contributors}
         onSort={onSortColumn}
       />
+      <div className="py-4 text-sm">
+        * Avatars are aggregated by combination of Given names and Family names or ORCID.
+        If there is more than one avatar option you can click on the avatar to change it.
+      </div>
     </div>
   )
 }

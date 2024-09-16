@@ -96,7 +96,7 @@ export default function useSoftwareContributors() {
         // update contributor id
         contributor.id = resp.message
 
-        if (contributor.is_contact_person==true){
+        if (contributor.is_contact_person===true){
           const newList = [
             ...resetContactPersons(contributor,contributors,token),
             contributor

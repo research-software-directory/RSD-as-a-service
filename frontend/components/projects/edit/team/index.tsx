@@ -186,7 +186,9 @@ export default function ProjectTeam() {
             config={{
               minLength: cfgTeamMembers.find.validation.minLength,
               label: cfgTeamMembers.find.label,
-              help: cfgTeamMembers.find.help
+              help: cfgTeamMembers.find.help,
+              // clear options after selection
+              reset: true,
             }}
           />
           <ContributorPrivacyHint />

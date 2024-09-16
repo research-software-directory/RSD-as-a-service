@@ -11,13 +11,13 @@ import {HTMLAttributes, useState} from 'react'
 import {useSession} from '~/auth'
 import {splitName} from '~/utils/getDisplayName'
 import {isOrcid} from '~/utils/getORCID'
+import {Person} from '~/types/Contributor'
 import AsyncAutocompleteSC,{AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
 import {searchForPerson} from '~/components/person/searchForPerson'
 import {AggregatedPerson} from '~/components/person/groupByOrcid'
 import AggregatedPersonOption from '~/components/person/AggregatedPersonOption'
-import {Person} from '~/types/Contributor'
 
-type FindPersonProps = {
+type FindPersonProps = Readonly<{
   // create new Person
   onCreate: (person: Person) => void
   // edit aggregated person
@@ -25,9 +25,10 @@ type FindPersonProps = {
   config: {
     minLength: number,
     label: string,
-    help: string
+    help: string,
+    reset?: boolean
   }
-}
+}>
 
 export default function FindPerson({onCreate,onAdd,config}:FindPersonProps) {
   const {token} = useSession()
@@ -56,9 +57,13 @@ export default function FindPerson({onCreate,onAdd,config}:FindPersonProps) {
   }
 
   function onAddPerson(selected:AutocompleteOption<AggregatedPerson>) {
-    if (selected && selected.data) {
+    if (selected?.data) {
       // debugger
       onAdd(selected.data)
+      // reset options
+      if (config?.reset){
+        setOptions([])
+      }
     }
   }
 
@@ -76,6 +81,10 @@ export default function FindPerson({onCreate,onAdd,config}:FindPersonProps) {
       position: null,
       ...name
     })
+    // reset options
+    if (config?.reset){
+      setOptions([])
+    }
   }
 
   function renderAddOption(props: HTMLAttributes<HTMLLIElement>,
@@ -130,8 +139,6 @@ export default function FindPerson({onCreate,onAdd,config}:FindPersonProps) {
         config={{
           freeSolo: true,
           forceShowAdd: true,
-          // clear selected item
-          reset: true,
           // pass received config
           ...config
         }}

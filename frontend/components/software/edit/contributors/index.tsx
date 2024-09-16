@@ -188,7 +188,9 @@ export default function SoftwareContributors() {
             config={{
               minLength: config.findContributor.validation.minLength,
               label: config.findContributor.label,
-              help: config.findContributor.help
+              help: config.findContributor.help,
+              // clear options after selection
+              reset: true
             }}
           />
           <ContributorPrivacyHint />

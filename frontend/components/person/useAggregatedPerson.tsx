@@ -34,7 +34,8 @@ export default function useAggregatedPerson(orcid:string|null){
           // we use first person that matches orcid,
           // it should be only one but just in case
           const person = persons.find(p=>p.orcid===orcid)
-          if (abort==false) setAggregatedPerson(person)
+          if (abort===true) return
+          setAggregatedPerson(person)
         })
         .finally(()=>setLoading(false))
     } else if (loading===true){

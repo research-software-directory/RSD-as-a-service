@@ -44,21 +44,3 @@ export async function getAggregatedPersons({searchFor,token}:
     return []
   }
 }
-
-export async function getAggregatedPersonOptions({orcid,token}:
-  {orcid:string,token:string}) {
-  try {
-    // we can search on orcid
-    const persons = await getAggregatedPersons({searchFor:orcid,token})
-    // console.log('getAggregatedPersons...persons...', persons)
-    const options={
-      avatars: persons[0]?.avatar_options ?? [],
-      affiliations: persons[0]?.affiliation_options ?? [],
-      emails: persons[0]?.email_options ?? []
-    }
-    return options
-  } catch (e: any) {
-    logger(`getAggregatedPersonOptions: ${e?.message}`, 'error')
-    return []
-  }
-}

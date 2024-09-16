@@ -160,7 +160,7 @@ export function personsToAutocompleteOptions(persons:AggregatedPerson[]) {
   if (!persons) return []
   const options = persons.map(item => {
     return {
-      key: item['orcid'] ?? item.display_name,
+      key: item['orcid'] ?? `${item.display_name}${Math.random()}`,
       label: item.display_name ?? '',
       data: item
     }

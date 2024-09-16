@@ -47,6 +47,8 @@ const mockSearchForPerson = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/components/person/searchForPerson', () => ({
   searchForPerson: jest.fn(props=>mockSearchForPerson(props))
 }))
+// MOCK useAggregatedPerson (use default)
+jest.mock('~/components/person/useAggregatedPerson')
 
 // MOCK getContributorsFromDoi
 const mockGetContributorsFromDoi = jest.fn(props => Promise.resolve([] as any))
@@ -85,7 +87,6 @@ const mockHandleFileUpload = jest.fn(props => Promise.resolve({
 jest.mock('~/utils/handleFileUpload', () => ({
   handleFileUpload: jest.fn(props=>mockHandleFileUpload(props))
 }))
-
 
 describe('frontend/components/software/edit/contributors/index.tsx', () => {
   beforeEach(() => {

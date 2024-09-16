@@ -37,7 +37,7 @@ type AggregatedPersonModalConfig={
   affiliation: InputProps
 }
 
-type AggregatedPersonModalProps = {
+type AggregatedPersonModalProps = Readonly<{
   onCancel: () => void,
   onSubmit: (person: FormPerson) => void,
   person: Person
@@ -46,7 +46,7 @@ type AggregatedPersonModalProps = {
   // default labels and validation are defined in ./config
   // optionally provide custom config
   config?: AggregatedPersonModalConfig
-}
+}>
 
 export type FormPerson = Person & {
   initial_avatar_id: string|null
@@ -137,7 +137,7 @@ export default function AggregatedPersonModal({
                 useNull: true,
                 defaultValue: formData?.given_names,
                 helperTextMessage: config.given_names.help,
-                helperTextCnt: `${formData?.given_names?.length || 0}/${config.given_names.validation.maxLength.value}`,
+                helperTextCnt: `${formData?.given_names?.length ?? 0}/${config.given_names.validation.maxLength.value}`,
               }}
               rules={config.given_names.validation}
             />
@@ -149,18 +149,19 @@ export default function AggregatedPersonModal({
                 useNull: true,
                 defaultValue: formData?.family_names,
                 helperTextMessage: config.family_names.help,
-                helperTextCnt: `${formData?.family_names?.length || 0}/${config.family_names.validation.maxLength.value}`,
+                helperTextCnt: `${formData?.family_names?.length ?? 0}/${config.family_names.validation.maxLength.value}`,
               }}
               rules={config.family_names.validation}
             />
             <ControlledTextField
               options={{
+                type: 'email',
                 name: 'email_address',
                 label: config.email_address.label,
                 useNull: true,
                 defaultValue: person?.email_address,
                 helperTextMessage: config.email_address.help,
-                helperTextCnt: `${formData?.email_address?.length || 0}/${config.email_address.validation().maxLength.value}`,
+                helperTextCnt: `${formData?.email_address?.length ?? 0}/${config.email_address.validation().maxLength.value}`,
               }}
               control={control}
               rules={config.email_address.validation(formData.is_contact_person)}

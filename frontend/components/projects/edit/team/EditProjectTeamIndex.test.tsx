@@ -27,8 +27,10 @@ jest.mock('~/utils/getProjects', () => ({
 // MOCK searchForPerson
 const mockSearchForPerson = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/components/person/searchForPerson', () => ({
-  searchForPerson: jest.fn(props=>mockSearchForPerson(props))
+  searchForPerson: jest.fn(props=>mockSearchForPerson(props)),
 }))
+// MOCK useAggregatedPerson (use default)
+jest.mock('~/components/person/useAggregatedPerson')
 
 // MOCK postTeamMember
 const mockPostTeamMember = jest.fn(props => Promise.resolve({
@@ -76,7 +78,6 @@ const mockImageData={
   image_b64: 'data:image/png;base64,base64-encoded-image-content',
   image_mime_type: 'image/png'
 }
-
 const mockHandleFileUpload = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK',
