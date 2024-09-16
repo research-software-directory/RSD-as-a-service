@@ -2,6 +2,7 @@
 -- SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+-- SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -185,7 +186,15 @@ CREATE TRIGGER zzz_check_cycle_categories  -- triggers are executed in alphabeti
 -- helper functions
 
 CREATE FUNCTION category_path(category_id UUID)
-RETURNS TABLE (LIKE category)
+RETURNS TABLE (
+	id UUID,
+	parent UUID,
+	community UUID,
+	short_name VARCHAR,
+	name VARCHAR,
+	properties JSONB,
+	provenance_iri VARCHAR
+)
 LANGUAGE SQL STABLE AS
 $$
 	WITH RECURSIVE cat_path AS (
