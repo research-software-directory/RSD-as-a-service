@@ -98,7 +98,7 @@ public class Main {
 				String name = sub;
 				String email = sub + "@example.com";
 				String organisation = "Example organisation";
-				OpenIdInfo localInfo = new OpenIdInfo(sub, name, email, organisation);
+				OpenIdInfo localInfo = new OpenIdInfo(sub, name, email, organisation, null);
 
 				AccountInfo accountInfo = new PostgrestAccount().account(localInfo, OpenidProvider.local);
 				createAndSetToken(ctx, accountInfo);

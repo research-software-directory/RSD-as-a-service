@@ -20,10 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MainTest {
 	OpenIdInfo userinfo = new OpenIdInfo(
-			"12345", "User Name", "user@example.com", "Example User"
+			"12345", "User Name", "user@example.com", "Example User", null
 	);
 	OpenIdInfo userinfoNullOrganisation = new OpenIdInfo(
-			"12345", "User Name", "user@example.com", null
+			"12345", "User Name", "user@example.com", null, null
 	);
 	static MockedStatic<Config> utilities;
 
