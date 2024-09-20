@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +16,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -44,7 +48,8 @@ public class OrcidLogin implements Login {
 			else if (familyName != null) name = familyName;
 			else if (givenName != null) name = givenName;
 		}
-		return new OpenIdInfo(subject, name, null, null);
+		Map<String, List<String>> emptyData = Collections.emptyMap();
+		return new OpenIdInfo(subject, name, null, null, emptyData);
 	}
 
 	private Map<String, String> createForm() {

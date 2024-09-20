@@ -18,12 +18,17 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 class MainTest {
+	Map<String, List<String>> emptyData = Collections.emptyMap();
 	OpenIdInfo userinfo = new OpenIdInfo(
-			"12345", "User Name", "user@example.com", "Example User"
+			"12345", "User Name", "user@example.com", "Example User", emptyData
 	);
 	OpenIdInfo userinfoNullOrganisation = new OpenIdInfo(
-			"12345", "User Name", "user@example.com", null
+			"12345", "User Name", "user@example.com", null, emptyData
 	);
 	static MockedStatic<Config> utilities;
 

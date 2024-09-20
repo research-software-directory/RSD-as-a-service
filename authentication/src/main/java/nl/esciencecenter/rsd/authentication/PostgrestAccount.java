@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -64,7 +66,7 @@ public class PostgrestAccount implements Account {
 				isAdmin = true;
 			}
 
-			return new AccountInfo(account, name, isAdmin);
+			return new AccountInfo(account, name, isAdmin, openIdInfo.data());
 		}
 		// The login credentials do no exist yet, create a new account and return it.
 		else {
@@ -78,7 +80,7 @@ public class PostgrestAccount implements Account {
 
 			boolean isAdmin = createAdminIfDevAndNoAdminsExist(backendUri, token, accountId);
 
-			return new AccountInfo(accountId, openIdInfo.name(), isAdmin);
+			return new AccountInfo(accountId, openIdInfo.name(), isAdmin, openIdInfo.data());
 		}
 	}
 
