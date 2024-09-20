@@ -16,6 +16,9 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class Main {
@@ -98,7 +101,8 @@ public class Main {
 				String name = sub;
 				String email = sub + "@example.com";
 				String organisation = "Example organisation";
-				OpenIdInfo localInfo = new OpenIdInfo(sub, name, email, organisation);
+				Map<String, List<String>> emptyData = Collections.emptyMap();
+				OpenIdInfo localInfo = new OpenIdInfo(sub, name, email, organisation, emptyData);
 
 				AccountInfo accountInfo = new PostgrestAccount().account(localInfo, OpenidProvider.local);
 				createAndSetToken(ctx, accountInfo);

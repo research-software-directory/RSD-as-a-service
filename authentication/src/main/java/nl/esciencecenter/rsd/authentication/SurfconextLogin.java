@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,7 +19,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -43,7 +46,8 @@ public class SurfconextLogin implements Login {
 		String name = idJwt.getClaim("name").asString();
 		String email = idJwt.getClaim("email").asString();
 		String organisation = idJwt.getClaim("schac_home_organization").asString();
-		return new OpenIdInfo(subject, name, email, organisation);
+		Map<String, List<String>> emptyData = Collections.emptyMap();
+		return new OpenIdInfo(subject, name, email, organisation, emptyData);
 	}
 
 	private Map<String, String> createForm() {
