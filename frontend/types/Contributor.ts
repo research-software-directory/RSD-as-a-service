@@ -15,15 +15,15 @@ export type Person = {
   email_address: string | null
   family_names: string
   given_names: string
-  affiliation?: string | null
+  affiliation: string | null
   role: string | null
   orcid: string | null
   position: number | null
   avatar_id: string | null
 }
 
-export type PatchPerson = {
-  id: string | null
+export type PatchPerson = Person & {
+  id: string
   is_contact_person?: boolean
   email_address?: string | null
   family_names?: string
@@ -35,8 +35,12 @@ export type PatchPerson = {
   position?: number | null
 }
 
-export type SaveContributor = Person & {
+export type PatchContributor = PatchPerson & {
   software: string,
+}
+
+export type NewContributor = Person & {
+  software: string
 }
 
 export type Contributor = Person & {
@@ -54,8 +58,7 @@ export type Profile = Person & {
 
 export type SourceType = 'RSD' | 'ORCID'
 
-
-export const Person = [
+export const PersonProps = [
   'id',
   'is_contact_person',
   'email_address',
@@ -69,11 +72,11 @@ export const Person = [
 ]
 
 export const TeamMemberProps = [
-  ...Person,
+  ...PersonProps,
   'project'
 ]
 
 export const ContributorProps = [
-  ...Person,
+  ...PersonProps,
   'software'
 ]

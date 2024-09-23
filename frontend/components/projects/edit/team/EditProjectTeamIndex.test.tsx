@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,7 +14,8 @@ import {WithProjectContext} from '~/utils/jest/WithProjectContext'
 import editProjectState from '../__mocks__/editProjectState'
 import mockTeamMembers from './__mocks__/teamMembers.json'
 import mockSearchOptions from '~/components/person/__mocks__/searchForPersonOptions.json'
-import {cfgTeamMembers as config} from './config'
+import {modalConfig} from '~/components/person/config'
+import {cfgTeamMembers} from './config'
 import ProjectTeam from './index'
 
 // MOCK getTeamForProject
@@ -26,8 +27,10 @@ jest.mock('~/utils/getProjects', () => ({
 // MOCK searchForPerson
 const mockSearchForPerson = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/components/person/searchForPerson', () => ({
-  searchForPerson: jest.fn(props=>mockSearchForPerson(props))
+  searchForPerson: jest.fn(props=>mockSearchForPerson(props)),
 }))
+// MOCK useAggregatedPerson (use default)
+jest.mock('~/components/person/useAggregatedPerson')
 
 // MOCK postTeamMember
 const mockPostTeamMember = jest.fn(props => Promise.resolve({
@@ -46,7 +49,7 @@ const mockPatchTeamMemberPositions = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'
 }))
-jest.mock('./editTeamMembers', () => ({
+jest.mock('./apiTeamMembers', () => ({
   postTeamMember: jest.fn(props => mockPostTeamMember(props)),
   patchTeamMember: jest.fn(props => mockPatchTeamMember(props)),
   deleteTeamMemberById: jest.fn(props => mockDeleteTeamMemberById(props)),
@@ -59,18 +62,26 @@ const mockUpsertImage = jest.fn(props => Promise.resolve({
   status: 201,
   message: 'uploaded-image-id'
 }))
+const mockSaveBase64Image = jest.fn(props => Promise.resolve({
+  status: 201,
+  message: 'uploaded-image-id'
+}))
 jest.mock('~/utils/editImage', () => ({
   ...jest.requireActual('~/utils/editImage'),
   deleteImage: jest.fn(props => mockDeleteImage(props)),
-  upsertImage: jest.fn(props => mockUpsertImage(props))
+  upsertImage: jest.fn(props => mockUpsertImage(props)),
+  saveBase64Image: jest.fn(props => mockSaveBase64Image(props)),
 }))
 
 // MOCK handleFileUpload
+const mockImageData={
+  image_b64: 'data:image/png;base64,base64-encoded-image-content',
+  image_mime_type: 'image/png'
+}
 const mockHandleFileUpload = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK',
-  image_b64: 'png,base64-encoded-image-content',
-  image_mime_type: 'image/png'
+  ...mockImageData
 }))
 jest.mock('~/utils/handleFileUpload', () => ({
   handleFileUpload: jest.fn(props=>mockHandleFileUpload(props))
@@ -151,7 +162,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
 
     // find member
     const findMember = screen.getByRole('combobox', {
-      name: config.find.label
+      name: cfgTeamMembers.find.label
     })
     fireEvent.change(findMember,{target:{value: searchMember}})
 
@@ -177,36 +188,36 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
 
     // given names
     const givenNames = within(modal).getByRole('textbox', {
-      name: config.given_names.label
+      name: modalConfig.given_names.label
     })
     expect(givenNames).toHaveValue(newPerson.given_names)
     // family name
     const familyNames = within(modal).getByRole('textbox', {
-      name: config.family_names.label
+      name: modalConfig.family_names.label
     })
     expect(familyNames).toHaveValue(newPerson.family_names)
 
     // add email
     const email = within(modal).getByRole('textbox', {
-      name: config.email_address.label
+      name: modalConfig.email_address.label
     })
     fireEvent.change(email, {target: {value: newPerson.email}})
 
     // add role
-    const role = within(modal).getByRole('textbox', {
-      name: config.role.label
+    const role = within(modal).getByRole('combobox', {
+      name: modalConfig.role.label
     })
     fireEvent.change(role, {target: {value: newPerson.role}})
 
     // add affiliation
-    const affiliation = within(modal).getByRole('textbox', {
-      name: config.affiliation.label
+    const affiliation = within(modal).getByRole('combobox', {
+      name: modalConfig.affiliation.label
     })
     fireEvent.change(affiliation, {target: {value: newPerson.affiliation}})
 
     // switch is_contact_person
     const isContact = within(modal).getByRole('checkbox', {
-      name: config.is_contact_person.label
+      name: modalConfig.is_contact_person.label
     })
     fireEvent.click(isContact)
 
@@ -287,6 +298,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
         ],
         'token': mockSession.token,
       })
+
       // confirm member removed from list
       const remainedMembers = screen.getAllByTestId('team-member-item')
       expect(remainedMembers.length).toEqual(mockTeamMembers.length - 1)
@@ -338,15 +350,9 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
 
     const modal = screen.getByRole('dialog')
 
-    // click on remove image
-    const removeImage = within(modal).getByRole('button', {
-      name: 'Remove'
-    })
-
-    await waitFor(() => {
-      expect(removeImage).toBeEnabled()
-      fireEvent.click(removeImage)
-    })
+    // click on no image button
+    const noImage = within(modal).getByTestId('no-image-btn')
+    fireEvent.click(noImage)
 
     // save
     const saveBtn = within(modal).getByRole('button', {
@@ -373,7 +379,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
       })
     })
   })
-  it('can CANCEL remove avatar (change)', async () => {
+  it('can CANCEL modal changes', async () => {
     // mock no members
     mockGetTeamForProject.mockResolvedValueOnce(mockTeamMembers)
     // mock patch
@@ -400,15 +406,9 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
 
     const modal = screen.getByRole('dialog')
 
-    // click on remove image
-    const removeImage = within(modal).getByRole('button', {
-      name: 'Remove'
-    })
-
-    await waitFor(() => {
-      expect(removeImage).toBeEnabled()
-      fireEvent.click(removeImage)
-    })
+    // click on no image button
+    const removeImage = within(modal).getByTestId('no-image-btn')
+    fireEvent.click(removeImage)
 
     // save
     const saveBtn = within(modal).getByRole('button', {
@@ -435,12 +435,12 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     })
   })
 
-  it('can replace avatar image', async () => {
+  it('can upload avatar image', async () => {
     const oldAvatarId = mockTeamMembers[0].avatar_id
     const newAvatarId = 'new-avatar-test-id-with-length-10-or-more'
     const fileToUpload = 'test-file-name.png'
-    const base64data = 'base64-encoded-image-content'
-    const fileType = 'image/png'
+    // const base64data = 'base64-encoded-image-content'
+    // const fileType = 'image/png'
     const editedMember = {
       ...mockTeamMembers[0],
       // we use project id from context
@@ -456,7 +456,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
       message: 'OK'
     })
     // mock image upload
-    mockUpsertImage.mockResolvedValueOnce({
+    mockSaveBase64Image.mockResolvedValueOnce({
       status: 201,
       message: newAvatarId
     })
@@ -498,10 +498,15 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
 
     await waitFor(() => {
       // validate new avatar upload
-      expect(mockUpsertImage).toBeCalledTimes(1)
-      expect(mockUpsertImage).toBeCalledWith({
-        'data': base64data,
-        'mime_type': fileType,
+      expect(mockSaveBase64Image).toBeCalledTimes(1)
+      expect(mockSaveBase64Image).toBeCalledWith({
+        'base64': mockImageData.image_b64,
+        'token': mockSession.token,
+      })
+      // validate delete image called
+      expect(mockDeleteImage).toBeCalledTimes(1)
+      expect(mockDeleteImage).toBeCalledWith({
+        'id': oldAvatarId,
         'token': mockSession.token,
       })
       // confirm member patched called
@@ -509,12 +514,6 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
       expect(mockPatchTeamMember).toBeCalledWith({
         member: editedMember,
         token: mockSession.token
-      })
-      // validate delete image called
-      expect(mockDeleteImage).toBeCalledTimes(1)
-      expect(mockDeleteImage).toBeCalledWith({
-        'id': oldAvatarId,
-        'token': mockSession.token,
       })
     })
   })

@@ -1,40 +1,37 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {HTMLAttributes, useState} from 'react'
 
 import {useSession} from '~/auth'
-import AsyncAutocompleteSC, {AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
-import {SaveTeamMember} from '~/types/Project'
 import {splitName} from '~/utils/getDisplayName'
 import {isOrcid} from '~/utils/getORCID'
+import {Person} from '~/types/Contributor'
+import AsyncAutocompleteSC,{AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
 import {searchForPerson} from '~/components/person/searchForPerson'
 import {AggregatedPerson} from '~/components/person/groupByOrcid'
 import AggregatedPersonOption from '~/components/person/AggregatedPersonOption'
-import AggregatedMemberModal, {NewRsdMember} from './AggregatedMemberModal'
-import {cfgTeamMembers} from './config'
 
-type FindMemberProps = {
-  project: string,
-  position: number,
-  // for adding new contact manually
-  onEdit: (member: SaveTeamMember) => void
-  // for submitting "aggregated person"
-  onSubmit: ({member}: { member: SaveTeamMember }) => void
-}
+type FindPersonProps = Readonly<{
+  // create new Person
+  onCreate: (person: Person) => void
+  // edit aggregated person
+  onAdd: (person: AggregatedPerson) => void
+  config: {
+    minLength: number,
+    label: string,
+    help: string,
+    reset?: boolean
+  }
+}>
 
-type ModalState = {
-  open: boolean,
-  person?: NewRsdMember
-}
-
-export default function FindMember({project,position,onEdit,onSubmit}: FindMemberProps) {
+export default function FindPerson({onCreate,onAdd,config}:FindPersonProps) {
   const {token} = useSession()
-  const [modal, setModal] = useState<ModalState>()
   const [options, setOptions] = useState<AutocompleteOption<AggregatedPerson>[]>([])
   const [status, setStatus] = useState<{
     loading: boolean,
@@ -44,14 +41,14 @@ export default function FindMember({project,position,onEdit,onSubmit}: FindMembe
     foundFor: undefined
   })
 
-  async function searchMember(searchFor: string) {
+  async function searchContributor(searchFor: string) {
     setStatus({loading:true,foundFor:undefined})
-    const options = await searchForPerson({
+    const resp = await searchForPerson({
       searchFor,
       token
     })
     // set options
-    setOptions(options)
+    setOptions(resp)
     // stop loading
     setStatus({
       loading: false,
@@ -60,48 +57,34 @@ export default function FindMember({project,position,onEdit,onSubmit}: FindMembe
   }
 
   function onAddPerson(selected:AutocompleteOption<AggregatedPerson>) {
-    if (selected && selected.data) {
-      const person: NewRsdMember = {
-        ...selected.data,
-        project,
-        is_contact_person: false,
-        selected_avatar: null,
-        avatar_id: null,
-        avatar_b64: null,
-        avatar_mime_type: null,
-        role: null,
-        position
-      }
+    if (selected?.data) {
       // debugger
-      setModal({
-        open: true,
-        person
-      })
+      onAdd(selected.data)
+      // reset options
+      if (config?.reset){
+        setOptions([])
+      }
     }
   }
 
-  function onAddMember(member: SaveTeamMember) {
-    // close modal
-    setModal({open: false})
-    // pass info
-    onSubmit({member})
-  }
-
-  function createMember(newInputValue: string) {
+  function createContributor(newInputValue: string) {
     const name = splitName(newInputValue)
-    // add new person
-    onEdit({
+    // add new contributor
+    onCreate({
       id: null,
-      project,
       is_contact_person: false,
       email_address: null,
       affiliation: null,
       role: null,
       orcid: null,
       avatar_id: null,
-      position,
+      position: null,
       ...name
     })
+    // reset options
+    if (config?.reset){
+      setOptions([])
+    }
   }
 
   function renderAddOption(props: HTMLAttributes<HTMLLIElement>,
@@ -138,7 +121,7 @@ export default function FindMember({project,position,onEdit,onSubmit}: FindMembe
     }
 
     return (
-      <li {...props} key={Math.random().toString()}>
+      <li {...props} key={option.key}>
         <AggregatedPersonOption option={option} />
       </li>
     )
@@ -149,28 +132,17 @@ export default function FindMember({project,position,onEdit,onSubmit}: FindMembe
       <AsyncAutocompleteSC
         status={status}
         options={options}
-        onSearch={searchMember}
+        onSearch={searchContributor}
         onAdd={onAddPerson}
-        onCreate={createMember}
+        onCreate={createContributor}
         onRenderOption={renderOption}
         config={{
           freeSolo: true,
           forceShowAdd: true,
-          minLength: cfgTeamMembers.find.validation.minLength,
-          label: cfgTeamMembers.find.label,
-          help: cfgTeamMembers.find.help,
-          // clear selected item
-          reset: true
+          // pass received config
+          ...config
         }}
       />
-      {modal && modal.open && modal.person &&
-        <AggregatedMemberModal
-          open={modal.open}
-          member={modal.person}
-          onCancel={() => setModal({open: false})}
-          onSubmit={onAddMember}
-        />
-      }
     </section>
   )
 }

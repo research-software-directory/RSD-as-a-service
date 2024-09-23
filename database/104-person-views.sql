@@ -1,6 +1,6 @@
--- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
--- SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -46,9 +46,50 @@ ORDER BY
 	display_name ASC;
 $$;
 
+-- Aggregate avatars by display_name (given_names + family_names)
+-- USED in rsd admins section
+CREATE FUNCTION person_avatars_by_name() RETURNS TABLE (
+	display_name TEXT,
+	avatars VARCHAR[]
+) LANGUAGE sql STABLE AS
+$$
+	SELECT
+		unique_person_entries.display_name,
+		array_agg(DISTINCT(unique_person_entries.avatar_id)) AS avatars
+	FROM
+		unique_person_entries()
+	WHERE
+		unique_person_entries.avatar_id IS NOT NULL
+	GROUP BY
+		unique_person_entries.display_name
+	;
+$$;
+
+-- Aggregate avatars by orcid (given_names + family_names)
+-- USED in rsd admins section
+CREATE FUNCTION person_avatars_by_orcid() RETURNS TABLE (
+	orcid TEXT,
+	avatars VARCHAR[]
+) LANGUAGE sql STABLE AS
+$$
+	SELECT
+		unique_person_entries.orcid,
+		array_agg(DISTINCT(unique_person_entries.avatar_id)) AS avatars
+	FROM
+		unique_person_entries()
+	WHERE
+		unique_person_entries.avatar_id IS NOT NULL AND
+		unique_person_entries.orcid IS NOT NULL
+	GROUP BY
+		unique_person_entries.orcid
+	;
+$$;
+
 -- LIST ALL persons mentioned in software and projects
 -- origin indicates source table
 -- slug is direct link to edit this entry
+-- avatars are aggregated on display_name (given_names + ' ' + family_names)
+-- AND avatars are aggregated on ORCID
 CREATE FUNCTION person_mentions() RETURNS TABLE (
 	id UUID,
 	given_names VARCHAR,
@@ -60,7 +101,9 @@ CREATE FUNCTION person_mentions() RETURNS TABLE (
 	avatar_id VARCHAR,
 	origin VARCHAR,
 	slug VARCHAR,
-	public_orcid_profile VARCHAR
+	public_orcid_profile VARCHAR,
+	avatars_by_name VARCHAR[],
+	avatars_by_orcid VARCHAR[]
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
@@ -74,13 +117,19 @@ SELECT
 	contributor.avatar_id,
 	'contributor' AS origin,
 	software.slug,
-	public_profile.orcid as public_orcid_profile
+	public_profile.orcid as public_orcid_profile,
+	person_avatars_by_name.avatars AS avatars_by_name,
+	person_avatars_by_orcid.avatars	AS avatars_by_orcid
 FROM
 	contributor
 INNER JOIN
 	software ON contributor.software = software.id
 LEFT JOIN
 	public_profile() ON public_profile.orcid=contributor.orcid
+LEFT JOIN
+	person_avatars_by_name() ON person_avatars_by_name.display_name = CONCAT(contributor.given_names,' ',contributor.family_names)
+LEFT JOIN
+	person_avatars_by_orcid() ON person_avatars_by_orcid.orcid = contributor.orcid
 UNION
 SELECT
 	team_member.id,
@@ -93,11 +142,42 @@ SELECT
 	team_member.avatar_id,
 	'team_member' AS origin,
 	project.slug,
-	public_profile.orcid as public_orcid_profile
+	public_profile.orcid as public_orcid_profile,
+	person_avatars_by_name.avatars AS avatars_by_name,
+	person_avatars_by_orcid.avatars	AS avatars_by_orcid
 FROM
 	team_member
 INNER JOIN
 	project ON team_member.project = project.id
 LEFT JOIN
 	public_profile() ON public_profile.orcid = team_member.orcid
+LEFT JOIN
+	person_avatars_by_name() ON person_avatars_by_name.display_name = CONCAT(team_member.given_names,' ',	team_member.family_names)
+LEFT JOIN
+	person_avatars_by_orcid() ON person_avatars_by_orcid.orcid = team_member.orcid
+$$;
+
+--ROLES ALREADY IN RSD
+--Use this to suggest roles in the modal
+CREATE FUNCTION suggested_roles() RETURNS
+VARCHAR[] LANGUAGE sql STABLE AS
+$$
+	SELECT
+    ARRAY_AGG("role")
+  FROM (
+		SELECT
+			"role"
+		FROM
+			contributor
+		WHERE
+			"role" IS NOT NULL
+		UNION
+		SELECT
+			"role"
+		FROM
+			team_member
+		WHERE
+		"role" IS NOT NULL
+  ) roles
+;
 $$;

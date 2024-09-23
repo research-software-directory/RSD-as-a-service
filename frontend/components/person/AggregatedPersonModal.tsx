@@ -1,10 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,49 +12,60 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {UseFormSetValue, UseFormWatch, useForm} from 'react-hook-form'
 
-import {useSession} from '~/auth'
-import {SaveTeamMember} from '~/types/Project'
-import {TeamMemberProps} from '~/types/Contributor'
-import {upsertImage} from '~/utils/editImage'
-import {getPropsFromObject} from '~/utils/getPropsFromObject'
-import useSnackbar from '~/components/snackbar/useSnackbar'
+import {Person} from '~/types/Contributor'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ControlledAutocomplete from '~/components/form/ControlledAutocomplete'
-import {AggregatedPerson} from '~/components/person/groupByOrcid'
 import AvatarOptionsPerson, {RequiredAvatarProps} from '~/components/person/AvatarOptionsPerson'
-import {postTeamMember} from './editTeamMembers'
-import {cfgTeamMembers as config} from './config'
+import useAggregatedPerson from './useAggregatedPerson'
+import {modalConfig} from './config'
 
-type AggregatedMemberModalProps = {
-  open: boolean,
+type InputProps={
+  label:string
+  help?: string | JSX.Element
+  validation?: any
+}
+
+type AggregatedPersonModalConfig={
+  is_contact_person: Omit<InputProps,'validation'>,
+  given_names: InputProps,
+  family_names: InputProps,
+  email_address: InputProps,
+  orcid: InputProps,
+  role: InputProps,
+  affiliation: InputProps
+}
+
+type AggregatedPersonModalProps = Readonly<{
   onCancel: () => void,
-  onSubmit: (person: SaveTeamMember) => void,
-  member: NewRsdMember
+  onSubmit: (person: FormPerson) => void,
+  person: Person
+  // default title is Profile, provide other value
+  title?: string
+  // default labels and validation are defined in ./config
+  // optionally provide custom config
+  config?: AggregatedPersonModalConfig
+}>
+
+export type FormPerson = Person & {
+  initial_avatar_id: string|null
 }
 
-export type NewRsdMember = AggregatedPerson & {
-  project: string
-  selected_avatar: string | null
-  avatar_id: string|null
-  avatar_b64: string|null
-  avatar_mime_type: string|null
-  role: string|null
-  is_contact_person: boolean
-  position: number
-}
+const formId = 'aggregated-person-modal'
 
-const formId = 'aggregated-member-modal'
-
-export default function AggregatedMemberModal({open, onCancel, onSubmit, member}: AggregatedMemberModalProps) {
-  const {token} = useSession()
-  const {showErrorMessage} = useSnackbar()
-  const smallScreen = useMediaQuery('(max-width:600px)')
-  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<NewRsdMember>({
+export default function AggregatedPersonModal({
+  person,onCancel,onSubmit,
+  title='Profile',config=modalConfig
+}: AggregatedPersonModalProps) {
+  const {loading, options} = useAggregatedPerson(person?.orcid)
+  const smallScreen = useMediaQuery('(max-width:640px)')
+  const {handleSubmit, watch, formState, control, register, setValue} = useForm<FormPerson>({
     mode: 'onChange',
     defaultValues: {
-      ...member
+      ...person,
+      // copy avatar id
+      initial_avatar_id: person.avatar_id
     }
   })
 
@@ -67,63 +73,25 @@ export default function AggregatedMemberModal({open, onCancel, onSubmit, member}
   const {isValid, isDirty} = formState
   const formData = watch()
 
-  // console.group('AggregatedMemberModal')
+  // console.group('AggregatedPersonModal')
+  // console.log('errors...', errors)
   // console.log('isDirty...', isDirty)
   // console.log('isValid...', isValid)
   // console.log('formData...', formData)
+  // console.log('loading...', loading)
+  // console.log('options...', options)
   // console.groupEnd()
 
-  function handleCancel(e?: any, reason?: 'backdropClick' | 'escapeKeyDown') {
+  function handleCancel(e?:any, reason?:'backdropClick' | 'escapeKeyDown') {
     if (reason && reason==='backdropClick') return
-    // reset form
-    reset()
-    // hide
     onCancel()
-  }
-
-  async function onSave(data: NewRsdMember) {
-    // UPLOAD avatar
-    if (data.avatar_b64 && data.avatar_mime_type) {
-      // split base64 to use only encoded content
-      const b64data = data.avatar_b64.split(',')[1]
-      const upload = await upsertImage({
-        data: b64data,
-        mime_type: data.avatar_mime_type,
-        token
-      })
-
-      // debugger
-      if (upload.status === 201) {
-        // update data values
-        data.avatar_id = upload.message
-      } else {
-        showErrorMessage(`Failed to upload image. ${upload.message}`)
-        return
-      }
-    }
-    // prepare member object for save (remove helper props)
-    const member:SaveTeamMember = getPropsFromObject(data, TeamMemberProps)
-    // new team member we need to add
-    const resp = await postTeamMember({
-      member,
-      token
-    })
-    // debugger
-    if (resp.status === 201) {
-      // get id out of message
-      member.id = resp.message
-      // pass member to parent
-      onSubmit(member)
-    } else {
-      showErrorMessage(`Failed to add member. ${resp.message}`)
-    }
   }
 
   return (
     <Dialog
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
-      open={open}
+      open={true}
       onClose={handleCancel}
     >
       <DialogTitle sx={{
@@ -133,36 +101,34 @@ export default function AggregatedMemberModal({open, onCancel, onSubmit, member}
         color: 'primary.main',
         fontWeight: 500
       }}>
-        Add team member
+        {title}
       </DialogTitle>
       <form
         id={formId}
-        onSubmit={handleSubmit((data) => onSave(data))}
+        onSubmit={handleSubmit((data) => onSubmit(data))}
         autoComplete="off"
       >
         {/* hidden inputs */}
         <input type="hidden"
-          {...register('project')}
-        />
-        <input type="hidden"
           {...register('position')}
         />
         <input type="hidden"
-          {...register('avatar_b64')}
+          {...register('avatar_id')}
         />
         <input type="hidden"
-          {...register('avatar_mime_type')}
+          {...register('initial_avatar_id')}
         />
         <DialogContent sx={{
-          width: ['100%', '37rem'],
+          width: ['100%', '40rem'],
         }}>
           <AvatarOptionsPerson
             watch={watch as unknown as UseFormWatch<RequiredAvatarProps>}
             setValue={setValue as unknown as UseFormSetValue<RequiredAvatarProps>}
-            avatar_options={member.avatar_options}
+            avatar_options={options?.avatars ?? []}
+            loading={loading}
           />
-          <div className="py-2"></div>
-          <section className="py-4 grid grid-cols-[1fr,1fr] gap-8">
+          <div className="py-2"/>
+          <section className="py-4 grid grid-cols-[1fr,1fr] gap-4">
             <ControlledTextField
               control={control}
               options={{
@@ -171,7 +137,7 @@ export default function AggregatedMemberModal({open, onCancel, onSubmit, member}
                 useNull: true,
                 defaultValue: formData?.given_names,
                 helperTextMessage: config.given_names.help,
-                helperTextCnt: `${formData?.given_names?.length || 0}/${config.given_names.validation.maxLength.value}`,
+                helperTextCnt: `${formData?.given_names?.length ?? 0}/${config.given_names.validation.maxLength.value}`,
               }}
               rules={config.given_names.validation}
             />
@@ -183,24 +149,29 @@ export default function AggregatedMemberModal({open, onCancel, onSubmit, member}
                 useNull: true,
                 defaultValue: formData?.family_names,
                 helperTextMessage: config.family_names.help,
-                helperTextCnt: `${formData?.family_names?.length || 0}/${config.family_names.validation.maxLength.value}`,
+                helperTextCnt: `${formData?.family_names?.length ?? 0}/${config.family_names.validation.maxLength.value}`,
               }}
               rules={config.family_names.validation}
             />
-            <ControlledAutocomplete
-              name="email_address"
-              label={config.email_address.label}
+            <ControlledTextField
+              options={{
+                type: 'email',
+                name: 'email_address',
+                label: config.email_address.label,
+                useNull: true,
+                defaultValue: person?.email_address,
+                helperTextMessage: config.email_address.help,
+                helperTextCnt: `${formData?.email_address?.length ?? 0}/${config.email_address.validation().maxLength.value}`,
+              }}
               control={control}
-              options={member.email_options}
-              helperTextMessage={config.email_address.help}
-              rules={config.email_address.validation}
+              rules={config.email_address.validation(formData.is_contact_person)}
             />
             <ControlledTextField
               options={{
                 name: 'orcid',
                 label: config.orcid.label,
                 useNull: true,
-                defaultValue: member?.orcid,
+                defaultValue: person?.orcid,
                 helperTextMessage: config.orcid.help,
                 // helperTextCnt: `${formData?.orcid?.length || 0}/${config.orcid.validation.maxLength.value}`,
               }}
@@ -211,23 +182,23 @@ export default function AggregatedMemberModal({open, onCancel, onSubmit, member}
               name="role"
               label={config.role.label}
               control={control}
-              options={member.role_options}
+              options={options?.roles ?? []}
               helperTextMessage={config.role.help}
               rules={config.role.validation}
             />
             <ControlledAutocomplete
               name="affiliation"
               label={config.affiliation.label}
-              options={member.affiliation_options}
+              options={options?.affiliations ?? []}
               control={control}
-              rules={config.affiliation.validation}
               helperTextMessage={config.affiliation.help}
+              rules={config.affiliation.validation}
             />
           </section>
           <section>
             <ControlledSwitch
               name="is_contact_person"
-              label="Contact person"
+              label={config.is_contact_person.label}
               control={control}
               defaultValue={false}
             />
@@ -256,8 +227,13 @@ export default function AggregatedMemberModal({open, onCancel, onSubmit, member}
   )
 
   function isSaveDisabled() {
+    // if not valid -> save disabled
     if (isValid === false) return true
+    // if valid and new entry (id===null) -> save enabled
+    if (formData.id === null) return false
+    // if valid and edit (id!=null) but not dirty/touched -> save disabled
     if (isDirty === false) return true
+    // else -> save enabled
     return false
   }
 }

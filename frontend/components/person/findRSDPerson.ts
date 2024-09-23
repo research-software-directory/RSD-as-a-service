@@ -1,13 +1,13 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
-import {isOrcid} from './getORCID'
-import logger from './logger'
+import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
+import {isOrcid} from '~/utils/getORCID'
+import logger from '~/utils/logger'
 
 export type UniqueRsdPerson = {
   avatar_id:string | null
@@ -20,11 +20,11 @@ export type UniqueRsdPerson = {
   display_name: string,
 }
 
-export async function rsdUniquePersonEntries({searchFor, token}:
-  { searchFor: string, token?: string}) {
+export async function rsdUniquePersonEntries({searchFor,limit=100,token}:
+  { searchFor: string, limit?:number, token?: string}) {
   try {
     // we search for all persons in RSD (contributors + team members)
-    let url = `${getBaseUrl()}/rpc/unique_person_entries?limit=50`
+    let url = `${getBaseUrl()}/rpc/unique_person_entries?limit=${limit}`
 
     if (isOrcid(searchFor)) {
       url = url + `&orcid=eq.${searchFor}`

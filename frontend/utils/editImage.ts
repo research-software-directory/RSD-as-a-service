@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
@@ -76,4 +77,31 @@ export function getImageUrl(uid: string|null) {
     return `/image/rpc/get_image?uid=${uid}`
   }
   return null
+}
+
+/**
+ * Saves base64 image to RSD.
+ * The base64 string must follow the pattern [data: {mime-type}; base64, {base64 data}]
+ * @param param0
+ * @returns
+ */
+export async function saveBase64Image({base64,token}:{base64:string,token:string}){
+  if (base64.startsWith('data:')===true){
+    const data = base64.split(',')
+    // extract mime-type from string data:image/jpg;base64
+    const mime_type = data[0].split(':')[1].split(';')[0]
+    // raw base64 string to save
+    const b64data = data[1]
+    const upload = await upsertImage({
+      data: b64data,
+      mime_type,
+      token
+    })
+    return upload
+  } else {
+    return {
+      status: 400,
+      message: 'Not a base64 string [saveBase64Image]'
+    }
+  }
 }

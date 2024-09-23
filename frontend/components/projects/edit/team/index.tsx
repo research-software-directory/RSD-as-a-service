@@ -5,39 +5,39 @@
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState} from 'react'
 
 import {getDisplayName} from '~/utils/getDisplayName'
-import useSnackbar from '~/components/snackbar/useSnackbar'
+import {Person, PersonProps} from '~/types/Contributor'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {SaveTeamMember, TeamMember} from '~/types/Project'
+import ContributorPrivacyHint from '~/components/layout/ContributorPrivacyHint'
+import AggregatedPersonModal, {FormPerson} from '~/components/person/AggregatedPersonModal'
+import {AggregatedPerson} from '~/components/person/groupByOrcid'
+import FindPerson from '~/components/person/FindPerson'
+import useProjectContext from '../useProjectContext'
 import {cfgTeamMembers} from './config'
-import FindMember from './FindMember'
-import {
-  deleteTeamMemberById, ModalProps,
-  ModalStates, patchTeamMemberPositions,
-} from './editTeamMembers'
-import EditTeamMemberModal from './EditTeamMemberModal'
+import {ModalProps, ModalStates} from './apiTeamMembers'
 import useTeamMembers from './useTeamMembers'
 import SortableTeamMemberList from './SortableTeamMemberList'
-import {deleteImage} from '~/utils/editImage'
-import ContributorPrivacyHint from '~/components/layout/ContributorPrivacyHint'
-import useProjectContext from '../useProjectContext'
 
 type EditMemberModal = ModalProps & {
-  member?: TeamMember
+  member?: Person
 }
 
 export default function ProjectTeam() {
-  const {showErrorMessage} = useSnackbar()
-  const {project:{slug}} = useProjectContext()
-  const {token,loading,project,members,setMembers} = useTeamMembers({slug})
+  const {project} = useProjectContext()
+  const {
+    loading,members,addMember,
+    updateMember,sortedMembers,deleteMember
+  } = useTeamMembers()
   const [modal, setModal] = useState<ModalStates<EditMemberModal>>({
     edit: {
       open: false
@@ -68,59 +68,73 @@ export default function ProjectTeam() {
     })
   }
 
-  function updateLocalState(member: TeamMember, pos?: number) {
-    if (typeof pos !== 'undefined') {
-      // update
-      const newMembersList = members.map((item, i) => {
-        if (i === pos) return member
-        return item
-      })
-      updateContactPeople(member, newMembersList)
-      setMembers(newMembersList)
-    } else {
-      // append to bottom
-      const newMembersList = [
-        ...members,
-        member
-      ]
-      updateContactPeople(member, newMembersList)
-      setMembers(newMembersList)
-    }
-  }
-
-  async function updateContactPeople(data: TeamMember, list: TeamMember[]) {
-    if (!data.is_contact_person) return
-
-    list.forEach(person => {
-      if (!person.is_contact_person || person === data) return
-      fetch(`/api/v1/team_member?id=eq.${person.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({is_contact_person: false}),
-        headers: {'content-type': 'application/json', Authorization: 'Bearer ' + token}
-      })
-      person.is_contact_person = false
-    })
-  }
-
-  function onEditMember(member: SaveTeamMember,pos?:number) {
-    if (member && project.id) {
-      // add project id
-      member.project = project.id
-      if (typeof pos==='undefined') {
-        // this is new member and we need to add position
-        member.position = members.length + 1
+  function onCreateTeamMember(person:Person){
+    if (person && project.id){
+      const member = {
+        ...person,
+        position: members.length + 1
       }
       // show modal and pass data
       setModal({
         edit: {
           open: true,
-          pos,
           member
         },
         delete: {
-          open:false
+          open: false
         }
       })
+    }
+  }
+
+  function onFoundPerson(person:AggregatedPerson){
+    // debugger
+    if (person && project?.id) {
+      // extract person props as much as possible (use null if not found)
+      const member:Person = getPropsFromObject(person, PersonProps, true)
+      // use first avatar (if exists)
+      member.avatar_id = person.avatar_options[0] ?? null
+      // use affiliation (if exists)
+      member.affiliation = person.affiliation_options[0] ?? null
+      // flag contact person to false
+      member.is_contact_person = false
+      // add position
+      member.position = members.length + 1
+      // show modal and pass data
+      setModal({
+        edit: {
+          open: true,
+          member
+        },
+        delete: {
+          open: false
+        }
+      })
+    }
+  }
+
+  function onEditMember(pos:number) {
+    // extract person props as much as possible (use null if not found)
+    const member:Person = getPropsFromObject(members[pos], PersonProps, true)
+    // show modal and pass data
+    setModal({
+      edit: {
+        open: true,
+        pos,
+        member
+      },
+      delete: {
+        open:false
+      }
+    })
+  }
+
+  function onSubmitMember({member, pos}: { member: FormPerson, pos?: number }) {
+    hideModals()
+    if (typeof pos == 'undefined'){
+      addMember(member)
+    } else {
+      updateMember(member)
     }
   }
 
@@ -137,66 +151,6 @@ export default function ProjectTeam() {
           displayName: getDisplayName(member)
         }
       })
-    }
-  }
-
-  async function deleteMember(pos: number) {
-    hideModals()
-    const member = members[pos]
-    if (member) {
-      const resp = await deleteTeamMemberById({
-        ids: [member?.id ?? ''],
-        token
-      })
-      if (resp.status === 200) {
-        const newMembersList = [
-          ...members.slice(0, pos),
-          ...members.slice(pos+1)
-        ].map((item, pos) => {
-          // renumber
-          item.position = pos + 1
-          return item
-        })
-        // renumber remaining members
-        await sortTeamMembers(newMembersList)
-        // try to remove member avatar
-        // without waiting for result
-        if (member.avatar_id) {
-          const del = await deleteImage({
-            id: member.avatar_id,
-            token
-          })
-        }
-      } else {
-        showErrorMessage(`Failed to remove member. ${resp.message}`)
-      }
-    }
-  }
-
-  function onSubmitMember({member, pos}: { member: SaveTeamMember, pos?: number }) {
-    // update local state
-    updateLocalState(member, pos)
-    hideModals()
-  }
-
-  async function sortTeamMembers(newList: TeamMember[]) {
-    // patch only if there are items left
-    if (newList.length > 0) {
-      // apply ui change first to avoid lag
-      setMembers(newList)
-      // patch db
-      const resp = await patchTeamMemberPositions({
-        members:newList,
-        token
-      })
-      if (resp.status !== 200) {
-        // revert back in case of failure
-        setMembers(members)
-        showErrorMessage(`Failed to update team positions. ${resp.message}`)
-      }
-    } else {
-      // clear list
-      setMembers([])
     }
   }
 
@@ -218,7 +172,7 @@ export default function ProjectTeam() {
             members={members}
             onEdit={onEditMember}
             onDelete={onDeleteMember}
-            onSorted={sortTeamMembers}
+            onSorted={sortedMembers}
           />
         </div>
         <div className="py-4 min-w-[21rem] xl:my-0">
@@ -226,31 +180,34 @@ export default function ProjectTeam() {
             title={cfgTeamMembers.find.title}
             subtitle={cfgTeamMembers.find.subtitle}
           />
-          <FindMember
-            project={project.id}
-            position={members.length + 1}
-            onEdit={onEditMember}
-            onSubmit={onSubmitMember}
+          <FindPerson
+            onCreate={onCreateTeamMember}
+            onAdd={onFoundPerson}
+            config={{
+              minLength: cfgTeamMembers.find.validation.minLength,
+              label: cfgTeamMembers.find.label,
+              help: cfgTeamMembers.find.help,
+              // clear options after selection
+              reset: true,
+            }}
           />
           <ContributorPrivacyHint />
         </div>
       </EditSection>
 
-      {modal.edit.open &&
-        <EditTeamMemberModal
-          open={modal.edit.open}
-          pos={modal.edit.pos}
-          member={modal.edit.member}
-          onCancel={() => {
-            setModal({
-              edit:{open:false},
-              delete:{open:false}
-            })
+      {modal.edit.open && modal.edit.member ?
+        <AggregatedPersonModal
+          title="Team member"
+          person={modal.edit.member}
+          onCancel={hideModals}
+          onSubmit={(member)=>{
+            onSubmitMember({member, pos: modal.edit.pos})
           }}
-          onSubmit={onSubmitMember}
         />
+        : null
       }
-      {modal.delete.open &&
+
+      {modal.delete.open ?
         <ConfirmDeleteModal
           open={modal.delete.open}
           title="Remove team member"
@@ -263,8 +220,14 @@ export default function ProjectTeam() {
               delete:{open:false}
             })
           }}
-          onDelete={()=>deleteMember(modal.delete.pos ?? 0)}
+          onDelete={()=>{
+            if (typeof modal.delete.pos != 'undefined'){
+              deleteMember(members[modal.delete.pos])
+            }
+            hideModals()
+          }}
         />
+        : null
       }
     </>
   )

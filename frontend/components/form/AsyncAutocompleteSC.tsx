@@ -78,7 +78,6 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
   useEffect(() => {
     // if we have search term at least minLength long
     // and search term is different from one we already processing
-    // and search term is differrent from on we already searched (foundFor)
     // and the input box is not empty (newInputValue)
     if (searchFor &&
       searchFor.length >= config.minLength &&

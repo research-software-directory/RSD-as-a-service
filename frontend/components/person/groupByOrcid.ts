@@ -1,13 +1,15 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import logger from '~/utils/logger'
 import {SourceType} from '~/types/Contributor'
-import {UniqueRsdPerson} from '~/utils/findRSDPerson'
 import {getDisplayName} from '~/utils/getDisplayName'
 import {OrcidRecord} from '~/utils/getORCID'
-import logger from '~/utils/logger'
+import {UniqueRsdPerson} from './findRSDPerson'
 
 export type AggregatedPerson = {
   orcid: string | null
@@ -158,7 +160,7 @@ export function personsToAutocompleteOptions(persons:AggregatedPerson[]) {
   if (!persons) return []
   const options = persons.map(item => {
     return {
-      key: item['orcid'] ?? item.display_name,
+      key: item['orcid'] ?? `${item.display_name}${Math.random()}`,
       label: item.display_name ?? '',
       data: item
     }

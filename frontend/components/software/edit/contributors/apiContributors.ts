@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,9 +10,9 @@
  * CONTRIBUTORS
  */
 
-import logger from './logger'
-import {Contributor, PatchPerson, Profile, SaveContributor} from '../types/Contributor'
-import {createJsonHeaders, extractReturnMessage, getBaseUrl} from './fetchHelpers'
+import logger from '~/utils/logger'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
+import {Contributor, NewContributor, PatchContributor, Profile} from '~/types/Contributor'
 
 export async function getContributorsForSoftware({software, token}:
   { software: string, token?: string}) {
@@ -43,9 +43,9 @@ export async function getContributorsForSoftware({software, token}:
 }
 
 export async function postContributor({contributor, token}:
-  { contributor: SaveContributor, token: string }) {
+  { contributor: NewContributor, token: string }) {
   try {
-    const url = '/api/v1/contributor'
+    const url = `${getBaseUrl()}/contributor`
 
     const resp = await fetch(url, {
       method: 'POST',
@@ -76,9 +76,9 @@ export async function postContributor({contributor, token}:
 }
 
 export async function patchContributor({contributor, token}:
-  { contributor: PatchPerson, token: string }) {
+  { contributor: PatchContributor, token: string }) {
   try {
-    const url = `/api/v1/contributor?id=eq.${contributor.id}`
+    const url = `${getBaseUrl()}/contributor?id=eq.${contributor.id}`
     const resp = await fetch(url, {
       method: 'PATCH',
       headers: {
@@ -105,7 +105,7 @@ export async function patchContributorPositions({contributors, token}:
     }
     // create all requests
     const requests = contributors.map(contributor => {
-      const url = `/api/v1/contributor?id=eq.${contributor.id}`
+      const url = `${getBaseUrl()}/contributor?id=eq.${contributor.id}`
       return fetch(url, {
         method: 'PATCH',
         headers: {
@@ -130,10 +130,9 @@ export async function patchContributorPositions({contributors, token}:
   }
 }
 
-
 export async function deleteContributorsById({ids,token}:{ids:string[],token:string}) {
   try{
-    const url = `/api/v1/contributor?id=in.("${ids.join('","')}")`
+    const url = `${getBaseUrl()}/contributor?id=in.("${ids.join('","')}")`
     const resp = await fetch(url, {
       method: 'DELETE',
       headers: {

@@ -6,21 +6,22 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useState} from 'react'
+
 import CircularProgress from '@mui/material/CircularProgress'
 import Button from '@mui/material/Button'
 import DownloadIcon from '@mui/icons-material/Download'
 
+import {useSession} from '~/auth'
+import {getContributorsFromDoi} from '~/utils/getInfoFromDatacite'
+import {itemsNotInListByKeys} from '~/utils/itemsNotInReferenceList'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
+import {getDisplayName} from '~/utils/getDisplayName'
+import {Contributor, ContributorProps} from '~/types/Contributor'
+import useSnackbar from '~/components/snackbar/useSnackbar'
 import {contributorInformation as config} from '../editSoftwareConfig'
 import useSoftwareContext from '../useSoftwareContext'
-import {useState} from 'react'
-import {getContributorsFromDoi} from '~/utils/getInfoFromDatacite'
-import {Contributor, ContributorProps} from '~/types/Contributor'
-import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
-import {postContributor} from '~/utils/editContributors'
-import {useSession} from '~/auth'
-import useSnackbar from '~/components/snackbar/useSnackbar'
-import {getDisplayName} from '~/utils/getDisplayName'
-import {getPropsFromObject} from '~/utils/getPropsFromObject'
+import {postContributor} from './apiContributors'
 
 type GetContributorsFromDoiProps = {
   contributors: Contributor[]
@@ -49,16 +50,16 @@ export default function GetContributorsFromDoi({contributors,onSetContributors}:
     }
 
     // extract only new Contributors
-    // for now using only family names as key
-    const newDoiContributors = itemsNotInReferenceList({
+    // for now using combination of family names and given names
+    const newDoiContributors = itemsNotInListByKeys({
       list: doiContributors,
       referenceList: contributors,
-      key: 'family_names'
+      keys: ['family_names','given_names']
     })
 
     if (newDoiContributors.length === 0) {
       showInfoMessage(
-        `No new contributors to add from DOI ${software?.concept_doi} based on family_names.`
+        `No new contributors to add from DOI ${software?.concept_doi} based on {family_names + given_names}.`
       )
       setLoading(false)
       return

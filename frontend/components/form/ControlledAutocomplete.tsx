@@ -14,15 +14,16 @@ type ControlledAutocompleteProps = {
   name: string,
   label: string,
   options: string[],
-  helperTextMessage: string,
+  helperTextMessage?: string | JSX.Element,
   control: any
   rules: any
   variant?: 'standard' | 'outlined' | 'filled'
 }
 
 export default function ControlledAutocomplete({
-  name, label, control, rules, options, variant, helperTextMessage}: ControlledAutocompleteProps) {
-  // const [open,setOpen]=useState(false)
+  name, label, control, rules, options, variant, helperTextMessage
+}: ControlledAutocompleteProps) {
+
   return (
     <Controller
       name={name}
@@ -40,10 +41,19 @@ export default function ControlledAutocomplete({
             freeSolo={true}
             multiple={false}
             options={options}
-            onInputChange={(e, value) => {
-              // debugger
-              if (value === '') onChange(null)
-              onChange(value)
+            value={value}
+            onInputChange={(e, newVal) => {
+              // Save typed input into the controller (form data)
+              // Note! onChange triggers the dirty state
+              // we do not want to call it when data is not changed
+              if (newVal !== value){
+                // debugger
+                if (newVal === '') {
+                  onChange(null)
+                }else{
+                  onChange(newVal)
+                }
+              }
             }}
             onChange={(e, item, reason) => {
               // debugger

@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -10,6 +10,11 @@ import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import {ApiParams, paginationUrlParams} from '~/utils/postgrestUrl'
 import {RsdContributor} from './useContributors'
+
+type RawRsdContributor = Omit<RsdContributor,'avatar'> & {
+  avatars_by_name: string[] | null
+  avatars_by_orcid: string[] | null
+}
 
 export async function getContributors({page, rows, token, searchFor, orderBy}: ApiParams<RsdContributor, keyof RsdContributor>) {
   try {
@@ -35,7 +40,22 @@ export async function getContributors({page, rows, token, searchFor, orderBy}: A
     })
 
     if ([200,206].includes(resp.status)) {
-      const contributors: RsdContributor[] = await resp.json()
+      const json: RawRsdContributor[] = await resp.json()
+      // aggregate avatars
+      const contributors:RsdContributor[] = json.map(item=>{
+        const avatars = [
+          ...item.avatars_by_name ?? [],
+        ]
+        item.avatars_by_orcid?.forEach(avatar=>{
+          if (avatars.includes(avatar)===false){
+            avatars.push(avatar)
+          }
+        })
+        return {
+          ...item,
+          avatars
+        }
+      })
       return {
         count: extractCountFromHeader(resp.headers) ?? 0,
         contributors
@@ -59,14 +79,14 @@ export async function patchPerson({id, key, value, origin, token}: {
   id:string, key:string, value:any, origin?:string, token:string
 }) {
   try {
-    // const url = `/api/v1/contributor?id=eq.${id}`
     if (typeof origin === 'undefined') {
       return {
         status: 400,
         message: 'Property origin is missing'
       }
     }
-    const url = `/api/v1/${origin}?id=eq.${id}`
+    const url = `${getBaseUrl()}/${origin}?id=eq.${id}`
+    // debugger
     const resp = await fetch(url, {
       method: 'PATCH',
       headers: {

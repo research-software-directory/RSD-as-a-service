@@ -1,42 +1,29 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import LaunchIcon from '@mui/icons-material/Launch'
 
-import ContributorAvatar from '~/components/software/ContributorAvatar'
 import {Column} from '~/components/table/EditableTable'
-import {getImageUrl} from '~/utils/editImage'
 import {patchPerson} from './apiRsdContributors'
-import {getDisplayInitials} from '~/utils/getDisplayName'
 import {RsdContributor} from './useContributors'
+import AvatarOptions from './AvatarOptions'
 
 export function createColumns(token: string) {
   const columns: Column<RsdContributor, keyof RsdContributor>[] = [{
     key: 'avatar_id',
-    label: 'Avatar',
+    label: 'Avatars *',
     type: 'custom',
     sx: {
       width: '4rem',
       padding: '0.5rem',
       textAlign: 'center'
     },
-    renderFn: (data) => {
-      return (
-        <ContributorAvatar
-          avatarUrl={getImageUrl(data.avatar_id) ?? ''}
-          displayName={data.family_names}
-          displayInitials={getDisplayInitials({
-            given_names: data.given_names,
-            family_names: data.family_names
-          })}
-        />
-      )
-    }
+    renderFn: (data) => <AvatarOptions data={data} />
   }, {
     key: 'given_names',
     label: 'Given names',
@@ -133,4 +120,3 @@ export function createColumns(token: string) {
 
   return columns
 }
-

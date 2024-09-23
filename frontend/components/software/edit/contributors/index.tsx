@@ -12,38 +12,35 @@
 
 import {useState} from 'react'
 
-import {useSession} from '~/auth'
-import useSnackbar from '~/components/snackbar/useSnackbar'
+import {PersonProps, Person} from '~/types/Contributor'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
+import {getDisplayName} from '~/utils/getDisplayName'
 import ContentLoader from '~/components/layout/ContentLoader'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
-import {Contributor, SaveContributor} from '~/types/Contributor'
-import {
-  deleteContributorsById,
-  patchContributorPositions,
-} from '~/utils/editContributors'
-import {getDisplayName} from '~/utils/getDisplayName'
-import EditContributorModal from './EditContributorModal'
-import FindContributor from './FindContributor'
-import EditSection from '../../../layout/EditSection'
-import EditSectionTitle from '../../../layout/EditSectionTitle'
+import EditSection from '~/components/layout/EditSection'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import ContributorPrivacyHint from '~/components/layout/ContributorPrivacyHint'
+import AggregatedPersonModal, {FormPerson} from '~/components/person/AggregatedPersonModal'
+import {AggregatedPerson} from '~/components/person/groupByOrcid'
+import FindPerson from '~/components/person/FindPerson'
 import {contributorInformation as config} from '../editSoftwareConfig'
 import {ModalProps, ModalStates} from '../editSoftwareTypes'
 import GetContributorsFromDoi from './GetContributorsFromDoi'
 import useSoftwareContext from '../useSoftwareContext'
 import useSoftwareContributors from './useSoftwareContributors'
 import SortableContributorsList from './SortableContributorsList'
-import {deleteImage} from '~/utils/editImage'
-import ContributorPrivacyHint from '~/components/layout/ContributorPrivacyHint'
 
 type EditContributorModal = ModalProps & {
-  contributor?: Contributor
+  contributor?: Person
 }
 
 export default function SoftwareContributors() {
-  const {token} = useSession()
-  const {showErrorMessage} = useSnackbar()
   const {software} = useSoftwareContext()
-  const {loading,contributors,setContributors} = useSoftwareContributors()
+  const {
+    loading,contributors,addContributor,
+    updateContributor,deleteContributor,
+    sortedContributors, setContributors
+  } = useSoftwareContributors()
   const [modal, setModal] = useState<ModalStates<EditContributorModal>>({
     edit: {
       open: false
@@ -54,15 +51,12 @@ export default function SoftwareContributors() {
   })
 
   // console.group('SoftwareContributors')
+  // console.log('contributors...', contributors)
   // console.log('software...', software)
   // console.log('loading...', loading)
-  // console.log('contributors...', contributors)
+  // console.log('orcid...', orcid)
+  // console.log('options...', options)
   // console.groupEnd()
-
-  // if loading show loader
-  if (loading) return (
-    <ContentLoader />
-  )
 
   function hideModals() {
     // hide modals
@@ -76,55 +70,18 @@ export default function SoftwareContributors() {
     })
   }
 
-  function updateContributorList({data, pos}: { data: Contributor, pos?: number }) {
-    if (typeof pos === 'number') {
-      // REPLACE existing item and sort
-      const list = contributors.map((item, i) => {
-        // replace item at pos
-        if (i === pos) return data
-        return item
-      })
-      updateContactPeople(data, list)
-      // pass new list with addition contributor
-      setContributors(list)
-    } else {
-      // ADD item and sort
-      const list = [
-        ...contributors,
-        data
-      ]
-      updateContactPeople(data, list)
-      setContributors(list)
-    }
-  }
-
-  async function updateContactPeople(data: Contributor, list: Contributor[]) {
-    if (!data.is_contact_person) return
-
-    list.forEach(person => {
-      if (!person.is_contact_person || person === data) return
-      fetch(`/api/v1/contributor?id=eq.${person.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({is_contact_person: false}),
-        headers: {'content-type': 'application/json', Authorization: 'Bearer ' + token}
-      })
-      person.is_contact_person = false
-    })
-  }
-
-  function loadContributorIntoModal(contributor: Contributor,pos?:number) {
-    if (contributor && software?.id) {
-      // load software.id
-      contributor.software = software?.id
-      if (typeof pos==='undefined') {
-        // this is new member and we need to add position
-        contributor.position = contributors.length + 1
+  function onCreateContributor(person: Person) {
+    // debugger
+    if (person && software?.id) {
+      // construct contributor
+      const contributor = {
+        ...person,
+        position: contributors.length + 1
       }
       // show modal and pass data
       setModal({
         edit: {
           open: true,
-          pos,
           contributor
         },
         delete: {
@@ -134,16 +91,56 @@ export default function SoftwareContributors() {
     }
   }
 
-  function onEditContributor(pos:number) {
-    // select contributor
-    const contributor = contributors[pos]
-    loadContributorIntoModal(contributor,pos)
+  function onFoundPerson(person:AggregatedPerson){
+    // debugger
+    if (person && software?.id) {
+      // extract person props as much as possible (use null if not found)
+      const contributor:Person = getPropsFromObject(person, PersonProps, true)
+      // use first avatar (if exists)
+      contributor.avatar_id = person.avatar_options[0] ?? null
+      // use affiliation (if exists)
+      contributor.affiliation = person.affiliation_options[0] ?? null
+      // flag contact person to false
+      contributor.is_contact_person = false
+      // add position
+      contributor.position = contributors.length + 1
+      // show modal and pass data
+      setModal({
+        edit: {
+          open: true,
+          contributor
+        },
+        delete: {
+          open: false
+        }
+      })
+    }
   }
 
-  function onSubmitContributor({contributor, pos}:{contributor:SaveContributor,pos?: number}) {
-    // update contributors list
-    updateContributorList({data: contributor,pos})
+  async function onEditContributor(pos:number) {
+    // select contributor
+    const contributor:Person = getPropsFromObject(contributors[pos],PersonProps,true)
+    // show modal and pass data
+    setModal({
+      edit: {
+        pos,
+        open: true,
+        contributor
+      },
+      delete: {
+        open: false
+      }
+    })
+  }
+
+  function onSubmitContributor({person,pos}:{person:FormPerson,pos?:number}) {
     hideModals()
+    // debugger
+    if (typeof pos == 'undefined'){
+      addContributor(person)
+    } else {
+      updateContributor(person)
+    }
   }
 
   function onDeleteContributor(pos:number) {
@@ -160,69 +157,10 @@ export default function SoftwareContributors() {
     })
   }
 
-  async function deleteContributor(pos?: number) {
-    // hide modals
-    hideModals()
-    // abort if not specified
-    if (typeof pos == 'number') {
-      const contributor = contributors[pos]
-      // existing contributor
-      if (contributor.id) {
-        // remove from database
-        const ids = [contributor.id]
-        const resp = await deleteContributorsById({ids, token})
-        if (resp.status === 200) {
-          removeFromContributorList(pos)
-        } else {
-          showErrorMessage(`Failed to remove ${getDisplayName(contributor)}. Error: ${resp.message}`)
-        }
-        // try to remove member avatar
-        // without waiting for result
-        if (contributor.avatar_id) {
-          const del = await deleteImage({
-            id: contributor.avatar_id,
-            token
-          })
-        }
-      } else {
-        // new contributor
-        removeFromContributorList(pos)
-      }
-    }
-  }
-
-  function removeFromContributorList(pos: number) {
-    // remove item from contributors list
-    const list = [
-      ...contributors.slice(0, pos),
-      ...contributors.slice(pos+1)
-    ].map((item, pos) => {
-      // renumber positions
-      item.position = pos + 1
-      return item
-    })
-    sortedContributors(list)
-  }
-
-  async function sortedContributors(newList: Contributor[]) {
-    if (newList.length > 0) {
-      // update ui first
-      setContributors(newList)
-      // update db
-      const resp = await patchContributorPositions({
-        contributors:newList,
-        token
-      })
-      if (resp.status !== 200) {
-        // revert back
-        setContributors(contributors)
-        // show error message
-        showErrorMessage(`Failed to update contributor positions. ${resp.message}`)
-      }
-    } else {
-      setContributors([])
-    }
-  }
+  // if loading show loader
+  if (loading) return (
+    <ContentLoader />
+  )
 
   return (
     <>
@@ -244,11 +182,16 @@ export default function SoftwareContributors() {
             title={config.findContributor.title}
             subtitle={config.findContributor.subtitle}
           />
-          <FindContributor
-            software={software.id}
-            position={contributors.length + 1}
-            onEdit={loadContributorIntoModal}
-            onSubmit={onSubmitContributor}
+          <FindPerson
+            onCreate={onCreateContributor}
+            onAdd={onFoundPerson}
+            config={{
+              minLength: config.findContributor.validation.minLength,
+              label: config.findContributor.label,
+              help: config.findContributor.help,
+              // clear options after selection
+              reset: true
+            }}
           />
           <ContributorPrivacyHint />
           <div className="pt-8 pb-0">
@@ -264,35 +207,33 @@ export default function SoftwareContributors() {
           </div>
         </section>
       </EditSection>
-      {modal.edit.open &&
-        <EditContributorModal
-          open={modal.edit.open}
-          pos={modal.edit.pos}
-          contributor={modal.edit.contributor}
-          onCancel={() => {
-            setModal({
-              edit:{open:false},
-              delete:{open:false}
-            })
+      {modal.edit.open && modal.edit.contributor ?
+        <AggregatedPersonModal
+          title="Contributor"
+          person={modal.edit.contributor}
+          onCancel={hideModals}
+          onSubmit={(person)=>{
+            onSubmitContributor({person, pos: modal.edit.pos})
           }}
-          onSubmit={onSubmitContributor}
         />
+        : null
       }
-      {modal.delete.open &&
+      {modal.delete.open ?
         <ConfirmDeleteModal
           open={modal.delete.open}
           title="Remove contributor"
           body={
             <p>Are you sure you want to remove <strong>{modal.delete.displayName ?? 'No name'}</strong>?</p>
           }
-          onCancel={() => {
-            setModal({
-              edit:{open:false},
-              delete:{open:false}
-            })
+          onCancel={hideModals}
+          onDelete={()=>{
+            if (typeof modal.delete.pos != 'undefined'){
+              deleteContributor(contributors[modal.delete.pos])
+            }
+            hideModals()
           }}
-          onDelete={()=>deleteContributor(modal.delete.pos)}
         />
+        : null
       }
     </>
   )

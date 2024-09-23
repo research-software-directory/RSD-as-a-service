@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -72,11 +72,6 @@ function TableRow<T extends {id:string,origin?:string}, K extends keyof T>({data
               >
                 {/* custom render function */}
                 {col.renderFn(data)}
-                {/* <ContributorAvatar
-                  avatarUrl={getImageUrl(value) ?? ''}
-                  displayName={''}
-                  displayInitials={''}
-                /> */}
               </MuiTableCell>
             )
           }
