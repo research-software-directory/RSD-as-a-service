@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,10 +17,15 @@ import ListItemText from '@mui/material/ListItemText'
 import {editMenuItemButtonSx} from '~/config/menuItems'
 import {editSoftwarePage} from './editSoftwarePages'
 import useRsdSettings from '~/config/useRsdSettings'
+import {PluginSlotNames, RsdPluginContext} from '~/config/RsdPluginContext'
+import {useContext} from 'react'
+import svgFromString from '~/utils/svgFromString'
 
 export default function EditSoftwareNav({slug,pageId}:{slug:string,pageId:string}) {
   const router = useRouter()
   const {host} = useRsdSettings()
+  const {pluginSlots} = useContext(RsdPluginContext)
+
   // default is true to follow useMenuItems approach
   const showCommunities = host.modules ? host.modules.includes('communities') : true
 
@@ -50,6 +57,28 @@ export default function EditSoftwareNav({slug,pageId}:{slug:string,pageId:string
             )
           }
         })}
+        {
+          pluginSlots.map((pluginSlot) => {
+            if (pluginSlot.name === PluginSlotNames.editSoftwareNav) {
+              return (
+                <ListItemButton
+                  data-testid="edit-software-nav-item"
+                  key={pluginSlot.title}
+                  selected={false}
+                  onClick={() => {
+                    router.push(pluginSlot.href || '#')
+                  }}
+                  sx={editMenuItemButtonSx}
+                >
+                  <ListItemIcon>
+                    {svgFromString(pluginSlot.icon)}
+                  </ListItemIcon>
+                  <ListItemText primary={pluginSlot.title} secondary={''} />
+                </ListItemButton>
+              )
+            }
+          })
+        }
       </List>
     </nav>
   )
