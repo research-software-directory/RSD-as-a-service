@@ -2,9 +2,9 @@
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -41,6 +41,8 @@ import Announcement from '~/components/Announcement/Announcement'
 // user settings (from cookies)
 import {getUserSettings} from '~/utils/userSettings'
 import {UserSettingsProps, UserSettingsProvider} from '~/config/UserSettingsContext'
+import getUserPlugins from '~/utils/userPlugins'
+import PluginSettingsProvider, {PluginSlot} from '~/config/RsdPluginContext'
 
 // extend Next app props interface with emotion cache
 export interface MuiAppProps extends AppProps {
@@ -48,7 +50,8 @@ export interface MuiAppProps extends AppProps {
   session: Session,
   settings: RsdSettingsState,
   matomo: Matomo,
-  userSettings?:UserSettingsProps
+  userSettings?: UserSettingsProps,
+  pluginSlots?: PluginSlot[]
 }
 
 // define npgrogres setup, no spinner
@@ -77,7 +80,7 @@ Router.events.on('routeChangeError', ()=>{
 function RsdApp(props: MuiAppProps) {
   const {
     Component, emotionCache = clientSideEmotionCache,
-    pageProps, session, settings, matomo, userSettings
+    pageProps, session, settings, matomo, userSettings, pluginSlots
   } = props
 
   //currently we support only default (light) and dark RSD theme for MUI
@@ -94,6 +97,7 @@ function RsdApp(props: MuiAppProps) {
   const [rsdSession] = useState(session)
   const [rsdSettings] = useState(settings)
   const [rsdUserSettings] = useState(userSettings)
+  const [rsdPluginSlots] = useState(pluginSlots)
   // request theme when options changed
   const {muiTheme, cssVariables} = useMemo(() => {
     return loadMuiTheme(rsdSettings.theme)
@@ -136,13 +140,16 @@ function RsdApp(props: MuiAppProps) {
         <AuthProvider session={rsdSession}>
           {/* RSD settings/config */}
           <RsdSettingsProvider settings={rsdSettings}>
-            {/* MUI snackbar service */}
-            <MuiSnackbarProvider>
-              {/* User settings rows, page layout etc. */}
-              <UserSettingsProvider user={rsdUserSettings}>
-                <Component {...pageProps} />
-              </UserSettingsProvider>
-            </MuiSnackbarProvider>
+            {/* Plugin slots context */}
+            <PluginSettingsProvider pluginSlots={rsdPluginSlots}>
+              {/* MUI snackbar service */}
+              <MuiSnackbarProvider>
+                {/* User settings rows, page layout etc. */}
+                <UserSettingsProvider user={rsdUserSettings}>
+                  <Component {...pageProps} />
+                </UserSettingsProvider>
+              </MuiSnackbarProvider>
+            </PluginSettingsProvider>
           </RsdSettingsProvider>
         </AuthProvider>
         {/* Matomo cookie consent dialog */}
@@ -190,6 +197,8 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
   let session: Session | null = null
   // user settings variable to extract from cookies
   let userSettings:UserSettingsProps|null = null
+  // List of all plugins that can be used by the user
+  let pluginSlots: PluginSlot[] = []
   // Matomo cached settings passed via getInitialProps
   // Note! getInitialProps does not always run server side
   // so we keep the last obtained values in this object
@@ -198,6 +207,8 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
     id: process.env.MATOMO_ID || null,
     consent: null
   }
+  // extract rsd settings
+  const settings = await getSettingsServerSide(req, appContext.router.query)
   // extract user session from cookies and
   // matomo consent if matomo is used (id)
   // only in SSR mode (req && res present)
@@ -209,11 +220,10 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
     }
     // get user settings from cookies
     userSettings = getUserSettings(req)
+    pluginSlots = await getUserPlugins(session?.token, settings.host.plugins)
     // set content security header
     setContentSecurityPolicyHeader(res)
   }
-  // extract rsd settings
-  const settings = await getSettingsServerSide(req, appContext.router.query)
 
   // console.group('RsdApp.getInitialProps')
   // console.log('session...', session)
@@ -227,7 +237,8 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
     session,
     settings,
     matomo,
-    userSettings
+    userSettings,
+    pluginSlots
   }
 }
 
