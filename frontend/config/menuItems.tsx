@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
@@ -21,7 +21,7 @@ import Diversity3Icon from '@mui/icons-material/Diversity3'
 import {RsdModule} from './rsdSettingsReducer'
 
 export type MenuItemType = {
-  type?: 'link' | 'function' |'divider'
+  type?: 'link' | 'function' |'divider' | 'pluginSlot'
   label: string,
   // used as url link
   path?: string,
@@ -120,6 +120,10 @@ export const userMenuItems: MenuItemType[] = [
     },
     path: '/user/communities',
     icon: <Diversity3Icon />,
+  }, {
+    module: 'user',
+    type: 'pluginSlot',
+    label: 'Unused label for plugin slot',
   }, {
     module: 'user',
     type: 'divider',

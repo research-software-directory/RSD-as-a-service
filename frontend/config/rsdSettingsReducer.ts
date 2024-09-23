@@ -40,7 +40,8 @@ export type RsdHost = {
     limit: number,
     description?: string | null
   },
-  modules?: RsdModule[]
+  modules?: RsdModule[],
+  plugins?: string[]
 }
 
 export type CustomLink = {
