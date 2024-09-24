@@ -74,14 +74,17 @@ export default function MentionsOverviewList({list, onUpdate}: { list: MentionIt
           )
         })}
       </List>
-      <EditMentionModal
-        title={mentionToEdit?.id as string ?? 'undefined'}
-        open={modalOpen}
-        pos={undefined} //why does this exist?
-        item={mentionToEdit}
-        onCancel={() => setModalOpen(false)}
-        onSubmit={({data}) => {updateMention(data)}}
-      />
+      {modalOpen ?
+        <EditMentionModal
+          title={mentionToEdit?.id as string ?? 'undefined'}
+          open={modalOpen}
+          pos={undefined} //why does this exist?
+          item={mentionToEdit}
+          onCancel={() => setModalOpen(false)}
+          onSubmit={({data}) => {updateMention(data)}}
+        />
+        : null
+      }
     </>
   )
 };
