@@ -8,7 +8,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect} from 'react'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -16,7 +15,6 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Alert from '@mui/material/Alert'
-// import AlertTitle from '@mui/material/AlertTitle'
 
 import {useForm} from 'react-hook-form'
 
@@ -56,15 +54,20 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
   const isAdmin = user?.role === 'rsd_admin'
 
   const smallScreen = useMediaQuery('(max-width:600px)')
-  const {handleSubmit, watch, formState, reset, control, register} = useForm<MentionItemProps>({
+  const {handleSubmit, watch, formState, reset, control, register, clearErrors} = useForm<MentionItemProps>({
     mode: 'onChange',
     defaultValues: {
       ...item
     }
   })
   // extract form states
-  const {isValid, isDirty} = formState
+  const {isValid, isDirty, errors} = formState
   const formData = watch()
+  // need to clear image_url error manually after the type change
+  // and dynamic rules change from required to not required
+  if (formData.mention_type!=='highlight' && errors?.hasOwnProperty('image_url')){
+    clearErrors('image_url')
+  }
 
   // console.group('EditMentionModal')
   // console.log('isValid...', isValid)
@@ -72,13 +75,6 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
   // console.log('errors...', errors)
   // console.log('formData...', formData)
   // console.groupEnd()
-
-  useEffect(() => {
-    if (item) {
-      //(re)set form to item values
-      reset(item)
-    }
-  }, [item, reset])
 
   function handleCancel(reason: any) {
     if (reason === 'backdropClick') {
@@ -264,9 +260,16 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
               defaultValue: formData?.image_url,
               helperTextMessage: config.image_url.help,
               helperTextCnt: `${formData?.image_url?.length || 0}/${config.image_url.validation.maxLength.value}`,
+              // if type not highlight we remove required flag and disable input
               disabled: formData?.mention_type !== 'highlight'
             }}
-            rules={formData?.mention_type === 'highlight' ? config.image_url.validation : {}}
+            rules={formData?.mention_type === 'highlight' ?
+              config.image_url.validation :
+              {
+                // if type not highlight we remove required flag and disable input
+                required: false
+              }
+            }
           />
 
           <div className="py-2"></div>

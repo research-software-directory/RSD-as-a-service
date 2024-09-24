@@ -85,35 +85,41 @@ export default function MentionEditSection() {
     return (
       <>
         {/* modal as external part of the section */}
-        <EditMentionModal
-          title={settings.editModalTitle}
-          open={editModal.open}
-          pos={editModal.pos}
-          item={editModal.item}
-          onCancel={closeEditModal}
-          onSubmit={(props)=>onSubmit(props.data)}
-        />
-        <ConfirmDeleteModal
-          open={confirmModal.open}
-          title={settings.confirmDeleteModalTitle}
-          body={
-            <p>Are you sure you want to remove <strong>
-              <SanitizedMathMLBox
-                component="span"
-                rawHtml={confirmModal?.item?.title ?? 'this item'}
-              />
-            </strong>?</p>
-          }
-          onCancel={() => {
-          // cancel confirm by removing item
-            confirmDelete()
-          }}
-          onDelete={() => {
-            if (confirmModal?.item) onDelete(confirmModal?.item)
-            // hide modal by removing confirm item
-            confirmDelete()
-          }}
-        />
+        {editModal.open ?
+          <EditMentionModal
+            title={settings.editModalTitle}
+            open={editModal.open}
+            pos={editModal.pos}
+            item={editModal.item}
+            onCancel={closeEditModal}
+            onSubmit={(props)=>onSubmit(props.data)}
+          />
+          : null
+        }{
+          confirmModal.open ?
+            <ConfirmDeleteModal
+              open={confirmModal.open}
+              title={settings.confirmDeleteModalTitle}
+              body={
+                <p>Are you sure you want to remove <strong>
+                  <SanitizedMathMLBox
+                    component="span"
+                    rawHtml={confirmModal?.item?.title ?? 'this item'}
+                  />
+                </strong>?</p>
+              }
+              onCancel={() => {
+                // cancel confirm by removing item
+                confirmDelete()
+              }}
+              onDelete={() => {
+                if (confirmModal?.item) onDelete(confirmModal?.item)
+                // hide modal by removing confirm item
+                confirmDelete()
+              }}
+            />
+            : null
+        }
       </>
     )
   }
