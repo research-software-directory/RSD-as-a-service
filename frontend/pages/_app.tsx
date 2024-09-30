@@ -41,8 +41,9 @@ import Announcement from '~/components/Announcement/Announcement'
 // user settings (from cookies)
 import {getUserSettings} from '~/utils/userSettings'
 import {UserSettingsProps, UserSettingsProvider} from '~/config/UserSettingsContext'
-import getUserPlugins from '~/utils/userPlugins'
-import PluginSettingsProvider, {PluginSlot} from '~/config/RsdPluginContext'
+// plugin settings
+import getPlugins from '~/config/getPlugins'
+import PluginSettingsProvider, {PluginConfig} from '~/config/RsdPluginContext'
 
 // extend Next app props interface with emotion cache
 export interface MuiAppProps extends AppProps {
@@ -51,7 +52,7 @@ export interface MuiAppProps extends AppProps {
   settings: RsdSettingsState,
   matomo: Matomo,
   userSettings?: UserSettingsProps,
-  pluginSlots?: PluginSlot[]
+  pluginSettings?: PluginConfig[]
 }
 
 // define npgrogres setup, no spinner
@@ -80,7 +81,8 @@ Router.events.on('routeChangeError', ()=>{
 function RsdApp(props: MuiAppProps) {
   const {
     Component, emotionCache = clientSideEmotionCache,
-    pageProps, session, settings, matomo, userSettings, pluginSlots
+    pageProps, session, settings, matomo, userSettings,
+    pluginSettings
   } = props
 
   //currently we support only default (light) and dark RSD theme for MUI
@@ -97,7 +99,7 @@ function RsdApp(props: MuiAppProps) {
   const [rsdSession] = useState(session)
   const [rsdSettings] = useState(settings)
   const [rsdUserSettings] = useState(userSettings)
-  const [rsdPluginSlots] = useState(pluginSlots)
+  const [rsdPluginSettings] = useState(pluginSettings)
   // request theme when options changed
   const {muiTheme, cssVariables} = useMemo(() => {
     return loadMuiTheme(rsdSettings.theme)
@@ -124,6 +126,8 @@ function RsdApp(props: MuiAppProps) {
   // console.log('rsdSession...', rsdSession)
   // console.log('userSettings...', userSettings)
   // console.log('rsdUserSettings...', rsdUserSettings)
+  // console.log('pluginSettings...', pluginSettings)
+  // console.log('rsdPluginSettings...', rsdPluginSettings)
   // console.groupEnd()
 
   return (
@@ -141,7 +145,7 @@ function RsdApp(props: MuiAppProps) {
           {/* RSD settings/config */}
           <RsdSettingsProvider settings={rsdSettings}>
             {/* Plugin slots context */}
-            <PluginSettingsProvider pluginSlots={rsdPluginSlots}>
+            <PluginSettingsProvider settings={rsdPluginSettings}>
               {/* MUI snackbar service */}
               <MuiSnackbarProvider>
                 {/* User settings rows, page layout etc. */}
@@ -198,7 +202,7 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
   // user settings variable to extract from cookies
   let userSettings:UserSettingsProps|null = null
   // List of all plugins that can be used by the user
-  let pluginSlots: PluginSlot[] = []
+  let pluginSettings: PluginConfig[] = []
   // Matomo cached settings passed via getInitialProps
   // Note! getInitialProps does not always run server side
   // so we keep the last obtained values in this object
@@ -220,7 +224,11 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
     }
     // get user settings from cookies
     userSettings = getUserSettings(req)
-    pluginSlots = await getUserPlugins(session?.token, settings.host.plugins)
+    // get RSD plugins from config endpoint
+    pluginSettings = await getPlugins({
+      plugins:settings.host.plugins,
+      token:session?.token
+    })
     // set content security header
     setContentSecurityPolicyHeader(res)
   }
@@ -238,7 +246,7 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
     settings,
     matomo,
     userSettings,
-    pluginSlots
+    pluginSettings
   }
 }
 

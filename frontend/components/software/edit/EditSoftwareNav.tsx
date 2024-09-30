@@ -9,23 +9,23 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useRouter} from 'next/router'
+
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
-import {editSoftwarePage} from './editSoftwarePages'
 import useRsdSettings from '~/config/useRsdSettings'
-import {PluginSlotNames, RsdPluginContext} from '~/config/RsdPluginContext'
-import {useContext} from 'react'
-import svgFromString from '~/utils/svgFromString'
+import {usePluginSlots} from '~/config/RsdPluginContext'
+import SvgFromString from '~/components/icons/SvgFromString'
+import {editSoftwarePage} from './editSoftwarePages'
 
 export default function EditSoftwareNav({slug,pageId}:{slug:string,pageId:string}) {
   const router = useRouter()
   const {host} = useRsdSettings()
-  const {pluginSlots} = useContext(RsdPluginContext)
-
+  // get edit software plugins
+  const pluginSlots = usePluginSlots('editSoftwareNav')
   // default is true to follow useMenuItems approach
   const showCommunities = host.modules ? host.modules.includes('communities') : true
 
@@ -59,24 +59,22 @@ export default function EditSoftwareNav({slug,pageId}:{slug:string,pageId:string
         })}
         {
           pluginSlots.map((pluginSlot) => {
-            if (pluginSlot.name === PluginSlotNames.editSoftwareNav) {
-              return (
-                <ListItemButton
-                  data-testid="edit-software-nav-item"
-                  key={pluginSlot.title}
-                  selected={false}
-                  onClick={() => {
-                    router.push(pluginSlot.href || '#')
-                  }}
-                  sx={editMenuItemButtonSx}
-                >
-                  <ListItemIcon>
-                    {svgFromString(pluginSlot.icon)}
-                  </ListItemIcon>
-                  <ListItemText primary={pluginSlot.title} secondary={''} />
-                </ListItemButton>
-              )
-            }
+            return (
+              <ListItemButton
+                data-testid="edit-software-nav-item"
+                key={pluginSlot.title}
+                selected={false}
+                onClick={() => {
+                  router.push(pluginSlot.href || '#')
+                }}
+                sx={editMenuItemButtonSx}
+              >
+                <ListItemIcon>
+                  <SvgFromString svg={pluginSlot.icon}/>
+                </ListItemIcon>
+                <ListItemText primary={pluginSlot.title} secondary={''} />
+              </ListItemButton>
+            )
           })
         }
       </List>

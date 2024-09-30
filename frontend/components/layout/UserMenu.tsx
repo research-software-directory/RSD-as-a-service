@@ -1,11 +1,13 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState} from 'react'
+import Link from 'next/link'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -13,24 +15,19 @@ import Avatar from '@mui/material/Avatar'
 import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
 
-import {useAuth} from '../../auth/index'
-import {MenuItemType} from '../../config/menuItems'
-import {getDisplayInitials, splitName} from '../../utils/getDisplayName'
-import CaretIcon from '~/components/icons/caret.svg'
+import {useAuth} from '~/auth/index'
+import {MenuItemType} from '~/config/menuItems'
+import useUserMenuItems from '~/config/useUserMenuItems'
+import {getDisplayInitials, splitName} from '~/utils/getDisplayName'
 import useDisableScrollLock from '~/utils/useDisableScrollLock'
-import Link from 'next/link'
+import CaretIcon from '~/components/icons/caret.svg'
 
-type UserMenuType = {
-  image?: string
-  menuOptions?: MenuItemType[]
-}
-
-export default function UserMenu(props: UserMenuType) {
+export default function UserMenu() {
   const {session} = useAuth()
   const disable = useDisableScrollLock()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
-  const {menuOptions} = props
+  const menuItems = useUserMenuItems()
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget)
@@ -45,9 +42,9 @@ export default function UserMenu(props: UserMenuType) {
   }
 
   function renderMenuOptions() {
-    if (menuOptions) {
+    if (menuItems) {
       return (
-        menuOptions.map(item => {
+        menuItems.map(item => {
           if (item?.type === 'divider') {
             return <Divider key={item.label}/>
           }
