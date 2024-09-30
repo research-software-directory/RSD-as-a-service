@@ -59,6 +59,7 @@ server {
 	}
 }
 ```
+
 :::tip
 Using this configuration, nginx will not exit upon starting if the plugin backend is not reachable yet. 127.0.0.11 is the docker internal resolver.
 :::

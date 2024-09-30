@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,6 +25,7 @@ afterEach(()=>{
 
 it('does NOT render snackbar when open=false',()=>{
   mockOptions.open = false
+  mockOptions.message = 'TEST MESSSAGE'
   render(<MuiSnackbar options={mockOptions} setSnackbar={setSnackbar} />)
   const found = screen.queryByText(mockOptions.message)
   expect(found).toEqual(null)
