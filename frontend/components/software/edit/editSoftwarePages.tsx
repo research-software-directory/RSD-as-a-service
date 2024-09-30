@@ -69,9 +69,7 @@ export type EditSoftwarePageProps = {
   status: string,
   label: string,
   icon: JSX.Element,
-  render: () => JSX.Element,
-  pluginSlot?: boolean,
-  pluginLink?: string
+  render: () => JSX.Element
 }
 
 export const editSoftwarePage:EditSoftwarePageProps[] = [{

@@ -5,37 +5,34 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {MenuItemType, userMenuItems} from './menuItems'
 import {useSession} from '~/auth'
+import SvgFromString from '~/components/icons/SvgFromString'
+import {MenuItemType, userMenuItems} from './menuItems'
 import useRsdSettings from './useRsdSettings'
-import {useContext} from 'react'
-import {PluginSlotNames, RsdPluginContext} from './RsdPluginContext'
-import svgFromString from '~/utils/svgFromString'
+import {usePluginSlots} from './RsdPluginContext'
 
 export default function useUserMenuItems(){
   const {user} = useSession()
   const {host} = useRsdSettings()
-  const {pluginSlots} = useContext(RsdPluginContext)
-
+  // get user menu plugins
+  const pluginSlots = usePluginSlots('userMenu')
+  // construct menu items
   const items: MenuItemType[] = []
 
   userMenuItems.forEach( (item) => {
     if (item.active && item.active({role: user?.role, modules: host.modules})){
       items.push(item)
     } else if (item.type == 'pluginSlot') {
-      pluginSlots.forEach(
-        (pluginSlot) => {
-          if (pluginSlot.name == PluginSlotNames.userMenu) {
-            items.push({
-              module: 'user',
-              type: 'link',
-              label: pluginSlot.title,
-              path: pluginSlot.href,
-              icon: svgFromString(pluginSlot.icon),
-            })
-          }
-        }
-      )
+      // add plugins to user menu
+      pluginSlots.forEach(pluginSlot => {
+        items.push({
+          module: 'user',
+          type: 'link',
+          label: pluginSlot.title,
+          path: pluginSlot.href,
+          icon: <SvgFromString svg={pluginSlot.icon} />,
+        })
+      })
     }
   })
 
