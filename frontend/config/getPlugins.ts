@@ -8,9 +8,20 @@
 import logger from '~/utils/logger'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import {PluginConfig} from '~/config/RsdPluginContext'
+import {RsdPluginSettings} from './rsdSettingsReducer'
 
-async function getPlugin({pluginName,token}:{pluginName: string, token?: string}){
-  const url = `http://localhost/plugin/${pluginName}/api/config`
+function constructBackendUrl(pluginSettings: RsdPluginSettings) {
+  const {name, backend_hostname} = pluginSettings
+  if (process.env.NODE_ENV === 'development') {
+    return `http://localhost/plugin/${name}`
+  } else {
+    return `http://${backend_hostname}/plugin/${name}`
+  }
+}
+
+async function getPlugin({pluginSettings, token}:{pluginSettings: RsdPluginSettings, token?: string}){
+  const url = constructBackendUrl(pluginSettings) + '/api/config'
+  console.log(url)
   try {
     const response = await fetch(url, {
       headers: {
@@ -25,7 +36,7 @@ async function getPlugin({pluginName,token}:{pluginName: string, token?: string}
         return {
           ...item,
           // add plugin name
-          name: pluginName
+          name: pluginSettings.name
         }
       })
       return config
@@ -46,13 +57,13 @@ async function getPlugin({pluginName,token}:{pluginName: string, token?: string}
 }
 
 export default async function getPlugins(
-  {plugins,token}: {plugins?: string[], token?: string}
+  {plugins, token}: {plugins?: RsdPluginSettings[], token?: string}
 ) {
   if (!plugins) {
     return []
   }
   // create all requests
-  const promises = plugins?.map(pluginName=>getPlugin({pluginName,token}))
+  const promises = plugins?.map(pluginSettings=>getPlugin({pluginSettings, token}))
   // execute all requests
   const pluginSlots = await Promise.all(promises)
   // flatten definitions

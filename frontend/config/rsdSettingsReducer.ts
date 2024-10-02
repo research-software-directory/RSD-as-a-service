@@ -21,6 +21,11 @@ export type RsdSettingsState = {
 
 export type RsdModule= 'software'| 'projects' | 'organisations' | 'communities' | 'news' | 'user'
 
+export type RsdPluginSettings = {
+  name: string,
+  backend_hostname: string
+}
+
 export type RsdHost = {
   name: string,
   email: string,
@@ -41,7 +46,7 @@ export type RsdHost = {
     description?: string | null
   },
   modules?: RsdModule[],
-  plugins?: string[]
+  plugins?: RsdPluginSettings[]
 }
 
 export type CustomLink = {
