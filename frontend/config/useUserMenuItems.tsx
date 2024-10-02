@@ -20,7 +20,7 @@ export default function useUserMenuItems(){
   const items: MenuItemType[] = []
 
   userMenuItems.forEach( (item) => {
-    if (item.active && item.active({role: user?.role, modules: host.modules})){
+    if (item.active?.({role: user?.role, modules: host.modules})){
       items.push(item)
     } else if (item.type == 'pluginSlot') {
       // add plugins to user menu

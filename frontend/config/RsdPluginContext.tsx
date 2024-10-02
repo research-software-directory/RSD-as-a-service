@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createContext, useContext, useEffect, useState} from 'react'
+import {createContext, useContext, useEffect, useMemo, useState} from 'react'
 
 // Defines the possible names for plugin slots, referred by the individual components
 export type PluginSlot = 'userMenu'|'editSoftwareNav'
@@ -27,9 +27,10 @@ export const RsdPluginContext = createContext<{settings:PluginConfig[]}>({settin
 
 export default function PluginSettingsProvider(props: any) {
   const [settings, setSettings] = useState(props?.settings ?? [])
+  const value = useMemo(() => ({settings, setSettings}), [settings, setSettings])
 
   return <RsdPluginContext.Provider
-    value={{settings,setSettings}}
+    value={value}
     {...props}
   />
 }
