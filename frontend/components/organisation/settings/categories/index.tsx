@@ -6,14 +6,14 @@
 
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
-import {useCommunityContext} from '~/components/communities/context'
 import CategoryEditTree from '~/components/category/CategoryEditTree'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import useCategories from '~/components/category/useCategories'
+import useOrganisationContext from '~/components/organisation/context/useOrganisationContext'
 
-export default function CommunityCategories() {
-  const {community} = useCommunityContext()
-  const {loading,error,roots,onMutation} = useCategories({community:community.id})
+export default function OrganisationCategories() {
+  const {id} = useOrganisationContext()
+  const {loading,error,roots,onMutation} = useCategories({organisation:id})
 
   if (loading) {
     return (
@@ -36,8 +36,8 @@ export default function CommunityCategories() {
         <CategoryEditTree
           title="Categories"
           roots={roots}
-          community={community.id}
-          organisation={null}
+          community={null}
+          organisation={id ?? null}
           onMutation={onMutation}
         />
       }

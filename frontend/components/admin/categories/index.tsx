@@ -27,6 +27,7 @@ export default function AdminCategories() {
         <CategoryEditTree
           roots={roots}
           community={null}
+          organisation={null}
           onMutation={onMutation}
         />
       }

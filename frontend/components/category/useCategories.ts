@@ -6,12 +6,17 @@
 
 import {useEffect, useState} from 'react'
 
+import logger from '~/utils/logger'
 import {TreeNode} from '~/types/TreeNode'
 import {CategoryEntry} from '~/types/Category'
 import {loadCategoryRoots} from '~/components/category/apiCategories'
-import logger from '~/utils/logger'
 
-export default function useCategories({community}:{community:string|null}){
+type UseCategoriesProps={
+  community?:string|null,
+  organisation?:string|null
+}
+
+export default function useCategories({community,organisation}:UseCategoriesProps){
   const [roots, setRoots] = useState<TreeNode<CategoryEntry>[] | null> (null)
   const [error, setError] = useState<string | null> (null)
   const [loading, setLoading] = useState<boolean> (true)
@@ -19,7 +24,7 @@ export default function useCategories({community}:{community:string|null}){
   useEffect(() => {
     let abort: boolean = false
     // only if there is community value
-    loadCategoryRoots(community)
+    loadCategoryRoots({community,organisation})
       .then(roots => {
         if (abort) return
         setRoots(roots)
@@ -37,7 +42,7 @@ export default function useCategories({community}:{community:string|null}){
       })
 
     return ()=>{abort=true}
-  }, [community])
+  }, [community,organisation])
 
   function onMutation() {
     if (roots !== null) {

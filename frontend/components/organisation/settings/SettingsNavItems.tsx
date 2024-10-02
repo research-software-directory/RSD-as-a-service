@@ -9,6 +9,7 @@
 import InfoIcon from '@mui/icons-material/Info'
 import PersonIcon from '@mui/icons-material/Person'
 import SettingsIcon from '@mui/icons-material/Settings'
+import CategoryIcon from '@mui/icons-material/Category'
 
 export type SettingsMenuProps = {
   id: string,
@@ -23,6 +24,12 @@ export const settingsMenu: SettingsMenuProps[] = [
     label:()=>'General settings',
     icon: <SettingsIcon />,
     status: 'Organisation details'
+  },
+  {
+    id:'categories',
+    label:()=>'Categories',
+    icon: <CategoryIcon />,
+    status: 'Define categories',
   },
   {
     id:'maintainers',

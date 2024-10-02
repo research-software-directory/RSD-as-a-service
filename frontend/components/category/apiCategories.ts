@@ -4,15 +4,28 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {CategoryEntry, CategoryID} from '~/types/Category'
+import {CategoryEntry} from '~/types/Category'
 import {getBaseUrl} from '~/utils/fetchHelpers'
 import {TreeNode} from '~/types/TreeNode'
 
-export async function loadCategoryRoots(community: string | null): Promise<TreeNode<CategoryEntry>[]> {
+type LoadCategoryProps={
+  community?: string | null,
+  organisation?: string | null
+}
 
-  const communityFilter = community === null ? 'community=is.null' : `community=eq.${community}`
+export async function loadCategoryRoots({community, organisation}:LoadCategoryProps){
+  // global categories is default
+  let categoryFilter = 'community=is.null&organisation=is.null'
+  // community filter
+  if (community){
+    categoryFilter = `community=eq.${community}`
+  }
+  // organisation filter
+  if (organisation){
+    categoryFilter = `organisation=eq.${organisation}`
+  }
 
-  const resp = await fetch(`${getBaseUrl()}/category?${communityFilter}`)
+  const resp = await fetch(`${getBaseUrl()}/category?${categoryFilter}`)
 
   if (!resp.ok) {
     throw new Error(`${await resp.text()}`)
@@ -25,8 +38,8 @@ export async function loadCategoryRoots(community: string | null): Promise<TreeN
 }
 
 export function categoryEntriesToRoots(categoriesArr: CategoryEntry[]): TreeNode<CategoryEntry>[] {
-  const idToNode: Map<CategoryID, TreeNode<CategoryEntry>> = new Map()
-  const idToChildren: Map<CategoryID, TreeNode<CategoryEntry>[]> = new Map()
+  const idToNode: Map<string, TreeNode<CategoryEntry>> = new Map()
+  const idToChildren: Map<string, TreeNode<CategoryEntry>[]> = new Map()
 
   for (const cat of categoriesArr) {
     const id = cat.id
