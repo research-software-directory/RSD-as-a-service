@@ -88,13 +88,17 @@ CREATE TABLE category (
 	id UUID PRIMARY KEY,
 	parent UUID REFERENCES category DEFAULT NULL,
 	community UUID REFERENCES community(id) DEFAULT NULL,
+	organisation UUID REFERENCES organisation(id) DEFAULT NULL,
+	allow_software BOOLEAN NOT NULL DEFAULT FALSE,
+	allow_projects BOOLEAN NOT NULL DEFAULT FALSE,
 	short_name VARCHAR(100) NOT NULL,
 	name VARCHAR(250) NOT NULL,
 	properties JSONB NOT NULL DEFAULT '{}'::jsonb,
 	provenance_iri VARCHAR(250) DEFAULT NULL,  -- e.g. https://www.w3.org/TR/skos-reference/#mapping
 
-	CONSTRAINT unique_short_name UNIQUE NULLS NOT DISTINCT (parent, short_name, community),
-	CONSTRAINT unique_name UNIQUE NULLS NOT DISTINCT (parent, name, community),
+	CONSTRAINT only_one_entity CHECK (community IS NULL OR organisation IS NULL),
+	CONSTRAINT unique_short_name UNIQUE NULLS NOT DISTINCT (parent, short_name, community, organisation),
+	CONSTRAINT unique_name UNIQUE NULLS NOT DISTINCT (parent, name, community, organisation),
 	CONSTRAINT invalid_value_for_properties CHECK (properties - '{icon, is_highlight, description, subtitle, tree_level_labels}'::text[] = '{}'::jsonb),
 	CONSTRAINT highlight_must_be_top_level_category CHECK (NOT ((properties->>'is_highlight')::boolean AND parent IS NOT NULL))
 );

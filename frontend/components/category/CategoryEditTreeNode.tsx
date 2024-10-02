@@ -26,9 +26,10 @@ import CategoryEditForm from '~/components/category/CategoryEditForm'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 
-export default function CategoryEditTreeNode({node, community, onDelete, onMutation}: Readonly<{
+export default function CategoryEditTreeNode({node, community, organisation, onDelete, onMutation}: Readonly<{
   node: TreeNode<CategoryEntry>
   community: string | null
+  organisation: string | null
   onDelete: (node: TreeNode<CategoryEntry>) => void
   onMutation: ()=>void
 }>) {
@@ -152,6 +153,7 @@ export default function CategoryEditTreeNode({node, community, onDelete, onMutat
           <CategoryEditForm
             createNew={false}
             community={community}
+            organisation={organisation}
             data={categoryData}
             onSuccess={onEditSuccess}
             onCancel={()=>setShowItem('none')}
@@ -162,6 +164,7 @@ export default function CategoryEditTreeNode({node, community, onDelete, onMutat
           <CategoryEditForm
             createNew={true}
             community={community}
+            organisation={organisation}
             data={categoryData}
             onSuccess={onNewChildSuccess}
             onCancel={()=>setShowItem('none')}
@@ -176,6 +179,7 @@ export default function CategoryEditTreeNode({node, community, onDelete, onMutat
                   key={child.getValue().id}
                   node={child}
                   community={community}
+                  organisation={organisation}
                   onDelete={onDeleteChild}
                   onMutation={onMutation}
                 />

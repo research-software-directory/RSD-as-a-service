@@ -1,11 +1,10 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
-
-export type CategoryID = string // NOSONAR ignore: typescript:S6564
 
 export type CategoryProperties = {
   icon?: string
@@ -16,9 +15,12 @@ export type CategoryProperties = {
 }
 
 export type CategoryEntry = {
-  id: CategoryID
-  parent: CategoryID | null
+  id: string
+  parent: string | null
   community: string | null
+  organisation: string | null
+  allow_software: boolean
+  allow_projects: boolean
   short_name: string
   name: string
   properties: CategoryProperties

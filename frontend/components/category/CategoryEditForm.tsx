@@ -15,16 +15,20 @@ import {CategoryEntry} from '~/types/Category'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
+import ControlledSwitch from '../form/ControlledSwitch'
 
 type CategoryEditFormProps=Readonly<{
   createNew: boolean
   data: CategoryEntry | null
   community: string | null
+  organisation: string | null
   onSuccess: (category:CategoryEntry)=>void
   onCancel: ()=>void
 }>
 
-export default function CategoryEditForm({createNew, data, community, onSuccess, onCancel}:CategoryEditFormProps) {
+export default function CategoryEditForm({
+  createNew, data, community=null,organisation=null,onSuccess, onCancel
+}:CategoryEditFormProps) {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const [disableSave, setDisableSave] = useState<boolean>(false)
@@ -32,14 +36,19 @@ export default function CategoryEditForm({createNew, data, community, onSuccess,
     mode: 'onChange'
   })
 
-  // console.group('CategoryEditForm')
-  // console.log('createNew...',createNew)
+  const [parent] = watch(['parent'])
+
+  console.group('CategoryEditForm')
+  console.log('createNew...',createNew)
   // console.log('data...',data)
   // console.log('disableSave...',disableSave)
   // console.log('community...',community)
-  // console.groupEnd()
+  // console.log('organisation...',organisation)
+  console.log('parent...',parent)
+  console.groupEnd()
 
-  const onSubmit = (formData: CategoryEntry) => {
+
+  function onSubmit(formData: CategoryEntry){
     setDisableSave(true)
     // debugger
     if (createNew) {
@@ -56,7 +65,6 @@ export default function CategoryEditForm({createNew, data, community, onSuccess,
         ...createJsonHeaders(token),
         Prefer: 'return=representation',
         Accept: 'application/vnd.pgrst.object+json'
-
       },
       body: JSON.stringify(formData)
     })
@@ -127,6 +135,7 @@ export default function CategoryEditForm({createNew, data, community, onSuccess,
         </>
       }
       <input type="hidden" {...register('community', {value: community})} />
+      <input type="hidden" {...register('organisation', {value: organisation})} />
 
       <h3 className="py-4 text-base-content-secondary">{getFormTitle()}</h3>
 
@@ -156,6 +165,7 @@ export default function CategoryEditForm({createNew, data, community, onSuccess,
           error: formState.errors?.name?.message !== undefined
         }}
       />
+
       <TextFieldWithCounter
         register={register('provenance_iri', {
           maxLength: {value: 250, message: 'max length is 250'}
@@ -169,9 +179,39 @@ export default function CategoryEditForm({createNew, data, community, onSuccess,
         }}
       />
 
-      {/* Highlight options are only for the top level items and for general categories */}
-      {((createNew && data === null && community===null) ||
-        (!createNew && data?.parent === null && community===null)) ?
+      {/*
+        Organisation categories can be used for software or project items
+        We show software/project switch only at top level
+      */}
+      {
+        organisation && !parent ?
+          <div className="flex gap-8 pt-8">
+            <ControlledSwitch
+              label="For software"
+              name="allow_software"
+              defaultValue = {data?.allow_software}
+              control={control}
+              disabled={parent ? true : false}
+            />
+            <ControlledSwitch
+              label="For projects"
+              name="allow_projects"
+              defaultValue = {data?.allow_projects ?? true}
+              control={control}
+              disabled={parent ? true : false}
+            />
+          </div>
+          :
+          <>
+            {/* By default categories are used by software in communities and by project for organisations */}
+            <input type="hidden" {...register('allow_software', {value: data?.allow_software ?? community!==null})} />
+            <input type="hidden" {...register('allow_projects', {value: data?.allow_projects ?? organisation!==null})} />
+          </>
+      }
+
+      {/* Highlight options are only for the top level items of general categories */}
+      {((createNew && data === null && community===null && organisation===null) ||
+        (!createNew && data?.parent === null && community===null && organisation===null)) ?
         <>
           <div className="py-4"/>
           <Controller
