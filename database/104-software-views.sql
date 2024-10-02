@@ -56,18 +56,20 @@ CREATE FUNCTION reference_papers_to_scrape()
 RETURNS TABLE (
 	id UUID,
 	doi CITEXT,
+	openalex_id CITEXT,
 	citations_scraped_at TIMESTAMPTZ,
-	known_dois CITEXT[]
+	known_citing_dois CITEXT[]
 )
 LANGUAGE sql STABLE AS
 $$
-	SELECT mention.id, mention.doi, mention.citations_scraped_at, ARRAY_REMOVE(ARRAY_AGG(citation.doi), NULL)
+	SELECT mention.id, mention.doi, mention.openalex_id, mention.citations_scraped_at, ARRAY_REMOVE(ARRAY_AGG(citation.doi), NULL)
 	FROM mention
 	LEFT JOIN citation_for_mention ON mention.id = citation_for_mention.mention
 	LEFT JOIN mention AS citation ON citation_for_mention.citation = citation.id
 	WHERE
-	-- ONLY items with DOI
-		mention.doi IS NOT NULL AND (
+	-- ONLY items with DOI or OpenAlex id
+		(mention.doi IS NOT NULL OR mention.openalex_id IS NOT NULL)
+		AND (
 			mention.id IN (
 				SELECT mention FROM reference_paper_for_software
 			)

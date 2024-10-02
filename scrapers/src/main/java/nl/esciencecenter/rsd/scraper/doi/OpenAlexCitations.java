@@ -10,11 +10,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpResponse;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,10 +28,17 @@ import java.util.stream.StreamSupport;
 
 class OpenAlexCitations {
 
-	static final String DOI_FILTER_URL_UNFORMATTED = "https://api.openalex.org/works?filter=doi:%s";
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpenAlexCitations.class);
 
-	public Collection<MentionRecord> mentionData(Collection<String> dataciteDois, String email) throws IOException, InterruptedException {
-		String filter = dataciteDois.stream().filter(Objects::nonNull).collect(Collectors.joining("|"));
+	static final String DOI_FILTER_URL_UNFORMATTED = "https://api.openalex.org/works?filter=doi:%s";
+	static final String OPENALEX_ID_URL_UNFORMATTED = "https://api.openalex.org/works?filter=ids.openalex:%s";
+
+	public Collection<ExternalMentionRecord> mentionData(Collection<Doi> dataciteDois, String email) throws IOException, InterruptedException {
+		String filter = dataciteDois
+				.stream()
+				.filter(Objects::nonNull)
+				.map(Doi::toString)
+				.collect(Collectors.joining("|"));
 		String worksUri = DOI_FILTER_URL_UNFORMATTED.formatted(Utils.urlEncode(filter)) + "&per-page=200";
 
 		HttpResponse<String> response;
@@ -44,12 +52,11 @@ class OpenAlexCitations {
 		JsonArray citationsArray = tree
 				.getAsJsonArray("results");
 
-		Collection<MentionRecord> mentions = new ArrayList<>();
-		Instant now = Instant.now();
+		Collection<ExternalMentionRecord> mentions = new ArrayList<>();
 		for (JsonElement citation : citationsArray) {
-			MentionRecord citationAsMention;
+			ExternalMentionRecord citationAsMention;
 			try {
-				citationAsMention = parseCitationAsMention(citation, now);
+				citationAsMention = parseCitationAsMention(citation);
 			} catch (RuntimeException e) {
 				Utils.saveExceptionInDatabase("OpenAlex mention scraper", "mention", null, e);
 				continue;
@@ -60,10 +67,15 @@ class OpenAlexCitations {
 		return mentions;
 	}
 
-	public Collection<MentionRecord> citations(String doi, String email, UUID id) throws IOException, InterruptedException {
+	public Collection<ExternalMentionRecord> citations(OpenalexId openalexId, Doi doi, String email, UUID id) throws IOException, InterruptedException {
+		// This shouldn't happen, but let's check it to prevent unexpected exceptions:
+		if (doi == null && openalexId == null) {
+			return Collections.emptyList();
+		}
 
-		String doiUrlEncoded = Utils.urlEncode(doi);
-		String worksUri = DOI_FILTER_URL_UNFORMATTED.formatted(doiUrlEncoded);
+		String worksUri = openalexId != null
+				? OPENALEX_ID_URL_UNFORMATTED.formatted(openalexId.toUrlEncodedString())
+				: DOI_FILTER_URL_UNFORMATTED.formatted(doi.toUrlEncodedString());
 
 		Optional<String> optionalCitationsUri = citationsUri(worksUri, email);
 		if (optionalCitationsUri.isEmpty()) {
@@ -88,27 +100,38 @@ class OpenAlexCitations {
 				.getAsJsonPrimitive("count")
 				.getAsInt();
 
-		if (count == 0 || count > 1) {
+		if (count < 1) {
+			LOGGER.warn("No results found for {}: {}", worksUri, count);
 			return Optional.empty();
 		}
 
-		String citationsUri = tree
-				.getAsJsonArray("results")
-				.get(0)
-				.getAsJsonObject()
-				.getAsJsonPrimitive("cited_by_api_url")
-				.getAsString();
+		if (count > 1) {
+			LOGGER.warn("More than 1 result found for {}: {}, taking the first", worksUri, count);
+		}
 
-		return Optional.of(citationsUri);
+		String citationsUri = null;
+		try {
+			citationsUri = tree
+					.getAsJsonArray("results")
+					.get(0)
+					.getAsJsonObject()
+					.getAsJsonPrimitive("cited_by_api_url")
+					.getAsString();
+		} catch (RuntimeException e) {
+			LOGGER.error("Exception parsing cited_by_api_url for %s".formatted(worksUri), e);
+			Utils.saveExceptionInDatabase("OpenAlex citations scraper", null, null, e);
+		}
+
+		return Optional.ofNullable(citationsUri);
 	}
 
 	// we use cursor paging as that will always work
 	// https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging#cursor-paging
-	static Collection<MentionRecord> scrapeCitations(String citationsUri, String email, UUID id) throws IOException, InterruptedException {
+	static Collection<ExternalMentionRecord> scrapeCitations(String citationsUri, String email, UUID id) throws IOException, InterruptedException {
 		final int perPage = 200;
 		String cursor = "*";
 
-		Collection<MentionRecord> citations = new ArrayList<>();
+		Collection<ExternalMentionRecord> citations = new ArrayList<>();
 		while (cursor != null) {
 			HttpResponse<String> response;
 			String citationsUriWithCursor = citationsUri + "&per-page=" + perPage + "&cursor=" + cursor;
@@ -127,11 +150,10 @@ class OpenAlexCitations {
 			JsonArray citationsArray = tree
 					.getAsJsonArray("results");
 
-			Instant now = Instant.now();
 			for (JsonElement citation : citationsArray) {
-				MentionRecord citationAsMention;
+				ExternalMentionRecord citationAsMention;
 				try {
-					citationAsMention = parseCitationAsMention(citation, now);
+					citationAsMention = parseCitationAsMention(citation);
 				} catch (RuntimeException e) {
 					Utils.saveExceptionInDatabase("Citation scraper", "mention", id, e);
 					continue;
@@ -143,70 +165,68 @@ class OpenAlexCitations {
 		return citations;
 	}
 
-	static MentionRecord parseCitationAsMention(JsonElement element, Instant scrapedAt) {
+	static ExternalMentionRecord parseCitationAsMention(JsonElement element) {
 		JsonObject citationObject = element.getAsJsonObject();
 
-		MentionRecord mention = new MentionRecord();
-
 		String doiUrl = Utils.stringOrNull(citationObject.get("doi"));
-		String doi = doiUrl;
-		if (doi != null) {
-			doi = doi.replace("https://doi.org/", "");
+		String doiString = doiUrl;
+		if (doiString != null) {
+			doiString = doiString.replace("https://doi.org/", "");
 		}
-		mention.doi = doi;
+		Doi doi = doiString == null ? null : Doi.fromString(doiString);
 
+		URI url;
 		if (doiUrl != null) {
-			mention.url = URI.create(doiUrl);
+			url = URI.create(doiUrl);
 		} else {
 			JsonArray locations = citationObject.getAsJsonArray("locations");
-			mention.url = extractUrlFromLocation(locations);
+			url = extractUrlFromLocation(locations);
 		}
 
-		mention.title = Utils.stringOrNull(citationObject.get("title"));
-		if (mention.title == null) {
+		String title = Utils.stringOrNull(citationObject.get("title"));
+		if (title == null) {
 			String openAlexId = citationObject.getAsJsonPrimitive("id").getAsString();
-			String message = "The title of the mention with DOI %s and OpenAlex ID %s is null".formatted(doi, openAlexId);
+			String message = "The title of the mention with DOI %s and OpenAlex ID %s is null".formatted(doiString, openAlexId);
 			throw new RuntimeException(message);
 		}
 
 		JsonArray authorsArray = citationObject.getAsJsonArray("authorships");
-		mention.authors = StreamSupport.stream(authorsArray.spliterator(), false)
+		String authors = StreamSupport.stream(authorsArray.spliterator(), false)
 				.map(JsonElement::getAsJsonObject)
 				.map(jo -> jo.get("raw_author_name"))
 				.filter(Predicate.not(JsonElement::isJsonNull))
 				.map(JsonElement::getAsString)
 				.collect(Collectors.joining(", "));
-		if (mention.authors.isBlank()) {
-			mention.authors = null;
+		if (authors.isBlank()) {
+			authors = null;
 		}
 
-		mention.publisher = null;
-
-		mention.publicationYear = Utils.integerOrNull(citationObject.get("publication_year"));
-
-		mention.doiRegistrationDate = null;
-
-		mention.journal = null;
-
-		mention.page = null;
-
-		mention.imageUrl = null;
+		Integer publicationYear = Utils.integerOrNull(citationObject.get("publication_year"));
 
 		String crossrefType = Utils.stringOrNull(citationObject.get("type_crossref"));
-		mention.mentionType = CrossrefMention.crossrefTypeMap.getOrDefault(crossrefType, MentionType.other);
+		MentionType mentionType = CrossrefMention.crossrefTypeMap.getOrDefault(crossrefType, MentionType.other);
 
-		mention.externalId = citationObject
+		String openalexIdString = citationObject
 				.getAsJsonObject("ids")
 				.getAsJsonPrimitive("openalex")
 				.getAsString();
+		OpenalexId openalexId = OpenalexId.fromString(openalexIdString);
 
-		mention.source = "OpenAlex";
-
-		mention.scrapedAt = scrapedAt;
-
-		mention.version = null;
-
-		return mention;
+		return new ExternalMentionRecord(
+				doi,
+				null,
+				openalexId,
+				url,
+				title,
+				authors,
+				null,
+				publicationYear,
+				null,
+				null,
+				mentionType,
+				"OpenAlex",
+				null
+		);
 	}
 
 	static URI extractUrlFromLocation(JsonArray locations) {

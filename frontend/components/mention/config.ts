@@ -135,14 +135,14 @@ export const mentionModal = {
       }
     }
   },
-  external_id: {
-    label: 'External ID',
-    help: 'An ID used by e.g. OpenAlex',
+  openalex_id: {
+    label: 'OpenAlex ID',
+    help: 'The OpenAlex ID',
     validation: {
       required: false,
-      maxLength: {
-        value: 500,
-        message: 'Maximum length is 500'
+      pattern: {
+        value: /^https:\/\/openalex\.org\/[WwAaSsIiCcPpFf]\d{3,13}$/,
+        message: 'e.g. https://openalex.org/W3160330321'
       }
     }
   },

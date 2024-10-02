@@ -14,23 +14,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class DataciteMentionRepository implements MentionRepository {
+public class DataciteMentionRepository {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DataciteMentionRepository.class);
-	
+
 	private static final String QUERY_UNFORMATTED = """
 			query {
 			  works(ids: [%s], first: 10000) {
@@ -111,69 +110,70 @@ public class DataciteMentionRepository implements MentionRepository {
 	}
 
 	// "10.5281/zenodo.1408128","10.1186/s12859-018-2165-7"
-	static String joinCollection(Collection<String> dois) {
+	static String joinDoisForGraphqlQuery(Collection<Doi> dois) {
 		return dois.stream()
+				.map(Doi::toString)
 				.collect(Collectors.joining("\",\"", "\"", "\""));
 	}
 
-	static Collection<MentionRecord> jsonStringToUniqueMentions(String json) {
+	static Collection<ExternalMentionRecord> jsonStringToUniqueMentions(String json) {
 		JsonObject root = JsonParser.parseString(json).getAsJsonObject();
 		JsonArray worksJson = root.getAsJsonObject("data").getAsJsonObject("works").getAsJsonArray("nodes");
-		Collection<MentionRecord> mentions = new ArrayList<>();
-		Set<String> usedDois = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+		Collection<ExternalMentionRecord> mentions = new ArrayList<>();
+		Set<Doi> usedDois = new HashSet<>();
 		for (JsonElement work : worksJson) {
 			try {
 				// Sometimes, DataCite gives back two of the same results for one DOI, e.g. for 10.4122/1.1000000817,
 				// so we need to only add it once, otherwise we cannot POST it to the backend
-				MentionRecord parsedMention = parseWork(work.getAsJsonObject());
-				if (usedDois.contains(parsedMention.doi)) continue;
+				ExternalMentionRecord parsedMention = parseWork(work.getAsJsonObject());
+				if (usedDois.contains(parsedMention.doi())) continue;
 
-				usedDois.add(parsedMention.doi);
+				usedDois.add(parsedMention.doi());
 				mentions.add(parsedMention);
 			} catch (RuntimeException e) {
-				// TODO: fix exeption type
-				LOGGER.warn("Failed to scrape a DataCite mention with data {} ", work, e);				
+				// TODO: fix exception type
+				LOGGER.error("Failed to scrape a DataCite mention with data {} ", work, e);
 			}
 		}
 		return mentions;
 	}
 
-	static MentionRecord parseWork(JsonObject work) {
-		MentionRecord result = new MentionRecord();
-		result.doi = work.get("doi").getAsString();
-		result.url = URI.create("https://doi.org/" + Utils.urlEncode(result.doi));
-		result.title = work.getAsJsonArray("titles").get(0).getAsJsonObject().get("title").getAsString();
+	static ExternalMentionRecord parseWork(JsonObject work) {
+		Doi doi = Doi.fromString(work.get("doi").getAsString());
+		URI url = URI.create("https://doi.org/" + Utils.urlEncode(doi.toString()));
+		String title = work.getAsJsonArray("titles").get(0).getAsJsonObject().get("title").getAsString();
 
-		Collection<String> authors = new ArrayList<>();
+		Collection<String> authorsBuilder = new ArrayList<>();
 		Iterable<JsonObject> creators = (Iterable) work.getAsJsonArray("creators");
 		for (JsonObject creator : creators) {
-			addAuthor(authors, creator);
+			addAuthor(authorsBuilder, creator);
 		}
 		Iterable<JsonObject> contributors = (Iterable) work.getAsJsonArray("contributors");
 		for (JsonObject contributor : contributors) {
-			addAuthor(authors, contributor);
+			addAuthor(authorsBuilder, contributor);
 		}
-		result.authors = String.join(", ", authors);
+		String authors = String.join(", ", authorsBuilder);
 
-		result.publisher = Utils.stringOrNull(work.getAsJsonObject("publisher").get("name"));
-		result.publicationYear = Utils.integerOrNull(work.get("publicationYear"));
+		String publisher = Utils.stringOrNull(work.getAsJsonObject("publisher").get("name"));
+		Integer publicationYear = Utils.integerOrNull(work.get("publicationYear"));
 		String doiRegistrationDateString = Utils.stringOrNull(work.get("registered"));
+		ZonedDateTime doiRegistrationDate = null;
 		if (doiRegistrationDateString != null) {
-			result.doiRegistrationDate = ZonedDateTime.parse(doiRegistrationDateString);
+			doiRegistrationDate = ZonedDateTime.parse(doiRegistrationDateString);
 		}
 
+		MentionType mentionType;
 		String dataciteResourceTypeGeneral = Utils.stringOrNull(work.getAsJsonObject("types").get("resourceTypeGeneral"));
 		if (dataciteResourceTypeGeneral != null && dataciteResourceTypeGeneral.equals("Text")) {
 			String dataciteResourceType = Utils.stringOrNull(work.getAsJsonObject("types").get("resourceType"));
 			if (dataciteResourceType != null) dataciteResourceType = dataciteResourceType.strip();
-			result.mentionType = dataciteTextTypeMap.getOrDefault(dataciteResourceType, MentionType.other);
+			mentionType = dataciteTextTypeMap.getOrDefault(dataciteResourceType, MentionType.other);
 		} else {
-			result.mentionType = dataciteTypeMap.getOrDefault(dataciteResourceTypeGeneral, MentionType.other);
+			mentionType = dataciteTypeMap.getOrDefault(dataciteResourceTypeGeneral, MentionType.other);
 		}
-		result.source = "DataCite";
-		result.version = Utils.stringOrNull(work.get("version"));
+		String version = Utils.stringOrNull(work.get("version"));
 		// if the version is null, we can often get the version from a linked Git URL which ends in "/tree/{tag}"
-		if (result.version == null) {
+		if (version == null) {
 			JsonArray relatedIdentifiers = work.getAsJsonArray("relatedIdentifiers");
 			for (JsonElement relatedIdentifier : relatedIdentifiers) {
 				String relatedIdentifierString = Utils.stringOrNull(relatedIdentifier.getAsJsonObject().get("relatedIdentifier"));
@@ -181,15 +181,28 @@ public class DataciteMentionRepository implements MentionRepository {
 				if (relatedIdentifierString != null && relatedIdentifierType != null && relatedIdentifierType.equals("URL")) {
 					Matcher tagMatcher = URL_TREE_TAG_PATTERN.matcher(relatedIdentifierString);
 					if (tagMatcher.find()) {
-						result.version = tagMatcher.group(1);
+						version = tagMatcher.group(1);
 						break;
 					}
 				}
 			}
 		}
 
-		result.scrapedAt = Instant.now();
-		return result;
+		return new ExternalMentionRecord(
+				doi,
+				doiRegistrationDate,
+				null,
+				url,
+				title,
+				authors,
+				publisher,
+				publicationYear,
+				null,
+				null,
+				mentionType,
+				"DataCite",
+				version
+		);
 	}
 
 	static void addAuthor(Collection<String> authors, JsonObject author) {
@@ -201,26 +214,14 @@ public class DataciteMentionRepository implements MentionRepository {
 		else authors.add(givenName + " " + familyName);
 	}
 
-	@Override
-	public Collection<MentionRecord> leastRecentlyScrapedMentions(int limit) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Collection<MentionRecord> mentionData(Collection<String> dois) {
+	public Collection<ExternalMentionRecord> mentionData(Collection<Doi> dois) {
 		if (dois.isEmpty()) {
 			return Collections.emptyList();
 		}
 
 		JsonObject body = new JsonObject();
-		body.addProperty("query", QUERY_UNFORMATTED.formatted(joinCollection(dois)));
+		body.addProperty("query", QUERY_UNFORMATTED.formatted(joinDoisForGraphqlQuery(dois)));
 		String responseJson = Utils.post("https://api.datacite.org/graphql", body.toString(), "Content-Type", "application/json");
 		return jsonStringToUniqueMentions(responseJson);
 	}
-
-	@Override
-	public void save(Collection<MentionRecord> mentions) {
-		throw new UnsupportedOperationException();
-	}
-
 }

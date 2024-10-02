@@ -29,10 +29,10 @@ export type MentionItemProps = {
   mention_type: MentionTypeKeys | null
   source: string
   note?: string | null
-  external_id?: string | null
+  openalex_id?: string | null
 }
 
-export const mentionColumns ='id,doi,url,title,authors,publisher,publication_year,journal,page,image_url,mention_type,source,note'
+export const mentionColumns ='id,doi,openalex_id,url,title,authors,publisher,publication_year,journal,page,image_url,mention_type,source,note'
 
 export type MentionByType = {
   [key in MentionTypeKeys]?: MentionItemProps[]

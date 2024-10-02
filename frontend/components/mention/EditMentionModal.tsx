@@ -291,14 +291,13 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
           <ControlledTextField
             control={control}
             options={{
-              name: 'external_id',
-              label: config.external_id.label,
+              name: 'openalex_id',
+              label: config.openalex_id.label,
               useNull: true,
-              defaultValue: formData?.external_id,
-              helperTextMessage: config.external_id.help,
-              helperTextCnt: `${formData?.external_id?.length || 0}/${config.external_id.validation.maxLength.value}`,
+              defaultValue: formData?.openalex_id,
+              helperTextMessage: config.openalex_id.help,
             }}
-            rules={config.external_id.validation}
+            rules={config.openalex_id.validation}
           />
           <div className="py-2"></div>
         </>

@@ -16,7 +16,7 @@ version: "3.0"
 services:
   database:
     build: ./database
-    image: rsd/database:2.4.1
+    image: rsd/database:2.5.0
     ports:
       # enable connection from outside (development mode)
       - "5432:5432"
@@ -110,7 +110,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend:2.19.0
+    image: rsd/frontend:2.19.1
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -158,7 +158,7 @@ services:
 
   scrapers:
     build: ./scrapers
-    image: rsd/scrapers:1.8.1
+    image: rsd/scrapers:1.9.0
     environment:
       # it uses values from .env file
       - POSTGREST_URL

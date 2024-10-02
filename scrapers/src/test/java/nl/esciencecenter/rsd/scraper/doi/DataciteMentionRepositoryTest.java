@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,10 +15,14 @@ public class DataciteMentionRepositoryTest {
 
 	@Test
 	public void givenCollectionOfStrings_whenJoining_thenCorrectStringReturned() {
-		Collection<String> strings = List.of("abc", "def", "ghij");
+		Doi doi1 = Doi.fromString("10.000/1");
+		Doi doi2 = Doi.fromString("10.2/2");
+		Doi doi3 = Doi.fromString("10.3/abc-def");
+		Collection<Doi> strings = List.of(doi1, doi2, doi3);
 
-		String joinedString = DataciteMentionRepository.joinCollection(strings);
+		String joinedString = DataciteMentionRepository.joinDoisForGraphqlQuery(strings);
 
-		Assertions.assertEquals("\"abc\",\"def\",\"ghij\"", joinedString);
+		String expected = "\"%s\",\"%s\",\"%s\"".formatted(doi1, doi2, doi3);
+		Assertions.assertEquals(expected, joinedString);
 	}
 }

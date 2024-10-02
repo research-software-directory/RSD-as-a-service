@@ -16,14 +16,13 @@ import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.io.IOException;
 import java.net.URI;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class CrossrefMention implements Mention {
+public class CrossrefMention {
 
 	static final Map<String, MentionType> crossrefTypeMap;
 
@@ -62,26 +61,24 @@ public class CrossrefMention implements Mention {
 		crossrefTypeMap.put("standard-series", MentionType.other);
 	}
 
-	private final String doi;
+	private final Doi doi;
 
-	public CrossrefMention(String doi) {
+	public CrossrefMention(Doi doi) {
 		this.doi = Objects.requireNonNull(doi);
 	}
 
-	@Override
-	public MentionRecord mentionData() throws IOException, InterruptedException, RsdResponseException {
-		StringBuilder url = new StringBuilder("https://api.crossref.org/works/" + Utils.urlEncode(doi));
-		Config.crossrefContactEmail().ifPresent(email -> url.append("?mailto=").append(email));
-		String responseJson = Utils.get(url.toString());
+	public ExternalMentionRecord mentionData() throws IOException, InterruptedException, RsdResponseException {
+		StringBuilder crossrefUrlBuilder = new StringBuilder("https://api.crossref.org/works/" + Utils.urlEncode(doi.toString()));
+		Config.crossrefContactEmail().ifPresent(email -> crossrefUrlBuilder.append("?mailto=").append(email));
+		String responseJson = Utils.get(crossrefUrlBuilder.toString());
 		JsonObject jsonTree = JsonParser.parseString(responseJson).getAsJsonObject();
-		MentionRecord result = new MentionRecord();
 		JsonObject workJson = jsonTree.getAsJsonObject("message");
 
-		result.doi = doi;
-		result.url = URI.create("https://doi.org/" + Utils.urlEncode(result.doi));
-		result.title = workJson.getAsJsonArray("title").get(0).getAsString();
+		URI mentionUrl = URI.create("https://doi.org/" + Utils.urlEncode(this.doi.toString()));
+		String title = workJson.getAsJsonArray("title").get(0).getAsString();
 
-		Collection<String> authors = new ArrayList<>();
+		Collection<String> authorsBuilder = new ArrayList<>();
+		String authors = null;
 		Iterable<JsonObject> authorsJson = (Iterable) workJson.getAsJsonArray("author");
 		if (authorsJson != null) {
 			for (JsonObject authorJson : authorsJson) {
@@ -89,36 +86,51 @@ public class CrossrefMention implements Mention {
 				String familyName = Utils.stringOrNull(authorJson.get("family"));
 				String name = Utils.stringOrNull(authorJson.get("name"));
 				if (givenName != null && familyName != null) {
-					authors.add(givenName + " " + familyName);
+					authorsBuilder.add(givenName + " " + familyName);
 				} else if (name != null) {
-					authors.add(name);
+					authorsBuilder.add(name);
 				} else if (givenName != null) {
-					authors.add(givenName);
+					authorsBuilder.add(givenName);
 				} else if (familyName != null) {
-					authors.add(familyName);
+					authorsBuilder.add(familyName);
 				}
 			}
-			result.authors = String.join(", ", authors);
+			authors = String.join(", ", authorsBuilder);
 		}
 
-		result.publisher = Utils.stringOrNull(workJson.get("publisher"));
+		String publisher = Utils.stringOrNull(workJson.get("publisher"));
+		Integer publicationYear = null;
 		try {
-			result.publicationYear = Utils.integerOrNull(workJson.getAsJsonObject("published").getAsJsonArray("date-parts").get(0).getAsJsonArray().get(0));
+			publicationYear = Utils.integerOrNull(workJson.getAsJsonObject("published").getAsJsonArray("date-parts").get(0).getAsJsonArray().get(0));
 		} catch (RuntimeException e) {
 			//			year not found, we leave it at null, nothing to do
 		}
+		String journal = null;
 		if (!workJson.getAsJsonArray("container-title").isEmpty()) {
 			JsonArray journalTitles = workJson.getAsJsonArray("container-title");
-			result.journal = journalTitles.get(0).getAsString();
+			StringBuilder journalBuilder = new StringBuilder(journalTitles.get(0).getAsString());
 			for (int i = 1; i < journalTitles.size(); i++) {
-				result.journal += ", " + journalTitles.get(i).getAsString();
+				journalBuilder.append(", ").append(journalTitles.get(i).getAsString());
 			}
+			journal = journalBuilder.toString();
 		}
-		result.page = Utils.stringOrNull(workJson.get("page"));
-		result.mentionType = crossrefTypeMap.getOrDefault(Utils.stringOrNull(workJson.get("type")), MentionType.other);
-		result.source = "Crossref";
-		result.scrapedAt = Instant.now();
+		String page = Utils.stringOrNull(workJson.get("page"));
+		MentionType mentionType = crossrefTypeMap.getOrDefault(Utils.stringOrNull(workJson.get("type")), MentionType.other);
 
-		return result;
+		return new ExternalMentionRecord(
+				this.doi,
+				null,
+				null,
+				mentionUrl,
+				title,
+				authors,
+				publisher,
+				publicationYear,
+				journal,
+				page,
+				mentionType,
+				"Crossref",
+				null
+		);
 	}
 }

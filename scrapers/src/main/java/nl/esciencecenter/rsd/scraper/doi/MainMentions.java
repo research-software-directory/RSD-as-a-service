@@ -15,36 +15,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class MainMentions {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainMentions.class);
-	
+
 	public static void main(String[] args) {
-		
+
 		LOGGER.info("Start scraping mentions");
-		
+
 		long t1 = System.currentTimeMillis();
-		
-		MentionRepository localMentionRepository = new PostgrestMentionRepository(Config.backendBaseUrl());
-		Collection<MentionRecord> mentionsToScrape = localMentionRepository.leastRecentlyScrapedMentions(Config.maxRequestsDoi());
+
+		PostgrestMentionRepository localMentionRepository = new PostgrestMentionRepository(Config.backendBaseUrl());
+		Collection<RsdMentionIds> mentionsToScrape = localMentionRepository.leastRecentlyScrapedMentions(Config.maxRequestsDoi());
 		// we will remove successfully scraped mentions from here,
 		// we use this to set scrapedAt even for failed mentions,
-		// to put them back at the scraping order
-		Map<String, MentionRecord> mentionsFailedToScrape = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-		for (MentionRecord mentionRecord : mentionsToScrape) {
-			mentionsFailedToScrape.put(mentionRecord.doi, mentionRecord);
+		// to put them back at the scraping queue
+		Map<Doi, RsdMentionIds> mentionsFailedToScrape = new HashMap<>();
+		for (RsdMentionIds mentionIds : mentionsToScrape) {
+			mentionsFailedToScrape.put(mentionIds.doi(), mentionIds);
 		}
 
 		String doisJoined = mentionsToScrape.stream()
-				.map(mention -> mention.doi)
-				.map(Utils::urlEncode)
+				.map(RsdMentionIds::doi)
+				.map(Doi::toUrlEncodedString)
 				.collect(Collectors.joining(","));
 		String jsonSources = null;
 		try {
@@ -54,75 +53,110 @@ public class MainMentions {
 			System.exit(1);
 		}
 
-		Map<String, String> doiToSource = parseJsonSources(jsonSources);
+		Map<String, String> doiToSource = parseJsonDoiSources(jsonSources);
 
-		Collection<MentionRecord> scrapedMentions = new ArrayList<>();
-		Collection<String> dataciteDois = doiToSource.entrySet()
+		Instant now = Instant.now();
+
+		// DATACITE
+		Collection<Doi> dataciteDois = doiToSource.entrySet()
 				.stream()
 				.filter(doiSourceEntry -> doiSourceEntry.getValue().equals("DataCite"))
 				.map(Map.Entry::getKey)
+				.map(Doi::fromString)
 				.toList();
+		Collection<ExternalMentionRecord> scrapedDataciteMentions = List.of();
 		try {
-			scrapedMentions.addAll(new DataciteMentionRepository().mentionData(dataciteDois));
+			scrapedDataciteMentions = new DataciteMentionRepository().mentionData(dataciteDois);
 		} catch (RuntimeException e) {
 			Utils.saveExceptionInDatabase("DataCite mention scraper", "mention", null, e);
 		}
-		for (MentionRecord scrapedMention : scrapedMentions) {
-			mentionsFailedToScrape.remove(scrapedMention.doi);
-		}
+		for (ExternalMentionRecord scrapedMention : scrapedDataciteMentions) {
+			Doi doi = scrapedMention.doi();
+			RsdMentionIds ids = mentionsFailedToScrape.get(doi);
+			try {
+				RsdMentionRecord mentionToUpdate = new RsdMentionRecord(ids.id(), scrapedMention, now);
+				localMentionRepository.updateMention(mentionToUpdate, false);
+				mentionsFailedToScrape.remove(doi);
+			} catch (Exception e) {
+				LOGGER.error("Failed to update a DataCite mention with DOI {}", scrapedMention.doi());
+				Utils.saveExceptionInDatabase("Mention scraper", "mention", ids.id(), e);
+			}
 
-		Collection<String> crossrefDois = doiToSource.entrySet()
+		}
+		// END DATACITE
+
+		// CROSSREF
+		Collection<Doi> crossrefDois = doiToSource.entrySet()
 				.stream()
 				.filter(doiSourceEntry -> doiSourceEntry.getValue().equals("Crossref"))
 				.map(Map.Entry::getKey)
+				.map(Doi::fromString)
 				.toList();
-		for (String crossrefDoi : crossrefDois) {
+		for (Doi crossrefDoi : crossrefDois) {
+			ExternalMentionRecord scrapedMention;
 			try {
-				MentionRecord scrapedMention = new CrossrefMention(crossrefDoi).mentionData();
-				scrapedMentions.add(scrapedMention);
-				mentionsFailedToScrape.remove(scrapedMention.doi);
+				scrapedMention = new CrossrefMention(crossrefDoi).mentionData();
 			} catch (Exception e) {
+				LOGGER.error("Failed to scrape a Crossref mention with DOI {}", crossrefDoi);
 				RuntimeException exceptionWithMessage = new RuntimeException("Failed to scrape a Crossref mention with DOI " + crossrefDoi, e);
-				Utils.saveExceptionInDatabase("Crossref mention scraper", "mention", null, exceptionWithMessage);
+				Utils.saveExceptionInDatabase("Crossref mention scraper", "mention", mentionsFailedToScrape.get(crossrefDoi).id(), exceptionWithMessage);
+				continue;
+			}
+			Doi doi = scrapedMention.doi();
+			RsdMentionIds ids = mentionsFailedToScrape.get(doi);
+			RsdMentionRecord mentionToUpdate = new RsdMentionRecord(ids.id(), scrapedMention, now);
+			try {
+				localMentionRepository.updateMention(mentionToUpdate, false);
+				mentionsFailedToScrape.remove(doi);
+			} catch (Exception e) {
+				RuntimeException exceptionWithMessage = new RuntimeException("Failed to update a Crossref mention with DOI " + crossrefDoi, e);
+				Utils.saveExceptionInDatabase("Crossref mention scraper", "mention", ids.id(), exceptionWithMessage);
 			}
 		}
+		// END CROSSREF
 
+		// OPENALEX (for European Publication Office DOIs)
 		String email = Config.crossrefContactEmail().orElse(null);
-		Collection<String> europeanPublicationsOfficeDois = doiToSource.entrySet()
+		Collection<ExternalMentionRecord> scrapedOpenalexMentions = List.of();
+		Collection<Doi> europeanPublicationsOfficeDois = doiToSource.entrySet()
 				.stream()
 				.filter(doiSourceEntry -> doiSourceEntry.getValue().equals("OP"))
 				.map(Map.Entry::getKey)
+				.map(Doi::fromString)
 				.toList();
 		try {
-			Collection<MentionRecord> openalexMentions = new OpenAlexCitations().mentionData(europeanPublicationsOfficeDois, email);
-			for (MentionRecord openalexMention : openalexMentions) {
-				mentionsFailedToScrape.remove(openalexMention.doi);
-				scrapedMentions.add(openalexMention);
-			}
+			scrapedOpenalexMentions = new OpenAlexCitations().mentionData(europeanPublicationsOfficeDois, email);
 		} catch (Exception e) {
-			Utils.saveExceptionInDatabase("DataCite mention scraper", "mention", null, e);
+			Utils.saveExceptionInDatabase("OpenAlex mention scraper", "mention", null, e);
 		}
-
-		Instant now = Instant.now();
-		for (MentionRecord mention : mentionsFailedToScrape.values()) {
-			mention.scrapedAt = now;
-			LOGGER.info("Failed to scrape mention with DOI {}", mention.doi);
+		for (ExternalMentionRecord scrapedMention : scrapedOpenalexMentions) {
+			Doi doi = scrapedMention.doi();
+			RsdMentionIds ids = mentionsFailedToScrape.get(doi);
+			RsdMentionRecord mentionToUpdate = new RsdMentionRecord(ids.id(), scrapedMention, now);
+			try {
+				localMentionRepository.updateMention(mentionToUpdate, true);
+				mentionsFailedToScrape.remove(doi);
+			} catch (Exception e) {
+				LOGGER.error("Failed to update an OpenAlex mention with DOI {}", scrapedMention.doi());
+				Utils.saveExceptionInDatabase("Mention scraper", "mention", ids.id(), e);
+			}
 		}
-		scrapedMentions.addAll(mentionsFailedToScrape.values());
+		// END OPENALEX
 
-
-		try {
-			localMentionRepository.save(scrapedMentions);
-		} catch (RuntimeException e) {
-			Utils.saveExceptionInDatabase("Mention scraper", "mention", null, e);
+		for (RsdMentionIds ids : mentionsFailedToScrape.values()) {
+			LOGGER.error("Failed to scrape mention with DOI {}", ids.doi());
+			try {
+				localMentionRepository.saveScrapedAt(ids, now);
+			} catch (RuntimeException e) {
+				Utils.saveExceptionInDatabase("Mention scraper", "mention", ids.id(), e);
+			}
 		}
 
 		long time = System.currentTimeMillis() - t1;
-
 		LOGGER.info("Done scraping mentions ({} ms.)", time);
 	}
 
-	static Map<String, String> parseJsonSources(String jsonSources) {
+	static Map<String, String> parseJsonDoiSources(String jsonSources) {
 		JsonArray sourcesArray = JsonParser.parseString(jsonSources).getAsJsonArray();
 		Map<String, String> result = new HashMap<>();
 		for (JsonElement jsonElement : sourcesArray) {

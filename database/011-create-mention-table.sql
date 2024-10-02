@@ -31,6 +31,7 @@ CREATE TABLE mention (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	doi CITEXT UNIQUE CHECK (doi ~ '^10(\.\w+)+/\S+$' AND LENGTH(doi) <= 255),
 	doi_registration_date TIMESTAMPTZ,
+	openalex_id CITEXT UNIQUE CHECK (openalex_id ~ '^https://openalex\.org/[WwAaSsIiCcPpFf]\d{3,13}$'),
 	url VARCHAR(500) CHECK (url ~ '^https?://'),
 	title VARCHAR(3000) NOT NULL,
 	authors VARCHAR(50000),
@@ -40,15 +41,13 @@ CREATE TABLE mention (
 	page VARCHAR(50),
 	image_url VARCHAR(500) CHECK (image_url ~ '^https?://'),
 	mention_type mention_type NOT NULL,
-	external_id VARCHAR(500),
 	source VARCHAR(50) NOT NULL,
 	version VARCHAR(100),
 	note VARCHAR(500),
 	scraped_at TIMESTAMPTZ,
 	citations_scraped_at TIMESTAMPTZ,
 	created_at TIMESTAMPTZ NOT NULL,
-	updated_at TIMESTAMPTZ NOT NULL,
-	UNIQUE(external_id, source)
+	updated_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_mention() RETURNS TRIGGER LANGUAGE plpgsql AS
