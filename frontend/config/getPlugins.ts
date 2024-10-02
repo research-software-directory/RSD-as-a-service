@@ -32,8 +32,15 @@ async function getPlugin({pluginName,token}:{pluginName: string, token?: string}
     }
     logger(`Failed to load plugin config from ${url}: ${response.status} ${response.statusText}`,'warn')
     return []
+
   } catch (error) {
-    logger(`Error loading plugin config from ${url}: ${error instanceof Error ? error.message : error}`,'warn')
+    if (error instanceof TypeError) {
+      const message = error.message
+      const cause = error.cause
+      logger(`Error loading plugin config from ${url}. Message: ${message}. Cause: ${cause}.`,'warn')
+    } else {
+      logger(`Error loading plugin config from ${url}: ${error}`,'warn')
+    }
     return []
   }
 }
