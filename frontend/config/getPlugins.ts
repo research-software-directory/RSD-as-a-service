@@ -10,20 +10,9 @@ import {createJsonHeaders} from '~/utils/fetchHelpers'
 import {PluginConfig} from '~/config/RsdPluginContext'
 import {RsdPluginSettings} from './rsdSettingsReducer'
 
-function constructBackendUrl(pluginSettings: RsdPluginSettings) {
-  const {name, backend_hostname} = pluginSettings
-  if (process.env.NODE_ENV === 'development') {
-    return `http://localhost/plugin/${name}`
-  } else {
-    return `http://${backend_hostname}/plugin/${name}`
-  }
-}
-
 async function getPlugin({pluginSettings, token}:{pluginSettings: RsdPluginSettings, token?: string}){
-  const url = constructBackendUrl(pluginSettings) + '/api/config'
-  console.log(url)
   try {
-    const response = await fetch(url, {
+    const response = await fetch(pluginSettings.config_url, {
       headers: {
         ...createJsonHeaders(token)
       },
@@ -41,16 +30,16 @@ async function getPlugin({pluginSettings, token}:{pluginSettings: RsdPluginSetti
       })
       return config
     }
-    logger(`Failed to load plugin config from ${url}: ${response.status} ${response.statusText}`,'warn')
+    logger(`Failed to load plugin config from ${pluginSettings.config_url}: ${response.status} ${response.statusText}`,'warn')
     return []
 
   } catch (error) {
     if (error instanceof TypeError) {
       const message = error.message
       const cause = error.cause
-      logger(`Error loading plugin config from ${url}. Message: ${message}. Cause: ${cause}.`,'warn')
+      logger(`Error loading plugin config from ${pluginSettings.config_url}. Message: ${message}. Cause: ${cause}.`,'warn')
     } else {
-      logger(`Error loading plugin config from ${url}: ${error}`,'warn')
+      logger(`Error loading plugin config from ${pluginSettings.config_url}: ${error}`,'warn')
     }
     return []
   }

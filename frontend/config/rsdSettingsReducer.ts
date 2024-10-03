@@ -23,7 +23,7 @@ export type RsdModule= 'software'| 'projects' | 'organisations' | 'communities' 
 
 export type RsdPluginSettings = {
   name: string,
-  backend_hostname: string
+  config_url: string
 }
 
 export type RsdHost = {

@@ -27,10 +27,9 @@ export const RsdPluginContext = createContext<{settings:PluginConfig[]}>({settin
 
 export default function PluginSettingsProvider(props: any) {
   const [settings, setSettings] = useState(props?.settings ?? [])
-  const value = useMemo(() => ({settings, setSettings}), [settings, setSettings])
 
   return <RsdPluginContext.Provider
-    value={value}
+    value={{settings, setSettings}}
     {...props}
   />
 }
