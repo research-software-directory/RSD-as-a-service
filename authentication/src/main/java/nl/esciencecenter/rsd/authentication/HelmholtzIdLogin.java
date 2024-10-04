@@ -209,12 +209,12 @@ public class HelmholtzIdLogin implements Login {
 		}
 		String organisation = getOrganisationFromEntitlements(entitlements);
 
-		List<String> eduPersonEntitlements = new ArrayList<String>();
+		List<String> eduPersonEntitlements = new ArrayList<>();
 		for (int i=0; i<entitlements.size(); i++) {
 			eduPersonEntitlements.add(entitlements.get(i).toString());
 		}
 
-		Map<String, List<String>> data = new HashMap<String, List<String>>();
+		Map<String, List<String>> data = new HashMap<>();
 		data.put("eduPersonEntitlements", eduPersonEntitlements);
 
 		return new OpenIdInfo(
