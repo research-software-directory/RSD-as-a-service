@@ -9,8 +9,20 @@ import logger from '~/utils/logger'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import {PluginConfig} from '~/config/RsdPluginContext'
 
-async function getPlugin({pluginName,token}:{pluginName: string, token?: string}){
-  const url = `http://localhost/plugin/${pluginName}/api/config`
+
+function getPluginBaseUrl(pluginName: string) {
+  if (/^(https?:\/\/)/.test(pluginName)) {
+    return pluginName
+  } else if (process.env.NODE_ENV === 'development') {
+    return `http://localhost/plugin/${pluginName}`
+  } else {
+    const baseUrl = process.env.RSD_REVERSE_PROXY_URL ?? 'http://nginx'
+    return `${baseUrl}/plugin/${pluginName}`
+  }
+}
+
+async function getPlugin({pluginName, token}:{pluginName: string, token?: string}){
+  const url = getPluginBaseUrl(pluginName) + '/api/v1/config'
   try {
     const response = await fetch(url, {
       headers: {
