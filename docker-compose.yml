@@ -118,6 +118,7 @@ services:
       - RSD_AUTH_URL
       - RSD_AUTH_PROVIDERS
       - RSD_AUTH_COUPLE_PROVIDERS
+      - RSD_REVERSE_PROXY_URL
       - MATOMO_URL
       - MATOMO_ID
       - SURFCONEXT_CLIENT_ID
@@ -149,7 +150,8 @@ services:
       - database
       - backend
       - auth
-    # volumes:
+    volumes:
+      - ./frontend/public:/app/public
     #   - ./deployment/hmz/styles:/app/public/styles
     #   - ./deployment/hmz/data:/app/public/data
     #   - ./deployment/hmz/images:/app/public/images

@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -34,9 +36,11 @@ public class JwtCreator {
 				.withClaim("role", accountInfo.isAdmin() ? "rsd_admin" : "rsd_user")
 				.withClaim("account", accountInfo.account().toString())
 				.withClaim("name", accountInfo.name())
+				.withClaim("data", accountInfo.data())
 				.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
 				.sign(signingAlgorithm);
 	}
+
 
 	String createAdminJwt() {
 		return JWT.create()

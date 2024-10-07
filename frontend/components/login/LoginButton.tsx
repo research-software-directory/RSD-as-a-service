@@ -15,14 +15,12 @@ import Link from 'next/link'
 
 import {useSession} from '~/auth'
 import useLoginProviders from '~/auth/api/useLoginProviders'
-import useUserMenuItems from '~/config/useUserMenuItems'
 import UserMenu from '~/components/layout/UserMenu'
 import LoginDialog from './LoginDialog'
 
 export default function LoginButton() {
   const providers = useLoginProviders()
   const {status} = useSession()
-  const menuItems = useUserMenuItems()
   const [open, setOpen] = useState(false)
 
   // console.group('LoginButton')
@@ -35,10 +33,9 @@ export default function LoginButton() {
   }
 
   if (status === 'authenticated') {
-    // const menuItems = getUserMenuItems(session.user?.role)
     // we show user menu with the avatar and user specific options
     return (
-      <UserMenu menuOptions={menuItems}/>
+      <UserMenu />
     )
   }
 

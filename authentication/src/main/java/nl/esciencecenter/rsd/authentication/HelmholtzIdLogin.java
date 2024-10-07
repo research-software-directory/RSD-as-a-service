@@ -37,6 +37,9 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -206,11 +209,20 @@ public class HelmholtzIdLogin implements Login {
 		}
 		String organisation = getOrganisationFromEntitlements(entitlements);
 
+		List<String> eduPersonEntitlements = new ArrayList<>();
+		for (int i=0; i<entitlements.size(); i++) {
+			eduPersonEntitlements.add(entitlements.get(i).toString());
+		}
+
+		Map<String, List<String>> data = new HashMap<>();
+		data.put("eduPersonEntitlements", eduPersonEntitlements);
+
 		return new OpenIdInfo(
 				userInfo.getSubject().toString(),
 				userInfo.getName(),
 				userInfo.getEmailAddress(),
-				organisation
+				organisation,
+				data
 		);
 	}
 }
