@@ -1,7 +1,7 @@
 # Data scrapers
 
 The RSD uses data scraper services to obtain and update various data. In this chapter, we explain these services.
-The scraper services are scheduled to run every 6 minutes on average. These services scrape the data from using various open API's, which might have a limit on the amount of data that can be scraped.
+The scraper services are scheduled to run every 6 minutes on average. These services scrape the data from using various open APIs, which might have a limit on the amount of data that can be scraped.
 
 :::warning
 The scraper services can only scrape information that is publicly available.
@@ -29,7 +29,9 @@ This service scrapes the contributor count from the repository of your software.
 
 ## Software releases
 
-The service scrapes information from Zenodo about registered software releases based on the concept DOI you provided to your software page.
+This service collects and stores all releases of your software page, if your software has a *[Concept DOI](https://support.zenodo.org/help/en-gb/1-upload-deposit/97-what-is-doi-versioning)*. The result is shown on the publicly facing software page as the "Cite this software" block.
+
+The releases are harvested from the [DataCite API](https://support.datacite.org/docs/api). We use the supplied concept DOI of the software to see if any *versions* exist of this software in the DataCite database. The best way to ensure that these links are stored in the DataCite database is to make use of the [GitHub and Zenodo integration](https://docs.github.com/en/repositories/archiving-a-github-repository/referencing-and-citing-content). This will make sure that every time you create a release of your software, an entry is created in [Zenodo](https://zenodo.org/) and that the link between the release and the concept DOI is created in the DataCite database.
 
 ## Citations
 
