@@ -44,7 +44,7 @@ This example is code area
 
 |column 1| column 2| column 3|
 |-|-|-|
-|123242|234234|3
+|123242|234234|3|
 |some text here|34|x=23|
 
 ## Task list
@@ -75,7 +75,7 @@ When using a Document URL to point to a remote Markdown file on the GitHub, you 
 
 ### Logo
 
-The software logo is shown on the software page and in the software card (see example below). **You can upload an image up to 2MB of size**. Widely used image formats like JPG, JPEG, PNG, SVG etc. are supported. Use the **svg** format, if possible, because it scales better than other formats.
+The software logo is shown on the software page and in the software card (see example below). **You can upload an image up to 2MB of size**. Widely used image formats like JPG, JPEG, PNG, SVG etc. are supported. Use the **SVG** format, if possible, because it scales better than other formats.
 
 ![image](img/software-logo-card.webp)
 
