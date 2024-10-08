@@ -42,6 +42,46 @@ export async function getMentionByOpenalexId(id: string) {
   }
 }
 
+export async function getOpenalexMentionsByTitle(search: string): Promise<{status: number, message: string, result: MentionItemProps[]}> {
+  try {
+    const url = `https://api.openalex.org/works?search=${encodeURI(search)}`
+
+    const resp = await fetch(url)
+
+    if (resp.status === 200) {
+      const json = await resp.json()
+      const mentions: MentionItemProps[] = json.results.map((result: any) => openalexItemToMentionItem(result))
+      return ({
+        status: 200,
+        message: 'success',
+        result: mentions
+      })
+    }
+    else if (resp.status === 404) {
+      return {
+        status: 404,
+        message: 'not found',
+        result: []
+      }
+    }
+    else {
+      return ({
+        status: resp.status,
+        message: `unexpected response from OpenAlex: ${await resp.text()}`,
+        result: []
+      })
+    }
+  } catch (e:any) {
+    logger(`getOpenalexMentionsByTitle: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message,
+      result: []
+    }
+  }
+}
+
+
 export async function getOpenalexItemByDoi(doi: string) {
   try {
     const url = `https://api.openalex.org/works/https://doi.org/${doi}`
