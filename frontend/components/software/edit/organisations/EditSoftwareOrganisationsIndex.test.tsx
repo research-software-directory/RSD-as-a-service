@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -31,13 +33,12 @@ jest.mock('~/utils/editOrganisation', () => ({
 }))
 
 // MOCK isMaintainerOfOrganisation
-const mockIsMainatainerOfOrganisation = jest.fn(props => Promise.resolve(false))
+const mockIsMaintainerOfOrganisation = jest.fn(props => Promise.resolve(false))
 jest.mock('~/auth/permissions/isMaintainerOfOrganisation', () => ({
   __esModule: true,
-  default: jest.fn(props=>mockIsMainatainerOfOrganisation(props)),
-  isMaintainerOfOrganisation: jest.fn(props=>mockIsMainatainerOfOrganisation(props))
+  default: jest.fn(props=>mockIsMaintainerOfOrganisation(props)),
+  isMaintainerOfOrganisation: jest.fn(props=>mockIsMaintainerOfOrganisation(props))
 }))
-
 
 // MOCK organisationForSoftware methods
 const mockCreateOrganisationAndAddToSoftware = jest.fn(props => Promise.resolve([] as any))
@@ -50,6 +51,11 @@ jest.mock('./organisationForSoftware', () => ({
   deleteOrganisationFromSoftware: jest.fn(props => mockDeleteOrganisationFromSoftware(props)),
   patchOrganisationPositions: jest.fn(props=>mockPatchOrganisationPositions(props))
 }))
+
+// MOCK software category calls
+// by default we return no categories
+jest.mock('~/components/category/apiCategories')
+jest.mock('~/utils/getSoftware')
 
 describe('frontend/components/software/edit/organisations/index.tsx', () => {
   beforeEach(() => {
@@ -290,8 +296,8 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
     // return list of organisations
     mockGetOrganisationsForSoftware.mockResolvedValueOnce(organisationsOfSoftware)
     // mock is Maintainer of first organisation
-    mockIsMainatainerOfOrganisation.mockResolvedValueOnce(true)
-    mockIsMainatainerOfOrganisation.mockResolvedValueOnce(false)
+    mockIsMaintainerOfOrganisation.mockResolvedValueOnce(true)
+    mockIsMaintainerOfOrganisation.mockResolvedValueOnce(false)
 
     render(
       <WithAppContext options={{session:mockSession}}>

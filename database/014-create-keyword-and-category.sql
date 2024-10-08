@@ -3,6 +3,7 @@
 -- SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+-- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -105,15 +106,6 @@ CREATE TABLE category (
 
 CREATE INDEX category_parent_idx ON category(parent);
 CREATE INDEX category_community_idx ON category(community);
-
-
-CREATE TABLE category_for_software (
-	software_id UUID REFERENCES software (id),
-	category_id UUID REFERENCES category (id),
-	PRIMARY KEY (software_id, category_id)
-);
-
-CREATE INDEX category_for_software_category_id_idx ON category_for_software(category_id);
 
 
 -- sanitize categories
@@ -228,6 +220,19 @@ $$
 $$;
 
 
+-- TABLE FOR software categories
+-- includes organisation, community and general categories
+-- Note! to filter specific categories of an community or organisation use join with community table
+
+CREATE TABLE category_for_software (
+	software_id UUID REFERENCES software (id),
+	category_id UUID REFERENCES category (id),
+	PRIMARY KEY (software_id, category_id)
+);
+
+CREATE INDEX category_for_software_category_id_idx ON category_for_software(category_id);
+
+-- RPC for software page to show all software categories
 CREATE FUNCTION category_paths_by_software_expanded(software_id UUID)
 RETURNS JSON
 LANGUAGE SQL STABLE AS
@@ -242,3 +247,14 @@ $$
 		ELSE '[]'::json
 		END AS result
 $$;
+
+
+-- TABLE FOR project categories
+-- currently used only for organisation categories
+CREATE TABLE category_for_project (
+	project_id UUID REFERENCES project (id),
+	category_id UUID REFERENCES category (id),
+	PRIMARY KEY (project_id, category_id)
+);
+
+CREATE INDEX category_for_project_category_id_idx ON category_for_project(category_id);

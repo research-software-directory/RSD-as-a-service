@@ -10,10 +10,12 @@ import {TreeNode} from '~/types/TreeNode'
 
 type LoadCategoryProps={
   community?: string | null,
-  organisation?: string | null
+  organisation?: string | null,
+  allow_software?: boolean,
+  allow_projects?: boolean
 }
 
-export async function loadCategoryRoots({community, organisation}:LoadCategoryProps){
+export async function loadCategoryRoots({community, organisation, allow_software, allow_projects}:LoadCategoryProps){
   // global categories is default
   let categoryFilter = 'community=is.null&organisation=is.null'
   // community filter
@@ -23,6 +25,14 @@ export async function loadCategoryRoots({community, organisation}:LoadCategoryPr
   // organisation filter
   if (organisation){
     categoryFilter = `organisation=eq.${organisation}`
+  }
+  // software specific categories
+  if (allow_software){
+    categoryFilter+='&allow_software=eq.true'
+  }
+  // project specific categories
+  if (allow_projects){
+    categoryFilter+='&allow_projects=eq.true'
   }
 
   const resp = await fetch(`${getBaseUrl()}/category?${categoryFilter}`)
