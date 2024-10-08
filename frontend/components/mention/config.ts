@@ -6,13 +6,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {MentionByType, MentionTypeKeys} from '~/types/Mention'
-import {doiRegexStrict} from '~/components/software/edit/mentions/utils'
+import {DOI_REGEX_STRICT} from '~/components/software/edit/mentions/utils'
 
 export const findMention={
   // title: 'Add publication',
   // subtitle: 'We search in Crossref, DataCite and RSD databases',
-  label: 'Search by DOI or publication title',
-  help: 'Valid DOI or at least first 2 letters of publication title',
+  label: 'Search by DOI, OpenAlex ID or publication title',
+  help: 'Valid DOI, OpenAlex ID or at least first 2 letters of publication title',
   validation: {
     // custom validation rule, not in use by react-hook-form
     minLength: 2,
@@ -31,7 +31,7 @@ export const mentionModal = {
         message: 'Maximum length is 255'
       },
       pattern: {
-        value: doiRegexStrict,
+        value: DOI_REGEX_STRICT,
         message: 'The DOI should look like 10.XXX/XXX'
       }
     }
