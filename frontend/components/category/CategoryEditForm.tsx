@@ -38,14 +38,14 @@ export default function CategoryEditForm({
 
   const [parent] = watch(['parent'])
 
-  console.group('CategoryEditForm')
-  console.log('createNew...',createNew)
+  // console.group('CategoryEditForm')
+  // console.log('createNew...',createNew)
   // console.log('data...',data)
   // console.log('disableSave...',disableSave)
   // console.log('community...',community)
   // console.log('organisation...',organisation)
-  console.log('parent...',parent)
-  console.groupEnd()
+  // console.log('parent...',parent)
+  // console.groupEnd()
 
 
   function onSubmit(formData: CategoryEntry){
@@ -181,7 +181,7 @@ export default function CategoryEditForm({
 
       {/*
         Organisation categories can be used for software or project items
-        We show software/project switch only at top level
+        We show software/project switch only at top level (root nodes)
       */}
       {
         organisation && !parent ?
@@ -203,9 +203,11 @@ export default function CategoryEditForm({
           </div>
           :
           <>
-            {/* By default categories are used by software in communities and by project for organisations */}
-            <input type="hidden" {...register('allow_software', {value: data?.allow_software ?? community!==null})} />
-            <input type="hidden" {...register('allow_projects', {value: data?.allow_projects ?? organisation!==null})} />
+            {/*
+              for children nodes we use false as default value
+            */}
+            <input type="hidden" {...register('allow_software', {value: false})} />
+            <input type="hidden" {...register('allow_projects', {value: false})} />
           </>
       }
 

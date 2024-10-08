@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {CategoriesForSoftware,} from '~/types/SoftwareTypes'
+import {CategoriesForSoftware, CategoryForSoftwareIds,} from '~/types/SoftwareTypes'
 import {CategoryPath} from '~/types/Category'
 
 export async function getSoftwareList({url,token}:{url:string,token?:string }){
@@ -41,6 +41,10 @@ export async function getKeywordsForSoftware(uuid:string,frontend?:boolean,token
 
 export async function getCategoriesForSoftware(software_id: string, token?: string): Promise<CategoriesForSoftware> {
   return []
+}
+
+export async function getCategoryForSoftwareIds(software_id: string, token?: string): Promise<CategoryForSoftwareIds> {
+  return new Set()
 }
 
 export async function getAvailableCategories(): Promise<CategoryPath[]> {
