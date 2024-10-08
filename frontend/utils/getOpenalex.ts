@@ -7,6 +7,41 @@ import logger from '~/utils/logger'
 import {MentionItemProps} from '~/types/Mention'
 import {crossrefToRsdType} from '~/utils/getCrossref'
 
+export async function getMentionByOpenalexId(id: string) {
+  try {
+    const url = `https://api.openalex.org/${encodeURI(id)}`
+
+    const resp = await fetch(url)
+
+    if (resp.status === 200) {
+      const json = await resp.json()
+      const mention = openalexItemToMentionItem(json)
+      return ({
+        status: 200,
+        message: mention
+      })
+    }
+    else if (resp.status === 404) {
+      return {
+        status: 404,
+        message: 'DOI not found'
+      }
+    }
+    else {
+      return ({
+        status: resp.status,
+        message: 'unexpected response from OpenAlex'
+      })
+    }
+  } catch (e:any) {
+    logger(`getMentionByOpenalexId: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
 export async function getOpenalexItemByDoi(doi: string) {
   try {
     const url = `https://api.openalex.org/works/https://doi.org/${doi}`
@@ -70,10 +105,13 @@ export async function getOpenalexItemsByDoi(dois: string[]) {
 }
 
 export function openalexItemToMentionItem(json: any): MentionItemProps {
+  const doiUrl = json.doi
+  const doi = doiUrl === null ? null : doiUrl.substring('https://doi.org/'.length)
   return ({
     id: null,
-    doi: json.doi.substring('https://doi.org/'.length),
-    url: json.doi,
+    doi: doi,
+    openalex_id: json.id,
+    url: doiUrl,
     title: json.title,
     authors: extractAuthors(json),
     publisher: null,
