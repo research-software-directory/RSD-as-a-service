@@ -36,7 +36,7 @@ public class MainCitations {
 			PostgrestCitationRepository localCitationRepository = new PostgrestCitationRepository(backendUrl);
 
 			Collection<CitationData> referencePapersToScrape = localCitationRepository.leastRecentlyScrapedCitations(5);
-			OpenAlexCitations openAlexCitations = new OpenAlexCitations();
+			OpenAlexConnector openAlexConnector = new OpenAlexConnector();
 			PostgrestMentionRepository localMentionRepository = new PostgrestMentionRepository(backendUrl);
 			String email = Config.crossrefContactEmail().orElse(null);
 			Instant now = Instant.now();
@@ -47,7 +47,7 @@ public class MainCitations {
 
 				LOGGER.info("Scraping for DOI {}, OpenAlex ID {}", citationData.doi(), citationData.openalexId());
 
-				Collection<ExternalMentionRecord> citingMentions = openAlexCitations.citations(citationData.openalexId(), citationData.doi(), email, citationData.id());
+				Collection<ExternalMentionRecord> citingMentions = openAlexConnector.citations(citationData.openalexId(), citationData.doi(), email, citationData.id());
 				// we don't update mentions that have a DOI in the database with OpenAlex data, as they can already be
 				// scraped through Crossref or DataCite
 

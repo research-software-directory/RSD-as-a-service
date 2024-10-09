@@ -45,6 +45,10 @@ public class OpenalexId {
 		return Utils.urlEncode(toString());
 	}
 
+	public String getOpenalexKey() {
+		return openalexKey;
+	}
+
 	@Override
 	public String toString() {
 		return OPENALEX_ID_BASE + openalexKey;
