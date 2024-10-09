@@ -15,10 +15,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class MainMentions {
@@ -36,13 +39,27 @@ public class MainMentions {
 		// we will remove successfully scraped mentions from here,
 		// we use this to set scrapedAt even for failed mentions,
 		// to put them back at the scraping queue
-		Map<Doi, RsdMentionIds> mentionsFailedToScrape = new HashMap<>();
+		Map<UUID, RsdMentionIds> mentionsFailedToScrape = new HashMap<>();
+		Map<Doi, UUID> doiToId = new HashMap<>();
+		Map<OpenalexId, UUID> openalexIdToId = new HashMap<>();
 		for (RsdMentionIds mentionIds : mentionsToScrape) {
-			mentionsFailedToScrape.put(mentionIds.doi(), mentionIds);
+			UUID id = mentionIds.id();
+			mentionsFailedToScrape.put(id, mentionIds);
+
+			Doi doi = mentionIds.doi();
+			if (doi != null) {
+				doiToId.put(doi, id);
+			}
+
+			OpenalexId openalexId = mentionIds.openalexId();
+			if (openalexId != null) {
+				openalexIdToId.put(openalexId, id);
+			}
 		}
 
 		String doisJoined = mentionsToScrape.stream()
 				.map(RsdMentionIds::doi)
+				.filter(Objects::nonNull)
 				.map(Doi::toUrlEncodedString)
 				.collect(Collectors.joining(","));
 		String jsonSources = null;
@@ -72,14 +89,14 @@ public class MainMentions {
 		}
 		for (ExternalMentionRecord scrapedMention : scrapedDataciteMentions) {
 			Doi doi = scrapedMention.doi();
-			RsdMentionIds ids = mentionsFailedToScrape.get(doi);
+			UUID id = doiToId.get(doi);
 			try {
-				RsdMentionRecord mentionToUpdate = new RsdMentionRecord(ids.id(), scrapedMention, now);
+				RsdMentionRecord mentionToUpdate = new RsdMentionRecord(id, scrapedMention, now);
 				localMentionRepository.updateMention(mentionToUpdate, false);
-				mentionsFailedToScrape.remove(doi);
+				mentionsFailedToScrape.remove(id);
 			} catch (Exception e) {
 				LOGGER.error("Failed to update a DataCite mention with DOI {}", scrapedMention.doi());
-				Utils.saveExceptionInDatabase("Mention scraper", "mention", ids.id(), e);
+				Utils.saveExceptionInDatabase("Mention scraper", "mention", id, e);
 			}
 
 		}
@@ -94,30 +111,30 @@ public class MainMentions {
 				.toList();
 		for (Doi crossrefDoi : crossrefDois) {
 			ExternalMentionRecord scrapedMention;
+			UUID id = doiToId.get(crossrefDoi);
 			try {
 				scrapedMention = new CrossrefMention(crossrefDoi).mentionData();
 			} catch (Exception e) {
 				LOGGER.error("Failed to scrape a Crossref mention with DOI {}", crossrefDoi);
 				RuntimeException exceptionWithMessage = new RuntimeException("Failed to scrape a Crossref mention with DOI " + crossrefDoi, e);
-				Utils.saveExceptionInDatabase("Crossref mention scraper", "mention", mentionsFailedToScrape.get(crossrefDoi).id(), exceptionWithMessage);
+				Utils.saveExceptionInDatabase("Crossref mention scraper", "mention", id, exceptionWithMessage);
 				continue;
 			}
-			Doi doi = scrapedMention.doi();
-			RsdMentionIds ids = mentionsFailedToScrape.get(doi);
-			RsdMentionRecord mentionToUpdate = new RsdMentionRecord(ids.id(), scrapedMention, now);
+			RsdMentionRecord mentionToUpdate = new RsdMentionRecord(id, scrapedMention, now);
 			try {
 				localMentionRepository.updateMention(mentionToUpdate, false);
-				mentionsFailedToScrape.remove(doi);
+				mentionsFailedToScrape.remove(id);
 			} catch (Exception e) {
 				RuntimeException exceptionWithMessage = new RuntimeException("Failed to update a Crossref mention with DOI " + crossrefDoi, e);
-				Utils.saveExceptionInDatabase("Crossref mention scraper", "mention", ids.id(), exceptionWithMessage);
+				Utils.saveExceptionInDatabase("Crossref mention scraper", "mention", id, exceptionWithMessage);
 			}
 		}
 		// END CROSSREF
 
 		// OPENALEX (for European Publication Office DOIs)
 		String email = Config.crossrefContactEmail().orElse(null);
-		Collection<ExternalMentionRecord> scrapedOpenalexMentions = List.of();
+		Collection<ExternalMentionRecord> scrapedOpenalexMentions = new ArrayList<>();
+		OpenAlexConnector openAlexConnector = new OpenAlexConnector();
 		Collection<Doi> europeanPublicationsOfficeDois = doiToSource.entrySet()
 				.stream()
 				.filter(doiSourceEntry -> doiSourceEntry.getValue().equals("OP"))
@@ -125,20 +142,31 @@ public class MainMentions {
 				.map(Doi::fromString)
 				.toList();
 		try {
-			scrapedOpenalexMentions = new OpenAlexCitations().mentionData(europeanPublicationsOfficeDois, email);
+			scrapedOpenalexMentions.addAll(openAlexConnector.mentionDataByDois(europeanPublicationsOfficeDois, email));
 		} catch (Exception e) {
 			Utils.saveExceptionInDatabase("OpenAlex mention scraper", "mention", null, e);
 		}
+		Collection<OpenalexId> openalexIdsToScrape = mentionsToScrape
+				.stream()
+				.filter(ids -> ids.doi() == null && ids.openalexId() != null)
+				.map(RsdMentionIds::openalexId)
+				.toList();
+		try {
+			scrapedOpenalexMentions.addAll(openAlexConnector.mentionDataByOpenalexIds(openalexIdsToScrape, email));
+		} catch (Exception e) {
+			Utils.saveExceptionInDatabase("OpenAlex mention scraper", "mention", null, e);
+		}
+
 		for (ExternalMentionRecord scrapedMention : scrapedOpenalexMentions) {
-			Doi doi = scrapedMention.doi();
-			RsdMentionIds ids = mentionsFailedToScrape.get(doi);
-			RsdMentionRecord mentionToUpdate = new RsdMentionRecord(ids.id(), scrapedMention, now);
+			OpenalexId openalexId = scrapedMention.openalexId();
+			UUID id = openalexIdToId.get(openalexId);
+			RsdMentionRecord mentionToUpdate = new RsdMentionRecord(id, scrapedMention, now);
 			try {
 				localMentionRepository.updateMention(mentionToUpdate, true);
-				mentionsFailedToScrape.remove(doi);
+				mentionsFailedToScrape.remove(id);
 			} catch (Exception e) {
 				LOGGER.error("Failed to update an OpenAlex mention with DOI {}", scrapedMention.doi());
-				Utils.saveExceptionInDatabase("Mention scraper", "mention", ids.id(), e);
+				Utils.saveExceptionInDatabase("Mention scraper", "mention", id, e);
 			}
 		}
 		// END OPENALEX

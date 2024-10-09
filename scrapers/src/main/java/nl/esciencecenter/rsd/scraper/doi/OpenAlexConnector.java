@@ -26,20 +26,56 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-class OpenAlexCitations {
+class OpenAlexConnector {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(OpenAlexCitations.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpenAlexConnector.class);
 
 	static final String DOI_FILTER_URL_UNFORMATTED = "https://api.openalex.org/works?filter=doi:%s";
 	static final String OPENALEX_ID_URL_UNFORMATTED = "https://api.openalex.org/works?filter=ids.openalex:%s";
 
-	public Collection<ExternalMentionRecord> mentionData(Collection<Doi> dataciteDois, String email) throws IOException, InterruptedException {
-		String filter = dataciteDois
+	public Collection<ExternalMentionRecord> mentionDataByDois(Collection<Doi> dois, String email) throws IOException, InterruptedException {
+		String filter = dois
 				.stream()
 				.filter(Objects::nonNull)
 				.map(Doi::toString)
 				.collect(Collectors.joining("|"));
+		// e.g. https://api.openalex.org/works?filter=doi:10.1038%2Fs41598-024-73248-4|10.5194%2Ftc-2022-249-rc1&per-page=200
 		String worksUri = DOI_FILTER_URL_UNFORMATTED.formatted(Utils.urlEncode(filter)) + "&per-page=200";
+
+		HttpResponse<String> response;
+		if (email == null || email.isBlank()) {
+			response = Utils.getAsHttpResponse(worksUri);
+		} else {
+			response = Utils.getAsHttpResponse(worksUri, "User-Agent", "mailto:" + email);
+		}
+
+		JsonObject tree = JsonParser.parseString(response.body()).getAsJsonObject();
+		JsonArray citationsArray = tree
+				.getAsJsonArray("results");
+
+		Collection<ExternalMentionRecord> mentions = new ArrayList<>();
+		for (JsonElement citation : citationsArray) {
+			ExternalMentionRecord citationAsMention;
+			try {
+				citationAsMention = parseCitationAsMention(citation);
+			} catch (RuntimeException e) {
+				Utils.saveExceptionInDatabase("OpenAlex mention scraper", "mention", null, e);
+				continue;
+			}
+			mentions.add(citationAsMention);
+		}
+
+		return mentions;
+	}
+
+	public Collection<ExternalMentionRecord> mentionDataByOpenalexIds(Collection<OpenalexId> openalexIds, String email) throws IOException, InterruptedException {
+		String filter = openalexIds
+				.stream()
+				.filter(Objects::nonNull)
+				.map(OpenalexId::getOpenalexKey)
+				.collect(Collectors.joining("|"));
+		// e.g. https://api.openalex.org/works?filter=ids.openalex:W4402994101|W4319593220&per-page=200
+		String worksUri = OPENALEX_ID_URL_UNFORMATTED.formatted(Utils.urlEncode(filter)) + "&per-page=200";
 
 		HttpResponse<String> response;
 		if (email == null || email.isBlank()) {
