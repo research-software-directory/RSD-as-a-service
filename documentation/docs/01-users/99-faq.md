@@ -27,3 +27,11 @@ You can use the [GitHub discussions page](https://github.com/research-software-d
 ### Where can I request a new feature or report a bug?
 
 You can use the [GitHub issues page](https://github.com/research-software-directory/RSD-as-a-service/issues) for this.
+
+### Can I create a dedicated software page for a workshop about a software package?
+
+If your workshop has a dedicated Git repo, has releases and software examples (i.e. the workshop is similar to something that one can consider to be software), then you can go ahead and make a dedicated software page for your workshop. Please create a link, as *related software*, to the software page your workshop is about.
+
+If your workshop looks more like a static collection of files, e.g. a collection of slides, then please only add this as output to the software page of which the workshop is about.
+
+Please use your best judgement, and if you have any doubts, you can contact us.
