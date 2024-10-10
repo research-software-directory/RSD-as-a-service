@@ -17,11 +17,11 @@ import useEditMentionReducer from '../useEditMentionReducer'
 
 export type DoiBulkImportReport = Map<string, SearchResult> | null
 
-export function useValidateInputList(token:string) {
+export function useValidateInputList(token: string) {
   const {mentions} = useEditMentionReducer()
   const [validating, setValidating] = useState(false)
 
-  async function validateInput(value:string) {
+  async function validateInput(value: string) {
     setValidating(true)
     const doiList = value.split(/\r\n|\n|\r/)
     const searchResults = await validateInputList(doiList, mentions, token)
@@ -48,21 +48,24 @@ export async function validateInputList(doiList: string[], mentions: MentionItem
     // filter valid DOI type entries
     .filter(search => {
       // debugger
-      if (search.type === 'doi') {
-        // convert to lower case
-        const doi = search.term.toLowerCase()
-        // validate if not already included
-        const found = mentions.find(mention => mention.doi?.toLowerCase() === doi)
-        if (found) {
-          // flag item with DOI already processed
-          mentionResultPerDoi.set(doi, {doi ,status: 'alreadyImported', include: false})
-          return false
+      switch (search.type) {
+        case 'doi': {
+          // convert to lower case
+          const doi = search.term.toLowerCase()
+          // validate if not already included
+          const found = mentions.find(mention => mention.doi?.toLowerCase() === doi)
+          if (found) {
+            // flag item with DOI already processed
+            mentionResultPerDoi.set(doi, {doi, status: 'alreadyImported', include: false})
+            return false
+          }
+          return true
         }
-        return true
-      } else {
-        // flag invalid DOI entries
-        mentionResultPerDoi.set(search.term, {doi:search.term, status: 'invalidDoi', include: false})
-        return false
+        case 'openalex':
+        case 'title':
+          // flag invalid DOI entries
+          mentionResultPerDoi.set(search.term, {doi: search.term, status: 'invalidDoi', include: false})
+          return false
       }
     })
     // extract DOI string from serch info
@@ -164,7 +167,7 @@ export async function validateInputList(doiList: string[], mentions: MentionItem
     // flag dois that are not updated
     doisNotInDatabase.forEach(doi => {
       if (!mentionResultPerDoi.has(doi)) {
-        mentionResultPerDoi.set(doi, {doi,status: 'unknown', include: false})
+        mentionResultPerDoi.set(doi, {doi, status: 'unknown', include: false})
       }
     })
   }
@@ -172,8 +175,8 @@ export async function validateInputList(doiList: string[], mentions: MentionItem
   return mentionResultPerDoi
 }
 
-export async function linkMentionToEntity({ids, table, entityName,entityId, token}: {
-  ids: string[], table: string, entityName: string, entityId:string, token: string
+export async function linkMentionToEntity({ids, table, entityName, entityId, token}: {
+  ids: string[], table: string, entityName: string, entityId: string, token: string
 }) {
   try {
     const url = `/api/v1/${table}`
@@ -207,7 +210,7 @@ export async function addMentions({mentions, token}: { mentions: MentionItemProp
       body: JSON.stringify(mentions)
     })
     if (resp.status === 201) {
-      const json:MentionItemProps[] = await resp.json()
+      const json: MentionItemProps[] = await resp.json()
       return {
         status: 200,
         message: json

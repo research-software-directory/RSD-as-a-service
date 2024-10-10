@@ -6,18 +6,23 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-const doiRegex = /10(\.\w+)+\/\S+/
-export const doiRegexStrict = /^10(\.\w+)+\/\S+$/
+const DOI_REGEX = /10(\.\w+)+\/\S+/
+export const DOI_REGEX_STRICT = /^10(\.\w+)+\/\S+$/
+const OPENALEX_ID_REGEX = /https:\/\/openalex\.org\/([WwAaSsIiCcPpFf]\d{3,13})/
 
 export type SearchTermInfo = {
   term: string,
-  type: 'doi' | 'title'
+  type: 'doi' | 'title' | 'openalex'
 }
 export function extractSearchTerm(query: string): SearchTermInfo{
 
-  const doiRegexMatch = query.match(doiRegex)
+  const doiRegexMatch = DOI_REGEX.exec(query)
   if (doiRegexMatch != null) {
     return {term: doiRegexMatch[0], type: 'doi'}
+  }
+  const openalexRegexMatch = OPENALEX_ID_REGEX.exec(query)
+  if (openalexRegexMatch != null) {
+    return {term: openalexRegexMatch[0], type: 'openalex'}
   }
   // remove double spaces:
   query = query.trim()

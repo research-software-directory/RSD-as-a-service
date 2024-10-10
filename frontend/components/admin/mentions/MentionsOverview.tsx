@@ -49,10 +49,14 @@ export default function MentionsOverview() {
 
     const searchTypeTerm: SearchTermInfo = extractSearchTerm(sanitisedSearch)
     const termEscaped = encodeURIComponent(sanitisedSearch)
-    if (searchTypeTerm.type === 'doi') {
-      return `doi=eq.${termEscaped}`
+    switch (searchTypeTerm.type) {
+      case 'doi':
+        return `doi=eq.${termEscaped}`
+      case 'openalex':
+        return `openalex_id=eq.${termEscaped}`
+      case 'title':
+        return `or=(title.ilike.*${termEscaped}*,authors.ilike.*${termEscaped}*,journal.ilike.*${termEscaped}*,url.ilike.*${termEscaped}*,note.ilike.*${termEscaped}*,openalex_id.ilike.*${termEscaped}*)`
     }
-    return `or=(title.ilike.*${termEscaped}*,authors.ilike.*${termEscaped}*,journal.ilike.*${termEscaped}*,url.ilike.*${termEscaped}*,note.ilike.*${termEscaped}*,openalex_id.ilike.*${termEscaped}*)`
   }
 
   function sanitiseSearch(search: string): string | undefined {
