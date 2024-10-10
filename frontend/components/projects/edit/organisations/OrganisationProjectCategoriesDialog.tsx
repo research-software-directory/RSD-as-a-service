@@ -4,43 +4,47 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useEffect, useState} from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import {useEffect, useState} from 'react'
-import {TreeNode} from '~/types/TreeNode'
-import {CategoryEntry} from '~/types/Category'
-import ContentLoader from '~/components/layout/ContentLoader'
 import Alert from '@mui/material/Alert'
-import {loadCategoryRoots} from '~/components/category/apiCategories'
-import {RecursivelyGenerateItems} from '~/components/software/TreeSelect'
-import {CategoryForSoftwareIds} from '~/types/SoftwareTypes'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
-import {useSession} from '~/auth'
-import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
-import {CommunityListProps} from '~/components/communities/apiCommunities'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import SaveIcon from '@mui/icons-material/Save'
-import {removeCommunityCategoriesFromSoftware} from '~/components/software/edit/communities/apiSoftwareCommunities'
-import {getCategoryForSoftwareIds} from '~/utils/getSoftware'
 
+import {useSession} from '~/auth'
+import {TreeNode} from '~/types/TreeNode'
+import {CategoryEntry} from '~/types/Category'
+import {CategoryForSoftwareIds} from '~/types/SoftwareTypes'
+import {EditOrganisation} from '~/types/Organisation'
+import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
+import ContentLoader from '~/components/layout/ContentLoader'
+import {loadCategoryRoots} from '~/components/category/apiCategories'
+import {RecursivelyGenerateItems} from '~/components/software/TreeSelect'
+import {getCategoryListForProject, removeOrganisationCategoriesFromProject} from './apiProjectOrganisations'
 
-export type communityAddCategoriesDialogProps = {
-  readonly softwareId: string
-  readonly community: CommunityListProps
-  readonly onCancel: () => void
-  readonly onConfirm: (community: CommunityListProps) => void
-  readonly autoConfirm: boolean
+export type OrganisationCategoriesDialogProps = Readonly<{
+  projectId: string
+  organisation: EditOrganisation
+  onCancel: () => void
+  onComplete: () => void
+  autoConfirm: boolean
+}>
+
+type ProjectCategory = {
+  project_id: string,
+  category_id: string
 }
 
-export default function CommunityAddCategoriesDialog({
-  softwareId,
-  community,
+export default function OrganisationProjectCategoriesDialog({
+  projectId,
+  organisation,
   onCancel,
-  onConfirm,
+  onComplete,
   autoConfirm
-}: communityAddCategoriesDialogProps) {
+}: OrganisationCategoriesDialogProps) {
   const {token} = useSession()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [categories, setCategories] = useState<TreeNode<CategoryEntry>[] | null>(null)
@@ -48,6 +52,47 @@ export default function CommunityAddCategoriesDialog({
   const [state, setState] = useState<'loading' | 'error' | 'ready' | 'saving'>('loading')
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<CategoryForSoftwareIds>(new Set())
   const [availableCategoryIds, setAvailableCategoryIds] = useState<CategoryForSoftwareIds>(new Set())
+
+  useEffect(() => {
+    let abort = false
+    setState('loading')
+    // load project specific organisation items
+    const promiseLoadRoots = loadCategoryRoots({organisation:organisation.id,allow_projects:true})
+      .then(roots => {
+        // if there are no categories we don't show the modal
+        if (roots.length === 0 && autoConfirm) {
+          onComplete()
+          return
+        }
+        const leaveIds = new Set<string>()
+        for (const root of roots) {
+          root.forEach(node => {
+            if (node.children().length === 0) {
+              leaveIds.add(node.getValue().id)
+            }
+          })
+        }
+        if (abort) return
+        setAvailableCategoryIds(leaveIds)
+        setCategories(roots)
+      })
+
+    const promiseLoadAssociatedCategories = getCategoryListForProject(projectId, token)
+      .then(setSelectedCategoryIds)
+
+    Promise.all([promiseLoadRoots, promiseLoadAssociatedCategories])
+      .then(() => {
+        if (abort) return
+        setState('ready')
+      })
+      .catch(e => {
+        if (abort) return
+        setError(`Couldn't load categories: ${e}`)
+        setState('error')
+      })
+
+    return ()=>{abort=true}
+  }, [organisation, onComplete, autoConfirm, projectId, token])
 
   function isSelected(node: TreeNode<CategoryEntry>) {
     const val = node.getValue()
@@ -72,40 +117,6 @@ export default function CommunityAddCategoriesDialog({
     setSelectedCategoryIds(new Set(selectedCategoryIds))
   }
 
-  useEffect(() => {
-    setState('loading')
-    const promiseLoadRoots = loadCategoryRoots({community:community.id})
-      .then(roots => {
-        // if there are no categories for this community, we don't show the modal
-        if (roots.length === 0 && autoConfirm) {
-          onConfirm(community)
-          return
-        }
-        const leaveIds = new Set<string>()
-        for (const root of roots) {
-          root.forEach(node => {
-            if (node.children().length === 0) {
-              leaveIds.add(node.getValue().id)
-            }
-          })
-        }
-        setAvailableCategoryIds(leaveIds)
-        setCategories(roots)
-      })
-
-    const promiseLoadAssociatedCategories = getCategoryForSoftwareIds(softwareId, token)
-      .then(setSelectedCategoryIds)
-
-    Promise.all([promiseLoadRoots, promiseLoadAssociatedCategories])
-      .then(() => {
-        setState('ready')
-      })
-      .catch(e => {
-        setError(`Couldn't load categories: ${e}`)
-        setState('error')
-      })
-  }, [community, onConfirm, autoConfirm, softwareId, token])
-
   function isCancelEnabled() {
     return state === 'saving'
   }
@@ -114,43 +125,50 @@ export default function CommunityAddCategoriesDialog({
     return categories === null || categories.length === 0 || state !== 'ready'
   }
 
-  async function saveCategoriesAndCommunity() {
+  async function saveCategoriesAndOrganisation() {
     if (selectedCategoryIds.size === 0) {
-      onConfirm(community)
+      onComplete()
       return
     }
 
-    setState('saving')
-
-    const deleteErrorMessage = await removeCommunityCategoriesFromSoftware(softwareId, community.id, token)
-    if (deleteErrorMessage !== null) {
-      setError(`Couldn't delete the existing categories: ${deleteErrorMessage}`)
-      setState('error')
-      return
+    // delete old selection
+    if (organisation.id){
+      const deleteErrorMessage = await removeOrganisationCategoriesFromProject(projectId, organisation.id, token)
+      if (deleteErrorMessage !== null) {
+        setError(`Couldn't delete the existing categories: ${deleteErrorMessage}`)
+        setState('error')
+        return
+      }
     }
 
-    const categoryUrl = `${getBaseUrl()}/category_for_software`
-    const categoriesArrayToSave: {software_id: string, category_id: string}[] = []
+    // generate new collection
+    const categoriesArrayToSave:ProjectCategory[] = []
     selectedCategoryIds
       .forEach(id => {
         if (availableCategoryIds.has(id)) {
-          categoriesArrayToSave.push({software_id: softwareId, category_id: id})
+          categoriesArrayToSave.push({project_id: projectId, category_id: id})
         }
       })
 
-    const resp = await fetch(categoryUrl, {
-      method: 'POST',
-      body: JSON.stringify(categoriesArrayToSave),
-      headers: {
-        ...createJsonHeaders(token)
+    // save organisation categories (if any)
+    if (categoriesArrayToSave.length > 0){
+      const categoryUrl = `${getBaseUrl()}/category_for_project`
+      const resp = await fetch(categoryUrl, {
+        method: 'POST',
+        body: JSON.stringify(categoriesArrayToSave),
+        headers: {
+          ...createJsonHeaders(token)
+        }
+      })
+      // debugger
+      if (!resp.ok) {
+        setError(`Couldn't save categories: ${await resp.text()}`)
+        setState('error')
+      } else {
+        onComplete()
       }
-    })
-
-    if (!resp.ok) {
-      setError(`Couldn't save categories: ${await resp.text()}`)
-      setState('error')
-    } else {
-      onConfirm(community)
+    }else{
+      onComplete()
     }
   }
 
@@ -201,7 +219,7 @@ export default function CommunityAddCategoriesDialog({
         borderColor: 'divider',
         color: 'primary.main',
         fontWeight: 500
-      }}>Add categories of {community.name}</DialogTitle>
+      }}>Add categories of {organisation.name}</DialogTitle>
       <DialogContent
         sx={{
           display: 'flex',
@@ -229,7 +247,7 @@ export default function CommunityAddCategoriesDialog({
           id="save-button"
           variant="contained"
           tabIndex={0}
-          onClick={saveCategoriesAndCommunity}
+          onClick={saveCategoriesAndOrganisation}
           color="primary"
           endIcon={<SaveIcon />}
           disabled={isSaveDisabled()}

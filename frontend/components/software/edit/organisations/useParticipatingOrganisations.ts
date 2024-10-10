@@ -1,60 +1,16 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-
-import isMaintainerOfOrganisation from '~/auth/permissions/isMaintainerOfOrganisation'
-import {EditOrganisation} from '../../../../types/Organisation'
-import {getOrganisationsForSoftware} from '../../../../utils/editOrganisation'
-
-type UseParticipatingOrganisationsProps = {
-  software: string,
-  token: string,
-  account: string
-}
-
-async function getParticipatingOrganisationsForSoftware({software, token, account}: UseParticipatingOrganisationsProps) {
-  const resp = await getOrganisationsForSoftware({
-    software,
-    token
-  })
-  // collect isMaintainerRequests
-  const promises: Promise<boolean>[] = []
-  // prepare organisation list
-  const orgList = resp.map((item, pos) => {
-    // save isMaintainer request
-    promises.push(isMaintainerOfOrganisation({
-      organisation: item.id,
-      account,
-      token
-    }))
-    // extract only needed props
-    const organisation: EditOrganisation = {
-      ...item,
-      // additional props for edit type
-      position: pos + 1,
-      logo_b64: null,
-      logo_mime_type: null,
-      source: 'RSD' as 'RSD',
-      status: item.status,
-      // false by default
-      canEdit: false,
-      // description: null
-    }
-    return organisation
-  })
-  // run all isMaintainer requests in parallel
-  const isMaintainer = await Promise.all(promises)
-  const organisations = orgList.map((item, pos) => {
-    // update canEdit based on isMaintainer requests
-    if (isMaintainer[pos]) item.canEdit = isMaintainer[pos]
-    return item
-  })
-  return organisations
-}
-
+import {EditOrganisation} from '~/types/Organisation'
+import {
+  getParticipatingOrganisationsForSoftware,
+  UseParticipatingOrganisationsProps
+} from './apiSoftwareOrganisations'
 
 export function useParticipatingOrganisations({software, token, account}: UseParticipatingOrganisationsProps) {
   const [organisations, setOrganisations] = useState<EditOrganisation[]>([])

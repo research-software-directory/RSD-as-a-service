@@ -1,27 +1,15 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState} from 'react'
 
 import {useSession} from '~/auth'
-import ContentLoader from '~/components/layout/ContentLoader'
-import EditSection from '~/components/layout/EditSection'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import useProjectContext from '../useProjectContext'
-import useParticipatingOrganisations from './useParticipatingOrganisations'
-import {cfgOrganisations as config} from './config'
-import FindOrganisation from '~/components/software/edit/organisations/FindOrganisation'
-import EditOrganisationModal from '~/components/software/edit/organisations/EditOrganisationModal'
-import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
-import {EditOrganisationModalProps} from '~/components/software/edit/organisations'
-import {ModalStates} from '~/components/software/edit/editSoftwareTypes'
 import {columsForUpdate, EditOrganisation, SearchOrganisation} from '~/types/Organisation'
-import useSnackbar from '~/components/snackbar/useSnackbar'
 import {
   newOrganisationProps,
   searchToEditOrganisation, updateOrganisation
@@ -34,6 +22,18 @@ import {
 import SortableOrganisationsList from '~/components/software/edit/organisations/SortableOrganisationsList'
 import {upsertImage} from '~/utils/editImage'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
+import ContentLoader from '~/components/layout/ContentLoader'
+import EditSection from '~/components/layout/EditSection'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import {EditOrganisationModalProps, OrganisationModalStates} from '~/components/software/edit/organisations'
+import FindOrganisation from '~/components/software/edit/organisations/FindOrganisation'
+import EditOrganisationModal from '~/components/software/edit/organisations/EditOrganisationModal'
+import useProjectContext from '../useProjectContext'
+import useParticipatingOrganisations from './useParticipatingOrganisations'
+import {cfgOrganisations as config} from './config'
+import OrganisationProjectCategoriesDialog from './OrganisationProjectCategoriesDialog'
 
 export default function ProjectOrganisations() {
   const {token,user} = useSession()
@@ -44,11 +44,14 @@ export default function ProjectOrganisations() {
     token: token,
     account: user?.account
   })
-  const [modal, setModal] = useState<ModalStates<EditOrganisationModalProps>>({
+  const [modal, setModal] = useState<OrganisationModalStates<EditOrganisationModalProps>>({
     edit: {
       open: false,
     },
     delete: {
+      open: false
+    },
+    categories:{
       open: false
     }
   })
@@ -79,6 +82,9 @@ export default function ProjectOrganisations() {
         },
         delete: {
           open:false
+        },
+        categories:{
+          open: false
         }
       })
     } else if (item.source === 'RSD' && addOrganisation.id) {
@@ -94,6 +100,20 @@ export default function ProjectOrganisations() {
         // update status received in message
         addOrganisation.status = resp.message
         addOrganisationToList(addOrganisation)
+        // show categories modal
+        setModal({
+          edit: {
+            open: false,
+          },
+          delete: {
+            open:false
+          },
+          categories:{
+            open: true,
+            organisation: addOrganisation,
+            autoConfirm: true
+          }
+        })
       } else {
         showErrorMessage(resp.message)
       }
@@ -116,6 +136,9 @@ export default function ProjectOrganisations() {
       },
       delete: {
         open:false
+      },
+      categories:{
+        open: false
       }
     })
   }
@@ -131,6 +154,9 @@ export default function ProjectOrganisations() {
         },
         delete: {
           open:false
+        },
+        categories:{
+          open: false
         }
       })
     }
@@ -148,6 +174,9 @@ export default function ProjectOrganisations() {
           open: true,
           pos,
           displayName
+        },
+        categories:{
+          open: false
         }
       })
     }
@@ -241,6 +270,9 @@ export default function ProjectOrganisations() {
       },
       delete: {
         open:false
+      },
+      categories:{
+        open: false
       }
     })
   }
@@ -293,6 +325,26 @@ export default function ProjectOrganisations() {
     }
   }
 
+  function onCategoryEdit(pos:number){
+    const organisation = organisations[pos]
+    if (organisation){
+      setModal({
+        edit: {
+          open:false
+        },
+        delete: {
+          open:false
+        },
+        categories:{
+          open:true,
+          organisation,
+          // editing categories
+          autoConfirm: false
+        }
+      })
+    }
+  }
+
   if (loading) {
     return (
       <ContentLoader />
@@ -312,6 +364,7 @@ export default function ProjectOrganisations() {
             onEdit={onEdit}
             onDelete={onDelete}
             onSorted={sortedOrganisations}
+            onCategory={onCategoryEdit}
           />
         </section>
         <section className="py-4">
@@ -344,6 +397,16 @@ export default function ProjectOrganisations() {
           onCancel={closeModals}
           onDelete={()=>deleteOrganisation(modal.delete.pos)}
         />
+      }
+      {modal.categories.open && modal.categories.organisation ?
+        <OrganisationProjectCategoriesDialog
+          projectId={project.id}
+          organisation={modal.categories.organisation}
+          onCancel={closeModals}
+          onComplete={closeModals}
+          autoConfirm={modal.categories.autoConfirm ?? false}
+        />
+        : null
       }
     </>
   )

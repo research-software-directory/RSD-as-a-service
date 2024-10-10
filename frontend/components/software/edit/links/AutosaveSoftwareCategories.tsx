@@ -7,7 +7,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {Fragment, useMemo, useState} from 'react'
-import {CategoryEntry, CategoryID} from '~/types/Category'
+import {CategoryEntry} from '~/types/Category'
 import {categoryTreeNodesSort, ReorderedCategories} from '~/utils/categories'
 import TreeSelect from '~/components/software/TreeSelect'
 import {TreeNode} from '~/types/TreeNode'
@@ -20,12 +20,12 @@ import EditSectionTitle from '~/components/layout/EditSectionTitle'
 export type SoftwareCategoriesProps = {
   softwareId: string
   reorderedCategories: ReorderedCategories
-  associatedCategoryIds: Set<CategoryID>
+  associatedCategoryIds: Set<string>
 }
 
 export default function AutosaveSoftwareCategories({softwareId, reorderedCategories, associatedCategoryIds}: Readonly<SoftwareCategoriesProps>) {
   // trick to force rerender
-  const [_, setAssociatedCategories] = useState<Set<CategoryID>>(associatedCategoryIds)
+  const [_, setAssociatedCategories] = useState<Set<string>>(associatedCategoryIds)
   const {token} = useSession()
   const selectedNodes: TreeNode<CategoryEntry>[] = []
   for (const root of reorderedCategories.all) {
@@ -40,9 +40,15 @@ export default function AutosaveSoftwareCategories({softwareId, reorderedCategor
     const generalCategories = new TreeNode<CategoryEntry>(
       {
         id: 'general',
+        parent: null,
+        community: null,
+        organisation: null,
         name: config.categories.title,
+        allow_software: false,
+        allow_projects: false,
+        short_name: '',
         properties: {subtitle: config.categories.subtitle},
-        community: null, parent: null, provenance_iri: null, short_name: '',
+        provenance_iri: null
       }
     )
     for (const generalRoot of reorderedCategories.general) {
@@ -64,7 +70,7 @@ export default function AutosaveSoftwareCategories({softwareId, reorderedCategor
     return result
   }, [reorderedCategories])
 
-  function deleteCategoryId(categoryId: CategoryID): void {
+  function deleteCategoryId(categoryId: string): void {
     deleteCategoryToSoftware(softwareId, categoryId, token)
     associatedCategoryIds.delete(categoryId)
     setAssociatedCategories(new Set(associatedCategoryIds))

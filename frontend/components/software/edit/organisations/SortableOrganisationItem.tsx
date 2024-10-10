@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,9 +22,10 @@ type OrganisationsListItemProps = {
   pos: number
   onEdit: (pos:number)=>void
   onDelete: (pos:number)=>void
+  onCategory: (pos:number)=>void
 }
 
-export default function SortableOrganisationsItem({organisation, pos, onEdit, onDelete}: OrganisationsListItemProps) {
+export default function SortableOrganisationsItem({organisation, pos, onEdit, onDelete, onCategory}: OrganisationsListItemProps) {
   const {
     attributes,listeners,setNodeRef,
     transform,transition,isDragging
@@ -52,6 +55,7 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
           listeners={listeners}
           onEdit={onEdit}
           onDelete={onDelete}
+          onCategory={onCategory}
         />
       )
     }
@@ -59,8 +63,8 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
       <SortableListItemActions
         pos={pos}
         listeners={listeners}
-        // onEdit={onEdit}
         onDelete={onDelete}
+        onCategory={onCategory}
       />
     )
   }
@@ -83,7 +87,7 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
       sx={{
         // position:'relative',
         // this makes space for buttons
-        paddingRight:'7.5rem',
+        paddingRight:'10rem',
         '&:hover': {
           backgroundColor:'grey.100'
         },
