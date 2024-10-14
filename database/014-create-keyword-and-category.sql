@@ -258,3 +258,34 @@ CREATE TABLE category_for_project (
 );
 
 CREATE INDEX category_for_project_category_id_idx ON category_for_project(category_id);
+
+-- RPC for project page to show all project categories
+CREATE FUNCTION category_paths_by_project_expanded(project_id UUID)
+RETURNS JSON
+LANGUAGE SQL STABLE AS
+$$
+	WITH
+		cat_ids AS
+		(SELECT
+			category_id
+		FROM
+			category_for_project
+		WHERE
+			category_for_project.project_id = category_paths_by_project_expanded.project_id
+		),
+		paths AS
+		(
+			SELECT
+				category_path_expanded(category_id) AS path
+			FROM cat_ids
+		)
+	SELECT
+		CASE
+			WHEN EXISTS(
+				SELECT 1 FROM cat_ids
+			) THEN (
+				SELECT json_agg(path) FROM paths
+			)
+			ELSE '[]'::json
+		END AS result
+$$;

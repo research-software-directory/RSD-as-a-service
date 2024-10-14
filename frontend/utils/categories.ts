@@ -23,8 +23,9 @@ export const categoryTreeNodesSort = (trees: TreeNode<CategoryEntry>[]) => {
 }
 
 
-export const genCategoryTreeNodes = (categories: CategoryPath[]) : TreeNode<CategoryEntry>[] => {
+export const genCategoryTreeNodes = (categories: CategoryPath[]=[]) : TreeNode<CategoryEntry>[] => {
   const allEntries: CategoryEntry[] = []
+
   for (const path of categories) {
     for (const entry of path) {
       allEntries.push(entry)

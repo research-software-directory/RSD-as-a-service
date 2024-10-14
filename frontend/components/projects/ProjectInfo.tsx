@@ -1,12 +1,13 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {ProjectOrganisationProps} from '~/types/Organisation'
 import {KeywordForProject, ProjectLink, ResearchDomain} from '~/types/Project'
+import {CategoryPath} from '~/types/Category'
 import ProjectDescription from './ProjectDescription'
 import ProjectSidebar from './ProjectSidebar'
 
@@ -22,13 +23,18 @@ type ProjectInfoProps = {
   researchDomains: ResearchDomain[],
   keywords: KeywordForProject[],
   fundingOrganisations: ProjectOrganisationProps[],
+  categories: CategoryPath[]
 }
 
 
-export default function ProjectInfo(
-  {image_id, image_caption, image_contain, description, date_start, date_end,
-    grant_id, links, researchDomains, keywords, fundingOrganisations}: ProjectInfoProps
-) {
+export default function ProjectInfo({
+  image_id, image_caption,
+  image_contain, description,
+  date_start, date_end,
+  grant_id, links, researchDomains,
+  keywords, fundingOrganisations,
+  categories
+}: ProjectInfoProps) {
   return (
     <section className="px-4 sm:pb-8 sm:grid sm:gap-8 lg:grid-cols-[3fr,1fr] lg:gap-16">
       <ProjectDescription
@@ -45,6 +51,7 @@ export default function ProjectInfo(
         keywords={keywords}
         links={links}
         fundingOrganisations={fundingOrganisations}
+        categories={categories}
       />
     </section>
   )
