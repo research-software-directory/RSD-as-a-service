@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -12,8 +13,8 @@ import {addOrGetMentionItem} from '~/utils/editMentions'
 
 export async function findPublicationByTitle({id, searchFor, token}:
   { id: string, searchFor: string, token: string }) {
-  const query = `id=${id}&search=${encodeURIComponent(searchFor)}`
-  const url = `/api/fe/mention/impact?${query}`
+  const query = `id=${id}&search=${encodeURIComponent(searchFor)}&relation_type=impact`
+  const url = `/api/fe/mention/find_by_title?${query}`
   try {
     const resp = await fetch(url, {
       method: 'GET',

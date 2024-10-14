@@ -95,7 +95,7 @@ Here you can add output that was produced by the project itself, such as papers,
 
 #### Add output
 
-To add an item, the search bar on the left can be used to search the RSD, [Crossref](https://crossref.org), and [DataCite](https://datacite.org) databases using the **Title** or **DOI** of the research output. An item can be added by selecting it from the list of the search results. The RSD will automatically classify the item based on the available metadata.
+To add an item, the search bar on the left can be used to search the RSD, [Crossref](https://www.crossref.org), [DataCite](https://datacite.org) and [OpenAlex](https://openalex.org/) databases using the **Title**, **DOI** or **OpenAlex ID** of the research output. An item can be added by selecting it from the list of the search results. The RSD will automatically classify the item based on the available metadata.
 
 #### Import output
 
@@ -124,7 +124,7 @@ Here you can add mentions of your project that cannot be found automatically by 
 
 #### Search publication
 
-To add an item, the search bar on the left can be used to search the RSD, [Crossref](https://crossref.org), and [DataCite](https://datacite.org) databases using the **Title** or **DOI** of the research output. An item can be added by selecting it from the list of search results. The RSD will automatically classify the item based on the available metadata.
+To add an item, the search bar on the left can be used to search the RSD, [Crossref](https://www.crossref.org), [DataCite](https://datacite.org) and [OpenAlex](https://openalex.org/) databases using the **Title**, **DOI** or **OpenAlex ID** of the research impact item. An item can be added by selecting it from the list of search results. The RSD will automatically classify the item based on the available metadata.
 
 #### Import publication
 

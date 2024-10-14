@@ -65,7 +65,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
   const formData = watch()
   // need to clear image_url error manually after the type change
   // and dynamic rules change from required to not required
-  if (formData.mention_type!=='highlight' && errors?.hasOwnProperty('image_url')){
+  if (formData.mention_type !== 'highlight' && errors?.hasOwnProperty('image_url')) {
     clearErrors('image_url')
   }
 
@@ -130,23 +130,6 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             width: ['100%'],
             padding: '1rem 1.5rem'
           }}>
-          {isAdmin &&
-        <>
-          <ControlledTextField
-            control={control}
-            options={{
-              name: 'doi',
-              label: config.doi.label,
-              useNull: true,
-              defaultValue: formData?.doi,
-              helperTextMessage: config.doi.help,
-              helperTextCnt: `${formData?.doi?.length || 0}/${config.doi.validation.maxLength.value}`,
-            }}
-            rules={config.doi.validation}
-          />
-          <div className="py-2"></div>
-        </>
-          }
           <ControlledTextField
             control={control}
             options={{
@@ -286,26 +269,39 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             rules={config.note.validation}
           />
           {isAdmin &&
-        <>
-          <div className="py-2"></div>
-          <ControlledTextField
-            control={control}
-            options={{
-              name: 'openalex_id',
-              label: config.openalex_id.label,
-              useNull: true,
-              defaultValue: formData?.openalex_id,
-              helperTextMessage: config.openalex_id.help,
-            }}
-            rules={config.openalex_id.validation}
-          />
-          <div className="py-2"></div>
-        </>
+            <>
+              <div className="py-2"></div>
+              <ControlledTextField
+                control={control}
+                options={{
+                  name: 'doi',
+                  label: config.doi.label,
+                  useNull: true,
+                  defaultValue: formData?.doi,
+                  helperTextMessage: config.doi.help,
+                  helperTextCnt: `${formData?.doi?.length || 0}/${config.doi.validation.maxLength.value}`,
+                }}
+                rules={config.doi.validation}
+              />
+              <div className="py-2"></div>
+              <ControlledTextField
+                control={control}
+                options={{
+                  name: 'openalex_id',
+                  label: config.openalex_id.label,
+                  useNull: true,
+                  defaultValue: formData?.openalex_id,
+                  helperTextMessage: config.openalex_id.help,
+                }}
+                rules={config.openalex_id.validation}
+              />
+              <div className="py-2"></div>
+            </>
           }
           {!isAdmin &&
-        <Alert severity="warning" sx={{marginTop: '1rem'}}>
-          The information can not be edited after creation.
-        </Alert>}
+            <Alert severity="warning" sx={{marginTop: '1rem'}}>
+              The information can not be edited after creation.
+            </Alert>}
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',

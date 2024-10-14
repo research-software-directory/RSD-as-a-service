@@ -59,7 +59,7 @@ public class PostgrestMentionRepository {
 	}
 
 	public Collection<RsdMentionIds> leastRecentlyScrapedMentions(int limit) {
-		String data = Utils.getAsAdmin(backendUrl + "/mention?doi=not.is.null&order=scraped_at.asc.nullsfirst&select=id,doi,openalex_id&limit=" + limit);
+		String data = Utils.getAsAdmin(backendUrl + "/mention?or=(doi.not.is.null,openalex_id.not.is.null)&order=scraped_at.asc.nullsfirst&select=id,doi,openalex_id&limit=" + limit);
 		return parseMultipleRsdIds(data);
 	}
 

@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
@@ -8,13 +8,14 @@
 
 import {useAuth} from '~/auth'
 import {MentionItemProps} from '~/types/Mention'
-import {getMentionByDoiFromRsd} from '~/utils/editMentions'
+import {getMentionByDoiFromRsd, getMentionByOpenalexIdFromRsd} from '~/utils/editMentions'
 import {getMentionByDoi} from '~/utils/getDOI'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import FindMention from '~/components/mention/FindMention'
 import FindMentionInfoPanel from '~/components/mention/FindMentionInfoPanel'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
 import {extractSearchTerm} from '~/components/software/edit/mentions/utils'
+import {getMentionByOpenalexId} from '~/utils/getOpenalex'
 
 type FindProjectMentionProps={
   id:string,
@@ -39,35 +40,57 @@ export default function FindMentionSection({id,config,findPublicationByTitle}:Fi
   const {session: {token}} = useAuth()
   const {onAdd} = useEditMentionReducer()
 
-  async function findPublication(searchFor: string) {
+  async function findPublication(searchFor: string): Promise<MentionItemProps[]> {
     const searchData = extractSearchTerm(searchFor)
-    if (searchData.type === 'doi') {
-      searchFor = searchData.term
-      // look first at RSD
-      const rsd = await getMentionByDoiFromRsd({
-        doi: searchFor,
-        token
-      })
-      if (rsd?.status === 200 && rsd.message?.length === 1) {
-        // return first found item in RSD
-        const item:MentionItemProps = rsd.message[0]
-        return [item]
+    switch (searchData.type) {
+      case 'doi': {
+        searchFor = searchData.term
+        // look first at RSD
+        const rsd = await getMentionByDoiFromRsd({
+          doi: searchFor,
+          token
+        })
+        if (rsd?.status === 200 && rsd.message?.length === 1) {
+          // return first found item in RSD
+          const item: MentionItemProps = rsd.message[0]
+          return [item]
+        }
+        // else find by DOI
+        const resp = await getMentionByDoi(searchFor)
+        if (resp?.status === 200) {
+          return [resp.message as MentionItemProps]
+        }
+        return []
       }
-      // else find by DOI
-      const resp = await getMentionByDoi(searchFor)
-      if (resp?.status === 200) {
-        return [resp.message as MentionItemProps]
+      case 'openalex': {
+        searchFor = searchData.term
+        // look first at RSD
+        const rsd = await getMentionByOpenalexIdFromRsd({
+          id: searchFor,
+          token
+        })
+        if (rsd?.status === 200 && rsd.message?.length === 1) {
+          // return first found item in RSD
+          const item: MentionItemProps = rsd.message[0]
+          return [item]
+        }
+        // else find by DOI
+        const resp = await getMentionByOpenalexId(searchFor)
+        if (resp?.status === 200) {
+          return [resp.message as MentionItemProps]
+        }
+        return []
       }
-      return []
-    } else{
-      searchFor = searchData.term
-      // find by title
-      const mentions = await findPublicationByTitle({
-        id: id,
-        searchFor,
-        token
-      })
-      return mentions
+      case 'title': {
+        searchFor = searchData.term
+        // find by title
+        const mentions = await findPublicationByTitle({
+          id: id,
+          searchFor,
+          token
+        })
+        return mentions
+      }
     }
   }
 

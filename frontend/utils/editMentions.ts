@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
@@ -65,7 +65,35 @@ export async function getMentionByDoiFromRsd({doi,token}:{doi: string, token: st
     }
     return extractReturnMessage(resp)
   } catch (e:any) {
-    logger(`getDoiFromRsd: ${e?.message}`, 'error')
+    logger(`getMentionByDoiFromRsd: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+
+export async function getMentionByOpenalexIdFromRsd({id,token}:{id: string, token: string}) {
+  try {
+    // we need to encode the OpenAlex ID because it is a full URL
+    const url = `/api/v1/mention?select=${mentionColumns}&openalex_id=eq.${encodeURIComponent(id)}`
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token)
+      },
+    })
+    if (resp.status === 200) {
+      const json = await resp.json()
+      return {
+        status: 200,
+        message: json
+      }
+    }
+    return extractReturnMessage(resp)
+  } catch (e:any) {
+    logger(`getMentionByOpenalexIdFromRsd: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message
@@ -264,7 +292,7 @@ export async function updateMentionItem({mention, token}:
       body: JSON.stringify(mention)
     })
 
-    if ([200,204].includes(resp.status)===true) {
+    if ([200,204].includes(resp.status)) {
       // return item in message
       return {
         status: 200,

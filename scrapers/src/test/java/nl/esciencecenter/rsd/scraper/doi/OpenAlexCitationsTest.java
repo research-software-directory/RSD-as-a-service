@@ -22,7 +22,7 @@ public class OpenAlexCitationsTest {
 		location.addProperty("landing_page_url", "https://www.example.com/path\\with\\slash");
 		array.add(location);
 
-		URI result = OpenAlexCitations.extractUrlFromLocation(array);
+		URI result = OpenAlexConnector.extractUrlFromLocation(array);
 
 		Assertions.assertNotNull(result);
 		Assertions.assertEquals("https://www.example.com/path%5Cwith%5Cslash", result.toString());
