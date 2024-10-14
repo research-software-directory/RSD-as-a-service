@@ -1,12 +1,14 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createJsonHeaders, getBaseUrl} from '../../utils/fetchHelpers'
-import logger from '../../utils/logger'
+import {OrganisationsOfProject} from '~/types/Project'
+import {EditOrganisation, OrganisationsForSoftware} from '~/types/Organisation'
+import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
+import logger from '~/utils/logger'
 import {RsdRole} from '../index'
 
 type IsOrganisationMaintainerProps = {
@@ -92,5 +94,65 @@ export async function getMaintainerOrganisations({token}:
   }
 }
 
+type CanEditOrganisationsProps={
+  account?: string
+  token?: string
+  organisations: OrganisationsOfProject[]| OrganisationsForSoftware[]
+}
+
+export async function canEditOrganisations({organisations,account,token}:CanEditOrganisationsProps){
+  try{
+    // collect isMaintainerRequests
+    const promises:Promise<boolean>[] = []
+    // prepare organisation list
+    const orgList = organisations.map((item, pos) => {
+      // save isMaintainer request
+      promises.push(isMaintainerOfOrganisation({
+        organisation: item.id,
+        account,
+        token
+      }))
+      // extract only needed props
+      const org: EditOrganisation = {
+        ...item,
+        // additional props for edit type
+        position: pos + 1,
+        logo_b64: null,
+        logo_mime_type: null,
+        source: 'RSD' as 'RSD',
+        status: item.status,
+        // false by default
+        canEdit: false
+      }
+      return org
+    })
+    // run all isMaintainer requests in parallel
+    const isMaintainer = await Promise.all(promises)
+    const canEditOrganisations = orgList.map((item, pos) => {
+      // update canEdit based on isMaintainer requests
+      if (isMaintainer[pos]) item.canEdit = isMaintainer[pos]
+      return item
+    })
+    return canEditOrganisations
+  }catch(e:any){
+    logger(`canEditOrganisations: ${e.message}`, 'error')
+    // on error all items set to false
+    return organisations.map((item, pos) => {
+      // extract only needed props
+      const org: EditOrganisation = {
+        ...item,
+        // additional props for edit type
+        position: pos + 1,
+        logo_b64: null,
+        logo_mime_type: null,
+        source: 'RSD' as 'RSD',
+        status: item.status,
+        // false by default
+        canEdit: false
+      }
+      return org
+    })
+  }
+}
 
 export default isMaintainerOfOrganisation

@@ -33,7 +33,7 @@ import EditOrganisationModal from '~/components/software/edit/organisations/Edit
 import useProjectContext from '../useProjectContext'
 import useParticipatingOrganisations from './useParticipatingOrganisations'
 import {cfgOrganisations as config} from './config'
-import OrganisationProjectCategoriesDialog from './OrganisationProjectCategoriesDialog'
+import ProjectCategoriesDialog from './ProjectCategoriesDialog'
 
 export default function ProjectOrganisations() {
   const {token,user} = useSession()
@@ -111,7 +111,7 @@ export default function ProjectOrganisations() {
           categories:{
             open: true,
             organisation: addOrganisation,
-            autoConfirm: true
+            edit: false
           }
         })
       } else {
@@ -339,7 +339,7 @@ export default function ProjectOrganisations() {
           open:true,
           organisation,
           // editing categories
-          autoConfirm: false
+          edit: true
         }
       })
     }
@@ -399,12 +399,12 @@ export default function ProjectOrganisations() {
         />
       }
       {modal.categories.open && modal.categories.organisation ?
-        <OrganisationProjectCategoriesDialog
+        <ProjectCategoriesDialog
           projectId={project.id}
           organisation={modal.categories.organisation}
+          edit={modal.categories.edit ?? false}
           onCancel={closeModals}
           onComplete={closeModals}
-          autoConfirm={modal.categories.autoConfirm ?? false}
         />
         : null
       }

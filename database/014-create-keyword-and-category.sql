@@ -106,7 +106,7 @@ CREATE TABLE category (
 
 CREATE INDEX category_parent_idx ON category(parent);
 CREATE INDEX category_community_idx ON category(community);
-
+CREATE INDEX category_organisation_idx ON category(organisation);
 
 -- sanitize categories
 

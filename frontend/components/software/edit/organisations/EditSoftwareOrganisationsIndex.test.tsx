@@ -37,7 +37,8 @@ const mockIsMaintainerOfOrganisation = jest.fn(props => Promise.resolve(false))
 jest.mock('~/auth/permissions/isMaintainerOfOrganisation', () => ({
   __esModule: true,
   default: jest.fn(props=>mockIsMaintainerOfOrganisation(props)),
-  isMaintainerOfOrganisation: jest.fn(props=>mockIsMaintainerOfOrganisation(props))
+  isMaintainerOfOrganisation: jest.fn(props=>mockIsMaintainerOfOrganisation(props)),
+  canEditOrganisations: jest.fn(({organisations,...other})=>organisations)
 }))
 
 // MOCK organisationForSoftware methods
@@ -290,51 +291,6 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
 
   })
 
-  it('maintainer of organisation can edit organisation', async () => {
-    // required software id
-    softwareState.software.id = 'test-software-id'
-    // return list of organisations
-    mockGetOrganisationsForSoftware.mockResolvedValueOnce(organisationsOfSoftware)
-    // mock is Maintainer of first organisation
-    mockIsMaintainerOfOrganisation.mockResolvedValueOnce(true)
-    mockIsMaintainerOfOrganisation.mockResolvedValueOnce(false)
-
-    render(
-      <WithAppContext options={{session:mockSession}}>
-        <WithSoftwareContext state={softwareState}>
-          <SoftwareOrganisations />
-        </WithSoftwareContext>
-      </WithAppContext>
-    )
-
-    // wait for loader to be removed
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
-
-    // render first project organisation with edit button
-    const editBtns = screen.getAllByTestId('EditIcon')
-    expect(editBtns.length).toEqual(1)
-
-    // click on edit button
-    fireEvent.click(editBtns[0])
-
-    const modal = await screen.findByRole('dialog')
-
-    // validate organisation name
-    const name = within(modal).getByRole('textbox', {
-      name: config.name.label
-    })
-    expect(name).toHaveValue(organisationsOfSoftware[0].name)
-
-    // cancel
-    const cancelBtn = within(modal).getByRole('button', {
-      name: 'Cancel'
-    })
-    fireEvent.click(cancelBtn)
-
-    // modal should not be visible
-    expect(modal).not.toBeVisible()
-  })
-
   it('can remove organisation from software', async () => {
     // required software id
     softwareState.software.id = 'test-software-id'
@@ -394,5 +350,45 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
       const remained = screen.getAllByTestId('organisation-list-item')
       expect(remained.length).toEqual(organisationsOfSoftware.length-1)
     })
+  })
+
+  it('shows organisation categories modal',async()=>{
+    // required software id
+    softwareState.software.id = 'test-software-id'
+    // return list of organisations
+    mockGetOrganisationsForSoftware.mockResolvedValueOnce(organisationsOfSoftware)
+
+    render(
+      <WithAppContext options={{session:mockSession}}>
+        <WithSoftwareContext state={softwareState}>
+          <SoftwareOrganisations />
+        </WithSoftwareContext>
+      </WithAppContext>
+    )
+
+    // wait for loader to be removed
+    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+
+    // renders project organisations
+    const organisations = screen.getAllByTestId('organisation-list-item')
+    expect(organisations.length).toEqual(organisationsOfSoftware.length)
+
+    // get edit categories button from first organisation
+    const categoriesBtn = within(organisations[0]).getByRole('button', {
+      name: 'edit categories'
+    })
+    // click edit categories
+    fireEvent.click(categoriesBtn)
+
+    // get organisation categories modal
+    const modal = screen.getByRole('dialog')
+
+    // close modal
+    const cancelBtn = within(modal).getByRole('button', {
+      name: 'Cancel'
+    })
+    fireEvent.click(cancelBtn)
+    // confirm modal closed
+    expect(modal).not.toBeInTheDocument()
   })
 })

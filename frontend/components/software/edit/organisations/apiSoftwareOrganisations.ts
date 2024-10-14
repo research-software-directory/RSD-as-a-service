@@ -4,9 +4,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {getOrganisationsForSoftware} from '~/utils/editOrganisation'
-import isMaintainerOfOrganisation from '~/auth/permissions/isMaintainerOfOrganisation'
-import {EditOrganisation} from '~/types/Organisation'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
+import {canEditOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
 
 export type UseParticipatingOrganisationsProps = {
   software: string,
@@ -19,38 +18,13 @@ export async function getParticipatingOrganisationsForSoftware({software, token,
     software,
     token
   })
-  // collect isMaintainerRequests
-  const promises: Promise<boolean>[] = []
-  // prepare organisation list
-  const orgList = resp.map((item, pos) => {
-    // save isMaintainer request
-    promises.push(isMaintainerOfOrganisation({
-      organisation: item.id,
-      account,
-      token
-    }))
-    // extract only needed props
-    const organisation: EditOrganisation = {
-      ...item,
-      // additional props for edit type
-      position: pos + 1,
-      logo_b64: null,
-      logo_mime_type: null,
-      source: 'RSD' as 'RSD',
-      status: item.status,
-      // false by default
-      canEdit: false,
-      // description: null
-    }
-    return organisation
+  // convert to EditOrganisation type and add canEdit flag
+  const organisations = await canEditOrganisations({
+    organisations: resp,
+    account,
+    token
   })
-  // run all isMaintainer requests in parallel
-  const isMaintainer = await Promise.all(promises)
-  const organisations = orgList.map((item, pos) => {
-    // update canEdit based on isMaintainer requests
-    if (isMaintainer[pos]) item.canEdit = isMaintainer[pos]
-    return item
-  })
+  // debugger
   return organisations
 }
 

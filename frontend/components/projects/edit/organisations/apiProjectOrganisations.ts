@@ -38,11 +38,11 @@ export async function getCategoryListForProject(project_id: string, token?: stri
       const categories:Set<string> = new Set(data.map((entry: any) => entry.category_id))
       return categories
     } else {
-      logger(`getCategoriesForSoftwareIds: ${resp.status} [${url}]`, 'error')
-      throw new Error('Couldn\'t load the categories for this software')
+      logger(`getCategoryListForProject: ${resp.status} [${url}]`, 'error')
+      throw new Error('Couldn\'t load the categories for this project')
     }
   } catch (e: any) {
-    logger(`getCategoriesForSoftwareIds: ${e?.message}`, 'error')
+    logger(`getCategoryListForProject: ${e?.message}`, 'error')
     throw e
   }
 }

@@ -39,7 +39,7 @@ import {
   addOrganisationToSoftware, createOrganisationAndAddToSoftware,
   deleteOrganisationFromSoftware, patchOrganisationPositions
 } from './organisationForSoftware'
-import OrganisationSoftwareCategoriesDialog from './OrganisationSoftwareCategoriesDialog'
+import SoftwareCategoriesDialog from './SoftwareCategoriesDialog'
 
 export type OrganisationModalStates<T> = ModalStates<T> & {
   categories: T
@@ -47,9 +47,8 @@ export type OrganisationModalStates<T> = ModalStates<T> & {
 
 export type EditOrganisationModalProps = ModalProps & {
   organisation?: EditOrganisation
-  // categories modal flag
-  // true ->
-  autoConfirm?: boolean
+  // edit categories flag
+  edit?: boolean
 }
 
 export default function SoftwareOrganisations() {
@@ -107,7 +106,9 @@ export default function SoftwareOrganisations() {
         delete: {
           open:false
         },
-        categories:{open:false}
+        categories:{
+          open:false
+        }
       })
     } else if (item.source === 'RSD') {
       // we add organisation directly
@@ -132,7 +133,7 @@ export default function SoftwareOrganisations() {
           categories:{
             open: true,
             organisation: addOrganisation,
-            autoConfirm: true
+            edit: false
           }
         })
       } else {
@@ -158,7 +159,9 @@ export default function SoftwareOrganisations() {
       delete: {
         open:false
       },
-      categories:{open:false}
+      categories:{
+        open:false
+      }
     })
   }
 
@@ -174,7 +177,9 @@ export default function SoftwareOrganisations() {
         delete: {
           open:false
         },
-        categories:{open:false}
+        categories:{
+          open:false
+        }
       })
     }
   }
@@ -192,7 +197,9 @@ export default function SoftwareOrganisations() {
           pos,
           displayName
         },
-        categories:{open:false}
+        categories:{
+          open:false
+        }
       })
     }
   }
@@ -357,7 +364,7 @@ export default function SoftwareOrganisations() {
           open:true,
           organisation,
           // editing categories
-          autoConfirm: false
+          edit: true
         }
       })
     }
@@ -411,12 +418,12 @@ export default function SoftwareOrganisations() {
         />
       }
       {modal.categories.open===true && modal.categories.organisation ?
-        <OrganisationSoftwareCategoriesDialog
+        <SoftwareCategoriesDialog
           softwareId={software.id}
           organisation={modal.categories.organisation}
+          edit={modal.categories.edit ?? false}
           onCancel={closeModals}
           onComplete={closeModals}
-          autoConfirm={modal.categories.autoConfirm ?? false}
         />
         : null
       }

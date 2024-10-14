@@ -28,7 +28,7 @@ export default function SortableListItemActions({pos,listeners,onEdit,onDelete,o
         <IconButton
           title="Edit categories"
           edge="end"
-          aria-label="edit"
+          aria-label="edit categories"
           sx={{marginRight: '1rem'}}
           onClick={() => {
             // alert(`Edit...${item.id}`)

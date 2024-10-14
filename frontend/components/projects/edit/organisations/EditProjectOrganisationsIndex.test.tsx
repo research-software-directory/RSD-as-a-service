@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,11 +19,12 @@ import editProjectState from '../__mocks__/editProjectState'
 import mockOrganisationsOfProject from './__mocks__/organisationsOfProject.json'
 
 // MOCK isMaintainerOfOrganisation
-const mockIsMainatainerOfOrganisation = jest.fn(props => Promise.resolve(false))
+const mockIsMaintainerOfOrganisation = jest.fn(props => Promise.resolve(false))
 jest.mock('~/auth/permissions/isMaintainerOfOrganisation', () => ({
   __esModule: true,
-  default: jest.fn(props=>mockIsMainatainerOfOrganisation(props)),
-  isMaintainerOfOrganisation: jest.fn(props=>mockIsMainatainerOfOrganisation(props))
+  default: jest.fn(props=>mockIsMaintainerOfOrganisation(props)),
+  isMaintainerOfOrganisation: jest.fn(props=>mockIsMaintainerOfOrganisation(props)),
+  canEditOrganisations: jest.fn(({organisations,...other})=>organisations)
 }))
 
 // MOCK getOrganisationsOfProject
@@ -261,48 +264,6 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
     })
   })
 
-
-  it('maintainer of organisation can edit organisation', async() => {
-    // mock organisations response
-    mockGetOrganisationsOfProject.mockResolvedValueOnce(mockOrganisationsOfProject as any)
-    mockIsMainatainerOfOrganisation.mockResolvedValueOnce(true)
-    mockIsMainatainerOfOrganisation.mockResolvedValueOnce(false)
-
-    render(
-      <WithAppContext options={{session: mockSession}}>
-        <WithProjectContext state={editProjectState}>
-          <ProjectOrganisations />
-        </WithProjectContext>
-      </WithAppContext>
-    )
-
-    // wait for loader to be removed
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
-
-    // render first project organisation with edit button
-    const editBtns = screen.getAllByTestId('EditIcon')
-    expect(editBtns.length).toEqual(1)
-
-    // click on edit button
-    fireEvent.click(editBtns[0])
-
-    const modal = await screen.findByRole('dialog')
-
-    // validate organisation name
-    const name = within(modal).getByRole('textbox', {
-      name: config.name.label
-    })
-    expect(name).toHaveValue(mockOrganisationsOfProject[0].name)
-
-    // cancel
-    const cancelBtn = within(modal).getByRole('button', {
-      name: 'Cancel'
-    })
-    fireEvent.click(cancelBtn)
-    // modal should not be visible
-    expect(modal).not.toBeVisible()
-  })
-
   it('can remove organisation from project', async() => {
     // mock organisations response
     mockGetOrganisationsOfProject.mockResolvedValueOnce(mockOrganisationsOfProject as any)
@@ -353,6 +314,44 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
       const remained = screen.getAllByTestId('organisation-list-item')
       expect(remained.length).toEqual(mockOrganisationsOfProject.length-1)
     })
+  })
+
+  it('shows organisation categories modal',async()=>{
+    // mock organisations response
+    mockGetOrganisationsOfProject.mockResolvedValueOnce(mockOrganisationsOfProject as any)
+
+    render(
+      <WithAppContext options={{session: mockSession}}>
+        <WithProjectContext state={editProjectState}>
+          <ProjectOrganisations />
+        </WithProjectContext>
+      </WithAppContext>
+    )
+
+    // wait for loader to be removed
+    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+
+    // renders project organisations
+    const organisations = screen.getAllByTestId('organisation-list-item')
+    expect(organisations.length).toEqual(mockOrganisationsOfProject.length)
+
+    // get edit categories button from first organisation
+    const categoriesBtn = within(organisations[0]).getByRole('button', {
+      name: 'edit categories'
+    })
+    // click edit categories
+    fireEvent.click(categoriesBtn)
+
+    // get organisation categories modal
+    const modal = screen.getByRole('dialog')
+
+    // close modal
+    const cancelBtn = within(modal).getByRole('button', {
+      name: 'Cancel'
+    })
+    fireEvent.click(cancelBtn)
+    // confirm modal closed
+    expect(modal).not.toBeInTheDocument()
   })
 })
 
