@@ -215,7 +215,7 @@ public class DataciteMentionRepository {
 	}
 
 	public Collection<ExternalMentionRecord> mentionData(Collection<Doi> dois) {
-		if (dois.isEmpty()) {
+		if (dois == null || dois.isEmpty()) {
 			return Collections.emptyList();
 		}
 

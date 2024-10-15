@@ -11,8 +11,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
 
-public class OpenAlexCitationsTest {
+public class OpenAlexConnectorTest {
 
 	@Test
 	void givenLocationWithBackSlashes_whenExtractedAsLocation_thenSlashesUrlEncoded() {
@@ -26,5 +28,16 @@ public class OpenAlexCitationsTest {
 
 		Assertions.assertNotNull(result);
 		Assertions.assertEquals("https://www.example.com/path%5Cwith%5Cslash", result.toString());
+	}
+
+	@Test
+	void givenEmptyCollection_whenGettingData_thenEmptyCollectionReturned() {
+		OpenAlexConnector openAlexConnector = new OpenAlexConnector();
+
+		Collection<ExternalMentionRecord> doiMentions = Assertions.assertDoesNotThrow(() -> openAlexConnector.mentionDataByDois(Collections.emptyList(), null));
+		Assertions.assertTrue(doiMentions.isEmpty());
+
+		Collection<ExternalMentionRecord> openalexMentions = Assertions.assertDoesNotThrow(() -> openAlexConnector.mentionDataByOpenalexIds(Collections.emptyList(), null));
+		Assertions.assertTrue(openalexMentions.isEmpty());
 	}
 }

@@ -85,7 +85,8 @@ public class MainMentions {
 		try {
 			scrapedDataciteMentions = new DataciteMentionRepository().mentionData(dataciteDois);
 		} catch (RuntimeException e) {
-			Utils.saveExceptionInDatabase("DataCite mention scraper", "mention", null, e);
+			Exception exceptionToSave = new Exception("Failed scraping the following DataCite DOIs: " + dataciteDois, e);
+			Utils.saveExceptionInDatabase("DataCite mention scraper", "mention", null, exceptionToSave);
 		}
 		for (ExternalMentionRecord scrapedMention : scrapedDataciteMentions) {
 			Doi doi = scrapedMention.doi();
@@ -144,7 +145,8 @@ public class MainMentions {
 		try {
 			scrapedOpenalexMentions.addAll(openAlexConnector.mentionDataByDois(europeanPublicationsOfficeDois, email));
 		} catch (Exception e) {
-			Utils.saveExceptionInDatabase("OpenAlex mention scraper", "mention", null, e);
+			Exception exceptionToSave = new Exception("Failed scraping the following EPO DOIs: " + europeanPublicationsOfficeDois, e);
+			Utils.saveExceptionInDatabase("OpenAlex mention scraper", "mention", null, exceptionToSave);
 		}
 		Collection<OpenalexId> openalexIdsToScrape = mentionsToScrape
 				.stream()
@@ -154,7 +156,8 @@ public class MainMentions {
 		try {
 			scrapedOpenalexMentions.addAll(openAlexConnector.mentionDataByOpenalexIds(openalexIdsToScrape, email));
 		} catch (Exception e) {
-			Utils.saveExceptionInDatabase("OpenAlex mention scraper", "mention", null, e);
+			Exception exceptionToSave = new Exception("Failed scraping the following OpenAlex IDs: " + openalexIdsToScrape, e);
+			Utils.saveExceptionInDatabase("OpenAlex mention scraper", "mention", null, exceptionToSave);
 		}
 
 		for (ExternalMentionRecord scrapedMention : scrapedOpenalexMentions) {
