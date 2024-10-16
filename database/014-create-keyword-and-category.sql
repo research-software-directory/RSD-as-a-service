@@ -122,6 +122,9 @@ BEGIN
 	IF NEW.parent IS NOT NULL AND (SELECT community FROM category WHERE id = NEW.parent) IS DISTINCT FROM NEW.community THEN
 		RAISE EXCEPTION USING MESSAGE = 'The community must be the same as of its parent.';
 	END IF;
+	IF NEW.parent IS NOT NULL AND (SELECT organisation FROM category WHERE id = NEW.parent) IS DISTINCT FROM NEW.organisation THEN
+		RAISE EXCEPTION USING MESSAGE = 'The organisation must be the same as of its parent.';
+	END IF;
 	NEW.id = gen_random_uuid();
 	RETURN NEW;
 END
@@ -146,6 +149,12 @@ BEGIN
 	END IF;
 	IF NEW.parent IS NOT NULL AND (SELECT community FROM category WHERE id = NEW.parent) IS DISTINCT FROM NEW.community THEN
 		RAISE EXCEPTION USING MESSAGE = 'The community must be the same as of its parent.';
+	END IF;
+	IF NEW.organisation IS DISTINCT FROM OLD.organisation THEN
+		RAISE EXCEPTION USING MESSAGE = 'The organisation this category belongs to may not be changed.';
+	END IF;
+	IF NEW.parent IS NOT NULL AND (SELECT organisation FROM category WHERE id = NEW.parent) IS DISTINCT FROM NEW.organisation THEN
+		RAISE EXCEPTION USING MESSAGE = 'The organisation must be the same as of its parent.';
 	END IF;
 	RETURN NEW;
 END

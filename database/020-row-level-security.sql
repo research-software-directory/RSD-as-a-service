@@ -279,7 +279,6 @@ CREATE POLICY admin_all_rights ON testimonial TO rsd_admin
 
 
 -- categories
-
 ALTER TABLE category ENABLE ROW LEVEL SECURITY;
 
 -- allow everybody to read
@@ -290,7 +289,11 @@ CREATE POLICY anyone_can_read ON category
 
 CREATE POLICY maintainer_all_rights ON category
 	TO rsd_user
-	USING (community IN (SELECT * FROM communities_of_current_maintainer()));
+	USING (
+		(community IS NOT NULL AND community IN (SELECT * FROM communities_of_current_maintainer()))
+		OR
+		(organisation IS NOT NULL AND organisation IN (SELECT * FROM organisations_of_current_maintainer()))
+	);
 
 -- allow admins to have full read/write access
 CREATE POLICY admin_all_rights ON category
@@ -299,14 +302,13 @@ CREATE POLICY admin_all_rights ON category
 
 
 -- categories for software
-
 ALTER TABLE category_for_software ENABLE ROW LEVEL SECURITY;
 
 -- allow everybody to read metadata of published software
 CREATE POLICY anyone_can_read ON category_for_software
 	FOR SELECT
 	TO rsd_web_anon, rsd_user
-	USING (EXISTS(SELECT 1 FROM software WHERE id = software_id));
+	USING (software_id IN (SELECT id FROM software));
 
 -- allow software maintainers to have read/write access to their software
 CREATE POLICY maintainer_all_rights ON category_for_software
@@ -315,6 +317,26 @@ CREATE POLICY maintainer_all_rights ON category_for_software
 
 -- allow admins to have full read/write access
 CREATE POLICY admin_all_rights ON category_for_software
+	TO rsd_admin
+	USING (TRUE);
+
+
+-- categories for project
+ALTER TABLE category_for_project ENABLE ROW LEVEL SECURITY;
+
+-- allow everybody to read metadata of published projects
+CREATE POLICY anyone_can_read ON category_for_project
+	FOR SELECT
+	TO rsd_web_anon, rsd_user
+	USING (project_id IN (SELECT id FROM project));
+
+-- allow software maintainers to have read/write access to their project
+CREATE POLICY maintainer_all_rights ON category_for_project
+	TO rsd_user
+	USING (project_id IN (SELECT * FROM projects_of_current_maintainer()));
+
+-- allow admins to have full read/write access
+CREATE POLICY admin_all_rights ON category_for_project
 	TO rsd_admin
 	USING (TRUE);
 
