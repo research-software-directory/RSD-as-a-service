@@ -34,6 +34,10 @@ class OpenAlexConnector {
 	static final String OPENALEX_ID_URL_UNFORMATTED = "https://api.openalex.org/works?filter=ids.openalex:%s";
 
 	public Collection<ExternalMentionRecord> mentionDataByDois(Collection<Doi> dois, String email) throws IOException, InterruptedException {
+		if (dois == null || dois.isEmpty()) {
+			return Collections.emptyList();
+		}
+
 		String filter = dois
 				.stream()
 				.filter(Objects::nonNull)
@@ -50,14 +54,14 @@ class OpenAlexConnector {
 		}
 
 		JsonObject tree = JsonParser.parseString(response.body()).getAsJsonObject();
-		JsonArray citationsArray = tree
+		JsonArray mentionsArray = tree
 				.getAsJsonArray("results");
 
 		Collection<ExternalMentionRecord> mentions = new ArrayList<>();
-		for (JsonElement citation : citationsArray) {
+		for (JsonElement mention : mentionsArray) {
 			ExternalMentionRecord citationAsMention;
 			try {
-				citationAsMention = parseCitationAsMention(citation);
+				citationAsMention = parseAsMention(mention);
 			} catch (RuntimeException e) {
 				Utils.saveExceptionInDatabase("OpenAlex mention scraper", "mention", null, e);
 				continue;
@@ -69,6 +73,10 @@ class OpenAlexConnector {
 	}
 
 	public Collection<ExternalMentionRecord> mentionDataByOpenalexIds(Collection<OpenalexId> openalexIds, String email) throws IOException, InterruptedException {
+		if (openalexIds == null || openalexIds.isEmpty()) {
+			return Collections.emptyList();
+		}
+
 		String filter = openalexIds
 				.stream()
 				.filter(Objects::nonNull)
@@ -85,14 +93,14 @@ class OpenAlexConnector {
 		}
 
 		JsonObject tree = JsonParser.parseString(response.body()).getAsJsonObject();
-		JsonArray citationsArray = tree
+		JsonArray mentionsArray = tree
 				.getAsJsonArray("results");
 
 		Collection<ExternalMentionRecord> mentions = new ArrayList<>();
-		for (JsonElement citation : citationsArray) {
+		for (JsonElement mention : mentionsArray) {
 			ExternalMentionRecord citationAsMention;
 			try {
-				citationAsMention = parseCitationAsMention(citation);
+				citationAsMention = parseAsMention(mention);
 			} catch (RuntimeException e) {
 				Utils.saveExceptionInDatabase("OpenAlex mention scraper", "mention", null, e);
 				continue;
@@ -189,7 +197,7 @@ class OpenAlexConnector {
 			for (JsonElement citation : citationsArray) {
 				ExternalMentionRecord citationAsMention;
 				try {
-					citationAsMention = parseCitationAsMention(citation);
+					citationAsMention = parseAsMention(citation);
 				} catch (RuntimeException e) {
 					Utils.saveExceptionInDatabase("Citation scraper", "mention", id, e);
 					continue;
@@ -201,7 +209,7 @@ class OpenAlexConnector {
 		return citations;
 	}
 
-	static ExternalMentionRecord parseCitationAsMention(JsonElement element) {
+	static ExternalMentionRecord parseAsMention(JsonElement element) {
 		JsonObject citationObject = element.getAsJsonObject();
 
 		String doiUrl = Utils.stringOrNull(citationObject.get("doi"));
@@ -266,6 +274,10 @@ class OpenAlexConnector {
 	}
 
 	static URI extractUrlFromLocation(JsonArray locations) {
+		if (locations == null) {
+			return null;
+		}
+
 		for (JsonElement location : locations) {
 			JsonObject locationObject = location.getAsJsonObject();
 			String landingPageUrl = Utils.stringOrNull(locationObject.get("landing_page_url"));
