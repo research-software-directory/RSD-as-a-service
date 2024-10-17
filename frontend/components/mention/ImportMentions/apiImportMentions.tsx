@@ -68,15 +68,15 @@ export async function validateInputList(doiList: string[], mentions: MentionItem
           return false
       }
     })
-    // extract DOI string from serch info
+    // extract DOI string from search info
     .map(search => search.term.toLowerCase())
 
-  // if no valid doi's left return report
+  // if no valid DOIs left return report
   if (validDois.length === 0) {
     return mentionResultPerDoi
   }
 
-  // FIND DOI's already in RSD
+  // FIND DOIs already in RSD
   const existingMentionsResponse = await getMentionsByDoiFromRsd({dois: validDois, token})
   if (existingMentionsResponse.status === 200) {
     const existingMentions = existingMentionsResponse.message as MentionItemProps[]
@@ -91,7 +91,7 @@ export async function validateInputList(doiList: string[], mentions: MentionItem
   }
 
   // DOI NOT IN RSD
-  // valid dois not present in mentionResultPerDoi map at this point are not in RSD
+  // valid DOIs not present in mentionResultPerDoi map at this point are not in RSD
   const doisNotInDatabase: string[] = validDois.filter(entry => !mentionResultPerDoi.has(entry))
 
   if (doisNotInDatabase.length > 0) {
@@ -104,17 +104,15 @@ export async function validateInputList(doiList: string[], mentions: MentionItem
     const openalexDois: string[] = []
     doiRas.forEach(doiRa => {
       const doi = doiRa.DOI.toLowerCase()
-      if (typeof doiRa?.RA === 'undefined') {
+      if (doiRa?.RA === undefined || doiRa.RA === 'invalid doi' || doiRa.RA === 'doi does not exist' || doiRa.RA === 'unknown') {
         // Invalid DOI -> RA not found
         mentionResultPerDoi.set(doi, {doi, status: 'doiNotFound', include: false})
       } else if (doiRa.RA === 'Crossref') {
         crossrefDois.push(doi)
       } else if (doiRa.RA === 'DataCite') {
         dataciteDois.push(doi)
-      } else if (doiRa.RA === 'OP') {
-        openalexDois.push(doi)
       } else {
-        mentionResultPerDoi.set(doi, {doi, status: 'unsupportedRA', include: false})
+        openalexDois.push(doi)
       }
     })
 

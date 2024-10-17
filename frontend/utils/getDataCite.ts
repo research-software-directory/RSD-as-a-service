@@ -186,6 +186,7 @@ export function dataCiteGraphQLItemToMentionItem(item: WorkResponse) {
     mention_type: dataciteToRsdType(item),
     source: 'DataCite',
     note: null,
+    openalex_id: null
   }
   return mention
 }

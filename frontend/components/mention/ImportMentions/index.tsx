@@ -23,7 +23,7 @@ import {DoiBulkImportReport, addMentions, linkMentionToEntity} from './apiImport
 
 export type SearchResult = {
   doi: string
-  status: 'valid' | 'invalidDoi' | 'doiNotFound' |'unsupportedRA' | 'alreadyImported' | 'unknown',
+  status: 'valid' | 'invalidDoi' | 'doiNotFound' | 'alreadyImported' | 'unknown',
   include: boolean
   source?: 'RSD' | 'Crossref' | 'DataCite' | 'OpenAlex',
   mention?: MentionItemProps

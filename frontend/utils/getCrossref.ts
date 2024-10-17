@@ -75,7 +75,8 @@ export function crossrefItemToMentionItem(item: CrossrefSelectItem) {
     image_url: null,
     mention_type: crossrefToRsdType(item.type),
     source: 'Crossref',
-    note: null
+    note: null,
+    openalex_id: null
   }
   // debugger
   return mention
