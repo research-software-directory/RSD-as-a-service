@@ -36,7 +36,8 @@ export default function CategoryEditForm({
     mode: 'onChange'
   })
 
-  const [parent] = watch(['parent'])
+  // use id of current item as parentId of new (child) item
+  const parentId = createNew ? data?.id : data?.parent
 
   // console.group('CategoryEditForm')
   // console.log('createNew...',createNew)
@@ -44,18 +45,25 @@ export default function CategoryEditForm({
   // console.log('disableSave...',disableSave)
   // console.log('community...',community)
   // console.log('organisation...',organisation)
-  // console.log('parent...',parent)
+  // console.log('parentId...',parentId)
   // console.groupEnd()
-
 
   function onSubmit(formData: CategoryEntry){
     setDisableSave(true)
     // debugger
     if (createNew) {
-      createNewCategory(formData)
+      createNewCategory(prepareDataForSave(formData))
     } else {
-      updateCategory(formData)
+      updateCategory(prepareDataForSave(formData))
     }
+  }
+
+  function prepareDataForSave(formData: CategoryEntry){
+    // fix provenance_iri empty value
+    if (formData.provenance_iri===''){
+      formData.provenance_iri = null
+    }
+    return formData
   }
 
   async function createNewCategory(formData: CategoryEntry) {
@@ -127,11 +135,11 @@ export default function CategoryEditForm({
       {/* Different hidden values when creating new item.*/}
       {createNew ?
         // use id of current item as parent for new (child) item
-        <input type="hidden" {...register('parent', {value: data === null ? null : data.id})} />
+        <input type="hidden" {...register('parent', {value: parentId ?? null})} />
         :
         <>
-          <input type="hidden" {...register('id', {value: data === null ? undefined : data.id})} />
-          <input type="hidden" {...register('parent', {value: data === null ? null : data.parent})} />
+          <input type="hidden" {...register('id', {value: data?.id})} />
+          <input type="hidden" {...register('parent', {value: parentId ?? null})} />
         </>
       }
       <input type="hidden" {...register('community', {value: community})} />
@@ -174,8 +182,8 @@ export default function CategoryEditForm({
           label: 'Provenance identifier',
           defaultValue: createNew ? undefined : (data?.provenance_iri ?? undefined),
           helperTextCnt: `${watch('provenance_iri')?.length ?? 0}/250`,
-          helperTextMessage: `${formState.errors?.name?.message ?? 'Optional Internationalized Resource Identifier for this category'}`,
-          error: formState.errors?.name?.message !== undefined
+          helperTextMessage: `${formState.errors?.provenance_iri?.message ?? 'Optional Internationalized Resource Identifier for this category'}`,
+          error: formState.errors?.provenance_iri?.message !== undefined
         }}
       />
 
@@ -184,21 +192,19 @@ export default function CategoryEditForm({
         We show software/project switch only at top level (root nodes)
       */}
       {
-        organisation && !parent ?
+        organisation && !parentId ?
           <div className="flex gap-8 pt-8">
             <ControlledSwitch
               label="For software"
               name="allow_software"
               defaultValue = {data?.allow_software}
               control={control}
-              disabled={parent ? true : false}
             />
             <ControlledSwitch
               label="For projects"
               name="allow_projects"
               defaultValue = {data?.allow_projects ?? true}
               control={control}
-              disabled={parent ? true : false}
             />
           </div>
           :
