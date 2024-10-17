@@ -82,8 +82,6 @@ export default function ImportReportBody({initialResults,onCancel,onImport}: Bul
         return 'Not a valid DOI'
       case 'doiNotFound':
         return 'DOI not found'
-      case 'unsupportedRA':
-        return 'Registration agent (RA) is not supported'
       case 'alreadyImported':
         return 'This publication is already imported'
       default:

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -136,9 +137,10 @@ public class MainMentions {
 		String email = Config.crossrefContactEmail().orElse(null);
 		Collection<ExternalMentionRecord> scrapedOpenalexMentions = new ArrayList<>();
 		OpenAlexConnector openAlexConnector = new OpenAlexConnector();
+		Collection<String> invalidDoiRas = Set.of("DataCite", "Crossref", "Invalid DOI", "DOI does not exist", "Unknown");
 		Collection<Doi> europeanPublicationsOfficeDois = doiToSource.entrySet()
 				.stream()
-				.filter(doiSourceEntry -> doiSourceEntry.getValue().equals("OP"))
+				.filter(doiSourceEntry -> !invalidDoiRas.contains(doiSourceEntry.getValue()))
 				.map(Map.Entry::getKey)
 				.map(Doi::fromString)
 				.toList();

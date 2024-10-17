@@ -188,18 +188,18 @@ export async function getMentionByDoi(doi: string) {
   if (doiRA && doiRA.RA) {
     switch (doiRA.RA.toLowerCase()) {
       case 'crossref':
-        // get from crossref
         return getItemFromCrossref(doi)
       case 'datacite':
-        // get from datacite
         return getItemFromDatacite(doi)
-      case 'op':
-        return getItemFromOpenalex(doi)
-      default:
+      case 'invalid doi':
+      case 'doi does not exist':
+      case 'unknown':
         return {
           status: 400,
-          message: `${doiRA.RA} not supported. RSD supports Crossref and DataCite api`
+          message: 'Invalid or unknown DOI'
         }
+      default:
+        return getItemFromOpenalex(doi)
     }
   }
   return {
