@@ -37,6 +37,7 @@ export default function CommunityCategories() {
           title="Categories"
           roots={roots}
           community={community.id}
+          organisation={null}
           onMutation={onMutation}
         />
       }

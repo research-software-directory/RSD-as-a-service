@@ -14,6 +14,7 @@ import {
   ResearchDomain, SearchProject, TeamMember
 } from '~/types/Project'
 import {RelatedSoftwareOfProject} from '~/types/SoftwareTypes'
+import {CategoryPath} from '~/types/Category'
 import {getImageUrl} from './editImage'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
@@ -416,6 +417,28 @@ export async function searchForRelatedProjectByTitle({project, searchFor, token}
     return []
   } catch (e: any) {
     logger(`searchForRelatedProjectByTitle: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+export async function getCategoriesForProject({project_id,token}:{project_id: string, token?: string}){
+  try {
+    const query = `project_id=${project_id}`
+    const url = `${getBaseUrl()}/rpc/category_paths_by_project_expanded?${query}`
+
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data:CategoryPath[] = await resp.json()
+      return data
+    } else {
+      logger(`getCategoriesForProject: ${resp.status} - ${resp.statusText} [${url}]`, 'error')
+      return []
+    }
+  } catch (e: any) {
+    logger(`getCategoriesForProject: ${e?.message}`, 'error')
     return []
   }
 }

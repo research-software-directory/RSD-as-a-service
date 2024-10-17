@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-import isMaintainerOfOrganisation from '~/auth/permissions/isMaintainerOfOrganisation'
+import isMaintainerOfOrganisation, {canEditOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
 import {EditOrganisation} from '~/types/Organisation'
 import {getOrganisationsOfProject} from '~/utils/getProjects'
 
@@ -31,37 +33,11 @@ export function useParticipatingOrganisations({project, token, account}: UsePart
         frontend: true,
         roles:['participating','hosting']
       })
-      // collect isMaintainerRequests
-      const promises:Promise<boolean>[] = []
-      // prepare organisation list
-      const orgList = resp.map((item, pos) => {
-        // save isMaintainer request
-        promises.push(isMaintainerOfOrganisation({
-          organisation: item.id,
-          account,
-          token
-        }))
-        // extract only needed props
-        const organisation: EditOrganisation = {
-          ...item,
-          // additional props for edit type
-          position: pos + 1,
-          logo_b64: null,
-          logo_mime_type: null,
-          source: 'RSD' as 'RSD',
-          status: item.status,
-          // false by default
-          canEdit: false,
-          // description: null
-        }
-        return organisation
-      })
-      // run all isMaintainer requests in parallel
-      const isMaintainer = await Promise.all(promises)
-      const organisations = orgList.map((item, pos) => {
-        // update canEdit based on isMaintainer requests
-        if (isMaintainer[pos]) item.canEdit = isMaintainer[pos]
-        return item
+      // convert to EditOrganisation type and add canEdit flag
+      const organisations = await canEditOrganisations({
+        organisations: resp,
+        account,
+        token
       })
       if (abort === true) return
       // update organisation list
@@ -71,7 +47,7 @@ export function useParticipatingOrganisations({project, token, account}: UsePart
         id: project,
         account
       })
-      // upadate loading state
+      // update loading state
       setLoading(false)
     }
     if (project && token && account &&

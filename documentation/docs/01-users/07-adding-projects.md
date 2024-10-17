@@ -8,7 +8,7 @@ After signing in, use the **"+"** button next to your avatar icon on the top rig
 
 ![image](img/new-project.gif)
 
-The RSD will automatically generate a *slug* for your project based on the project name you have provided. This slug will become part of the URL on which your project page can be found.
+The RSD will automatically generate a _slug_ for your project based on the project name you have provided. This slug will become part of the URL on which your project page can be found.
 There is a small chance the generated slug is already in use by another project. If this is the case, an error will be shown, and you will need to change the slug manually to resolve this conflict.
 
 Once you click **"save"**, the RSD will initialize a new empty project page. This page will not be public yet to give you some time to provide additional information. Next, you can add additional information in the edit sections explained below.
@@ -63,7 +63,7 @@ project. Therefore, you can safely change information about this person without 
 When manually adding team members or adding images or email addresses of persons, please ensure you have **permission** to share this information!
 :::
 
-## Participating Organisations
+## Participating organisations
 
 ![image](img/project-add-organisation.webp)
 
@@ -81,6 +81,17 @@ All other information is retrieved automatically.
 :::warning
 Regular users cannot update an organisation after adding it to the RSD. Only the organisation maintainer (for registered organisations) or the RSD administrators can update this
 information. Please [contact us](mailto:rsd@esciencecenter.nl) if you need to update organisation information.
+:::
+
+### Organisation categories
+
+If the maintainers of the organisation have created custom categories, you will see **an additional modal asking you to select organisation specific categories that apply to your project**.
+
+:::tip
+
+- Custom organisation categories will be shown on the project page below the keywords. Use the "View Project" button to see how custom organisation categories are displayed on your project page.
+- You can change the custom organisation categories using the categories button.
+
 :::
 
 ## Mentions

@@ -17,11 +17,12 @@ import EditSectionTitle from '../layout/EditSectionTitle'
 type CategoryEditTreeProps=Readonly<{
   roots: TreeNode<CategoryEntry>[],
   community: string | null
+  organisation: string | null
   onMutation: ()=>void
   title?:string
 }>
 
-export default function CategoryEditTree({roots, community, title, onMutation}:CategoryEditTreeProps) {
+export default function CategoryEditTree({roots, community, organisation, title, onMutation}:CategoryEditTreeProps) {
 
   const [showAddChildForm, setShowAddChildForm] = useState<boolean>(false)
 
@@ -61,6 +62,7 @@ export default function CategoryEditTree({roots, community, title, onMutation}:C
         <CategoryEditForm
           createNew={true}
           community={community}
+          organisation={organisation}
           data={null}
           onSuccess={onNewChildSuccess}
           onCancel={()=>setShowAddChildForm(false)}
@@ -74,6 +76,7 @@ export default function CategoryEditTree({roots, community, title, onMutation}:C
                   key={node.getValue().id}
                   node={node}
                   community={community}
+                  organisation={organisation}
                   onDelete={onDeleteChild}
                   onMutation={onMutation}
                 />

@@ -34,24 +34,24 @@ Another section with subtitle
 
 ## Code area
 
-Use `three backticks` to create code area
+Use `three backticks` to create a code area
 
-``bash
+`bash
 This example is code area
-``
+`
 
 ## Simple table
 
-|column 1| column 2| column 3|
-|-|-|-|
-|123242|234234|3|
-|some text here|34|x=23|
+| column 1       | column 2 | column 3 |
+| -------------- | -------- | -------- |
+| 123242         | 234234   | 3        |
+| some text here | 34       | x=23     |
 
 ## Task list
 
-* [x] Do this first
-* [ ] Then this
-* [ ] And this at last
+- [x] Do this first
+- [ ] Then this
+- [ ] And this at last
 
 ## Links
 
@@ -62,7 +62,6 @@ This example is code area
 You need to use the full URL of the image and the image needs to send CORS headers, otherwise the image will not be loaded
 
 ![Mozilla](https://cdn.glitch.me/4c9ebeb9-8b9a-4adc-ad0a-238d9ae00bb5%2Fmdn_logo-only_color.svg)
-
 ```
 
 ### Document URL
@@ -89,8 +88,8 @@ The software logo is shown on the software page and in the software card (see ex
 
   The RSD supports URLs starting with https that point to the repository website, or to the actual git repository, for example:
 
-  * `https://github.com/research-software-directory/RSD-as-a-service` (website)
-  * `https://github.com/research-software-directory/RSD-as-a-service.git` (git repository)
+  - `https://github.com/research-software-directory/RSD-as-a-service` (website)
+  - `https://github.com/research-software-directory/RSD-as-a-service.git` (git repository)
 
 - A **Getting started URL** which refers to webpage with more information about the software. This is shown as the "Get started" button on the software page.
 
@@ -149,12 +148,23 @@ If you have provided a **Software DOI** in the previous section, you can import 
 
 :::
 
-## Organisations
+## Participating organisations
 
 In this section, you can list which organisations contributed to the development of the software. You can use the search bar underneath "Add organisation" to search for
 organisations already registered in the RSD or in the [ROR](https://ROR.org) database.
 
 ![video](img/software-organisation.gif)
+
+### Organisation categories
+
+If the maintainers of the organisation have created custom categories, you will see **an additional modal asking you to select organisation specific categories that apply to your software**.
+
+:::tip
+
+- Custom organisation categories will be shown on the software page below the logo and before the keywords. Use the "View Software" button to see how custom organisation categories are displayed on the software page.
+- You can change the custom organisation categories using the categories button.
+
+:::
 
 ## Mentions
 
@@ -164,7 +174,7 @@ This section allows you to add mentions to your software page. You can use this 
 
 ### Reference papers
 
-Use the *Search* box on the right hand side to find papers by DOI, OpenAlex ID or title. All the relevant data about the publication will be retrieved automatically. A background scraper will use [OpenAlex](https://openalex.org/) to collect all citations of reference papers that have a DOI or an OpenAlex ID.
+Use the _Search_ box on the right hand side to find papers by DOI, OpenAlex ID or title. All the relevant data about the publication will be retrieved automatically. A background scraper will use [OpenAlex](https://openalex.org/) to collect all citations of reference papers that have a DOI or an OpenAlex ID.
 
 ### Citations
 
@@ -176,7 +186,7 @@ You cannot edit the content of this section. All entries are automatically harve
 
 ### Related output
 
-Here you can add all additional related output. Use search to find papers or other publications by DOI, OpenAlex ID or title. It is also possible to bulk add mentions, that have a DOI (use the *Import* button). On the popup, you can add one DOI per line, with a maximum of 50. After clicking on the *Next* button, we will fetch the data, which can take a moment. When that is done, you will see an overview of the data we fetched, including possible errors, where you can check the data and possibly disable some of the mentions.
+Here you can add all additional related output. Use search to find papers or other publications by DOI, OpenAlex ID or title. It is also possible to bulk add mentions, that have a DOI (use the _Import_ button). On the popup, you can add one DOI per line, with a maximum of 50. After clicking on the _Next_ button, we will fetch the data, which can take a moment. When that is done, you will see an overview of the data we fetched, including possible errors, where you can check the data and possibly disable some of the mentions.
 
 ## Testimonials
 
@@ -190,7 +200,7 @@ If your software is available through a package manager like Anaconda, PyPi or D
 
 We currently support the following package managers: [Anaconda](https://anaconda.org/), [Cran](https://cran.r-project.org/web/packages/index.html), [Chocolatey](https://community.chocolatey.org), [Debian](https://packages.debian.org), [Docker Hub](https://hub.docker.com/search?q=), [GitHub](https://github.com), [Gitlab](https://gitlab.com), [Go](https://pkg.go.dev), [Maven](https://mvnrepository.com/), [npm](https://www.npmjs.com/), [PyPI](https://pypi.org/), [Rust](https://crates.io), [Sonatype](https://central.sonatype.com/), [Snapcraft](https://snapcraft.io).
 
-If your package manager is not listed above, you can still add it, but we will categorise it as *other* and cannot scrape it yet. You can [open an GitHub issue](https://github.com/research-software-directory/RSD-as-a-service/issues) (please check for existing issues first) or contact us if you want us to support an additional package manager.
+If your package manager is not listed above, you can still add it, but we will categorise it as _other_ and cannot scrape it yet. You can [open an GitHub issue](https://github.com/research-software-directory/RSD-as-a-service/issues) (please check for existing issues first) or contact us if you want us to support an additional package manager.
 
 ![video](img/software-package-managers.gif)
 

@@ -16,7 +16,8 @@ import {
   getProjectItem, getRelatedSoftwareForProject,
   getTeamForProject, getResearchDomainsForProject,
   getKeywordsForProject, getRelatedProjectsForProject,
-  getMentionsForProject, getImpactByProject
+  getMentionsForProject, getImpactByProject,
+  getCategoriesForProject
 } from '~/utils/getProjects'
 import {
   KeywordForProject, Project, ProjectLink,
@@ -45,6 +46,7 @@ import RelatedProjectsSection from '~/components/projects/RelatedProjectsSection
 import MentionsSection from '~/components/mention/MentionsSection'
 import {getTestimonialsForProject} from '~/components/projects/edit/testimonials/apiProjectTestimonial'
 import TestimonialSection from '~/components/software/TestimonialsSection'
+import {CategoryPath} from '~/types/Category'
 
 export interface ProjectPageProps extends ScriptProps{
   slug: string
@@ -53,6 +55,7 @@ export interface ProjectPageProps extends ScriptProps{
   organisations: ProjectOrganisationProps[],
   researchDomains: ResearchDomain[],
   keywords: KeywordForProject[],
+  categories: CategoryPath[],
   links: ProjectLink[],
   output: MentionItemProps[],
   impact: MentionItemProps[],
@@ -64,14 +67,14 @@ export interface ProjectPageProps extends ScriptProps{
 
 export default function ProjectPage(props: ProjectPageProps) {
   const {slug, project, isMaintainer, organisations,
-    researchDomains, keywords, links, output, impact, team,
+    researchDomains, keywords, categories, links, output, impact, team,
     relatedSoftware, relatedProjects, testimonials
   } = props
 
   if (!project?.title){
     return <NoContent />
   }
-  // console.log('ProjectPage...testimonials...', testimonials)
+  // console.log('ProjectPage...categories...', categories)
   return (
     <>
       {/* Page Head meta tags */}
@@ -109,6 +112,7 @@ export default function ProjectPage(props: ProjectPageProps) {
           researchDomains={researchDomains}
           keywords={keywords}
           links={links}
+          categories={categories}
         />
         {/* <div className="py-8"></div> */}
       </PageContainer>
@@ -174,6 +178,7 @@ export async function getServerSideProps(context:any) {
       organisations,
       researchDomains,
       keywords,
+      categories,
       output,
       impact,
       testimonials,
@@ -186,6 +191,8 @@ export async function getServerSideProps(context:any) {
       getOrganisations({project: project.id, token, frontend: false}),
       getResearchDomainsForProject({project: project.id, token, frontend: false}),
       getKeywordsForProject({project: project.id, token, frontend: false}),
+      // Project specific categories
+      getCategoriesForProject({project_id:project.id,token}),
       // Output
       getMentionsForProject({project: project.id, token, table:'output_for_project'}),
       // Impact
@@ -211,6 +218,7 @@ export async function getServerSideProps(context:any) {
         organisations,
         researchDomains,
         keywords,
+        categories,
         output,
         impact,
         testimonials,

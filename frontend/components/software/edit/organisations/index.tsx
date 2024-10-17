@@ -8,40 +8,47 @@
 
 import {useState} from 'react'
 
-import {useSession} from '../../../../auth'
-import useSnackbar from '../../../snackbar/useSnackbar'
-import ContentLoader from '../../../layout/ContentLoader'
-import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
+import {useSession} from '~/auth'
 import {
   columsForUpdate,
   EditOrganisation,
   SearchOrganisation,
   SoftwareForOrganisation
-} from '../../../../types/Organisation'
+} from '~/types/Organisation'
 import {
   newOrganisationProps,
   searchToEditOrganisation,
   updateOrganisation,
-} from '../../../../utils/editOrganisation'
-import useParticipatingOrganisations from './useParticipatingOrganisations'
+} from '~/utils/editOrganisation'
+import {upsertImage} from '~/utils/editImage'
+import {getSlugFromString} from '~/utils/getSlugFromString'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import ContentLoader from '~/components/layout/ContentLoader'
+import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import EditSection from '~/components/layout/EditSection'
 import {organisationInformation as config} from '../editSoftwareConfig'
-import EditSection from '../../../layout/EditSection'
+import useSoftwareContext from '../useSoftwareContext'
+import useParticipatingOrganisations from './useParticipatingOrganisations'
 import {ModalProps, ModalStates} from '../editSoftwareTypes'
-import EditSectionTitle from '../../../layout/EditSectionTitle'
 import FindOrganisation from './FindOrganisation'
 import EditOrganisationModal from './EditOrganisationModal'
-import {getSlugFromString} from '../../../../utils/getSlugFromString'
-import useSoftwareContext from '../useSoftwareContext'
 import SortableOrganisationsList from './SortableOrganisationsList'
 import {
   addOrganisationToSoftware, createOrganisationAndAddToSoftware,
   deleteOrganisationFromSoftware, patchOrganisationPositions
 } from './organisationForSoftware'
-import {upsertImage} from '~/utils/editImage'
-import {getPropsFromObject} from '~/utils/getPropsFromObject'
+import SoftwareCategoriesDialog from './SoftwareCategoriesDialog'
+
+export type OrganisationModalStates<T> = ModalStates<T> & {
+  categories: T
+}
 
 export type EditOrganisationModalProps = ModalProps & {
   organisation?: EditOrganisation
+  // edit categories flag
+  edit?: boolean
 }
 
 export default function SoftwareOrganisations() {
@@ -53,11 +60,14 @@ export default function SoftwareOrganisations() {
     account: user?.account ?? '',
     token
   })
-  const [modal, setModal] = useState<ModalStates<EditOrganisationModalProps>>({
+  const [modal, setModal] = useState<OrganisationModalStates<EditOrganisationModalProps>>({
     edit: {
       open: false,
     },
     delete: {
+      open: false
+    },
+    categories:{
       open: false
     }
   })
@@ -65,6 +75,7 @@ export default function SoftwareOrganisations() {
   // console.group('SoftwareOrganisations')
   // console.log('loading...', loading)
   // console.log('organisations...', organisations)
+  // console.log('modal...', modal)
   // console.groupEnd()
 
   // if loading show loader
@@ -94,6 +105,9 @@ export default function SoftwareOrganisations() {
         },
         delete: {
           open:false
+        },
+        categories:{
+          open:false
         }
       })
     } else if (item.source === 'RSD') {
@@ -108,6 +122,20 @@ export default function SoftwareOrganisations() {
         // update status received in message
         addOrganisation.status = resp.message as SoftwareForOrganisation['status']
         addOrganisationToList(addOrganisation)
+        // show categories modal
+        setModal({
+          edit: {
+            open: false,
+          },
+          delete: {
+            open:false
+          },
+          categories:{
+            open: true,
+            organisation: addOrganisation,
+            edit: false
+          }
+        })
       } else {
         showErrorMessage(resp.message)
       }
@@ -130,6 +158,9 @@ export default function SoftwareOrganisations() {
       },
       delete: {
         open:false
+      },
+      categories:{
+        open:false
       }
     })
   }
@@ -144,6 +175,9 @@ export default function SoftwareOrganisations() {
           pos
         },
         delete: {
+          open:false
+        },
+        categories:{
           open:false
         }
       })
@@ -162,6 +196,9 @@ export default function SoftwareOrganisations() {
           open: true,
           pos,
           displayName
+        },
+        categories:{
+          open:false
         }
       })
     }
@@ -255,6 +292,9 @@ export default function SoftwareOrganisations() {
       },
       delete: {
         open:false
+      },
+      categories:{
+        open:false
       }
     })
   }
@@ -310,6 +350,26 @@ export default function SoftwareOrganisations() {
     }
   }
 
+  function onCategoryEdit(pos:number){
+    const organisation = organisations[pos]
+    if (organisation){
+      setModal({
+        edit: {
+          open:false
+        },
+        delete: {
+          open:false
+        },
+        categories:{
+          open:true,
+          organisation,
+          // editing categories
+          edit: true
+        }
+      })
+    }
+  }
+
   return (
     <>
       <EditSection className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem]">
@@ -323,6 +383,7 @@ export default function SoftwareOrganisations() {
             onEdit={onEdit}
             onDelete={onDelete}
             onSorted={sortedOrganisations}
+            onCategory={onCategoryEdit}
           />
         </section>
         <section className="py-4">
@@ -355,6 +416,16 @@ export default function SoftwareOrganisations() {
           onCancel={closeModals}
           onDelete={()=>deleteOrganisation(modal.delete.pos)}
         />
+      }
+      {modal.categories.open===true && modal.categories.organisation ?
+        <SoftwareCategoriesDialog
+          softwareId={software.id}
+          organisation={modal.categories.organisation}
+          edit={modal.categories.edit ?? false}
+          onCancel={closeModals}
+          onComplete={closeModals}
+        />
+        : null
       }
     </>
   )

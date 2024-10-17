@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {CategoriesForSoftware,} from '~/types/SoftwareTypes'
-import {CategoryID, CategoryPath} from '~/types/Category'
+import {CategoriesForSoftware, CategoryForSoftwareIds,} from '~/types/SoftwareTypes'
+import {CategoryPath} from '~/types/Category'
 
 export async function getSoftwareList({url,token}:{url:string,token?:string }){
   return []
@@ -43,15 +43,19 @@ export async function getCategoriesForSoftware(software_id: string, token?: stri
   return []
 }
 
+export async function getCategoryForSoftwareIds(software_id: string, token?: string): Promise<CategoryForSoftwareIds> {
+  return new Set()
+}
+
 export async function getAvailableCategories(): Promise<CategoryPath[]> {
   return []
 }
 
-export async function addCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {
+export async function addCategoryToSoftware(softwareId: string, categoryId: string, token: string) {
   return []
 }
 
-export async function deleteCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {
+export async function deleteCategoryToSoftware(softwareId: string, categoryId: string, token: string) {
   return null
 }
 
