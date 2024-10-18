@@ -304,7 +304,7 @@ export async function getLicenseForSoftware(uuid:string,token?:string){
 }
 
 /**
- * REMOTE MARKDOWN FILE
+ * REMOTE MARKDOWN FILE called server side
  */
 export async function getRemoteMarkdown(url: string) {
   try {
@@ -330,7 +330,39 @@ export async function getRemoteMarkdown(url: string) {
     logger(`getRemoteMarkdown: ${e?.message}`, 'error')
     return {
       status: 404,
-      message: e?.message
+      message: 'Markdown file not found. Validate url.'
+    }
+  }
+}
+
+/**
+ * Get remote markdown using RSD api.
+ * Validates the url returns text/markdown and not html page.
+ * If html page it returns suggested rawUrl for Github/Gitlab
+ * @param url
+ * @returns
+ */
+export async function apiRemoteMarkdown(url:string){
+  try{
+    const api = `/api/fe/markdown/raw?url=${encodeURI(url)}`
+    const resp = await fetch(api)
+    if (resp.ok){
+      const data:{
+        status:number,
+        message:string,
+        rawUrl?:string
+      } = await resp.json()
+      return data
+    }else{
+      return {
+        status: resp.status,
+        message: resp.statusText
+      }
+    }
+  }catch(e:any){
+    return {
+      status:500,
+      message: e?.message as string ?? 'Unknown server error'
     }
   }
 }
