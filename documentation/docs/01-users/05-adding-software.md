@@ -65,12 +65,12 @@ You need to use the full URL of the image and the image needs to send CORS heade
 
 ```
 
-### Document URL
+### Markdown URL
 
 You can link to a remote Markdown file which will be dynamically loaded by the RSD. An often used approach is to link to a readme file on the GitHub repository. In this case you need to link to the `raw` version of the readme file. For example, to link to the readme file of the RSD repository, we used the link https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md. **Note that the URL domain is different** `https://raw.githubusercontent.com/` from the default GitHub domain (https://github.com).
 
 :::warning
-When using a Document URL to point to a remote Markdown file on the GitHub, you need to provide a URL to a raw Markdown file (see the animation below). In addition, all links used in the Markdown document, like **images**, need to use the **full URL** (e.g. use `https://user-images.githubusercontent.com/4195550/136156498-736f915f-7623-43d2-8678-f30b06563a38.png`, not `/4195550/136156498-736f915f-7623-43d2-8678-f30b06563a38.png`). This is required, because the Markdown content is loaded from the GitHub domain into the RSD website.
+When using a Markdown URL to point to a remote Markdown file all links used in the Markdown document, like **images**, need to use the **full URL** (e.g. use `https://user-images.githubusercontent.com/4195550/136156498-736f915f-7623-43d2-8678-f30b06563a38.png`, not `/4195550/136156498-736f915f-7623-43d2-8678-f30b06563a38.png`). This is required, because the Markdown content is loaded into the RSD website.
 :::
 
 ### Logo
