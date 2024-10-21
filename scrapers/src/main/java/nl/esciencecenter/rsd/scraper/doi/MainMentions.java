@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -75,9 +76,10 @@ public class MainMentions {
 		Instant now = Instant.now();
 
 		// DATACITE
+		final String dataciteDoiRaKey = "DataCite";
 		Collection<Doi> dataciteDois = doiToSource.entrySet()
 				.stream()
-				.filter(doiSourceEntry -> doiSourceEntry.getValue().equals("DataCite"))
+				.filter(doiSourceEntry -> doiSourceEntry.getValue().equals(dataciteDoiRaKey))
 				.map(Map.Entry::getKey)
 				.map(Doi::fromString)
 				.toList();
@@ -104,9 +106,10 @@ public class MainMentions {
 		// END DATACITE
 
 		// CROSSREF
+		final String crossrefDoiRaKey = "Crossref";
 		Collection<Doi> crossrefDois = doiToSource.entrySet()
 				.stream()
-				.filter(doiSourceEntry -> doiSourceEntry.getValue().equals("Crossref"))
+				.filter(doiSourceEntry -> doiSourceEntry.getValue().equals(crossrefDoiRaKey))
 				.map(Map.Entry::getKey)
 				.map(Doi::fromString)
 				.toList();
@@ -132,13 +135,14 @@ public class MainMentions {
 		}
 		// END CROSSREF
 
-		// OPENALEX (for European Publication Office DOIs)
+		// OPENALEX (other DOI registry agents)
 		String email = Config.crossrefContactEmail().orElse(null);
 		Collection<ExternalMentionRecord> scrapedOpenalexMentions = new ArrayList<>();
 		OpenAlexConnector openAlexConnector = new OpenAlexConnector();
+		Collection<String> invalidDoiRas = Set.of(dataciteDoiRaKey, crossrefDoiRaKey, "Invalid DOI", "DOI does not exist", "Unknown");
 		Collection<Doi> europeanPublicationsOfficeDois = doiToSource.entrySet()
 				.stream()
-				.filter(doiSourceEntry -> doiSourceEntry.getValue().equals("OP"))
+				.filter(doiSourceEntry -> !invalidDoiRas.contains(doiSourceEntry.getValue()))
 				.map(Map.Entry::getKey)
 				.map(Doi::fromString)
 				.toList();
