@@ -308,44 +308,72 @@ function generateKeywordsForEntity(idsEntity, idsKeyword, nameEntity) {
 	return result;
 }
 
-async function generateCategories(idsCommunities, maxDepth = 3) {
-	const communityPromises = [];
-	for (const commId of idsCommunities) {
-		communityPromises.push(generateAndSaveCategoriesForCommunity(commId, maxDepth));
-	}
-	communityPromises.push(generateAndSaveCategoriesForCommunity(null, maxDepth));
+const categoriesPerCommunity = new Map();
+const categoriesPerOrganisation = new Map();
+const globalCategories = [];
+async function generateCategories(idsCommunities, idsOrganisations, maxDepth = 3) {
+	const promises = [];
 
-	return await Promise.all(communityPromises);
+	for (const commId of idsCommunities) {
+		promises.push(
+			generateAndSaveCategoriesForEntity(commId, null, maxDepth).then(ids =>
+				categoriesPerCommunity.set(commId, ids),
+			),
+		);
+	}
+	for (const orgId of idsOrganisations) {
+		promises.push(
+			generateAndSaveCategoriesForEntity(null, orgId, maxDepth).then(ids =>
+				categoriesPerOrganisation.set(orgId, ids),
+			),
+		);
+	}
+	promises.push(generateAndSaveCategoriesForEntity(null, null, maxDepth).then(ids => globalCategories.push(...ids)));
+
+	return await Promise.all(promises);
 }
 
-async function generateAndSaveCategoriesForCommunity(idCommunity, maxDepth) {
+async function generateAndSaveCategoriesForEntity(idCommunity, idOrganisation, maxDepth) {
 	return new Promise(async res => {
-		let parentIds = [null];
+		let parentIdsAndFlags = [
+			{id: null, forSoftware: faker.datatype.boolean(), forProjects: faker.datatype.boolean()},
+		];
+		const idsAndFlags = [];
 		for (let level = 1; level <= maxDepth; level++) {
-			const newParentIds = [];
-			for (const parent of parentIds) {
+			const newParentIdsAndFlags = [];
+			for (const parent of parentIdsAndFlags) {
 				let toGenerateCount = faker.number.int(4);
-				if (idCommunity === null && level === 1) {
+				if (idCommunity === null && idOrganisation === null && level === 1) {
 					toGenerateCount += 1;
 				}
 				for (let i = 0; i < toGenerateCount; i++) {
-					const name = `Parent ${parent}, level ${level}, item ${i + 1}`;
+					const name = `Parent ${parent.id}, level ${level}, item ${i + 1}`;
 					const shortName = `Level ${level}, item ${i + 1}`;
 					const body = {
 						community: idCommunity,
-						parent: parent,
+						organisation: idOrganisation,
+						parent: parent.id,
 						short_name: shortName,
 						name: name,
+						allow_software: parent.forSoftware,
+						allow_projects: parent.forProjects,
 					};
 					await postToBackend('/category', body)
 						.then(resp => resp.json())
-						.then(json => json[0].id)
-						.then(id => newParentIds.push(id));
+						.then(json => ({
+							id: json[0].id,
+							forSoftware: parent.forSoftware,
+							forProjects: parent.forProjects,
+						}))
+						.then(data => {
+							newParentIdsAndFlags.push(data);
+							idsAndFlags.push(data);
+						});
 				}
 			}
-			parentIds = newParentIds;
+			parentIdsAndFlags = newParentIdsAndFlags;
 		}
-		res();
+		res(idsAndFlags);
 	});
 }
 
@@ -1060,7 +1088,8 @@ const communityPromise = postToBackend('/community', generateCommunities())
 	.then(async commArray => {
 		idsCommunities = commArray.map(comm => comm['id']);
 		postToBackend('/keyword_for_community', generateKeywordsForEntity(idsCommunities, idsKeywords, 'community'));
-		generateCategories(idsCommunities);
+		await organisationPromise;
+		await generateCategories(idsCommunities, idsOrganisations);
 	});
 
 await postToBackend('/meta_pages', generateMetaPages()).then(() => console.log('meta pages done'));
@@ -1079,13 +1108,52 @@ await postToBackend(
 	'/software_for_project',
 	generateRelationsForDifferingEntities(idsSoftware, idsProjects, 'software', 'project'),
 ).then(() => console.log('sw-pj done'));
-await postToBackend(
-	'/software_for_organisation',
-	generateRelationsForDifferingEntities(idsSoftware, idsOrganisations, 'software', 'organisation'),
-).then(() => console.log('sw-org done'));
-await postToBackend('/project_for_organisation', generateProjectForOrganisation(idsProjects, idsOrganisations)).then(
-	() => console.log('pj-org done'),
+const softwareForOrganisation = generateRelationsForDifferingEntities(
+	idsSoftware,
+	idsOrganisations,
+	'software',
+	'organisation',
 );
+await postToBackend('/software_for_organisation', softwareForOrganisation)
+	.then(async () => {
+		const allCategoriesForSoftware = [];
+		for (const entry of softwareForOrganisation) {
+			const orgId = entry.organisation;
+			const relations = generateRelationsForDifferingEntities(
+				[entry.software],
+				categoriesPerOrganisation
+					.get(orgId)
+					.filter(data => data.forSoftware)
+					.map(data => data.id),
+				'software_id',
+				'category_id',
+			);
+			allCategoriesForSoftware.push(...relations);
+		}
+		// console.log(allCategoriesForSoftware);
+		await postToBackend('/category_for_software', allCategoriesForSoftware);
+	})
+	.then(() => console.log('sw-org done'));
+const projectForOrganisation = generateProjectForOrganisation(idsProjects, idsOrganisations);
+await postToBackend('/project_for_organisation', generateProjectForOrganisation(idsProjects, idsOrganisations))
+	.then(async () => {
+		const allCategoriesForProjects = [];
+		for (const entry of projectForOrganisation) {
+			const orgId = entry.organisation;
+			const relations = generateRelationsForDifferingEntities(
+				[entry.project],
+				categoriesPerOrganisation
+					.get(orgId)
+					.filter(data => data.forProjects)
+					.map(data => data.id),
+				'project_id',
+				'category_id',
+			);
+			allCategoriesForProjects.push(...relations);
+		}
+		await postToBackend('/category_for_project', allCategoriesForProjects);
+	})
+	.then(() => console.log('pj-org done'));
 await postToBackend('/software_for_community', generateSoftwareForCommunity(idsSoftware, idsCommunities)).then(() =>
 	console.log('sw-comm done'),
 );
