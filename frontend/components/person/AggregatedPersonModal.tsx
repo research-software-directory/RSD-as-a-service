@@ -3,6 +3,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useEffect} from 'react'
+
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -60,7 +62,7 @@ export default function AggregatedPersonModal({
 }: AggregatedPersonModalProps) {
   const {loading, options} = useAggregatedPerson(person?.orcid)
   const smallScreen = useMediaQuery('(max-width:640px)')
-  const {handleSubmit, watch, formState, control, register, setValue} = useForm<FormPerson>({
+  const {handleSubmit, watch, formState, control, register, setValue, trigger} = useForm<FormPerson>({
     mode: 'onChange',
     defaultValues: {
       ...person,
@@ -72,6 +74,13 @@ export default function AggregatedPersonModal({
   // extract
   const {isValid, isDirty} = formState
   const formData = watch()
+
+  useEffect(()=>{
+    // when is_contact_person OR email_address changes
+    // we trigger additional validation on email because
+    // email is required for the contact person
+    trigger('email_address')
+  },[formData.email_address,formData.is_contact_person,trigger])
 
   // console.group('AggregatedPersonModal')
   // console.log('errors...', errors)
