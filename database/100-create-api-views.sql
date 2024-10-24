@@ -749,6 +749,7 @@ $$;
 -- TOTAL COUNTS FOR HOMEPAGE
 -- software_cnt, project_cnt, organisation_cnt
 -- this rpc returns json object instead of array
+-- DEPENDS on RPC mentions_by_software (104-software-views.sql)
 CREATE FUNCTION homepage_counts(
 	OUT software_cnt BIGINT,
 	OUT open_software_cnt BIGINT,
@@ -770,7 +771,7 @@ BEGIN
 		organisations_overview.parent IS NULL AND organisations_overview.score>0
 	INTO organisation_cnt;
 	SELECT COUNT(DISTINCT(orcid,given_names,family_names)) FROM contributor INTO contributor_cnt;
-	SELECT COUNT(mention) FROM mention_for_software INTO software_mention_cnt;
+	SELECT count(DISTINCT(id)) FROM mentions_by_software() INTO software_mention_cnt;
 END
 $$;
 
