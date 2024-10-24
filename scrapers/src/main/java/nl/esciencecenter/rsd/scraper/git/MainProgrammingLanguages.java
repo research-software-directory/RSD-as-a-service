@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,6 +9,8 @@ import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -16,24 +18,21 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class MainProgrammingLanguages {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainProgrammingLanguages.class);
-	
+
 	public static void main(String[] args) {
-		
+
 		LOGGER.info("Start scraping programming languages");
-		
+
 		long t1 = System.currentTimeMillis();
-		
+
 		scrapeGithub();
 		scrapeGitLab();
-		
+
 		long time = System.currentTimeMillis() - t1;
-		
+
 		LOGGER.info("Done scraping programming languages ({} ms.)", time);
 	}
 

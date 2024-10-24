@@ -16,6 +16,10 @@ This module handles authentication from third parties using oAuth2 and OpenID.
 ## Environment variables
 Check `.env.example` to see which environment variables are needed. In particular, look for the env variable `RSD_ENVIRONMENT` to allow for easy admin creation when developing and testing out the RSD (this is not safe for production!).
 
+## Contributing
+
+This module uses [EditorConfig](https://editorconfig.org/) for basic formatting. Please check if your editor [already supports EditorConfig](https://editorconfig.org/#pre-installed) or if you need to [install a plugin](https://editorconfig.org/#download). A GitHub workflow is run on every PR to check if any files violate the formatting settings.
+
 ## Developing locally
 If you want to develop and run the auth module locally, i.e. outside of Docker, you have to make two changes to files tracked by Git.
 1. In `docker-compose.yml`, add the following lines to the `nginx` service:

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -11,6 +11,8 @@ import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -18,25 +20,21 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class MainCommits {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainCommits.class);
-	
+
 	public static void main(String[] args) {
-		
+
 		LOGGER.info("Start scraping commits");
-		
+
 		long t1 = System.currentTimeMillis();
-		
+
 		scrapeGitHub();
 		scrapeGitLab();
 
 		long time = System.currentTimeMillis() - t1;
-		
+
 		LOGGER.info("Done scraping commits ({} ms.)", time);
 	}
 

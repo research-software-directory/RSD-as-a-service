@@ -1,0 +1,20 @@
+# SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# EditorConfig is awesome: https://editorconfig.org
+
+# Unix-style newlines with a newline ending every file and tab indentation
+[**]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+trim_trailing_whitespace = true
+indent_style = tab
+
+[**.md]
+indent_style = unset
+
+[**.py]
+indent_style = unset

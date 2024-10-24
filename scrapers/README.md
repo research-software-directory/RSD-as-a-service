@@ -11,6 +11,10 @@ SPDX-License-Identifier: CC-BY-4.0
 
 This module contains the scrapers used by the RSD. The scrapers are written in Java using Maven.
 
+## Contributing
+
+This module uses [EditorConfig](https://editorconfig.org/) for basic formatting. Please check if your editor [already supports EditorConfig](https://editorconfig.org/#pre-installed) or if you need to [install a plugin](https://editorconfig.org/#download). A GitHub workflow is run on every PR to check if any files violate the formatting settings.
+
 ## Running from within Docker Compose
 
 If you have an instance of the RSD, including the scrapers, running with Docker Compose, you can manually run a scraper by running the respective command from the root of the project content:

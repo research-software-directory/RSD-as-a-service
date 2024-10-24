@@ -30,39 +30,41 @@ public class DataciteMentionRepository {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DataciteMentionRepository.class);
 
+	// editorconfig-checker-disable
 	private static final String QUERY_UNFORMATTED = """
-			query {
-			  works(ids: [%s], first: 10000) {
-			    nodes {
-			      doi
-			      types {
-			        resourceType
-			        resourceTypeGeneral
-			      }
-			      version
-			      relatedIdentifiers {
-			        relatedIdentifier
-			        relatedIdentifierType
-			      }
-			      titles(first: 1) {
-			        title
-			      }
-			      publisher {
-			        name
-			      }
-			      publicationYear
-			      registered
-			      creators {
-			        givenName
-			        familyName
-			      }
-			      contributors {
-			        givenName
-			        familyName
-			      }
-			    }
-			  }
-			}""";
+		query {
+		  works(ids: [%s], first: 10000) {
+		    nodes {
+		      doi
+		      types {
+		        resourceType
+		        resourceTypeGeneral
+		      }
+		      version
+		      relatedIdentifiers {
+		        relatedIdentifier
+		        relatedIdentifierType
+		      }
+		      titles(first: 1) {
+		        title
+		      }
+		      publisher {
+		        name
+		      }
+		      publicationYear
+		      registered
+		      creators {
+		        givenName
+		        familyName
+		      }
+		      contributors {
+		        givenName
+		        familyName
+		      }
+		    }
+		  }
+		}""";
+	// editorconfig-checker-enable
 
 	private static final Map<String, MentionType> dataciteTypeMap;
 	private static final Map<String, MentionType> dataciteTextTypeMap;
@@ -112,8 +114,8 @@ public class DataciteMentionRepository {
 	// "10.5281/zenodo.1408128","10.1186/s12859-018-2165-7"
 	static String joinDoisForGraphqlQuery(Collection<Doi> dois) {
 		return dois.stream()
-				.map(Doi::toString)
-				.collect(Collectors.joining("\",\"", "\"", "\""));
+			.map(Doi::toString)
+			.collect(Collectors.joining("\",\"", "\"", "\""));
 	}
 
 	static Collection<ExternalMentionRecord> jsonStringToUniqueMentions(String json) {
@@ -189,19 +191,19 @@ public class DataciteMentionRepository {
 		}
 
 		return new ExternalMentionRecord(
-				doi,
-				doiRegistrationDate,
-				null,
-				url,
-				title,
-				authors,
-				publisher,
-				publicationYear,
-				null,
-				null,
-				mentionType,
-				"DataCite",
-				version
+			doi,
+			doiRegistrationDate,
+			null,
+			url,
+			title,
+			authors,
+			publisher,
+			publicationYear,
+			null,
+			null,
+			mentionType,
+			"DataCite",
+			version
 		);
 	}
 
