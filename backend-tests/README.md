@@ -7,7 +7,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # Backend tests
 
-This folder contains backend tests for the RSD. It is intended to mainly: 
+This folder contains backend tests for the RSD. It is intended to mainly:
 - test the correctness of row level security rules
 - test the correctness of remote procedure calls (no tests yet)
 - load test the backend/database (no tests yet)
@@ -23,6 +23,10 @@ As a testing framework we use [JUnit 5](https://junit.org/junit5/).
 Tests should be written taking the following principles in account:
 - each test should be runnable independently of other tests
 - each test should be repeatable, without e.g. having to clean up the database first
+
+## Contributing
+
+This module uses [EditorConfig](https://editorconfig.org/) for basic formatting. Please check if your editor [already supports EditorConfig](https://editorconfig.org/#pre-installed) or if you need to [install a plugin](https://editorconfig.org/#download). A GitHub workflow is run on every PR to check if any files violate the formatting settings.
 
 ## Writing tests
 
