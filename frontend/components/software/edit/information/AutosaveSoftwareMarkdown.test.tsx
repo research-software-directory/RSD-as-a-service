@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {fireEvent, render, screen, waitFor, waitForElementToBeRemoved,act} from '@testing-library/react'
+import {fireEvent, render, screen, waitFor, waitForElementToBeRemoved} from '@testing-library/react'
 
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithFormContext} from '~/utils/jest/WithFormContext'
@@ -20,8 +20,13 @@ jest.mock('./patchSoftwareTable', () => ({
 }))
 
 const mockGetRemoteMarkdown = jest.fn(props => Promise.resolve('Remote markdown'))
+const mockApiRemoteMarkdown = jest.fn(props => Promise.resolve({
+  status:200,
+  message: 'Remote markdown'
+}))
 jest.mock('~/utils/getSoftware', () => ({
-  getRemoteMarkdown: jest.fn(props=>mockGetRemoteMarkdown(props))
+  getRemoteMarkdown: jest.fn(props=>mockGetRemoteMarkdown(props)),
+  apiRemoteMarkdown: jest.fn(props=>mockApiRemoteMarkdown(props))
 }))
 
 beforeEach(() => {
@@ -79,8 +84,12 @@ it('shows loaded description_url', async() => {
     description_url: 'https://github.com/project/README.md'
   }
   // mock remote api response
-  const expectedMarkdown = 'Remote markdown for testing'
-  mockGetRemoteMarkdown.mockResolvedValueOnce(expectedMarkdown)
+  const expectedMarkdown = {
+    status:200,
+    message:'Remote markdown for testing'
+  }
+
+  mockApiRemoteMarkdown.mockResolvedValueOnce(expectedMarkdown)
 
   render(
     <WithAppContext options={{session: mockSession}}>
@@ -94,7 +103,7 @@ it('shows loaded description_url', async() => {
 
   // expect document URL
   const documentUrl = screen.getByRole('radio', {
-    name: 'Document URL'
+    name: 'Markdown URL'
   })
   expect(documentUrl).toBeChecked()
   // select document_url
@@ -103,7 +112,7 @@ it('shows loaded description_url', async() => {
   // wait loader to be removed
   await waitForElementToBeRemoved(screen.getByRole('progressbar'))
   // validate remote markdown response
-  screen.getByText(expectedMarkdown)
+  screen.getByText(expectedMarkdown.message)
 })
 
 it('saves custom markdown', async() => {
@@ -194,7 +203,7 @@ it('saves remote markdown', async() => {
 
   // check remote markdown
   const remoteUrl = screen.getByRole('radio', {
-    name: 'Document URL'
+    name: 'Markdown URL'
   })
   fireEvent.click(remoteUrl)
   expect(remoteUrl).toBeChecked()

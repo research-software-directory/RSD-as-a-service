@@ -11,6 +11,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {isProperUrl} from '~/utils/fetchHelpers'
+
 export const softwareInformation = {
   slug: {
     label: 'RSD path (admin only)',
@@ -62,14 +64,19 @@ export const softwareInformation = {
   description_url: {
     label: 'URL of (raw) Markdown file',
     help: <>
-      Read <u><a href="/documentation/users/adding-software/#document-url" target="_blank">here</a></u> how to properly link to a raw Markdown URL
+      Read <u><a href="/documentation/users/adding-software/#markdown-url" target="_blank">here</a></u> how to properly link to a raw Markdown URL
     </>,
     validation: {
-      required: 'Valid markdown URL must be provided',
+      required: 'Valid markdown URL is required',
       maxLength: {value: 200, message: 'Maximum length is 200'},
-      pattern: {
-        value: /^https?:\/\/.+\..+\.md$/,
-        message: 'URL should start with http(s):// have at least one dot (.) and end with (.md)'
+      // custom validation function for correct url syntax
+      validate: (url:string)=>{
+        // return error message if not correct url syntax
+        if (isProperUrl(url)===false){
+          return 'Invalid url. Please improve your input'
+        }
+        // has correct url syntax
+        return true
       }
     }
   },
@@ -100,70 +107,7 @@ export const contributorInformation = {
     infoLink: '/documentation/users/adding-software/#contributors',
     label: 'Import contributors',
     message: (doi: string) => `Import contributors from datacite.org using DOI ${doi}`
-  },
-  // We use default config of AggregatedPersonModal
-  // Dusan, 2024-09-12
-  // is_contact_person: {
-  //   label: 'Contact person',
-  //   help: 'Is this contributor the main contact person?'
-  // },
-  // given_names: {
-  //   label: 'First name / Given name(s)',
-  //   help: 'One or more given names',
-  //   validation: {
-  //     required: 'First name is required',
-  //     minLength: {value: 1, message: 'Minimum length is 1'},
-  //     maxLength: {value: 200, message: 'Maximum length is 200'},
-  //   }
-  // },
-  // family_names: {
-  //   label: 'Last name / Family name(s)',
-  //   help: 'Include "de/van/van den ...etc."',
-  //   validation: {
-  //     required: 'Family name is required',
-  //     minLength: {value: 2, message: 'Minimum length is 2'},
-  //     maxLength: {value: 200, message: 'Maximum length is 200'},
-  //   }
-  // },
-  // email_address: {
-  //   label: 'Email',
-  //   help: 'Contact person should have an email',
-  //   validation: (required:boolean) => ({
-  //     required: required ? 'Contact person should have an email' : false,
-  //     minLength: {value: 5, message: 'Minimum length is 5'},
-  //     maxLength: {value: 200, message: 'Maximum length is 200'},
-  //     pattern: {
-  //       value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-  //       message: 'Invalid email address'
-  //     }
-  //   })
-  // },
-  // affiliation: {
-  //   label: 'Affiliation',
-  //   help: 'Select or type in the current affiliation?',
-  //   validation: {
-  //     minLength: {value: 2, message: 'Minimum length is 2'},
-  //     maxLength: {value: 200, message: 'Maximum length is 200'},
-  //   }
-  // },
-  // role: {
-  //   label: 'Role',
-  //   help: 'For this software',
-  //   validation: {
-  //     minLength: {value: 2, message: 'Minimum length is 2'},
-  //     maxLength: {value: 200, message: 'Maximum length is 200'},
-  //   }
-  // },
-  // orcid: {
-  //   label: 'ORCID',
-  //   help: '16 digits, pattern 0000-0000-0000-0000',
-  //   validation: {
-  //     pattern: {
-  //       value: /^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$/,
-  //       message: 'Invalid pattern, not a 0000-0000-0000-0000'
-  //     }
-  //   }
-  // }
+  }
 }
 
 

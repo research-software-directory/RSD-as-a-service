@@ -138,3 +138,13 @@ export async function promiseWithTimeout<T>(
   // console.log('promiseWithTimeout...', resp)
   return resp
 }
+
+// Validate url string is syntactically correct
+export function isProperUrl(url:string){
+  try{
+    new URL(url)
+    return true
+  }catch(e){
+    return false
+  }
+}
