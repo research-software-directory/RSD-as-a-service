@@ -23,21 +23,23 @@ public class DataCiteReleaseRepository {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DataCiteReleaseRepository.class);
 
+	// editorconfig-checker-disable
 	private static final String QUERY_UNFORMATTED = """
-			query {
-			  works(ids: [%s], first: 10000) {
-			    nodes {
-			      doi
-			      versionOfCount
-			      relatedIdentifiers {
-			        relationType
-			        relatedIdentifierType
-			        relatedIdentifier
-			      }
-			    }
-			  }
-			}
-			""";
+		query {
+		  works(ids: [%s], first: 10000) {
+		    nodes {
+		      doi
+		      versionOfCount
+		      relatedIdentifiers {
+		        relationType
+		        relatedIdentifierType
+		        relatedIdentifier
+		      }
+		    }
+		  }
+		}
+		""";
+	// editorconfig-checker-enable
 
 	public Map<Doi, Collection<ExternalMentionRecord>> getVersionedDois(Collection<Doi> conceptDois) {
 		if (conceptDois.isEmpty()) {

@@ -2,6 +2,7 @@
 -- SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2023 dv4all
+-- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -163,8 +164,8 @@ CREATE FUNCTION suggested_roles() RETURNS
 VARCHAR[] LANGUAGE sql STABLE AS
 $$
 	SELECT
-    ARRAY_AGG("role")
-  FROM (
+	ARRAY_AGG("role")
+	FROM (
 		SELECT
 			"role"
 		FROM
@@ -178,6 +179,5 @@ $$
 			team_member
 		WHERE
 		"role" IS NOT NULL
-  ) roles
-;
+	) roles;
 $$;

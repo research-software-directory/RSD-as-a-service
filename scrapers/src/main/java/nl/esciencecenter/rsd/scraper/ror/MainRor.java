@@ -22,7 +22,7 @@ public class MainRor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainRor.class);
 	private static final int SCRAPING_LIMIT = Config.maxRequestsRor();
-	
+
 	public static void main(String[] args) {
 		LOGGER.info("Start scraping ROR data.");
 		long t1 = System.currentTimeMillis();
@@ -34,7 +34,7 @@ public class MainRor {
 	private static void scrapeLocationData() {
 		RorPostgrestConnector organisationsInRSD = new RorPostgrestConnector();
 		Collection<BasicOrganisationData> organisationsToScrape = organisationsInRSD.organisationsWithoutLocation(SCRAPING_LIMIT);
-		CompletableFuture<?> [] futures = new CompletableFuture[organisationsToScrape.size()];
+		CompletableFuture<?>[] futures = new CompletableFuture[organisationsToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
 		String tableName = "organisation";
