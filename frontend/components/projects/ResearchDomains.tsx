@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +10,9 @@ import Link from '@mui/material/Link'
 import LinkIcon from '@mui/icons-material/Link'
 import {ResearchDomain} from '~/types/Project'
 import {ssrProjectsUrl} from '~/utils/postgrestUrl'
-import TagChipFilter from '../layout/TagChipFilter'
+import TagChipFilter from '~/components/layout/TagChipFilter'
+import ProjectSidebarSection from '~/components/layout/SidebarSection'
+import ProjectSidebarTitle from '~/components/layout/SidebarTitle'
 
 export default function ResearchDomains({domains}:{domains:ResearchDomain[]}) {
 
@@ -31,8 +34,8 @@ export default function ResearchDomains({domains}:{domains:ResearchDomain[]}) {
   }
 
   return (
-    <div>
-      <div className="text-primary py-4">
+    <ProjectSidebarSection>
+      <ProjectSidebarTitle>
         Research domains
         <Link
           title="Link to ERC research domains page"
@@ -46,8 +49,9 @@ export default function ResearchDomains({domains}:{domains:ResearchDomain[]}) {
             }}
           />
         </Link>
-      </div>
+
+      </ProjectSidebarTitle>
       {renderTags()}
-    </div>
+    </ProjectSidebarSection>
   )
 }

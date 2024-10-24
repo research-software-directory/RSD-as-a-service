@@ -1,24 +1,30 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Link from 'next/link'
-import {ProjectLink} from '../../types/Project'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+
+import {ProjectLink} from '~/types/Project'
+import ProjectSidebarSection from '../layout/SidebarSection'
+import ProjectSidebarTitle from '../layout/SidebarTitle'
 
 export default function ProjectLinks({links}: { links: ProjectLink[] }) {
   if (!links || links?.length === 0) {
     return (
-      <div>
-        <div className="text-primary py-4">Project links</div>
+      <ProjectSidebarSection>
+        <ProjectSidebarTitle>Project links</ProjectSidebarTitle>
         <i>Not specified</i>
-      </div>
+      </ProjectSidebarSection>
     )
   }
 
   return (
-    <div>
-      <div className="text-primary py-4">Project links</div>
+    <ProjectSidebarSection>
+      <ProjectSidebarTitle>Project links</ProjectSidebarTitle>
       <ul>
         {
           links.map(link => {
@@ -29,7 +35,13 @@ export default function ProjectLinks({links}: { links: ProjectLink[] }) {
                     href={link.url}
                     target="_blank"
                     passHref
+                    className='flex gap-2 items-center'
                   >
+                    <OpenInNewIcon
+                      sx={{
+                        width: '1rem'
+                      }}
+                    />
 
                     {link.title}
 
@@ -40,6 +52,6 @@ export default function ProjectLinks({links}: { links: ProjectLink[] }) {
           })
         }
       </ul>
-    </div>
+    </ProjectSidebarSection>
   )
 }

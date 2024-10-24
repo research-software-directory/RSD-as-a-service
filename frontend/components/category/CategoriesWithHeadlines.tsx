@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
@@ -7,8 +8,8 @@
 
 import React from 'react'
 import {useCategoryTree} from '~/utils/categories'
-import {SidebarHeadline} from '../typography/SidebarHeadline'
 import {CategoryPath} from '~/types/Category'
+import {SidebarHeadline} from '~/components/typography/SidebarHeadline'
 import {CategoryTreeLevel} from '~/components/category/CategoryTree'
 
 type CategoriesWithHeadlinesProps = {

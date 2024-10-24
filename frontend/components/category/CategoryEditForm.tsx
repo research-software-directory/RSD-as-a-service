@@ -15,16 +15,20 @@ import {CategoryEntry} from '~/types/Category'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
+import ControlledSwitch from '../form/ControlledSwitch'
 
 type CategoryEditFormProps=Readonly<{
   createNew: boolean
   data: CategoryEntry | null
   community: string | null
+  organisation: string | null
   onSuccess: (category:CategoryEntry)=>void
   onCancel: ()=>void
 }>
 
-export default function CategoryEditForm({createNew, data, community, onSuccess, onCancel}:CategoryEditFormProps) {
+export default function CategoryEditForm({
+  createNew, data, community=null,organisation=null,onSuccess, onCancel
+}:CategoryEditFormProps) {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const [disableSave, setDisableSave] = useState<boolean>(false)
@@ -32,21 +36,34 @@ export default function CategoryEditForm({createNew, data, community, onSuccess,
     mode: 'onChange'
   })
 
+  // use id of current item as parentId of new (child) item
+  const parentId = createNew ? data?.id : data?.parent
+
   // console.group('CategoryEditForm')
   // console.log('createNew...',createNew)
   // console.log('data...',data)
   // console.log('disableSave...',disableSave)
   // console.log('community...',community)
+  // console.log('organisation...',organisation)
+  // console.log('parentId...',parentId)
   // console.groupEnd()
 
-  const onSubmit = (formData: CategoryEntry) => {
+  function onSubmit(formData: CategoryEntry){
     setDisableSave(true)
     // debugger
     if (createNew) {
-      createNewCategory(formData)
+      createNewCategory(prepareDataForSave(formData))
     } else {
-      updateCategory(formData)
+      updateCategory(prepareDataForSave(formData))
     }
+  }
+
+  function prepareDataForSave(formData: CategoryEntry){
+    // fix provenance_iri empty value
+    if (formData.provenance_iri===''){
+      formData.provenance_iri = null
+    }
+    return formData
   }
 
   async function createNewCategory(formData: CategoryEntry) {
@@ -56,7 +73,6 @@ export default function CategoryEditForm({createNew, data, community, onSuccess,
         ...createJsonHeaders(token),
         Prefer: 'return=representation',
         Accept: 'application/vnd.pgrst.object+json'
-
       },
       body: JSON.stringify(formData)
     })
@@ -119,14 +135,15 @@ export default function CategoryEditForm({createNew, data, community, onSuccess,
       {/* Different hidden values when creating new item.*/}
       {createNew ?
         // use id of current item as parent for new (child) item
-        <input type="hidden" {...register('parent', {value: data === null ? null : data.id})} />
+        <input type="hidden" {...register('parent', {value: parentId ?? null})} />
         :
         <>
-          <input type="hidden" {...register('id', {value: data === null ? undefined : data.id})} />
-          <input type="hidden" {...register('parent', {value: data === null ? null : data.parent})} />
+          <input type="hidden" {...register('id', {value: data?.id})} />
+          <input type="hidden" {...register('parent', {value: parentId ?? null})} />
         </>
       }
       <input type="hidden" {...register('community', {value: community})} />
+      <input type="hidden" {...register('organisation', {value: organisation})} />
 
       <h3 className="py-4 text-base-content-secondary">{getFormTitle()}</h3>
 
@@ -156,6 +173,7 @@ export default function CategoryEditForm({createNew, data, community, onSuccess,
           error: formState.errors?.name?.message !== undefined
         }}
       />
+
       <TextFieldWithCounter
         register={register('provenance_iri', {
           maxLength: {value: 250, message: 'max length is 250'}
@@ -164,14 +182,44 @@ export default function CategoryEditForm({createNew, data, community, onSuccess,
           label: 'Provenance identifier',
           defaultValue: createNew ? undefined : (data?.provenance_iri ?? undefined),
           helperTextCnt: `${watch('provenance_iri')?.length ?? 0}/250`,
-          helperTextMessage: `${formState.errors?.name?.message ?? 'Optional Internationalized Resource Identifier for this category'}`,
-          error: formState.errors?.name?.message !== undefined
+          helperTextMessage: `${formState.errors?.provenance_iri?.message ?? 'Optional Internationalized Resource Identifier for this category'}`,
+          error: formState.errors?.provenance_iri?.message !== undefined
         }}
       />
 
-      {/* Highlight options are only for the top level items and for general categories */}
-      {((createNew && data === null && community===null) ||
-        (!createNew && data?.parent === null && community===null)) ?
+      {/*
+        Organisation categories can be used for software or project items
+        We show software/project switch only at top level (root nodes)
+      */}
+      {
+        organisation && !parentId ?
+          <div className="flex gap-8 pt-8">
+            <ControlledSwitch
+              label="For software"
+              name="allow_software"
+              defaultValue = {data?.allow_software}
+              control={control}
+            />
+            <ControlledSwitch
+              label="For projects"
+              name="allow_projects"
+              defaultValue = {data?.allow_projects ?? true}
+              control={control}
+            />
+          </div>
+          :
+          <>
+            {/*
+              for children nodes we use false as default value
+            */}
+            <input type="hidden" {...register('allow_software', {value: false})} />
+            <input type="hidden" {...register('allow_projects', {value: false})} />
+          </>
+      }
+
+      {/* Highlight options are only for the top level items of general categories */}
+      {((createNew && data === null && community===null && organisation===null) ||
+        (!createNew && data?.parent === null && community===null && organisation===null)) ?
         <>
           <div className="py-4"/>
           <Controller

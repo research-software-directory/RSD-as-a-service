@@ -10,7 +10,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from './logger'
-import {CategoryID} from '~/types/Category'
 import {RelatedProjectForSoftware} from '~/types/Project'
 import {CommunitiesOfSoftware} from '~/components/software/edit/communities/apiSoftwareCommunities'
 import {
@@ -189,9 +188,7 @@ export async function getKeywordsForSoftware(uuid:string,token?:string){
 }
 
 function prepareQueryURL(path: string, params?: Record<string, string>) {
-  const baseURL = getBaseUrl()
-  logger(`prepareQueryURL baseURL:${baseURL}`)
-  let url = `${baseURL}${path}`
+  let url = `${getBaseUrl()}${path}`
   if (params) {
     const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&')
     if (paramStr) url += '?' + paramStr
@@ -199,7 +196,7 @@ function prepareQueryURL(path: string, params?: Record<string, string>) {
   return url
 }
 
-export async function getCategoriesForSoftware(software_id: string, token?: string): Promise<CategoriesForSoftware> {
+export async function getCategoriesForSoftware(software_id: string, token?: string){
   try {
     const url = prepareQueryURL('/rpc/category_paths_by_software_expanded', {software_id})
     const resp = await fetch(url, {
@@ -207,16 +204,16 @@ export async function getCategoriesForSoftware(software_id: string, token?: stri
       headers: createJsonHeaders(token)
     })
     if (resp.status === 200) {
-      const data = await resp.json()
-      logger(`getCategoriesForSoftware response: ${JSON.stringify(data)}`)
+      const data:CategoriesForSoftware = await resp.json()
       return data
-    } else if (resp.status === 404) {
-      logger(`getCategoriesForSoftware: 404 [${url}]`, 'error')
+    } else {
+      logger(`getCategoriesForSoftware: ${resp.status} - ${resp.statusText} [${url}]`, 'error')
+      return []
     }
   } catch (e: any) {
     logger(`getCategoriesForSoftware: ${e?.message}`, 'error')
+    return []
   }
-  return []
 }
 
 export async function getCategoryForSoftwareIds(software_id: string, token?: string): Promise<CategoryForSoftwareIds> {
@@ -228,7 +225,6 @@ export async function getCategoryForSoftwareIds(software_id: string, token?: str
     })
     if (resp.status === 200) {
       const data = await resp.json()
-      logger(`getCategoriesForSoftwareIds response: ${JSON.stringify(data)}`)
       return new Set(data.map((entry: any) => entry.category_id))
     } else if (resp.status === 404) {
       logger(`getCategoriesForSoftwareIds: 404 [${url}]`, 'error')
@@ -243,7 +239,7 @@ export async function getCategoryForSoftwareIds(software_id: string, token?: str
   }
 }
 
-export async function addCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {
+export async function addCategoryToSoftware(softwareId: string, categoryId: string, token: string) {
   const url = prepareQueryURL('/category_for_software')
   const data = {software_id: softwareId, category_id: categoryId}
 
@@ -254,14 +250,14 @@ export async function addCategoryToSoftware(softwareId: string, categoryId: Cate
     },
     body: JSON.stringify(data),
   })
-  logger(`addCategoryToSoftware: resp: ${resp}`)
+
   if (resp.ok) {
     return null
   }
   throw new Error(`API returned: ${resp.status} ${resp.statusText}`)
 }
 
-export async function deleteCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {
+export async function deleteCategoryToSoftware(softwareId: string, categoryId: string, token: string) {
   const url = prepareQueryURL(`/category_for_software?software_id=eq.${softwareId}&category_id=eq.${categoryId}`)
 
   const resp = await fetch(url, {
@@ -270,7 +266,7 @@ export async function deleteCategoryToSoftware(softwareId: string, categoryId: C
       ...createJsonHeaders(token),
     },
   })
-  logger(`deleteCategoryToSoftware: resp: ${resp}`)
+
   if (resp.ok) {
     return null
   }

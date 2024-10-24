@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,9 +17,10 @@ type OrganisationListProps = {
   onEdit: (pos: number) => void
   onDelete: (pos: number) => void
   onSorted: (organisation:EditOrganisation[])=>void
+  onCategory: (pos: number) => void
 }
 
-export default function SortableOrganisationsList({organisations,onEdit,onDelete,onSorted}:OrganisationListProps) {
+export default function SortableOrganisationsList({organisations,onEdit,onDelete,onSorted,onCategory}:OrganisationListProps) {
 
   if (organisations.length === 0) {
     return (
@@ -35,6 +38,7 @@ export default function SortableOrganisationsList({organisations,onEdit,onDelete
       organisation={item}
       onEdit={onEdit}
       onDelete={onDelete}
+      onCategory={onCategory}
     />
   }
 

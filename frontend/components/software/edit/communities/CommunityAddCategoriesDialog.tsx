@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
@@ -40,14 +41,13 @@ export default function CommunityAddCategoriesDialog({
   onConfirm,
   autoConfirm
 }: communityAddCategoriesDialogProps) {
+  const {token} = useSession()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [categories, setCategories] = useState<TreeNode<CategoryEntry>[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [state, setState] = useState<'loading' | 'error' | 'ready' | 'saving'>('loading')
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<CategoryForSoftwareIds>(new Set())
   const [availableCategoryIds, setAvailableCategoryIds] = useState<CategoryForSoftwareIds>(new Set())
-
-  const {token} = useSession()
 
   function isSelected(node: TreeNode<CategoryEntry>) {
     const val = node.getValue()
@@ -74,7 +74,7 @@ export default function CommunityAddCategoriesDialog({
 
   useEffect(() => {
     setState('loading')
-    const promiseLoadRoots = loadCategoryRoots(community.id)
+    const promiseLoadRoots = loadCategoryRoots({community:community.id})
       .then(roots => {
         // if there are no categories for this community, we don't show the modal
         if (roots.length === 0 && autoConfirm) {

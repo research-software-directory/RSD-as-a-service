@@ -9,13 +9,13 @@
 import CancelIcon from '@mui/icons-material/Cancel'
 import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton'
-import {CategoryEntry, CategoryID} from '~/types/Category'
+import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
 
 export type CategoryTreeLevelProps = {
   items: TreeNode<CategoryEntry>[]
   showLongNames?: boolean
-  onRemove?: (categoryId: CategoryID) => void
+  onRemove?: (categoryId: string) => void
 }
 export const CategoryTreeLevel = ({onRemove, ...props}: CategoryTreeLevelProps) => {
 
