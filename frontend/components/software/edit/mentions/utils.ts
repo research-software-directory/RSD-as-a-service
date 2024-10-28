@@ -6,7 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-const DOI_REGEX = /10(\.\w+)+\/\S+/
+const DOI_REGEX = /(10(\.\w+)+)(\/|%2F)(\S+)/i
 export const DOI_REGEX_STRICT = /^10(\.\w+)+\/\S+$/
 const OPENALEX_ID_REGEX = /https:\/\/openalex\.org\/([WwAaSsIiCcPpFf]\d{3,13})/
 
@@ -18,7 +18,7 @@ export function extractSearchTerm(query: string): SearchTermInfo{
 
   const doiRegexMatch = DOI_REGEX.exec(query)
   if (doiRegexMatch != null) {
-    return {term: doiRegexMatch[0], type: 'doi'}
+    return {term: doiRegexMatch[1] + '/' + doiRegexMatch[4], type: 'doi'}
   }
   const openalexRegexMatch = OPENALEX_ID_REGEX.exec(query)
   if (openalexRegexMatch != null) {
