@@ -129,7 +129,6 @@ MyDocument.getInitialProps = async (ctx) => {
 
   ctx.renderPage = () =>
     originalRenderPage({
-      // eslint-disable-next-line react/display-name
       enhanceApp: (App:any) => (props) => <App emotionCache={cache} {...props} />,
     })
 
@@ -144,7 +143,6 @@ MyDocument.getInitialProps = async (ctx) => {
       key={style.key}
       // pass nonce for security headers
       nonce={nonce}
-      // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{__html: style.css}}
     />
   ))
