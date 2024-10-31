@@ -46,7 +46,7 @@ const eslintConfig = [
       '@typescript-eslint/no-empty-object-type' :'warn',
       '@typescript-eslint/prefer-as-const':'warn',
       '@typescript-eslint/no-unused-expressions':'warn',
-      '@typescript-eslint/no-unsafe-function-type':'off',
+      '@typescript-eslint/no-unsafe-function-type':'warn',
       'prefer-const':'off',
       'no-unused-vars':'off',
       'no-var':'off',
