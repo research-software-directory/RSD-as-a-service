@@ -33,7 +33,7 @@ public class MainRor {
 
 	private static void scrapeLocationData() {
 		RorPostgrestConnector organisationsInRSD = new RorPostgrestConnector();
-		Collection<BasicOrganisationData> organisationsToScrape = organisationsInRSD.organisationsWithoutLocation(SCRAPING_LIMIT);
+		Collection<OrganisationDatabaseData> organisationsToScrape = organisationsInRSD.organisationsWithoutLocation(SCRAPING_LIMIT);
 		CompletableFuture<?>[] futures = new CompletableFuture[organisationsToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
@@ -41,15 +41,12 @@ public class MainRor {
 		String columnName = "ror_last_error";
 		String primaryKeyName = "id";
 		String scrapedAtName = "ror_scraped_at";
-		for (BasicOrganisationData organisation : organisationsToScrape) {
+		for (OrganisationDatabaseData organisation : organisationsToScrape) {
 			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
 				try {
-					String rorUrl = organisation.rorId().replace("https://ror.org/", "https://api.ror.org/organizations/");
-					RorScraper rorScraper = new RorScraper(rorUrl);
-					String city = rorScraper.city();
-					String country = rorScraper.country();
-					BasicOrganisationData updatedOrganisationData = new BasicOrganisationData(organisation.id(), organisation.rorId(), country, city);
-					BasicOrganisationDatabaseData updatedOrganisationDatabaseData = new BasicOrganisationDatabaseData(updatedOrganisationData, scrapedAt);
+					RorScraper rorScraper = new RorScraper(organisation.rorId());
+					RorData data = rorScraper.scrapeData();
+					OrganisationDatabaseData updatedOrganisationDatabaseData = new OrganisationDatabaseData(organisation.id(), organisation.rorId(), scrapedAt, data);
 					organisationsInRSD.saveLocationData(updatedOrganisationDatabaseData);
 				} catch (RsdResponseException | IOException | InterruptedException e) {
 					Utils.saveExceptionInDatabase("ROR location scraper", tableName, organisation.id(), e);
