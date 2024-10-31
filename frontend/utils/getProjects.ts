@@ -60,7 +60,7 @@ export async function getProjectItem({slug,token}:
   try{
     // get project by slug
     const query = `project?slug=eq.${slug}`
-    let url = `${getBaseUrl()}/${query}`
+    const url = `${getBaseUrl()}/${query}`
 
     const resp = await fetch(url, {
       method: 'GET',
@@ -220,7 +220,7 @@ export async function getKeywordsForProject({project, token, frontend = false}:
 export async function getLinksForProject({project, token, frontend = false}:
   { project: string, token: string, frontend?: boolean }) {
   try {
-    let query = `url_for_project?project=eq.${project}&order=position.asc`
+    const query = `url_for_project?project=eq.${project}&order=position.asc`
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend === true) {
       url = `/api/v1/${query}`

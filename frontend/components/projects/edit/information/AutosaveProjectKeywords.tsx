@@ -66,7 +66,7 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
     const find = keywords.filter(item => item.keyword.trim().toLowerCase() === selected.trim().toLowerCase())
     if (find.length === 0) {
       // create keyword
-      let resp = await createOrGetKeyword({
+      const resp = await createOrGetKeyword({
         keyword: selected,
         token
       })

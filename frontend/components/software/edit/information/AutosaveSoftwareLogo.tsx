@@ -47,7 +47,6 @@ export default function AutosaveSoftwareLogo() {
   }
 
   async function saveImage(image_b64: string, mime_type: string) {
-    let resp
     // split base64 to use only encoded content
     const data = image_b64.split(',')[1]
     if (form_image_id) {
@@ -68,7 +67,7 @@ export default function AutosaveSoftwareLogo() {
       }
     }
     // add new image to db
-    resp = await upsertImage({
+    const resp = await upsertImage({
       data,
       mime_type,
       token

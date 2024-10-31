@@ -78,7 +78,7 @@ export default function AutosaveSoftwareKeywords(){
     const find = keywords.filter(item => item.keyword.trim().toLowerCase() === selected.trim().toLowerCase())
     if (find.length === 0) {
       // create or get existing keyword
-      let resp = await createOrGetKeyword({
+      const resp = await createOrGetKeyword({
         keyword: selected,
         token
       })

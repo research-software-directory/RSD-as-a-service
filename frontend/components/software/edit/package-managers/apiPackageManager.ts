@@ -159,7 +159,7 @@ export async function getPackageManagers({software, token}: { software: string, 
 
 export async function postPackageManager({data, token}: {data: NewPackageManager, token: string }) {
   try {
-    let url = `${getBaseUrl()}/package_manager`
+    const url = `${getBaseUrl()}/package_manager`
 
     // ELSE add new package manager
     const resp = await fetch(url,{

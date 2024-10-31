@@ -161,7 +161,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract user settings from cookie
   const {rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings
-  let page_rows = rows ?? rsd_page_rows
+  const page_rows = rows ?? rsd_page_rows
 
   // console.log('rows...', rows)
   // console.log('page...', page)

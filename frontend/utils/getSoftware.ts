@@ -168,7 +168,7 @@ export async function getKeywordsForSoftware(uuid:string,token?:string){
     // this request is always performed from backend
     // the content is order by tag ascending
     const query = `rpc/keywords_by_software?software=eq.${uuid}&order=keyword.asc`
-    let url = `${getBaseUrl()}/${query}`
+    const url = `${getBaseUrl()}/${query}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)
@@ -280,7 +280,7 @@ export async function getLicenseForSoftware(uuid:string,token?:string){
   try{
     // this request is always performed from backend
     // the content is order by license ascending
-    let url = `${getBaseUrl()}/license_for_software?&software=eq.${uuid}&order=license.asc`
+    const url = `${getBaseUrl()}/license_for_software?&software=eq.${uuid}&order=license.asc`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)

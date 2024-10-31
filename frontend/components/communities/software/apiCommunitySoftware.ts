@@ -69,7 +69,7 @@ export async function getSoftwareForCommunity({
       url += '&is_published=eq.true'
     }
     // FILTERS
-    let filters = baseQueryString({
+    const filters = baseQueryString({
       keywords,
       prog_lang,
       licenses,

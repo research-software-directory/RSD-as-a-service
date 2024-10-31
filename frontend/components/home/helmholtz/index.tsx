@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -101,7 +101,7 @@ function PreviousSpotlight({name, image, link, description, i}:
   function descriptionParagraph (description: string) {
     if (description != '') {
       if (description.length > MAX_CHARS) {
-        let description_trunc = description.substring(0, MAX_CHARS)
+        const description_trunc = description.substring(0, MAX_CHARS)
         description = description_trunc.substring(0, description_trunc.lastIndexOf(' ')) + ' …'
       }
       return (
@@ -143,7 +143,7 @@ function Spotlights({spotlights}:{spotlights: Array<SpotlightDescription>}) {
       <div className="w-full flex flex-row flex-wrap py-5">
         {spotlights.slice(1, 5).map(spotlight => {
           i++
-          let key = 'spotlight_' + i
+          const key = 'spotlight_' + i
           return(
             <PreviousSpotlight
               key={key}

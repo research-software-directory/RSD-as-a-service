@@ -22,7 +22,7 @@ export async function getTestimonialsForSoftware({software, token}:
   {software: string, token?: string}) {
   try {
 
-    let url = `${getBaseUrl()}/testimonial?software=eq.${software}&order=position.asc`
+    const url = `${getBaseUrl()}/testimonial?software=eq.${software}&order=position.asc`
 
     const resp = await fetch(url, {
       method: 'GET',

@@ -233,27 +233,29 @@ export default function SoftwareOverviewPage({
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   let offset=0
   // extract params from page-query
-  let {search, keywords, prog_lang, licenses, order, rows, page} = ssrSoftwareParams(context.query)
+  const {search, keywords, prog_lang, licenses, order, rows, page} = ssrSoftwareParams(context.query)
   // extract user settings from cookie
   const {rsd_page_layout, rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings
-  let page_rows = rows ?? rsd_page_rows
+  const page_rows = rows ?? rsd_page_rows
   // calculate offset when page & rows present
   if (page_rows && page) {
     offset = page_rows * (page - 1)
   }
 
   const allowedOrderings = softwareOrderOptions.map(o => o.key)
-
-  if (!order || !allowedOrderings.includes(order)) {
-    order = 'mention_cnt'
+  // default order
+  let softwareOrder = order ?? 'mention_cnt'
+  // remove order key if NOT in list of allowed
+  if (order && allowedOrderings.includes(order)===false) {
+    softwareOrder = 'mention_cnt'
   }
 
   // extract order direction from definitions
-  const orderInfo = softwareOrderOptions.find(item=>item.key===order)!
+  const orderInfo = softwareOrderOptions.find(item=>item.key===softwareOrder)!
   // ordering options require "stable" secondary order
   // to ensure proper pagination. We use slug for this purpose
-  const orderBy = `${order}.${orderInfo.direction},slug.asc`
+  const orderBy = `${softwareOrder}.${orderInfo.direction},slug.asc`
 
   // construct postgREST api url with query params
   const url = softwareListUrl({
@@ -306,7 +308,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       licenses,
       licensesList,
       page,
-      order,
+      order: softwareOrder,
       rows: page_rows,
       layout: rsd_page_layout,
       count: software.count,

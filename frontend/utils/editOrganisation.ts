@@ -258,7 +258,7 @@ export async function getRsdPathForOrganisation({uuid,token}:
   {uuid: string, token?: string}) {
   try {
     const query = `rpc/organisation_route?id=${uuid}`
-    let url = `${getBaseUrl()}/${query}`
+    const url = `${getBaseUrl()}/${query}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: {

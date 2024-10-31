@@ -12,7 +12,7 @@ const refreshInterval = 60*60*1000
 // save timer as public variable
 let timer:NodeJS.Timer
 // save authorisation endpoint info
-let cache:{
+const cache:{
   [key:string]:{
     authEndpoint?: string
     wellknownUrl: string

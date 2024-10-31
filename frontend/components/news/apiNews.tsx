@@ -40,7 +40,7 @@ export async function getNewsItemBySlug({date,slug,token}: {date:string,slug:str
     if (!slug || !date) return null
 
     // get news item, join with image_for_news
-    let query = `slug=eq.${slug}&publication_date=eq.${date}&select=*,image_for_news(id,image_id,position)`
+    const query = `slug=eq.${slug}&publication_date=eq.${date}&select=*,image_for_news(id,image_id,position)`
     const url = `${getBaseUrl()}/news?${query}`
 
     // get page
@@ -272,7 +272,7 @@ export async function validSlugNews({date, slug, token}: {date:string, slug: str
   // use server side when available
   const baseUrl = getBaseUrl()
   // get published meta pages ordered by position
-  let query = `news?select=slug,publication_date&slug=eq.${slug}&publication_date=eq.${date}`
+  const query = `news?select=slug,publication_date&slug=eq.${slug}&publication_date=eq.${date}`
   const url = `${baseUrl}/${query}`
 
   // get page
@@ -364,7 +364,7 @@ export async function getTopNews(items:number) {
     // use server side when available
     const select = 'id,slug,publication_date,title,summary,is_published'
     // get top 4 published articles (newest at the top)
-    let query = `${paginationUrlParams({rows:items, page:0})}&is_published=eq.true&order=publication_date.desc`
+    const query = `${paginationUrlParams({rows:items, page:0})}&is_published=eq.true&order=publication_date.desc`
     const url = `${getBaseUrl()}/news?select=${select}&${query}`
 
     // get page

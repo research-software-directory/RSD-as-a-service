@@ -18,8 +18,8 @@ export type MaintainerOfCommunity = {
 export async function getMaintainersOfCommunity({community, token}:
   { community: string, token: string}) {
   try {
-    let query = `rpc/maintainers_of_community?community_id=${community}`
-    let url = `${getBaseUrl()}/${query}`
+    const query = `rpc/maintainers_of_community?community_id=${community}`
+    const url = `${getBaseUrl()}/${query}`
 
     const resp = await fetch(url, {
       method: 'GET',
@@ -42,8 +42,8 @@ export async function getMaintainersOfCommunity({community, token}:
 export async function deleteMaintainerFromCommunity({maintainer,community,token}:
   {maintainer:string,community:string,token:string}) {
   try {
-    let query = `maintainer_for_community?maintainer=eq.${maintainer}&community=eq.${community}`
-    let url = `${getBaseUrl()}/${query}`
+    const query = `maintainer_for_community?maintainer=eq.${maintainer}&community=eq.${community}`
+    const url = `${getBaseUrl()}/${query}`
 
     const resp = await fetch(url, {
       method: 'DELETE',

@@ -91,7 +91,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     }
   }
 
-  let pageIndex = editProjectPage.findIndex(p => p.id === page)
+  const pageIndex = editProjectPage.findIndex(p => p.id === page)
   // Edit project page not found in defs
   if (pageIndex===-1) {
     return {

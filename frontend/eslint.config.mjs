@@ -40,14 +40,14 @@ const eslintConfig = [
 
       // ---------------------------------------
       // ENABLE LATER
-      // dissable rules we did not used in the past
+      // disable rules we did not used in the past
       // we can enable these rules in the future
       // and fix the linter errors
       '@typescript-eslint/no-empty-object-type' :'warn',
       '@typescript-eslint/prefer-as-const':'warn',
       '@typescript-eslint/no-unused-expressions':'warn',
       '@typescript-eslint/no-unsafe-function-type':'warn',
-      'prefer-const':'off',
+      'prefer-const':'warn',
       'no-unused-vars':'off',
       'no-var':'off',
 

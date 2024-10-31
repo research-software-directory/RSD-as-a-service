@@ -75,7 +75,7 @@ export async function getMaintainerOrganisations({token}:
     if (!token) return []
     // build url
     const query = 'rpc/organisations_of_current_maintainer'
-    let url = `${getBaseUrl()}/${query}`
+    const url = `${getBaseUrl()}/${query}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)

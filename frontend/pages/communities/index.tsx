@@ -154,7 +154,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     // extract user settings from cookie
     const {rsd_page_layout,rsd_page_rows} = getUserSettings(context.req)
     // use url param if present else user settings
-    let page_rows = rows ?? rsd_page_rows
+    const page_rows = rows ?? rsd_page_rows
 
     // get news items list to all pages server side
     const {count,communities} = await getCommunityList({

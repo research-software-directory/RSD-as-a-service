@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -135,11 +137,9 @@ export async function getPageLinks({is_published = true,token}: {is_published?: 
 }
 
 export async function validPageSlug({slug, token}: { slug: string, token: string }) {
-  // use server side when available
-  const baseUrl = getBaseUrl()
   // get published meta pages ordered by position
-  let query = `meta_pages?select=slug,is_published&slug=eq.${slug}`
-  const url = `${baseUrl}/${query}`
+  const query = `meta_pages?select=slug,is_published&slug=eq.${slug}`
+  const url = `${getBaseUrl()}/${query}`
 
   // get page
   const resp = await fetch(url, {

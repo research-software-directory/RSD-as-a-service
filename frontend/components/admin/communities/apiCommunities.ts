@@ -21,7 +21,7 @@ export async function validCommunitySlug({slug, token}: { slug: string, token: s
     // use server side when available
     const baseUrl = getBaseUrl()
     // get community by slug
-    let query = `community?select=slug&slug=eq.${slug}`
+    const query = `community?select=slug&slug=eq.${slug}`
     const url = `${baseUrl}/${query}`
     // get community
     const resp = await fetch(url, {
