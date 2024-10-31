@@ -1,13 +1,15 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 // Obtain refresh token from RSD auth service
 import type {NextApiRequest, NextApiResponse} from 'next'
-import cookie from 'cookie'
-import {createSession, Session} from '../../../../auth'
-import logger from '../../../../utils/logger'
+import {parse} from 'cookie'
+import {createSession, Session} from '~/auth'
+import logger from '~/utils/logger'
 
 type Data = {
   session:Session
@@ -62,12 +64,12 @@ export default async function RefreshToken(
       const raw_cookies = resp.headers.get('set-cookie')
       let rsd_token = null
       if (raw_cookies) {
-        rsd_token = cookie.parse(raw_cookies)?.rsd_token
+        rsd_token = parse(raw_cookies)?.rsd_token
       }
       if (rsd_token && raw_cookies) {
         const session = createSession(rsd_token)
         if (session.status === 'authenticated') {
-          // replace old cookie in out reponse to FE
+          // replace old cookie in the response to FE
           res.setHeader('set-cookie',raw_cookies)
         }
         return res.status(200).json({session})

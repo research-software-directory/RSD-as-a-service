@@ -8,10 +8,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {createContext, Dispatch, SetStateAction, useState, useContext, useEffect} from 'react'
-import verifyJwt, {decodeJwt} from './jwtUtils'
 import {IncomingMessage, OutgoingMessage} from 'http'
-import cookie from 'cookie'
-import logger from '../utils/logger'
+import {parse} from 'cookie'
+import logger from '~/utils/logger'
+import verifyJwt, {decodeJwt} from './jwtUtils'
 import {refreshSession} from './refreshSession'
 
 // refresh schedule margin 5min. before expiration time
@@ -177,7 +177,7 @@ export function getSessionSeverSide(req: IncomingMessage|undefined, res: Outgoin
   // get token from cookie
   const token = getRsdTokenNode(req)
   // create session from token
-  const session = createSession(token)
+  const session = createSession(token ?? null)
   // remove invalid cookie
   if (session.status === 'invalid') {
     // console.log('remove rsd cookies...')
@@ -199,7 +199,7 @@ export function getRsdTokenNode(req: IncomingMessage){
   // check for cookies
   if (req?.headers?.cookie) {
     // parse cookies from node request
-    const cookies = cookie.parse(req.headers.cookie)
+    const cookies = parse(req.headers.cookie)
     // validate and decode
     const token = cookies?.rsd_token
     return token
