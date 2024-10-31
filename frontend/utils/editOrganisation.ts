@@ -234,7 +234,7 @@ export async function deleteOrganisation({uuid,logo_id, token}:
     if ([200, 204].includes(resp.status) === true && logo_id) {
       // try to remove old image
       // but don't wait for results
-      const del = await deleteImage({
+      deleteImage({
         id: logo_id,
         token
       })

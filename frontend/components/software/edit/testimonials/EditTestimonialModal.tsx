@@ -35,7 +35,7 @@ const formId='edit-testimonial-modal'
 
 export default function EditTestimonialModal({config,open,onCancel,onSubmit,testimonial,pos}: EditTestimonialModalProps) {
   const smallScreen = useMediaQuery('(max-width:600px)')
-  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<Testimonial|NewTestimonial>({
+  const {handleSubmit, watch, formState, reset, control, register} = useForm<Testimonial|NewTestimonial>({
     mode: 'onChange',
     defaultValues: {
       ...testimonial

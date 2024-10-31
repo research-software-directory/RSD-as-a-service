@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,6 +18,7 @@ type getHighlightsApiParams = {
   orderBy?: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getSoftwareHighlights({page, rows, token, searchFor, orderBy}: getHighlightsApiParams) {
   // console.log('getSoftwareHighlights...mocks DEFAULT')
 
@@ -27,6 +28,7 @@ export async function getSoftwareHighlights({page, rows, token, searchFor, order
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function addSoftwareHighlight({id, position, token}: { id: string, position: number, token: string }) {
   // console.log('addSoftwareHighlight...mocks DEFAULT')
 
@@ -36,6 +38,7 @@ export async function addSoftwareHighlight({id, position, token}: { id: string, 
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function patchSoftwareHighlights({highlights, token}: { highlights: SoftwareHighlight[], token: string }) {
   // console.log('patchSoftwareHighlights...mocks DEFAULT')
 
@@ -45,6 +48,7 @@ export async function patchSoftwareHighlights({highlights, token}: { highlights:
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function deleteSoftwareHighlight({id, token}: { id: string, token: string }) {
   // console.log('deleteSoftwareHighlight...mocks DEFAULT')
 

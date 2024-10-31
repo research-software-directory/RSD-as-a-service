@@ -16,12 +16,14 @@ type LoadCategoryProps={
 
 
 // DEFAULT mock return empty array of categories
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function loadCategoryRoots({community, organisation, allow_software, allow_projects}:LoadCategoryProps){
   const result: TreeNode<CategoryEntry>[] = []
   return result
 }
 
 // DEFAULT mock return empty array of categories
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function categoryEntriesToRoots(categoriesArr: CategoryEntry[]): TreeNode<CategoryEntry>[] {
   const result: TreeNode<CategoryEntry>[] = []
   return result

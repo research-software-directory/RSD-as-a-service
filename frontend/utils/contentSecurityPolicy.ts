@@ -37,9 +37,9 @@ const sharedPolicy = `
   base-uri 'none';
   object-src 'none';
 `
-// default script def - use unsafe-inline for backward compatibilty
+// default script def - use unsafe-inline for backward compatibility
 // https://developer.chrome.com/docs/lighthouse/best-practices/csp-xss/?utm_source=lighthouse&utm_medium=devtools#ensure-csp-is-backwards-compatible
-const sharedScript = 'script-src \'self\' '
+// const sharedScript = 'script-src \'self\' '
 
 function defaultNonce() {
   if (crypto) return crypto.randomUUID()

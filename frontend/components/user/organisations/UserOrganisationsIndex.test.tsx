@@ -13,6 +13,7 @@ import UserOrganisations from './index'
 // MOCKS
 import organisationByMaintainer from './__mocks__/organisationsByMaintainer.json'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetOrganisationsForMaintainer = jest.fn(props => Promise.resolve([] as any))
 const mockUseUserOrganisations = jest.fn()
 

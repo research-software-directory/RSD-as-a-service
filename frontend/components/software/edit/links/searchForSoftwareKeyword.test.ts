@@ -22,7 +22,7 @@ it('searchForSoftwareKeyword calls api with proper params', async() => {
 
   mockResolvedValueOnce('OK')
 
-  const resp = await searchForSoftwareKeyword({searchFor})
+  await searchForSoftwareKeyword({searchFor})
 
   // validate api call
   expect(global.fetch).toBeCalledTimes(1)

@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +26,7 @@ export default function OrganisationLogo({host}: { host: RsdHost }) {
     )
   }
   if (host?.logo_url) {
-    const {name,logo_url,website}=host
+    const {name,logo_url}=host
     return (
       <div className="flex items-center">
         <span className="h-[4rem] w-[16rem]">

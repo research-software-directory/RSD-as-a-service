@@ -23,6 +23,7 @@ const mockProps = {
 }
 
 // MOCK patchOrganisationTable
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchOrganisationTable = jest.fn((props) => Promise.resolve({status: 200, statusText: 'OK'}))
 jest.mock('./updateOrganisationSettings', () => ({
   patchOrganisationTable: jest.fn((props)=>mockPatchOrganisationTable(props))
@@ -122,7 +123,7 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
       mockSession.user.role = 'rsd_admin'
       mockSession.status = 'authenticated'
     }
-    const {container} = render(
+    render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
           <OrganisationSettings />

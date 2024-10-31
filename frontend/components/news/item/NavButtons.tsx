@@ -27,7 +27,7 @@ type NavButtonsProps={
 async function deleteArticle(id:string,image_for_news:NewsImageProps[],token:string):Promise<{status:number,message:string}>{
   try{
     // delete images from image_for_news FIRST (reference index)
-    const img = await deleteNewsImages({
+    await deleteNewsImages({
       news_id: id,
       token
     })

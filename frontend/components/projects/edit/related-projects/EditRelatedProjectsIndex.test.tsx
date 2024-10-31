@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -18,7 +18,9 @@ import editProjectState from '../__mocks__/editProjectState'
 import mockRelatedProjects from './__mocks__/relatedProjectsForProject.json'
 
 // MOCK getRelatedProjectsForProject, getRelatedSoftwareForProject
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetRelatedProjectsForProject = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSearchForRelatedProjectByTitle = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/utils/getProjects', () => ({
   getRelatedProjectsForProject: jest.fn(props => mockGetRelatedProjectsForProject(props)),
@@ -26,9 +28,13 @@ jest.mock('~/utils/getProjects', () => ({
 }))
 
 // MOCK addRelatedProject, deleteRelatedProject
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockAddRelatedProject = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteRelatedProject = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockAddRelatedSoftware = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteRelatedSoftware = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/utils/editProject', () => ({
   addRelatedProject: jest.fn(props => mockAddRelatedProject(props)),
@@ -36,12 +42,11 @@ jest.mock('~/utils/editProject', () => ({
   addRelatedSoftware: jest.fn(props => mockAddRelatedSoftware(props)),
   deleteRelatedSoftware: jest.fn(props => mockDeleteRelatedSoftware(props)),
 }))
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSearchForRelatedSoftware = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/utils/editRelatedSoftware', () => ({
   searchForRelatedSoftware: jest.fn(props=>mockSearchForRelatedSoftware(props))
 }))
-
 
 describe('frontend/components/projects/edit/related-projects/index.tsx', () => {
   beforeEach(() => {

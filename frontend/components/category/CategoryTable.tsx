@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -62,6 +63,7 @@ We use dynamic class names here to build the table view ([not recommend](https:/
 because this approach is more difficult to maintain. Instead we use the following workaround to include the used CSS classes.
 Add more depth if necessary.
 */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const workaround =
   'grid-cols-1 grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5' +
   'col-span-1 col-span-2 col-span-3 col-span-4 col-span-5'

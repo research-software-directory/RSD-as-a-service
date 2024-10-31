@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,6 +12,7 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import UserAgrementModal from './UserAgreementModal'
 
 // MOCK useUserAgreements
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUserAgreements = jest.fn(props => {
   return {
     loading: false,
@@ -44,7 +47,7 @@ it('renders modal when agree_terms=false', async () => {
     </WithAppContext>
   )
 
-  const modal = await screen.findByTestId('user-agreement-modal')
+  await screen.findByTestId('user-agreement-modal')
 })
 
 it('renders modal when notice_privacy_statement=false', async() => {
@@ -62,7 +65,7 @@ it('renders modal when notice_privacy_statement=false', async() => {
     </WithAppContext>
   )
 
-  const modal = await screen.findByTestId('user-agreement-modal')
+  await screen.findByTestId('user-agreement-modal')
 })
 
 it('does not render modal when terms accepted', async() => {
@@ -93,7 +96,7 @@ it('accepts TOS via modal and calls patch account', async() => {
     public_orcid_profile: false
   })
 
-  mockPatchAccountTable.mockResolvedValueOnce((props: any) => {
+  mockPatchAccountTable.mockResolvedValueOnce(() => {
     return {
       status:204
     }
@@ -105,7 +108,7 @@ it('accepts TOS via modal and calls patch account', async() => {
     </WithAppContext>
   )
 
-  const modal = await screen.findByTestId('user-agreement-modal')
+  await screen.findByTestId('user-agreement-modal')
 
   const switches = screen.getAllByRole('checkbox')
 

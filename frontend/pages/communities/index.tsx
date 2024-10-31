@@ -177,7 +177,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         communities,
       },
     }
-  }catch(e){
+  }catch{
     return {
       notFound: true,
     }

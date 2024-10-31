@@ -34,6 +34,7 @@ export default function ProjectInformationForm({editProject}: { editProject: Edi
   })
   const {register, formState, watch} = methods
   // destructure formState (subscribe to changes)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {dirtyFields} = formState
   // watch form data changes (we use reset in useEffect)
   const formData = watch()

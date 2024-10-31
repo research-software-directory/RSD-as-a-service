@@ -94,8 +94,8 @@ function LatestSpotlight({name, description, image, link}:
   )
 }
 
-function PreviousSpotlight({name, image, link, description, i}:
-  {name: string, image: string, link: string, description: string | '', i: number}) {
+function PreviousSpotlight({name, image, link, description}:
+  {name: string, image: string, link: string, description: string | ''}) {
 
   const MAX_CHARS = 150
   function descriptionParagraph (description: string) {
@@ -151,7 +151,6 @@ function Spotlights({spotlights}:{spotlights: Array<SpotlightDescription>}) {
               image={spotlight.image}
               link={spotlight.link}
               description={spotlight.description}
-              i={i}
             />
           )
         })}
@@ -274,17 +273,17 @@ function moveLeft() {
 
 export default function HelmholtzHome() {
   const {session}=useAuth()
-  const {loading,organisations} = useOrganisations(session.token)
+  const {organisations} = useOrganisations(session.token)
 
-  const handleClickOpen = () => {
-    const loginButton = document.querySelector('.rsd-login-button')
-    if (loginButton) {
-      const evt = new MouseEvent('click', {
-        bubbles: true
-      })
-      loginButton.dispatchEvent(evt)
-    }
-  }
+  // const handleClickOpen = () => {
+  //   const loginButton = document.querySelector('.rsd-login-button')
+  //   if (loginButton) {
+  //     const evt = new MouseEvent('click', {
+  //       bubbles: true
+  //     })
+  //     loginButton.dispatchEvent(evt)
+  //   }
+  // }
 
   return (
     <div className="bg-base-100" data-testid="rsd-helmholtz-home">

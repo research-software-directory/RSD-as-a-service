@@ -12,14 +12,10 @@ import useProjectContext from '../useProjectContext'
 
 export default function ProjectMaintainerLinks() {
   const {project} = useProjectContext()
-  const {
-    unusedInvitations,magicLink,
-    createInvitation,deleteInvitation
-  } = useProjectInvitations({project:project.id})
+  const {unusedInvitations,createInvitation,deleteInvitation} = useProjectInvitations({project:project.id})
 
   // console.group('ProjectMaintainerLinks')
   // console.log('project...', project)
-  // console.log('magicLink...', magicLink)
   // console.log('unusedInvitations...', unusedInvitations)
   // console.groupEnd()
 

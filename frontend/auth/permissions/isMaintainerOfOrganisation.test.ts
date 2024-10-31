@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -40,14 +42,6 @@ it('returns true when organisation in list', async () => {
 })
 
 it('returns false when organisation NOT in list', async () => {
-  const expectedUrl = '/api/v1/rpc/organisations_of_current_maintainer'
-  const expectedOptions = {
-    'headers': {
-      'Authorization': `Bearer ${mockData.token}`,
-      'Content-Type': 'application/json'
-    },
-    'method': 'GET'
-  }
   // return mocked organisation
   mockResolvedValueOnce([])
   // get maintainer value
@@ -68,8 +62,7 @@ it('makes call to expected rpc ', async () => {
   // return mocked organisation
   mockResolvedValueOnce([mockData.organisation])
   // get maintainer value
-  const isMaintainer = await isMaintainerOfOrganisation(mockData)
-
+  await isMaintainerOfOrganisation(mockData)
   // validate call
   expect(global.fetch).toBeCalledTimes(1)
   expect(global.fetch).toBeCalledWith(expectedUrl, expectedOptions)

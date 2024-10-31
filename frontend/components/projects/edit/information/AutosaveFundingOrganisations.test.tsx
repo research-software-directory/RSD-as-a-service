@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,7 +15,9 @@ import {projectInformation as config} from './config'
 import mockFundingOrganisations from './__mocks__/fundingOrganisations.json'
 
 // MOCK searchForOrganisation api calls
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSearchForOrganisation = jest.fn(props => Promise.resolve([]))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockCreateOrganisation = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/utils/editOrganisation', () => ({
   searchForOrganisation: jest.fn(props => mockSearchForOrganisation(props)),
@@ -21,6 +25,7 @@ jest.mock('~/utils/editOrganisation', () => ({
 }))
 
 const mockAddOrganisationToProject = jest.fn(props => Promise.resolve({status:200,message:props}))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteOrganisationFromProject = jest.fn(props => Promise.resolve({status:200,message:[]}))
 jest.mock('~/utils/editProject', () => ({
   // ...jest.requireActual('~/utils/editProject'),

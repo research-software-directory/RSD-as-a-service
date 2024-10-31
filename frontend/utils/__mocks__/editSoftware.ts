@@ -1,16 +1,11 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-  NewSoftwareItem,
-  Tag,
-  EditSoftwareItem,
-  License
-} from '../../types/SoftwareTypes'
-
-import {AutocompleteOption} from '../../types/AutocompleteOptions'
+import {NewSoftwareItem} from '~/types/SoftwareTypes'
 
 export async function addSoftware({software, token}:
   { software: NewSoftwareItem, token: string }) {
@@ -32,23 +27,6 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
       slug,
       token,
       baseUrl
-    }
-  }
-}
-
-export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repositoryInDb, token}:{
-  software: EditSoftwareItem, tagsInDb: AutocompleteOption<Tag>[], licensesInDb: AutocompleteOption<License>[],
-  repositoryInDb: string|null, token: string
-}) {
-  try {
-    return {
-      status: 200,
-      message: software
-    }
-  } catch (e: any) {
-    return {
-      status: 500,
-      message: e?.message
     }
   }
 }

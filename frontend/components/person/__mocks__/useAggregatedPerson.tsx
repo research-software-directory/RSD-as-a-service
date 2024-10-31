@@ -10,6 +10,7 @@ export type AggregatedPersonOptions={
   emails: string[]
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function useAggregatedPerson(orcid:string|null){
 
   const options:AggregatedPersonOptions = {

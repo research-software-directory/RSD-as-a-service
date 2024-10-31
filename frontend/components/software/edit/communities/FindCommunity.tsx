@@ -69,46 +69,16 @@ export default function FindCommunity({onAdd}:FindCommunityProps) {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function createCommunity(newInputValue: string) {
     // onCreate(newInputValue)
-    logger('create not support','warn')
-  }
-
-  function renderAddOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<CommunityListProps>) {
-    // if more than one option we add border at the bottom
-    // we assume that first option is Add "new item"
-    if (options.length > 1) {
-      if (props?.className) {
-        props.className+=' mb-2 border-b'
-      } else {
-        props.className='mb-2 border-b'
-      }
-    }
-    return (
-      <li
-        data-testid="add-community-option"
-        key={option.key}
-        {...props}
-      >
-        {/* if new option (has input) show label and count  */}
-        <strong>{`Add "${option.label}"`}</strong>
-      </li>
-    )
+    logger('create not supported','warn')
   }
 
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<CommunityListProps>) {
-    // when value is not found option returns input prop
-    // if (option?.input) {
-    //   // if input is over minLength
-    //   if (option?.input.length > config.findCommunity.validation.minLength) {
-    //     // we offer an option to create this entry
-    //     return renderAddOption(props,option)
-    //   } else {
-    //     return null
-    //   }
-    // }
+    option: AutocompleteOption<CommunityListProps>
+  ) {
+
     return (
       <li
         data-testid="find-community-option"

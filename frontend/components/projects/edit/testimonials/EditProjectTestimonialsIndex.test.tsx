@@ -19,6 +19,7 @@ import config from './config'
 import mockTestimonials from './__mocks__/project_testimonials.json'
 
 // Mock editTestimonial api calls
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetTestimonialsForProject = jest.fn(props => Promise.resolve(mockTestimonials))
 const mockPostTestimonial = jest.fn(({testimonial}) => {
   return Promise.resolve({
@@ -26,7 +27,9 @@ const mockPostTestimonial = jest.fn(({testimonial}) => {
     message: testimonial
   })
 })
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteProjectTestimonial = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchTestimonialPositions = jest.fn(props => Promise.resolve([] as any))
 jest.mock('./apiProjectTestimonial', () => ({
   getTestimonialsForProject: jest.fn(props => mockGetTestimonialsForProject(props)),
@@ -57,7 +60,7 @@ describe('frontend/components/projects/edit/testimonials/index.tsx', () => {
     // wait for loader to
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // validate no items message
-    const noItemsMsg = screen.getByText('No testimonials')
+    screen.getByText('No testimonials')
   })
 
   it('renders mocked testimonials', async() => {
@@ -113,7 +116,7 @@ describe('frontend/components/projects/edit/testimonials/index.tsx', () => {
     fireEvent.click(addBtn)
 
     // get modal
-    const modal = screen.getByRole('dialog')
+    screen.getByRole('dialog')
 
     // write message
     const message = screen.getByRole('textbox', {

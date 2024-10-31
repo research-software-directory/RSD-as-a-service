@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -46,7 +46,7 @@ export default function AddSoftwareHighlights({onAddSoftware,highlights}:AddSoft
     // get software list, we do not pass the token
     // when token is passed it will return not published items too
     const resp= await getSoftwareList({url})
-    // remove items already in hightlights
+    // remove items already in highlights
     const software = itemsNotInReferenceList({
       list: resp.data ?? [],
       referenceList: highlights as any as SoftwareOverviewItemProps[] ?? [],
@@ -68,8 +68,8 @@ export default function AddSoftwareHighlights({onAddSoftware,highlights}:AddSoft
   }
 
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<SoftwareOverviewItemProps>,
-    state: object) {
+    option: AutocompleteOption<SoftwareOverviewItemProps>
+  ) {
     // when value is not not found option returns input prop
     if (option?.input) {
       // we DO NOT offer an option to create this entry

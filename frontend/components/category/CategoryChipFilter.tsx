@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {Fragment} from 'react'
-import {CategoryEntry, CategoryPath} from '~/types/Category'
+import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
 import TagChipFilter from '~/components/layout/TagChipFilter'
 

@@ -97,7 +97,7 @@ export default function CommunityLogo({id,name,logo_id,isMaintainer}:CommunityLo
       // console.log('removeLogo...',resp)
       if (resp.status === 200) {
         // delete logo without check
-        const del = await deleteImage({
+        deleteImage({
           id: logo,
           token
         })

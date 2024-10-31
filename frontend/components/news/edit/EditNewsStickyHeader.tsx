@@ -21,7 +21,7 @@ export default function EditNewsStickyHeader() {
   const [title,slug,publication_date] = watch(['title','slug','publication_date'])
 
   // add border when header is at the top of the page
-  const {el} = useStickyHeaderBorder({
+  useStickyHeaderBorder({
     headerRef, setClasses
   })
 

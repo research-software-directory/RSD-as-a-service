@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -39,9 +39,9 @@ export function useProjectCardActions({project}: ProjectCardWithMenuProps) {
     is_featured: project.is_featured,
     target: 'project'
   })
-  // refresh "signal" for child component(s) to relaod project item after update
-  // and updated menuOptions
-  const [refresh, setRefresh] = useState<number>(0)
+  // refresh "signal" for child component(s) to reload project item after update and update menuOptions
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [refresh,setRefresh] = useState<number>(0)
 
   // console.group('useProjectCardActions')
   // console.log('id...', id)
@@ -65,7 +65,7 @@ export function useProjectCardActions({project}: ProjectCardWithMenuProps) {
       // directly update object value
       project.is_featured = is_featured
       // send refresh signal
-      // TO BE USED BY child component to relaod item
+      // TO BE USED BY child component to reload item
       setRefresh(v=>v+1)
     }
   }
@@ -104,7 +104,7 @@ export function useProjectCardActions({project}: ProjectCardWithMenuProps) {
         setStatus('approved')
         break
       default:
-        logger(`Action type ${action.type} NOT SUPORTED. Check your spelling.`, 'warn')
+        logger(`Action type ${action.type} NOT SUPPORTED. Check your spelling.`, 'warn')
     }
   }
 

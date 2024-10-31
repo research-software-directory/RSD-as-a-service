@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,18 +19,22 @@ const mockProps = {
   url_for_project: mockUrlProject
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUpdateProjectLink = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockAddProjectLink = jest.fn(props => Promise.resolve({
   status: 201,
   message: 'project-link-id'
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteProjectLink = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchProjectLinkPositions = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'

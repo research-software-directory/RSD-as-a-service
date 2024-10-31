@@ -74,7 +74,7 @@ export default function EditImpactProvider(props:any) {
     editMentionReducer,
     {
       ...initialState,
-      // use inital values from useProjectMentionContext hook
+      // use initial values from useProjectMentionContext hook
       loading,
       mentions
     }
@@ -224,9 +224,9 @@ export default function EditImpactProvider(props:any) {
         if (impact>0) setImpactCnt(impact-1)
         // try to remove mention item from RSD
         // we do not handle response status
-        // if mention is referenced elswhere
+        // if mention is referenced elsewhere
         // delete action will fail (and that's ok)
-        const del = await deleteMentionItem({
+        deleteMentionItem({
           id: item.id,
           token
         })

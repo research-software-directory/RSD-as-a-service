@@ -22,24 +22,27 @@ import {initialState as softwareState} from '~/components/software/edit/editSoft
 import mockCrossrefItems from '~/utils/__mocks__/crossrefItems.json'
 
 // Mock getMentionsForSoftware
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetMentionByDoiFromRsd = jest.fn((props) => Promise.resolve([] as any))
 
 jest.mock('~/utils/editMentions', () => ({
   ...jest.requireActual('~/utils/editMentions'),
   getMentionByDoiFromRsd: jest.fn(props=>mockGetMentionByDoiFromRsd(props))
 }))
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetMentionByDoi = jest.fn((props) => Promise.resolve([] as any))
 jest.mock('~/utils/getDOI', () => ({
   getMentionByDoi: jest.fn(props=>mockGetMentionByDoi(props))
 }))
 
 // Mock findPublicationByTitle
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockFindPublicationByTitle = jest.fn(props => Promise.resolve([] as any))
 const mockAddNewMentionToSoftware = jest.fn(props => Promise.resolve({
   status: 200,
   message: props
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockRemoveMentionForSoftware = jest.fn(props => Promise.resolve([] as any))
 jest.mock('./apiRelatedOutput', () => ({
   findPublicationByTitle: jest.fn(props => mockFindPublicationByTitle(props)),
@@ -64,6 +67,7 @@ const mockSoftwareMentionContext={
   setCitationCnt:jest.fn(),
   setReferencePapersCnt:jest.fn()
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUseSoftwareMentionContext = jest.fn(props=>mockSoftwareMentionContext)
 jest.mock('~/components/software/edit/mentions/SoftwareMentionContext',()=>({
   useSoftwareMentionContext: jest.fn(props=>mockUseSoftwareMentionContext(props))

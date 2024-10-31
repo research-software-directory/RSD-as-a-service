@@ -19,6 +19,7 @@ const mockProps = {
   disabled: true
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetSoftwareVersionInfoForDoi = jest.fn(props => Promise.resolve({
   status: 200,
   data: {
@@ -96,7 +97,7 @@ it('shows valid concept DOI message', async() => {
   // wait loader to disappear
   await waitForElementToBeRemoved(within(validateBtn).getByRole('progressbar'))
   // valid DOI message shown
-  const validDOI = screen.getByText(`The DOI ${mockProps.doi} is a valid Concept DOI`)
+  screen.getByText(`The DOI ${mockProps.doi} is a valid Concept DOI`)
 })
 
 it('calls onUpdate with concept DOI when version DOI provided', async() => {

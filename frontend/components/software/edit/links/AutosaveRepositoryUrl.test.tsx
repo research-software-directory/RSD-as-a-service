@@ -15,6 +15,7 @@ import AutosaveRepositoryUrl from './AutosaveRepositoryUrl'
 import {config} from './config'
 
 // MOCK patchSoftwareTable
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockAddToRepositoryTable = jest.fn(props => Promise.resolve('OK'))
 jest.mock('~/utils/editSoftware', () => ({
   addToRepositoryTable: jest.fn(props=>mockAddToRepositoryTable(props))
@@ -49,7 +50,7 @@ it('shows loaded info', () => {
   expect(repoUrl).toHaveValue(formValues.repository_url)
 })
 
-it('save repostory url and platform', async() => {
+it('save repository url and platform', async() => {
 
   const newRepo = 'https://github.com/test-repo'
 

@@ -52,7 +52,7 @@ export default function ControlledImageInput({name,logo_b64,logo_id,setValue}:Im
   async function replaceLogo(logo_b64:string, logo_mime_type:string) {
     if (logo_id) {
       // remove old logo from db
-      const del = await deleteImage({
+      deleteImage({
         id: logo_id,
         token
       })
@@ -67,7 +67,7 @@ export default function ControlledImageInput({name,logo_b64,logo_id,setValue}:Im
   async function deleteLogo() {
     if (logo_id) {
       // remove old logo from db
-      await deleteImage({
+      deleteImage({
         id: logo_id,
         token
       })

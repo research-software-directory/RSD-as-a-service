@@ -9,42 +9,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import dynamic from 'next/dynamic'
-
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import BusinessIcon from '@mui/icons-material/Business'
 import SettingsIcon from '@mui/icons-material/Settings'
 import TableViewIcon from '@mui/icons-material/TableView'
 import Diversity3Icon from '@mui/icons-material/Diversity3'
-
-
-import ContentLoader from '../layout/ContentLoader'
-
-// dynamically import user pages
-const UserSettings = dynamic(() => import('./settings'),{
-  loading: ()=><ContentLoader />
-})
-
-const UserSoftware = dynamic(() => import('./software'),{
-  loading: ()=><ContentLoader />
-})
-
-const UserProjects = dynamic(() => import('./project'),{
-  loading: ()=><ContentLoader />
-})
-
-const Organisations = dynamic(() => import('./organisations'),{
-  loading: ()=><ContentLoader />
-})
-
-const Communities = dynamic(() => import('./communities'),{
-  loading: ()=><ContentLoader />
-})
-
-const ProjectQuality = dynamic(() => import('./project-quality'),{
-  loading: ()=><ContentLoader />
-})
 
 export type UserPageId = 'software'|'projects'|'organisations'|'communities'|'project-quality'|'settings'
 

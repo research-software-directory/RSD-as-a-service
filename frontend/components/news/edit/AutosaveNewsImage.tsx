@@ -138,7 +138,7 @@ export default function AutosaveNewsImage() {
     if (resp.status === 200 && image.image_id) {
       // try to remove old image
       // but don't wait for results
-      const del = await deleteImage({
+      deleteImage({
         id: image.image_id,
         token
       })

@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -8,12 +8,12 @@ import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import {useRouter} from 'next/router'
 
-import {TabKey, organistionTabItems} from './OrganisationTabItems'
+import {TabKey, organisationTabItems} from './OrganisationTabItems'
 import useOrganisationContext from '../context/useOrganisationContext'
 import useSelectedTab from './useSelectedTab'
 
 // extract tab items (object keys)
-const tabItems = Object.keys(organistionTabItems) as TabKey[]
+const tabItems = Object.keys(organisationTabItems) as TabKey[]
 
 export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
   const router = useRouter()
@@ -45,7 +45,7 @@ export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
       aria-label="organisation tabs"
     >
       {tabItems.map(key => {
-        const item = organistionTabItems[key]
+        const item = organisationTabItems[key]
         if (item.isVisible({
           isMaintainer,
           software_cnt,

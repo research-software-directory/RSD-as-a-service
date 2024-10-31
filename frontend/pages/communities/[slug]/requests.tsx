@@ -148,7 +148,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         licensesList
       },
     }
-  }catch(e){
+  }catch{
     return {
       notFound: true,
     }

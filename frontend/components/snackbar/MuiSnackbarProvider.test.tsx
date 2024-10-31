@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -58,8 +60,8 @@ it('renders snackbar error message', () => {
   fireEvent.click(btn)
 
   // validate error icon and text shown
-  const errorIcon = screen.getByTestId('ErrorOutlineIcon')
-  const errorMsg = screen.getByText(mockProps.message)
+  screen.getByTestId('ErrorOutlineIcon')
+  screen.getByText(mockProps.message)
 })
 
 it('renders snackbar success message', () => {
@@ -82,8 +84,8 @@ it('renders snackbar success message', () => {
   fireEvent.click(btn)
 
   // validate success icon and text shown
-  const successIcon = screen.getByTestId('SuccessOutlinedIcon')
-  const successMsg = screen.getByText(mockProps.message)
+  screen.getByTestId('SuccessOutlinedIcon')
+  screen.getByText(mockProps.message)
 })
 
 it('renders snackbar warning message', () => {
@@ -106,8 +108,8 @@ it('renders snackbar warning message', () => {
   fireEvent.click(btn)
 
   // validate warning icon shown
-  const warningIcon = screen.getByTestId('ReportProblemOutlinedIcon')
-  const warningMsg = screen.getByText(mockProps.message)
+  screen.getByTestId('ReportProblemOutlinedIcon')
+  screen.getByText(mockProps.message)
 })
 
 it('renders snackbar info message', () => {
@@ -130,6 +132,6 @@ it('renders snackbar info message', () => {
   fireEvent.click(btn)
 
   // validate info icon shown
-  const infoIcon = screen.getByTestId('InfoOutlinedIcon')
-  const infoMsg = screen.getByText(mockProps.message)
+  screen.getByTestId('InfoOutlinedIcon')
+  screen.getByText(mockProps.message)
 })

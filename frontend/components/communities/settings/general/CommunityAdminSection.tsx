@@ -9,18 +9,17 @@ import config from './config'
 import AutosaveOrganisationTextField from './AutosaveCommunityTextField'
 
 export default function CommunityAdminSection() {
-  const {watch, control, resetField} = useFormContext()
+  const {watch} = useFormContext()
   const [
-    id, slug, primary_maintainer
+    slug, primary_maintainer
   ] = watch([
-    'id', 'slug', 'primary_maintainer'
+    'slug', 'primary_maintainer'
   ])
 
   return (
     <>
       <h3 className='pb-4'>Admin section</h3>
       <section className="grid grid-cols-[1fr,1fr] gap-8 py-4">
-        {/* <div className='my-auto'>Community ID: {id}</div> */}
         <AutosaveOrganisationTextField
           options={{
             name: 'slug',

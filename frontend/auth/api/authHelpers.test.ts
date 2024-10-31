@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -133,7 +133,7 @@ it('claimProjectMaintainerInvite calls expected endpoint', async () => {
   })
 
   // claim maintainer invite
-  const response = await claimProjectMaintainerInvite({
+  await claimProjectMaintainerInvite({
     id: expectedId,
     token: 'TEST_TOKEN',
     frontend: true
@@ -211,7 +211,7 @@ it('claimSoftwareMaintainerInvite calls expected endpoint', async () => {
   })
 
   // claim maintainer invite
-  const response = await claimSoftwareMaintainerInvite({
+  await claimSoftwareMaintainerInvite({
     id: expectedId,
     token: 'TEST_TOKEN',
     frontend: true
@@ -289,7 +289,7 @@ it('claimOrganisationMaintainerInvite calls expected endpoint', async () => {
   })
 
   // claim maintainer invite
-  const response = await claimOrganisationMaintainerInvite({
+  await claimOrganisationMaintainerInvite({
     id: expectedId,
     token: 'TEST_TOKEN',
     frontend: true

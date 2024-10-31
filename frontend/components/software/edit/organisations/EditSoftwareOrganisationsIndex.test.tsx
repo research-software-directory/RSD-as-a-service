@@ -19,8 +19,11 @@ import {initialState as softwareState} from '~/components/software/edit/editSoft
 import organisationsOfSoftware from './__mocks__/organisationsOfSoftware.json'
 
 // MOCK getOrganisationsForSoftware, searchForOrganisation, mockCreateOrganisation
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetOrganisationsForSoftware = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSearchForOrganisation = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockCreateOrganisation = jest.fn(props => Promise.resolve({
   status: 201,
   message: 'new-organisation-id'
@@ -33,18 +36,24 @@ jest.mock('~/utils/editOrganisation', () => ({
 }))
 
 // MOCK isMaintainerOfOrganisation
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockIsMaintainerOfOrganisation = jest.fn(props => Promise.resolve(false))
 jest.mock('~/auth/permissions/isMaintainerOfOrganisation', () => ({
   __esModule: true,
   default: jest.fn(props=>mockIsMaintainerOfOrganisation(props)),
   isMaintainerOfOrganisation: jest.fn(props=>mockIsMaintainerOfOrganisation(props)),
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   canEditOrganisations: jest.fn(({organisations,...other})=>organisations)
 }))
 
 // MOCK organisationForSoftware methods
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockCreateOrganisationAndAddToSoftware = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockAddOrganisationToSoftware = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteOrganisationFromSoftware = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchOrganisationPositions = jest.fn(props=>Promise.resolve([]as any))
 jest.mock('./organisationForSoftware', () => ({
   createOrganisationAndAddToSoftware: jest.fn(props=>mockCreateOrganisationAndAddToSoftware(props)),
@@ -80,7 +89,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
     // wait for loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // shows no maintainers message
-    const noOrganisations = screen.getByText('No participating organisations')
+    screen.getByText('No participating organisations')
   })
 
   it('renders software organisations', async() => {
@@ -130,7 +139,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
     mockGetOrganisationsForSoftware.mockResolvedValueOnce([])
     // mock no organisation found by search
     mockSearchForOrganisation.mockResolvedValueOnce([])
-    // mock createOrganisation reponse
+    // mock createOrganisation response
     mockCreateOrganisation.mockResolvedValueOnce({
       status: 201,
       message: newOrganisation.id

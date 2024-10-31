@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
@@ -55,7 +56,7 @@ it('calls search api on input', async () => {
   // enter value
   fireEvent.change(globalSearch, {target: {value: 'Search text'}})
   // wait for list to return
-  const items = await screen.findAllByTestId('global-search-list-item')
+  await screen.findAllByTestId('global-search-list-item')
   // expect(items.length).toEqual(apiResponse.length)
   // confirm api call
   expect(global.fetch).toBeCalledTimes(1)

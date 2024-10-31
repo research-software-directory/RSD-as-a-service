@@ -34,7 +34,7 @@ export function useSoftwareCardActions({software}: SoftwareCardWithMenuProps) {
 
   // refresh "signal" for child component(s) to reload project item after update
   // and updated menuOptions
-  const [_, setRefresh] = useState<number>(0)
+  const [,setRefresh] = useState<number>(0)
 
   async function setStatus(status: CommunityRequestStatus) {
     const resp = await patchSoftwareForCommunity({

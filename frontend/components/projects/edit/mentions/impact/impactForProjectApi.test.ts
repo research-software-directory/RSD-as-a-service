@@ -17,6 +17,7 @@ import {
 import impactForProject from './__mocks__/impactForProject.json'
 
 // MOCK
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetMentionByDoiFromRsd = jest.fn((props) => Promise.resolve([] as any))
 jest.mock('~/utils/editMentions', () => ({
   ...jest.requireActual('~/utils/editMentions'),

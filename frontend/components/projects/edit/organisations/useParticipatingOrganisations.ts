@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-import isMaintainerOfOrganisation, {canEditOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
+import {canEditOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
 import {EditOrganisation} from '~/types/Organisation'
 import {getOrganisationsOfProject} from '~/utils/getProjects'
 

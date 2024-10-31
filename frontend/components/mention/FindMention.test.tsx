@@ -10,6 +10,7 @@ import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 import FindMention, {FindMentionProps} from './FindMention'
 
 // default is non-resolved promise - for first test
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSearchFn = jest.fn((props) => new Promise<MentionItemProps[]>((res, rej) => {}))
 const mockAdd = jest.fn()
 const mockCreate = jest.fn()

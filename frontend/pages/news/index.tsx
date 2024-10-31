@@ -166,7 +166,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         news,
       },
     }
-  }catch(e){
+  }catch{
     return {
       notFound: true,
     }

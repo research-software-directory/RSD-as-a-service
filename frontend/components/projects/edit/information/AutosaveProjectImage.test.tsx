@@ -16,6 +16,7 @@ import {projectInformation as config} from './config'
 import projectState from '../__mocks__/editProjectState'
 
 // MOCKS
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchProjectTable = jest.fn(props => Promise.resolve({
   status: 200, message: 'OK'
 }))
@@ -24,7 +25,9 @@ jest.mock('./patchProjectInfo', () => ({
 }))
 
 // MOCK editImage methods
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteImage = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUpsertImage = jest.fn(props => Promise.resolve({
   status: 201,
   message: 'uploaded-image-id'
@@ -34,6 +37,7 @@ jest.mock('~/utils/editImage', () => ({
   deleteImage: jest.fn(props => mockDeleteImage(props)),
   upsertImage: jest.fn(props => mockUpsertImage(props))
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockHandleFileUpload = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK',
@@ -58,9 +62,9 @@ it('renders upload image inputs', () => {
   )
 
   // has image caption
-  const imageCaption = screen.getByRole('textbox',{name:'Image caption'})
+  screen.getByRole('textbox',{name:'Image caption'})
   // has contain switch
-  const containSwitch = screen.getByRole('checkbox', {
+  screen.getByRole('checkbox', {
     name: config.image_contain.label
   })
   // has input for file
@@ -104,7 +108,6 @@ it('saves image caption', () => {
 })
 
 it('set contain image to true', () => {
-  const expectedValue = 'Test caption value'
   const defaultValues = {
     id: projectState.project.id,
     slug: projectState.project.slug

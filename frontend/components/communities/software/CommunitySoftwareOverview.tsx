@@ -20,14 +20,10 @@ import {SoftwareOfCommunity} from './apiCommunitySoftware'
 type CommunitySoftwareOverviewProps = {
   layout: ProjectLayoutType
   software: SoftwareOfCommunity[]
-  rows: number
 }
 
-export default function CommunitySoftwareOverview({layout,software,rows}: CommunitySoftwareOverviewProps) {
-  const {community:{software_cnt},isMaintainer} = useCommunityContext()
-  // max item to be set to rows
-  let itemCnt = rows
-  if (software_cnt && software_cnt < rows) itemCnt = software_cnt
+export default function CommunitySoftwareOverview({layout,software}: CommunitySoftwareOverviewProps) {
+  const {isMaintainer} = useCommunityContext()
 
   // console.group('CommunitySoftwareOverview')
   // console.log('isMaintainer...', isMaintainer)

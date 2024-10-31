@@ -50,7 +50,7 @@ export default function ResearchUnitModal({
   open, onCancel, onSubmit, organisation, pos, title = 'Organisation'
 }: EditOrganisationModalProps) {
   const {token} = useSession()
-  const {showWarningMessage} = useSnackbar()
+  const {showWarningMessage,showErrorMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [baseUrl, setBaseUrl] = useState('')
   const {
@@ -116,8 +116,8 @@ export default function ResearchUnitModal({
 
   async function replaceLogo(logo_b64:string, logo_mime_type:string) {
     if (formData.logo_id) {
-      // remove old logo from db
-      const del = await deleteImage({
+      // remove old logo from db without waiting
+      deleteImage({
         id: formData.logo_id,
         token
       })
@@ -131,8 +131,8 @@ export default function ResearchUnitModal({
 
   async function deleteLogo() {
     if (formData.logo_id) {
-      // remove old logo from db
-      const del = await deleteImage({
+      // remove old logo from db without waiting
+      deleteImage({
         id: formData.logo_id,
         token
       })
@@ -299,8 +299,5 @@ export default function ResearchUnitModal({
     }
     return false
   }
-}
-function showErrorMessage(message: string) {
-  throw new Error('Function not implemented.')
 }
 

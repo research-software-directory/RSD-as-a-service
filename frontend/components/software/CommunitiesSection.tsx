@@ -35,7 +35,7 @@ export default function CommunitiesSection({communities = []}: CommunitiesSectio
         Member of community
       </h2>
       <OrganisationGridSection>
-        {communities.map((item, pos) => {
+        {communities.map((item) => {
           return (
             <CommunityItem
               key={item.slug}

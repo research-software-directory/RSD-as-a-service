@@ -10,7 +10,6 @@ import Link from 'next/link'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
 
 import {OrganisationList} from '~/types/Organisation'
 import ListItemText from '@mui/material/ListItemText'

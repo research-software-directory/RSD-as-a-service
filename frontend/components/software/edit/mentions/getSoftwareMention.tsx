@@ -29,7 +29,7 @@ export async function getSoftwareMention(software:string,token:string){
       citations,
       output,
     }
-  }catch(e:any){
+  }catch{
     return {
       reference_papers: [],
       citations: [],

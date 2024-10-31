@@ -1,16 +1,16 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {fireEvent, render, screen, waitFor, waitForElementToBeRemoved} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
-import AdminAnnoucementsPage from '~/components/admin/announcements/index'
+import AdminAnnouncementsPage from '~/components/admin/announcements/index'
 import {Session} from '~/auth'
 
 // MOCKS
-import {mockAnnoucement} from './__mocks__/apiAnnouncement'
+import {mockAnnouncement} from './__mocks__/apiAnnouncement'
 // api mock
 jest.mock('~/components/admin/announcements/apiAnnouncement')
 
@@ -29,10 +29,10 @@ describe('components/admin/announcements/index.tsx', () => {
     jest.resetAllMocks()
   })
 
-  it('shows progressbar initialy', () => {
+  it('shows progressbar initially', () => {
     render(
       <WithAppContext options={{session: testSession}}>
-        <AdminAnnoucementsPage />
+        <AdminAnnouncementsPage />
       </WithAppContext>
     )
     screen.getByRole('progressbar')
@@ -43,7 +43,7 @@ describe('components/admin/announcements/index.tsx', () => {
   it('shows announcement returned from api', async() => {
     render(
       <WithAppContext options={{session: testSession}}>
-        <AdminAnnoucementsPage />
+        <AdminAnnouncementsPage />
       </WithAppContext>
     )
     // wait for loader to be removed
@@ -56,7 +56,7 @@ describe('components/admin/announcements/index.tsx', () => {
     // get text
     const announcement = screen.getByRole<HTMLInputElement>('textbox')
     // validate text returmed from mocked api
-    expect(announcement.value).toEqual(mockAnnoucement.text)
+    expect(announcement.value).toEqual(mockAnnouncement.text)
 
     const saveBtn = screen.getByRole('button', {name: 'Save'})
     expect(saveBtn).toBeDisabled()
@@ -67,7 +67,7 @@ describe('components/admin/announcements/index.tsx', () => {
 
     render(
       <WithAppContext options={{session: testSession}}>
-        <AdminAnnoucementsPage />
+        <AdminAnnouncementsPage />
       </WithAppContext>
     )
     // wait for loader to be removed

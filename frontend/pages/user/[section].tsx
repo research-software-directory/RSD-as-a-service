@@ -133,7 +133,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         showSearch: sectionItem?.showSearch ?? false
       },
     }
-  }catch(e){
+  }catch{
     return {
       notFound: true,
     }

@@ -32,28 +32,22 @@ const eslintConfig = [
       // do not warn for use of img element
       '@next/next/no-img-element': 'off',
 
-      // ---------------------------------------
-      // disable specific typescript rules
-      // we will use generic rules instead
-      '@typescript-eslint/no-explicit-any':'off',
-      '@typescript-eslint/no-unused-vars':'off',
-
-      // ---------------------------------------
-      // ENABLE LATER
-      // disable rules we did not used in the past
-      // we can enable these rules in the future
-      // and fix the linter errors
+      // warn only on these rules
       '@typescript-eslint/no-empty-object-type' :'warn',
       '@typescript-eslint/prefer-as-const':'warn',
       '@typescript-eslint/no-unused-expressions':'warn',
       '@typescript-eslint/no-unsafe-function-type':'warn',
+      '@typescript-eslint/no-unused-vars':'warn',
       'prefer-const':'warn',
-      'no-unused-vars':'off',
-      'no-var':'off',
+      'no-var':'warn',
+
+      // ---------------------------------------
+      // disable specific typescript rules
+      '@typescript-eslint/no-explicit-any':'off',
 
       // ---------------------------------------
       // FORMATTING (this rules are deprecated)
-      // Though it seems these still work for me in VS Code?
+      // These will be removed in next major version v10
       'eol-last': ['warn', 'always'],
       'quotes': ['warn', 'single'],
       'semi': ['warn', 'never'],

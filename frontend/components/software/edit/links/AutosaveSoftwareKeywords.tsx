@@ -116,7 +116,7 @@ export default function AutosaveSoftwareKeywords(){
         // try to delete this keyword from keyword table
         // delete will fail if the keyword is referenced
         // therefore we do not check the status
-        const del = await silentKeywordDelete({
+        silentKeywordDelete({
           keyword: item.keyword,
           token
         })

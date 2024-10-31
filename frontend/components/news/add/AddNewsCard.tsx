@@ -103,7 +103,7 @@ export default function AddNewsCard() {
         slug,
         token: session?.token
       })
-      // if (abort) return
+      if (abort) return
       if (isUsed === true) {
         const message = `${publication_date}/${slug} is already taken. Use letters, numbers and dash "-" to modify slug value or change publication date.`
         setError('slug', {

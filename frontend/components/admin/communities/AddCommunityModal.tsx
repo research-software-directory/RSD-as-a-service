@@ -99,7 +99,7 @@ export default function AddPageModal({open,onCancel,onSubmit}:AddCommunityModalP
     async function validateSlug() {
       setValidating(true)
       const isUsed = await validCommunitySlug({slug,token})
-      // if (abort) return
+      if (abort) return
       if (isUsed === true) {
         const message = `${slug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
         setError('slug', {

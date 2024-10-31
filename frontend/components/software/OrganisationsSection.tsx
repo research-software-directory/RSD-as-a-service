@@ -10,6 +10,7 @@ import {ParticipatingOrganisationProps} from '../../types/Organisation'
 import PageContainer from '../layout/PageContainer'
 import ParticipatingOrganisation from './ParticipatingOrganisation'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const OrganisationGridSection = styled('section')(({theme}) => ({
   flex: 1,
   display: 'grid',
@@ -30,7 +31,7 @@ export default function OrganisationsSection({organisations = []}: { organisatio
         Participating organisations
       </h2>
       <OrganisationGridSection>
-        {organisations.map((item, pos) => {
+        {organisations.map((item) => {
           return (
             <ParticipatingOrganisation
               key={item.rsd_path}

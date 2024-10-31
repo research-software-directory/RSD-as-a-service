@@ -8,7 +8,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {IncomingMessage} from 'http'
-import {ParsedUrlQuery} from 'querystring'
 
 import logger from '~/utils/logger'
 import {getPageLinks} from '~/components/admin/pages/useMarkdownPages'
@@ -18,7 +17,7 @@ import {getAnnouncement} from '~/components/admin/announcements/apiAnnouncement'
 
 /**
  * getThemeSettings from local json file
- * theme.json can be mounted in the doceker image into settings folder.
+ * theme.json can be mounted in the docker image into settings folder.
  * If file is not found we use default settings file
  * @returns
  */
@@ -42,7 +41,7 @@ export async function getRsdSettings() {
   }
 }
 
-export async function getSettingsServerSide(req: IncomingMessage | undefined, query: ParsedUrlQuery): Promise<RsdSettingsState> {
+export async function getSettingsServerSide(req: IncomingMessage | undefined): Promise<RsdSettingsState> {
   // if not SSR we return default
   if (typeof req === 'undefined') return defaultRsdSettings as RsdSettingsState
   // get links, settings and announcements in parallel

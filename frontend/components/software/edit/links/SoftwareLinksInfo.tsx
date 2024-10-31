@@ -44,7 +44,7 @@ export default function SoftwareLinksInfo({reorderedCategories}: SoftwareLinksIn
       <p className="py-2"><strong>Keywords</strong></p>
       <p>Here you can provide keyword that describe your software, by selecting from existing keyword, adding your own, or importing the keywords from the Software DOI.</p>
 
-      {helpForCategories.map(([headline, text], index) => (
+      {helpForCategories.map(([headline, text]) => (
         <Fragment key={headline}>
           <p className="py-2"><strong>{headline}</strong></p>
           <p>{text}</p>

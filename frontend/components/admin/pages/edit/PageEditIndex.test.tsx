@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,6 +34,7 @@ const mockPage:MarkdownPage = {
   is_published: true,
   position: 1
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockMarkdownPage = jest.fn((props) => Promise.resolve({
   page: mockPage
 }))
@@ -41,11 +44,12 @@ jest.mock('~/components/admin/pages/useMarkdownPages', () => {
     getMarkdownPage: jest.fn((props)=>mockMarkdownPage(props))
   }
 })
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeletePage = jest.fn((props) => Promise.resolve({
   status: 200,
   statusText: 'OK'
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUpdatePositions = jest.fn((props) => Promise.resolve({
   status: 200,
   message: 'OK'

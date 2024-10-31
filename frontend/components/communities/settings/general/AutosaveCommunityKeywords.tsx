@@ -119,8 +119,8 @@ export default function AutosaveCommunityKeywords(){
         setKeywords(items)
         // try to delete this keyword from keyword table
         // delete will fail if the keyword is referenced
-        // therefore we do not check the status
-        const del = await silentKeywordDelete({
+        // therefore we do not wait or check the status
+        silentKeywordDelete({
           keyword: item.keyword,
           token
         })

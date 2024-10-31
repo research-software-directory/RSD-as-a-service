@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -110,7 +110,7 @@ export function getTimeAgoSince(since: Date, isoStringDate: string | null) {
     } else {
       return 'right now'
     }
-  } catch (e) {
+  } catch {
     // on fail return nothing
     return null
   }
@@ -125,7 +125,7 @@ export function getMonthYearDate(date: string, locale = 'en-us') {
       return monthDate.toLocaleDateString(locale, {year: 'numeric', month: 'short'})
     }
     return null
-  } catch (e:any) {
+  } catch {
     return null
   }
 }

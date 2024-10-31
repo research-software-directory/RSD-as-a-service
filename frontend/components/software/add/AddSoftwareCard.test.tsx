@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,9 +15,10 @@ import {addConfig} from './addConfig'
 import {getSlugFromString} from '../../../utils/getSlugFromString'
 
 const mockAddSoftware = jest.fn((props)=>Promise.resolve({status: 201, message: props}))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockValidSoftwareItem = jest.fn((slug,token) => {
   // console.log('validProjectItem...props...',slug,token)
-  return new Promise((res, rej) => {
+  return new Promise((res) => {
     setTimeout(() => {
       res(false)
     }, 10)

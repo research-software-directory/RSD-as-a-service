@@ -21,6 +21,7 @@ const dummyMaintainersData={
   maintainers:[],
   deleteMaintainer: mockDeleteMaintainer
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUseCommunityMaintainers = jest.fn((props)=>dummyMaintainersData)
 jest.mock('./useCommunityMaintainers', () => ({
   useCommunityMaintainers:jest.fn((props)=>mockUseCommunityMaintainers(props))
@@ -35,6 +36,7 @@ const dummyInvitationData={
   createInvitation: mockCreateInvitation,
   deleteInvitation: mockDeleteInvitation
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUseCommunityInvitations = jest.fn((props)=>dummyInvitationData)
 jest.mock('./useCommunityInvitations', () => ({
   useCommunityInvitations:jest.fn((props)=>mockUseCommunityInvitations(props))

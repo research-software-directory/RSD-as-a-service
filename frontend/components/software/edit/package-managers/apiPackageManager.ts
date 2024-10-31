@@ -322,7 +322,7 @@ export async function getPackageManagerTypeFromUrl(url:string) {
       return 'other' as PackageManagerTypes
     }
     return 'other' as PackageManagerTypes
-  } catch (e: any) {
+  } catch {
     return 'other' as PackageManagerTypes
   }
 }

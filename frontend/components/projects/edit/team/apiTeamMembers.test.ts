@@ -16,13 +16,14 @@ import {
 import teamMembers from './__mocks__/teamMembers.json'
 
 const expectedId = 'new-team-member-id'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockHeaderGet = jest.fn(props => `prefix.${expectedId}`)
 
 beforeEach(() => {
   jest.clearAllMocks()
 })
 
-it('postTeamMember cals api and returns id', async () => {
+it('postTeamMember calls api and returns id', async () => {
   const token = 'TEST-TOKEN'
   const expectUrl = '/api/v1/team_member'
   const expectPayload = {

@@ -41,8 +41,11 @@ function onWebsiteChange(e: any, warning: string) {
 }
 
 
-export default function useOnUnsavedChange({isDirty, isValid, warning, dirtyFields}:
-  { isDirty: boolean, isValid: boolean, warning:string, dirtyFields?:object }) {
+export default function useOnUnsavedChange({
+  isDirty, warning
+}:{
+  isDirty: boolean, warning:string
+}) {
   const router = useRouter()
   useEffect(() => {
     // needs to be registered fn in order to remove it on unload

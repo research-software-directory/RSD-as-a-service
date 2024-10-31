@@ -21,7 +21,9 @@ import {initialState as softwareState} from '~/components/software/edit/editSoft
 import mockCrossrefItems from '~/utils/__mocks__/crossrefItems.json'
 
 // Mock getMentionsForSoftware
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetMentionsForSoftware = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetMentionByDoiFromRsd = jest.fn((props) => Promise.resolve([] as any))
 
 jest.mock('~/utils/editMentions', () => ({
@@ -29,19 +31,21 @@ jest.mock('~/utils/editMentions', () => ({
   getMentionsForSoftware: jest.fn(props => mockGetMentionsForSoftware(props)),
   getMentionByDoiFromRsd: jest.fn(props=>mockGetMentionByDoiFromRsd(props))
 }))
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetMentionByDoi = jest.fn((props) => Promise.resolve([] as any))
 jest.mock('~/utils/getDOI', () => ({
   getMentionByDoi: jest.fn(props=>mockGetMentionByDoi(props))
 }))
 
 // Mock findPublicationByTitle
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockFindPublicationByTitle = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/components/software/edit/mentions/output/apiRelatedOutput', () => ({
   findPublicationByTitle: jest.fn(props => mockFindPublicationByTitle(props)),
 }))
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockAddToMentionForSoftware = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockRemoveMentionForSoftware = jest.fn(props => Promise.resolve([] as any))
 jest.mock('./apiReferencePapers', () => ({
   addToMentionForSoftware: jest.fn(props => mockAddToMentionForSoftware(props)),
@@ -65,6 +69,7 @@ const mockSoftwareMentionContext={
   setCitationCnt:jest.fn(),
   setReferencePapersCnt:jest.fn()
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUseSoftwareMentionContext = jest.fn(props=>mockSoftwareMentionContext)
 jest.mock('~/components/software/edit/mentions/SoftwareMentionContext',()=>({
   useSoftwareMentionContext: jest.fn(props=>mockUseSoftwareMentionContext(props))

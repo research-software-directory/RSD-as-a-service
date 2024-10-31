@@ -21,7 +21,7 @@ export const maxFileSize = 2097152
 export const allowedImageMimeTypes: string = 'image/avif,image/gif,image/jpeg,image/png,image/svg+xml,image/webp,image/x-icon'
 
 export function handleFileUpload({target}: { target: any }): Promise<HandleFileUploadResponse>{
-  return new Promise((res, rej) => {
+  return new Promise((res) => {
     try {
       if (typeof target==='undefined' || target===null) res({
         status: 400,

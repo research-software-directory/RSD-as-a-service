@@ -86,10 +86,8 @@ export async function getOrganisationMetadata(ror_id: string|null) {
   }
 }
 
-
-export type RORItem = typeof rorItem
-
 // example of ROR item response
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const rorItem = {
   'id': 'https://ror.org/008xxew50',
   'name': 'VU Amsterdam',
@@ -221,3 +219,5 @@ const rorItem = {
     }
   }
 }
+
+export type RORItem = typeof rorItem

@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,7 +17,7 @@ it('patchSoftwareTable calls api with proper params', async() => {
   const mockProps = {
     id: 'software-id',
     data: {
-      prop: 'value'
+      brand_name: 'Test brand name'
     },
     token: 'TEST-TOKEN'
   }
@@ -32,7 +34,7 @@ it('patchSoftwareTable calls api with proper params', async() => {
 
   mockResolvedValueOnce('OK')
 
-  const resp = await patchSoftwareTable(mockProps)
+  await patchSoftwareTable(mockProps)
 
   // validate api call
   expect(global.fetch).toBeCalledTimes(1)

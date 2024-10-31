@@ -34,7 +34,7 @@ const formId='edit-testimonial-modal'
 
 export default function EditLicenseModal({open, onCancel, onSubmit, data}: EditLicenseModal) {
   const smallScreen = useMediaQuery('(max-width:600px)')
-  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<LicenseForSoftware>({
+  const {handleSubmit, watch, formState, reset, control, register} = useForm<LicenseForSoftware>({
     mode: 'onChange',
     defaultValues: {
       ...data
@@ -42,12 +42,11 @@ export default function EditLicenseModal({open, onCancel, onSubmit, data}: EditL
   })
 
   // extract
-  const {isValid, isDirty, errors} = formState
+  const {isValid, errors} = formState
   const formData = watch()
 
   // console.group('EditLicenseModal')
   // console.log('isValid...', isValid)
-  // console.log('isDirty...', isDirty)
   // console.log('errors...', errors)
   // console.groupEnd()
 

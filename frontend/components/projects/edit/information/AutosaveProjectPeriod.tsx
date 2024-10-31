@@ -53,13 +53,13 @@ export default function AutosaveProjectPeriod({date_start, date_end}:
     }
   }, [start, end, validateDateRange])
 
-  async function saveProjectPeriod({name, value}: OnSaveProps<EditProject>) {
+  async function saveProjectPeriod({name}: OnSaveProps<EditProject>) {
     // console.group('saveProjectPeriod')
     // console.log('name...', name)
-    // console.log('value...', value)
     // console.log('start...', start)
     // console.log('end...', end)
     // console.groupEnd()
+
     // patch project table, both values at the same time
     const resp = await patchProjectTable({
       id,

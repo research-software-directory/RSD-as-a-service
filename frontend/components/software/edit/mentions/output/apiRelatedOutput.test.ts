@@ -38,7 +38,7 @@ it('findPublicationByTitle', async () => {
 
   mockResolvedValueOnce([])
 
-  const resp = await findPublicationByTitle(props)
+  await findPublicationByTitle(props)
 
   expect(global.fetch).toBeCalledTimes(1)
   expect(global.fetch).toBeCalledWith(expectedUrl, expectBody)

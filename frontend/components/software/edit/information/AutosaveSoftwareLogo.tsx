@@ -60,7 +60,7 @@ export default function AutosaveSoftwareLogo() {
       if (patch.status === 200) {
         // try to remove old image
         // but don't wait for results
-        const del = await deleteImage({
+        deleteImage({
           id: form_image_id,
           token
         })
@@ -108,7 +108,7 @@ export default function AutosaveSoftwareLogo() {
       if (form_image_id) {
         // try to remove old image
         // but don't wait for results
-        const del = await deleteImage({
+        deleteImage({
           id: form_image_id,
           token
         })

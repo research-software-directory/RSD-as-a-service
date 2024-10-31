@@ -78,14 +78,14 @@ function drawLine(props: LineChartConfig) {
 
   // generate
   const generateScaledLine = d3.line()
-    .x((d:any,i:number) => {
+    .x((d:any) => {
       // Plot everything below hundred unscaled
       if (d.x < 100) {
         return d.x
       }
       return xScale(d.x)
     })
-    .y((d:any,i) => {
+    .y((d:any) => {
       // y as number, using yScale to calculate position
       const val = yScale(d.y)
       if (val < 0) {

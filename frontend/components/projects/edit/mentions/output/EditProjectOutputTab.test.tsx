@@ -7,7 +7,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {fireEvent, render, screen, waitFor, waitForElementToBeRemoved, within} from '@testing-library/react'
+import {fireEvent, render, screen, waitFor, within} from '@testing-library/react'
 
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithProjectContext} from '~/utils/jest/WithProjectContext'
@@ -21,22 +21,24 @@ import {mentionModal} from '~/components/mention/config'
 // MOCKS
 import outputForProject from './__mocks__/outputForProject.json'
 // MOCK getOutputForProject
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetOutputForProject = jest.fn((props) => Promise.resolve(outputForProject))
 jest.mock('~/utils/getProjects', () => ({
   getMentionsForProject: jest.fn((props)=>mockGetOutputForProject(props))
 }))
 // MOCK getMentionByDoiFromRsd
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetMentionByDoiFromRsd = jest.fn((props) => Promise.resolve([] as any))
 jest.mock('~/utils/editMentions', () => ({
   ...jest.requireActual('~/utils/editMentions'),
   getMentionByDoiFromRsd: jest.fn(props=>mockGetMentionByDoiFromRsd(props))
 }))
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetMentionByDoi = jest.fn((props) => Promise.resolve([] as any))
 jest.mock('~/utils/getDOI', () => ({
   getMentionByDoi: jest.fn(props=>mockGetMentionByDoi(props))
 }))
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockFindPublicationByTitle = jest.fn((props) => Promise.resolve(outputForProject))
 const mockAddNewOutputToProject = jest.fn(props => Promise.resolve({
   status: 200,
@@ -66,6 +68,7 @@ const mockProjectMentionContext={
   setCitationCnt:jest.fn(),
   setImpactCnt:jest.fn()
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUseProjectMentionContext = jest.fn(props=>mockProjectMentionContext)
 jest.mock('~/components/projects/edit/mentions/ProjectMentionContext',()=>({
   useProjectMentionContext: jest.fn(props=>mockUseProjectMentionContext(props))

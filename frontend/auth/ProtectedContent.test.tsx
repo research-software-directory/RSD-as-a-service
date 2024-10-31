@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,7 +12,9 @@ import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 import ProtectedContent from './ProtectedContent'
 
 // MOCKS
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const softwareMaintainer=jest.fn((props)=>Promise.resolve(false))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const projectMaintainer=jest.fn((props)=>Promise.resolve(false))
 jest.mock('./permissions/isMaintainerOfSoftware', () => {
   // console.log('mocked isMaintainerOfSoftware')

@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,8 +13,10 @@ import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
 
 import AutosaveSoftwareTextField from './AutosaveSoftwareTextField'
 import {softwareInformation as config} from '../editSoftwareConfig'
+import {NewSoftwareItem} from '~/types/SoftwareTypes'
 
 // MOCK patchSoftwareTable
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchSoftwareTable = jest.fn(props => Promise.resolve('OK'))
 jest.mock('./patchSoftwareTable', () => ({
   patchSoftwareTable: jest.fn(props=>mockPatchSoftwareTable(props))
@@ -22,7 +26,7 @@ const defaultValue = 'default value'
 const mockProps = {
   software_id: 'test-software-id',
   options: {
-    name: 'brand_name',
+    name: 'brand_name' as keyof NewSoftwareItem,
     label: config.brand_name.label,
     useNull: true,
     defaultValue,
