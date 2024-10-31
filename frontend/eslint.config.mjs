@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {dirname} from 'node:path'
 import {fileURLToPath} from 'node:url'
 import {FlatCompat} from '@eslint/eslintrc'
@@ -38,7 +43,7 @@ const eslintConfig = [
       // dissable rules we did not used in the past
       // we can enable these rules in the future
       // and fix the linter errors
-      '@typescript-eslint/no-empty-object-type' :'off',
+      '@typescript-eslint/no-empty-object-type' :'warn',
       '@typescript-eslint/prefer-as-const':'off',
       '@typescript-eslint/no-unused-expressions':'off',
       '@typescript-eslint/no-unsafe-function-type':'off',
