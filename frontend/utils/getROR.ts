@@ -1,12 +1,13 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {AutocompleteOption} from '../types/AutocompleteOptions'
-import {SearchOrganisation} from '../types/Organisation'
+import {OrganisationSource, SearchOrganisation} from '../types/Organisation'
 import {createJsonHeaders} from './fetchHelpers'
 import {getSlugFromString} from './getSlugFromString'
 import logger from './logger'
@@ -58,7 +59,7 @@ function buildAutocompleteOptions(rorItems: RORItem[]): AutocompleteOption<Searc
         is_tenant: false,
         website: item.links[0] ?? '',
         logo_id: null,
-        source: 'ROR' as 'ROR',
+        source: 'ROR' as OrganisationSource,
         description: null
       }
     }

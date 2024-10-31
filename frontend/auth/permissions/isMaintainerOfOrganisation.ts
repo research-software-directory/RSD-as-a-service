@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {OrganisationsOfProject} from '~/types/Project'
-import {EditOrganisation, OrganisationsForSoftware} from '~/types/Organisation'
+import {EditOrganisation, OrganisationsForSoftware, OrganisationSource} from '~/types/Organisation'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {RsdRole} from '../index'
@@ -119,7 +119,7 @@ export async function canEditOrganisations({organisations,account,token}:CanEdit
         position: pos + 1,
         logo_b64: null,
         logo_mime_type: null,
-        source: 'RSD' as 'RSD',
+        source: 'RSD' as OrganisationSource,
         status: item.status,
         // false by default
         canEdit: false
@@ -145,7 +145,7 @@ export async function canEditOrganisations({organisations,account,token}:CanEdit
         position: pos + 1,
         logo_b64: null,
         logo_mime_type: null,
-        source: 'RSD' as 'RSD',
+        source: 'RSD' as OrganisationSource,
         status: item.status,
         // false by default
         canEdit: false

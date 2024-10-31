@@ -14,6 +14,7 @@ import {
   EditOrganisation, Organisation,
   OrganisationRole,
   OrganisationsForSoftware,
+  OrganisationSource,
   PatchOrganisation,
   SearchOrganisation
 } from '../types/Organisation'
@@ -336,7 +337,7 @@ export function newOrganisationProps(props: NewOrganisation) {
     logo_mime_type: null,
     logo_id: null,
     website: null,
-    source: 'MANUAL' as 'MANUAL',
+    source: 'MANUAL' as OrganisationSource,
     primary_maintainer: props.primary_maintainer,
     role: props?.role ?? 'participating',
     canEdit: false,
