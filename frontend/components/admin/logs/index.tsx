@@ -46,8 +46,6 @@ export default function ScraperErrorLogs() {
     // here we pass deleteLog method to columns
     const cols = createColumns(deleteLog)
     setColumns(cols)
-  // do not include deleteLog to avoid loop
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[deleteLog])
 
   return (
