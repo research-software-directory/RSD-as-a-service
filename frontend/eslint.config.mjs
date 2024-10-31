@@ -45,7 +45,7 @@ const eslintConfig = [
       // and fix the linter errors
       '@typescript-eslint/no-empty-object-type' :'warn',
       '@typescript-eslint/prefer-as-const':'warn',
-      '@typescript-eslint/no-unused-expressions':'off',
+      '@typescript-eslint/no-unused-expressions':'warn',
       '@typescript-eslint/no-unsafe-function-type':'off',
       'prefer-const':'off',
       'no-unused-vars':'off',

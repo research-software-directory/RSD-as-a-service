@@ -111,32 +111,33 @@ export default function GlobalSearchAutocomplete(props: Props) {
 
   // Handle keyup
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    // Handle arrow up and down
-    switch (e.keyCode) {
+    // Handle keyboard events
+    // for key values see https://www.w3.org/TR/uievents-key/#named-key-attribute-values
+    switch (e.key) {
       // Close menu on lost focus with tab key
-      case 9:
+      case 'Tab':
         setOpen(false)
         break
       // Backspace - Remove selection
-      case 8:
+      case 'Backspace':
         setSelected(0)
         break
       // Up arrow
-      case 38:
+      case 'ArrowUp':
         e.preventDefault() // Disallows the cursor to move to the end of the input
-        selected > 0 && setSelected(selected - 1)
+        if (selected > 0) setSelected(selected - 1)
         break
       // Down arrow
-      case 40:
+      case 'ArrowDown':
         e.preventDefault() // Disallows the cursor to move to the end of the input
-        searchResults.length - 1 > selected && setSelected(selected + 1)
+        if (searchResults.length - 1 > selected) setSelected(selected + 1)
         break
       // Enter
-      case 13:
+      case 'Enter':
         handleClick()
         break
       // Escape key
-      case 27:
+      case 'Escape':
         setOpen(false)
         break
     }

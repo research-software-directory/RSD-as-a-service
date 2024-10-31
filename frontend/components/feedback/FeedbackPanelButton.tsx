@@ -35,7 +35,8 @@ export default function FeedbackPanelButton({feedback_email, issues_page_url, cl
   }
   const closeAndClean = async () => {
     setOpen(false)
-    closeFeedbackPanel && closeFeedbackPanel()
+
+    if (closeFeedbackPanel) closeFeedbackPanel()
 
     setTimeout(() => {
       setText('')
