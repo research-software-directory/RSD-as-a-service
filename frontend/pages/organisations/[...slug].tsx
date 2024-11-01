@@ -10,9 +10,7 @@ import {GetServerSidePropsContext} from 'next/types'
 
 import {app} from '~/config/app'
 import {getUserFromToken} from '~/auth'
-import {getOrganisationMetadata, RORItem} from '~/utils/getROR'
 import {getUserSettings} from '~/utils/userSettings'
-import {OrganisationForOverview} from '~/types/Organisation'
 import {getOrganisationBySlug} from '~/components/organisation/apiOrganisations'
 import OrganisationMetadata from '~/components/organisation/metadata'
 import PageMeta from '~/components/seo/PageMeta'
@@ -23,13 +21,12 @@ import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import OrganisationTabs from '~/components/organisation/tabs/OrganisationTabs'
 import TabContent from '~/components/organisation/tabs/TabContent'
 import {TabKey} from '~/components/organisation/tabs/OrganisationTabItems'
-import {OrganisationProvider} from '~/components/organisation/context/OrganisationContext'
+import {OrganisationForContext, OrganisationProvider} from '~/components/organisation/context/OrganisationContext'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {UserSettingsProvider} from '~/components/organisation/context/UserSettingsContext'
 
 export type OrganisationPageProps = {
-  organisation: OrganisationForOverview,
-  ror: RORItem | null
+  organisation: OrganisationForContext,
   slug: string[],
   tab: TabKey | null,
   isMaintainer: boolean,
@@ -38,7 +35,7 @@ export type OrganisationPageProps = {
 }
 
 export default function OrganisationPage({
-  organisation, slug, tab, ror,
+  organisation, slug, tab,
   isMaintainer, rsd_page_rows, rsd_page_layout
 }: OrganisationPageProps) {
 
@@ -46,7 +43,6 @@ export default function OrganisationPage({
   // console.log('organisation...', organisation)
   // console.log('slug....', slug)
   // console.log('ror....', ror)
-  // console.log('tab....', tab)
   // console.log('select_tab....', select_tab)
   // console.log('loading....', loading)
   // console.log('isMaintainer....', isMaintainer)
@@ -88,7 +84,7 @@ export default function OrganisationPage({
                 path:'/organisations'
               }}
             />
-            <OrganisationMetadata ror_info={ror} />
+            <OrganisationMetadata />
 
             {/* TABS */}
             <BaseSurfaceRounded
@@ -132,12 +128,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     }
     // extract data from response
     const {organisation,isMaintainer} = resp
-    // make maintainer and ror requests
-    const ror = await getOrganisationMetadata(organisation.ror_id ?? null)
     return {
       // passed to the page component as props
       props: {
-        ror,
         organisation,
         slug: params?.slug,
         tab: query?.tab ?? null,

@@ -15,7 +15,7 @@ import Button from '@mui/material/Button'
 import {useSession} from '~/auth'
 import useSnackbar from '../../snackbar/useSnackbar'
 import {
-  columsForCreate, columsForUpdate, CoreOrganisationProps,
+  colForCreate, colForUpdate, CoreOrganisationProps,
   EditOrganisation, Organisation, OrganisationForOverview
 } from '../../../types/Organisation'
 import {
@@ -150,7 +150,7 @@ export default function ResearchUnits() {
       }
       // SAVE organisation
       if (typeof pos != 'undefined' && data.id) {
-        const unit:Organisation = getPropsFromObject(data,columsForUpdate)
+        const unit:Organisation = getPropsFromObject(data,colForUpdate)
         // update existing organisation
         const resp = await updateOrganisation({
           organisation: unit,
@@ -165,7 +165,7 @@ export default function ResearchUnits() {
         }
       } else {
         // create new organisation
-        const unit:CoreOrganisationProps = getPropsFromObject(data, columsForCreate)
+        const unit:CoreOrganisationProps = getPropsFromObject(data, colForCreate)
         const resp = await createOrganisation({
           organisation:unit,
           token

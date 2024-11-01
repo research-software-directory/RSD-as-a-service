@@ -264,7 +264,7 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     // validate api call
     const expectedUrl = '/api/v1/organisation'
     const expectedPayload = {
-      'body': '{"parent":"91c2ffa7-bce6-4488-be00-6613a2d99f51","slug":"test-unit-name","primary_maintainer":"121212121212","name":"Test unit name","ror_id":null,"is_tenant":false,"website":"https://google.com/test","logo_id":null}',
+      'body': '{"parent":"91c2ffa7-bce6-4488-be00-6613a2d99f51","primary_maintainer":"121212121212","slug":"test-unit-name","name":"Test unit name","ror_id":null,"website":"https://google.com/test","is_tenant":false,"country":null,"city":null,"wikipedia_url":null,"ror_types":null,"logo_id":null}',
       'headers': {
         'Authorization': 'Bearer TEST_TOKEN',
         'Content-Type': 'application/json',

@@ -6,7 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {columsForCreate, EditOrganisation, SoftwareForOrganisation} from '~/types/Organisation'
+import {colForCreate, EditOrganisation, SoftwareForOrganisation} from '~/types/Organisation'
 import {createOrganisation} from '~/utils/editOrganisation'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
@@ -15,7 +15,7 @@ import logger from '~/utils/logger'
 export async function createOrganisationAndAddToSoftware({item, token, software}:
   { item: EditOrganisation, token: string, software: string}) {
   // extract props we need for createOrganisation
-  const organisation = getPropsFromObject(item, columsForCreate)
+  const organisation = getPropsFromObject(item, colForCreate)
   // create new organisation
   let resp = await createOrganisation({
     organisation,

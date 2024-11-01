@@ -51,39 +51,25 @@ function buildAutocompleteOptions(rorItems: RORItem[]): AutocompleteOption<Searc
       label: item.name,
       data: {
         id: null,
-        slug,
         parent: null,
         primary_maintainer: null,
+        slug,
         name: item.name,
+        short_description: null,
+        description: null,
         ror_id: item.id,
+        website: item.links[0] ?? null,
         is_tenant: false,
-        website: item.links[0] ?? '',
+        country: item?.country?.country_name ?? null,
+        city: item?.addresses[0]?.city ?? null,
+        wikipedia_url: item.wikipedia_url ?? null,
+        ror_types: item.types ?? [],
         logo_id: null,
-        source: 'ROR' as OrganisationSource,
-        description: null
+        source: 'ROR' as OrganisationSource
       }
     }
   })
   return options
-}
-
-
-export async function getOrganisationMetadata(ror_id: string|null) {
-  try {
-    // check availability
-    if (ror_id === undefined || ror_id === null || ror_id.trim().length === 0) return null
-    // build url
-    const url = `https://api.ror.org/organizations/${ror_id}`
-    const resp = await fetch(url)
-    if (resp.status === 200) {
-      const json: RORItem = await resp.json()
-      return json
-    }
-    return null
-  } catch (e: any) {
-    logger(`getOrganisationMetadata failed. ${e.message}`)
-    return null
-  }
 }
 
 // example of ROR item response

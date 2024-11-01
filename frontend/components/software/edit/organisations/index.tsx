@@ -10,7 +10,7 @@ import {useState} from 'react'
 
 import {useSession} from '~/auth'
 import {
-  columsForUpdate,
+  colForUpdate,
   EditOrganisation,
   SearchOrganisation,
   SoftwareForOrganisation
@@ -250,7 +250,7 @@ export default function SoftwareOrganisations() {
       }
       if (typeof pos !== 'undefined' && data.id) {
         // extract data for update
-        const organisation = getPropsFromObject(data,columsForUpdate)
+        const organisation = getPropsFromObject(data,colForUpdate)
         // update existing organisation
         const resp = await updateOrganisation({
           organisation,

@@ -1,9 +1,11 @@
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {getOrganisationMetadata, findInROR} from './getROR'
+import {findInROR} from './getROR'
 
 // mock fetch
 const mockFetchJson = jest.fn((props) => Promise.resolve(props))
@@ -20,40 +22,19 @@ beforeEach(() => {
   jest.clearAllMocks()
 })
 
-it('getOrganisationMetadata does NOT call fetch on undefined ror_id', async () => {
-  const ror_id = undefined
-  const resp = await getOrganisationMetadata(ror_id as any)
-  expect(resp).toBe(null)
-  expect(mockFetch).not.toBeCalled()
-})
-
-it('getOrganisationMetadata does NOT call fetch on ror_id=null', async () => {
-  const ror_id = null
-  const resp = await getOrganisationMetadata(ror_id)
-  expect(resp).toBe(null)
-  expect(mockFetch).not.toBeCalled()
-})
-
-it('getOrganisationMetadata does NOT call fetch on empty string ror_id=" "', async () => {
-  const ror_id = ' '
-  const resp = await getOrganisationMetadata(ror_id)
-  expect(resp).toBe(null)
-  expect(mockFetch).not.toBeCalled()
-})
-
-it('getOrganisationMetadata calls fetch on ror_id="ABCD"', async () => {
-  const ror_id = 'ABCD'
-  await getOrganisationMetadata(ror_id)
-
-  // validate fetch call
-  expect(mockFetch).toBeCalledTimes(1)
-  expect(mockFetch).toBeCalledWith(`https://api.ror.org/organizations/${ror_id}`)
-})
-
 it('findInROR calls fetch with search param and json header', async () => {
   const searchFor = 'ABCD'
   // mock ROR response
-  mockFetchJson.mockResolvedValueOnce({items:[{id:'test-id',name:'Test organisation',links:[]}]})
+  mockFetchJson.mockResolvedValueOnce({items:[{
+    id:'test-id',
+    name:'Test organisation',
+    country:{country_name:'Test country'},
+    addresses:[
+      {city: 'Test city'}
+    ],
+    links:[],
+    types:['Education']
+  }]})
 
   const resp = await findInROR({searchFor})
 
@@ -61,17 +42,22 @@ it('findInROR calls fetch with search param and json header', async () => {
   expect(resp).toEqual([
     {
       'data': {
-        'description': null,
         'id': null,
-        'is_tenant': false,
-        'logo_id': null,
-        'name': 'Test organisation',
         'parent': null,
         'primary_maintainer': null,
-        'ror_id': 'test-id',
         'slug': 'test-organisation',
+        'name': 'Test organisation',
+        'short_description': null,
+        'description': null,
+        'ror_id': 'test-id',
+        'website': null,
+        'is_tenant': false,
+        'country': 'Test country',
+        'city': 'Test city',
+        'wikipedia_url': null,
+        'ror_types': ['Education'],
+        'logo_id': null,
         'source': 'ROR',
-        'website': '',
       },
       'key': 'test-id',
       'label': 'Test organisation',
