@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,7 +13,7 @@ import EditIcon from '@mui/icons-material/Edit'
 
 import {showDialogAndGetFile} from '~/utils/handleFileUpload'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {ImageDataProps} from './OrganisationLogo'
+import {ImageDataProps} from './Logo'
 
 type AdminMenuLogoProps = {
   logo: string | null
@@ -22,7 +22,7 @@ type AdminMenuLogoProps = {
   onRemoveLogo: () => void
 }
 
-export default function OrganisationLogoMenu({logo, onAddLogo, onRemoveLogo}: AdminMenuLogoProps) {
+export default function LogoMenu({logo, onAddLogo, onRemoveLogo}: AdminMenuLogoProps) {
   const {showWarningMessage, showErrorMessage} = useSnackbar()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)

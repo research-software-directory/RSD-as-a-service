@@ -17,10 +17,10 @@ import AdminSoftwareGridCard from './card/AdminSoftwareGridCard'
 import AdminSoftwareListItem from './list/AdminSoftwareListItem'
 import {SoftwareOfCommunity} from './apiCommunitySoftware'
 
-type CommunitySoftwareOverviewProps = {
+type CommunitySoftwareOverviewProps = Readonly<{
   layout: ProjectLayoutType
   software: SoftwareOfCommunity[]
-}
+}>
 
 export default function CommunitySoftwareOverview({layout,software}: CommunitySoftwareOverviewProps) {
   const {isMaintainer} = useCommunityContext()

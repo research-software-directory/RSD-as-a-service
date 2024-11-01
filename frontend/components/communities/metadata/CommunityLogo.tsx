@@ -8,9 +8,8 @@ import {useEffect, useState} from 'react'
 
 import {useSession} from '~/auth'
 import {deleteImage,getImageUrl,upsertImage} from '~/utils/editImage'
-import LogoAvatar from '~/components/layout/LogoAvatar'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import OrganisationLogoMenu from '~/components/organisation/metadata/OrganisationLogoMenu'
+import Logo from '~/components/layout/Logo'
 import {patchCommunityTable} from '../apiCommunities'
 
 type CommunityLogoProps = {
@@ -109,27 +108,21 @@ export default function CommunityLogo({id,name,logo_id,isMaintainer}:CommunityLo
   }
 
   return (
-    <>
-      <LogoAvatar
-        name={name ?? ''}
-        src={getImageUrl(logo) ?? undefined}
-        sx={{
-          backgroundColor: logo ? 'inherit' : 'text.disabled',
-          height: '10rem',
-          'img': {
-            objectFit: 'contain',
-            objectPosition: 'center'
-          }
-        }}
-      />
-      {isMaintainer &&
-        <OrganisationLogoMenu
-          logo={logo}
-          onAddLogo={addLogo}
-          onRemoveLogo={removeLogo}
-        />
-      }
-    </>
+    <Logo
+      name={name ?? ''}
+      logo={logo}
+      onAddLogo={addLogo}
+      onRemoveLogo={removeLogo}
+      canEdit={isMaintainer}
+      src={getImageUrl(logo) ?? undefined}
+      sx={{
+        backgroundColor: logo ? 'inherit' : 'text.disabled',
+        height: '10rem',
+        'img': {
+          objectFit: 'contain',
+          objectPosition: 'center'
+        }
+      }}
+    />
   )
-
 }
