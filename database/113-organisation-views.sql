@@ -13,6 +13,8 @@ AS
 $$
 DECLARE child_id UUID;
 DECLARE child_ids UUID[];
+DECLARE category_id UUID;
+DECLARE category_ids UUID[];
 BEGIN
 	IF id IS NULL THEN
 		RAISE EXCEPTION USING MESSAGE = 'Please provide the ID of the organisation to delete';
@@ -26,10 +28,16 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'You are not allowed to delete this organisation';
 	END IF;
 
-	child_ids := ARRAY_REMOVE(ARRAY_AGG((SELECT organisation.id FROM organisation WHERE organisation.parent = delete_organisation.id)), NULL);
+	child_ids := (SELECT COALESCE((SELECT ARRAY_AGG(organisation.id) FROM organisation WHERE organisation.parent = delete_organisation.id), '{}'));
 
 	FOREACH child_id IN ARRAY child_ids LOOP
 		PERFORM delete_organisation(child_id);
+	END LOOP;
+
+	category_ids := (SELECT COALESCE((SELECT ARRAY_AGG(category.id) FROM category WHERE category.organisation = delete_organisation.id), '{}'));
+
+	FOREACH category_id IN ARRAY category_ids LOOP
+		PERFORM delete_category_node(category_id);
 	END LOOP;
 
 	DELETE FROM invite_maintainer_for_organisation WHERE invite_maintainer_for_organisation.organisation = delete_organisation.id;

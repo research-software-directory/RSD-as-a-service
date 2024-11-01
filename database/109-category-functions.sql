@@ -46,3 +46,38 @@ DELETE FROM category_for_project
 		category_for_project.project_id = delete_organisation_categories_from_project.project_id AND
 		category.organisation = delete_organisation_categories_from_project.organisation_id;
 $$;
+
+CREATE FUNCTION delete_category_node(category_id UUID)
+	RETURNS VOID
+	LANGUAGE plpgsql
+	SECURITY DEFINER
+	VOLATILE
+AS
+$$
+DECLARE child_id UUID;
+DECLARE child_ids UUID[];
+BEGIN
+	IF category_id IS NULL THEN
+		RAISE EXCEPTION USING MESSAGE = 'Please provide the ID of the category to delete';
+	END IF;
+
+	IF
+		(SELECT rolsuper FROM pg_roles WHERE rolname = SESSION_USER) IS DISTINCT FROM TRUE
+			AND
+		(SELECT CURRENT_SETTING('request.jwt.claims', FALSE)::json->>'role') IS DISTINCT FROM 'rsd_admin'
+	THEN
+		RAISE EXCEPTION USING MESSAGE = 'You are not allowed to delete this category';
+	END IF;
+
+	child_ids := (SELECT COALESCE((SELECT ARRAY_AGG(category.id) FROM category WHERE category.parent = delete_category_node.category_id), '{}'));
+
+	FOREACH child_id IN ARRAY child_ids LOOP
+		PERFORM delete_category_node(child_id);
+	END LOOP;
+
+	DELETE FROM category_for_software WHERE category_for_software.category_id = delete_category_node.category_id;
+	DELETE FROM category_for_project WHERE category_for_project.category_id = delete_category_node.category_id;
+
+	DELETE FROM category WHERE category.id = delete_category_node.category_id;
+END;
+$$;

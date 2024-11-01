@@ -26,6 +26,7 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'You are not allowed to delete this project';
 	END IF;
 
+	DELETE FROM category_for_project WHERE category_for_project.project_id = delete_project.id;
 	DELETE FROM impact_for_project WHERE impact_for_project.project = delete_project.id;
 	DELETE FROM invite_maintainer_for_project WHERE invite_maintainer_for_project.project = delete_project.id;
 	DELETE FROM keyword_for_project WHERE keyword_for_project.project = delete_project.id;
@@ -36,6 +37,7 @@ BEGIN
 	DELETE FROM research_domain_for_project WHERE research_domain_for_project.project = delete_project.id;
 	DELETE FROM software_for_project WHERE software_for_project.project = delete_project.id;
 	DELETE FROM team_member WHERE team_member.project = delete_project.id;
+	DELETE FROM testimonial_for_project WHERE testimonial_for_project.project = delete_project.id;
 	DELETE FROM url_for_project WHERE url_for_project.project = delete_project.id;
 
 	DELETE FROM project WHERE project.id = delete_project.id;
