@@ -3,12 +3,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM node:22.5.1-bullseye-slim
+FROM denoland/deno:2.0.4
 WORKDIR /usr/app
 COPY ./package.json /usr/app
-RUN npm install
+RUN deno install
 COPY ./img /usr/app/img
 COPY ./images.js /usr/app
 COPY ./real-data.js /usr/app
 COPY ./main.js /usr/app
-CMD npx wait-on --timeout 10000 $POSTGREST_URL && node main.js
+CMD deno run -A npm:wait-on --timeout 10000 $POSTGREST_URL && deno run --allow-env=POSTGREST_URL,PGRST_JWT_SECRET --allow-read=./ --allow-net=backend:3500 main.js

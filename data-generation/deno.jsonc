@@ -1,0 +1,11 @@
+{
+	"fmt": {
+		"useTabs": true,
+		"lineWidth": 120,
+		"indentWidth": 4,
+		"semiColons": true,
+		"singleQuote": true,
+		"proseWrap": "preserve",
+		"exclude": ["**/*.md"]
+	}
+}
