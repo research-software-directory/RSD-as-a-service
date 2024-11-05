@@ -37,7 +37,7 @@ export const communityTabItems:CommunityTabProps = {
     id:'software',
     label:({software_cnt})=>`Software (${software_cnt ?? 0})`,
     icon: <TerminalIcon />,
-    isVisible: (props) => true,
+    isVisible: () => true,
   },
   requests:{
     id:'requests',

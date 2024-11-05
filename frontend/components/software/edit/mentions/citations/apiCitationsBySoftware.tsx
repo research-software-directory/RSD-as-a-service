@@ -20,7 +20,7 @@ export async function getCitationsBySoftware({
 ){
   try {
     // the content is ordered by type ascending
-    let query = `rpc/citation_by_software?software=eq.${software}&order=mention_type.asc`
+    const query = `rpc/citation_by_software?software=eq.${software}&order=mention_type.asc`
     // construct url
     const url = `${getBaseUrl()}/${query}`
     // make request

@@ -21,7 +21,7 @@ import {baseQueryString, paginationUrlParams} from '~/utils/postgrestUrl'
 
 export function organisationListUrl({search, rows = 12, page = 0}:
   { search: string | undefined, rows: number, page: number }) {
-  // NOTE 1! selectList need to include all colums used in filtering
+  // NOTE 1! selectList need to include all columns used in filtering
   // NOTE 2! ensure selectList uses identical props as defined in OrganisationList type
   const selectList = 'id,parent,name,short_description,country,website,is_tenant,rsd_path,logo_id,software_cnt,project_cnt,score'
   let url = `${getBaseUrl()}/rpc/organisations_overview?parent=is.null&score=gt.0&order=is_tenant.desc,score.desc.nullslast,name.asc&select=${selectList}`
@@ -123,7 +123,7 @@ export async function getOrganisationIdForSlug({slug, token, frontend=false}:
       url = '/api/v1/rpc/slug_to_organisation'
     }
 
-    let resp = await fetch(url, {
+    const resp = await fetch(url, {
       method: 'POST',
       headers: {
         ...createJsonHeaders(token),
@@ -175,7 +175,7 @@ export async function getOrganisationChildren({uuid, token}:
   { uuid: string, token: string}) {
   const selectList = 'id,name,primary_maintainer,slug,website,logo_id,is_tenant,parent'
   const query = `organisation?parent=eq.${uuid}&order=name.asc&select=${selectList}`
-  let url = `${getBaseUrl()}/${query}`
+  const url = `${getBaseUrl()}/${query}`
 
   const resp = await fetch(url, {
     method: 'GET',
@@ -251,7 +251,7 @@ export async function getSoftwareForOrganisation({
       url += '&status=eq.approved&is_published=eq.true'
     }
     // additional filters
-    let filters = baseQueryString({
+    const filters = baseQueryString({
       keywords,
       prog_lang,
       licenses,
@@ -322,7 +322,7 @@ export async function getProjectsForOrganisation({
       url += '&status=eq.approved&is_published=eq.true'
     }
     // additional filters
-    let filters = baseQueryString({
+    const filters = baseQueryString({
       project_status,
       keywords,
       domains,

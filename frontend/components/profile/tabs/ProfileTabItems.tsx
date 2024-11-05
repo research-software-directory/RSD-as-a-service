@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,12 +19,12 @@ export const profileTabItems:ProfileTabProps = {
     id:'software',
     label:({software_cnt})=>`Software (${software_cnt ?? 0})`,
     icon: <TerminalIcon />,
-    isVisible: (props) => true,
+    isVisible: () => true,
   },
   projects:{
     id:'projects',
     label: ({project_cnt})=>`Projects (${project_cnt ?? 0})`,
     icon: <ListAltIcon />,
-    isVisible: (props) => true,
+    isVisible: () => true,
   }
 }

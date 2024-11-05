@@ -199,8 +199,8 @@ export default function AutosaveSoftwareLicenses() {
   }
 
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<License>,
-    state: object) {
+    option: AutocompleteOption<License>
+  ) {
     // console.log('renderOption...', option)
     // when value is not found option returns input prop
     if (option?.input) {

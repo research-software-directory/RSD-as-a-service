@@ -19,12 +19,14 @@ import {cfgTeamMembers} from './config'
 import ProjectTeam from './index'
 
 // MOCK getTeamForProject
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetTeamForProject = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/utils/getProjects', () => ({
   getTeamForProject: jest.fn(props=>mockGetTeamForProject(props))
 }))
 
 // MOCK searchForPerson
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSearchForPerson = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/components/person/searchForPerson', () => ({
   searchForPerson: jest.fn(props=>mockSearchForPerson(props)),
@@ -33,18 +35,22 @@ jest.mock('~/components/person/searchForPerson', () => ({
 jest.mock('~/components/person/useAggregatedPerson')
 
 // MOCK postTeamMember
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPostTeamMember = jest.fn(props => Promise.resolve({
   status: 201,
   message: 'unique-person-id'
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchTeamMember = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteTeamMemberById = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchTeamMemberPositions = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'
@@ -57,11 +63,14 @@ jest.mock('./apiTeamMembers', () => ({
 }))
 
 // MOCK deleteImage
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteImage = jest.fn(props => Promise.resolve('OK'))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUpsertImage = jest.fn(props => Promise.resolve({
   status: 201,
   message: 'uploaded-image-id'
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSaveBase64Image = jest.fn(props => Promise.resolve({
   status: 201,
   message: 'uploaded-image-id'
@@ -78,6 +87,7 @@ const mockImageData={
   image_b64: 'data:image/png;base64,base64-encoded-image-content',
   image_mime_type: 'image/png'
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockHandleFileUpload = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK',
@@ -462,7 +472,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     })
 
     // render component
-    const {container} = render(
+    render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
           <ProjectTeam />

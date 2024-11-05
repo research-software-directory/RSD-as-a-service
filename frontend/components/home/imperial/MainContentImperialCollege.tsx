@@ -30,7 +30,7 @@ function submit_software_href(auth_status: string, login_providers: Provider[]) 
   return (login_providers[0]?.redirectUrl ?? '')
 }
 
-export default function MainContentImperialCollege({counts,news}: HomeProps) {
+export default function MainContentImperialCollege({counts}: HomeProps) {
   const {token} = useSession()
   const {loading, keywords} = useImperialData(token)
   const {session} = useAuth()

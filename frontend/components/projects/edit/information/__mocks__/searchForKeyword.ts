@@ -11,6 +11,7 @@ export type Keyword = {
 
 
 // DEFAULT MOCK
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function searchForProjectKeyword({searchFor}: { searchFor: string }) {
   // console.log('searchForProjectKeyword...default MOCK')
   return []

@@ -14,12 +14,14 @@ import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
 import AutosaveSoftwareMarkdown from './AutosaveSoftwareMarkdown'
 
 // MOCK patchSoftwareTable
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchSoftwareTable = jest.fn(props => Promise.resolve('OK'))
 jest.mock('./patchSoftwareTable', () => ({
   patchSoftwareTable: jest.fn(props=>mockPatchSoftwareTable(props))
 }))
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetRemoteMarkdown = jest.fn(props => Promise.resolve('Remote markdown'))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockApiRemoteMarkdown = jest.fn(props => Promise.resolve({
   status:200,
   message: 'Remote markdown'

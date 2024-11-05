@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -176,8 +176,8 @@ export default function FindMention({config, onAdd, searchFn, onCreate}: FindMen
   }
 
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<MentionItemProps>,
-    state: object) {
+    option: AutocompleteOption<MentionItemProps>
+  ) {
     // console.log('renderOption...', option)
     // when value is not not found option returns input prop
     if (option?.key==='__add_item__') {

@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -22,10 +22,10 @@ async function getOrganisationList() {
       const json: SitemapInfo[] = await resp.json()
       return json
     }
-    logger(`getProjectsSitemap.getProjectsList...${resp.status} ${resp.statusText}`, 'warn')
+    logger(`getOrganisationList...${resp.status} ${resp.statusText}`, 'warn')
     return []
   } catch (e: any) {
-    logger(`getProjectsSitemap.getProjectsList...${e.message}`, 'error')
+    logger(`getOrganisationList...${e.message}`, 'error')
     return []
   }
 }

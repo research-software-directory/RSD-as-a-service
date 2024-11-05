@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,6 +11,26 @@ import {crossrefItemToMentionItem} from './getCrossref'
 import {dataCiteGraphQLItemToMentionItem, getDataciteItemByDoiGraphQL, getDataciteItemsByDoiGraphQL} from './getDataCite'
 import logger from './logger'
 import {getOpenalexItemByDoi, getOpenalexItemsByDoi, openalexItemToMentionItem} from '~/utils/getOpenalex'
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const exampleUrlResponse = {
+  'responseCode': 1,
+  'handle': '10.5281/zenodo.3401363',
+  'values': [
+    {
+      'index': 1,
+      'type': 'URL',
+      'data': {
+        'format': 'string',
+        'value': 'https://zenodo.org/record/3401363'
+      },
+      'ttl': 86400,
+      'timestamp': '2019-09-06T13:29:11Z'
+    }
+  ]
+}
+
+type DoiUrlResponse = typeof exampleUrlResponse
 
 type DoiRA = {
   DOI: string,
@@ -105,7 +126,7 @@ export async function getItemsFromCrossref(dois: string[]){
     const upperIndex = Math.min((batch + 1) * 40, dois.length)
     for (let index = lowerIndex; index < upperIndex; index++) {
       const doi = dois[index]
-      const promise = new Promise((res, rej) => {
+      const promise = new Promise((res) => {
         setTimeout(res, 1000 * batch)
       }).then(async () => {
         const mentionResult = await getItemFromCrossref(doi)
@@ -215,21 +236,3 @@ export function makeDoiRedirectUrl(doi: string) {
   return `https://doi.org/${encodeURIComponent(doi)}`
 }
 
-const exampleUrlResponse = {
-  'responseCode': 1,
-  'handle': '10.5281/zenodo.3401363',
-  'values': [
-    {
-      'index': 1,
-      'type': 'URL',
-      'data': {
-        'format': 'string',
-        'value': 'https://zenodo.org/record/3401363'
-      },
-      'ttl': 86400,
-      'timestamp': '2019-09-06T13:29:11Z'
-    }
-  ]
-}
-
-type DoiUrlResponse = typeof exampleUrlResponse

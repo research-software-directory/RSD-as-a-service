@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,6 +12,7 @@ type getLoginApiParams = {
   searchFor?: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getRsdAccounts({page, rows, token, searchFor}: getLoginApiParams) {
   // console.log('getRsdAccounts...mock DEFAULT')
 
@@ -22,7 +23,7 @@ export async function getRsdAccounts({page, rows, token, searchFor}: getLoginApi
 
 }
 
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function deleteRsdAccount({id, token}: { id: string, token: string }) {
   // console.log('deleteRsdAccount...mock DEFAULT')
 

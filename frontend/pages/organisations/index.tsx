@@ -23,7 +23,7 @@ import {getOrganisationsList} from '~/components/organisation/apiOrganisations'
 import PageMeta from '~/components/seo/PageMeta'
 import AppFooter from '~/components/AppFooter'
 import AppHeader from '~/components/AppHeader'
-import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
+import {getUserSettings} from '~/utils/userSettings'
 import useSearchParams from '~/components/search/useSearchParams'
 import OrganisationGrid from '~/components/organisation/overview/OrganisationGrid'
 import PageBackground from '~/components/layout/PageBackground'
@@ -161,7 +161,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract user settings from cookie
   const {rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings
-  let page_rows = rows ?? rsd_page_rows
+  const page_rows = rows ?? rsd_page_rows
 
   // console.log('rows...', rows)
   // console.log('page...', page)

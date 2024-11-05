@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -17,12 +17,12 @@ export default function useValidateImageSrc(src?: string|null) {
     if (typeof src === 'string') {
       const image = new Image()
       // listen for events
-      image.onload = (props) => {
+      image.onload = () => {
         // console.log('useValidImageLink...onload...',props)
         if (abort) return
         setValid(true)
       }
-      image.onerror = ((props) => {
+      image.onerror = (() => {
         // console.log('useValidImageLink...onerror...', props)
         if (abort) return
         setValid(false)

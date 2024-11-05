@@ -41,10 +41,12 @@ const defaultValues:{
 jest.mock('~/utils/useSpdxLicenses')
 
 // MOCK addLicensesForSoftware, deleteLicense
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockAddLicensesForSoftware = jest.fn(props => Promise.resolve({
   status: 201,
   message: 'new-license-id'
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteLicense = jest.fn(props=>Promise.resolve('OK' as any))
 jest.mock('~/utils/editSoftware', () => ({
   addLicensesForSoftware: jest.fn(props => mockAddLicensesForSoftware(props)),
@@ -52,6 +54,7 @@ jest.mock('~/utils/editSoftware', () => ({
 }))
 
 // MOCK getLicensesFromDoi
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetLicensesFromDoi = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/utils/getInfoFromDatacite', () => ({
   getLicensesFromDoi: jest.fn(props=>mockGetLicensesFromDoi(props))

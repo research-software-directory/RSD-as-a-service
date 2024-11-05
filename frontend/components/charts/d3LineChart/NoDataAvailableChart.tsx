@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -40,9 +42,10 @@ const noCommitData: Point[] = [
 ]
 
 function drawLine(props: LineChartConfig) {
+  // eslint-disable-next-line prefer-const
   let {dim: {w, h}, svgEl, text, strokeColor} = props
   if (text === undefined) {
-    text = 'Whoops, something went wronge here.'
+    text = 'Whoops, something went wrong here.'
   }
   // if no data return null
   // ignore if no size
@@ -75,14 +78,14 @@ function drawLine(props: LineChartConfig) {
 
   // generate
   const generateScaledLine = d3.line()
-    .x((d:any,i:number) => {
+    .x((d:any) => {
       // Plot everything below hundred unscaled
       if (d.x < 100) {
         return d.x
       }
       return xScale(d.x)
     })
-    .y((d:any,i) => {
+    .y((d:any) => {
       // y as number, using yScale to calculate position
       const val = yScale(d.y)
       if (val < 0) {

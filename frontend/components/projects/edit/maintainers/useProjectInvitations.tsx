@@ -25,7 +25,7 @@ export function useProjectInvitations({project}:{project?:string}) {
     }).then(items=>{
       // update
       setUnusedInvitations(items)
-    }).catch(e=>{
+    }).catch(()=>{
       // update on error to empty array
       setUnusedInvitations([])
     })
@@ -33,7 +33,7 @@ export function useProjectInvitations({project}:{project?:string}) {
 
   useEffect(()=>{
     let abort = false
-    if (project && token){
+    if (project && token && abort===false){
       loadUnusedInvitations()
     }
     return ()=>{abort=true}

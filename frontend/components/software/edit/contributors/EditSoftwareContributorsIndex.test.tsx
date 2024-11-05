@@ -22,13 +22,18 @@ import mockContributors from './__mocks__/softwareContributors.json'
 import mockSearchOptions from '~/components/person/__mocks__/searchForPersonOptions.json'
 
 // MOCK getContributorsForSoftware
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetContributorsForSoftware = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPostContributor = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchContributor = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteContributorsById = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchContributorPositions = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'
@@ -43,6 +48,7 @@ jest.mock('./apiContributors', () => ({
 }))
 
 // MOCK searchForPerson
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSearchForPerson = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/components/person/searchForPerson', () => ({
   searchForPerson: jest.fn(props=>mockSearchForPerson(props))
@@ -51,17 +57,21 @@ jest.mock('~/components/person/searchForPerson', () => ({
 jest.mock('~/components/person/useAggregatedPerson')
 
 // MOCK getContributorsFromDoi
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetContributorsFromDoi = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/utils/getInfoFromDatacite', () => ({
   getContributorsFromDoi: jest.fn((...props)=>mockGetContributorsFromDoi(props))
 }))
 
 // MOCK editImage methods
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteImage = jest.fn(props => Promise.resolve('OK'))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUpsertImage = jest.fn(props => Promise.resolve({
   status: 201,
   message: 'uploaded-image-id'
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSaveBase64Image = jest.fn(props => Promise.resolve({
   status: 201,
   message: 'uploaded-image-id'
@@ -79,6 +89,7 @@ const mockImageData={
 }
 
 // MOCK handleFileUpload
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockHandleFileUpload = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK',

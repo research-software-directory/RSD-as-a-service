@@ -31,6 +31,7 @@ const mockSoftwareMentionContext={
   setCitationCnt:jest.fn(),
   setReferencePapersCnt:jest.fn()
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUseSoftwareMentionContext = jest.fn(props=>mockSoftwareMentionContext)
 jest.mock('~/components/software/edit/mentions/SoftwareMentionContext',()=>({
   useSoftwareMentionContext: jest.fn(props=>mockUseSoftwareMentionContext(props))

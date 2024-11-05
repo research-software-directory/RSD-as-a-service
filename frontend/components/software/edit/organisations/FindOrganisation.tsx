@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -83,8 +85,8 @@ export default function FindOrganisation({onAdd, onCreate}:
   }
 
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<SearchOrganisation>,
-    state: object) {
+    option: AutocompleteOption<SearchOrganisation>
+  ) {
     // when value is not found option returns input prop
     if (option?.input) {
       // if input is over minLength

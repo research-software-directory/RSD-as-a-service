@@ -26,7 +26,7 @@ export type KeywordForCommunity = {
 export async function getKeywordsByCommunity(uuid:string,token?:string){
   try{
     const query = `rpc/keywords_by_community?community=eq.${uuid}&order=keyword.asc`
-    let url = `${getBaseUrl()}/${query}`
+    const url = `${getBaseUrl()}/${query}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)

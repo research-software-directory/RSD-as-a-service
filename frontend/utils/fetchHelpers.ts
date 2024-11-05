@@ -85,7 +85,7 @@ export async function extractReturnMessage(resp: Response, dataId?: string) {
 }
 
 export function extractErrorMessages(responses: { status: number, message: string }[]) {
-  let errors: { status: number, message: string }[] = []
+  const errors: { status: number, message: string }[] = []
   responses.forEach(resp => {
     if (resp.status !== 200) {
       errors.push(resp)
@@ -144,7 +144,7 @@ export function isProperUrl(url:string){
   try{
     new URL(url)
     return true
-  }catch(e){
+  }catch{
     return false
   }
 }

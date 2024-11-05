@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -232,7 +232,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract user settings from cookie
   const {rsd_page_layout, rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings
-  let page_rows = rows ?? rsd_page_rows
+  const page_rows = rows ?? rsd_page_rows
   // calculate offset when page & rows present
   if (page_rows && page) {
     offset = page_rows * (page - 1)

@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -8,13 +8,14 @@
 import {ApiParams} from '~/utils/postgrestUrl'
 import {BackendLog} from '../useLogs'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getLogs({page, rows, token, searchFor, orderBy}: ApiParams<BackendLog, keyof BackendLog>) {
   try {
     return {
       count: 0,
       logs: []
     }
-  } catch (e: any) {
+  } catch {
     return {
       count: 0,
       logs: []
@@ -22,13 +23,14 @@ export async function getLogs({page, rows, token, searchFor, orderBy}: ApiParams
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function deleteLogById({id,token}:{id:string, token:string}){
   try{
     return {
       status:200,
       message: 'OK'
     }
-  }catch(e:any){
+  }catch{
     return {
       status: 500,
       message: 'Server error'
@@ -42,6 +44,7 @@ export async function deleteLogById({id,token}:{id:string, token:string}){
  * @param @object{days?,limit?,token}
  * @returns
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function deleteLogsOlderThan({days=30,limit=1000,token}:{token:string,days?:number,limit?:number}){
   return {
     status: 200,

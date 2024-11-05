@@ -190,7 +190,7 @@ export async function claimCommunityMaintainerInvite({id, token}:
   { id: string, token?: string}) {
   try {
     const query = 'rpc/accept_invitation_community'
-    let url = `${getBaseUrl()}/${query}`
+    const url = `${getBaseUrl()}/${query}`
 
     const resp = await fetch(url, {
       method: 'POST',

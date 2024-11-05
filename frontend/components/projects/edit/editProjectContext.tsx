@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -40,7 +42,7 @@ export type EditProjectContextProps = {
 
 const EditProjectContext = createContext<EditProjectContextProps>({
   state: initialState,
-  dispatch: (action)=>{}
+  dispatch: ()=>{}
 })
 
 export function EditProjectProvider(props: any) {
@@ -52,7 +54,7 @@ export function EditProjectProvider(props: any) {
   // console.groupEnd()
 
   useEffect(() => {
-    // The prokect context is used on dynamic edit project page.
+    // The project context is used on dynamic edit project page.
     // Basic project information is loaded server side on each change
     // of dynamic page. NOTE! useReducer state runs in a different context
     // AND takes only initial props.state. In order to ensure latest state

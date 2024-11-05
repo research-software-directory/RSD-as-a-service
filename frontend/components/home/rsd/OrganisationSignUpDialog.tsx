@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -145,8 +145,7 @@ export default function OrganisationSignUpDialog({
             <a
               role="button"
               type="submit"
-              onClick={(e) => {
-                // e.preventDefault()
+              onClick={() => {
                 closeAndReset()
               }}
               className="text-sm text-base-100 hover:text-base-100 bg-primary px-4 py-1 rounded hover:opacity-90 active:opacity-95"

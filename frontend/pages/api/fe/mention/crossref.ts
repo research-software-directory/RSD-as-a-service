@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
@@ -20,8 +21,8 @@ export default async function handler(
     const doiResponse = await getCrossrefItemByDoi(doi as string)
     res.status(doiResponse.status)
     res.json(doiResponse)
-  } catch (e: any) {
+  } catch {
     res.status(500)
-    res.json({status: 500, message: 'unknown error'})
+    res.json({status: 500, message: 'Unknown error'})
   }
 }

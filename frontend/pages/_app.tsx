@@ -66,10 +66,12 @@ const setCustomUrl = initMatomoCustomUrl()
 // ProgressBar at the top
 // listen to route change and drive nprogress status
 // it's taken out of RsdApp to be initialized only once
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 Router.events.on('routeChangeStart', (props) => {
   // console.log('routeChangeStart...props...', props)
   nprogress.start()
 })
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 Router.events.on('routeChangeComplete', (path) => {
   // console.log('routeChangeComplete...path...', path)
   nprogress.done()
@@ -212,7 +214,7 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
     consent: null
   }
   // extract rsd settings
-  const settings = await getSettingsServerSide(req, appContext.router.query)
+  const settings = await getSettingsServerSide(req)
   // extract user session from cookies and
   // matomo consent if matomo is used (id)
   // only in SSR mode (req && res present)

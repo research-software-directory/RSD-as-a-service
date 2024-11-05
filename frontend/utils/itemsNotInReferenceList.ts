@@ -40,7 +40,7 @@ export function itemsNotInListByKeys<T>({list, referenceList, keys}:
     // items not present in reference list should be removed from db
     const notInReferenceList = list.filter(item => {
       // generate item from the list
-      let lId = keys.reduce((agg:string,key)=>{
+      const lId = keys.reduce((agg:string,key)=>{
         // add value of the property if exists
         if (item[key as keyof T]){
           agg+= item[key as keyof T]
@@ -53,7 +53,7 @@ export function itemsNotInListByKeys<T>({list, referenceList, keys}:
       // if item cannot be found in reference
       return !referenceList.some(item => {
         // generate item from the reference list
-        let rId = keys.reduce((agg:string,key)=>{
+        const rId = keys.reduce((agg:string,key)=>{
           // add value of the property if exists
           if (item[key as keyof T]){
             agg+= item[key as keyof T]

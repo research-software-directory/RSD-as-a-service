@@ -228,7 +228,7 @@ export default function EditRelatedOutputProvider(props: any) {
         // we do not handle response result
         // because if mention is referenced in other
         // software the delete action will fail (and that's ok)
-        const del = await deleteMentionItem({
+        deleteMentionItem({
           id: item.id,
           token
         })

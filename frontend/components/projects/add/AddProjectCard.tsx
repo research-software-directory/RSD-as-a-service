@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,18 +16,18 @@ import CircularProgress from '@mui/material/CircularProgress'
 
 import {useForm} from 'react-hook-form'
 
-import {useSession} from '../../../auth'
-import TextFieldWithCounter from '../../form/TextFieldWithCounter'
-import SlugTextField from '../../form/SlugTextField'
-import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
-import {NewProject} from '../../../types/Project'
-import {getSlugFromString} from '../../../utils/getSlugFromString'
+import {useSession} from '~/auth'
+import {NewProject} from '~/types/Project'
+import {getSlugFromString} from '~/utils/getSlugFromString'
 import {useDebounce} from '~/utils/useDebounce'
-import {addProject, validProjectItem} from '../../../utils/editProject'
-import {addConfig as config} from './addProjectConfig'
+import {addProject, validProjectItem} from '~/utils/editProject'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
+import SlugTextField from '~/components/form/SlugTextField'
+import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
+import {addConfig as config} from './addProjectConfig'
 
-const initalState = {
+const initialState = {
   loading: false,
   error:''
 }
@@ -45,11 +47,11 @@ export default function AddProjectCard() {
   const [baseUrl, setBaseUrl] = useState('')
   const [slugValue, setSlugValue] = useState('')
   const [validating, setValidating]=useState(false)
-  const [state, setState] = useState(initalState)
+  const [state, setState] = useState(initialState)
   const {register, handleSubmit, watch, formState, setError, setValue} = useForm<AddProjectForm>({
     mode: 'onChange'
   })
-  const {errors, isValid, isDirty} = formState
+  const {errors, isValid} = formState
   // watch for data change in the form
   const [slug,project_title,project_subtitle] = watch(['slug', 'project_title', 'project_subtitle'])
   // construct slug from title

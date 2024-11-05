@@ -25,7 +25,7 @@ export function useSoftwareInvitations({software}:{software?:string}) {
     }).then(items=>{
       // update
       setUnusedInvitations(items)
-    }).catch(e=>{
+    }).catch(()=>{
       // update on error to empty array
       setUnusedInvitations([])
     })
@@ -33,7 +33,7 @@ export function useSoftwareInvitations({software}:{software?:string}) {
 
   useEffect(()=>{
     let abort = false
-    if (software && token){
+    if (software && token && abort===false){
       loadUnusedInvitations()
     }
     return ()=>{abort=true}

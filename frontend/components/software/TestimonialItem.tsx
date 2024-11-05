@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,6 +28,7 @@ const TestimonialContent = styled('div')(({theme}) => ({
   }
 }))
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const GivenBy = styled('div')(({theme}) => ({
   margin: '20px 0 4em',
   paddingLeft:'6rem'

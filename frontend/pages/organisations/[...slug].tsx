@@ -146,7 +146,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         rsd_page_rows
       },
     }
-  }catch(e){
+  }catch{
     return {
       notFound: true,
     }

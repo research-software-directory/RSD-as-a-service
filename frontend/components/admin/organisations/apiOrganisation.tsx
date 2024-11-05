@@ -71,7 +71,7 @@ async function getOrganisations({page, rows, token, searchFor, orderBy}: getOrga
       count: 0,
       organisations: []
     }
-  } catch (e: any) {
+  } catch {
     return {
       count: 0,
       organisations: []

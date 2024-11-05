@@ -19,29 +19,35 @@ import editProjectState from '../__mocks__/editProjectState'
 import mockOrganisationsOfProject from './__mocks__/organisationsOfProject.json'
 
 // MOCK isMaintainerOfOrganisation
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockIsMaintainerOfOrganisation = jest.fn(props => Promise.resolve(false))
 jest.mock('~/auth/permissions/isMaintainerOfOrganisation', () => ({
   __esModule: true,
   default: jest.fn(props=>mockIsMaintainerOfOrganisation(props)),
   isMaintainerOfOrganisation: jest.fn(props=>mockIsMaintainerOfOrganisation(props)),
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   canEditOrganisations: jest.fn(({organisations,...other})=>organisations)
 }))
 
 // MOCK getOrganisationsOfProject
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetOrganisationsOfProject = jest.fn(props => Promise.resolve([]))
 jest.mock('~/utils/getProjects', () => ({
   getOrganisationsOfProject: jest.fn(props=>mockGetOrganisationsOfProject(props))
 }))
 
 // MOCK deleteOrganisationFromProject
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteOrganisationFromProject = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchOrganisationPositions = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockAddOrganisationToProject = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'approved'
@@ -54,7 +60,9 @@ jest.mock('~/utils/editProject', () => ({
 }))
 
 // MOCK searchForOrganisation
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSearchForOrganisation = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockCreateOrganisation = jest.fn(props => Promise.resolve({
   status: 201,
   message: 'new-organisation-id'

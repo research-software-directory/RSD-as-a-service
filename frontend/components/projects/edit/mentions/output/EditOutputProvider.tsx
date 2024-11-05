@@ -224,9 +224,9 @@ export default function EditOutputProvider(props: any) {
         if (output>0)setOutputCnt(output-1)
         // try to remove mention item from RSD
         // we do not handle response status
-        // if mention is referenced elswhere
+        // if mention is referenced elsewhere
         // delete action will fail (and that's ok)
-        const del = await deleteMentionItem({
+        deleteMentionItem({
           id: item.id,
           token
         })

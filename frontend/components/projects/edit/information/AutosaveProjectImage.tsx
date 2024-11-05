@@ -37,7 +37,6 @@ export default function AutosaveProjectImage() {
   ])
 
   async function saveImage(image_b64: string, mime_type: string) {
-    let resp
     // split base64 to use only encoded content
     const data = image_b64.split(',')[1]
     if (form_image_id) {
@@ -51,14 +50,14 @@ export default function AutosaveProjectImage() {
       if (patch.status === 200) {
         // try to remove old image
         // but don't wait for results
-        const del = await deleteImage({
+        deleteImage({
           id: form_image_id,
           token
         })
       }
     }
     // add new image to db
-    resp = await upsertImage({
+    const resp = await upsertImage({
       data,
       mime_type,
       token
@@ -128,7 +127,7 @@ export default function AutosaveProjectImage() {
       if (form_image_id) {
         // try to remove old image
         // but don't wait for results
-        const del = await deleteImage({
+        deleteImage({
           id: form_image_id,
           token
         })

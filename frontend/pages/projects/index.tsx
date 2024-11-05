@@ -232,30 +232,32 @@ export default function ProjectsOverviewPage({
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   let offset=0
   // extract from page-query
-  let {
+  const {
     search, rows, page, keywords, domains,
     organisations, project_status, order
   } = ssrProjectsParams(context.query)
   // extract user settings from cookie
   const {rsd_page_layout, rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings
-  let page_rows = rows ?? rsd_page_rows
+  const page_rows = rows ?? rsd_page_rows
   // calculate offset when page & rows present
   if (page_rows && page) {
     offset = page_rows * (page - 1)
   }
 
   const allowedOrderings = projectOrderOptions.map(o => o.key)
-
-  if (!order || !allowedOrderings.includes(order)) {
-    order = 'impact_cnt'
+  // default order
+  let projectOrder = order ?? 'impact_cnt'
+  // remove order key if NOT in list of allowed
+  if (order && allowedOrderings.includes(order)===false) {
+    projectOrder = 'impact_cnt'
   }
 
   // extract order direction from definitions
-  const orderInfo = projectOrderOptions.find(item=>item.key===order)!
+  const orderInfo = projectOrderOptions.find(item=>item.key===projectOrder)!
   // ordering options require "stable" secondary order
   // to ensure proper pagination. We use slug for this purpose
-  const orderBy = `${order}.${orderInfo.direction},slug.asc`
+  const orderBy = `${projectOrder}.${orderInfo.direction},slug.asc`
 
   const url = projectListUrl({
     baseUrl: getBaseUrl(),
@@ -298,7 +300,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     // pass this to page component as props
     props: {
       search,
-      order,
+      order:projectOrder,
       keywords,
       keywordsList,
       domains,

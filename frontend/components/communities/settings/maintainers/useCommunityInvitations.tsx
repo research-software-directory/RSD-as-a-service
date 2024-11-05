@@ -25,7 +25,7 @@ export function useCommunityInvitations({community}:{community?:string}) {
     }).then(items=>{
       // update
       setUnusedInvitations(items)
-    }).catch(e=>{
+    }).catch(()=>{
       // update on error to empty array
       setUnusedInvitations([])
     })
@@ -33,7 +33,7 @@ export function useCommunityInvitations({community}:{community?:string}) {
 
   useEffect(()=>{
     let abort = false
-    if (community && token){
+    if (community && token && abort===false){
       loadUnusedInvitations()
     }
     return ()=>{abort=true}

@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,7 +12,7 @@ import Box from '@mui/material/Box'
 import {Theme} from '@mui/material/styles/createTheme'
 import Slide from '@mui/material/Slide'
 
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const NoContentText = styled('h2')(({theme}:{theme?:Theme}) => ({
   fontWeight: 500,
   letterSpacing: '0.25rem',
@@ -18,6 +20,7 @@ const NoContentText = styled('h2')(({theme}:{theme?:Theme}) => ({
   padding: '1rem 0rem'
 }))
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const NoContentBody = styled('div')(({theme}:{theme?:Theme}) => ({
   margin:'2rem 0rem 0rem 0rem',
   display: 'flex',

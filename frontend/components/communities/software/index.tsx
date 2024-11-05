@@ -84,7 +84,6 @@ export default function CommunitySoftware({
           <CommunitySoftwareOverview
             layout={view}
             software={software}
-            rows={rows}
           />
           {/* Pagination */}
           {numPages > 1 &&

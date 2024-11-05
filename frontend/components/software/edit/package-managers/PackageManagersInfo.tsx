@@ -13,7 +13,7 @@ import {packageManagerSettings, PackageManagerTypes} from './apiPackageManager'
 export default function PackageManagersInfo() {
   // extract package manager names from settings
   const keys = Object.keys(packageManagerSettings)
-  let managers:string[]=[]
+  const managers:string[]=[]
   keys.forEach((key) => {
     if (packageManagerSettings[key as PackageManagerTypes].services?.length > 0){
       managers.push(packageManagerSettings[key as PackageManagerTypes].name)

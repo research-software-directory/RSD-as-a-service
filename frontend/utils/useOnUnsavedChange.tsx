@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -39,8 +41,11 @@ function onWebsiteChange(e: any, warning: string) {
 }
 
 
-export default function useOnUnsavedChange({isDirty, isValid, warning, dirtyFields}:
-  { isDirty: boolean, isValid: boolean, warning:string, dirtyFields?:{} }) {
+export default function useOnUnsavedChange({
+  isDirty, warning
+}:{
+  isDirty: boolean, warning:string
+}) {
   const router = useRouter()
   useEffect(() => {
     // needs to be registered fn in order to remove it on unload

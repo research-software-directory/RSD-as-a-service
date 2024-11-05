@@ -84,12 +84,11 @@ export default function AutosaveNewsImage() {
 
 
   async function saveImage(image_b64: string, mime_type: string) {
-    let resp
     // split base64 to use only encoded content
     const data = image_b64.split(',')[1]
     // debugger
     // add new image to db
-    resp = await upsertImage({
+    const resp = await upsertImage({
       data,
       mime_type,
       token
@@ -139,7 +138,7 @@ export default function AutosaveNewsImage() {
     if (resp.status === 200 && image.image_id) {
       // try to remove old image
       // but don't wait for results
-      const del = await deleteImage({
+      deleteImage({
         id: image.image_id,
         token
       })

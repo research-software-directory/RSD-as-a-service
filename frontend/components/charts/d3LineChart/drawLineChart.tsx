@@ -6,8 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as d3 from 'd3'
+import logger from '~/utils/logger'
 import {SizeType} from './useResizeObserver'
-import logger from '../../../utils/logger'
 
 type LineData = {
   x: number,
@@ -83,12 +83,12 @@ export default function drawLineChart(props: LineChartConfig) {
 
   // generate
   const generateScaledLine = d3.line()
-    .x((d:any,i:number) => {
+    .x((d:any) => {
       // x as date value, using xScale to calculate position
       const val = xScale(new Date(d.x))
       return val
     })
-    .y((d:any,i) => {
+    .y((d:any) => {
       // y as number, using yScale to calculate position
       const val = yScale(d.y)
       if (val < 0) {

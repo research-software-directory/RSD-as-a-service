@@ -123,12 +123,13 @@ export type PackageManager = NewPackageManager & {
   reverse_dependency_count_scraped_at: string | null
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getPackageManagers({software, token}: { software: string, token: string }) {
   // console.log('getPackageManagers...default MOCK')
   return mockPackageManagers
 }
 
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function postPackageManager({data, token}: { data: NewPackageManager, token: string }) {
   // console.log('postPackageManager...default MOCK')
   return {
@@ -137,7 +138,7 @@ export async function postPackageManager({data, token}: { data: NewPackageManage
   }
 }
 
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function patchPackageManagers({items, token}: { items: PackageManager[], token: string }) {
   // console.log('patchPackageManagers...default MOCK')
   return {
@@ -146,6 +147,7 @@ export async function patchPackageManagers({items, token}: { items: PackageManag
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function deletePackageManager({id, token}: { id: string, token: string }) {
   // console.log('deletePackageManager...default MOCK')
   return {
@@ -169,11 +171,12 @@ export async function getPackageManagerTypeFromUrl(url:string) {
       return pm_key
     }
     return 'other' as PackageManagerTypes
-  } catch (e: any) {
+  } catch {
     return 'other' as PackageManagerTypes
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getPackageManagerServices(pm_key:PackageManagerTypes|null){
   // just return no services
   return []

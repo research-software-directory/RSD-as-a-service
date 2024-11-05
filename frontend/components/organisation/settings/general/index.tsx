@@ -16,6 +16,8 @@ import RsdAdminSection from './RsdAdminSection'
 
 export default function OrganisationGeneralSettings() {
   const {user} = useSession()
+  // extract organisation values from hook
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {isMaintainer,...organisation} = useOrganisationContext()
   const methods = useForm<OrganisationForOverview>({
     mode: 'onChange',
@@ -23,15 +25,14 @@ export default function OrganisationGeneralSettings() {
   })
   // extract used methods
   const {
-    watch, register, formState
+    watch, register
   } = methods
-  // const {isValid, isDirty} = formState
+
   const [name,website,short_description]=watch(['name','website','short_description'])
 
   // console.group('OrganisationGeneralSettings')
   // console.log('short_description...', short_description)
   // console.log('website....', website)
-  // console.log('isMaintainer....', isMaintainer)
   // console.groupEnd()
 
   return (

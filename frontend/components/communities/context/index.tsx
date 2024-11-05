@@ -35,7 +35,7 @@ const emptyCommunity:EditCommunityProps = {
 const CommunityContext = createContext<CommunityContextProps>({
   community: emptyCommunity,
   isMaintainer: false,
-  updateCommunity: ({key,value}:UpdateCommunityProps)=> {}
+  updateCommunity: () => {}
 })
 
 export function CommunityProvider({community:initCommunity,isMaintainer:initMaintainer,...props}:any){

@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,11 +13,12 @@ import AddPageModal from './AddPageModal'
 import {addConfig as config} from './addConfig'
 
 // MOCKS
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockValidPageSlug = jest.fn((props) => Promise.resolve(false))
 jest.mock('../useMarkdownPages', () => ({
   validPageSlug: jest.fn(props=>mockValidPageSlug(props))
 }))
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockAddMarkdownPage = jest.fn((props) => Promise.resolve({status:200,message:'test-message'}))
 jest.mock('../saveMarkdownPage', () => ({
   addMarkdownPage: jest.fn(props=>mockAddMarkdownPage(props))

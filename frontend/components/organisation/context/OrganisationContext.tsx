@@ -20,7 +20,7 @@ type OrganisationContextProps = {
 const OrganisationContext = createContext<OrganisationContextProps>({
   organisation: null,
   isMaintainer: false,
-  updateOrganisation: ({key, value}: UpdateOrganisationProps) => { }
+  updateOrganisation: () => {}
 })
 
 export function OrganisationProvider(props: any) {

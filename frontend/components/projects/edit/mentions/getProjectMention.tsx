@@ -30,7 +30,7 @@ export async function getProjectMention(project:string,token:string){
       impact,
       citation
     }
-  }catch(e:any){
+  }catch{
     return {
       output: [],
       citation: [],

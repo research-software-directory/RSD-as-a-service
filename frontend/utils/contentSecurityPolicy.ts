@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,7 +28,7 @@ import crypto from 'crypto'
 import {IncomingMessage, ServerResponse} from 'http'
 
 // default policies
-let sharedPolicy = `
+const sharedPolicy = `
   default-src 'self';
   style-src 'self' 'unsafe-inline';
   connect-src 'self' https://*;
@@ -37,9 +37,9 @@ let sharedPolicy = `
   base-uri 'none';
   object-src 'none';
 `
-// default script def - use unsafe-inline for backward compatibilty
+// default script def - use unsafe-inline for backward compatibility
 // https://developer.chrome.com/docs/lighthouse/best-practices/csp-xss/?utm_source=lighthouse&utm_medium=devtools#ensure-csp-is-backwards-compatible
-let sharedScript = 'script-src \'self\' '
+// const sharedScript = 'script-src \'self\' '
 
 function defaultNonce() {
   if (crypto) return crypto.randomUUID()
@@ -64,7 +64,7 @@ function devScript() {
 export function nonceContentSecurity() {
   const nonce = crypto.randomUUID()
   // append default, monitoring scripts and dev script
-  let scriptSrc = `script-src 'nonce-${nonce}' 'strict-dynamic'${monitoringScripts()}${devScript()} 'unsafe-inline' https:`
+  const scriptSrc = `script-src 'nonce-${nonce}' 'strict-dynamic'${monitoringScripts()}${devScript()} 'unsafe-inline' https:`
   // combine shared policies with script policy
   const policy = `${sharedPolicy.replace(/\s{2,}/g, ' ').trim()} ${scriptSrc}`
   // console.log('shaContentSecurity...', policy)

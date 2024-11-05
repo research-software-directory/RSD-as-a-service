@@ -25,6 +25,7 @@ export type SoftwareCategoriesProps = {
 
 export default function AutosaveSoftwareCategories({softwareId, reorderedCategories, associatedCategoryIds}: Readonly<SoftwareCategoriesProps>) {
   // trick to force rerender
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setAssociatedCategories] = useState<Set<string>>(associatedCategoryIds)
   const {token} = useSession()
   const selectedNodes: TreeNode<CategoryEntry>[] = []

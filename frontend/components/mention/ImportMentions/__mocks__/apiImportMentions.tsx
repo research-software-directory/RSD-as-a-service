@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +14,7 @@ async function mockValidateInput(value: string){
   const results = new Map()
 
   // Just return all values as VALID
-  doiList.forEach((doi,index) => {
+  doiList.forEach((doi) => {
     results.set(doi.toLocaleLowerCase(), {
       doi: doi.toLocaleLowerCase(),
       status: 'valid',
@@ -32,6 +32,7 @@ async function mockValidateInput(value: string){
   return results
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function useValidateInputList(token: string) {
   // console.log('useValidateInputList...default MOCK...token...', token)
   return {
@@ -41,6 +42,7 @@ export function useValidateInputList(token: string) {
 }
 
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function linkMentionToEntity({ids, table, entityName, entityId, token}: {
   ids: string[], table: string, entityName: string, entityId: string, token: string
 }) {
@@ -52,6 +54,7 @@ export async function linkMentionToEntity({ids, table, entityName, entityId, tok
 }
 
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function addMentions({mentions, token}: { mentions: MentionItemProps[], token: string }) {
   // console.log('addMentions...default MOCK...mentions...', mentions)
   return {

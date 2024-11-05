@@ -14,6 +14,7 @@ import {
   EditOrganisation, Organisation,
   OrganisationRole,
   OrganisationsForSoftware,
+  OrganisationSource,
   PatchOrganisation,
   SearchOrganisation
 } from '../types/Organisation'
@@ -233,7 +234,7 @@ export async function deleteOrganisation({uuid,logo_id, token}:
     if ([200, 204].includes(resp.status) === true && logo_id) {
       // try to remove old image
       // but don't wait for results
-      const del = await deleteImage({
+      deleteImage({
         id: logo_id,
         token
       })
@@ -257,7 +258,7 @@ export async function getRsdPathForOrganisation({uuid,token}:
   {uuid: string, token?: string}) {
   try {
     const query = `rpc/organisation_route?id=${uuid}`
-    let url = `${getBaseUrl()}/${query}`
+    const url = `${getBaseUrl()}/${query}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
@@ -336,7 +337,7 @@ export function newOrganisationProps(props: NewOrganisation) {
     logo_mime_type: null,
     logo_id: null,
     website: null,
-    source: 'MANUAL' as 'MANUAL',
+    source: 'MANUAL' as OrganisationSource,
     primary_maintainer: props.primary_maintainer,
     role: props?.role ?? 'participating',
     canEdit: false,

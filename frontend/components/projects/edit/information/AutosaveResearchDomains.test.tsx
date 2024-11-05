@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,10 +16,12 @@ import mockResearchDomain from './__mocks__/researchDomain.json'
 import mockResearchDomainByProject from './__mocks__/researchDomainByProject.json'
 
 // MOCK addResearchDomainToProject
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockAdResearchDomainToProject = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteResearchDomainFromProject=jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'

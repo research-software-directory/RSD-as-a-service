@@ -100,7 +100,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       notFound: true,
     }
 
-  }catch(e){
+  }catch{
     return {
       notFound: true,
     }

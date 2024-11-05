@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
@@ -25,7 +26,7 @@ export async function getGlobalSearch(searchText: string, token: string,): Promi
   try {
     // call the function query
     const query = `rpc/global_search?query=${searchText}&limit=30&order=rank.asc,index_found.asc`
-    let url = `/api/v1/${query}`
+    const url = `/api/v1/${query}`
 
     const resp = await fetch(url, {
       method: 'GET',

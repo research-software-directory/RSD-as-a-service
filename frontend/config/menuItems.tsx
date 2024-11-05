@@ -32,7 +32,7 @@ export type MenuItemType = {
   icon?: JSX.Element,
   // optional, but fn is provided it will have higher priority
   // than path
-  fn?: Function,
+  fn?: (props:any)=>void,
   // enables filtering of menuItems for the instance (defined in settings.json)
   module?: RsdModule
 }

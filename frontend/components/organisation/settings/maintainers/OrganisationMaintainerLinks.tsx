@@ -12,15 +12,11 @@ import {useOrganisationInvitations} from './useOrganisationInvitations'
 
 export default function OrganisationMaintainerLinks() {
   const {id,name} = useOrganisationContext()
-  const {
-    unusedInvitations,magicLink,
-    createInvitation,deleteInvitation
-  } = useOrganisationInvitations({organisation:id})
+  const {unusedInvitations,createInvitation,deleteInvitation} = useOrganisationInvitations({organisation:id})
 
   // console.group('OrganisationMaintainerLinks')
   // console.log('id...', id)
   // console.log('name...', name)
-  // console.log('magicLink...', magicLink)
   // console.log('unusedInvitations...', unusedInvitations)
   // console.groupEnd()
 

@@ -93,7 +93,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     }
   }
 
-  let pageIndex = editSoftwarePage.findIndex(p => p.id === page)
+  const pageIndex = editSoftwarePage.findIndex(p => p.id === page)
   // Edit software page not found in defs
   if (pageIndex===-1) {
     return {

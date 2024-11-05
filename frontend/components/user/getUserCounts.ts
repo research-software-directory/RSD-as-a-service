@@ -20,8 +20,8 @@ export async function getUserCounts({token}:{token?: string}) {
     // NOTE! the selection is based on the token
     // RLS in postgres returns only counts for the user
     // therefore no additional account filter is required
-    let query = 'rpc/counts_by_maintainer'
-    let url = `${getBaseUrl()}/${query}`
+    const query = 'rpc/counts_by_maintainer'
+    const url = `${getBaseUrl()}/${query}`
 
     const resp = await fetch(url, {
       method: 'GET',

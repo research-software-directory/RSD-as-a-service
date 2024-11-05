@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,6 +10,7 @@ import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 import FindMention, {FindMentionProps} from './FindMention'
 
 // default is non-resolved promise - for first test
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSearchFn = jest.fn((props) => new Promise<MentionItemProps[]>((res, rej) => {}))
 const mockAdd = jest.fn()
 const mockCreate = jest.fn()
@@ -29,7 +32,7 @@ const mockMentionItem = {
   note: null
 }
 
-let props:FindMentionProps = {
+const props:FindMentionProps = {
   config: {
     freeSolo: true,
     minLength: 3,

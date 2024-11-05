@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -94,14 +94,14 @@ function LatestSpotlight({name, description, image, link}:
   )
 }
 
-function PreviousSpotlight({name, image, link, description, i}:
-  {name: string, image: string, link: string, description: string | '', i: number}) {
+function PreviousSpotlight({name, image, link, description}:
+  {name: string, image: string, link: string, description: string | ''}) {
 
   const MAX_CHARS = 150
   function descriptionParagraph (description: string) {
     if (description != '') {
       if (description.length > MAX_CHARS) {
-        let description_trunc = description.substring(0, MAX_CHARS)
+        const description_trunc = description.substring(0, MAX_CHARS)
         description = description_trunc.substring(0, description_trunc.lastIndexOf(' ')) + ' …'
       }
       return (
@@ -143,7 +143,7 @@ function Spotlights({spotlights}:{spotlights: Array<SpotlightDescription>}) {
       <div className="w-full flex flex-row flex-wrap py-5">
         {spotlights.slice(1, 5).map(spotlight => {
           i++
-          let key = 'spotlight_' + i
+          const key = 'spotlight_' + i
           return(
             <PreviousSpotlight
               key={key}
@@ -151,7 +151,6 @@ function Spotlights({spotlights}:{spotlights: Array<SpotlightDescription>}) {
               image={spotlight.image}
               link={spotlight.link}
               description={spotlight.description}
-              i={i}
             />
           )
         })}
@@ -274,17 +273,17 @@ function moveLeft() {
 
 export default function HelmholtzHome() {
   const {session}=useAuth()
-  const {loading,organisations} = useOrganisations(session.token)
+  const {organisations} = useOrganisations(session.token)
 
-  const handleClickOpen = () => {
-    const loginButton = document.querySelector('.rsd-login-button')
-    if (loginButton) {
-      const evt = new MouseEvent('click', {
-        bubbles: true
-      })
-      loginButton.dispatchEvent(evt)
-    }
-  }
+  // const handleClickOpen = () => {
+  //   const loginButton = document.querySelector('.rsd-login-button')
+  //   if (loginButton) {
+  //     const evt = new MouseEvent('click', {
+  //       bubbles: true
+  //     })
+  //     loginButton.dispatchEvent(evt)
+  //   }
+  // }
 
   return (
     <div className="bg-base-100" data-testid="rsd-helmholtz-home">

@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -196,7 +196,7 @@ export async function getResearchDomainInfo(keys: string[]) {
 }
 
 export function createDomainsList(domainOptions: DomainsFilterOption[], domainInfo: ResearchDomainInfo[]) {
-  let domainsList: ResearchDomainOption[] = []
+  const domainsList: ResearchDomainOption[] = []
   // return empty list
   if (domainOptions.length === 0 || domainInfo.length === 0) return domainsList
   //

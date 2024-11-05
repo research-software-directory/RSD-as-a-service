@@ -19,7 +19,7 @@ it('searchForCommunityKeyword calls api with proper params', async() => {
 
   mockResolvedValueOnce('OK')
 
-  const resp = await searchForCommunityKeyword({searchFor})
+  await searchForCommunityKeyword({searchFor})
 
   // validate api call
   expect(global.fetch).toBeCalledTimes(1)

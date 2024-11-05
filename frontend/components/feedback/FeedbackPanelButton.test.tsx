@@ -19,7 +19,7 @@ it('it has feedback button', () => {
   expect(btn).toBeEnabled()
 })
 
-it('shows feedback dialog with cancel and sendfeedback', () => {
+it('shows feedback dialog with cancel and send feedback', () => {
   render(
     <FeedbackPanelButton
       feedback_email='test@email.com'
@@ -33,8 +33,8 @@ it('shows feedback dialog with cancel and sendfeedback', () => {
 
   const dialog = screen.getByRole('dialog')
   // has cancel button
-  const cancel = within(dialog).getByRole('button',{name:'Cancel'})
+  within(dialog).getByRole('button',{name:'Cancel'})
   // has save link
-  const send = within(dialog).getByRole('link',{name:'Send feedback'})
+  within(dialog).getByRole('link',{name:'Send feedback'})
   // screen.debug()
 })

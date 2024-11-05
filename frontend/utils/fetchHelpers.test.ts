@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -160,7 +162,7 @@ it('getBaseUrl', () => {
 
 it('promiseWithTimeout resolves promise', async () => {
   function mockPromise(timeoutInSec:number){
-    return new Promise((res, rej) => {
+    return new Promise((res) => {
       setTimeout(() => {
         res({message:'OK'})
       },timeoutInSec*1000)
@@ -176,7 +178,7 @@ it('promiseWithTimeout resolves promise', async () => {
 
 it('promiseWithTimeout resoves request timeout', async() => {
   function mockPromise(timeoutInSec: number) {
-    return new Promise((res, rej) => {
+    return new Promise((res) => {
       setTimeout(() => {
         res({message: 'OK'})
       }, timeoutInSec * 1000)

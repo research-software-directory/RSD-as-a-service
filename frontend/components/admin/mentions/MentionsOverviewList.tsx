@@ -26,7 +26,7 @@ function leaveOutSomeFieldsReplacer(key: string, value: any) {
   }
 }
 
-export default function MentionsOverviewList({list, onUpdate}: { list: MentionItemProps[], onUpdate: Function }) {
+export default function MentionsOverviewList({list, onUpdate}: { list: MentionItemProps[], onUpdate: ()=>void }) {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [mentionToEdit, setMentionToEdit] = useState<MentionItemProps | undefined>(undefined)
   const {token} = useSession()

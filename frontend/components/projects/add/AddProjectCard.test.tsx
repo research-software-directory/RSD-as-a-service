@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,9 +13,10 @@ import {addConfig} from './addProjectConfig'
 import {getSlugFromString} from '../../../utils/getSlugFromString'
 
 const mockAddProject = jest.fn((props)=>Promise.resolve({status: 201, message: props}))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockValidProjectItem = jest.fn((slug,token) => {
   // console.log('validProjectItem...props...',slug,token)
-  return new Promise((res, rej) => {
+  return new Promise((res) => {
     setTimeout(() => {
       res(false)
     }, 10)

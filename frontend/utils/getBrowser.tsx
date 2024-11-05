@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * Add browser detection
  * ref: https://stackoverflow.com/a/16938481
@@ -11,7 +16,8 @@ type BrowserType = {
 export default function getBrowser(): BrowserType | undefined {
   if (typeof navigator === 'undefined') return
 
-  var ua = navigator.userAgent, tem,
+  // eslint-disable-next-line prefer-const
+  let ua = navigator.userAgent, tem,
     M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || []
   if (/trident/i.test(M[1])) {
     tem = /\brv[ :]+(\d+)/g.exec(ua) || []

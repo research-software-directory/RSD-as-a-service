@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,20 +14,22 @@ import OrganisationLogo from './OrganisationLogo'
 
 //  MOCKS
 import mockOrganisation from '../__mocks__/mockOrganisation'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteImage = jest.fn((props) => Promise.resolve({status: 200, statusText: 'OK'}))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUpsertImage = jest.fn((props) => Promise.resolve({status: 201, statusText: 'OK', message:''}))
 jest.mock('~/utils/editImage', () => ({
   ...jest.requireActual('~/utils/editImage'),
   upsertImage: jest.fn((props)=>mockUpsertImage(props)),
   deleteImage: jest.fn((props)=>mockDeleteImage(props))
 }))
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchOrganisation = jest.fn((props) => Promise.resolve({status: 200, statusText: 'OK'}))
 jest.mock('~/utils/editOrganisation', () => ({
   ...jest.requireActual('~/utils/editOrganisation'),
   patchOrganisation: jest.fn((props)=>mockPatchOrganisation(props))
 }))
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockFileUpload = jest.fn((props) => Promise.resolve({
   status: 200,
   message: 'OK',
@@ -196,7 +198,7 @@ it('can change the logo', async () => {
   // validate handleFileUpload call
   expect(mockFileUpload).toBeCalledTimes(1)
 
-  // validate upserImage call
+  // validate upsertImage call
   expect(mockUpsertImage).toBeCalledTimes(1)
   expect(mockUpsertImage).toBeCalledWith({
     'data': 'test-b64-encoded-as-string',

@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -37,24 +37,24 @@ export type OrganisationTabProps = {
  * NOTE! When changing the tab options also update
  * TabContent.tsx file to load proper component.
  */
-export const organistionTabItems:OrganisationTabProps = {
+export const organisationTabItems:OrganisationTabProps = {
   software: {
     id:'software',
     label:({software_cnt})=>`Software (${software_cnt ?? 0})`,
     icon: <TerminalIcon />,
-    isVisible: (props) => true,
+    isVisible: () => true,
   },
   projects:{
     id:'projects',
     label: ({project_cnt})=>`Projects (${project_cnt ?? 0})`,
     icon: <ListAltIcon />,
-    isVisible: (props) => true,
+    isVisible: () => true,
   },
   releases: {
     id:'releases',
     label:({release_cnt})=>`Releases (${release_cnt ?? 0})`,
     icon: <StyleOutlinedIcon />,
-    isVisible: (props) => true,
+    isVisible: () => true,
   },
   units:{
     id:'units',

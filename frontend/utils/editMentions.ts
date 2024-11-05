@@ -135,14 +135,14 @@ export async function getMentionsByDoiFromRsd({dois,token}:{dois: string[], toke
 
 
 export function classifyMentionsByType(mentions: MentionItemProps[]) {
-  let mentionByType: MentionByType = {}
-  let featuredMentions: MentionItemProps[] = []
+  const mentionByType: MentionByType = {}
+  const featuredMentions: MentionItemProps[] = []
 
   mentions.forEach(item => {
     // remove array with software uuid
     // delete item.mention_for_software
     // check if type prop exists
-    let mType = item?.mention_type as MentionTypeKeys ?? 'other'
+    const mType = item?.mention_type as MentionTypeKeys ?? 'other'
 
     // extract featured mentions/highlight
     if (item.mention_type === 'highlight') {

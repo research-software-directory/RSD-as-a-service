@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -98,6 +100,8 @@ export function useUserAgreements() {
     if (user?.account) {
       getAgreements()
     }
+
+    return ()=>{abort=true}
 
   }, [token, user?.account])
 

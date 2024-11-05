@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -87,13 +87,12 @@ export async function deleteLogById({id,token}:{id:string, token:string}){
  * @param @object{days?,limit?,token}
  * @returns
  */
-export async function deleteLogsOlderThan({days=30,limit=1000,token}:{token:string,days?:number,limit?:number}){
+export async function deleteLogsOlderThan({days=30,token}:{token:string,days?:number}){
   // use negative days value
   const targetDate = getDateFromNow(-days)
   // convert to iso string to pass in query
   const isoStrDate = targetDate.toISOString()
   // delete records where created_at < isoStrDate
-  // use limit to set max of 1000 deleted records
   const url = `${getBaseUrl()}/backend_log?created_at=lt.${isoStrDate}&select=id`
   try{
     // make request

@@ -13,13 +13,16 @@ import {WithFormContext} from '~/utils/jest/WithFormContext'
 import AutosaveSoftwareLogo from './AutosaveSoftwareLogo'
 
 //MOCK patchSoftwareTable
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchSoftwareTable = jest.fn(props => Promise.resolve('OK' as any))
 jest.mock('./patchSoftwareTable', () => ({
   patchSoftwareTable: jest.fn(props=>mockPatchSoftwareTable(props))
 }))
 
 // MOCK editImage methods
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteImage = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUpsertImage = jest.fn(props => Promise.resolve({
   status: 201,
   message: 'uploaded-image-id'
@@ -29,6 +32,7 @@ jest.mock('~/utils/editImage', () => ({
   deleteImage: jest.fn(props => mockDeleteImage(props)),
   upsertImage: jest.fn(props => mockUpsertImage(props))
 }))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockHandleFileUpload = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK',
@@ -92,7 +96,7 @@ it('can upload image', async() => {
   )
 
   // expect upload image
-  const uploadIcon = screen.getByTestId('PhotoSizeSelectActualOutlinedIcon')
+  screen.getByTestId('PhotoSizeSelectActualOutlinedIcon')
 
   // simulate upload action
   const imageInput:any = container.querySelector('#upload-software-logo')

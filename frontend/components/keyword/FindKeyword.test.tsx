@@ -16,6 +16,7 @@ import FindKeyword, {Keyword} from './FindKeyword'
  */
 
 // default is non-resolved promise - for first test
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSearch = jest.fn((props) => new Promise<Keyword[]>((res, rej) => {}))
 const mockAdd = jest.fn()
 const mockCreate = jest.fn()
