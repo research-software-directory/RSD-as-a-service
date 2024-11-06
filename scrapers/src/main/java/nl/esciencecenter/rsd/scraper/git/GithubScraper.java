@@ -69,11 +69,11 @@ public class GithubScraper implements GitScraper {
 		return switch (response.statusCode()) {
 			case 200 -> parseBasicData(response.body());
 			case 404 ->
-					throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
+				throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
 			case 403 ->
-					throw new RsdRateLimitException(403, response.uri(), response.body(), "Rate limit for GitHub probably reached");
+				throw new RsdRateLimitException(403, response.uri(), response.body(), "Rate limit for GitHub probably reached");
 			default ->
-					throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
+				throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
 		};
 	}
 
@@ -86,12 +86,12 @@ public class GithubScraper implements GitScraper {
 		HttpResponse<String> response = getAsHttpResponse(BASE_API_URL + "/repos/" + organisation + "/" + repo + "/languages");
 		return switch (response.statusCode()) {
 			case 404 ->
-					throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
+				throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
 			case 403 ->
-					throw new RsdRateLimitException(403, response.uri(), response.body(), "Rate limit for GitHub probably reached");
+				throw new RsdRateLimitException(403, response.uri(), response.body(), "Rate limit for GitHub probably reached");
 			case 200 -> response.body();
 			default ->
-					throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
+				throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
 		};
 	}
 
@@ -194,16 +194,24 @@ public class GithubScraper implements GitScraper {
 	}
 
 	static BasicGitData parseBasicData(String json) {
-		BasicGitData result = new BasicGitData();
 		JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
 
+		Boolean archived = jsonObject.getAsJsonPrimitive("archived").getAsBoolean();
 		JsonElement jsonLicense = jsonObject.get("license");
-		result.license = jsonLicense.isJsonNull() ? null : jsonLicense.getAsJsonObject().getAsJsonPrimitive("spdx_id").getAsString();
-		result.starCount = jsonObject.getAsJsonPrimitive("stargazers_count").getAsLong();
-		result.forkCount = jsonObject.getAsJsonPrimitive("forks_count").getAsInt();
-		result.openIssueCount = jsonObject.getAsJsonPrimitive("open_issues_count").getAsInt();
+		String license = jsonLicense.isJsonNull() ? null : jsonLicense.getAsJsonObject()
+			.getAsJsonPrimitive("spdx_id")
+			.getAsString();
+		Long starCount = jsonObject.getAsJsonPrimitive("stargazers_count").getAsLong();
+		Integer forkCount = jsonObject.getAsJsonPrimitive("forks_count").getAsInt();
+		Integer openIssueCount = jsonObject.getAsJsonPrimitive("open_issues_count").getAsInt();
 
-		return result;
+		return new BasicGitData(
+			archived,
+			license,
+			starCount,
+			forkCount,
+			openIssueCount
+		);
 	}
 
 	// return an object with the URL of the last page and the number of the last page respectively

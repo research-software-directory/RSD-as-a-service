@@ -29,7 +29,7 @@ public class GitlabScraperIT {
 	@Disabled
 	@Test
 	void license() {
-		String license = Assertions.assertDoesNotThrow(() -> scraper.basicData().license);
+		String license = Assertions.assertDoesNotThrow(() -> scraper.basicData().license());
 		Assertions.assertEquals("MIT License", license);
 	}
 
@@ -38,7 +38,7 @@ public class GitlabScraperIT {
 	void licenseDoesNotExist() {
 		// unlicensed projects should return null
 		// we need to find a suitable project or create a mocked interface
-		String license = Assertions.assertDoesNotThrow(() -> scraper.basicData().license);
+		String license = Assertions.assertDoesNotThrow(() -> scraper.basicData().license());
 		Assertions.assertNull(license);
 	}
 

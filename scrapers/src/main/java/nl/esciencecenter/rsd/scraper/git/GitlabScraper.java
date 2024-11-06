@@ -88,10 +88,10 @@ public class GitlabScraper implements GitScraper {
 		boolean done = false;
 		while (!done) {
 			HttpRequest request = HttpRequest.newBuilder().GET()
-					.uri(URI.create(apiUri + "/projects/" + Utils.urlEncode(projectPath)
-							+ "/repository/commits?per_page=100&order=default&page=" + page))
-					.timeout(Duration.ofSeconds(30))
-					.build();
+				.uri(URI.create(apiUri + "/projects/" + Utils.urlEncode(projectPath)
+					+ "/repository/commits?per_page=100&order=default&page=" + page))
+				.timeout(Duration.ofSeconds(30))
+				.build();
 			HttpResponse<String> response;
 			try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()) {
 				response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -138,15 +138,20 @@ public class GitlabScraper implements GitScraper {
 	}
 
 	static BasicGitData parseBasicData(String json) {
-		BasicGitData result = new BasicGitData();
 		JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
 
 		JsonElement jsonLicense = jsonObject.get("license");
-		result.license = jsonLicense.isJsonNull() ? null : jsonLicense.getAsJsonObject().get("name").getAsString();
-		result.starCount = jsonObject.getAsJsonPrimitive("star_count").getAsLong();
-		result.forkCount = jsonObject.getAsJsonPrimitive("forks_count").getAsInt();
+		String license = jsonLicense.isJsonNull() ? null : jsonLicense.getAsJsonObject().get("name").getAsString();
+		Long starCount = jsonObject.getAsJsonPrimitive("star_count").getAsLong();
+		Integer forkCount = jsonObject.getAsJsonPrimitive("forks_count").getAsInt();
 
-		return result;
+		return new BasicGitData(
+			null,
+			license,
+			starCount,
+			forkCount,
+			null
+		);
 	}
 
 }
