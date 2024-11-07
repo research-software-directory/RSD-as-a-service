@@ -26,7 +26,7 @@ export async function createProject({title, desc, slug, page}: CreateSoftwarePro
   await addMenu.click()
   // click new project
   await Promise.all([
-    page.waitForURL('**/projects/add', {
+    page.waitForURL('**/add/project', {
       waitUntil: 'networkidle'
     }),
     newProject.click()

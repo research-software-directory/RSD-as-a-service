@@ -185,7 +185,7 @@ export async function deleteLicense({id, token}:
 // query for software item page based on slug
 export async function validSoftwareItem(slug: string | undefined, token?: string) {
   try {
-    // this request is always perfomed from frontend
+    // this request is always performed from frontend
     const url = `/api/v1/software?select=id,slug&slug=eq.${slug}`
     let resp
     if (token) {

@@ -10,15 +10,15 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Button from '@mui/material/Button'
 import {useForm} from 'react-hook-form'
 
-import {useAuth} from '~/auth'
+import {useSession} from '~/auth'
 import {useDebounce} from '~/utils/useDebounce'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import SlugTextField from '~/components/form/SlugTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import ControlledTextField from '~/components/form/ControlledTextField'
 import {AddNewsItem, addNewsItem, validSlugNews} from '~/components/news/apiNews'
 import {newsConfig as config} from './newsConfig'
-import ControlledTextField from '~/components/form/ControlledTextField'
 
 type AddNewsForm = {
   title: string|null,
@@ -35,13 +35,12 @@ const initialState = {
 }
 
 export default function AddNewsCard() {
-  const {session} = useAuth()
+  const {token} = useSession()
   const router = useRouter()
   const [baseUrl, setBaseUrl] = useState('')
-  const [slugValue, setSlugValue] = useState('')
   const [validating, setValidating]=useState(false)
   const [state, setState] = useState(initialState)
-  const {register, control, handleSubmit, watch, formState, setError, setValue, clearErrors} = useForm<AddNewsForm>({
+  const {register, control, handleSubmit, watch, formState, setError, setValue} = useForm<AddNewsForm>({
     mode: 'onChange',
     defaultValues:{
       title: null,
@@ -54,13 +53,12 @@ export default function AddNewsCard() {
   // watch for data change in the form
   const [slug,title,publication_date] = watch(['slug','title','publication_date'])
   // construct slug from title
-  const bouncedSlug = useDebounce(slugValue,700)
+  const bouncedSlug = useDebounce(slug ?? '',700)
 
   // console.group('AddNewsCard')
   // console.log('publication_date...', publication_date)
   // console.log('isValid...', isValid)
   // console.groupEnd()
-
 
   useEffect(() => {
     if (typeof location != 'undefined') {
@@ -75,54 +73,57 @@ export default function AddNewsCard() {
    */
   useEffect(() => {
     if (title){
-      const softwareSlug = getSlugFromString(title)
-      setSlugValue(softwareSlug)
+      const slugValue = getSlugFromString(title)
+      // update slugValue
+      setValue('slug',slugValue,{shouldValidate:true,shouldDirty:true})
     }
-  }, [title])
+  }, [title, setValue])
+
   /**
-   * When bouncedSlug value is changed,
-   * we need to update slug value (value in the input) shown to user.
-   * This slug changes when the title value is changed
+   * When bouncedSlug value is changed by debounce we check if slug is already
+   * used by existing news entries.
    */
   useEffect(() => {
-    if (bouncedSlug){
-      setValue('slug', bouncedSlug, {
-        shouldValidate: true
-      })
-    }
-  }, [bouncedSlug, setValue])
-
-  useEffect(() => {
     let abort = false
-
     async function validateSlug() {
-      if (slug===null || publication_date===null) return
-      setValidating(true)
       const isUsed = await validSlugNews({
-        date: publication_date,
-        slug,
-        token: session?.token
+        date: publication_date ?? '',
+        slug: bouncedSlug,
+        token
       })
       if (abort) return
       if (isUsed === true) {
-        const message = `${publication_date}/${slug} is already taken. Use letters, numbers and dash "-" to modify slug value or change publication date.`
+        const message = `${publication_date}/${bouncedSlug} is already taken. Use letters, numbers and dash "-" to modify slug value or change publication date.`
         setError('slug', {
           type: 'validate',
           message
         })
       }
-      lastValidatedSlug = `${publication_date}/${slug}`
+      lastValidatedSlug = `${publication_date}/${bouncedSlug}`
       // we need to wait some time
       setValidating(false)
     }
 
-    if (`${publication_date}/${slug}` !== lastValidatedSlug) {
-      clearErrors()
+    if (bouncedSlug && publication_date &&
+      `${publication_date}/${bouncedSlug}` !== lastValidatedSlug
+    ) {
+      // clearErrors()
       // debugger
       validateSlug()
     }
     return ()=>{abort=true}
-  },[slug,publication_date,session?.token,setError,clearErrors])
+  },[bouncedSlug,publication_date,token,setError])
+
+  useEffect(()=>{
+    // As soon as the slug value start changing we signal to user that we need to validate new slug.
+    // New slug value is "debounced" into variable bouncedSlug after the user stops typing.
+    // Another useEffect monitors bouncedSlug value and performs the validation.
+    // Validating flag disables Save button from the moment the slug value is changed until the validation is completed (see line 115).
+    if (slug && slug !== lastValidatedSlug){
+      // debugger
+      setValidating(true)
+    }
+  },[slug])
 
   function handleCancel() {
     // on cancel we send user back to previous page
@@ -131,7 +132,6 @@ export default function AddNewsCard() {
 
   function onSubmit(data: AddNewsForm) {
     // console.log('onSubmit...', data)
-    const {token} = session
     // set flags
     if (token && data) {
       setState({
@@ -154,7 +154,7 @@ export default function AddNewsCard() {
     }).then(resp => {
       if (resp.status === 200) {
         // redirect to edit page
-        // and remove software/add route from the history
+        // and remove /add/news route from the history
         router.replace(`/news/${page.publication_date}/${page.slug}/edit`)
       } else {
         // show error

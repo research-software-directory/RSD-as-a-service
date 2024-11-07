@@ -45,7 +45,6 @@ export default function AddProjectCard() {
   const {token} = useSession()
   const router = useRouter()
   const [baseUrl, setBaseUrl] = useState('')
-  const [slugValue, setSlugValue] = useState('')
   const [validating, setValidating]=useState(false)
   const [state, setState] = useState(initialState)
   const {register, handleSubmit, watch, formState, setError, setValue} = useForm<AddProjectForm>({
@@ -55,7 +54,15 @@ export default function AddProjectCard() {
   // watch for data change in the form
   const [slug,project_title,project_subtitle] = watch(['slug', 'project_title', 'project_subtitle'])
   // construct slug from title
-  const bouncedSlug = useDebounce(slugValue,700)
+  const bouncedSlug = useDebounce(slug,700)
+
+  // console.group('AddProjectCard')
+  // console.log('slug...', slug)
+  // console.log('lastValidatedSlug...', lastValidatedSlug)
+  // console.log('bouncedSlug...', bouncedSlug)
+  // console.log('errors...', errors)
+  // console.log('validating...', validating)
+  // console.groupEnd()
 
   useEffect(() => {
     if (typeof location != 'undefined') {
@@ -73,47 +80,46 @@ export default function AddProjectCard() {
     if (project_title) {
       const slugValue = getSlugFromString(project_title)
       // update slugValue
-      setSlugValue(slugValue)
+      setValue('slug',slugValue,{shouldValidate:true,shouldDirty:true})
     }
-  }, [project_title])
+  }, [project_title, setValue])
+
   /**
-   * When bouncedSlug value is changed,
-   * we need to update slug value (value in the input) shown to user.
-   * This change occures when brand_name value is changed
+   * When bouncedSlug value is changed by debounce we check if slug is already
+   * used by existing project entries.
    */
   useEffect(() => {
-    if (bouncedSlug) {
-      setValue('slug', bouncedSlug, {
-        shouldValidate: true
-      })
-    }
-  }, [bouncedSlug, setValue])
-  /**
-   * When slug value is changed by debounce or manually by user
-   * In addition to basic validations we also check if slug is already
-   * used by existing software entries. I moved this validation here
-   * because react-hook-form async validate function calls api 2 times.
-   * Further investigation about this is needed. For now we move it here.
-   */
-  useEffect(() => {
+    let abort = false
     async function validateSlug() {
-      setValidating(true)
-      const isUsed = await validProjectItem(slug, token)
+      const isUsed = await validProjectItem(bouncedSlug, token)
+      if (abort) return
       if (isUsed === true) {
-        const message = `${slug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
+        const message = `${bouncedSlug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
         setError('slug',{type:'validate',message})
       }
-      lastValidatedSlug = slug
+
+      lastValidatedSlug = bouncedSlug
       setValidating(false)
     }
-    if (slug && token && slug !== lastValidatedSlug) {
+    if (bouncedSlug && token && bouncedSlug !== lastValidatedSlug) {
       validateSlug()
     }
-  },[slug,token,setError])
+    return ()=>{abort=true}
+  },[bouncedSlug,token,setError])
 
+  useEffect(()=>{
+    // As soon as the slug value start changing we signal to user that we need to validate new slug.
+    // New slug value is "debounced" into variable bouncedSlug after the user stops typing.
+    // Another useEffect monitors bouncedSlug value and performs the validation.
+    // Validating flag disables Save button from the moment the slug value is changed until the validation is completed (see line 115).
+    if (slug && slug !== lastValidatedSlug){
+      // debugger
+      setValidating(true)
+    }
+  },[slug])
 
   function handleCancel() {
-    // on cancel we send user back to prevous page
+    // on cancel we send user back to previous page
     router.back()
   }
 
@@ -149,7 +155,7 @@ export default function AddProjectCard() {
     }).then(resp => {
       if (resp.status === 201) {
         // redirect to edit page
-        // and remove projects/add route from the history
+        // and remove /add/project route from the history
         router.replace(`/projects/${project.slug}/edit`)
       } else {
         // show error
