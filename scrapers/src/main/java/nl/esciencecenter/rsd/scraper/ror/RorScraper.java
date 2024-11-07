@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -7,51 +7,89 @@
 
 package nl.esciencecenter.rsd.scraper.ror;
 
-import java.io.IOException;
-
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
 public class RorScraper {
 
-	private String rorApiUrl;
-	private JsonObject apiObject;
+	private final RorId rorId;
 
-	public RorScraper(String rorApiUrl) throws IOException, InterruptedException, RsdResponseException, JsonParseException, JsonSyntaxException {
-		this.rorApiUrl = rorApiUrl;
-		getFromApi();
+	public RorScraper(RorId rorId) {
+		this.rorId = Objects.requireNonNull(rorId);
 	}
 
-	private void getFromApi() throws IOException, InterruptedException, RsdResponseException, JsonParseException, JsonSyntaxException {
-		String jsonResponse = Utils.get(rorApiUrl);
-		apiObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
+	private String getFromApi() throws IOException, InterruptedException, RsdResponseException {
+		// e.g https://api.ror.org/organizations/04tsk2644
+		return Utils.get(rorId.asApiUrl().toString());
 	}
 
-	public String country() {
-		String country = null;
-		JsonObject jsonCountry = apiObject.has("country") ? apiObject.get("country").getAsJsonObject() : new JsonObject();
-		if (! jsonCountry.isEmpty()) {
-			JsonElement jsonCountryName = jsonCountry.has("country_name") ? jsonCountry.get("country_name") : new JsonObject();
-			country = jsonCountryName.isJsonNull() ? null : jsonCountryName.getAsString();
+	public RorData scrapeData() throws RsdResponseException, IOException, InterruptedException {
+		String json = getFromApi();
+		return parseData(json);
+	}
+
+	static RorData parseData(String json) {
+		JsonElement jsonElement = JsonParser.parseString(json);
+		final String addressesKey = "addresses";
+
+		String country = Utils.safelyGetOrNull(jsonElement, j -> j
+			.getAsJsonObject()
+			.getAsJsonObject("country")
+			.getAsJsonPrimitive("country_name")
+			.getAsString());
+		String city = Utils.safelyGetOrNull(jsonElement, j -> j
+			.getAsJsonObject()
+			.getAsJsonArray(addressesKey)
+			.get(0)
+			.getAsJsonObject()
+			.getAsJsonPrimitive("city")
+			.getAsString());
+		String wikipediaUrl = Utils.safelyGetOrNull(jsonElement, j -> {
+			JsonElement wikiElement = j
+				.getAsJsonObject()
+				.get("wikipedia_url");
+			return wikiElement.isJsonPrimitive() ? wikiElement.getAsString() : null;
+		});
+		if (wikipediaUrl != null && wikipediaUrl.isBlank()) {
+			wikipediaUrl = null;
 		}
-		return country;
-	}
+		List<String> rorTypes = Utils.safelyGetOrNull(jsonElement, j -> j
+			.getAsJsonObject()
+			.getAsJsonArray("types")
+			.asList()
+			.stream()
+			.map(JsonElement::getAsString)
+			.toList()
+		);
+		Double lat = Utils.safelyGetOrNull(jsonElement, j -> j
+			.getAsJsonObject()
+			.getAsJsonArray(addressesKey)
+			.get(0)
+			.getAsJsonObject()
+			.getAsJsonPrimitive("lat")
+			.getAsDouble());
+		Double lon = Utils.safelyGetOrNull(jsonElement, j -> j
+			.getAsJsonObject()
+			.getAsJsonArray(addressesKey)
+			.get(0)
+			.getAsJsonObject()
+			.getAsJsonPrimitive("lng")
+			.getAsDouble());
 
-	public String city() {
-		String city = null;
-		JsonArray jsonAddresses = apiObject.has("addresses") ? apiObject.get("addresses").getAsJsonArray() : new JsonArray();
-		if (! jsonAddresses.isEmpty()) {
-			JsonElement jsonFirstAddress = jsonAddresses.get(0);
-			JsonElement jsonCity = jsonFirstAddress.isJsonNull() ? new JsonObject() : jsonFirstAddress.getAsJsonObject().get("city");
-			city = jsonCity.isJsonNull() ? null : jsonCity.getAsString();
-		}
-		return city;
+		return new RorData(
+			country,
+			city,
+			wikipediaUrl,
+			rorTypes == null ? Collections.emptyList() : rorTypes,
+			lat,
+			lon
+		);
 	}
 }

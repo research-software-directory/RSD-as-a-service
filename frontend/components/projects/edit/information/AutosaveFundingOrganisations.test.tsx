@@ -182,14 +182,18 @@ it('can add funding organisation from ROR', async() => {
     expect(mockCreateOrganisation).toBeCalledTimes(1)
     expect(mockCreateOrganisation).toBeCalledWith({
       'organisation': {
+        'city': null,
+        'country': null,
         'is_tenant': false,
         'logo_id': foundOrgs[1].data.logo_id,
         'name': foundOrgs[1].data.name,
         'parent': null,
         'primary_maintainer': null,
         'ror_id': foundOrgs[1].data.ror_id,
+        'ror_types': null,
         'slug': 'vu-university-amsterdam',
-        'website': foundOrgs[1].data.website
+        'website': foundOrgs[1].data.website,
+        'wikipedia_url': null,
       },
       'token': 'TEST_TOKEN',
     })

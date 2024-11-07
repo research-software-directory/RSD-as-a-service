@@ -9,9 +9,8 @@
 import {RsdUser} from '~/auth'
 import {isOrganisationMaintainer} from '~/auth/permissions/isMaintainerOfOrganisation'
 import {
-  Organisation, OrganisationForOverview,
-  OrganisationList, ProjectOfOrganisation,
-  SoftwareOfOrganisation
+  OrganisationForOverview, OrganisationList,
+  ProjectOfOrganisation, SoftwareOfOrganisation
 } from '~/types/Organisation'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
@@ -92,19 +91,19 @@ export async function getOrganisationBySlug({slug,user,token}:
     })
     // console.log('getOrganisationBySlug...isMaintainer...', isMaintainer)
     // get organisation data
-    const [organisation, description] = await Promise.all([
+    const [organisation, orgInfo] = await Promise.all([
       getOrganisationById({
         uuid,
         token,
         isMaintainer
       }),
-      getOrganisationDescription({uuid, token})
+      getOrganisationInfo({uuid, token})
     ])
-    // return consolidate organisation
+    // return consolidated organisation data
     return {
       organisation: {
         ...organisation,
-        description
+        ...orgInfo
       },
       isMaintainer
     }
@@ -193,8 +192,30 @@ export async function getOrganisationChildren({uuid, token}:
   return []
 }
 
-export async function getOrganisationDescription({uuid, token}: { uuid: string, token?: string }) {
-  const query = `organisation?id=eq.${uuid}&select=description`
+// export async function getOrganisationDescription({uuid, token}: { uuid: string, token?: string }) {
+//   const query = `organisation?id=eq.${uuid}&select=description`
+//   const url = `${getBaseUrl()}/${query}`
+//   // console.log('url...', url)
+//   const resp = await fetch(url, {
+//     method: 'GET',
+//     headers: {
+//       ...createJsonHeaders(token),
+//       // request single object item
+//       'Accept': 'application/vnd.pgrst.object+json'
+//     }
+//   })
+//   if (resp.status === 200) {
+//     const json: Organisation = await resp.json()
+//     return json.description
+//   }
+//   // otherwise request failed
+//   logger(`getOrganisationDescription failed: ${resp.status} ${resp.statusText}`, 'warn')
+//   // we log and return null
+//   return null
+// }
+
+export async function getOrganisationInfo({uuid, token}: { uuid: string, token?: string }) {
+  const query = `organisation?id=eq.${uuid}&select=description,wikipedia_url,city,ror_types`
   const url = `${getBaseUrl()}/${query}`
   // console.log('url...', url)
   const resp = await fetch(url, {
@@ -206,8 +227,13 @@ export async function getOrganisationDescription({uuid, token}: { uuid: string, 
     }
   })
   if (resp.status === 200) {
-    const json: Organisation = await resp.json()
-    return json.description
+    const json: any = await resp.json()
+    return {
+      city: json.city as string | null,
+      description: json.description as string | null,
+      wikipedia_url: json.wikipedia_url as string | null,
+      ror_types: json?.ror_types ?? [] as string[] | null
+    }
   }
   // otherwise request failed
   logger(`getOrganisationDescription failed: ${resp.status} ${resp.statusText}`, 'warn')

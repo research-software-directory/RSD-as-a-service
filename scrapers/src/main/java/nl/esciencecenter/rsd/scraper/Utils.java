@@ -31,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
+import java.util.function.Function;
 
 public class Utils {
 
@@ -90,9 +91,9 @@ public class Utils {
 	 */
 	public static HttpResponse<String> getAsHttpResponse(String uri, String... headers) throws IOException, InterruptedException {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
-				.GET()
-				.timeout(DEFAULT_TIMEOUT)
-				.uri(URI.create(uri));
+			.GET()
+			.timeout(DEFAULT_TIMEOUT)
+			.uri(URI.create(uri));
 		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
 			httpRequestBuilder.headers(headers);
 		}
@@ -112,11 +113,11 @@ public class Utils {
 	public static String getAsAdmin(String uri) {
 		String jwtString = adminJwt();
 		HttpRequest request = HttpRequest.newBuilder()
-				.GET()
-				.uri(URI.create(uri))
-				.timeout(DEFAULT_TIMEOUT)
-				.header("Authorization", "Bearer " + jwtString)
-				.build();
+			.GET()
+			.uri(URI.create(uri))
+			.timeout(DEFAULT_TIMEOUT)
+			.header("Authorization", "Bearer " + jwtString)
+			.build();
 
 		HttpResponse<String> response;
 
@@ -148,9 +149,9 @@ public class Utils {
 	 */
 	public static String post(String uri, String body, String... extraHeaders) {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
-				.POST(HttpRequest.BodyPublishers.ofString(body))
-				.timeout(DEFAULT_TIMEOUT)
-				.uri(URI.create(uri));
+			.POST(HttpRequest.BodyPublishers.ofString(body))
+			.timeout(DEFAULT_TIMEOUT)
+			.uri(URI.create(uri));
 		if (extraHeaders != null && extraHeaders.length > 0 && extraHeaders.length % 2 == 0) {
 			httpRequestBuilder.headers(extraHeaders);
 		}
@@ -183,11 +184,11 @@ public class Utils {
 	public static String postAsAdmin(String uri, String json, String... extraHeaders) {
 		String jwtString = adminJwt();
 		HttpRequest.Builder builder = HttpRequest.newBuilder()
-				.POST(HttpRequest.BodyPublishers.ofString(json))
-				.uri(URI.create(uri))
-				.timeout(DEFAULT_TIMEOUT)
-				.header("Content-Type", "application/json")
-				.header("Authorization", "Bearer " + jwtString);
+			.POST(HttpRequest.BodyPublishers.ofString(json))
+			.uri(URI.create(uri))
+			.timeout(DEFAULT_TIMEOUT)
+			.header("Content-Type", "application/json")
+			.header("Authorization", "Bearer " + jwtString);
 		if (extraHeaders != null && extraHeaders.length > 0) {
 			builder.headers(extraHeaders);
 		}
@@ -281,11 +282,11 @@ public class Utils {
 	public static String patchAsAdmin(String uri, String json, String... extraHeaders) {
 		String jwtString = adminJwt();
 		HttpRequest.Builder builder = HttpRequest.newBuilder()
-				.method("PATCH", HttpRequest.BodyPublishers.ofString(json))
-				.uri(URI.create(uri))
-				.timeout(Duration.ofSeconds(30))
-				.header("Content-Type", "application/json")
-				.header("Authorization", "Bearer " + jwtString);
+			.method("PATCH", HttpRequest.BodyPublishers.ofString(json))
+			.uri(URI.create(uri))
+			.timeout(Duration.ofSeconds(30))
+			.header("Content-Type", "application/json")
+			.header("Authorization", "Bearer " + jwtString);
 		if (extraHeaders != null && extraHeaders.length > 0) {
 			builder.headers(extraHeaders);
 		}
@@ -309,13 +310,22 @@ public class Utils {
 		String signingSecret = Config.jwtSigningSecret();
 		Algorithm signingAlgorithm = Algorithm.HMAC256(signingSecret);
 		return JWT.create()
-				.withClaim("role", "rsd_admin")
-				.withExpiresAt(new Date(System.currentTimeMillis() + Config.jwtExpirationTime()))
-				.sign(signingAlgorithm);
+			.withClaim("role", "rsd_admin")
+			.withExpiresAt(new Date(System.currentTimeMillis() + Config.jwtExpirationTime()))
+			.sign(signingAlgorithm);
 	}
 
 	public static String stringOrNull(JsonElement e) {
 		return e == null || !e.isJsonPrimitive() ? null : e.getAsString();
+	}
+
+	public static <T> T safelyGetOrNull(JsonElement element, Function<JsonElement, T> extractor) {
+		try {
+			return extractor.apply(element);
+		} catch (RuntimeException e) {
+			LOGGER.warn("Exception extracting data from JSON: " + element, e);
+			return null;
+		}
 	}
 
 	public static Integer integerOrNull(JsonElement e) {
@@ -329,7 +339,9 @@ public class Utils {
 	 * @return the filter.
 	 */
 	public static String atLeastOneHourAgoFilter(String scrapedAtColumnName) {
-		String oneHourAgoEncoded = urlEncode(ZonedDateTime.now().minusHours(1).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		String oneHourAgoEncoded = urlEncode(ZonedDateTime.now()
+			.minusHours(1)
+			.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		return "or=(%s.is.null,%s.lte.%s)".formatted(scrapedAtColumnName, scrapedAtColumnName, oneHourAgoEncoded);
 	}
 }

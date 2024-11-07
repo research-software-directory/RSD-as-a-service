@@ -7,7 +7,13 @@
 
 package nl.esciencecenter.rsd.scraper.ror;
 
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
-public record BasicOrganisationData(UUID id, String rorId, String country, String city) {
+public record OrganisationDatabaseData(
+	UUID id,
+	RorId rorId,
+	ZonedDateTime rorScrapedAt,
+	RorData data
+) {
 }

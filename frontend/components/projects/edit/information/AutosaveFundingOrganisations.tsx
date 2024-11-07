@@ -11,7 +11,7 @@ import {useState} from 'react'
 
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {columsForCreate, SearchOrganisation} from '~/types/Organisation'
+import {colForCreate, SearchOrganisation} from '~/types/Organisation'
 import {createOrganisation, searchForOrganisation} from '~/utils/editOrganisation'
 import {addOrganisationToProject, deleteOrganisationFromProject} from '~/utils/editProject'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
@@ -40,7 +40,7 @@ export default function AutosaveFundingOrganisations({id,items}:FundingOrganisat
       }
       // console.log('onAddOrganisation...', selected)
       if (selected.id===null){
-        const organisation = getPropsFromObject(selected,columsForCreate)
+        const organisation = getPropsFromObject(selected,colForCreate)
         // createNewOrganisation(selected)
         resp = await createOrganisation({
           organisation,

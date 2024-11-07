@@ -9,7 +9,7 @@
 import {useState} from 'react'
 
 import {useSession} from '~/auth'
-import {columsForUpdate, EditOrganisation, SearchOrganisation} from '~/types/Organisation'
+import {colForUpdate, EditOrganisation, SearchOrganisation} from '~/types/Organisation'
 import {
   newOrganisationProps,
   searchToEditOrganisation, updateOrganisation
@@ -230,7 +230,7 @@ export default function ProjectOrganisations() {
       // SAVE organisation
       if (typeof pos != 'undefined' && data.id) {
         // extract data for update
-        const organisation = getPropsFromObject(data,columsForUpdate)
+        const organisation = getPropsFromObject(data,colForUpdate)
         // update existing organisation
         const resp = await updateOrganisation({
           organisation,

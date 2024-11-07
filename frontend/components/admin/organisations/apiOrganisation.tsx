@@ -13,7 +13,7 @@ import {paginationUrlParams} from '~/utils/postgrestUrl'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import logger from '~/utils/logger'
-import {columsForCreate, EditOrganisation, OrganisationList} from '~/types/Organisation'
+import {colForCreate, EditOrganisation, OrganisationList} from '~/types/Organisation'
 import {upsertImage} from '~/utils/editImage'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
@@ -137,7 +137,7 @@ export function useOrganisations(token: string) {
       // create slug for new organisation based on name
       data.slug = getSlugFromString(data.name)
       // extract props we need for createOrganisation
-      const organisation = getPropsFromObject(data, columsForCreate)
+      const organisation = getPropsFromObject(data, colForCreate)
       // create new organisation
       const {status,message} = await createOrganisation({
         organisation,

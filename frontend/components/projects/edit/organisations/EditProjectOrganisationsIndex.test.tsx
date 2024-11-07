@@ -198,14 +198,18 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
       expect(mockCreateOrganisation).toBeCalledTimes(1)
       expect(mockCreateOrganisation).toBeCalledWith({
         'organisation': {
+          'city': null,
+          'country': null,
           'is_tenant': false,
           'logo_id': null,
           'name': searchFor,
           'parent': null,
           'primary_maintainer': null,
           'ror_id': null,
+          'ror_types': null,
           'slug': expectSlug,
           'website': expectWebsite,
+          'wikipedia_url': null,
         },
         'token': mockSession.token,
       })
