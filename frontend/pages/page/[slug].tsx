@@ -1,27 +1,46 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next'
 
 import {app} from '~/config/app'
 import {ssrMarkdownPage} from '~/components/admin/pages/useMarkdownPages'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
-import MarkdownPage from '~/components/layout/MarkdownPage'
+import PageMeta from '~/components/seo/PageMeta'
+import OgMetaTags from '~/components/seo/OgMetaTags'
+import PageBackground from '~/components/layout/PageBackground'
+import MainContent from '~/components/layout/MainContent'
+import ReactMarkdownWithSettings from '~/components/layout/ReactMarkdownWithSettings'
 
 export default function PublicPage({title,markdown}: {title:string, markdown: string }) {
   const pageTitle=`${title} | ${app.title}`
+  const description = markdown.split('\n')[0] ?? ''
   return (
     <>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
-      <AppHeader/>
-      <MarkdownPage markdown={markdown} />
-      <AppFooter/>
+      {/* Page Head meta tags */}
+      <PageMeta
+        title={pageTitle}
+        description={description}
+      />
+      <OgMetaTags
+        title={pageTitle}
+        description={description}
+      />
+      <PageBackground>
+        <AppHeader/>
+        <MainContent className="lg:w-[64rem] lg:mx-auto pb-12 bg-base-100">
+          <ReactMarkdownWithSettings
+            className='p-8'
+            markdown={markdown}
+          />
+        </MainContent>
+        <AppFooter/>
+      </PageBackground>
     </>
   )
 }
