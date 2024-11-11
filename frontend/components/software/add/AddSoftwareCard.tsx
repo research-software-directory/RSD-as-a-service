@@ -38,7 +38,7 @@ type AddSoftwareForm = {
   short_statement: string|null,
 }
 
-let lastValidatedSlug = ''
+// let lastValidatedSlug = ''
 const formId = 'add-software-form'
 
 export default function AddSoftwareCard() {
@@ -57,7 +57,6 @@ export default function AddSoftwareCard() {
   const bouncedSlug = useDebounce(slug, 700)
 
   // console.group('AddSoftwareCard')
-  // console.log('state...', state)
   // console.log('slug...', slug)
   // console.log('lastValidatedSlug...', lastValidatedSlug)
   // console.log('bouncedSlug...', bouncedSlug)
@@ -103,27 +102,28 @@ export default function AddSoftwareCard() {
         const message = `${bouncedSlug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
         setError('slug',{type:'custom-slug-validation',message})
       }
-
-      lastValidatedSlug = bouncedSlug
       setValidating(false)
     }
     // debugger
-    if (bouncedSlug && token && bouncedSlug !== lastValidatedSlug) {
+    if (bouncedSlug && token && bouncedSlug === slug) {
       validateSlug()
+    } else if (!slug){
+      // fix: remove validating/spinner when no slug
+      setValidating(false)
     }
     return ()=>{abort=true}
-  },[bouncedSlug,token,setError])
+  },[bouncedSlug,slug,token,setError])
 
   useEffect(()=>{
     // As soon as the slug value start changing we signal to user that we need to validate new slug.
     // New slug value is "debounced" into variable bouncedSlug after the user stops typing.
     // Another useEffect monitors bouncedSlug value and performs the validation.
-    // Validating flag disables Save button from the moment the slug value is changed until the validation is completed (see line 115).
-    if (slug && slug !== lastValidatedSlug){
+    // Validating flag disables Save button from the moment the slug value is changed until the validation is completed.
+    if (slug && !errors?.brand_name && !errors?.slug){
       // debugger
       setValidating(true)
     }
-  },[slug])
+  },[slug,errors?.brand_name,errors?.slug])
 
   function handleCancel() {
     // on cancel we send user back to previous page
@@ -202,6 +202,8 @@ export default function AddSoftwareCard() {
     if (state.loading === true) return true
     // during async validation we disable button
     if (validating === true) return true
+    // check for errors
+    if (Object.keys(errors).length > 0) return true
     // if isValid is not true
     return isValid===false
   }

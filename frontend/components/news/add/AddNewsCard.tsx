@@ -27,7 +27,6 @@ type AddNewsForm = {
 }
 
 const formId='add-news-form'
-let lastValidatedSlug = ''
 
 const initialState = {
   loading: false,
@@ -40,12 +39,12 @@ export default function AddNewsCard() {
   const [baseUrl, setBaseUrl] = useState('')
   const [validating, setValidating]=useState(false)
   const [state, setState] = useState(initialState)
-  const {register, control, handleSubmit, watch, formState, setError, setValue} = useForm<AddNewsForm>({
+  const {register, control, handleSubmit, watch, formState, setError, setValue,clearErrors} = useForm<AddNewsForm>({
     mode: 'onChange',
     defaultValues:{
       title: null,
       slug: null,
-      // default is today in the format YYYY-MM-DD (en-CA locale)
+      // default is today in the format YYYY-MM-DD (sv-SE locale)
       publication_date: new Date().toLocaleDateString('sv-SE')
     }
   })
@@ -63,8 +62,9 @@ export default function AddNewsCard() {
   useEffect(() => {
     if (typeof location != 'undefined') {
       setBaseUrl(`${location.origin}/news/${publication_date}/`)
+      clearErrors('slug')
     }
-  }, [publication_date])
+  }, [publication_date,clearErrors])
 
   /**
    * Convert title value into slugValue.
@@ -99,31 +99,31 @@ export default function AddNewsCard() {
           message
         })
       }
-      lastValidatedSlug = `${publication_date}/${bouncedSlug}`
       // we need to wait some time
       setValidating(false)
     }
 
     if (bouncedSlug && publication_date &&
-      `${publication_date}/${bouncedSlug}` !== lastValidatedSlug
+      bouncedSlug===slug
     ) {
-      // clearErrors()
-      // debugger
       validateSlug()
+    } else if (!slug){
+      // fix: remove validating/spinner when no slug
+      setValidating(false)
     }
     return ()=>{abort=true}
-  },[bouncedSlug,publication_date,token,setError])
+  },[bouncedSlug,publication_date,slug,token,setError])
 
   useEffect(()=>{
     // As soon as the slug value start changing we signal to user that we need to validate new slug.
     // New slug value is "debounced" into variable bouncedSlug after the user stops typing.
     // Another useEffect monitors bouncedSlug value and performs the validation.
-    // Validating flag disables Save button from the moment the slug value is changed until the validation is completed (see line 115).
-    if (slug && slug !== lastValidatedSlug){
+    // Validating flag disables Save button from the moment the slug value is changed until the validation is completed.
+    if (slug && !errors?.title && !errors?.slug){
       // debugger
       setValidating(true)
     }
-  },[slug])
+  },[slug,publication_date,errors?.title,errors?.slug])
 
   function handleCancel() {
     // on cancel we send user back to previous page
@@ -190,6 +190,8 @@ export default function AddNewsCard() {
     if (state.loading == true) return true
     // during async validation we disable button
     if (validating === true) return true
+    // check for errors
+    if (Object.keys(errors).length > 0) return true
     // if isValid is not true
     return isValid===false
   }

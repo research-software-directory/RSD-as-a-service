@@ -38,7 +38,6 @@ type AddProjectForm = {
   project_subtitle: string|null,
 }
 
-let lastValidatedSlug = ''
 const formId='add-project-card-form'
 
 export default function AddProjectCard() {
@@ -61,6 +60,7 @@ export default function AddProjectCard() {
   // console.log('lastValidatedSlug...', lastValidatedSlug)
   // console.log('bouncedSlug...', bouncedSlug)
   // console.log('errors...', errors)
+  // console.log('isValid...', isValid)
   // console.log('validating...', validating)
   // console.groupEnd()
 
@@ -97,26 +97,27 @@ export default function AddProjectCard() {
         const message = `${bouncedSlug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
         setError('slug',{type:'validate',message})
       }
-
-      lastValidatedSlug = bouncedSlug
       setValidating(false)
     }
-    if (bouncedSlug && token && bouncedSlug !== lastValidatedSlug) {
+    if (bouncedSlug && token && bouncedSlug === slug) {
       validateSlug()
+    }else if (!slug){
+      // fix: remove validating/spinner when no slug
+      setValidating(false)
     }
     return ()=>{abort=true}
-  },[bouncedSlug,token,setError])
+  },[bouncedSlug,slug,token,setError])
 
   useEffect(()=>{
     // As soon as the slug value start changing we signal to user that we need to validate new slug.
     // New slug value is "debounced" into variable bouncedSlug after the user stops typing.
     // Another useEffect monitors bouncedSlug value and performs the validation.
-    // Validating flag disables Save button from the moment the slug value is changed until the validation is completed (see line 115).
-    if (slug && slug !== lastValidatedSlug){
+    // Validating flag disables Save button from the moment the slug value is changed until the validation is completed.
+    if (slug && !errors?.project_title && !errors?.slug){
       // debugger
       setValidating(true)
     }
-  },[slug])
+  },[slug,errors?.project_title,errors?.slug])
 
   function handleCancel() {
     // on cancel we send user back to previous page
@@ -192,6 +193,8 @@ export default function AddProjectCard() {
     if (state.loading === true) return true
     // during async validation we disable button
     if (validating === true) return true
+    // check for errors
+    if (Object.keys(errors).length > 0) return true
     // if isValid is not true
     return isValid===false
   }
