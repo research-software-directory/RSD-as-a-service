@@ -23,7 +23,7 @@ export const CategoriesWithHeadlines = ({categories}: CategoriesWithHeadlinesPro
     const category = node.getValue()
     const children = node.children()
 
-    return <React.Fragment key={category.short_name}>
+    return <React.Fragment key={category.id}>
       <SidebarHeadline iconName={category.properties.icon} title={category.name} />
       <div className='ml-4'>
         <CategoryTreeLevel items={children} />
