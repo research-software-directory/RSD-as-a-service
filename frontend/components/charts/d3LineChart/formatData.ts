@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -37,10 +39,11 @@ export function formatUnixDateData(data: Data) {
 }
 
 export function prepareDataForSoftwarePage(data: Data) {
+  console.log('prepareDataForSoftwarePage...',data)
   // format unix time in seconds to ms for js
   const {lineData,lastUpdateInMs} = formatUnixDateData(data)
   // calculate total number of commits
-  const totalCountY = lineData.reduce((acc: any, point) => {
+  const totalCountY:number = lineData.reduce((acc: any, point) => {
     return acc+=point.y
   }, 0)
   // extract last commit date

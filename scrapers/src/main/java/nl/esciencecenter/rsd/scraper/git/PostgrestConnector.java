@@ -82,17 +82,20 @@ public class PostgrestConnector {
 	}
 
 	public void saveLanguagesData(LanguagesData languagesData) {
-		String json = String.format("{\"languages_last_error\": null, \"languages\": %s, \"languages_scraped_at\": \"%s\"}", languagesData.languages(), languagesData.languagesScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		String json = String.format("{\"languages_last_error\": null, \"languages\": %s, \"languages_scraped_at\": \"%s\"}", languagesData.languages(), languagesData.languagesScrapedAt()
+			.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		Utils.patchAsAdmin(backendUrl + "?software=eq." + languagesData.basicData().software().toString(), json);
 	}
 
 	public void saveCommitData(CommitData commitData) {
 		String json;
 		if (commitData.commitHistory() == null) {
-			json = String.format("{\"commit_history_last_error\": null, \"commit_history_scraped_at\": \"%s\"}", commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+			json = String.format("{\"commit_history_last_error\": null, \"commit_history_scraped_at\": \"%s\"}", commitData.commitHistoryScrapedAt()
+				.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		} else {
 			commitData.commitHistory().addMissingZeros();
-			json = String.format("{\"commit_history_last_error\": null, \"commit_history\": %s, \"commit_history_scraped_at\": \"%s\"}", commitData.commitHistory().toJson(), commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+			json = String.format("{\"commit_history_last_error\": null, \"commit_history\": %s, \"commit_history_scraped_at\": \"%s\"}", commitData.commitHistory()
+				.toJson(), commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		}
 		Utils.patchAsAdmin(backendUrl + "?software=eq." + commitData.basicData().software().toString(), json);
 	}
@@ -100,23 +103,30 @@ public class PostgrestConnector {
 	public void saveBasicData(BasicGitDatabaseData basicData) {
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.add("basic_data_last_error", JsonNull.INSTANCE);
-		jsonObject.addProperty("basic_data_scraped_at", basicData.dataScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		jsonObject.addProperty("license", basicData.statsData().license);
-		jsonObject.addProperty("star_count", basicData.statsData().starCount);
-		jsonObject.addProperty("fork_count", basicData.statsData().forkCount);
-		jsonObject.addProperty("open_issue_count", basicData.statsData().openIssueCount);
+		jsonObject.addProperty("basic_data_scraped_at", basicData.dataScrapedAt()
+			.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		jsonObject.addProperty("archived", basicData.statsData().archived());
+		jsonObject.addProperty("license", basicData.statsData().license());
+		jsonObject.addProperty("star_count", basicData.statsData().starCount());
+		jsonObject.addProperty("fork_count", basicData.statsData().forkCount());
+		jsonObject.addProperty("open_issue_count", basicData.statsData().openIssueCount());
 
-		Utils.patchAsAdmin(backendUrl + "?software=eq." + basicData.basicData().software().toString(), jsonObject.toString());
+		Utils.patchAsAdmin(backendUrl + "?software=eq." + basicData.basicData()
+			.software()
+			.toString(), jsonObject.toString());
 	}
 
 	public void saveContributorCount(ContributorDatabaseData contributorData) {
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.add("contributor_count_last_error", JsonNull.INSTANCE);
-		jsonObject.addProperty("contributor_count_scraped_at", contributorData.dataScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		jsonObject.addProperty("contributor_count_scraped_at", contributorData.dataScrapedAt()
+			.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		if (contributorData.contributorCount() != null) {
 			jsonObject.addProperty("contributor_count", contributorData.contributorCount());
 		}
 
-		Utils.patchAsAdmin(backendUrl + "?software=eq." + contributorData.basicData().software().toString(), jsonObject.toString());
+		Utils.patchAsAdmin(backendUrl + "?software=eq." + contributorData.basicData()
+			.software()
+			.toString(), jsonObject.toString());
 	}
 }

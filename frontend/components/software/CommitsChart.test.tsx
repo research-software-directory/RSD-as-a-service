@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -8,7 +8,7 @@
 import {render, screen} from '@testing-library/react'
 
 import {WithAppContext} from '~/utils/jest/WithAppContext'
-import CommitsChart, {CommitsChartProps} from './CommitsChart'
+import CommitsChart, {CommitsChartProps,ArchivedRepo,StarCount,ForkCount} from './CommitsChart'
 
 // MOCK useResizeObserver
 jest.mock('~/components/charts/d3LineChart/useResizeObserver')
@@ -21,20 +21,18 @@ jest.mock('~/components/charts/d3LineChart/NoDataAvailableChart', () => ({
   default: jest.fn(({text}) =><div data-testid="no-data-chart-message">{text}</div>)
 }))
 
-// const mockPrepareDataForSoftwarePage = jest.fn(props => ({
-//   lineData: [],
-//   totalCountY:0,
-//   lastCommitDate: null
-// }))
-// jest.mock('~/components/charts/d3LineChart/formatData', () => ({
-//   prepareDataForSoftwarePage: jest.fn(props=>mockPrepareDataForSoftwarePage(props))
-// }))
+type MutableProps = {
+  -readonly [key in keyof CommitsChartProps]: CommitsChartProps[key]
+}
 
-const mockProps:CommitsChartProps = {
+const mockProps:MutableProps = {
   repository_url: null,
   commit_history: undefined,
   commit_history_scraped_at: undefined,
-  className: undefined
+  className: undefined,
+  archived: null,
+  star_count: null,
+  fork_count: null
 }
 
 it('renders "missing repository_url" message', () => {
@@ -70,7 +68,7 @@ it('renders "did not scrape repo yet" message', () => {
   // screen.debug()
 })
 
-it('renders "reposotory is empty" message', () => {
+it('renders "repository is empty" message', () => {
   mockProps.repository_url = 'https://some.repo.url.com'
   mockProps.commit_history_scraped_at = new Date().toISOString()
   mockProps.commit_history = {}
@@ -105,3 +103,82 @@ it('renders "we cannot read the commit history" message', () => {
   expect(message).toHaveTextContent(expectMessage)
   // screen.debug()
 })
+
+it('renders "archived repository" message', () => {
+  // render
+  render(
+    <WithAppContext>
+      <ArchivedRepo archived={true} />
+    </WithAppContext>
+  )
+
+  screen.getByTestId('archived-repository')
+})
+
+it('renders "0 stars" message', () => {
+  // render
+  render(
+    <WithAppContext>
+      <StarCount star_count={0} />
+    </WithAppContext>
+  )
+
+  screen.getByText('0 stars')
+})
+
+it('does NOT render the stars message on null', async() => {
+  // render
+  render(
+    <WithAppContext>
+      <StarCount star_count={null} />
+    </WithAppContext>
+  )
+  const stars = screen.queryByTestId('star-count')
+  expect(stars).not.toBeInTheDocument()
+  // screen.debug(stars)
+})
+
+it('does NOT render the stars message on undefined', async() => {
+  // render
+  render(
+    <WithAppContext>
+      <StarCount star_count={undefined} />
+    </WithAppContext>
+  )
+  const stars = screen.queryByTestId('star-count')
+  expect(stars).not.toBeInTheDocument()
+})
+
+it('renders "0 forks" message', () => {
+  // render
+  render(
+    <WithAppContext>
+      <ForkCount fork_count={0} />
+    </WithAppContext>
+  )
+
+  screen.getByText('0 forks')
+})
+
+it('does NOT render forks message on null', async() => {
+  // render
+  render(
+    <WithAppContext>
+      <ForkCount fork_count={null} />
+    </WithAppContext>
+  )
+  const forks = screen.queryByTestId('fork-count')
+  expect(forks).not.toBeInTheDocument()
+})
+
+it('does NOT render forks message on undefined', async() => {
+  // render
+  render(
+    <WithAppContext>
+      <ForkCount fork_count={undefined} />
+    </WithAppContext>
+  )
+  const stars = screen.queryByTestId('fork-count')
+  expect(stars).not.toBeInTheDocument()
+})
+

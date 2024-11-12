@@ -24,7 +24,7 @@ type LineChartConfig = {
 const margin = {
   // minimal margins to host first/last year label 'overflow'
   left: 12, right: 12,
-  top: 4, bottom: 16
+  top: 4, bottom: 24
 }
 
 function findMax(data:LineData[]) {

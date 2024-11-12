@@ -20,6 +20,7 @@ CREATE TABLE repository_url (
 	software UUID REFERENCES software (id) PRIMARY KEY,
 	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://'),
 	code_platform platform_type NOT NULL DEFAULT 'other',
+	archived BOOLEAN,
 	license VARCHAR(200),
 	star_count BIGINT,
 	fork_count INTEGER,

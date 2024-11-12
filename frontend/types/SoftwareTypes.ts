@@ -178,6 +178,11 @@ export type RepositoryInfo = {
   commit_history: CommitHistory,
   commit_history_scraped_at: string,
   code_platform: CodePlatform
+  archived: boolean | null
+  fork_count: number | null
+  star_count: number | null
+  open_issue_count: number | null
+  contributor_count: number | null
 }
 
 /**

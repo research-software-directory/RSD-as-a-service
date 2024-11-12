@@ -34,7 +34,7 @@ public class GithubScraperIT {
 	@Disabled
 	@Test
 	void license() {
-		String license = Assertions.assertDoesNotThrow(() -> githubScraper.basicData().license);
+		String license = Assertions.assertDoesNotThrow(() -> githubScraper.basicData().license());
 		Assertions.assertEquals("Apache-2.0", license);
 	}
 
