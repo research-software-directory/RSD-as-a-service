@@ -20,12 +20,12 @@ import {Provider} from 'pages/api/fe/auth'
 function set_location_cookie() {
   // set cookie so that user is bounced to the software submission page
   // after authentication
-  document.cookie = 'rsd_pathname=/software/add;path=/auth;SameSite=None;Secure'
+  document.cookie = 'rsd_pathname=/add/software;path=/auth;SameSite=None;Secure'
 }
 
 function submit_software_href(auth_status: string, login_providers: Provider[]) {
   if (auth_status == 'authenticated') {
-    return '/software/add'
+    return '/add/software'
   }
   return (login_providers[0]?.redirectUrl ?? '')
 }

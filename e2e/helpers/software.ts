@@ -29,7 +29,7 @@ export async function createSoftware({title, desc, slug, page}: CreateSoftwarePr
   await addMenu.click()
   // open add software page
   await Promise.all([
-    page.waitForURL('**/software/add',{
+    page.waitForURL('**/add/software',{
       waitUntil: 'networkidle'
     }),
     newSoftware.click()

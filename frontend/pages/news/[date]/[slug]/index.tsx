@@ -38,7 +38,7 @@ export default function NewsItemPage({newsItem}:{newsItem:NewsItem}) {
       <CanonicalUrl/>
       <PageBackground>
         <AppHeader />
-        <MainContent className="lg:w-[53rem] lg:mx-auto pb-12">
+        <MainContent className="lg:w-[64rem] lg:mx-auto pb-12">
           {/* BREADCRUMBS and button */}
           <NewsItemNav
             slug={newsItem.slug}

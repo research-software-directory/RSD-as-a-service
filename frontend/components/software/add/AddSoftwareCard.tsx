@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,19 +16,18 @@ import CircularProgress from '@mui/material/CircularProgress'
 
 import {useForm} from 'react-hook-form'
 
-import {useSession} from '../../../auth'
-import TextFieldWithCounter from '../../form/TextFieldWithCounter'
-import SlugTextField from '../../form/SlugTextField'
-import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
-import {NewSoftwareItem} from '../../../types/SoftwareTypes'
-import {getSlugFromString} from '../../../utils/getSlugFromString'
-import {validSoftwareItem} from '../../../utils/editSoftware'
+import {useSession} from '~/auth'
+import {NewSoftwareItem} from '~/types/SoftwareTypes'
 import {useDebounce} from '~/utils/useDebounce'
-import {addSoftware} from '../../../utils/editSoftware'
-import {addConfig as config} from './addConfig'
+import {getSlugFromString} from '~/utils/getSlugFromString'
+import {addSoftware,validSoftwareItem} from '~/utils/editSoftware'
+import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
+import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
+import SlugTextField from '~/components/form/SlugTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import {addConfig as config} from './addConfig'
 
-const initalState = {
+const initialState = {
   loading: false,
   error:''
 }
@@ -37,16 +38,15 @@ type AddSoftwareForm = {
   short_statement: string|null,
 }
 
-let lastValidatedSlug = ''
+// let lastValidatedSlug = ''
 const formId = 'add-software-form'
 
 export default function AddSoftwareCard() {
   const {token} = useSession()
   const router = useRouter()
   const [baseUrl, setBaseUrl] = useState('')
-  const [slugValue, setSlugValue] = useState('')
   const [validating, setValidating]=useState(false)
-  const [state, setState] = useState(initalState)
+  const [state, setState] = useState(initialState)
   const {register, handleSubmit, watch, formState, setValue,setError} = useForm<AddSoftwareForm>({
     mode: 'onChange'
   })
@@ -54,16 +54,15 @@ export default function AddSoftwareCard() {
   // watch for data change in the form
   const [slug,brand_name,short_statement] = watch(['slug', 'brand_name', 'short_statement'])
   // take the last slugValue
-  const bouncedSlug = useDebounce(slugValue, 700)
+  const bouncedSlug = useDebounce(slug, 700)
 
   // console.group('AddSoftwareCard')
-  // console.log('session...', session)
-  // console.log('state...', state)
   // console.log('slug...', slug)
+  // console.log('lastValidatedSlug...', lastValidatedSlug)
+  // console.log('bouncedSlug...', bouncedSlug)
   // console.log('errors...', errors)
   // console.log('isValid...', isValid)
   // console.log('validating...', validating)
-  // console.log('validSlug...', validSlug)
   // console.groupEnd()
 
   useEffect(() => {
@@ -81,50 +80,53 @@ export default function AddSoftwareCard() {
     // construct slug from title
     if (brand_name) {
       const slugValue = getSlugFromString(brand_name)
-      // console.log('useEffect.slugValue...', slugValue)
       // update slugValue
-      setSlugValue(slugValue)
+      setValue('slug',slugValue,{shouldValidate:true,shouldDirty:true})
     }
-  }, [brand_name])
-  /**
-   * When bouncedSlug value is changed,
-   * we need to update slug value (value in the input) shown to user.
-   * This change occures when brand_name value is changed
-   */
+  }, [brand_name, setValue])
+
   useEffect(() => {
-    if (bouncedSlug) {
-      // console.log('useEffect.bouncedSlug...', bouncedSlug)
-      setValue('slug', bouncedSlug, {
-        shouldValidate: true
-      })
-    }
-  }, [bouncedSlug,setValue])
-  /**
-   * When slug value is changed by debounce or manually by user
-   * In addition to basic validations we also check if slug is already
-   * used by existing software entries. I moved this validation here
-   * because react-hook-form async validate function calls api 2 times.
-   * Further investigation about this is needed. For now we move it here.
-   */
-  useEffect(() => {
+    let abort = false
+    /**
+     * When bouncedSlug value is changed we perform slug validation.
+     * In addition to "basic" react-hook-form validations we check here if the slug is already
+     * used by existing software entries. I moved this validation here because react-hook-form
+     * async validate function calls api 2 times.
+     */
     async function validateSlug() {
-      if (slug===null) return
-      setValidating(true)
-      const isUsed = await validSoftwareItem(slug, token)
+      // check if slug is already taken
+      const isUsed = await validSoftwareItem(bouncedSlug, token)
+      if (abort) return
       if (isUsed === true) {
-        const message = `${slug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
-        setError('slug',{type:'validate',message})
+        // construct error message
+        const message = `${bouncedSlug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
+        setError('slug',{type:'custom-slug-validation',message})
       }
-      lastValidatedSlug = slug
       setValidating(false)
     }
-    if (slug && token && slug !== lastValidatedSlug) {
+    // debugger
+    if (bouncedSlug && token && bouncedSlug === slug) {
       validateSlug()
+    } else if (!slug){
+      // fix: remove validating/spinner when no slug
+      setValidating(false)
     }
-  },[slug,token,setError])
+    return ()=>{abort=true}
+  },[bouncedSlug,slug,token,setError])
+
+  useEffect(()=>{
+    // As soon as the slug value start changing we signal to user that we need to validate new slug.
+    // New slug value is "debounced" into variable bouncedSlug after the user stops typing.
+    // Another useEffect monitors bouncedSlug value and performs the validation.
+    // Validating flag disables Save button from the moment the slug value is changed until the validation is completed.
+    if (slug && !errors?.brand_name && !errors?.slug){
+      // debugger
+      setValidating(true)
+    }
+  },[slug,errors?.brand_name,errors?.slug])
 
   function handleCancel() {
-    // on cancel we send user back to prevous page
+    // on cancel we send user back to previous page
     router.back()
   }
 
@@ -200,6 +202,8 @@ export default function AddSoftwareCard() {
     if (state.loading === true) return true
     // during async validation we disable button
     if (validating === true) return true
+    // check for errors
+    if (Object.keys(errors).length > 0) return true
     // if isValid is not true
     return isValid===false
   }

@@ -75,14 +75,14 @@ export default function AddMenu() {
         // disable adding styles to body (overflow:hidden & padding-right)
         disableScrollLock={disable}
       >
-        <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/software/add')}>
+        <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/add/software')}>
           <ListItemIcon>
             <TerminalIcon/>
           </ListItemIcon>
           New Software
         </MenuItem>
 
-        <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/projects/add')}>
+        <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/add/project')}>
           <ListItemIcon>
             <ListAltIcon/>
           </ListItemIcon>
@@ -91,7 +91,7 @@ export default function AddMenu() {
         {
           // ADMIN ONLY options
           user?.role==='rsd_admin' ?
-            <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/news/add')}>
+            <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/add/news')}>
               <ListItemIcon>
                 <NewspaperIcon/>
               </ListItemIcon>

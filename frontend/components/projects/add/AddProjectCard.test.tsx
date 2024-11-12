@@ -7,10 +7,10 @@
 
 import {render,screen,fireEvent,waitFor,waitForElementToBeRemoved,act} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
+import {getSlugFromString} from '~/utils/getSlugFromString'
 
 import AddProjectCard from './AddProjectCard'
 import {addConfig} from './addProjectConfig'
-import {getSlugFromString} from '../../../utils/getSlugFromString'
 
 const mockAddProject = jest.fn((props)=>Promise.resolve({status: 201, message: props}))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
