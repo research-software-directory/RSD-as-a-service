@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
@@ -50,7 +50,7 @@ public class HelmholtzIdLogin implements Login {
 	static final String DEFAULT_ORGANISATION = "Helmholtz";
 
 	// See https://hifis.net/doc/helmholtz-aai/list-of-vos/#vos-representing-helmholtz-centres
-	static private final Collection<String> knownHgfOrganisations = Set.of(
+	private static final Collection<String> knownHgfOrganisations = Set.of(
 			"AWI", "CISPA", "DESY", "DKFZ", "DLR", "DZNE", "FZJ", "GEOMAR", "GFZ", "GSI", "hereon", "HMGU", "HZB", "KIT", "MDC", "UFZ"
 	);
 
@@ -198,8 +198,8 @@ public class HelmholtzIdLogin implements Login {
 
 		JSONArray entitlements = new JSONArray();
 		Object edupersonClaim = userInfo.getClaim("eduperson_entitlement");
-		if (edupersonClaim instanceof JSONArray) {
-			entitlements = (JSONArray) edupersonClaim;
+		if (edupersonClaim instanceof JSONArray jsonArray) {
+			entitlements = jsonArray;
 		} else if (edupersonClaim instanceof String) {
 			entitlements.appendElement(edupersonClaim);
 		} else if (edupersonClaim == null) {

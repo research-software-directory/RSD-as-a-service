@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.net.URI;
 
 public class PostgrestConnector {
+
+	private PostgrestConnector() {
+	}
 
 	public static void addOrcidToAllowList(String orcid) throws IOException, InterruptedException {
 		String backendUri = Config.backendBaseUrl();

@@ -14,6 +14,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Base64;
 import java.util.Collections;
@@ -24,6 +26,9 @@ import java.util.UUID;
 public class Main {
 	static final long ONE_HOUR_IN_SECONDS = 3600; // 60 * 60
 	static final long ONE_MINUTE_IN_SECONDS = 60;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+	private static final String LOGIN_FAILED_PATH = "/login/failed";
 
 	public static boolean userIsAllowed(OpenIdInfo info) {
 		String whitelist = Config.userMailWhitelist();
@@ -191,27 +196,33 @@ public class Main {
 				String token = jwtCreator.refreshToken(tokenToVerify);
 				setJwtCookie(ctx, token);
 			} catch (RuntimeException ex) {
-				ex.printStackTrace();
+				LOGGER.error("RuntimeException", ex);
 				ctx.status(400);
 				ctx.json("{\"message\": \"failed to refresh token\"}");
 			}
 		});
 
 		app.exception(JWTVerificationException.class, (ex, ctx) -> {
-			ex.printStackTrace();
+			LOGGER.error("JWTVerificationException", ex);
 			ctx.status(400);
 			ctx.json("{\"message\": \"invalid JWT\"}");
 		});
 
 		app.exception(RsdAuthenticationException.class, (ex, ctx) -> {
 			setLoginFailureCookie(ctx, ex.getMessage());
-			ctx.redirect("/login/failed");
+			ctx.redirect(LOGIN_FAILED_PATH);
 		});
 
 		app.exception(RuntimeException.class, (ex, ctx) -> {
-			ex.printStackTrace();
+			LOGGER.error("RuntimeException", ex);
 			setLoginFailureCookie(ctx, "Something unexpected went wrong, please try again or contact us.");
-			ctx.redirect("/login/failed");
+			ctx.redirect(LOGIN_FAILED_PATH);
+		});
+
+		app.exception(Exception.class, (ex, ctx) -> {
+			LOGGER.error("Exception", ex);
+			setLoginFailureCookie(ctx, "Something unexpected went wrong, please try again or contact us.");
+			ctx.redirect(LOGIN_FAILED_PATH);
 		});
 	}
 

@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
@@ -21,6 +21,9 @@ public class Config {
 		return System.getenv("PGRST_JWT_SECRET");
 	}
 
+	private Config() {
+	}
+
 	private static Collection<String> rsdAuthCoupleProviders() {
 		return Optional.ofNullable(System.getenv("RSD_AUTH_COUPLE_PROVIDERS"))
 				.map(String::toUpperCase)
@@ -39,10 +42,10 @@ public class Config {
 
 	private static Collection<String> rsdLoginProviders() {
 		return Optional.ofNullable(System.getenv("RSD_AUTH_PROVIDERS"))
-			.map(String::toUpperCase)
-			.map(s -> s.split(";"))
-			.map(Set::of)
-			.orElse(Collections.emptySet());
+				.map(String::toUpperCase)
+				.map(s -> s.split(";"))
+				.map(Set::of)
+				.orElse(Collections.emptySet());
 	}
 
 	public static boolean isLocalLoginEnabled() {

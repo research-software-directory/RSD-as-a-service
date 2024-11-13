@@ -40,6 +40,9 @@ public class Utils {
 	// Default timeout used for http connections.
 	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
 
+	private Utils() {
+	}
+
 	/**
 	 * Base64encode a string.
 	 *

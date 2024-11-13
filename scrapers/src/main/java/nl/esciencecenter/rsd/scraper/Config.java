@@ -23,6 +23,9 @@ public class Config {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
 
+	private Config() {
+	}
+
 	/**
 	 * Retrieves the value of the environment variable with the given name. Variable is not allowed to unset, and an Error
 	 * will be thrown if this is the case.

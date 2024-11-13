@@ -24,20 +24,17 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 
 public class GitlabScraper implements GitScraper {
-	public String projectPath;
-	public String apiUri;
+	private final String projectPath;
+	private final String apiUri;
 
 	/**
 	 * A GitLab scraper for API version 4.
 	 *
-	 * @param gitLabApiUrl The API Url without version, e.g. https://<gitlab_instance_url>/api
+	 * @param gitLabApiUrl The API Url without a version, e.g. https://<gitlab_instance_url>/api
 	 * @param projectPath  The full path to the project
 	 */
 	public GitlabScraper(String gitLabApiUrl, String projectPath) {
-		this.projectPath = projectPath;
-		if (this.projectPath.endsWith(".git")) {
-			this.projectPath = this.projectPath.substring(0, this.projectPath.length() - 4);
-		}
+		this.projectPath = projectPath.endsWith(".git") ? projectPath.substring(0, projectPath.length() - 4) : projectPath;
 		this.apiUri = gitLabApiUrl + "/v4";
 	}
 

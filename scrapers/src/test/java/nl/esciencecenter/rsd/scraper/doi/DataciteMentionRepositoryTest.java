@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test;
 import java.util.Collection;
 import java.util.List;
 
-public class DataciteMentionRepositoryTest {
+class DataciteMentionRepositoryTest {
 
 	@Test
-	public void givenCollectionOfStrings_whenJoining_thenCorrectStringReturned() {
+	void givenCollectionOfStrings_whenJoining_thenCorrectStringReturned() {
 		Doi doi1 = Doi.fromString("10.000/1");
 		Doi doi2 = Doi.fromString("10.2/2");
 		Doi doi3 = Doi.fromString("10.3/abc-def");

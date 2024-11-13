@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-public class GithubScraperTest {
+class GithubScraperTest {
 
 	private final String githubUrlPrefix = "https://github.com/";
 	private final String repo = "research-software-directory/RSD-as-a-service";
