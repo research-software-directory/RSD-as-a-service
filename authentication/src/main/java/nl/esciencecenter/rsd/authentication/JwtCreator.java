@@ -14,26 +14,28 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class JwtCreator {
 
 	static final long ONE_HOUR_IN_MILLISECONDS = 3600_000L; // 60 * 60 * 1000
-	private final String signingSecret;
 	private final Algorithm signingAlgorithm;
+	private static final String RSD_ADMIN_ROLE = "rsd_admin";
+	private static final String RSD_USER_ROLE = "rsd_user";
 
 	public JwtCreator(String signingSecret) {
 		Objects.requireNonNull(signingSecret);
-		this.signingSecret = signingSecret;
-		this.signingAlgorithm = Algorithm.HMAC256(this.signingSecret);
+		this.signingAlgorithm = Algorithm.HMAC256(signingSecret);
 	}
 
 	String createUserJwt(AccountInfo accountInfo) {
 		return JWT.create()
 			.withClaim("iss", "rsd_auth")
-			.withClaim("role", accountInfo.isAdmin() ? "rsd_admin" : "rsd_user")
+			.withClaim("role", accountInfo.isAdmin() ? RSD_ADMIN_ROLE : RSD_USER_ROLE)
 			.withClaim("account", accountInfo.account().toString())
 			.withClaim("name", accountInfo.name())
 			.withClaim("data", accountInfo.data())
@@ -45,19 +47,22 @@ public class JwtCreator {
 	String createAdminJwt() {
 		return JWT.create()
 			.withClaim("iss", "rsd_auth")
-			.withClaim("role", "rsd_admin")
+			.withClaim("role", RSD_ADMIN_ROLE)
 			.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
 			.sign(signingAlgorithm);
 	}
 
-	String refreshToken(String token) {
+	String refreshToken(String token) throws IOException, InterruptedException {
 		DecodedJWT oldJwt = JWT.decode(token);
+		UUID accountId = UUID.fromString(oldJwt.getClaim("account").asString());
+		boolean isAdmin = PostgrestAccount.isAdmin(accountId);
 		String payloadEncoded = oldJwt.getPayload();
 		String payloadDecoded = Main.decode(payloadEncoded);
 		Gson gson = new Gson();
 		Map<String, ?> claimsMap = gson.<Map<String, ?>>fromJson(payloadDecoded, Map.class);
 		return JWT.create()
 			.withPayload(claimsMap)
+			.withClaim("role", isAdmin ? RSD_ADMIN_ROLE : RSD_USER_ROLE)
 			.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
 			.sign(signingAlgorithm);
 	}
