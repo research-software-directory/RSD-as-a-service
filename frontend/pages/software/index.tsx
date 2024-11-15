@@ -189,8 +189,9 @@ export default function SoftwareOverviewPage({
                     page={page}
                     renderItem={item => {
                       if (item.page !== null) {
+                        const url = createUrl('page', item.page.toString())
                         return (
-                          <Link href={createUrl('page', item.page.toString())}>
+                          <Link href={url}>
                             <PaginationItem {...item}/>
                           </Link>
                         )

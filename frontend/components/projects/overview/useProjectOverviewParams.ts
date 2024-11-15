@@ -30,7 +30,7 @@ export default function useProjectOverviewParams() {
       // use value from user settings if none provided
       params['rows'] = rsd_page_rows
     }
-    // construct url with all query params
+    // construct and encode url with all query params
     const url = ssrProjectsUrl(params)
     return url
   }

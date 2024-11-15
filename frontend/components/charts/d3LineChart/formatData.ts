@@ -39,7 +39,7 @@ export function formatUnixDateData(data: Data) {
 }
 
 export function prepareDataForSoftwarePage(data: Data) {
-  console.log('prepareDataForSoftwarePage...',data)
+  // console.log('prepareDataForSoftwarePage...',data)
   // format unix time in seconds to ms for js
   const {lineData,lastUpdateInMs} = formatUnixDateData(data)
   // calculate total number of commits

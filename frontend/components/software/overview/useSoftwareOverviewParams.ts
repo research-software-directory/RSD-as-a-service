@@ -40,7 +40,7 @@ export default function useSoftwareOverviewParams() {
   }
 
   function createUrl(key: string, value: string | string[]) {
-
+    // console.log('createUrl...',key,value, router.query)
     const params: QueryParams = {
       // take existing params from url (query)
       ...ssrSoftwareParams(router.query),
@@ -54,7 +54,7 @@ export default function useSoftwareOverviewParams() {
       // use value from user settings if none provided
       params['rows'] = rsd_page_rows
     }
-    // construct url with all query params
+    // construct and encode url with all query params
     const url = ssrViewUrl({
       view: getCurrentPage(),
       params: params
