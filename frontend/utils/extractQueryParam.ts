@@ -20,16 +20,13 @@ type BuildUrlQueryProps = EncodeQueryParamProps & {
   query: string
 }
 
-export function encodeQueryValue(value: EncodeQueryValue,encodeString?:boolean) {
+export function encodeQueryValue(value: EncodeQueryValue) {
   try {
-    if (typeof value === 'string') {
-      if (encodeString) return encodeURIComponent(value)
-      return value
+    if (typeof value === 'string' || typeof value === 'number') {
+      return encodeURIComponent(value)
     } else if (Array.isArray(value) === true && (value as any)?.length > 0) {
       // arrays are stringified
       return encodeURIComponent(JSON.stringify(value))
-    } else if (typeof value === 'number') {
-      return encodeURIComponent(value)
     }
   } catch (e: any) {
     logger(`encodeQueryValue...${e.message}`, 'error')
@@ -83,11 +80,12 @@ export function decodeJsonParam(value: string|null, defaultValue:any) {
 
 // decoding Query params back from encodedUrl
 export function decodeQueryParam({query,param,castToType='string',defaultValue}:{
-  query: ParsedUrlQuery, param: string, castToType?: ('string' | 'number' | 'json-encoded'),
+  query: ParsedUrlQuery, param: string, castToType?: ('string' | 'number' | 'json-encoded'|'raw'),
   defaultValue:any
 }){
   try{
     if (query && query.hasOwnProperty(param)){
+      // debugger
       const rawVal = query[param]
       // if value is not "actionable" we return default value
       if (typeof rawVal == 'undefined' || rawVal === '' || rawVal === null) return defaultValue
@@ -102,7 +100,11 @@ export function decodeQueryParam({query,param,castToType='string',defaultValue}:
           logger(`decodeQueryParam: query param ${param} NOT a string. Returning defaultValue`, 'warn')
           return defaultValue
         case 'string':
-          return decodeURIComponent(rawVal?.toString())
+          if (typeof rawVal === 'string'){
+            return decodeURIComponent(rawVal)
+          }else{
+            return decodeURIComponent(rawVal?.toString())
+          }
         case 'json-encoded':
           if (typeof rawVal === 'string') {
             const json = decodeJsonParam(rawVal,defaultValue)
@@ -110,8 +112,14 @@ export function decodeQueryParam({query,param,castToType='string',defaultValue}:
           }
           logger(`decodeQueryParam: query param ${param} NOT a string. Returning defaultValue`, 'warn')
           return defaultValue
+        case 'raw':
+          return rawVal
         default:
-          logger(`decodeQueryParam: castToType ${castToType} NOT supported. Returning defaultValue`, 'warn')
+          if (defaultValue){
+            logger(`decodeQueryParam: castToType ${castToType} NOT supported. Returning defaultValue`, 'warn')
+            return defaultValue
+          }
+          logger(`decodeQueryParam: castToType ${castToType} NOT supported. Returning rawValue`, 'warn')
           return rawVal
       }
     }else{
@@ -120,8 +128,8 @@ export function decodeQueryParam({query,param,castToType='string',defaultValue}:
       return defaultValue
     }
   }catch(e:any){
-    logger(`decodeQueryParam: ${e.description}`,'error')
-    // throw e
+    // console.log('decodeQueryParam...',query,param,castToType)
+    logger(`decodeQueryParam: ${e}`,'error')
     return defaultValue
   }
 }
@@ -156,7 +164,10 @@ export function ssrSoftwareParams(query: ParsedUrlQuery): SoftwareParams {
     query,
     param: 'search',
     defaultValue: null,
-    castToType:'string'
+    // search string is already decoded by next
+    // and decodeURIComponent fails when % is in the string to decode
+    // see this issue https://github.com/vercel/next.js/issues/10080
+    castToType:'raw'
   })
   const keywords:string[]|undefined = decodeQueryParam({
     query,
@@ -213,7 +224,11 @@ export function ssrProjectsParams(query: ParsedUrlQuery) {
   const search:string|null = decodeQueryParam({
     query,
     param: 'search',
-    defaultValue: null
+    defaultValue: null,
+    // search string is already decoded by next
+    // and decodeURIComponent fails when % is in the string to decode
+    // see this issue https://github.com/vercel/next.js/issues/10080
+    castToType:'raw'
   })
   const keywords:string[]|null = decodeQueryParam({
     query,
@@ -278,7 +293,11 @@ export function ssrBasicParams(query: ParsedUrlQuery) {
   const search = decodeQueryParam({
     query,
     param: 'search',
-    defaultValue: null
+    defaultValue: null,
+    // search string is already decoded by next
+    // and decodeURIComponent fails when % is in the string to decode
+    // see this issue https://github.com/vercel/next.js/issues/10080
+    castToType:'raw'
   })
   return {
     search,
