@@ -233,6 +233,7 @@ $$;
 -- includes organisation, community and general categories
 -- Note! to filter specific categories of an community or organisation use join with community table
 
+-- if you ever change this table, then software_of_category() needs to be changed as well
 CREATE TABLE category_for_software (
 	software_id UUID REFERENCES software (id),
 	category_id UUID REFERENCES category (id),
@@ -260,6 +261,8 @@ $$;
 
 -- TABLE FOR project categories
 -- currently used only for organisation categories
+
+-- if you ever change this table, then projects_of_category() needs to be changed as well
 CREATE TABLE category_for_project (
 	project_id UUID REFERENCES project (id),
 	category_id UUID REFERENCES category (id),
@@ -297,4 +300,30 @@ $$
 			)
 			ELSE '[]'::json
 		END AS result
+$$;
+
+
+CREATE FUNCTION software_of_category()
+RETURNS SETOF category_for_software
+LANGUAGE SQL STABLE AS
+$$
+SELECT DISTINCT software.id, category_path.id
+FROM software
+INNER JOIN category_for_software
+	ON software.id = category_for_software.software_id
+INNER JOIN category_path(category_for_software.category_id)
+	ON TRUE;
+$$;
+
+
+CREATE FUNCTION projects_of_category()
+RETURNS SETOF category_for_project
+LANGUAGE SQL STABLE AS
+$$
+SELECT DISTINCT project.id, category_path.id
+FROM project
+INNER JOIN category_for_project
+	ON project.id = category_for_project.project_id
+INNER JOIN category_path(category_for_project.category_id)
+	ON TRUE;
 $$;
