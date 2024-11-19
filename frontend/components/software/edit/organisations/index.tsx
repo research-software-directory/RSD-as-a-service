@@ -40,6 +40,7 @@ import {
   deleteOrganisationFromSoftware, patchOrganisationPositions
 } from './organisationForSoftware'
 import SoftwareCategoriesDialog from './SoftwareCategoriesDialog'
+import {removeOrganisationCategoriesFromSoftware} from './apiSoftwareOrganisations'
 
 export type OrganisationModalStates<T> = ModalStates<T> & {
   categories: T
@@ -211,9 +212,12 @@ export default function SoftwareOrganisations() {
     // get organisation
     const organisation = organisations[pos]
     // if it has id
-    if (organisation?.id) {
+    if (organisation?.id && software?.id) {
+      // remove categories from software - do not wait for result
+      removeOrganisationCategoriesFromSoftware(software?.id, organisation.id, token)
+      // remove organisation from software
       const resp = await deleteOrganisationFromSoftware({
-        software: software?.id ?? undefined,
+        software: software?.id,
         organisation: organisation.id,
         token
       })
