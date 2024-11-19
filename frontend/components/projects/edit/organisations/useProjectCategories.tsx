@@ -50,9 +50,7 @@ export default function useProjectCategories({
           const availableIds = new Set<string>()
           categories.forEach(root=>{
             root.forEach(node=>{
-              if (node.children().length === 0) {
-                availableIds.add(node.getValue().id)
-              }
+              availableIds.add(node.getValue().id)
             })
           })
           if (abort) return

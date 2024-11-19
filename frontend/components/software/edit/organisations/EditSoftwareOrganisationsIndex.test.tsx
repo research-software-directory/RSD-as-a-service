@@ -66,6 +66,8 @@ jest.mock('./organisationForSoftware', () => ({
 // by default we return no categories
 jest.mock('~/components/category/apiCategories')
 jest.mock('~/utils/getSoftware')
+// MOCK removeOrganisationCategoriesFromSoftware
+jest.mock('./apiSoftwareOrganisations')
 
 describe('frontend/components/software/edit/organisations/index.tsx', () => {
   beforeEach(() => {

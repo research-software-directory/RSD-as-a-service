@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {CategoryPath} from '~/types/Category'
-import {useCategoryTree} from '~/utils/categories'
+import {useCategoryTree} from '~/components/category/useCategoryTree'
 import SidebarSection from '../layout/SidebarSection'
 import SidebarTitle from '../layout/SidebarTitle'
 import {CategoryChipFilter} from '../category/CategoryChipFilter'

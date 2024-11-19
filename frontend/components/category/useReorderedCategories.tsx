@@ -6,43 +6,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useMemo, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {CategoryEntry, CategoryPath} from '~/types/Category'
-import {categoryEntriesToRoots, loadCategoryRoots} from '~/components/category/apiCategories'
 import {TreeNode} from '~/types/TreeNode'
-
-const compareCategoryEntry = (p1: CategoryEntry, p2: CategoryEntry) => p1.name.localeCompare(p2.name)
-const compareCategoryTreeNode = (p1: TreeNode<CategoryEntry>, p2: TreeNode<CategoryEntry>) => compareCategoryEntry(p1.getValue(), p2.getValue())
-
-
-export const categoryTreeNodesSort = (trees: TreeNode<CategoryEntry>[]) => {
-  trees.sort(compareCategoryTreeNode)
-  for (const root of trees) {
-    root.sortRecursively(compareCategoryEntry)
-  }
-}
-
-
-export const genCategoryTreeNodes = (categories: CategoryPath[]=[]) : TreeNode<CategoryEntry>[] => {
-  const allEntries: CategoryEntry[] = []
-
-  for (const path of categories) {
-    for (const entry of path) {
-      allEntries.push(entry)
-    }
-  }
-
-  const result = categoryEntriesToRoots(allEntries)
-
-  categoryTreeNodesSort(result)
-
-  return result
-}
-
-
-export const useCategoryTree = (categories: CategoryPath[]) : TreeNode<CategoryEntry>[] => {
-  return useMemo(() => genCategoryTreeNodes(categories), [categories])
-}
+import {loadCategoryRoots} from '~/components/category/apiCategories'
 
 export type ReorderedCategories = {
   paths: CategoryPath[],
@@ -51,7 +18,7 @@ export type ReorderedCategories = {
   general: TreeNode<CategoryEntry>[],
 }
 
-export function reorderCategories(categoryRoots: TreeNode<CategoryEntry>[]): ReorderedCategories {
+function reorderCategories(categoryRoots: TreeNode<CategoryEntry>[]): ReorderedCategories {
   const all: TreeNode<CategoryEntry>[] = categoryRoots
   const highlighted: TreeNode<CategoryEntry>[] = []
   const general: TreeNode<CategoryEntry>[] = []
@@ -117,11 +84,11 @@ export function useReorderedCategories(community: string | null): ReorderedCateg
   return reorderedCategories
 }
 
-export function calcTreeLevelDepth(tree: TreeNode<CategoryEntry>): number {
+// export function calcTreeLevelDepth(tree: TreeNode<CategoryEntry>): number {
 
-  function walk (tree: TreeNode<CategoryEntry>, depth:number): number {
-    return Math.max(depth, ...tree.children().map(sub => walk(sub, depth+1)))
-  }
+//   function walk (tree: TreeNode<CategoryEntry>, depth:number): number {
+//     return Math.max(depth, ...tree.children().map(sub => walk(sub, depth+1)))
+//   }
 
-  return walk(tree, 0)
-}
+//   return walk(tree, 0)
+// }

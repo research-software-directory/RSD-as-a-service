@@ -4,26 +4,22 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-
 import {useSession} from '~/auth'
+import {loadCategoryRoots} from '~/components/category/apiCategories'
 import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
 import {getCategoryForSoftwareIds} from '~/utils/getSoftware'
-import {loadCategoryRoots} from '~/components/category/apiCategories'
-import {
-  removeOrganisationCategoriesFromSoftware,
-  saveSoftwareCategories,
-  SoftwareCategories
-} from './apiSoftwareOrganisations'
+import {saveSoftwareCategories, SoftwareCategories} from '../organisations/apiSoftwareOrganisations'
+import {removeCommunityCategoriesFromSoftware} from './apiSoftwareCommunities'
 
-type UseSoftwareOrganisationCategoriesProps={
-  organisationId:string|null,
+type UseSoftwareCommunityCategoriesProps={
+  communityId:string|null,
   softwareId:string
 }
 
-export default function useSoftwareCategories({
-  organisationId,softwareId
-}:UseSoftwareOrganisationCategoriesProps){
+export default function useCommunityCategories({
+  communityId,softwareId
+}:UseSoftwareCommunityCategoriesProps){
   const {token} = useSession()
   const [categories, setCategories] = useState<TreeNode<CategoryEntry>[] | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -31,33 +27,31 @@ export default function useSoftwareCategories({
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<Set<string>>(new Set())
   const [availableCategoryIds, setAvailableCategoryIds] = useState<Set<string>>(new Set())
 
-  // console.group('useSoftwareCategories')
+  // console.group('useCommunityCategories')
   // console.log('state...',state)
   // console.log('categories...', categories)
   // console.groupEnd()
 
   useEffect(() => {
     let abort = false
-    if (organisationId && softwareId && token){
+    if (communityId && softwareId && token){
       Promise.all([
-        loadCategoryRoots({organisation:organisationId}),
+        loadCategoryRoots({community:communityId}),
         getCategoryForSoftwareIds(softwareId, token)
       ])
         .then(([roots,selected]) => {
           // filter top level categories for software (only top level items have this flag)
-          const categories = roots.filter(item=>item.getValue().allow_software)
           // collect tree leaves ids (end nodes)
           const availableIds = new Set<string>()
-          categories.forEach(root=>{
+          roots.forEach(root=>{
             root.forEach(node=>{
               availableIds.add(node.getValue().id)
             })
           })
           if (abort) return
-          // debugger
           // save values
           setAvailableCategoryIds(availableIds)
-          setCategories(categories)
+          setCategories(roots)
           setSelectedCategoryIds(selected)
         })
         .catch(e => {
@@ -71,13 +65,13 @@ export default function useSoftwareCategories({
         })
     }
     return ()=>{abort=true}
-  }, [organisationId, softwareId, token])
+  }, [communityId, softwareId, token])
 
 
-  async function saveOrganisationCategories(selected:Set<string>,onComplete:()=>void) {
+  async function saveCommunityCategories(selected:Set<string>,onComplete:()=>void) {
     // delete old selection
-    if (organisationId){
-      const deleteErrorMessage = await removeOrganisationCategoriesFromSoftware(softwareId, organisationId, token)
+    if (communityId){
+      const deleteErrorMessage = await removeCommunityCategoriesFromSoftware(softwareId, communityId, token)
       if (deleteErrorMessage !== null) {
         setError(`Failed to save categories: ${deleteErrorMessage}`)
         setState('error')
@@ -98,7 +92,7 @@ export default function useSoftwareCategories({
       }
     })
 
-    // save organisation categories for software (if any)
+    // save community categories for software (if any)
     if (categoriesArrayToSave.length > 0){
       const resp = await saveSoftwareCategories(categoriesArrayToSave,token)
       // debugger
@@ -106,7 +100,7 @@ export default function useSoftwareCategories({
         // signal we are done
         onComplete()
       } else {
-        setError(`Failed to save categories: ${resp.message()}`)
+        setError(`Failed to save categories: ${resp.message}`)
         setState('error')
       }
     }else{
@@ -119,6 +113,6 @@ export default function useSoftwareCategories({
     selectedCategoryIds,
     error,
     state,
-    saveOrganisationCategories
+    saveCommunityCategories
   }
 }

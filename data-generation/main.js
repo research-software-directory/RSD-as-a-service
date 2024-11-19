@@ -336,7 +336,11 @@ async function generateCategories(idsCommunities, idsOrganisations, maxDepth = 3
 async function generateAndSaveCategoriesForEntity(idCommunity, idOrganisation, maxDepth) {
 	return new Promise(async res => {
 		let parentIdsAndFlags = [
-			{id: null, forSoftware: faker.datatype.boolean(), forProjects: idCommunity ? false : faker.datatype.boolean()},
+			{
+				id: null,
+				forSoftware: faker.datatype.boolean(),
+				forProjects: idCommunity ? false : faker.datatype.boolean(),
+			},
 		];
 		const idsAndFlags = [];
 		for (let level = 1; level <= maxDepth; level++) {
@@ -347,15 +351,15 @@ async function generateAndSaveCategoriesForEntity(idCommunity, idOrganisation, m
 					toGenerateCount += 1;
 				}
 				for (let i = 0; i < toGenerateCount; i++) {
-					let name = `Global, level ${level}, item ${i + 1}${parent.id ? `, parent${parent.id.substring(0,5)}` : ""}`;
-					let shortName = `G-${level}-${i + 1}${parent.id ? `, P-${parent.id.substring(0,5)}` : ""}`;
+					let name = `Global, level ${level}, item ${i + 1}${parent.id ? `, parent${parent.id.substring(0, 5)}` : ''}`;
+					let shortName = `G-${level}-${i + 1}${parent.id ? `, P-${parent.id.substring(0, 5)}` : ''}`;
 
-					if (idCommunity){
-						name = `Level ${level}, item ${i + 1}, community-${idCommunity.substring(0,5)}${parent.id ? `, parent-${parent.id.substring(0,5)}` : ""}`;
-						shortName = `L-${level}-${i + 1}, C-${idCommunity.substring(0,5)}${parent.id ? `, P-${parent.id.substring(0,5)}` : ""}`;
-					}else if (idOrganisation){
-						name = `Level ${level}, item ${i + 1}, organisation-${idOrganisation.substring(0,5)}${parent.id ? `, parent-${parent.id.substring(0,5)}` : ""}`;
-						shortName = `L-${level}-${i + 1}, O-${idOrganisation.substring(0,5)}${parent.id ? `, P-${parent.id.substring(0,5)}` : ""}`;
+					if (idCommunity) {
+						name = `Level ${level}, item ${i + 1}, community-${idCommunity.substring(0, 5)}${parent.id ? `, parent-${parent.id.substring(0, 5)}` : ''}`;
+						shortName = `L-${level}-${i + 1}, C-${idCommunity.substring(0, 5)}${parent.id ? `, P-${parent.id.substring(0, 5)}` : ''}`;
+					} else if (idOrganisation) {
+						name = `Level ${level}, item ${i + 1}, organisation-${idOrganisation.substring(0, 5)}${parent.id ? `, parent-${parent.id.substring(0, 5)}` : ''}`;
+						shortName = `L-${level}-${i + 1}, O-${idOrganisation.substring(0, 5)}${parent.id ? `, P-${parent.id.substring(0, 5)}` : ''}`;
 					}
 
 					const body = {

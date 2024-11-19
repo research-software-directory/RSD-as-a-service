@@ -11,7 +11,7 @@
 
 import {Fragment} from 'react'
 import Alert from '@mui/material/Alert'
-import {ReorderedCategories} from '~/utils/categories'
+import {ReorderedCategories} from '~/components/category/useReorderedCategories'
 import {config} from '~/components/software/edit/links/config'
 import {CategoryEntry} from '~/types/Category'
 

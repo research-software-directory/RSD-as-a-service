@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {getOrganisationsForSoftware} from '~/utils/editOrganisation'
-import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import {canEditOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
 
 export type UseParticipatingOrganisationsProps = {
@@ -46,4 +46,28 @@ export async function removeOrganisationCategoriesFromSoftware(
   })
 
   return resp.ok ? null : resp.text()
+}
+
+export type SoftwareCategories={
+  software_id: string,
+  category_id: string
+}
+
+export async function saveSoftwareCategories(categories:SoftwareCategories[],token:string){
+  try{
+    const categoryUrl = `${getBaseUrl()}/category_for_software`
+    const resp = await fetch(categoryUrl, {
+      method: 'POST',
+      body: JSON.stringify(categories),
+      headers: {
+        ...createJsonHeaders(token)
+      }
+    })
+    return extractReturnMessage(resp)
+  }catch(e:any){
+    return {
+      status:500,
+      message: e.message
+    }
+  }
 }

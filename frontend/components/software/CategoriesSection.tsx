@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -6,8 +7,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {CategoryPath} from '~/types/Category'
-import PageContainer from '../layout/PageContainer'
-import {useCategoryTree} from '~/utils/categories'
+import PageContainer from '~/components/layout/PageContainer'
+import {useCategoryTree} from '~/components/category/useCategoryTree'
 import {CategoryTable} from '~/components//category/CategoryTable'
 import {CategoryTreeLevel} from '~/components/category/CategoryTree'
 

@@ -3,10 +3,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useEffect, useState} from 'react'
+
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import Alert from '@mui/material/Alert'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -14,9 +15,7 @@ import SaveIcon from '@mui/icons-material/Save'
 
 import {TreeNode} from '~/types/TreeNode'
 import {CategoryEntry} from '~/types/Category'
-import ContentLoader from '../layout/ContentLoader'
-import {RecursivelyGenerateItems} from '~/components/software/TreeSelect'
-import {useEffect, useState} from 'react'
+import CategoriesDialogBody from './CategoriesDialogBody'
 
 type CategoriesDialogProps={
   title: string,
@@ -49,70 +48,8 @@ export default function CategoriesDialog({
     }
   },[selected,state])
 
-  function isSelected(node: TreeNode<CategoryEntry>) {
-    const val = node.getValue()
-    return selectedCategoryIds.has(val.id)
-  }
-
-  function textExtractor(value: CategoryEntry) {
-    return value.name
-  }
-
-  function keyExtractor(value: CategoryEntry) {
-    return value.id
-  }
-
-  function onSelect(node: TreeNode<CategoryEntry>) {
-    const val = node.getValue()
-    if (selectedCategoryIds.has(val.id)) {
-      selectedCategoryIds.delete(val.id)
-    } else {
-      selectedCategoryIds.add(val.id)
-    }
-    setSelectedCategoryIds(new Set(selectedCategoryIds))
-  }
-
   function isSaveDisabled(){
     return categories === null || categories.length === 0 || state !== 'ready'
-  }
-
-  function renderDialogContent(): JSX.Element {
-    switch (state) {
-      case 'loading':
-      case 'saving':
-        return (
-          <div className="flex-1 flex justify-center items-center">
-            <ContentLoader/>
-          </div>
-        )
-
-      case 'error':
-        return (
-          <Alert severity="error" sx={{marginTop: '0.5rem'}}>
-            {errorMsg ?? '500 - Unexpected error'}
-          </Alert>
-        )
-
-      case 'ready':
-        return (
-          <>
-            {(categories === null || categories.length === 0)
-              ?
-              <Alert severity="info" sx={{'padding': '2rem'}}>
-                {noItemsMsg}
-              </Alert>
-              :
-              <RecursivelyGenerateItems
-                nodes={categories}
-                isSelected={isSelected}
-                keyExtractor={keyExtractor}
-                onSelect={onSelect}
-                textExtractor={textExtractor}
-              />
-            }
-          </>
-        )
-    }
   }
 
   return (
@@ -131,7 +68,14 @@ export default function CategoriesDialog({
           padding: '1rem 1.5rem 2.5rem !important',
         }}>
 
-        {renderDialogContent()}
+        <CategoriesDialogBody
+          categories={categories}
+          state={state}
+          errorMsg={errorMsg}
+          noItemsMsg={noItemsMsg}
+          selectedCategoryIds={selectedCategoryIds}
+          setSelectedCategoryIds={setSelectedCategoryIds}
+        />
 
       </DialogContent>
       <DialogActions sx={{
