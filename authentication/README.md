@@ -28,7 +28,8 @@ extra_hosts:
   - "host.docker.internal:host-gateway"
 ```
 2. In `nginx.conf`, replace `server auth:7000;` with `server host.docker.internal:7000;`
-3. (Optionally) allow TCP traffic on port 7000 of your firewall if logging in seems to hang forever or if you get `504 Gateway Timeout` responses.
+3. (Optional) For refreshing your tokens to work, set `RSD_AUTH_URL=http://nginx/auth` in your `.env`.
+4. (Optional) Allow TCP traffic on port 7000 of your firewall if signing in seems to hang forever or if you get `504 Gateway Timeout` responses.
 
 Remember to undo these changes before committing!
 

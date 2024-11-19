@@ -8,6 +8,7 @@
 package nl.esciencecenter.rsd.authentication;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -98,6 +99,32 @@ public class PostgrestAccount implements Account {
 
 			return new AccountInfo(accountId, openIdInfo.name(), isAdmin, openIdInfo.data());
 		}
+	}
+
+	public static boolean isAdmin(UUID accountId) throws IOException, InterruptedException {
+		Objects.requireNonNull(accountId);
+		String backendUri = Config.backendBaseUrl();
+		URI accountUrl = URI.create(backendUri + "/admin_account?account_id=eq.%s".formatted(accountId));
+		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
+		String token = jwtCreator.createAdminJwt();
+
+		String response = getAsAdmin(accountUrl, token);
+		return parseIsAdminResponse(accountId, response);
+	}
+
+	static boolean parseIsAdminResponse(UUID accountId, String response) {
+		Objects.requireNonNull(accountId);
+		Objects.requireNonNull(response);
+		JsonElement jsonTree = JsonParser.parseString(response);
+		return jsonTree.isJsonArray()
+			&& jsonTree.getAsJsonArray().size() == 1
+			&& jsonTree.getAsJsonArray().get(0).getAsJsonObject().get("account_id").isJsonPrimitive()
+			&& jsonTree.getAsJsonArray()
+			.get(0)
+			.getAsJsonObject()
+			.getAsJsonPrimitive("account_id")
+			.getAsString()
+			.equals(accountId.toString());
 	}
 
 	public void coupleLogin(UUID accountId, OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException {
