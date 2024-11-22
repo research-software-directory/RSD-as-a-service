@@ -12,6 +12,11 @@ import {CategoryChipFilter} from '../category/CategoryChipFilter'
 export default function ProjectCategories({categories}:{categories:CategoryPath[]}) {
   const tree = useCategoryTree(categories)
 
+  // console.group('ProjectCategories')
+  // console.log('categories...', categories)
+  // console.log('tree...', tree)
+  // console.groupEnd()
+
   // each root category is separate sidebar section
   return tree.map(node => {
     const category = node.getValue()

@@ -5,10 +5,11 @@
 
 import {useEffect, useState} from 'react'
 import {useSession} from '~/auth'
-import {loadCategoryRoots} from '~/components/category/apiCategories'
 import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
 import {getCategoryForSoftwareIds} from '~/utils/getSoftware'
+import {loadCategoryRoots} from '~/components/category/apiCategories'
+import {sortCategoriesByName} from '~/components/category/useCategoryTree'
 import {saveSoftwareCategories, SoftwareCategories} from '../organisations/apiSoftwareOrganisations'
 import {removeCommunityCategoriesFromSoftware} from './apiSoftwareCommunities'
 
@@ -40,8 +41,9 @@ export default function useCommunityCategories({
         getCategoryForSoftwareIds(softwareId, token)
       ])
         .then(([roots,selected]) => {
-          // filter top level categories for software (only top level items have this flag)
-          // collect tree leaves ids (end nodes)
+          // sort categories
+          sortCategoriesByName(roots)
+          // collect ids
           const availableIds = new Set<string>()
           roots.forEach(root=>{
             root.forEach(node=>{

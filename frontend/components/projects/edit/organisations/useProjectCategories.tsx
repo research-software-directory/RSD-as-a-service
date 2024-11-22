@@ -9,6 +9,7 @@ import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
 import {loadCategoryRoots} from '~/components/category/apiCategories'
+import {sortCategoriesByName} from '~/components/category/useCategoryTree'
 import {getCategoryListForProject, removeOrganisationCategoriesFromProject} from './apiProjectOrganisations'
 
 type UseProjectOrganisationCategoriesProps={
@@ -46,6 +47,8 @@ export default function useProjectCategories({
         .then(([roots,selected]) => {
           // filter top level categories for projects (only top level items have this flag)
           const categories = roots.filter(item=>item.getValue().allow_projects)
+          // sort categories
+          sortCategoriesByName(categories)
           // collect tree leaves ids (end nodes)
           const availableIds = new Set<string>()
           categories.forEach(root=>{

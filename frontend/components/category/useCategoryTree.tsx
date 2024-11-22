@@ -18,6 +18,22 @@ export const categoryTreeNodesSort = (trees: TreeNode<CategoryEntry>[]) => {
   }
 }
 
+/**
+ * Sort (ascending) the complete category tree, at all levels, on name property .
+ * @param trees TreeNode<CategoryEntry>[]
+ */
+export function sortCategoriesByName(trees: TreeNode<CategoryEntry>[]){
+  trees.sort(compareCategoryTreeNode)
+  for (const root of trees) {
+    // sort children first
+    if (root.childrenCount()>0){
+      sortCategoriesByName(root.children())
+    }
+    // sort roots
+    root.sortRecursively(compareCategoryEntry)
+  }
+}
+
 export const genCategoryTreeNodes = (categories: CategoryPath[]=[]) : TreeNode<CategoryEntry>[] => {
   const allEntries: CategoryEntry[] = []
 
@@ -29,7 +45,7 @@ export const genCategoryTreeNodes = (categories: CategoryPath[]=[]) : TreeNode<C
 
   const result = categoryEntriesToRoots(allEntries)
 
-  categoryTreeNodesSort(result)
+  sortCategoriesByName(result)
 
   return result
 }
@@ -37,3 +53,4 @@ export const genCategoryTreeNodes = (categories: CategoryPath[]=[]) : TreeNode<C
 export function useCategoryTree(categories: CategoryPath[]) : TreeNode<CategoryEntry>[]{
   return useMemo(() => genCategoryTreeNodes(categories), [categories])
 }
+

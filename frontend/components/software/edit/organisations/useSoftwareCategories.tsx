@@ -10,6 +10,7 @@ import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
 import {getCategoryForSoftwareIds} from '~/utils/getSoftware'
 import {loadCategoryRoots} from '~/components/category/apiCategories'
+import {sortCategoriesByName} from '~/components/category/useCategoryTree'
 import {
   removeOrganisationCategoriesFromSoftware,
   saveSoftwareCategories,
@@ -46,7 +47,9 @@ export default function useSoftwareCategories({
         .then(([roots,selected]) => {
           // filter top level categories for software (only top level items have this flag)
           const categories = roots.filter(item=>item.getValue().allow_software)
-          // collect tree leaves ids (end nodes)
+          // sort categories
+          sortCategoriesByName(categories)
+          // collect ids
           const availableIds = new Set<string>()
           categories.forEach(root=>{
             root.forEach(node=>{
@@ -85,7 +88,7 @@ export default function useSoftwareCategories({
       }
     }
 
-    if (selectedCategoryIds.size === 0) {
+    if (selected.size === 0) {
       onComplete()
       return
     }
