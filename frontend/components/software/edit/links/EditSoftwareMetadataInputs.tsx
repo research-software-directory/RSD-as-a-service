@@ -22,7 +22,7 @@ import AutosaveSoftwareCategories from './AutosaveSoftwareCategories'
 import AutosaveSoftwareKeywords from './AutosaveSoftwareKeywords'
 import AutosaveSoftwareLicenses from './AutosaveSoftwareLicenses'
 import SoftwareLinksInfo from './SoftwareLinksInfo'
-import {ReorderedCategories, useReorderedCategories} from '~/utils/categories'
+import {ReorderedCategories, useReorderedCategories} from '~/components/category/useReorderedCategories'
 
 export default function EditSoftwareMetadataInputs() {
   // use form context to interact with form data

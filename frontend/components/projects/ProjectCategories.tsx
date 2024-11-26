@@ -4,13 +4,18 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {CategoryPath} from '~/types/Category'
-import {useCategoryTree} from '~/utils/categories'
+import {useCategoryTree} from '~/components/category/useCategoryTree'
 import SidebarSection from '../layout/SidebarSection'
 import SidebarTitle from '../layout/SidebarTitle'
 import {CategoryChipFilter} from '../category/CategoryChipFilter'
 
 export default function ProjectCategories({categories}:{categories:CategoryPath[]}) {
   const tree = useCategoryTree(categories)
+
+  // console.group('ProjectCategories')
+  // console.log('categories...', categories)
+  // console.log('tree...', tree)
+  // console.groupEnd()
 
   // each root category is separate sidebar section
   return tree.map(node => {

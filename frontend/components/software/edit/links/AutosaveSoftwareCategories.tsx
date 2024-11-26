@@ -7,15 +7,16 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {Fragment, useMemo, useState} from 'react'
+import {useSession} from '~/auth'
 import {CategoryEntry} from '~/types/Category'
-import {categoryTreeNodesSort, ReorderedCategories} from '~/utils/categories'
-import TreeSelect from '~/components/software/TreeSelect'
 import {TreeNode} from '~/types/TreeNode'
 import {addCategoryToSoftware, deleteCategoryToSoftware} from '~/utils/getSoftware'
-import {useSession} from '~/auth'
-import {CategoryTreeLevel} from '~/components/category/CategoryTree'
-import {config} from '~/components/software/edit/links/config'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import {categoryTreeNodesSort} from '~/components/category/useCategoryTree'
+import TreeSelect from '~/components/category/TreeSelect'
+import {CategoryTreeLevel} from '~/components/category/CategoryTree'
+import {ReorderedCategories} from '~/components/category/useReorderedCategories'
+import {config} from '~/components/software/edit/links/config'
 
 export type SoftwareCategoriesProps = {
   softwareId: string

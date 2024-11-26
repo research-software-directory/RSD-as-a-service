@@ -157,7 +157,8 @@ export default function CategoryEditForm({
           defaultValue: createNew ? undefined : data?.short_name,
           helperTextCnt: `${watch('short_name')?.length ?? 0}/100`,
           helperTextMessage: `${formState.errors?.short_name?.message ?? ''}`,
-          error: formState.errors?.short_name?.message !== undefined
+          error: formState.errors?.short_name?.message !== undefined,
+          autofocus: true
         }}
       />
       <TextFieldWithCounter

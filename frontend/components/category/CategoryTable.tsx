@@ -8,7 +8,15 @@
 
 import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
-import {calcTreeLevelDepth} from '~/utils/categories'
+
+export function calcTreeLevelDepth(tree: TreeNode<CategoryEntry>): number {
+
+  function walk (tree: TreeNode<CategoryEntry>, depth:number): number {
+    return Math.max(depth, ...tree.children().map(sub => walk(sub, depth+1)))
+  }
+
+  return walk(tree, 0)
+}
 
 export type CategoryTableProps = Readonly<{
    tree: TreeNode<CategoryEntry>

@@ -65,6 +65,9 @@ export function useSoftwareCommunities(software:string){
       return
     }
 
+    // remove all community categories without waiting
+    void removeCommunityCategoriesFromSoftware(software, community, token)
+
     const resp = await removeSoftwareFromCommunity({
       software,
       community,

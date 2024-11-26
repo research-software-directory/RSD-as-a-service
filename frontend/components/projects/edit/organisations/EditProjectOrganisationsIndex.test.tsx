@@ -18,6 +18,8 @@ import {cfgOrganisations as config} from './config'
 import editProjectState from '../__mocks__/editProjectState'
 import mockOrganisationsOfProject from './__mocks__/organisationsOfProject.json'
 
+// MOCK removeOrganisationCategoriesFromProject
+jest.mock('./apiProjectOrganisations')
 // MOCK isMaintainerOfOrganisation
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockIsMaintainerOfOrganisation = jest.fn(props => Promise.resolve(false))

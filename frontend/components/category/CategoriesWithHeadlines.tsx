@@ -7,10 +7,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React from 'react'
-import {useCategoryTree} from '~/utils/categories'
 import {CategoryPath} from '~/types/Category'
 import {SidebarHeadline} from '~/components/typography/SidebarHeadline'
 import {CategoryTreeLevel} from '~/components/category/CategoryTree'
+import {useCategoryTree} from './useCategoryTree'
 
 type CategoriesWithHeadlinesProps = {
   categories: CategoryPath[]

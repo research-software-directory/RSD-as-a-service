@@ -10,6 +10,7 @@ import logger from '~/utils/logger'
 import {TreeNode} from '~/types/TreeNode'
 import {CategoryEntry} from '~/types/Category'
 import {loadCategoryRoots} from '~/components/category/apiCategories'
+import {sortCategoriesByName} from './useCategoryTree'
 
 type UseCategoriesProps={
   community?:string|null,
@@ -27,6 +28,9 @@ export default function useCategories({community,organisation}:UseCategoriesProp
     loadCategoryRoots({community,organisation})
       .then(roots => {
         if (abort) return
+        // sort categories
+        sortCategoriesByName(roots)
+        // set state
         setRoots(roots)
         setError(null)
       })
@@ -46,6 +50,9 @@ export default function useCategories({community,organisation}:UseCategoriesProp
 
   function onMutation() {
     if (roots !== null) {
+      // sort categories
+      sortCategoriesByName(roots)
+      // update state
       setRoots([...roots])
     }
   }

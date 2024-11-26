@@ -34,6 +34,7 @@ import useProjectContext from '../useProjectContext'
 import useParticipatingOrganisations from './useParticipatingOrganisations'
 import {cfgOrganisations as config} from './config'
 import ProjectCategoriesDialog from './ProjectCategoriesDialog'
+import {removeOrganisationCategoriesFromProject} from './apiProjectOrganisations'
 
 export default function ProjectOrganisations() {
   const {token,user} = useSession()
@@ -190,6 +191,9 @@ export default function ProjectOrganisations() {
     const organisation = organisations[pos]
     // if it has id
     if (organisation?.id) {
+      // remove categories from project - do not wait for result
+      removeOrganisationCategoriesFromProject(project.id,organisation.id,token)
+      // remove organisation from project
       const resp = await deleteOrganisationFromProject({
         project: project.id,
         organisation: organisation.id,
