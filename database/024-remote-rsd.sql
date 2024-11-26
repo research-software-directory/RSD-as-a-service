@@ -11,8 +11,8 @@ CREATE TABLE remote_rsd (
 	label VARCHAR (50) NOT NULL CHECK (LENGTH(label) >= 3),
 	domain VARCHAR(200) NOT NULL UNIQUE,
 	active BOOLEAN DEFAULT TRUE,
-	refresh_rate_min BIGINT DEFAULT 5 CHECK (refresh_rate_min >= 5),
-	refreshed_at TIMESTAMPTZ,
+	scrape_interval_minutes BIGINT DEFAULT 5 CHECK (scrape_interval_minutes >= 5),
+	scraped_at TIMESTAMPTZ,
 	last_err_msg VARCHAR(1000),
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
@@ -46,8 +46,12 @@ CREATE TRIGGER sanitise_update_remote_rsd BEFORE UPDATE ON remote_rsd
 	FOR EACH ROW EXECUTE PROCEDURE sanitise_update_remote_rsd();
 
 -- RLS REMOTE_RSD
--- rsd-admin access only
+
 ALTER TABLE remote_rsd ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON remote_rsd FOR SELECT TO rsd_web_anon, rsd_user
+	USING (TRUE);
+
 CREATE POLICY admin_all_rights ON remote_rsd TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
@@ -58,7 +62,8 @@ CREATE POLICY admin_all_rights ON remote_rsd TO rsd_admin
 -- Results are returned from software_overview RPC from remote RSD and enriched with remote_rsd id
 CREATE TABLE remote_software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	remote_rsd UUID NOT NULL REFERENCES remote_rsd(id),
+	remote_rsd_id UUID NOT NULL REFERENCES remote_rsd(id),
+	remote_software_id UUID NOT NULL,
 	slug VARCHAR(200) NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,
 	brand_name VARCHAR(200) NOT NULL,
@@ -72,7 +77,7 @@ CREATE TABLE remote_software (
 	prog_lang TEXT[],
 	licenses VARCHAR[],
 	scraped_at TIMESTAMPTZ NOT NULL,
-	UNIQUE(remote_rsd, slug)
+	UNIQUE(remote_rsd_id, remote_software_id)
 );
 
 CREATE POLICY anyone_can_read ON remote_software FOR SELECT TO rsd_web_anon, rsd_user
