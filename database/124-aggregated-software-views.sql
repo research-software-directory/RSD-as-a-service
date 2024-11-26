@@ -1,4 +1,5 @@
 -- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -41,7 +42,7 @@ SELECT
 	software_overview.licenses
 FROM
 	software_overview()
-UNION
+UNION ALL
 SELECT
 	remote_software.id,
 	remote_rsd.label AS source,
@@ -61,7 +62,7 @@ SELECT
 FROM
 	remote_software
 INNER JOIN
-	remote_rsd ON remote_rsd.id=remote_software.remote_rsd
+	remote_rsd ON remote_rsd.id = remote_software.remote_rsd_id
 ;
 $$;
 
