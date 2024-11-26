@@ -309,6 +309,27 @@ public class Utils {
 		return response.body();
 	}
 
+	public static String deleteAsAdmin(String uri, String... extraHeaders) throws IOException, InterruptedException, RsdResponseException {
+		String jwtString = adminJwt();
+		HttpRequest.Builder builder = HttpRequest.newBuilder()
+			.method("DELETE", HttpRequest.BodyPublishers.noBody())
+			.uri(URI.create(uri))
+			.timeout(Duration.ofSeconds(30))
+			.header("Authorization", "Bearer " + jwtString);
+		if (extraHeaders != null && extraHeaders.length > 0) {
+			builder.headers(extraHeaders);
+		}
+		HttpRequest request = builder.build();
+		HttpResponse<String> response;
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		}
+		if (response.statusCode() >= 300) {
+			throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Error deleting data as admin");
+		}
+		return response.body();
+	}
+
 	private static String adminJwt() {
 		String signingSecret = Config.jwtSigningSecret();
 		Algorithm signingAlgorithm = Algorithm.HMAC256(signingSecret);
