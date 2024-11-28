@@ -30,6 +30,7 @@ import Diversity3Icon from '@mui/icons-material/Diversity3'
 import CategoryIcon from '@mui/icons-material/Category'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
+import HubIcon from '@mui/icons-material/Hub'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 
@@ -105,6 +106,12 @@ export const adminPages = {
     subtitle: '',
     icon: <ReceiptLongIcon />,
     path: '/admin/mentions',
+  },
+  remote_rsd: {
+    title: 'Remotes',
+    subtitle: '',
+    icon: <HubIcon />,
+    path: '/admin/remote-rsd',
   },
   logs:{
     title: 'Error logs',
