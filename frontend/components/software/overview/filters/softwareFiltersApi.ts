@@ -52,7 +52,7 @@ export function buildSoftwareFilter({search, keywords, prog_lang, licenses}: Sof
 }
 
 export async function softwareKeywordsFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
-  const rpc = 'software_keywords_filter'
+  const rpc = 'aggregated_software_keywords_filter'
   return genericSoftwareKeywordsFilter({search, keywords, prog_lang, licenses, rpc})
 }
 
@@ -98,7 +98,7 @@ export async function genericSoftwareKeywordsFilter({search, keywords, prog_lang
 }
 
 export async function softwareLanguagesFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
-  const rpc = 'software_languages_filter'
+  const rpc = 'aggregated_software_languages_filter'
   return genericSoftwareLanguagesFilter({search, keywords, prog_lang, licenses, rpc})
 }
 
@@ -144,7 +144,7 @@ export async function genericSoftwareLanguagesFilter({search, keywords, prog_lan
 }
 
 export async function softwareLicensesFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
-  const rpc = 'software_licenses_filter'
+  const rpc = 'aggregated_software_licenses_filter'
   return genericSoftwareLicensesFilter({search, keywords, prog_lang, licenses, rpc})
 }
 
