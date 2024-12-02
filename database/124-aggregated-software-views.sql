@@ -121,3 +121,87 @@ ORDER BY
 	END
 ;
 $$;
+
+-- REACTIVE KEYWORD FILTER WITH COUNTS FOR SOFTWARE
+-- DEPENDS ON: aggregated_software_search
+CREATE FUNCTION aggregated_software_keywords_filter(
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	prog_lang_filter TEXT[] DEFAULT '{}',
+	license_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	keyword CITEXT,
+	keyword_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	UNNEST(keywords) AS keyword,
+	COUNT(id) AS keyword_cnt
+FROM
+	aggregated_software_search(search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(prog_lang, '{}') @> prog_lang_filter
+	AND
+	COALESCE(licenses, '{}') @> license_filter
+GROUP BY
+	keyword
+;
+$$;
+
+-- REACTIVE PROGRAMMING LANGUAGES WITH COUNTS FOR SOFTWARE
+-- DEPENDS ON: aggregated_software_search
+CREATE FUNCTION aggregated_software_languages_filter(
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	prog_lang_filter TEXT[] DEFAULT '{}',
+	license_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	prog_language TEXT,
+	prog_language_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	UNNEST(prog_lang) AS prog_language,
+	COUNT(id) AS prog_language_cnt
+FROM
+	aggregated_software_search(search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(prog_lang, '{}') @> prog_lang_filter
+	AND
+	COALESCE(licenses, '{}') @> license_filter
+GROUP BY
+	prog_language
+;
+$$;
+
+-- REACTIVE LICENSES FILTER WITH COUNTS FOR SOFTWARE
+-- DEPENDS ON: aggregated_software_search
+CREATE FUNCTION aggregated_software_licenses_filter(
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	prog_lang_filter TEXT[] DEFAULT '{}',
+	license_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	license VARCHAR,
+	license_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	UNNEST(licenses) AS license,
+	COUNT(id) AS license_cnt
+FROM
+	aggregated_software_search(search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(prog_lang, '{}') @> prog_lang_filter
+	AND
+	COALESCE(licenses, '{}') @> license_filter
+GROUP BY
+	license
+;
+$$;
