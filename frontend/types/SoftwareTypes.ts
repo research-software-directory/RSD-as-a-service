@@ -77,6 +77,8 @@ export type SoftwareItemFromDB = SoftwareTableItem & {
 
 export type SoftwareOverviewItemProps = {
   id:string
+  domain: string | null
+  source: string | null
   slug:string
   brand_name: string
   short_statement: string
@@ -85,9 +87,9 @@ export type SoftwareOverviewItemProps = {
   mention_cnt: number | null
   is_published: boolean
   image_id: string | null
-  keywords: string[],
-  prog_lang: string[],
-  licenses: string,
+  keywords: string[]
+  prog_lang: string[]
+  licenses: string
   downloads?: number
 }
 
