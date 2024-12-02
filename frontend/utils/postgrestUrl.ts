@@ -308,12 +308,12 @@ export function softwareListUrl(props: PostgrestParams) {
     // check rpc in 105-project-views.sql for exact filtering
     query += `&search=${encodedSearch}`
 
-    const url = `${baseUrl}/rpc/software_search?${query}`
+    const url = `${baseUrl}/rpc/aggregated_software_search?${query}`
     // console.log('softwareListUrl...', url)
     return url
   }
 
-  const url = `${baseUrl}/rpc/software_overview?${query}`
+  const url = `${baseUrl}/rpc/aggregated_software_overview?${query}`
   // console.log('softwareListUrl...', url)
   return url
 }
