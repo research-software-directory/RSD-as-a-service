@@ -26,7 +26,8 @@ CREATE FUNCTION aggregated_software_overview() RETURNS TABLE (
 $$
 SELECT
 	software_overview.id,
-	NULL AS source,
+	-- use remote_name information for local name
+	(SELECT value FROM rsd_info WHERE KEY='remote_name') AS source,
 	NULL AS domain,
 	software_overview.slug,
 	software_overview.brand_name,
@@ -128,7 +129,8 @@ CREATE FUNCTION aggregated_software_keywords_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
+	license_filter VARCHAR[] DEFAULT '{}',
+	source_filter VARCHAR[] DEFAULT NULL
 ) RETURNS TABLE (
 	keyword CITEXT,
 	keyword_cnt INTEGER
@@ -145,6 +147,12 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+		CASE
+			WHEN source_filter IS NULL THEN TRUE
+		ELSE
+			source = ANY(source_filter)
+		END
 GROUP BY
 	keyword
 ;
@@ -156,7 +164,8 @@ CREATE FUNCTION aggregated_software_languages_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
+	license_filter VARCHAR[] DEFAULT '{}',
+	source_filter VARCHAR[] DEFAULT NULL
 ) RETURNS TABLE (
 	prog_language TEXT,
 	prog_language_cnt INTEGER
@@ -173,6 +182,12 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+		CASE
+			WHEN source_filter IS NULL THEN TRUE
+		ELSE
+			source = ANY(source_filter)
+		END
 GROUP BY
 	prog_language
 ;
@@ -184,7 +199,8 @@ CREATE FUNCTION aggregated_software_licenses_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
+	license_filter VARCHAR[] DEFAULT '{}',
+	source_filter VARCHAR[] DEFAULT NULL
 ) RETURNS TABLE (
 	license VARCHAR,
 	license_cnt INTEGER
@@ -201,7 +217,48 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+		CASE
+			WHEN source_filter IS NULL THEN TRUE
+		ELSE
+			source = ANY(source_filter)
+		END
 GROUP BY
 	license
+;
+$$;
+
+-- REACTIVE SOURCE FILTER WITH COUNTS FOR SOFTWARE
+-- DEPENDS ON: aggregated_software_search
+CREATE FUNCTION aggregated_software_sources_filter(
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	prog_lang_filter TEXT[] DEFAULT '{}',
+	license_filter VARCHAR[] DEFAULT '{}',
+	source_filter VARCHAR[] DEFAULT NULL
+) RETURNS TABLE (
+	source VARCHAR,
+	source_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	source AS source,
+	COUNT(id) AS source_cnt
+FROM
+	aggregated_software_search(search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(prog_lang, '{}') @> prog_lang_filter
+	AND
+	COALESCE(licenses, '{}') @> license_filter
+	AND
+		CASE
+			WHEN source_filter IS NULL THEN TRUE
+		ELSE
+			source = ANY(source_filter)
+		END
+GROUP BY
+	source
 ;
 $$;

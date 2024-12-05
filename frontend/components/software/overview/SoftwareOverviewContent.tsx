@@ -20,12 +20,13 @@ import SoftwareListItemContent from './list/SoftwareListItemContent'
 import OverviewListItem from './list/OverviewListItem'
 import {getItemKey, getPageUrl} from './useSoftwareOverviewProps'
 
-type SoftwareOverviewContentProps = {
+type SoftwareOverviewContentProps = Readonly<{
   layout: LayoutType
   software: SoftwareOverviewItemProps[]
-}
+  hasRemotes?: boolean
+}>
 
-export default function SoftwareOverviewContent({layout, software}: SoftwareOverviewContentProps) {
+export default function SoftwareOverviewContent({layout, software, hasRemotes}: SoftwareOverviewContentProps) {
 
   if (!software || software.length === 0) {
     return <NoContent />
@@ -37,6 +38,10 @@ export default function SoftwareOverviewContent({layout, software}: SoftwareOver
       <SoftwareOverviewMasonry>
         {software.map((item) => {
           const cardKey = getItemKey({id:item.id,domain:item.domain})
+          // remove source if remotes are not present
+          if (hasRemotes===false && item.source!==null){
+            item.source = null
+          }
           return (
             <div key={cardKey} className="mb-8 break-inside-avoid">
               <SoftwareMasonryCard item={item}/>
@@ -53,6 +58,10 @@ export default function SoftwareOverviewContent({layout, software}: SoftwareOver
         {software.map(item => {
           const listKey = getItemKey({id:item.id,domain:item.domain})
           const pageUrl = getPageUrl({domain:item.domain,slug:item.slug})
+          // remove source if remotes are not present
+          if (hasRemotes===false && item.source!==null){
+            item.source = null
+          }
           return (
             <Link
               data-testid="software-list-item"
@@ -88,6 +97,10 @@ export default function SoftwareOverviewContent({layout, software}: SoftwareOver
     <SoftwareOverviewGrid>
       {software.map((item) => {
         const cardKey = getItemKey({id:item.id,domain:item.domain})
+        // remove source if remotes are not present
+        if (hasRemotes===false && item.source!==null){
+          item.source = null
+        }
         return <SoftwareGridCard key={cardKey} {...item}/>
       })}
     </SoftwareOverviewGrid>
