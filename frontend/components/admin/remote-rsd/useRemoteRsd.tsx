@@ -36,9 +36,7 @@ export default function useRemoteRsd() {
   },[token, searchFor, page, rows])
 
   useEffect(()=>{
-    if(token){
-      loadRemoteRsd()
-    }
+    loadRemoteRsd()
   // we do not include setCount in order to avoid loop
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[token, searchFor, page, rows])

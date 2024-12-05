@@ -10,6 +10,7 @@
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
 import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
+import {SourcesFilterOption} from '~/components/filter/RsdSourceFilter'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 
@@ -18,6 +19,7 @@ type SoftwareFilterProps = {
   keywords?: string[] | null
   prog_lang?: string[] | null
   licenses?: string[] | null
+  sources?: string[] | null
 }
 
 type GenericSoftwareFilterProps = SoftwareFilterProps & {
@@ -29,9 +31,10 @@ type SoftwareFilterApiProps = {
   keyword_filter?: string[]
   prog_lang_filter?: string[]
   license_filter?: string[]
+  source_filter?: string[]
 }
 
-export function buildSoftwareFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
+export function buildSoftwareFilter({search, keywords, prog_lang, licenses, sources}: SoftwareFilterProps) {
   const filter: SoftwareFilterApiProps={}
   if (search) {
     filter['search_filter'] = search
@@ -45,15 +48,18 @@ export function buildSoftwareFilter({search, keywords, prog_lang, licenses}: Sof
   if (licenses) {
     filter['license_filter'] = licenses
   }
+  if (sources) {
+    filter['source_filter'] = sources
+  }
   // console.group('buildSoftwareFilter')
   // console.log('filter...', filter)
   // console.groupEnd()
   return filter
 }
 
-export async function softwareKeywordsFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
+export async function softwareKeywordsFilter({search, keywords, prog_lang, licenses, sources}: SoftwareFilterProps) {
   const rpc = 'aggregated_software_keywords_filter'
-  return genericSoftwareKeywordsFilter({search, keywords, prog_lang, licenses, rpc})
+  return genericSoftwareKeywordsFilter({search, keywords, prog_lang, licenses, sources,rpc})
 }
 
 export async function highlightKeywordsFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
@@ -61,7 +67,7 @@ export async function highlightKeywordsFilter({search, keywords, prog_lang, lice
   return genericSoftwareKeywordsFilter({search, keywords, prog_lang, licenses, rpc})
 }
 
-export async function genericSoftwareKeywordsFilter({search, keywords, prog_lang, licenses, rpc}: GenericSoftwareFilterProps) {
+export async function genericSoftwareKeywordsFilter({search, keywords, prog_lang, licenses, sources, rpc}: GenericSoftwareFilterProps) {
   try {
     const query =`rpc/${rpc}?order=keyword`
     const url = `${getBaseUrl()}/${query}`
@@ -69,7 +75,8 @@ export async function genericSoftwareKeywordsFilter({search, keywords, prog_lang
       search,
       keywords,
       prog_lang,
-      licenses
+      licenses,
+      sources
     })
 
     // console.group('softwareKeywordsFilter')
@@ -97,9 +104,9 @@ export async function genericSoftwareKeywordsFilter({search, keywords, prog_lang
   }
 }
 
-export async function softwareLanguagesFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
+export async function softwareLanguagesFilter({search, keywords, prog_lang, licenses, sources}: SoftwareFilterProps) {
   const rpc = 'aggregated_software_languages_filter'
-  return genericSoftwareLanguagesFilter({search, keywords, prog_lang, licenses, rpc})
+  return genericSoftwareLanguagesFilter({search, keywords, prog_lang, licenses, sources, rpc})
 }
 
 export async function highlightLanguagesFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
@@ -107,7 +114,7 @@ export async function highlightLanguagesFilter({search, keywords, prog_lang, lic
   return genericSoftwareLanguagesFilter({search, keywords, prog_lang, licenses, rpc})
 }
 
-export async function genericSoftwareLanguagesFilter({search, keywords, prog_lang, licenses, rpc}: GenericSoftwareFilterProps) {
+export async function genericSoftwareLanguagesFilter({search, keywords, prog_lang, licenses, sources, rpc}: GenericSoftwareFilterProps) {
   try {
     const query = `rpc/${rpc}?order=prog_language`
     const url = `${getBaseUrl()}/${query}`
@@ -115,7 +122,8 @@ export async function genericSoftwareLanguagesFilter({search, keywords, prog_lan
       search,
       keywords,
       prog_lang,
-      licenses
+      licenses,
+      sources
     })
 
     // console.group('softwareLanguagesFilter')
@@ -143,9 +151,9 @@ export async function genericSoftwareLanguagesFilter({search, keywords, prog_lan
   }
 }
 
-export async function softwareLicensesFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
+export async function softwareLicensesFilter({search, keywords, prog_lang, licenses, sources}: SoftwareFilterProps) {
   const rpc = 'aggregated_software_licenses_filter'
-  return genericSoftwareLicensesFilter({search, keywords, prog_lang, licenses, rpc})
+  return genericSoftwareLicensesFilter({search, keywords, prog_lang, licenses, sources, rpc})
 }
 
 
@@ -154,7 +162,7 @@ export async function highlightLicensesFilter({search, keywords, prog_lang, lice
   return genericSoftwareLicensesFilter({search, keywords, prog_lang, licenses, rpc})
 }
 
-export async function genericSoftwareLicensesFilter({search, keywords, prog_lang, licenses, rpc}: GenericSoftwareFilterProps) {
+export async function genericSoftwareLicensesFilter({search, keywords, prog_lang, licenses, sources, rpc}: GenericSoftwareFilterProps) {
   try {
     const query = `rpc/${rpc}?order=license`
     const url = `${getBaseUrl()}/${query}`
@@ -162,7 +170,8 @@ export async function genericSoftwareLicensesFilter({search, keywords, prog_lang
       search,
       keywords,
       prog_lang,
-      licenses
+      licenses,
+      sources
     })
 
     const resp = await fetch(url, {
@@ -181,6 +190,38 @@ export async function genericSoftwareLicensesFilter({search, keywords, prog_lang
 
   } catch (e: any) {
     logger(`genericSoftwareLicensesFilter (${rpc}): ${e?.message}`, 'error')
+    return []
+  }
+}
+
+export async function softwareSourcesFilter({search, keywords, prog_lang, licenses, sources}: SoftwareFilterProps) {
+  try {
+    const query = 'aggregated_software_sources_filter?order=source'
+    const url = `${getBaseUrl()}/rpc/${query}`
+    const filter = buildSoftwareFilter({
+      search,
+      keywords,
+      prog_lang,
+      licenses,
+      sources
+    })
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: createJsonHeaders(),
+      body: JSON.stringify(filter)
+    })
+
+    if (resp.status === 200) {
+      const json: SourcesFilterOption[] = await resp.json()
+      return json
+    }
+
+    logger(`softwareSourcesFilter: ${resp.status} ${resp.statusText}`, 'warn')
+    return []
+
+  } catch (e: any) {
+    logger(`softwareSourcesFilter: ${e?.message}`, 'error')
     return []
   }
 }
