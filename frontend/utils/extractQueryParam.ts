@@ -140,6 +140,7 @@ export type SoftwareParams = {
   keywords?: string[],
   prog_lang?: string[],
   licenses?: string[],
+  sources?: string[],
   page?: number,
   rows?: number
 }
@@ -187,6 +188,12 @@ export function ssrSoftwareParams(query: ParsedUrlQuery): SoftwareParams {
     castToType: 'json-encoded',
     defaultValue: null
   })
+  const sources:string[]|undefined = decodeQueryParam({
+    query,
+    param: 'sources',
+    castToType: 'json-encoded',
+    defaultValue: null
+  })
 
   const order:string = decodeQueryParam({
     query,
@@ -202,6 +209,7 @@ export function ssrSoftwareParams(query: ParsedUrlQuery): SoftwareParams {
     keywords,
     prog_lang,
     licenses,
+    sources,
     order,
     rows,
     page,

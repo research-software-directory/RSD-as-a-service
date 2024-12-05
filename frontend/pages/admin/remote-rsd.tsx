@@ -52,14 +52,7 @@ export default function AdminRemoteRsdPage() {
 //   try{
 //     const {req} = context
 //     const token = req?.cookies['rsd_token']
-
-//     // get links to all pages server side
-//     const resp = await getCommunities({
-//       page: 0,
-//       rows: 12,
-//       token: token ?? ''
-//     })
-
+//
 //     return {
 //       // passed to the page component as props
 //       props: {

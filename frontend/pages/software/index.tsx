@@ -20,6 +20,7 @@ import {getBaseUrl} from '~/utils/fetchHelpers'
 import {softwareListUrl} from '~/utils/postgrestUrl'
 import {getSoftwareList} from '~/utils/getSoftware'
 import {ssrSoftwareParams} from '~/utils/extractQueryParam'
+import {getUserSettings} from '~/utils/userSettings'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import MainContent from '~/components/layout/MainContent'
 import PageBackground from '~/components/layout/PageBackground'
@@ -42,14 +43,16 @@ import SoftwareOverviewContent from '~/components/software/overview/SoftwareOver
 import SoftwareFilters from '~/components/software/overview/filters/index'
 import {
   softwareKeywordsFilter, softwareLanguagesFilter,
-  softwareLicensesFilter
+  softwareLicensesFilter,
+  softwareSourcesFilter
 } from '~/components/software/overview/filters/softwareFiltersApi'
 import SoftwareFiltersModal from '~/components/software/overview/filters/SoftwareFiltersModal'
-import {getUserSettings} from '~/utils/userSettings'
 import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {getRsdSettings} from '~/config/getSettingsServerSide'
 import {useUserSettings} from '~/config/UserSettingsContext'
+import {SourcesFilterOption} from '~/components/filter/RsdSourceFilter'
+import {getRemoteRsd} from '~/components/admin/remote-rsd/apiRemoteRsd'
 
 type SoftwareOverviewProps = {
   search?: string | null
@@ -59,13 +62,16 @@ type SoftwareOverviewProps = {
   languagesList: LanguagesFilterOption[],
   licenses?: string[] | null,
   licensesList: LicensesFilterOption[],
+  sources?: string[] | null,
+  sourcesList: SourcesFilterOption[]
   order: string,
   page: number,
   rows: number,
   count: number,
   layout: LayoutType,
   software: SoftwareOverviewItemProps[],
-  highlights: SoftwareHighlight[]
+  highlights: SoftwareHighlight[],
+  hasRemotes: boolean
 }
 
 const pageTitle = `Software | ${app.title}`
@@ -74,10 +80,11 @@ const pageDesc = 'The list of research software registered in the Research Softw
 export default function SoftwareOverviewPage({
   search, keywords,
   prog_lang, licenses,
-  order, page, rows,
-  count, layout,
+  sources, order, page,
+  rows, count, layout,
   keywordsList, languagesList,
-  licensesList, software, highlights
+  licensesList, sourcesList,
+  software, highlights, hasRemotes
 }: SoftwareOverviewProps) {
   const smallScreen = useMediaQuery('(max-width:640px)')
   const {createUrl} = useSoftwareOverviewParams()
@@ -94,6 +101,7 @@ export default function SoftwareOverviewPage({
   // console.log('keywords...', keywords)
   // console.log('prog_lang...', prog_lang)
   // console.log('licenses...', licenses)
+  // console.log('sources...', sources)
   // console.log('order...', order)
   // console.log('page...', page)
   // console.log('rows...', rows)
@@ -102,8 +110,10 @@ export default function SoftwareOverviewPage({
   // console.log('keywordsList...', keywordsList)
   // console.log('languagesList...', languagesList)
   // console.log('licensesList...', licensesList)
+  // console.log('sourcesList...', sourcesList)
   // console.log('software...', software)
   // console.log('highlights...', highlights)
+  // console.log('hasRemotes...', hasRemotes)
   // console.groupEnd()
 
   function getFilterCount() {
@@ -112,6 +122,7 @@ export default function SoftwareOverviewPage({
     if (prog_lang) count++
     if (licenses) count++
     if (search) count++
+    if (sources) count++
     return count
   }
 
@@ -159,8 +170,11 @@ export default function SoftwareOverviewPage({
                   languagesList={languagesList}
                   licenses={licenses ?? []}
                   licensesList={licensesList}
+                  sources={sources ?? []}
+                  sourcesList={sourcesList}
                   orderBy={order}
                   filterCnt={filterCnt}
+                  hasRemotes={hasRemotes}
                 />
               </FiltersPanel>
             }
@@ -180,6 +194,7 @@ export default function SoftwareOverviewPage({
               <SoftwareOverviewContent
                 layout={view}
                 software={software}
+                hasRemotes={hasRemotes}
               />
               {/* Pagination */}
               <div className="flex justify-center mt-8">
@@ -220,9 +235,12 @@ export default function SoftwareOverviewPage({
           languagesList={languagesList}
           licenses={licenses ?? []}
           licensesList={licensesList}
+          sources={sources ?? []}
+          sourcesList={sourcesList}
           order={order ?? ''}
           filterCnt={filterCnt}
           setModal={setModal}
+          hasRemotes={hasRemotes}
         />
       }
     </>
@@ -234,7 +252,7 @@ export default function SoftwareOverviewPage({
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   let offset=0
   // extract params from page-query
-  const {search, keywords, prog_lang, licenses, order, rows, page} = ssrSoftwareParams(context.query)
+  const {search, keywords, prog_lang, licenses, sources, order, rows, page} = ssrSoftwareParams(context.query)
   // extract user settings from cookie
   const {rsd_page_layout, rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings
@@ -264,6 +282,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     search,
     keywords,
     licenses,
+    sources,
     prog_lang,
     order: orderBy,
     limit: page_rows,
@@ -284,13 +303,19 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     keywordsList,
     languagesList,
     licensesList,
+    sourcesList,
+    // extract remotes count from fn response
+    {count:remotesCount},
     // extract highlights from fn response (we don't need count)
     {highlights}
   ] = await Promise.all([
     getSoftwareList({url}),
-    softwareKeywordsFilter({search, keywords, prog_lang, licenses}),
-    softwareLanguagesFilter({search, keywords, prog_lang, licenses}),
-    softwareLicensesFilter({search, keywords, prog_lang, licenses}),
+    softwareKeywordsFilter({search, keywords, prog_lang, licenses, sources}),
+    softwareLanguagesFilter({search, keywords, prog_lang, licenses, sources}),
+    softwareLicensesFilter({search, keywords, prog_lang, licenses, sources}),
+    softwareSourcesFilter({search, keywords, prog_lang, licenses, sources}),
+    // get remotes count
+    getRemoteRsd({page:0, rows:1}),
     page !== 1 ? Promise.resolve({highlights: []}) : getSoftwareHighlights({
       limit: settings.host?.software_highlights?.limit ?? 3,
       offset: 0
@@ -308,13 +333,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       languagesList,
       licenses,
       licensesList,
+      sources,
+      sourcesList,
       page,
       order: softwareOrder,
       rows: page_rows,
       layout: rsd_page_layout,
       count: software.count,
       software: software.data,
-      highlights
+      highlights,
+      hasRemotes: remotesCount > 0
     },
   }
 }

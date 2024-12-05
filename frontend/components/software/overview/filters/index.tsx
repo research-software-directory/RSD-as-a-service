@@ -13,6 +13,7 @@ import FilterHeader from '~/components/filter/FilterHeader'
 import KeywordsFilter, {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import ProgrammingLanguagesFilter, {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import LicensesFilter, {LicensesFilterOption} from '~/components/filter/LicensesFilter'
+import RsdSourceFilter, {SourcesFilterOption} from '~/components/filter/RsdSourceFilter'
 import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
 import OrderSoftwareBy, {OrderHighlightsBy} from './OrderSoftwareBy'
 
@@ -26,6 +27,9 @@ type SoftwareFilterProps = {
   orderBy: string,
   filterCnt: number,
   highlightsOnly?: boolean
+  sources?: string []
+  sourcesList?: SourcesFilterOption[]
+  hasRemotes?: boolean
 }
 
 export default function SoftwareFilters({
@@ -35,11 +39,19 @@ export default function SoftwareFilters({
   languagesList,
   licenses,
   licensesList,
+  sources,
+  sourcesList,
   filterCnt,
   orderBy,
-  highlightsOnly = false
+  highlightsOnly = false,
+  hasRemotes = false
 }:SoftwareFilterProps) {
   const {resetFilters,handleQueryChange} = useSoftwareOverviewParams()
+
+  // console.group('SoftwareFilters')
+  // console.log('sources...', sources)
+  // console.log('sourcesList...', sourcesList)
+  // console.groupEnd()
 
   function clearDisabled() {
     if (filterCnt && filterCnt > 0) return false
@@ -54,8 +66,11 @@ export default function SoftwareFilters({
         resetFilters={resetFilters}
       />
       {/* Order by */}
-      {highlightsOnly && <OrderHighlightsBy orderBy={orderBy} />}
-      {!highlightsOnly && <OrderSoftwareBy orderBy={orderBy} />}
+      {highlightsOnly ?
+        <OrderHighlightsBy orderBy={orderBy} />
+        :
+        <OrderSoftwareBy orderBy={orderBy} />
+      }
       {/* Keywords */}
       <div>
         <KeywordsFilter
@@ -80,6 +95,15 @@ export default function SoftwareFilters({
           handleQueryChange={handleQueryChange}
         />
       </div>
+      {/* RSD hosts list only if remotes are defined */}
+      {hasRemotes ?
+        <RsdSourceFilter
+          sources={sources ?? []}
+          sourcesList={sourcesList ?? []}
+          handleQueryChange={handleQueryChange}
+        />
+        : null
+      }
     </>
   )
 }
