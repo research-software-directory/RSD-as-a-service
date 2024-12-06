@@ -26,6 +26,9 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
       - POSTGRES_AUTHENTICATOR_PASSWORD
+      - RSD_REMOTE_NAME
+    # insert remote_name into postgres settings, this value is used in initial SQL scripts
+    command: postgres -D /var/lib/postgresql/data -c 'rsd.remote_name=${RSD_REMOTE_NAME}'
     volumes:
       # persist data in named docker volume
       # to remove use: docker compose down --volumes
