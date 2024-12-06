@@ -187,3 +187,23 @@ export async function isValidRemoteRsdUrl(domain:string){
     return false
   }
 }
+
+export async function getRemoteName(domain:string){
+  try{
+    const url = `${domain}/api/v1/rsd_info?key=eq.remote_name`
+    // basic request
+    const resp = await fetch(url,{
+      // wait max. of 5 seconds
+      signal: AbortSignal.timeout(5000)
+    })
+    if (resp.ok){
+      const data = await resp.json()
+      const name = data[0]?.['value']
+      return name
+    }
+    return null
+  }catch(e:any){
+    logger(`getRemoteName: ${e?.message}`, 'error')
+    return null
+  }
+}

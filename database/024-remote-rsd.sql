@@ -8,7 +8,7 @@
 -- Table for remote rsd to scrape
 CREATE TABLE remote_rsd (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	label VARCHAR (50) NOT NULL CHECK (LENGTH(label) >= 3),
+	label VARCHAR (50) NOT NULL UNIQUE CHECK (LENGTH(label) >= 3),
 	domain VARCHAR(200) NOT NULL UNIQUE,
 	active BOOLEAN DEFAULT TRUE,
 	scrape_interval_minutes BIGINT DEFAULT 5 CHECK (scrape_interval_minutes >= 5),

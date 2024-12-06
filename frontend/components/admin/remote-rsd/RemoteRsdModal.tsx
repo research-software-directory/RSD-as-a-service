@@ -9,15 +9,17 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 
 import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import CircularProgress from '@mui/material/CircularProgress'
+import SettingsRemoteIcon from '@mui/icons-material/SettingsRemote'
 
 import {useForm} from 'react-hook-form'
 
@@ -25,8 +27,9 @@ import {useDebounce} from '~/utils/useDebounce'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
+import ControlledTextField from '~/components/form/ControlledTextField'
 import config from './config'
-import {EditRemoteRsd, isValidRemoteRsdUrl} from './apiRemoteRsd'
+import {EditRemoteRsd, getRemoteName, isValidRemoteRsdUrl} from './apiRemoteRsd'
 
 type RemoteRsdModalProps = Readonly<{
   remoteRsd?: EditRemoteRsd
@@ -39,7 +42,8 @@ const formId='add-remote-rsd-form'
 export default function RemoteRsdModal({remoteRsd,onCancel,onSubmit}:RemoteRsdModalProps) {
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [validating, setValidating]=useState(false)
-  const {register, handleSubmit, watch, formState, control, setError} = useForm<EditRemoteRsd>({
+  const [remoteName, setRemoteName]=useState<string>()
+  const {register, handleSubmit, watch, formState, control, setError, setValue} = useForm<EditRemoteRsd>({
     mode: 'onChange',
     defaultValues: remoteRsd
   })
@@ -48,6 +52,8 @@ export default function RemoteRsdModal({remoteRsd,onCancel,onSubmit}:RemoteRsdMo
   const [label,domain] = watch(['label','domain'])
   // bounce domain value for async validation
   const bouncedDomain = useDebounce(domain,700)
+  // keep validatedDomain as reference through renders
+  const validatedDomain = useRef('')
 
   // console.group('RemoteRsdModal')
   // console.log('isValid...', isValid)
@@ -63,22 +69,37 @@ export default function RemoteRsdModal({remoteRsd,onCancel,onSubmit}:RemoteRsdMo
   useEffect(() => {
     let abort = false
     async function validateRsd() {
-      const isValid = await isValidRemoteRsdUrl(bouncedDomain)
+      const [isValid, remoteName] = await Promise.all([
+        isValidRemoteRsdUrl(bouncedDomain),
+        getRemoteName(bouncedDomain)
+      ])
+
       if (abort) return
       if (isValid === false) {
         const message = `Failed to connect to ${bouncedDomain} remote endpoint`
         setError('domain',{type:'validate',message})
       }
+      if (remoteName){
+        // advised remote name
+        setRemoteName(remoteName)
+        // set label name if not present
+        if (!label) setValue('label',remoteName,{shouldDirty:true,shouldValidate:true})
+      }
       setValidating(false)
+      // save to validatedDomain
+      validatedDomain.current = bouncedDomain
     }
-    if (bouncedDomain && bouncedDomain === domain && !errors?.domain) {
+    if (bouncedDomain &&
+      bouncedDomain === domain &&
+      validatedDomain.current !== bouncedDomain &&
+      !errors?.domain) {
       validateRsd()
     }else if (!domain){
       // fix: remove validating/spinner when no slug
       setValidating(false)
     }
     return ()=>{abort=true}
-  },[bouncedDomain,domain,errors?.domain,setError])
+  },[bouncedDomain,domain,errors?.domain,label,setError,setValue])
 
   useEffect(()=>{
     // As soon as the domain value start changing we signal to user that we need to validate new domain.
@@ -129,19 +150,6 @@ export default function RemoteRsdModal({remoteRsd,onCancel,onSubmit}:RemoteRsdMo
           <TextFieldWithCounter
             options={{
               autofocus:true,
-              error: errors.label?.message !== undefined,
-              label: config.label.label,
-              helperTextMessage: errors?.label?.message ?? config.label.help,
-              helperTextCnt: `${label?.length || 0}/${config.label.validation.maxLength.value}`,
-              variant:'outlined'
-            }}
-            register={register('label', {
-              ...config.label.validation
-            })}
-          />
-          <div className="py-4" />
-          <TextFieldWithCounter
-            options={{
               error: errors.domain?.message !== undefined,
               label: config.domain.label,
               helperTextMessage: errors?.domain?.message ?? config.domain.help,
@@ -152,6 +160,26 @@ export default function RemoteRsdModal({remoteRsd,onCancel,onSubmit}:RemoteRsdMo
             register={register('domain', {
               ...config.domain.validation
             })}
+          />
+
+          <div className="py-4" />
+
+          <ControlledTextField
+            control={control}
+            options={{
+              name: 'label',
+              label: config.label.label,
+              helperTextMessage: errors?.label?.message ?? config.label.help,
+              helperTextCnt: `${label?.length || 0}/${config.label.validation.maxLength.value}`,
+              variant:'outlined',
+              endAdornment: remoteName && remoteName !== label ?
+                <IconButton
+                  title={`Use suggested remote name: ${remoteName}`}
+                  onClick={()=>setValue('label',remoteName,{shouldValidate:true,shouldDirty:true})}>
+                  <SettingsRemoteIcon/>
+                </IconButton>
+                : undefined
+            }}
           />
 
           <div className="grid grid-cols-2 gap-20 items-start pt-8">

@@ -19,7 +19,7 @@ const config = {
   modalTitle:'Remote RSD',
   label: {
     label: 'Name',
-    help: 'Remote RSD name shown in the card.',
+    help: 'Remote RSD name. From v3 remote suggests the name.',
     // react-hook-form validation rules
     validation: {
       required: 'Name is required',
@@ -29,7 +29,7 @@ const config = {
   },
   domain: {
     label: 'Remote RSD homepage',
-    help: 'URL to remote RSD homepage (eq. https://research-software-directory.org/)',
+    help: 'URL to remote RSD homepage (eq. https://research-software-directory.org)',
     validation: {
       required: 'Valid URL is required.',
       // we do not show error message for this one, we use only maxLength value
