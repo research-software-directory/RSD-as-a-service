@@ -1,15 +1,15 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Link from 'next/link'
 import {SoftwareOfOrganisation} from '~/types/Organisation'
-import {useSoftwareCardActions} from '../card/useSoftwareCardActions'
-import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
 import IconBtnMenuOnAction from '~/components/menu/IconBtnMenuOnAction'
-import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import StatusBanner from '~/components/cards/StatusBanner'
+import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
+import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
+import {useSoftwareCardActions} from '~/components/organisation/software/card/useSoftwareCardActions'
 
 type AdminSoftwareListItem = {
   item: SoftwareOfOrganisation

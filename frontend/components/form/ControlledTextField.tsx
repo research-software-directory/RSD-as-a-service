@@ -10,6 +10,7 @@
 import {useEffect, useRef} from 'react'
 import {Controller} from 'react-hook-form'
 import TextField, {TextFieldProps} from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
 import HelperTextWithCounter from './HelperTextWithCounter'
 
 export type ControlledTextFieldOptions<T> = {
@@ -29,6 +30,8 @@ export type ControlledTextFieldOptions<T> = {
   helperTextMessage?: string | JSX.Element
   helperTextCnt?: string
   disabled?: boolean
+  startAdornment?: string | JSX.Element
+  endAdornment?: string | JSX.Element
   muiProps?: TextFieldProps
 }
 
@@ -58,12 +61,7 @@ export default function ControlledTextField<T>({options, control, rules}:Control
       render={({field,fieldState}) => {
         const {onChange,value} = field
         const {error} = fieldState
-        // if (error) {
-        //   console.group(`ControlledTextField...${options.name.toString()}`)
-        //   console.log('error...',error)
-        //   console.log('value...', value)
-        //   console.groupEnd()
-        // }
+
         return (
           <TextField
             id={options.name.toString() ?? `input-${Math.floor(Math.random()*10000)}`}
@@ -102,6 +100,10 @@ export default function ControlledTextField<T>({options, control, rules}:Control
               } else {
                 onChange(target.value)
               }
+            }}
+            InputProps={{
+              startAdornment: options?.startAdornment ? <InputAdornment position="start">{options?.startAdornment}</InputAdornment> : undefined,
+              endAdornment: options?.endAdornment ? <InputAdornment position="end">{options?.endAdornment}</InputAdornment> : undefined
             }}
             {...options.muiProps}
           />
