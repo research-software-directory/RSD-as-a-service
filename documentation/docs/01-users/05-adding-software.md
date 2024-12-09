@@ -12,7 +12,7 @@ To create a new software page provide a name and a short description (optional) 
 
 ## Description
 
-In this section, you can provide the basic information about the software, like a **description** of the software, which will be shown on the software page. You can use [custom Markdown](#custom-markdown) to write the description or [link to existing Markdown](#document-url) page on the web.
+In this section, you can provide the basic information about the software, like a **description** of the software, which will be shown on the software page. You can use [custom Markdown](#custom-markdown) to write the description or [link to existing Markdown](#markdown-url) page on the web.
 
 ### Custom Markdown
 
