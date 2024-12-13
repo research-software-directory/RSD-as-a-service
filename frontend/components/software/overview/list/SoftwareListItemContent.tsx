@@ -1,17 +1,16 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {getImageUrl} from '~/utils/editImage'
 import ListImageWithGradientPlaceholder from '~/components/projects/overview/list/ListImageWithGradientPlaceholder'
 import SoftwareMetrics from '../cards/SoftwareMetrics'
+import {getImgUrl} from '../useSoftwareOverviewProps'
 
 type SoftwareOverviewListItemProps = {
   // id:string
-  // slug:string
   brand_name: string
   short_statement: string
   image_id: string | null
@@ -24,15 +23,16 @@ type SoftwareOverviewListItemProps = {
   // licenses: string,
   downloads?: number
   statusBanner?: JSX.Element
+  domain?: string|null
 }
 
 export default function SoftwareListItemContent(item:SoftwareOverviewListItemProps) {
-  const imgSrc = getImageUrl(item.image_id ?? null)
+  const imgUrl = getImgUrl({domain:item.domain,image_id:item.image_id})
 
   return (
     <>
       <ListImageWithGradientPlaceholder
-        imgSrc={imgSrc}
+        imgSrc={imgUrl}
         alt = {`Cover image for ${item.brand_name}`}
       />
       <div className="flex flex-col md:flex-row gap-3 flex-1 py-2">
