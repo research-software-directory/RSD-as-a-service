@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -11,9 +11,9 @@
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractErrorMessages, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 
-export type PackageManagerSettings={
+export type PackageManagerSettings = {
   name: string,
-  icon: string|null,
+  icon: string | null,
   hostname: string[],
   services: string[]
 }
@@ -43,7 +43,7 @@ export const packageManagerSettings = {
     hostname: ['community.chocolatey.org'],
     services: []
   },
-  debian:{
+  debian: {
     name: 'Debian',
     icon: '/images/debian-logo.svg',
     hostname: ['packages.debian.org'],
@@ -55,6 +55,12 @@ export const packageManagerSettings = {
     hostname: ['hub.docker.com'],
     services: ['downloads']
   },
+  ghcr: {
+    name: 'Github Container Registry',
+    icon: '/images/github-logo.svg',
+    hostname: ['ghcr.io'],
+    services: []
+  },
   github: {
     name: 'Github',
     icon: '/images/github-logo.svg',
@@ -64,7 +70,7 @@ export const packageManagerSettings = {
   gitlab: {
     name: 'Gitlab',
     icon: '/images/gitlab-icon-rgb.svg',
-    hostname: ['gitlab.com','registry.gitlab.com'],
+    hostname: ['gitlab.com', 'registry.gitlab.com'],
     services: []
   },
   golang: {
@@ -82,7 +88,7 @@ export const packageManagerSettings = {
   npm: {
     name: 'NPM',
     icon: '/images/npm-logo-64.png',
-    hostname: ['www.npmjs.com','npmjs.com'],
+    hostname: ['www.npmjs.com', 'npmjs.com'],
     services: ['dependents']
   },
   pypi: {
@@ -91,13 +97,13 @@ export const packageManagerSettings = {
     hostname: ['pypi.org'],
     services: ['dependents']
   },
-  sonatype:{
+  sonatype: {
     name: 'Sonatype',
     icon: '/images/sonatype-logo.svg',
     hostname: ['central.sonatype.com'],
     services: ['dependents']
   },
-  snapcraft:{
+  snapcraft: {
     name: 'Snapcraft',
     icon: '/images/snapcraft-logo.svg',
     hostname: ['snapcraft.io'],
@@ -115,7 +121,7 @@ export type PackageManagerTypes = keyof typeof packageManagerSettings
 
 
 export type NewPackageManager = {
-  id: string|null
+  id: string | null
   software: string,
   url: string,
   package_manager: PackageManagerTypes | null,
@@ -133,13 +139,16 @@ export type PackageManager = NewPackageManager & {
   reverse_dependency_count_scraping_disabled_reason: string | null,
 }
 
-export async function getPackageManagers({software, token}: { software: string, token?: string }): Promise<PackageManager[]> {
+export async function getPackageManagers({software, token}: {
+  software: string,
+  token?: string
+}): Promise<PackageManager[]> {
   try {
     const query = `software=eq.${software}&order=position.asc,package_manager.asc`
     const url = `${getBaseUrl()}/package_manager?${query}`
 
     // make request
-    const resp = await fetch(url,{
+    const resp = await fetch(url, {
       method: 'GET',
       headers: {
         ...createJsonHeaders(token),
@@ -149,20 +158,20 @@ export async function getPackageManagers({software, token}: { software: string, 
     if (resp.status === 200) {
       return await resp.json()
     }
-    logger(`getPackageManagers...${resp.status} ${resp.statusText}`,'warn')
+    logger(`getPackageManagers...${resp.status} ${resp.statusText}`, 'warn')
     return []
   } catch (e: any) {
-    logger(`getPackageManagers failed. ${e.message}`,'error')
+    logger(`getPackageManagers failed. ${e.message}`, 'error')
     return []
   }
 }
 
-export async function postPackageManager({data, token}: {data: NewPackageManager, token: string }) {
+export async function postPackageManager({data, token}: { data: NewPackageManager, token: string }) {
   try {
     const url = `${getBaseUrl()}/package_manager`
 
     // ELSE add new package manager
-    const resp = await fetch(url,{
+    const resp = await fetch(url, {
       method: 'POST',
       headers: {
         ...createJsonHeaders(token),
@@ -187,12 +196,16 @@ type UpdatePackageManager = {
   reverse_dependency_count_scraping_disabled_reason: string | null,
 }
 
-export async function patchPackageManager({id, data, token}: {id:string, data: UpdatePackageManager, token: string }) {
+export async function patchPackageManager({id, data, token}: {
+  id: string,
+  data: UpdatePackageManager,
+  token: string
+}) {
   try {
-    const query=`id=eq.${id}`
+    const query = `id=eq.${id}`
     const url = `${getBaseUrl()}/package_manager?${query}`
     // make request
-    const resp = await fetch(url,{
+    const resp = await fetch(url, {
       method: 'PATCH',
       headers: {
         ...createJsonHeaders(token),
@@ -243,8 +256,8 @@ export async function patchPackageManagers({items, token}: { items: PackageManag
   }
 }
 
-export async function patchPackageManagerItem({id,key,value,token}:
-  { id:string,key:string,value:any,token:string }) {
+export async function patchPackageManagerItem({id, key, value, token}:
+                                                { id: string, key: string, value: any, token: string }) {
   try {
     const url = `/api/v1/package_manager?id=eq.${id}`
     const resp = await fetch(url, {
@@ -254,7 +267,7 @@ export async function patchPackageManagerItem({id,key,value,token}:
       },
       // just update position!
       body: JSON.stringify({
-        [key]:value
+        [key]: value
       })
     })
     // extract errors
@@ -268,7 +281,7 @@ export async function patchPackageManagerItem({id,key,value,token}:
   }
 }
 
-export async function deletePackageManager({id,token}:{id: string,token:string}) {
+export async function deletePackageManager({id, token}: { id: string, token: string }) {
   try {
     const url = `/api/v1/package_manager?id=eq.${id}`
     const resp = await fetch(url, {
@@ -288,14 +301,14 @@ export async function deletePackageManager({id,token}:{id: string,token:string})
   }
 }
 
-export async function getPackageManagerTypeFromUrl(url:string) {
+export async function getPackageManagerTypeFromUrl(url: string) {
   try {
     const urlObject = new URL(url)
     const keys = Object.keys(packageManagerSettings) as PackageManagerTypes[]
 
     // find first key to match the hostname
     const pm_key = keys.find(key => {
-      const manager:PackageManagerSettings = packageManagerSettings[key]
+      const manager: PackageManagerSettings = packageManagerSettings[key]
       // match hostname
       return manager.hostname.includes(urlObject.hostname)
     })
@@ -315,7 +328,7 @@ export async function getPackageManagerTypeFromUrl(url:string) {
       }
     )
     if (resp.status === 200) {
-      const platform_type:PackageManagerTypes = await resp.json()
+      const platform_type: PackageManagerTypes = await resp.json()
       if (platform_type !== null) {
         return platform_type
       }
@@ -327,11 +340,11 @@ export async function getPackageManagerTypeFromUrl(url:string) {
   }
 }
 
-export function getPackageManagerServices(pm_key:PackageManagerTypes|null){
+export function getPackageManagerServices(pm_key: PackageManagerTypes | null) {
   // no services if no key
-  if (pm_key===null) return []
+  if (pm_key === null) return []
   // return services if key found
-  if (Object.hasOwn(packageManagerSettings,pm_key)===true){
+  if (Object.hasOwn(packageManagerSettings, pm_key) === true) {
     return packageManagerSettings[pm_key].services
   }
   // no services if key not found
