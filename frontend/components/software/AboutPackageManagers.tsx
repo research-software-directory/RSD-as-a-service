@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,7 +13,7 @@ type AboutPackageManagersProps={
   packages: PackageManager[]
 }
 
-function PackageManager({item}:{item:PackageManager}){
+function PackageManagerItem({item}:{item:PackageManager}){
   // get package manager only when url provided
   if (item.url){
     const info = packageManagerSettings[item.package_manager ?? 'other']
@@ -52,7 +52,7 @@ export default function AboutPackageManagers({packages}:AboutPackageManagersProp
           <span className="text-primary pl-2">Packages</span>
         </div>
         <div className="flex gap-4 flex-wrap">
-          {packages.map(item=><PackageManager key={item.id} item={item} />)}
+          {packages.map(item=><PackageManagerItem key={item.id} item={item} />)}
         </div>
       </>
     )
