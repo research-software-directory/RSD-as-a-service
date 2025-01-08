@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,9 +7,12 @@ package nl.esciencecenter.rsd.authentication;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -18,6 +21,8 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 public class Utils {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
 
 	private Utils() {
 	}
@@ -37,9 +42,13 @@ public class Utils {
 		return URI.create(tokenUrl);
 	}
 
+	public static String urlEncode(String s) {
+		return URLEncoder.encode(s, StandardCharsets.UTF_8);
+	}
+
 	public static String formMapToxWwwFormUrlencoded(Map<String, String> form) {
 		StringJoiner x_www_form_urlencoded = new StringJoiner("&");
-		form.forEach((key, value) -> x_www_form_urlencoded.add(key + "=" + value));
+		form.forEach((key, value) -> x_www_form_urlencoded.add(urlEncode(key) + "=" + urlEncode(value)));
 		return x_www_form_urlencoded.toString();
 	}
 
@@ -58,6 +67,7 @@ public class Utils {
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			if (response.statusCode() >= 300) {
+				LOGGER.error("Error posting form: {}, {}", response.statusCode(), response.body());
 				throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Error posting form");
 			}
 			return response.body();

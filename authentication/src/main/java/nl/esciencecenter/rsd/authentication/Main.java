@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
@@ -181,6 +181,16 @@ public class Main {
 				String redirectUrl = Config.azureRedirect();
 				OpenIdInfo azureInfo = new AzureLogin(code, redirectUrl).openidInfo();
 				AccountInfo accountInfo = new PostgrestAccount().account(azureInfo, OpenidProvider.azure);
+				createAndSetToken(ctx, accountInfo);
+			});
+		}
+
+		if (Config.isLinkedinLoginEnabled()) {
+			app.get("login/linkedin", ctx -> {
+				String code = ctx.queryParam("code");
+				String redirectUrl = Config.linkedinRedirect();
+				OpenIdInfo linkedinInfo = new LinkedinLogin(code, redirectUrl).openidInfo();
+				AccountInfo accountInfo = new PostgrestAccount().account(linkedinInfo, OpenidProvider.linkedin);
 				createAndSetToken(ctx, accountInfo);
 			});
 		}

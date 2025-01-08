@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
@@ -26,10 +26,10 @@ public class Config {
 
 	private static Collection<String> rsdAuthCoupleProviders() {
 		return Optional.ofNullable(System.getenv("RSD_AUTH_COUPLE_PROVIDERS"))
-				.map(String::toUpperCase)
-				.map(s -> s.split(";"))
-				.map(Set::of)
-				.orElse(Collections.emptySet());
+			.map(String::toUpperCase)
+			.map(s -> s.split(";"))
+			.map(Set::of)
+			.orElse(Collections.emptySet());
 	}
 
 	public static boolean isDevEnv() {
@@ -42,10 +42,10 @@ public class Config {
 
 	private static Collection<String> rsdLoginProviders() {
 		return Optional.ofNullable(System.getenv("RSD_AUTH_PROVIDERS"))
-				.map(String::toUpperCase)
-				.map(s -> s.split(";"))
-				.map(Set::of)
-				.orElse(Collections.emptySet());
+			.map(String::toUpperCase)
+			.map(s -> s.split(";"))
+			.map(Set::of)
+			.orElse(Collections.emptySet());
 	}
 
 	public static boolean isLocalLoginEnabled() {
@@ -71,6 +71,10 @@ public class Config {
 
 	public static boolean isAzureLoginEnabled() {
 		return rsdLoginProviders().contains("AZURE");
+	}
+
+	public static boolean isLinkedinLoginEnabled() {
+		return rsdLoginProviders().contains("LINKEDIN");
 	}
 
 	public static String userMailWhitelist() {
@@ -127,7 +131,7 @@ public class Config {
 
 	public static boolean helmholtzIdAllowExternalUsers() {
 		return Boolean.parseBoolean(
-				System.getenv("HELMHOLTZID_ALLOW_EXTERNAL_USERS")
+			System.getenv("HELMHOLTZID_ALLOW_EXTERNAL_USERS")
 		);
 	}
 
@@ -137,7 +141,7 @@ public class Config {
 
 	public static boolean helmholtzIdUseAllowList() {
 		return Boolean.parseBoolean(
-				System.getenv("HELMHOLTZID_USE_ALLOW_LIST")
+			System.getenv("HELMHOLTZID_USE_ALLOW_LIST")
 		);
 	}
 
@@ -190,5 +194,22 @@ public class Config {
 
 	public static String azureOrganisation() {
 		return System.getenv("AZURE_ORGANISATION");
+	}
+
+	// LinkedIn
+	public static String linkedinRedirect() {
+		return System.getenv("LINKEDIN_REDIRECT");
+	}
+
+	public static String linkedinClientId() {
+		return System.getenv("LINKEDIN_CLIENT_ID");
+	}
+
+	public static String linkedinWellknown() {
+		return System.getenv("LINKEDIN_WELL_KNOWN_URL");
+	}
+
+	public static String linkedinClientSecret() {
+		return System.getenv("AUTH_LINKEDIN_CLIENT_SECRET");
 	}
 }
