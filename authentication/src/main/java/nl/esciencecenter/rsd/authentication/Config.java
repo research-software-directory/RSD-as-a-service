@@ -103,10 +103,6 @@ public class Config {
 		return System.getenv("AUTH_SURFCONEXT_CLIENT_SECRET");
 	}
 
-	public static String surfconextScopes() {
-		return System.getenv("SURFCONEXT_SCOPES");
-	}
-
 
 	//	Helmholtz ID
 	public static String helmholtzIdRedirect() {
@@ -167,9 +163,6 @@ public class Config {
 		return System.getenv("AUTH_ORCID_CLIENT_SECRET");
 	}
 
-	public static String orcidScopes() {
-		return System.getenv("ORCID_SCOPES");
-	}
 
 	// Azure Active Directory
 	public static String azureRedirect() {
@@ -188,13 +181,10 @@ public class Config {
 		return System.getenv("AUTH_AZURE_CLIENT_SECRET");
 	}
 
-	public static String azureScopes() {
-		return System.getenv("AZURE_SCOPES");
-	}
-
 	public static String azureOrganisation() {
 		return System.getenv("AZURE_ORGANISATION");
 	}
+
 
 	// LinkedIn
 	public static String linkedinRedirect() {
