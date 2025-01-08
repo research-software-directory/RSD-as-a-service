@@ -14,6 +14,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -220,19 +221,19 @@ public class Main {
 
 		app.exception(RsdAuthenticationException.class, (ex, ctx) -> {
 			setLoginFailureCookie(ctx, ex.getMessage());
-			ctx.redirect(LOGIN_FAILED_PATH);
+			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
 		});
 
 		app.exception(RuntimeException.class, (ex, ctx) -> {
 			LOGGER.error("RuntimeException", ex);
 			setLoginFailureCookie(ctx, "Something unexpected went wrong, please try again or contact us.");
-			ctx.redirect(LOGIN_FAILED_PATH);
+			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
 		});
 
 		app.exception(Exception.class, (ex, ctx) -> {
 			LOGGER.error("Exception", ex);
 			setLoginFailureCookie(ctx, "Something unexpected went wrong, please try again or contact us.");
-			ctx.redirect(LOGIN_FAILED_PATH);
+			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
 		});
 	}
 
@@ -255,9 +256,9 @@ public class Main {
 		String returnPath = ctx.cookie("rsd_pathname");
 		if (returnPath != null && !returnPath.isBlank()) {
 			returnPath = returnPath.trim();
-			ctx.redirect(returnPath);
+			ctx.redirect(returnPath, HttpStatus.SEE_OTHER);
 		} else {
-			ctx.redirect("/");
+			ctx.redirect("/", HttpStatus.SEE_OTHER);
 		}
 	}
 
