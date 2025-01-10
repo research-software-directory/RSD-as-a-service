@@ -196,16 +196,18 @@ Edit mentions with care: they might be referenced to in multiple places. If you 
 
 ## Remotes
 
-Here you can define the remote RSD instances that will be used to "enrich" your RSD instance with additional software entries. For each remote you need to provide URL to the homepage of valid RSD instance. If the RSD remote is of version 3 or higher the instance will return instance name suggested by the instance owner. For the earlier RSD versions you need to provide remote name/label manually.
+Here you can connect your RSD to remote RSD instances. These connections will be used to "enrich" your RSD instance with additional (remote) software entries. 
 
-:::tip
-It is advised to use suggested remote name in order to maintain "unanimity" of instance names across the RSD network.
+:::info
+When connecting to remote RSD instances, each software card in the software overview shows the source RSD. The software from the "local" RSD uses `remote_name` from the rsd_info table. This value is inserted in rsd_info table during the  initialization of RSD instance using docker-compose.yml that uses `RSD_REMOTE_NAME` environment variable (see docker-compose.yml and .env.example).
 :::
+
+For each remote RSD you wish to connect to, you need to provide the URL to the homepage of that RSD instance. If the RSD remote is of version 3 or higher the instance will return an RSD instance name suggested by the instance owner. For the earlier RSD versions you need to provide remote name/label manually.
 
 ![animation](img/admin-remotes.gif)
 
-:::info
-When using remote RSD instances each software card in the software overview shows the RSD source. The software from the "local" RSD uses `remote_name` from the rsd_info table. This value is inserted in rsd_info table during the  initialization of RSD instance using docker-compose.yml that uses `RSD_REMOTE_NAME` environment variable (see docker-compose.yml and .env.example).
+:::tip
+For clarity, it is advised to use suggested RSD instance name configured by the instance owner. This ensures instance names across the RSD network remain the same.
 :::
 
 ## Error logs
