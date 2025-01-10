@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
@@ -14,6 +14,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -185,6 +186,16 @@ public class Main {
 			});
 		}
 
+		if (Config.isLinkedinLoginEnabled()) {
+			app.get("login/linkedin", ctx -> {
+				String code = ctx.queryParam("code");
+				String redirectUrl = Config.linkedinRedirect();
+				OpenIdInfo linkedinInfo = new LinkedinLogin(code, redirectUrl).openidInfo();
+				AccountInfo accountInfo = new PostgrestAccount().account(linkedinInfo, OpenidProvider.linkedin);
+				createAndSetToken(ctx, accountInfo);
+			});
+		}
+
 		app.get("/refresh", ctx -> {
 			try {
 				String tokenToVerify = ctx.cookie("rsd_token");
@@ -210,19 +221,19 @@ public class Main {
 
 		app.exception(RsdAuthenticationException.class, (ex, ctx) -> {
 			setLoginFailureCookie(ctx, ex.getMessage());
-			ctx.redirect(LOGIN_FAILED_PATH);
+			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
 		});
 
 		app.exception(RuntimeException.class, (ex, ctx) -> {
 			LOGGER.error("RuntimeException", ex);
 			setLoginFailureCookie(ctx, "Something unexpected went wrong, please try again or contact us.");
-			ctx.redirect(LOGIN_FAILED_PATH);
+			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
 		});
 
 		app.exception(Exception.class, (ex, ctx) -> {
 			LOGGER.error("Exception", ex);
 			setLoginFailureCookie(ctx, "Something unexpected went wrong, please try again or contact us.");
-			ctx.redirect(LOGIN_FAILED_PATH);
+			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
 		});
 	}
 
@@ -245,9 +256,9 @@ public class Main {
 		String returnPath = ctx.cookie("rsd_pathname");
 		if (returnPath != null && !returnPath.isBlank()) {
 			returnPath = returnPath.trim();
-			ctx.redirect(returnPath);
+			ctx.redirect(returnPath, HttpStatus.SEE_OTHER);
 		} else {
-			ctx.redirect("/");
+			ctx.redirect("/", HttpStatus.SEE_OTHER);
 		}
 	}
 

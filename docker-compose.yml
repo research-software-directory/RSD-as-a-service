@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2021 - 2023 dv4all
-# SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-# SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 # SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre for Environmental Research (UFZ)
@@ -68,7 +68,6 @@ services:
       - SURFCONEXT_CLIENT_ID
       - SURFCONEXT_REDIRECT
       - SURFCONEXT_WELL_KNOWN_URL
-      - SURFCONEXT_SCOPES
       - HELMHOLTZID_CLIENT_ID
       - HELMHOLTZID_REDIRECT
       - HELMHOLTZID_WELL_KNOWN_URL
@@ -79,17 +78,19 @@ services:
       - ORCID_REDIRECT
       - ORCID_REDIRECT_COUPLE
       - ORCID_WELL_KNOWN_URL
-      - ORCID_SCOPES
       - AZURE_CLIENT_ID
       - AZURE_REDIRECT
       - AZURE_WELL_KNOWN_URL
-      - AZURE_SCOPES
       - AZURE_ORGANISATION
+      - LINKEDIN_CLIENT_ID
+      - LINKEDIN_REDIRECT
+      - LINKEDIN_WELL_KNOWN_URL
       - HELMHOLTZID_ALLOW_EXTERNAL_USERS
       - AUTH_SURFCONEXT_CLIENT_SECRET
       - AUTH_HELMHOLTZID_CLIENT_SECRET
       - AUTH_ORCID_CLIENT_SECRET
       - AUTH_AZURE_CLIENT_SECRET
+      - AUTH_LINKEDIN_CLIENT_SECRET
       - PGRST_JWT_SECRET
     depends_on:
       - database
@@ -143,6 +144,9 @@ services:
       - AZURE_LOGIN_PROMPT
       - AZURE_DISPLAY_NAME
       - AZURE_DESCRIPTION_HTML
+      - LINKEDIN_CLIENT_ID
+      - LINKEDIN_REDIRECT
+      - LINKEDIN_WELL_KNOWN_URL
       - CROSSREF_CONTACT_EMAIL
     expose:
       - 3000

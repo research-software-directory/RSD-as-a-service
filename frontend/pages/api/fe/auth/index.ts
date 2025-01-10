@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -23,6 +23,7 @@ import {helmholtzInfo} from './helmholtzid'
 import {localInfo} from './local'
 import {orcidInfo} from './orcid'
 import {azureInfo} from './azure'
+import {linkedinInfo} from './linkedin'
 import logger from '~/utils/logger'
 
 export type ApiError = {
@@ -52,6 +53,8 @@ async function getRedirectInfo(provider: string) {
       return orcidInfo()
     case 'azure':
       return azureInfo()
+    case 'linkedin':
+      return linkedinInfo()
     default:
       const message = `${provider} NOT SUPPORTED, check your spelling`
       logger(`api/fe/auth/providers: ${message}`, 'error')
