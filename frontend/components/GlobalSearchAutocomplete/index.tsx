@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -11,19 +11,19 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {ClickAwayListener} from '@mui/base'
 import {useRouter} from 'next/router'
-
-import {useAuth} from '~/auth'
-import {getGlobalSearch,GlobalSearchResults} from '~/components/GlobalSearchAutocomplete/globalSearchAutocomplete.api'
-
-import EnterkeyIcon from '~/components/icons/enterkey.svg'
-import {useDebounce} from '~/utils/useDebounce'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import BusinessIcon from '@mui/icons-material/Business'
 import Diversity3Icon from '@mui/icons-material/Diversity3'
+
+import {useAuth} from '~/auth'
+import {useDebounce} from '~/utils/useDebounce'
 import logger from '~/utils/logger'
-import useSnackbar from '~/components/snackbar/useSnackbar'
 import {useModules} from '~/config/useModules'
+import {composeUrl} from '~/utils/fetchHelpers'
+import EnterkeyIcon from '~/components/icons/enterkey.svg'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import {getGlobalSearch,GlobalSearchResults} from './globalSearchAutocomplete.api'
 
 type Props = {
   className?: string
@@ -69,16 +69,16 @@ export default function GlobalSearchAutocomplete(props: Props) {
   const defaultValues: GlobalSearchResults[] = []
 
   if (isModuleEnabled('software')) {
-    defaultValues.push({name: 'Go to Software page', slug: '', source: 'software'})
+    defaultValues.push({name: 'Go to Software page', slug: '', source: 'software', domain: null})
   }
   if (isModuleEnabled('projects')) {
-    defaultValues.push({name: 'Go to Projects page', slug: '', source: 'projects'})
+    defaultValues.push({name: 'Go to Projects page', slug: '', source: 'projects', domain: null})
   }
   if (isModuleEnabled('organisations')) {
-    defaultValues.push({name: 'Go to Organisations page', slug: '', source: 'organisations'})
+    defaultValues.push({name: 'Go to Organisations page', slug: '', source: 'organisations', domain: null})
   }
   if (isModuleEnabled('communities')) {
-    defaultValues.push({name: 'Go to Communities page', slug: '', source: 'communities'})
+    defaultValues.push({name: 'Go to Communities page', slug: '', source: 'communities', domain: null})
   }
 
   async function fetchData(search: string) {
@@ -102,11 +102,20 @@ export default function GlobalSearchAutocomplete(props: Props) {
   }
 
   function handleClick() {
-    const slug = searchResults[selected]?.slug !== '' ? ('/' + searchResults[selected]?.slug) : ''
-    router.push(`/${searchResults[selected]?.source}${slug}`)
-    setSelected(0)
-    setOpen(false)
-    setInputValue('')
+    const selectedItem = searchResults[selected] ?? null
+    if (selectedItem){
+      // build url
+      const url = composeUrl({
+        domain: selectedItem.domain,
+        route: selectedItem.source,
+        slug: selectedItem.slug
+      })
+      // open page
+      router.push(url)
+      setSelected(0)
+      setOpen(false)
+      setInputValue('')
+    }
   }
 
   // Handle keyup
@@ -225,7 +234,8 @@ export default function GlobalSearchAutocomplete(props: Props) {
             {!hasResults &&
               <div className="px-4 py-3 font-normal bg-base-200 mb-2 ">
                 <span className="animate-pulse">No results...</span>
-              </div>}
+              </div>
+            }
             {searchResults.map((item, index) =>
               <div key={index}
                 data-testid="global-search-list-item"
@@ -243,14 +253,30 @@ export default function GlobalSearchAutocomplete(props: Props) {
                     {item?.source === 'communities' && <Diversity3Icon/>}
                   </div>
 
-                  <div className="flex-grow ">
-                    <div className="font-normal line-clamp-1">{item?.name}</div>
-
-                    <div className="text-xs text-current text-opacity-40">
-                      {item?.source}{item?.is_published === false && <span
-                        className="flex-nowrap border px-1 py-[2px] rounded bg-warning ml-3 text-xs text-warning-content">unpublished</span>}
+                  <div className="flex-grow"
+                    title={composeUrl({
+                      domain: item?.domain,
+                      route: item?.source,
+                      slug: item?.slug ?? '/'
+                    })}
+                  >
+                    <div className="font-normal line-clamp-1">
+                      {item?.name}
                     </div>
-
+                    {item?.domain ?
+                      <div className="text-xs text-current text-opacity-40 line-clamp-1">
+                        {item?.domain}/{item?.source}
+                      </div>
+                      : <div className="text-xs text-current text-opacity-40 line-clamp-1">
+                        /{item?.source}
+                      </div>
+                    }
+                    {item?.is_published === false ?
+                      <div className="flex-nowrap text-warning text-xs">
+                        Unpublished
+                      </div>
+                      : null
+                    }
                   </div>
 
                   {selected === index && <div>
@@ -262,7 +288,6 @@ export default function GlobalSearchAutocomplete(props: Props) {
           </div>
         }
       </div>
-
     </ClickAwayListener>
   )
 }
