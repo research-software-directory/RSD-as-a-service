@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -90,8 +90,8 @@ export default function SoftwareOverviewPage({
   const {createUrl} = useSoftwareOverviewParams()
   const {setPageLayout} = useUserSettings()
   const [modal,setModal] = useState(false)
-  // if no layout - default is masonry
-  const initView = layout ?? 'masonry'
+  // if no layout - default is grid
+  const initView = layout ?? 'grid'
   const [view, setView] = useState<LayoutType>(initView)
   const numPages = Math.ceil(count / rows)
   const filterCnt = getFilterCount()
