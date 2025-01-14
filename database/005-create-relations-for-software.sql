@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2024 dv4all
 -- SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -49,6 +49,7 @@ CREATE TYPE package_manager_type AS ENUM (
 	'crates',
 	'debian',
 	'dockerhub',
+	'ghcr',
 	'github',
 	'gitlab',
 	'golang',

@@ -3,8 +3,9 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,6 +20,8 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {useForm} from 'react-hook-form'
 
+import {useDebounce} from '~/utils/useDebounce'
+import ControlledSelect from '~/components/form/ControlledSelect'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {
@@ -28,7 +31,6 @@ import {
 } from './apiPackageManager'
 import PackageManagerInfo from './PackageManagerInfo'
 import {config} from './config'
-import ControlledSelect from '~/components/form/ControlledSelect'
 
 type EditPackageManagerModalProps = Readonly<{
   open: boolean,
@@ -56,9 +58,9 @@ export default function EditPackageManagerModal({open, onCancel, onSubmit, packa
       ...package_manager
     }
   })
-  // extract
+  // extract form states and possible errors
   const {isValid, isDirty, errors} = formState
-  // const formData = watch()
+  // watch for value changes in the form
   const [
     url,
     package_manager_form,
@@ -70,32 +72,34 @@ export default function EditPackageManagerModal({open, onCancel, onSubmit, packa
     'download_count_scraping_disabled_reason',
     'reverse_dependency_count_scraping_disabled_reason'
   ])
+  // take the last url value
+  const bouncedUrl = useDebounce(url, 700)
+  const packageManagerServices = getPackageManagerServices(package_manager_form)
 
   useEffect(() => {
     async function fetchPackageManagerType(){
       // extract manager type from url
-      const pm_key = await getPackageManagerTypeFromUrl(url)
+      const pm_key = await getPackageManagerTypeFromUrl(bouncedUrl)
       // save value
       setValue('package_manager', pm_key as PackageManagerTypes, {
         shouldValidate: true,
         shouldDirty: true
       })
     }
-    if (typeof errors['url'] === 'undefined' &&
-      url?.length > 5 &&
+    if (!errors?.url && url?.length > 5 &&
+      bouncedUrl === url &&
       // only for new items
       package_manager?.id === null
     ) {
       fetchPackageManagerType()
     }
-  },[url,setValue,errors,package_manager?.id])
-
-  const packageManagerServices = getPackageManagerServices(package_manager_form)
+  },[bouncedUrl,url,setValue,errors?.url,package_manager?.id])
 
   // console.group('EditPackageManagerModal')
   // console.log('isValid...', isValid)
   // console.log('isDirty...', isDirty)
   // console.log('url...', url)
+  // console.log('bouncedUrl...', bouncedUrl)
   // console.log('package_manager...', package_manager)
   // console.log('package_manager_form...', package_manager_form)
   // console.log('packageManagerOptions...', packageManagerOptions)
@@ -236,6 +240,7 @@ export default function EditPackageManagerModal({open, onCancel, onSubmit, packa
   function isSaveDisabled() {
     if (isValid === false) return true
     if (isDirty === false) return true
+    if (url !== bouncedUrl) return true
     return false
   }
 }
