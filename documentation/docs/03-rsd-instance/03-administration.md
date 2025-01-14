@@ -71,7 +71,8 @@ This section shows all RSD users who logged in to RSD at least once. You can sea
 
 - Removing account will remove all its maintainer roles.
 - You cannot delete account you are currently using.
-  :::
+
+:::
 
 ![animation](img/admin-rsd-users.gif)
 
@@ -191,6 +192,22 @@ In this section, admins can search for mentions and edit them. If you enter a DO
 
 :::warning
 Edit mentions with care: they might be referenced to in multiple places. If you want to fully change a mention attached to e.g. a software page, you should delete it there and create a new one instead of editing it.
+:::
+
+## Remotes
+
+Here you can connect your RSD to remote RSD instances. These connections will be used to "enrich" your RSD instance with additional (remote) software entries. 
+
+:::info
+When connecting to remote RSD instances, each software card in the software overview shows the source RSD. The software from the "local" RSD uses `remote_name` from the rsd_info table. This value is inserted in rsd_info table during the  initialization of RSD instance using docker-compose.yml that uses `RSD_REMOTE_NAME` environment variable (see docker-compose.yml and .env.example).
+:::
+
+For each remote RSD you wish to connect to, you need to provide the URL to the homepage of that RSD instance. If the RSD remote is of version 3 or higher the instance will return an RSD instance name suggested by the instance owner. For the earlier RSD versions you need to provide remote name/label manually.
+
+![animation](img/admin-remotes.gif)
+
+:::tip
+For clarity, it is advised to use suggested RSD instance name configured by the instance owner. This ensures instance names across the RSD network remain the same.
 :::
 
 ## Error logs

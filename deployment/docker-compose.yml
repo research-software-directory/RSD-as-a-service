@@ -5,7 +5,7 @@
 # SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre for Environmental Research (UFZ)
 # SPDX-FileCopyrightText: 2022 dv4all
-# SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+# SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -24,6 +24,9 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
       - POSTGRES_AUTHENTICATOR_PASSWORD
+      - RSD_REMOTE_NAME
+    # insert remote_name into postgres settings, this value is used in initial SQL scripts
+    command: postgres -D /var/lib/postgresql/data -c 'rsd.remote_name=${RSD_REMOTE_NAME}'
     volumes:
       # persist data in named docker volume
       # to remove use: docker compose down --volumes

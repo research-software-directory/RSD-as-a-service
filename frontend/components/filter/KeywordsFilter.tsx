@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -34,15 +34,23 @@ export default function KeywordsFilter({keywords, keywordsList, handleQueryChang
   const [options, setOptions] = useState<KeywordFilterOption[]>(keywordsList)
 
   // console.group('KeywordsFilter')
+  // console.log('keywords...', keywords)
   // console.log('keywordsList...', keywordsList)
   // console.log('options...', options)
+  // console.log('selected...', selected)
   // console.groupEnd()
 
   useEffect(() => {
     if (keywords && keywordsList &&
       keywords.length > 0 && keywordsList.length > 0) {
       const selectedKeywords = keywordsList.filter(option => {
-        return keywords.includes(option.keyword)
+        // we need to make values from various RSD instances "comparable"
+        // keyword field is of type CITEXT which is not case sensitive
+        // so the api search will match all case insensitive entries
+        // and we need to do the same here
+        return keywords
+          .map(item=>item.toLocaleLowerCase())
+          .includes(option.keyword.toLocaleLowerCase())
       })
       setSelected(selectedKeywords)
     } else {

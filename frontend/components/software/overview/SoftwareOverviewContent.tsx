@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,16 +14,20 @@ import SoftwareOverviewList from './list/SoftwareOverviewList'
 import SoftwareOverviewMasonry from './cards/SoftwareOverviewMasonry'
 import SoftwareOverviewGrid from './cards/SoftwareOverviewGrid'
 import SoftwareGridCard from './cards/SoftwareGridCard'
+
 import SoftwareMasonryCard from './cards/SoftwareMasonryCard'
 import SoftwareListItemContent from './list/SoftwareListItemContent'
+import SourceBanner from './list/SourceBanner'
 import OverviewListItem from './list/OverviewListItem'
+import {getItemKey, getPageUrl} from './useSoftwareOverviewProps'
 
-type SoftwareOverviewContentProps = {
+type SoftwareOverviewContentProps = Readonly<{
   layout: LayoutType
   software: SoftwareOverviewItemProps[]
-}
+  hasRemotes?: boolean
+}>
 
-export default function SoftwareOverviewContent({layout, software}: SoftwareOverviewContentProps) {
+export default function SoftwareOverviewContent({layout, software, hasRemotes}: SoftwareOverviewContentProps) {
 
   if (!software || software.length === 0) {
     return <NoContent />
@@ -33,11 +37,18 @@ export default function SoftwareOverviewContent({layout, software}: SoftwareOver
     // Masonry layout (software only)
     return (
       <SoftwareOverviewMasonry>
-        {software.map((item) => (
-          <div key={item.id} className="mb-8 break-inside-avoid">
-            <SoftwareMasonryCard item={item}/>
-          </div>
-        ))}
+        {software.map((item) => {
+          const cardKey = getItemKey({id:item.id,domain:item.domain})
+          // remove source if remotes are not present
+          if (hasRemotes===false && item.source!==null){
+            item.source = null
+          }
+          return (
+            <div key={cardKey} className="mb-8 break-inside-avoid">
+              <SoftwareMasonryCard item={item}/>
+            </div>
+          )
+        })}
       </SoftwareOverviewMasonry>
     )
   }
@@ -46,16 +57,28 @@ export default function SoftwareOverviewContent({layout, software}: SoftwareOver
     return (
       <SoftwareOverviewList>
         {software.map(item => {
+          const listKey = getItemKey({id:item.id,domain:item.domain})
+          const pageUrl = getPageUrl({domain:item.domain,slug:item.slug})
+          // remove source if remotes are not present
+          if (hasRemotes===false && item.source!==null){
+            item.source = null
+          }
           return (
             <Link
               data-testid="software-list-item"
-              key={item.id}
-              href={`/software/${item.slug}`}
-              className='flex-1 hover:text-inherit'
+              key={listKey}
+              href={pageUrl}
+              className='flex-1 flex hover:text-inherit group'
               title={item.brand_name}
+              target={item.domain ? '_blank' : '_self'}
             >
               <OverviewListItem className="pr-4">
-                <SoftwareListItemContent key={item.id} {...item} />
+                <SoftwareListItemContent
+                  statusBanner={
+                    <SourceBanner source={item?.source} domain={item?.domain}/>
+                  }
+                  {...item}
+                />
               </OverviewListItem>
             </Link>
           )
@@ -67,9 +90,14 @@ export default function SoftwareOverviewContent({layout, software}: SoftwareOver
   // GRID as default
   return (
     <SoftwareOverviewGrid>
-      {software.map((item) => (
-        <SoftwareGridCard key={item.id} {...item}/>
-      ))}
+      {software.map((item) => {
+        const cardKey = getItemKey({id:item.id,domain:item.domain})
+        // remove source if remotes are not present
+        if (hasRemotes===false && item.source!==null){
+          item.source = null
+        }
+        return <SoftwareGridCard key={cardKey} {...item}/>
+      })}
     </SoftwareOverviewGrid>
   )
 }
