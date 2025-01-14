@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -10,17 +10,12 @@ import SoftwareMetrics from '../cards/SoftwareMetrics'
 import {getImgUrl} from '../useSoftwareOverviewProps'
 
 type SoftwareOverviewListItemProps = {
-  // id:string
   brand_name: string
   short_statement: string
   image_id: string | null
-  // updated_at: string | null
   contributor_cnt: number | null
   mention_cnt: number | null
   is_published: boolean
-  // keywords: string[],
-  // prog_lang: string[],
-  // licenses: string,
   downloads?: number
   statusBanner?: JSX.Element
   domain?: string|null

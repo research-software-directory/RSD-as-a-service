@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -14,6 +14,7 @@ import SourceRsd from '~/components/cards/SourceRsd'
 import ProgrammingLanguageList from './ProgrammingLanguageList'
 import SoftwareMetrics from './SoftwareMetrics'
 import useSoftwareOverviewProps from '../useSoftwareOverviewProps'
+import ExternalLinkIcon from './ExternalLinkIcon'
 
 type SoftwareCardProps = {
   item: SoftwareOverviewItemProps
@@ -36,7 +37,7 @@ export default function SoftwareMasonryCard({item}:SoftwareCardProps){
       data-testid="software-masonry-card"
       href={pageUrl}
       className="hover:text-inherit">
-      <div className="flex-shrink-0 transition bg-base-100 shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer h-full select-none flex-col">
+      <div className="flex-shrink-0 transition bg-base-100 shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer h-full select-none flex-col relative group">
         {/* Cover image, show only if valid image link */}
         { validImg === false ? null
           :
@@ -50,6 +51,8 @@ export default function SoftwareMasonryCard({item}:SoftwareCardProps){
             width="100%"
           />
         }
+        {/* Requires tailwind classes relative and group */}
+        <ExternalLinkIcon domain={item.domain} />
         {/* Card content */}
         <div className="flex flex-col p-4">
           <SourceRsd source={item?.source} domain={item?.domain}/>
