@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
@@ -39,6 +39,24 @@ module.exports = {
     ]
   },
 
+  // default redirects
+  async redirects() {
+    return [
+      // community default page
+      {
+        source: '/communities/:slug',
+        destination: '/communities/:slug/software',
+        permanent: true,
+      },
+      // profile default page
+      {
+        source: '/profile/:orcid',
+        destination: '/profile/:orcid/software',
+        permanent: true,
+      },
+    ]
+  },
+
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,
@@ -47,4 +65,5 @@ module.exports = {
     })
     return config
   },
+
 }
