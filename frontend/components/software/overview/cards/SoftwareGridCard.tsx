@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -8,6 +8,7 @@
 import Link from 'next/link'
 import {getPageUrl,visibleNumberOfKeywords,visibleNumberOfProgLang} from '../useSoftwareOverviewProps'
 import SoftwareCardContent from './SoftwareCardContent'
+import ExternalLinkIcon from './ExternalLinkIcon'
 
 type SoftwareCardProps = {
   id: string
@@ -33,11 +34,15 @@ export default function SoftwareGridCard(item:SoftwareCardProps){
       className="flex-1 flex flex-col hover:text-inherit relative group"
       target={item.domain ? '_blank' : '_self'}
     >
+      {/* Requires tailwind classes relative and group */}
+      <ExternalLinkIcon domain={item.domain} />
+
       <SoftwareCardContent
         visibleKeywords={visibleNumberOfKeywords}
         visibleProgLang={visibleNumberOfProgLang}
         {...item}
       />
+
     </Link>
   )
 }
