@@ -1,9 +1,11 @@
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useRouter} from 'next/router'
+import Link from 'next/link'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 
@@ -26,21 +28,16 @@ export default function ProfileTabs({tab_id, isMaintainer}:ProfileTabsProps) {
       variant="scrollable"
       allowScrollButtonsMobile
       value={tab_id}
-      onChange={(_, value) => {
-        // change tab
-        const query:any={
-          orcid: router.query['orcid'],
-          tab: value,
-        }
-        // push tab change
-        router.push({query},undefined,{scroll:false})
-      }}
       aria-label="profile tabs"
     >
       {tabItems.map(key => {
         const item = profileTabItems[key]
         if (item.isVisible({isMaintainer})===true){
+          // @ts-expect-error scroll is not present in Tab
           return <Tab
+            LinkComponent={Link}
+            scroll={false}
+            href={`../${router.query['orcid']}/${key}`}
             icon={item.icon}
             key={key}
             label={item.label({
@@ -48,6 +45,14 @@ export default function ProfileTabs({tab_id, isMaintainer}:ProfileTabsProps) {
               project_cnt
             })}
             value={key}
+            sx={{
+              '&:hover':{
+                color:'text.secondary'
+              },
+              '&.Mui-selected:hover':{
+                color:'primary.main'
+              }
+            }}
           />
         }
       })}
