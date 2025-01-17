@@ -1,6 +1,6 @@
 -- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
--- SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2023 dv4all
 --
@@ -893,7 +893,9 @@ CREATE FUNCTION projects_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
 	image_contain BOOLEAN,
-	image_id VARCHAR
+	image_id VARCHAR,
+	impact_cnt INTEGER,
+	output_cnt INTEGER
 ) LANGUAGE sql STABLE AS
 $$
 	SELECT
@@ -906,11 +908,17 @@ $$
 		project.updated_at,
 		project.is_published,
 		project.image_contain,
-		project.image_id
+		project.image_id,
+		COALESCE(count_project_impact.impact_cnt, 0),
+		COALESCE(count_project_output.output_cnt, 0)
 	FROM
 		project
 	INNER JOIN
 		maintainer_for_project ON project.id = maintainer_for_project.project
+	LEFT JOIN
+		count_project_impact() ON count_project_impact.project = project.id
+	LEFT JOIN
+		count_project_output() ON count_project_output.project = project.id
 	LEFT JOIN
 		project_status() ON project.id=project_status.project
 	WHERE
