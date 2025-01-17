@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -31,6 +31,7 @@ import CategoryIcon from '@mui/icons-material/Category'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import HubIcon from '@mui/icons-material/Hub'
+import CookieIcon from '@mui/icons-material/Cookie'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 
@@ -106,6 +107,12 @@ export const adminPages = {
     subtitle: '',
     icon: <ReceiptLongIcon />,
     path: '/admin/mentions',
+  },
+  rsd_info:{
+    title: 'Rsd info',
+    subtitle: '',
+    icon: <CookieIcon />,
+    path: '/admin/rsd-info',
   },
   remote_rsd: {
     title: 'Remotes',

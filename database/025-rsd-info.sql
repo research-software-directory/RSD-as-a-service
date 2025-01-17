@@ -1,14 +1,16 @@
--- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
--- SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
 
 -- RSD info table
 -- used to obtain RSD name to use for remotes
--- it should provide basic info about rsd instance (eg. endpoints)
+-- it should provide basic info about rsd instance
+-- manually insert remote_name property
 CREATE TABLE rsd_info (
 	key VARCHAR(100) PRIMARY KEY,
-	value VARCHAR(250),
+	value VARCHAR(250) NOT NULL,
+	public BOOLEAN DEFAULT TRUE,
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
 );
@@ -37,22 +39,18 @@ $$;
 CREATE TRIGGER sanitise_update_rsd_info BEFORE UPDATE ON
 	rsd_info FOR EACH ROW EXECUTE PROCEDURE sanitise_update_rsd_info();
 
--- Insert remote_name key extracted from env variable RSD_REMOTE_NAME, default value is 'Local RSD'
--- AND basic endpoints info
-INSERT INTO rsd_info VALUES
-	('remote_name', COALESCE(current_setting('rsd.remote_name',true),'Local RSD')),
-	('postgrest_api','/api/v1'),
-	('images_api','/images'),
-	('swagger','/swagger'),
-	('codemeta','/metadata/codemeta')
-;
+-- EXAMPLE OF PUBLIC PROPERTIES TO INSERT IN THE rsd_info table
+-- REMOTE NAME IS used to identify your instance to other RSD instances
+INSERT INTO rsd_info VALUES ('remote_name','Not defined',TRUE);
 
 -- RLS
 -- rsd info table
 ALTER TABLE rsd_info ENABLE ROW LEVEL SECURITY;
--- anyone can read (SELECT)
+
+-- anyone can read (SELECT) public keys
 CREATE POLICY anyone_can_read ON rsd_info FOR SELECT TO rsd_web_anon, rsd_user
-	USING (TRUE);
+	USING (public = TRUE);
+
 -- rsd_admin has all rights
 CREATE POLICY admin_all_rights ON rsd_info TO rsd_admin
 	USING (TRUE)
