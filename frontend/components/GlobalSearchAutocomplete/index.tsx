@@ -110,8 +110,14 @@ export default function GlobalSearchAutocomplete(props: Props) {
         route: selectedItem.source,
         slug: selectedItem.slug
       })
-      // open page
-      router.push(url)
+      // remote RSD
+      if (selectedItem.domain){
+        // open page in new tab
+        window.open(url,'_blank')?.focus()
+      }else{
+        // local page use next router
+        router.push(url)
+      }
       setSelected(0)
       setOpen(false)
       setInputValue('')
@@ -236,55 +242,63 @@ export default function GlobalSearchAutocomplete(props: Props) {
                 <span className="animate-pulse">No results...</span>
               </div>
             }
-            {searchResults.map((item, index) =>
-              <div key={index}
-                data-testid="global-search-list-item"
-                className={`${selected === index ? 'bg-base-200' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
-                onClick={handleClick}
-                onMouseEnter={() => setSelected(index)}
-                onTouchStart={() => setSelected(index)}
-              >
-                <div className="flex gap-3 w-full">
-                  {/*icon*/}
-                  <div className={selected === index ? 'text-content' : 'opacity-40'}>
-                    {item?.source === 'software' && <TerminalIcon/>}
-                    {item?.source === 'projects' && <ListAltIcon/>}
-                    {item?.source === 'organisations' && <BusinessIcon/>}
-                    {item?.source === 'communities' && <Diversity3Icon/>}
-                  </div>
-
-                  <div className="flex-grow"
-                    title={composeUrl({
-                      domain: item?.domain,
-                      route: item?.source,
-                      slug: item?.slug ?? '/'
-                    })}
-                  >
-                    <div className="font-normal line-clamp-1">
-                      {item?.name}
+            {searchResults.map((item, index) => {
+              const url = composeUrl({
+                domain: item?.domain,
+                route: item?.source,
+                slug: item?.slug ?? '/'
+              })
+              let domain
+              if (item?.domain){
+                domain = new URL(url).hostname
+              } else {
+                domain = window.location.hostname
+              }
+              // debugger
+              return (
+                <div key={index}
+                  data-testid="global-search-list-item"
+                  className={`${selected === index ? 'bg-base-200' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
+                  onClick={handleClick}
+                  onMouseEnter={() => setSelected(index)}
+                  onTouchStart={() => setSelected(index)}
+                >
+                  <div className="flex gap-3 w-full">
+                    {/*icon*/}
+                    <div className={selected === index ? 'text-content' : 'opacity-40'}>
+                      {item?.source === 'software' && <TerminalIcon/>}
+                      {item?.source === 'projects' && <ListAltIcon/>}
+                      {item?.source === 'organisations' && <BusinessIcon/>}
+                      {item?.source === 'communities' && <Diversity3Icon/>}
                     </div>
-                    {item?.domain ?
-                      <div className="text-xs text-current text-opacity-40 line-clamp-1">
-                        {item?.domain}/{item?.source}
-                      </div>
-                      : <div className="text-xs text-current text-opacity-40 line-clamp-1">
-                        /{item?.source}
-                      </div>
-                    }
-                    {item?.is_published === false ?
-                      <div className="flex-nowrap text-warning text-xs">
-                        Unpublished
-                      </div>
-                      : null
-                    }
-                  </div>
 
-                  {selected === index && <div>
-                    <EnterkeyIcon/>
-                  </div>}
+                    <div className="flex-grow"
+                      title={url}
+                    >
+                      <div className="font-normal line-clamp-1">
+                        {item?.name}
+                      </div>
+                      <div className="text-xs text-current line-clamp-1">
+                        {item?.source}
+                      </div>
+                      <div className="text-xs text-current opacity-50 line-clamp-1">
+                        @{domain}
+                      </div>
+                      {item?.is_published === false ?
+                        <div className="flex-nowrap text-warning text-xs">
+                          Unpublished
+                        </div>
+                        : null
+                      }
+                    </div>
+
+                    {selected === index && <div>
+                      <EnterkeyIcon/>
+                    </div>}
+                  </div>
                 </div>
-              </div>
-            )}
+              )
+            })}
           </div>
         }
       </div>
