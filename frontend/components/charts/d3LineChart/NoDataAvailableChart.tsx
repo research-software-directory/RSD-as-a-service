@@ -3,16 +3,17 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import * as d3 from 'd3'
+import {select,scaleLinear,line} from 'd3'
 import {useRef, useEffect, useState} from 'react'
+// note! direct import causes jest tests to fail
+import {useTheme} from '@mui/material/styles'
+import logger from '~/utils/logger'
 import useResizeObserver,{SizeType} from './useResizeObserver'
-import logger from '../../../utils/logger'
-import useTheme from '@mui/material/styles/useTheme'
 
 export type Point = {x: number, y: number}
 
@@ -56,7 +57,7 @@ function drawLine(props: LineChartConfig) {
   const height = h - margin.top - margin.bottom
 
   // select svg element
-  const svg = d3.select(svgEl)
+  const svg = select(svgEl)
     // important! for resizing the svg dimensions
     // need to be set to 100% while the actual
     // dimensions of wrapper div element are used
@@ -67,17 +68,17 @@ function drawLine(props: LineChartConfig) {
     .attr('xmlns:xhtml', 'http://www.w3.org/1999/xhtml')
     // .style('background', '#eeee')
 
-  const xScale = d3.scaleLinear()
+  const xScale = scaleLinear()
     .domain([0, 100])
     .range([0, width])
 
   // define y scale as linear
-  const yScale = d3.scaleLinear()
+  const yScale = scaleLinear()
     .domain([-40, 50])
     .range([height, margin.top])
 
   // generate
-  const generateScaledLine = d3.line()
+  const generateScaledLine = line()
     .x((d:any) => {
       // Plot everything below hundred unscaled
       if (d.x < 100) {
