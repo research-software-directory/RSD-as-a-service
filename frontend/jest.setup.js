@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -47,6 +47,13 @@ jest.mock('remark-gfm', () => {
 // MOCK REMARK-BREAKS plugin as it fails to load in current setup
 // there seem to be problem with ESM modules and Jest loading these
 jest.mock('remark-breaks', jest.fn((...props) => {
+  // console.log('remark-breaks...', props)
+  return props
+}))
+
+// MOCK REHYPE-EXTERNAL-LINKS plugin as it fails to load in current setup
+// there seem to be problem with ESM modules and Jest loading these
+jest.mock('rehype-external-links', jest.fn((...props) => {
   // console.log('remark-breaks...', props)
   return props
 }))
