@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -39,6 +39,7 @@ const customJestConfig = {
   // if using TypeScript with a baseUrl set to the root directory
   // then you need the below for alias' to work
   // moduleDirectories: ['node_modules', '<rootDir>/'],
+
   moduleNameMapper: {
     // need to map d3 to avoid SyntaxError: Unexpected token 'export'
     'd3': '<rootDir>/node_modules/d3/dist/d3.min.js',
@@ -48,6 +49,7 @@ const customJestConfig = {
     // Wildcard module name mapper MUST BE at the botton of this list
     '~/(.*)$': '<rootDir>/$1',
   },
+
   // ignore .next folder
   modulePathIgnorePatterns: ['.next'],
   // d3 solution that does not work

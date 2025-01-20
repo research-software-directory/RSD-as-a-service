@@ -9,8 +9,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React, {useCallback, useEffect, useRef, useState} from 'react'
-import {ClickAwayListener} from '@mui/base'
 import {useRouter} from 'next/router'
+import ClickAwayListener from '@mui/material/ClickAwayListener'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import BusinessIcon from '@mui/icons-material/Business'

@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -36,7 +38,7 @@ function WithFormControl() {
 it('renders component with options', () => {
   render(<WithFormControl />)
 
-  const select = screen.getByRole('button')
+  const select = screen.getByRole('combobox')
   fireEvent.mouseDown(select)
 
   const options = screen.getAllByRole('option')
@@ -51,7 +53,7 @@ it('select second option', () => {
   expect(selectGroup).toBeInTheDocument()
 
   // select button - for expanding
-  const select = within(selectGroup).getByRole('button')
+  const select = within(selectGroup).getByRole('combobox')
   fireEvent.mouseDown(select)
 
   const options = screen.getAllByRole('option')

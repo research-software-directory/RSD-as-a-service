@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -137,7 +137,7 @@ export async function addResearchDomain(page) {
   // select first level
   // await page.getByTestId('l1-domain-select').click()
   await page.getByTestId('l1-domain-select')
-    .getByRole('button')
+    .getByRole('combobox')
     .first()
     .click()
   const l1options = page.getByTestId('l1-domain-item')
@@ -150,7 +150,7 @@ export async function addResearchDomain(page) {
   }
   // select second level
   await page.getByTestId('l2-domain-select')
-    .getByRole('button')
+    .getByRole('combobox')
     .first()
     .click()
   const l2options = page.getByTestId('l2-domain-item')
@@ -163,7 +163,7 @@ export async function addResearchDomain(page) {
   }
   // select third level
   await page.getByTestId('l3-domain-select')
-    .getByRole('button')
+    .getByRole('combobox')
     .first()
     .click()
   const l3options = page.getByTestId('l3-domain-item')

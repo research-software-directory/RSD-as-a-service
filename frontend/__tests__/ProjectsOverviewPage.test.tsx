@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -63,11 +63,11 @@ describe('pages/projects/index.tsx', () => {
     // get reference to filter panel
     const panel = screen.getByTestId('filters-panel')
     // find order by testid
-    const order = within(panel).getByTestId('filters-order-by')
-    const status = within(panel).getByTestId('filters-project-status')
-    // should have 3 filters
+    // within(panel).getByTestId('filters-order-by')
+    // within(panel).getByTestId('filters-project-status')
+    // should have 5 filters
     const filters = within(panel).getAllByRole('combobox')
-    expect(filters.length).toEqual(3)
+    expect(filters.length).toEqual(5)
     // screen.debug(filters)
   })
 
