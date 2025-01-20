@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
@@ -23,12 +23,12 @@ import {Provider, ApiError} from '.'
 type Data = Provider | ApiError
 
 export async function orcidRedirectProps() {
-  try{
+  try {
     // extract well known url from env
     const wellknownUrl = process.env.ORCID_WELL_KNOWN_URL ?? null
     if (wellknownUrl) {
       // get (cached) authorisation endpoint from wellknown url
-      const authorization_endpoint = await getAuthEndpoint(wellknownUrl,'orcid') ?? null
+      const authorization_endpoint = await getAuthEndpoint(wellknownUrl, 'orcid') ?? null
       if (authorization_endpoint) {
         // construct all props needed for redirectUrl
         const props: RedirectToProps = {
@@ -50,14 +50,14 @@ export async function orcidRedirectProps() {
       logger(`orcidRedirectProps: ${message}`, 'error')
       return null
     }
-  }catch(e:any){
+  } catch (e: any) {
     logger(`orcidRedirectProps: ${e.message}`, 'error')
     return null
   }
 }
 
 export async function orcidInfo() {
-  // extract all props from env and wellknow endpoint
+  // extract all props from env and wellknown endpoint
   const redirectProps = await orcidRedirectProps()
   if (redirectProps) {
     // create return url and the name to use in login button
@@ -80,7 +80,7 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   try {
-    // extract all props from env and wellknow endpoint
+    // extract all props from env and wellknown endpoint
     // and create return url and the name to use in login button
     const loginInfo = await orcidInfo()
     if (loginInfo) {

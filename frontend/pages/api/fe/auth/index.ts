@@ -62,14 +62,14 @@ async function getRedirectInfo(provider: string) {
   }
 }
 
-async function getProvidersInfo(){
+async function getProvidersInfo() {
   // extract list of providers, default value surfconext
   const strProviders = process.env.RSD_AUTH_PROVIDERS || 'surfconext'
   // split providers to array on ;
   const providers = strProviders.split(';')
 
   // add all requests
-  const promises: Promise<Provider|null>[] = []
+  const promises: Promise<Provider | null>[] = []
   providers.forEach(provider => {
     promises.push(
       getRedirectInfo(provider)
@@ -80,8 +80,8 @@ async function getProvidersInfo(){
   // filter null responses (if any)
   const info: Provider[] = []
   resp.forEach(item => {
-    if (item.status === 'fulfilled') {
-      info.push(item.value as Provider)
+    if (item.status === 'fulfilled' && item.value !== null) {
+      info.push(item.value)
     }
   })
   return info
