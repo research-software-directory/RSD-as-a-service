@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {JSX} from 'react'
 import ListImageWithGradientPlaceholder from '~/components/projects/overview/list/ListImageWithGradientPlaceholder'
 import SoftwareMetrics from '../cards/SoftwareMetrics'
 import {getImgUrl} from '../useSoftwareOverviewProps'

@@ -6,6 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {JSX} from 'react'
 import {SxProps, Theme} from '@mui/system'
 import Table from '@mui/material/Table'
 import TableBody from './TableBody'

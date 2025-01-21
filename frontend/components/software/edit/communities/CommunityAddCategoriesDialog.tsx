@@ -1,29 +1,30 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useEffect, useState, JSX} from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import {useEffect, useState} from 'react'
-import {TreeNode} from '~/types/TreeNode'
-import {CategoryEntry} from '~/types/Category'
-import ContentLoader from '~/components/layout/ContentLoader'
 import Alert from '@mui/material/Alert'
-import {loadCategoryRoots} from '~/components/category/apiCategories'
-import {RecursivelyGenerateItems} from '~/components/category/TreeSelect'
-import {CategoryForSoftwareIds} from '~/types/SoftwareTypes'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
-import {useSession} from '~/auth'
-import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
-import {CommunityListProps} from '~/components/communities/apiCommunities'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import SaveIcon from '@mui/icons-material/Save'
-import {removeCommunityCategoriesFromSoftware} from '~/components/software/edit/communities/apiSoftwareCommunities'
+
+import {useSession} from '~/auth'
+import {TreeNode} from '~/types/TreeNode'
+import {CategoryEntry} from '~/types/Category'
+import {CategoryForSoftwareIds} from '~/types/SoftwareTypes'
+import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {getCategoryForSoftwareIds} from '~/utils/getSoftware'
+import ContentLoader from '~/components/layout/ContentLoader'
+import {loadCategoryRoots} from '~/components/category/apiCategories'
+import {RecursivelyGenerateItems} from '~/components/category/TreeSelect'
+import {CommunityListProps} from '~/components/communities/apiCommunities'
+import {removeCommunityCategoriesFromSoftware} from '~/components/software/edit/communities/apiSoftwareCommunities'
 
 
 export type communityAddCategoriesDialogProps = {

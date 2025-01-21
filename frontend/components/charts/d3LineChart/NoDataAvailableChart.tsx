@@ -146,8 +146,8 @@ function drawLine(props: LineChartConfig) {
 
 function NoDataAvailableChart({text}: { text: string | undefined }) {
   const theme = useTheme()
-  const svgRef: any = useRef()
-  const divRef: any = useRef()
+  const svgRef: any = useRef(undefined)
+  const divRef: any = useRef(undefined)
   const [element, setElement] = useState()
   const size = useResizeObserver(element)
 
