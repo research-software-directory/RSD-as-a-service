@@ -1,6 +1,6 @@
--- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -26,8 +26,8 @@ CREATE FUNCTION aggregated_software_overview() RETURNS TABLE (
 $$
 SELECT
 	software_overview.id,
-	-- use remote_name information for local name
-	(SELECT value FROM rsd_info WHERE KEY='remote_name') AS source,
+	-- use remote_name information for local name or DEFAULT value My RSD instance
+	COALESCE((SELECT value FROM rsd_info WHERE KEY='remote_name'),'My RSD instance') AS source,
 	NULL AS domain,
 	software_overview.slug,
 	software_overview.brand_name,

@@ -6,9 +6,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
+import Switch from '@mui/material/Switch'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {ColType} from './EditableTable'
-import Switch from '@mui/material/Switch'
 
 export type UpdateProps = {
   id: string,
@@ -25,16 +25,14 @@ type EditableCellProps = Readonly<{
   disabledFn?: (props:UpdateProps)=>boolean
 }>
 
-export default function EditableCell({params,patchFn,validFn,disabledFn}: EditableCellProps) {
+export default function EditableCell({params,patchFn,disabledFn}: EditableCellProps) {
   const {showErrorMessage} = useSnackbar()
   const {value} = params
   const [localValue, setValue] = useState(value)
-  const [valid, setValid] = useState(true)
 
   // console.group('EditableCell')
   // console.log('params...', params)
   // console.log('localValue...', localValue)
-  // console.log('valid...', valid)
   // console.log('value...', value)
   // console.groupEnd()
 
@@ -44,31 +42,16 @@ export default function EditableCell({params,patchFn,validFn,disabledFn}: Editab
 
   async function patchValue(newValue:any) {
     if (patchFn) {
-      let validValue = true
-      if (validFn){
-        validValue = validFn({
-          ...params,
-          value: newValue
-        })
-      }
-      // only if valid
-      if (validValue){
-        const resp = await patchFn({
-          ...params,
-          value: newValue
-        })
-        if (resp.status !== 200) {
-          // show error message
-          showErrorMessage(`Failed to update value. ${resp.message}`)
-          // reverse back to original value
-          setValue(value)
-        }
-      }else{
+      const resp = await patchFn({
+        ...params,
+        value: newValue
+      })
+      if (resp.status !== 200) {
+        // show error message
+        showErrorMessage(`Failed to update value. ${resp.message}`)
         // reverse back to original value
         setValue(value)
       }
-      // update valid if not in sync
-      if (validValue!==valid) setValid(validValue)
     }
   }
 
@@ -89,7 +72,7 @@ export default function EditableCell({params,patchFn,validFn,disabledFn}: Editab
   return (
     <input
       disabled={disabledFn ? disabledFn(params) : false}
-      className={`p-1 w-full ${valid ? 'focus:bg-base-200' : 'focus:bg-error'}`}
+      className="p-1 w-full focus:bg-base-200"
       type="text"
       value={localValue}
       onChange={({target})=>{

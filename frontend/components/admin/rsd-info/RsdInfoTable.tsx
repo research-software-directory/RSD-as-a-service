@@ -13,6 +13,7 @@ import EditableTable, {OrderByProps} from '~/components/table/EditableTable'
 import ContentLoader from '~/components/layout/ContentLoader'
 import {RsdInfo} from './apiRsdInfo'
 import useRsdInfo from './useRsdInfo'
+import AddRsdInfo from './AddRsdInfo'
 
 const styles = {
   flex: 1,
@@ -30,7 +31,7 @@ const initialOrder:OrderByProps<RsdInfo, keyof RsdInfo> = {
 export default function RsdInfoTable() {
   const {token} = useSession()
   const [orderBy, setOrderBy] = useState<OrderByProps<RsdInfo, keyof RsdInfo>>(initialOrder)
-  const {loading, columns, rsdInfo} = useRsdInfo({token,orderBy})
+  const {loading, columns, rsdInfo, addRsdInfo} = useRsdInfo({token,orderBy})
 
   // console.group('RsdInfoTable')
   // console.log('loading...', loading)
@@ -42,14 +43,16 @@ export default function RsdInfoTable() {
 
   if (rsdInfo.length === 0) {
     return (
-      <section className="flex-1">
+      <section className="flex-1 flex gap-4 items-center justify-between pr-4">
         <Alert severity="warning"
           sx={{
             marginTop: '0.5rem'
           }}
         >
-          <AlertTitle sx={{fontWeight:500}}>Rsd info not found</AlertTitle>
+          <AlertTitle sx={{fontWeight:500}}>RSD info not found</AlertTitle>
+          Use <strong>Add</strong> button to create new entry. At least you should add <strong>remote_name</strong> to communicate name of your instance to other RSD instances.
         </Alert>
+        <AddRsdInfo onAdd={addRsdInfo} />
       </section>
     )
   }

@@ -33,7 +33,6 @@ export type Column<T,K extends keyof T> = {
   order?: OrderProps
   patchFn?: (props: UpdateProps) => Promise<{ status: number, message: string }>
   disabledFn?: (props: UpdateProps) => boolean
-  validFn?: (props: UpdateProps) => boolean
   renderFn?: (data:T) => JSX.Element
   headerFn?: () => JSX.Element
 }

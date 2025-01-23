@@ -109,7 +109,7 @@ export const adminPages = {
     path: '/admin/mentions',
   },
   rsd_info:{
-    title: 'Rsd info',
+    title: 'RSD info',
     subtitle: '',
     icon: <CookieIcon />,
     path: '/admin/rsd-info',

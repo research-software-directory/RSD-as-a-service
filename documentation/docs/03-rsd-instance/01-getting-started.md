@@ -22,15 +22,6 @@ POSTGRES_AUTHENTICATOR_PASSWORD=reallyreallyreallyreallyverysafe
 PGRST_JWT_SECRET=reallyreallyreallyreallyverysafe
 ```
 
-- Define remote name of your instance in the .env file. Other RSD instances can pull software information from your instance. How to link the remote RSD instances is described in the [remotes chapter](/rsd-instance/administration/#remotes) of the administration section.
-
-```env
-# RSD REMOTE NAME
-# identify this instance as remote by this name
-# it is used as source label in RPC aggregated_software_overview
-RSD_REMOTE_NAME=Local RSD
-```
-
 - Start RSD using docker compose
 
 ```bash
@@ -123,7 +114,7 @@ cp .env.example .env
 and change, as described above, the values for `POSTGRES_PASSWORD`, `PGRST_JWT_SECRET` (with at least 32 characters) and `POSTGRES_AUTHENTICATOR_PASSWORD` to arbitrary values.
 Additionally set
 
-```
+```env
 POSTGREST_URL_EXTERNAL=http://fqdn.yourdomain.com/api/v1
 RSD_AUTH_URL=http://fqdn.yourdomain.com:7000
 ```

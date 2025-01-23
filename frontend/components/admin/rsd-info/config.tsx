@@ -18,14 +18,16 @@ export function createColumns(token: string, addRsdInfo:(data:RsdInfo)=>void, de
     key: 'value',
     label: 'Value*',
     type: 'string',
-    validFn: ({value})=>{
-      if (value && value.toString().trim()!=='') return true
-      return false
+    patchFn: async (props) => {
+      // change "" to null
+      if (props.value===''){
+        props.value = null
+      }
+      return patchRsdInfo({
+        ...props,
+        token
+      })
     },
-    patchFn: async (props) => patchRsdInfo({
-      ...props,
-      token
-    })
   }, {
     key: 'public',
     label: 'Public',
@@ -33,12 +35,7 @@ export function createColumns(token: string, addRsdInfo:(data:RsdInfo)=>void, de
     patchFn: async (props) => patchRsdInfo({
       ...props,
       token
-    }),
-    disabledFn:(data)=>{
-      // remote_name public value cannot be changed
-      if (data.id==='remote_name') return true
-      return false
-    },
+    })
   },{
     key: 'created_at',
     label: 'Created At',
@@ -63,7 +60,7 @@ export function createColumns(token: string, addRsdInfo:(data:RsdInfo)=>void, de
       return (
         <IconButton
           // rsd remote name should not be deleted
-          disabled={key==='remote_name'}
+          // disabled={key==='remote_name'}
           title={`Delete ${key}`}
           aria-label='delete'
           onClick={()=>{
@@ -87,6 +84,7 @@ export const rsdInfoForm = {
     help: 'Unique single word without spaces is required.',
     validation: {
       required: 'Unique key value is required.',
+      minLength: {value: 3, message: 'Minimum length is 3'},
       // we do not show error message for this one, we use only maxLength value
       maxLength: {value: 100, message: 'Maximum length is 100'},
       pattern: {

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -198,8 +198,10 @@ export async function getRemoteName(domain:string){
     })
     if (resp.ok){
       const data = await resp.json()
-      const name = data[0]?.['value']
-      return name
+      if (data[0]?.['value']){
+        return data[0]?.['value']
+      }
+      return null
     }
     return null
   }catch(e:any){

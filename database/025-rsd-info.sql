@@ -41,7 +41,7 @@ CREATE TRIGGER sanitise_update_rsd_info BEFORE UPDATE ON
 
 -- EXAMPLE OF PUBLIC PROPERTIES TO INSERT IN THE rsd_info table
 -- REMOTE NAME IS used to identify your instance to other RSD instances
-INSERT INTO rsd_info VALUES ('remote_name','Not defined',TRUE);
+INSERT INTO rsd_info VALUES ('remote_name','My RSD instance',TRUE);
 
 -- RLS
 -- rsd info table

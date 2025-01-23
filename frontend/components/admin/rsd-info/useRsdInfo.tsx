@@ -8,7 +8,7 @@ import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
 import {OrderByProps} from '~/components/table/EditableTable'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {createInfo, deleteInfoByKey, getRsdInfo, RsdInfoTable,RsdInfo} from './apiRsdInfo'
+import {createInfo, deleteInfoByKey, getRsdInfo, RsdInfoTable, RsdInfo} from './apiRsdInfo'
 import {createColumns} from './config'
 
 type useContributorsProps = {
@@ -92,6 +92,7 @@ export default function useRsdInfo({token, orderBy}:useContributorsProps) {
   return {
     loading,
     columns,
-    rsdInfo
+    rsdInfo,
+    addRsdInfo
   }
 }

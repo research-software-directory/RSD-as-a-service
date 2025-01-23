@@ -57,7 +57,6 @@ function TableRow<T extends {id:string,origin?:string}, K extends keyof T>({data
                   }}
                   patchFn={col?.patchFn}
                   disabledFn={col?.disabledFn}
-                  validFn={col?.validFn}
                 />
               </MuiTableCell>
             )
