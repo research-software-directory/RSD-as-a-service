@@ -8,7 +8,7 @@
 -- DEPENDS ON: software_overview, remote_software
 CREATE FUNCTION aggregated_software_overview() RETURNS TABLE (
 	id UUID,
-	source VARCHAR,
+	rsd_host VARCHAR,
 	domain VARCHAR,
 	slug VARCHAR,
 	brand_name VARCHAR,
@@ -26,8 +26,7 @@ CREATE FUNCTION aggregated_software_overview() RETURNS TABLE (
 $$
 SELECT
 	software_overview.id,
-	-- use remote_name information for local name or DEFAULT value My RSD instance
-	COALESCE((SELECT value FROM rsd_info WHERE KEY='remote_name'),'My RSD instance') AS source,
+	COALESCE((SELECT value FROM rsd_info WHERE KEY='remote_name'),NULL) AS rsd_host,
 	NULL AS domain,
 	software_overview.slug,
 	software_overview.brand_name,
@@ -46,7 +45,7 @@ FROM
 UNION ALL
 SELECT
 	remote_software.id,
-	remote_rsd.label AS source,
+	remote_rsd.label AS rsd_host,
 	remote_rsd.domain,
 	remote_software.slug,
 	remote_software.brand_name,
@@ -71,7 +70,7 @@ $$;
 -- DEPENDS ON: aggregated_software_overview
 CREATE FUNCTION aggregated_software_search(search VARCHAR) RETURNS TABLE (
 	id UUID,
-	source VARCHAR,
+	rsd_host VARCHAR,
 	domain VARCHAR,
 	slug VARCHAR,
 	brand_name VARCHAR,
@@ -88,7 +87,7 @@ CREATE FUNCTION aggregated_software_search(search VARCHAR) RETURNS TABLE (
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
-	id, source, domain, slug, brand_name, short_statement, image_id,
+	id, rsd_host, domain, slug, brand_name, short_statement, image_id,
 	updated_at, contributor_cnt, mention_cnt, is_published, keywords,
 	keywords_text, prog_lang, licenses
 FROM
@@ -130,7 +129,7 @@ CREATE FUNCTION aggregated_software_keywords_filter(
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
 	license_filter VARCHAR[] DEFAULT '{}',
-	source_filter VARCHAR[] DEFAULT NULL
+	rsd_host_filter VARCHAR DEFAULT ''
 ) RETURNS TABLE (
 	keyword CITEXT,
 	keyword_cnt INTEGER
@@ -149,9 +148,10 @@ WHERE
 	COALESCE(licenses, '{}') @> license_filter
 	AND
 		CASE
-			WHEN source_filter IS NULL THEN TRUE
+			WHEN rsd_host_filter = '' THEN TRUE
+			WHEN rsd_host_filter IS NULL THEN rsd_host IS NULL
 		ELSE
-			source = ANY(source_filter)
+			rsd_host = rsd_host_filter
 		END
 GROUP BY
 	keyword
@@ -165,7 +165,7 @@ CREATE FUNCTION aggregated_software_languages_filter(
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
 	license_filter VARCHAR[] DEFAULT '{}',
-	source_filter VARCHAR[] DEFAULT NULL
+	rsd_host_filter VARCHAR DEFAULT ''
 ) RETURNS TABLE (
 	prog_language TEXT,
 	prog_language_cnt INTEGER
@@ -184,9 +184,10 @@ WHERE
 	COALESCE(licenses, '{}') @> license_filter
 	AND
 		CASE
-			WHEN source_filter IS NULL THEN TRUE
+			WHEN rsd_host_filter = '' THEN TRUE
+			WHEN rsd_host_filter IS NULL THEN rsd_host IS NULL
 		ELSE
-			source = ANY(source_filter)
+			rsd_host = rsd_host_filter
 		END
 GROUP BY
 	prog_language
@@ -200,7 +201,7 @@ CREATE FUNCTION aggregated_software_licenses_filter(
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
 	license_filter VARCHAR[] DEFAULT '{}',
-	source_filter VARCHAR[] DEFAULT NULL
+	rsd_host_filter VARCHAR DEFAULT ''
 ) RETURNS TABLE (
 	license VARCHAR,
 	license_cnt INTEGER
@@ -219,31 +220,32 @@ WHERE
 	COALESCE(licenses, '{}') @> license_filter
 	AND
 		CASE
-			WHEN source_filter IS NULL THEN TRUE
+			WHEN rsd_host_filter = '' THEN TRUE
+			WHEN rsd_host_filter IS NULL THEN rsd_host IS NULL
 		ELSE
-			source = ANY(source_filter)
+			rsd_host = rsd_host_filter
 		END
 GROUP BY
 	license
 ;
 $$;
 
+
 -- REACTIVE SOURCE FILTER WITH COUNTS FOR SOFTWARE
 -- DEPENDS ON: aggregated_software_search
-CREATE FUNCTION aggregated_software_sources_filter(
+CREATE FUNCTION aggregated_software_hosts_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}',
-	source_filter VARCHAR[] DEFAULT NULL
+	license_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
-	source VARCHAR,
-	source_cnt INTEGER
+	rsd_host VARCHAR,
+	rsd_host_cnt INTEGER
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
-	source AS source,
-	COUNT(id) AS source_cnt
+	rsd_host,
+	COUNT(id) AS rsd_host_cnt
 FROM
 	aggregated_software_search(search_filter)
 WHERE
@@ -252,13 +254,7 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
-	AND
-		CASE
-			WHEN source_filter IS NULL THEN TRUE
-		ELSE
-			source = ANY(source_filter)
-		END
 GROUP BY
-	source
+	rsd_host
 ;
 $$;

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -34,6 +34,23 @@ export function getPageUrl({slug,domain}:{slug:string|null,domain?:string|null})
 export function getItemKey({id,domain}:{id:string,domain?:string|null}){
   if (domain) return `${domain}${id}`
   return id
+}
+
+export function getRsdHost({hasRemotes,rsd_host}:{hasRemotes?:boolean,rsd_host?:string|null}){
+  // if no remote RSD we do not show rsd_host
+  if (!hasRemotes){
+    return null
+  }
+  // if no domain these are local entries
+  if (!rsd_host){
+    // local rsd_host
+    if (typeof (window) !== 'undefined'){
+      return `@${window.location.hostname}`
+    }
+    return '@localhost'
+  }
+  // extract external domain (hostname)
+  return rsd_host
 }
 
 export const visibleNumberOfKeywords: number = 3

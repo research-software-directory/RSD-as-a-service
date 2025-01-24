@@ -10,7 +10,7 @@ import Link from 'next/link'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import KeywordList from '~/components/cards/KeywordList'
 import CardTitleSubtitle from '~/components/cards/CardTitleSubtitle'
-import SourceRsd from '~/components/cards/SourceRsd'
+import RsdHostLabel from '~/components/cards/RsdHostLabel'
 import ProgrammingLanguageList from './ProgrammingLanguageList'
 import SoftwareMetrics from './SoftwareMetrics'
 import useSoftwareOverviewProps from '../useSoftwareOverviewProps'
@@ -43,7 +43,7 @@ export default function SoftwareMasonryCard({item}:SoftwareCardProps){
           :
           <img
             className="object-cover w-full rounded-tr-lg rounded-tl-lg"
-            src={`${imgUrl ?? ''}`}
+            src={imgUrl ?? undefined}
             alt={`Cover image for ${item.brand_name}`}
             // loading = "lazy"
             // lighthouse audit requires explicit with and height
@@ -55,7 +55,7 @@ export default function SoftwareMasonryCard({item}:SoftwareCardProps){
         <ExternalLinkIcon domain={item.domain} />
         {/* Card content */}
         <div className="flex flex-col p-4">
-          <SourceRsd source={item?.source} domain={item?.domain}/>
+          <RsdHostLabel rsd_host={item?.rsd_host} domain={item?.domain}/>
           <CardTitleSubtitle
             title={item.brand_name}
             subtitle={item.short_statement}

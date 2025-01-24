@@ -42,16 +42,17 @@ import useSoftwareOverviewParams from '~/components/software/overview/useSoftwar
 import SoftwareOverviewContent from '~/components/software/overview/SoftwareOverviewContent'
 import SoftwareFilters from '~/components/software/overview/filters/index'
 import {
-  softwareKeywordsFilter, softwareLanguagesFilter,
+  softwareKeywordsFilter,
+  softwareLanguagesFilter,
   softwareLicensesFilter,
-  softwareSourcesFilter
+  softwareRsdHostsFilter
 } from '~/components/software/overview/filters/softwareFiltersApi'
 import SoftwareFiltersModal from '~/components/software/overview/filters/SoftwareFiltersModal'
 import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {getRsdSettings} from '~/config/getSettingsServerSide'
 import {useUserSettings} from '~/config/UserSettingsContext'
-import {SourcesFilterOption} from '~/components/filter/RsdSourceFilter'
+import {HostsFilterOption} from '~/components/filter/RsdHostFilter'
 import {getRemoteRsd} from '~/components/admin/remote-rsd/apiRemoteRsd'
 
 type SoftwareOverviewProps = {
@@ -62,8 +63,8 @@ type SoftwareOverviewProps = {
   languagesList: LanguagesFilterOption[],
   licenses?: string[] | null,
   licensesList: LicensesFilterOption[],
-  sources?: string[] | null,
-  sourcesList: SourcesFilterOption[]
+  rsd_host?: string,
+  hostsList: HostsFilterOption[]
   order: string,
   page: number,
   rows: number,
@@ -80,10 +81,10 @@ const pageDesc = 'The list of research software registered in the Research Softw
 export default function SoftwareOverviewPage({
   search, keywords,
   prog_lang, licenses,
-  sources, order, page,
+  rsd_host, order, page,
   rows, count, layout,
   keywordsList, languagesList,
-  licensesList, sourcesList,
+  licensesList, hostsList,
   software, highlights, hasRemotes
 }: SoftwareOverviewProps) {
   const smallScreen = useMediaQuery('(max-width:640px)')
@@ -101,7 +102,7 @@ export default function SoftwareOverviewPage({
   // console.log('keywords...', keywords)
   // console.log('prog_lang...', prog_lang)
   // console.log('licenses...', licenses)
-  // console.log('sources...', sources)
+  // console.log('rsd_host...', rsd_host)
   // console.log('order...', order)
   // console.log('page...', page)
   // console.log('rows...', rows)
@@ -110,7 +111,7 @@ export default function SoftwareOverviewPage({
   // console.log('keywordsList...', keywordsList)
   // console.log('languagesList...', languagesList)
   // console.log('licensesList...', licensesList)
-  // console.log('sourcesList...', sourcesList)
+  // console.log('hostsList...', hostsList)
   // console.log('software...', software)
   // console.log('highlights...', highlights)
   // console.log('hasRemotes...', hasRemotes)
@@ -122,7 +123,7 @@ export default function SoftwareOverviewPage({
     if (prog_lang) count++
     if (licenses) count++
     if (search) count++
-    if (sources) count++
+    if (rsd_host) count++
     return count
   }
 
@@ -170,8 +171,8 @@ export default function SoftwareOverviewPage({
                   languagesList={languagesList}
                   licenses={licenses ?? []}
                   licensesList={licensesList}
-                  sources={sources ?? []}
-                  sourcesList={sourcesList}
+                  rsd_host={rsd_host}
+                  hostsList={hostsList}
                   orderBy={order}
                   filterCnt={filterCnt}
                   hasRemotes={hasRemotes}
@@ -235,8 +236,8 @@ export default function SoftwareOverviewPage({
           languagesList={languagesList}
           licenses={licenses ?? []}
           licensesList={licensesList}
-          sources={sources ?? []}
-          sourcesList={sourcesList}
+          rsd_host={rsd_host}
+          hostsList={hostsList}
           order={order ?? ''}
           filterCnt={filterCnt}
           setModal={setModal}
@@ -252,7 +253,7 @@ export default function SoftwareOverviewPage({
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   let offset=0
   // extract params from page-query
-  const {search, keywords, prog_lang, licenses, sources, order, rows, page} = ssrSoftwareParams(context.query)
+  const {search, keywords, prog_lang, licenses, rsd_host, order, rows, page} = ssrSoftwareParams(context.query)
   // extract user settings from cookie
   const {rsd_page_layout, rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings
@@ -282,7 +283,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     search,
     keywords,
     licenses,
-    sources,
+    rsd_host,
     prog_lang,
     order: orderBy,
     limit: page_rows,
@@ -293,6 +294,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const settings = await getRsdSettings()
 
   // console.log('software...url...', url)
+  // console.log('rsd_host...', rsd_host)
+  // console.log('search...', search)
   // console.log('order...', order)
   // console.log('orderBy...', orderBy)
   // console.log('page_rows...', page_rows)
@@ -303,17 +306,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     keywordsList,
     languagesList,
     licensesList,
-    sourcesList,
+    hostsList,
     // extract remotes count from fn response
     {count:remotesCount},
     // extract highlights from fn response (we don't need count)
     {highlights}
   ] = await Promise.all([
     getSoftwareList({url}),
-    softwareKeywordsFilter({search, keywords, prog_lang, licenses, sources}),
-    softwareLanguagesFilter({search, keywords, prog_lang, licenses, sources}),
-    softwareLicensesFilter({search, keywords, prog_lang, licenses, sources}),
-    softwareSourcesFilter({search, keywords, prog_lang, licenses, sources}),
+    softwareKeywordsFilter({search, keywords, prog_lang, licenses, rsd_host}),
+    softwareLanguagesFilter({search, keywords, prog_lang, licenses, rsd_host}),
+    softwareLicensesFilter({search, keywords, prog_lang, licenses, rsd_host}),
+    // get sources list based on other filters
+    softwareRsdHostsFilter({search, keywords, prog_lang, licenses}),
     // get remotes count
     getRemoteRsd({page:0, rows:1}),
     page !== 1 ? Promise.resolve({highlights: []}) : getSoftwareHighlights({
@@ -322,27 +326,34 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     })
   ])
 
-  // passed as props to the page
-  // see params of page function
+  // console.log('software...', software)
+
+  // return page properties
+  const props:SoftwareOverviewProps={
+    search,
+    keywords,
+    keywordsList,
+    prog_lang,
+    languagesList,
+    licenses,
+    licensesList,
+    hostsList,
+    page: page ?? 0,
+    order: softwareOrder,
+    rows: page_rows,
+    layout: rsd_page_layout,
+    count: software.count ?? 0,
+    software: software.data,
+    highlights,
+    hasRemotes: remotesCount > 0
+  }
+
+  // add rsd_host if not undefined
+  if (rsd_host){
+    props['rsd_host']=rsd_host
+  }
+
   return {
-    props: {
-      search,
-      keywords,
-      keywordsList,
-      prog_lang,
-      languagesList,
-      licenses,
-      licensesList,
-      sources,
-      sourcesList,
-      page,
-      order: softwareOrder,
-      rows: page_rows,
-      layout: rsd_page_layout,
-      count: software.count,
-      software: software.data,
-      highlights,
-      hasRemotes: remotesCount > 0
-    },
+    props
   }
 }

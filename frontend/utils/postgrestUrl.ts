@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -33,8 +33,7 @@ type baseQueryStringProps = {
   domains?: string[] | null,
   prog_lang?: string[] | null,
   licenses?: string[] | null,
-  // rsd sources (remote RSD)
-  sources?: string[] | null,
+  rsd_host?: string,
   organisations?: string[] | null,
   order?: string,
   limit?: number,
@@ -52,7 +51,7 @@ export type QueryParams={
   domains?:string[] | null,
   prog_lang?: string[] | null,
   licenses?: string[] | null,
-  sources?: string[] | null,
+  rsd_host?: string,
   organisations?: string[] | null,
   project_status?: string | null,
   page?:number | null,
@@ -92,7 +91,7 @@ export function ssrProjectsUrl(params: QueryParams) {
 export function buildFilterUrl(params: QueryParams, view:string) {
   const {
     search, order, keywords, domains,
-    licenses, prog_lang, sources,
+    licenses, prog_lang, rsd_host,
     organisations, project_status,
     rows, page
   } = params
@@ -133,8 +132,8 @@ export function buildFilterUrl(params: QueryParams, view:string) {
   // sources (rsd remote source)
   query = encodeUrlQuery({
     query,
-    param: 'sources',
-    value: sources
+    param: 'rsd_host',
+    value: rsd_host
   })
   // organisations
   query = encodeUrlQuery({
@@ -198,7 +197,7 @@ export function baseQueryString(props: baseQueryStringProps) {
     domains,
     prog_lang,
     licenses,
-    sources,
+    rsd_host,
     organisations,
     project_status,
     order,
@@ -276,19 +275,20 @@ export function baseQueryString(props: baseQueryStringProps) {
       query = `licenses=cs.%7B${licensesAll}%7D`
     }
   }
-  if (sources !== undefined &&
-    sources !== null &&
-    Array.isArray(sources) === true
-  ){
-    // sort and convert array to comma separated string
-    const sourcesAll = sources
-      .toSorted(localeSort)
-      .map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
-
+  // RSD Host
+  if (rsd_host !== undefined){
     if (query){
-      query = `${query}&source=in.(${sourcesAll})`
+      // the null value is passed as string in url query
+      if (rsd_host==='null'){
+        query = `${query}&rsd_host=is.null`
+      }else{
+        query = `${query}&rsd_host=eq.${rsd_host}`
+      }
+    }else if (rsd_host==='null' || rsd_host===null){
+      // the null value is passed as string in url query
+      query = 'rsd_host=is.null'
     }else{
-      query = `source=in.(${sourcesAll})`
+      query = `rsd_host=eq.${rsd_host}`
     }
   }
   if (organisations !== undefined &&

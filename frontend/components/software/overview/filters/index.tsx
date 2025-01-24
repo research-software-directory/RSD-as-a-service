@@ -13,7 +13,7 @@ import FilterHeader from '~/components/filter/FilterHeader'
 import KeywordsFilter, {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import ProgrammingLanguagesFilter, {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import LicensesFilter, {LicensesFilterOption} from '~/components/filter/LicensesFilter'
-import RsdSourceFilter, {SourcesFilterOption} from '~/components/filter/RsdSourceFilter'
+import RsdSourceFilter, {HostsFilterOption} from '~/components/filter/RsdHostFilter'
 import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
 import OrderSoftwareBy, {OrderHighlightsBy} from './OrderSoftwareBy'
 
@@ -27,8 +27,8 @@ type SoftwareFilterProps = {
   orderBy: string,
   filterCnt: number,
   highlightsOnly?: boolean
-  sources?: string []
-  sourcesList?: SourcesFilterOption[]
+  rsd_host?: string
+  hostsList?: HostsFilterOption[]
   hasRemotes?: boolean
 }
 
@@ -39,8 +39,8 @@ export default function SoftwareFilters({
   languagesList,
   licenses,
   licensesList,
-  sources,
-  sourcesList,
+  rsd_host,
+  hostsList,
   filterCnt,
   orderBy,
   highlightsOnly = false,
@@ -50,7 +50,7 @@ export default function SoftwareFilters({
 
   // console.group('SoftwareFilters')
   // console.log('sources...', sources)
-  // console.log('sourcesList...', sourcesList)
+  // console.log('hostsList...', hostsList)
   // console.groupEnd()
 
   function clearDisabled() {
@@ -98,8 +98,8 @@ export default function SoftwareFilters({
       {/* RSD hosts list only if remotes are defined */}
       {hasRemotes ?
         <RsdSourceFilter
-          sources={sources ?? []}
-          sourcesList={sourcesList ?? []}
+          rsd_host={rsd_host}
+          hostsList={hostsList ?? []}
           handleQueryChange={handleQueryChange}
         />
         : null

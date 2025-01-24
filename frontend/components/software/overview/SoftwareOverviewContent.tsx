@@ -17,9 +17,9 @@ import SoftwareGridCard from './cards/SoftwareGridCard'
 
 import SoftwareMasonryCard from './cards/SoftwareMasonryCard'
 import SoftwareListItemContent from './list/SoftwareListItemContent'
-import SourceBanner from './list/SourceBanner'
+import RsdHostBanner from './list/RsdHostBanner'
 import OverviewListItem from './list/OverviewListItem'
-import {getItemKey, getPageUrl} from './useSoftwareOverviewProps'
+import {getItemKey, getPageUrl, getRsdHost} from './useSoftwareOverviewProps'
 
 type SoftwareOverviewContentProps = Readonly<{
   layout: LayoutType
@@ -33,16 +33,15 @@ export default function SoftwareOverviewContent({layout, software, hasRemotes}: 
     return <NoContent />
   }
 
+
   if (layout === 'masonry') {
     // Masonry layout (software only)
     return (
       <SoftwareOverviewMasonry>
         {software.map((item) => {
           const cardKey = getItemKey({id:item.id,domain:item.domain})
-          // remove source if remotes are not present
-          if (hasRemotes===false && item.source!==null){
-            item.source = null
-          }
+          // remove rsd_host if remotes are not present
+          item.rsd_host = getRsdHost({hasRemotes,rsd_host:item.rsd_host})
           return (
             <div key={cardKey} className="mb-8 break-inside-avoid">
               <SoftwareMasonryCard item={item}/>
@@ -59,10 +58,8 @@ export default function SoftwareOverviewContent({layout, software, hasRemotes}: 
         {software.map(item => {
           const listKey = getItemKey({id:item.id,domain:item.domain})
           const pageUrl = getPageUrl({domain:item.domain,slug:item.slug})
-          // remove source if remotes are not present
-          if (hasRemotes===false && item.source!==null){
-            item.source = null
-          }
+          // remove rsd_host if remotes are not present
+          item.rsd_host = getRsdHost({hasRemotes,rsd_host:item.rsd_host})
           return (
             <Link
               data-testid="software-list-item"
@@ -75,7 +72,7 @@ export default function SoftwareOverviewContent({layout, software, hasRemotes}: 
               <OverviewListItem className="pr-4">
                 <SoftwareListItemContent
                   statusBanner={
-                    <SourceBanner source={item?.source} domain={item?.domain}/>
+                    <RsdHostBanner rsd_host={item?.rsd_host} domain={item?.domain}/>
                   }
                   {...item}
                 />
@@ -92,10 +89,9 @@ export default function SoftwareOverviewContent({layout, software, hasRemotes}: 
     <SoftwareOverviewGrid>
       {software.map((item) => {
         const cardKey = getItemKey({id:item.id,domain:item.domain})
-        // remove source if remotes are not present
-        if (hasRemotes===false && item.source!==null){
-          item.source = null
-        }
+        // remove rsd_host if remotes are not present
+        item.rsd_host = getRsdHost({hasRemotes,rsd_host:item.rsd_host})
+
         return <SoftwareGridCard key={cardKey} {...item}/>
       })}
     </SoftwareOverviewGrid>

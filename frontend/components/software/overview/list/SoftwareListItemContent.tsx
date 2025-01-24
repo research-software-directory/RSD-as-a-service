@@ -36,12 +36,12 @@ export default function SoftwareListItemContent(item:SoftwareOverviewListItemPro
           <div className='line-clamp-2 md:line-clamp-1 break-words font-medium'>
             {item.brand_name}
           </div>
-          <div className='line-clamp-3 md:line-clamp-1 break-words text-sm opacity-70'>
+          <div className='line-clamp-3 md:line-clamp-1 break-words text-sm text-base-content-secondary'>
             {item.short_statement}
           </div>
           {/* project status - admin only */}
           {item.statusBanner &&
-            <div className="pt-2 flex gap-2 text-xs opacity-60">
+            <div className="flex gap-2 text-xs opacity-70">
               {item.statusBanner}
             </div>
           }

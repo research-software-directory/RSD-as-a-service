@@ -69,16 +69,16 @@ export default function GlobalSearchAutocomplete(props: Props) {
   const defaultValues: GlobalSearchResults[] = []
 
   if (isModuleEnabled('software')) {
-    defaultValues.push({name: 'Go to Software page', slug: '', source: 'software', domain: null})
+    defaultValues.push({name: 'Go to Software page', slug: '', source: 'software', domain: null, rsd_host: null})
   }
   if (isModuleEnabled('projects')) {
-    defaultValues.push({name: 'Go to Projects page', slug: '', source: 'projects', domain: null})
+    defaultValues.push({name: 'Go to Projects page', slug: '', source: 'projects', domain: null, rsd_host: null})
   }
   if (isModuleEnabled('organisations')) {
-    defaultValues.push({name: 'Go to Organisations page', slug: '', source: 'organisations', domain: null})
+    defaultValues.push({name: 'Go to Organisations page', slug: '', source: 'organisations', domain: null, rsd_host: null})
   }
   if (isModuleEnabled('communities')) {
-    defaultValues.push({name: 'Go to Communities page', slug: '', source: 'communities', domain: null})
+    defaultValues.push({name: 'Go to Communities page', slug: '', source: 'communities', domain: null, rsd_host: null})
   }
 
   async function fetchData(search: string) {
@@ -248,11 +248,13 @@ export default function GlobalSearchAutocomplete(props: Props) {
                 route: item?.source,
                 slug: item?.slug ?? '/'
               })
-              let domain
-              if (item?.domain){
-                domain = new URL(url).hostname
+              let rsd_host
+              if (item?.rsd_host){
+                rsd_host = item.rsd_host
+              } else if (item?.domain){
+                rsd_host = `@${new URL(url).hostname}`
               } else {
-                domain = window.location.hostname
+                rsd_host = `@${window.location.hostname}`
               }
               // debugger
               return (
@@ -281,8 +283,8 @@ export default function GlobalSearchAutocomplete(props: Props) {
                       <div className="text-xs text-current line-clamp-1">
                         {item?.source}
                       </div>
-                      <div className="text-xs text-current opacity-50 line-clamp-1">
-                        @{domain}
+                      <div className="text-xs text-base-content-secondary line-clamp-1">
+                        {rsd_host}
                       </div>
                       {item?.is_published === false ?
                         <div className="flex-nowrap text-warning text-xs">

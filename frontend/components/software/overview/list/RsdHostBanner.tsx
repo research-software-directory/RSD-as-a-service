@@ -6,23 +6,23 @@
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 
 type SourceRSDType = Readonly<{
-  source?:string|null,
+  rsd_host?:string|null,
   domain?:string|null
 }>
 
-export default function SourceBanner({source,domain}:SourceRSDType){
+export default function RsdHostBanner({rsd_host,domain}:SourceRSDType){
 
-  if (!source) return null
+  if (!rsd_host) return null
 
   return (
     <div
-      className="flex gap-2 py-1 uppercase font-medium group-hover:px-2 group-hover:bg-primary group-hover:text-primary-content"
+      className="flex gap-2 py-1 group-hover:px-2 group-hover:bg-primary group-hover:text-primary-content"
     >
       <div
-        title={domain ?? source}
-        className="line-clamp-1 text-sm tracking-widest uppercase"
+        title={domain ?? rsd_host}
+        className="line-clamp-1 text-sm"
       >
-        {source}
+        {rsd_host}
       </div>
       {
         domain ? <OpenInNewIcon sx={{width:'1.25rem', height: '1.25rem'}} />

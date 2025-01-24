@@ -8,6 +8,7 @@
 CREATE FUNCTION global_search(query VARCHAR) RETURNS TABLE(
 	slug VARCHAR,
 	domain VARCHAR,
+	rsd_host VARCHAR,
 	name VARCHAR,
 	source TEXT,
 	is_published BOOLEAN,
@@ -19,6 +20,7 @@ $$
 	SELECT
 		aggregated_software_search.slug,
 		aggregated_software_search.domain,
+		aggregated_software_search.rsd_host,
 		aggregated_software_search.brand_name AS name,
 		'software' AS "source",
 		aggregated_software_search.is_published,
@@ -44,6 +46,7 @@ $$
 	SELECT
 		project.slug,
 		NULL AS domain,
+		NULL as rsd_host,
 		project.title AS name,
 		'projects' AS "source",
 		project.is_published,
@@ -80,6 +83,7 @@ $$
 	SELECT
 		organisation.slug,
 		NULL AS domain,
+		NULL as rsd_host,
 		organisation."name",
 		'organisations' AS "source",
 		TRUE AS is_published,
@@ -106,6 +110,7 @@ $$
 	SELECT
 		community.slug,
 		NULL AS domain,
+		NULL as rsd_host,
 		community."name",
 		'communities' AS "source",
 		TRUE AS is_published,

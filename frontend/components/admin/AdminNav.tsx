@@ -15,7 +15,6 @@ import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-
 import DescriptionIcon from '@mui/icons-material/Description'
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck'
 import GroupIcon from '@mui/icons-material/Group'
@@ -31,7 +30,8 @@ import CategoryIcon from '@mui/icons-material/Category'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import HubIcon from '@mui/icons-material/Hub'
-import CookieIcon from '@mui/icons-material/Cookie'
+import InfoIcon from '@mui/icons-material/Info'
+
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 
@@ -111,7 +111,7 @@ export const adminPages = {
   rsd_info:{
     title: 'RSD info',
     subtitle: '',
-    icon: <CookieIcon />,
+    icon: <InfoIcon />,
     path: '/admin/rsd-info',
   },
   remote_rsd: {

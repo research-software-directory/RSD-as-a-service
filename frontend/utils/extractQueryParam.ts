@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -140,7 +140,7 @@ export type SoftwareParams = {
   keywords?: string[],
   prog_lang?: string[],
   licenses?: string[],
-  sources?: string[],
+  rsd_host?: string,
   page?: number,
   rows?: number
 }
@@ -188,11 +188,10 @@ export function ssrSoftwareParams(query: ParsedUrlQuery): SoftwareParams {
     castToType: 'json-encoded',
     defaultValue: null
   })
-  const sources:string[]|undefined = decodeQueryParam({
+  const rsd_host:string|undefined = decodeQueryParam({
     query,
-    param: 'sources',
-    castToType: 'json-encoded',
-    defaultValue: null
+    param: 'rsd_host',
+    defaultValue: undefined
   })
 
   const order:string = decodeQueryParam({
@@ -209,7 +208,7 @@ export function ssrSoftwareParams(query: ParsedUrlQuery): SoftwareParams {
     keywords,
     prog_lang,
     licenses,
-    sources,
+    rsd_host,
     order,
     rows,
     page,

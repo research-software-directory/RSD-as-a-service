@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,7 +8,7 @@ import CardTitleSubtitle from '~/components/cards/CardTitleSubtitle'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
 import CardContentFrame from '~/components/cards/CardContentFrame'
 import CardImageFrame from '~/components/cards/CardImageFrame'
-import SourceRsd from '~/components/cards/SourceRsd'
+import RsdHostLabel from '~/components/cards/RsdHostLabel'
 import ProgrammingLanguageList from './ProgrammingLanguageList'
 import SoftwareMetrics from './SoftwareMetrics'
 import {getImgUrl} from '../useSoftwareOverviewProps'
@@ -25,7 +25,7 @@ type SoftwareCardContentProps = {
   visibleKeywords?: number
   visibleProgLang?: number
   domain?: string|null
-  source?: string|null
+  rsd_host?: string|null
 }
 
 export default function SoftwareCardContent(item:SoftwareCardContentProps) {
@@ -46,7 +46,7 @@ export default function SoftwareCardContent(item:SoftwareCardContentProps) {
       </CardImageFrame>
 
       <CardContentFrame>
-        <SourceRsd source={item?.source} domain={item?.domain}/>
+        <RsdHostLabel rsd_host={item?.rsd_host} domain={item?.domain}/>
         <CardTitleSubtitle
           title={item.brand_name}
           subtitle={item.short_statement}

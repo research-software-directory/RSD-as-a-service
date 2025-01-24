@@ -5,15 +5,12 @@
 
 import {useState} from 'react'
 
-import Alert from '@mui/material/Alert'
-import AlertTitle from '@mui/material/AlertTitle'
-
 import {useSession} from '~/auth'
 import EditableTable, {OrderByProps} from '~/components/table/EditableTable'
 import ContentLoader from '~/components/layout/ContentLoader'
 import {RsdInfo} from './apiRsdInfo'
 import useRsdInfo from './useRsdInfo'
-import AddRsdInfo from './AddRsdInfo'
+import NoRsdInfoAlert from './NoRsdInfoAlert'
 
 const styles = {
   flex: 1,
@@ -39,23 +36,9 @@ export default function RsdInfoTable() {
   // console.log('rsdInfo...', rsdInfo)
   // console.groupEnd()
 
-  if(loading) return <ContentLoader/>
+  if(loading) return <div className="py-6"><ContentLoader /></div>
 
-  if (rsdInfo.length === 0) {
-    return (
-      <section className="flex-1 flex gap-4 items-center justify-between pr-4">
-        <Alert severity="warning"
-          sx={{
-            marginTop: '0.5rem'
-          }}
-        >
-          <AlertTitle sx={{fontWeight:500}}>RSD info not found</AlertTitle>
-          Use <strong>Add</strong> button to create new entry. At least you should add <strong>remote_name</strong> to communicate name of your instance to other RSD instances.
-        </Alert>
-        <AddRsdInfo onAdd={addRsdInfo} />
-      </section>
-    )
-  }
+  if (rsdInfo.length === 0) return <div className="py-6"><NoRsdInfoAlert addRsdInfo={addRsdInfo} /></div>
 
   function onSortColumn(column:keyof RsdInfo) {
     if (orderBy && orderBy.column === column) {

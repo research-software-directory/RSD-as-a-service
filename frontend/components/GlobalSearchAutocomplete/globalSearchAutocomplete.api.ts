@@ -10,6 +10,7 @@ import logger from '~/utils/logger'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 
 export type GlobalSearchResults = {
+  rsd_host: string | null
   domain: string | null
   slug: string,
   name: string,
