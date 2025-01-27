@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -63,8 +63,8 @@ it('calls findROR api on search', async () => {
   expect(find.value).toEqual(searchFor)
 
   await waitFor(() => {
-    expect(mockFindInROR).toBeCalledTimes(1)
-    expect(mockFindInROR).toBeCalledWith({
+    expect(mockFindInROR).toHaveBeenCalledTimes(1)
+    expect(mockFindInROR).toHaveBeenCalledWith({
       'searchFor': searchFor
     })
   })
@@ -88,8 +88,8 @@ it('offers to add organisation when not found in ROR', async () => {
   expect(find.value).toEqual(searchFor)
 
   await waitFor(() => {
-    expect(mockFindInROR).toBeCalledTimes(1)
-    expect(mockFindInROR).toBeCalledWith({
+    expect(mockFindInROR).toHaveBeenCalledTimes(1)
+    expect(mockFindInROR).toHaveBeenCalledWith({
       'searchFor': searchFor
     })
   })
@@ -120,8 +120,8 @@ it('shows option found in ROR', async () => {
   expect(find.value).toEqual(searchFor)
 
   await waitFor(() => {
-    expect(mockFindInROR).toBeCalledTimes(1)
-    expect(mockFindInROR).toBeCalledWith({
+    expect(mockFindInROR).toHaveBeenCalledTimes(1)
+    expect(mockFindInROR).toHaveBeenCalledWith({
       'searchFor': searchFor
     })
   })

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -108,8 +108,8 @@ describe('frontend/components/projects/edit/related-software/index.tsx', () => {
     fireEvent.click(options[0])
 
     // validate api calls
-    expect(mockAddRelatedSoftware).toBeCalledTimes(1)
-    expect(mockAddRelatedSoftware).toBeCalledWith({
+    expect(mockAddRelatedSoftware).toHaveBeenCalledTimes(1)
+    expect(mockAddRelatedSoftware).toHaveBeenCalledWith({
       'project': editProjectState.project.id,
       'software': relatedSoftwareFound[0].id,
       'status': 'approved',
@@ -147,8 +147,8 @@ describe('frontend/components/projects/edit/related-software/index.tsx', () => {
     fireEvent.click(delBtn)
 
     await waitFor(() => {
-      expect(mockDeleteRelatedSoftware).toBeCalledTimes(1)
-      expect(mockDeleteRelatedSoftware).toBeCalledWith({
+      expect(mockDeleteRelatedSoftware).toHaveBeenCalledTimes(1)
+      expect(mockDeleteRelatedSoftware).toHaveBeenCalledWith({
         'project': editProjectState.project.id,
         'software': mockRelatedSoftware[0].id,
         'token': mockSession.token,

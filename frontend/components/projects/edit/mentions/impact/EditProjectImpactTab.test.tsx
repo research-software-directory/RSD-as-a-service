@@ -167,14 +167,14 @@ describe('frontend/components/project/edit/mentions/impact/index.tsx', () => {
 
     await waitFor(() => {
       // call RSD api to find mention by DOI
-      expect(mockGetMentionByDoiFromRsd).toBeCalledTimes(1)
-      expect(mockGetMentionByDoiFromRsd).toBeCalledWith({
+      expect(mockGetMentionByDoiFromRsd).toHaveBeenCalledTimes(1)
+      expect(mockGetMentionByDoiFromRsd).toHaveBeenCalledWith({
         'doi': validDOI,
         'token': mockSession.token
       })
       // becase we did not found it in RSD we try doi.org
-      expect(mockGetMentionByDoi).toBeCalledTimes(1)
-      expect(mockGetMentionByDoi).toBeCalledWith(validDOI)
+      expect(mockGetMentionByDoi).toHaveBeenCalledTimes(1)
+      expect(mockGetMentionByDoi).toHaveBeenCalledWith(validDOI)
     })
 
   })
@@ -205,8 +205,8 @@ describe('frontend/components/project/edit/mentions/impact/index.tsx', () => {
 
     await waitFor(() => {
       // call RSD api to find mention by DOI
-      expect(mockFindPublicationByTitle).toBeCalledTimes(1)
-      expect(mockFindPublicationByTitle).toBeCalledWith({
+      expect(mockFindPublicationByTitle).toHaveBeenCalledTimes(1)
+      expect(mockFindPublicationByTitle).toHaveBeenCalledWith({
         'id': projectState.project.id,
         searchFor,
         'token': mockSession.token
@@ -278,8 +278,8 @@ describe('frontend/components/project/edit/mentions/impact/index.tsx', () => {
     fireEvent.click(save)
 
     await waitFor(() => {
-      expect(mockAddNewImpactToProject).toBeCalledTimes(1)
-      expect(mockAddNewImpactToProject).toBeCalledWith({
+      expect(mockAddNewImpactToProject).toHaveBeenCalledTimes(1)
+      expect(mockAddNewImpactToProject).toHaveBeenCalledWith({
         'item': {
           'authors': null,
           'doi': null,
@@ -330,8 +330,8 @@ describe('frontend/components/project/edit/mentions/impact/index.tsx', () => {
     // screen.debug(items)
 
     await waitFor(() => {
-      expect(mockRemoveImpactForProject).toBeCalledTimes(1)
-      expect(mockRemoveImpactForProject).toBeCalledWith({
+      expect(mockRemoveImpactForProject).toHaveBeenCalledTimes(1)
+      expect(mockRemoveImpactForProject).toHaveBeenCalledWith({
         'mention': mockImpactForProject[0].id,
         'project': projectState.project.id,
         'token': mockSession.token,

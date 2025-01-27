@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -64,8 +64,8 @@ describe('components/organisation/releases/index.tsx', () => {
     screen.getByText(markdown)
 
     await waitFor(() => {
-      expect(mockPatchOrganisationTable).toBeCalledTimes(1)
-      expect(mockPatchOrganisationTable).toBeCalledWith({
+      expect(mockPatchOrganisationTable).toHaveBeenCalledTimes(1)
+      expect(mockPatchOrganisationTable).toHaveBeenCalledWith({
         'data':{
           'description': markdown,
         },

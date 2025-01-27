@@ -109,7 +109,7 @@ it('can add domains', async() => {
   fireEvent.click(addBtn)
 
   // validate API call
-  expect(mockAdResearchDomainToProject).toBeCalledTimes(1)
+  expect(mockAdResearchDomainToProject).toHaveBeenCalledTimes(1)
 
   await waitFor(() => {
     // validate 3 chips added
@@ -133,7 +133,7 @@ it('can delete research domain', async() => {
   const cancelIcon = within(domains[0]).getByTestId('CancelIcon')
   fireEvent.click(cancelIcon)
 
-  expect(mockDeleteResearchDomainFromProject).toBeCalledTimes(1)
+  expect(mockDeleteResearchDomainFromProject).toHaveBeenCalledTimes(1)
 
   await waitFor(() => {
     const remainedDomains = screen.getAllByTestId('research-domain-chip')

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -192,8 +192,8 @@ it('calls onCreate method with string value to add new option', async() => {
   expect(addOption).toBeInTheDocument()
   if (addOption) {
     fireEvent.click(addOption)
-    expect(mockCreate).toBeCalledTimes(1)
-    expect(mockCreate).toBeCalledWith(searchFor)
+    expect(mockCreate).toHaveBeenCalledTimes(1)
+    expect(mockCreate).toHaveBeenCalledWith(searchFor)
   }
 })
 
@@ -236,8 +236,8 @@ it('calls onAdd method to add option to selection', async() => {
 
   if (addOption) {
     fireEvent.click(addOption)
-    expect(mockAdd).toBeCalledTimes(1)
-    expect(mockAdd).toBeCalledWith(mockOption)
+    expect(mockAdd).toHaveBeenCalledTimes(1)
+    expect(mockAdd).toHaveBeenCalledWith(mockOption)
   }
 })
 

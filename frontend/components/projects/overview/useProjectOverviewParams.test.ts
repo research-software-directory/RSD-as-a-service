@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -38,8 +38,8 @@ it('handlesQueryChange with search param', () => {
   // call it with random param
   handleQueryChange('search', 'test-value')
 
-  expect(mockPush).toBeCalledTimes(1)
-  expect(mockPush).toBeCalledWith(
+  expect(mockPush).toHaveBeenCalledTimes(1)
+  expect(mockPush).toHaveBeenCalledWith(
     '/projects?search=test-value&page=1&rows=12',
     '/projects?search=test-value&page=1&rows=12',
     {'scroll': false}
@@ -53,8 +53,8 @@ it('handlesQueryChange for pagination', () => {
   // call it with random param
   handleQueryChange('page', '2')
 
-  expect(mockPush).toBeCalledTimes(1)
-  expect(mockPush).toBeCalledWith(
+  expect(mockPush).toHaveBeenCalledTimes(1)
+  expect(mockPush).toHaveBeenCalledWith(
     '/projects?page=2&rows=12',
     '/projects?page=2&rows=12',
     {'scroll': true}
@@ -68,8 +68,8 @@ it('resetFilters calls push without any params', () => {
   // call it with random param
   resetFilters()
 
-  expect(mockPush).toBeCalledTimes(1)
-  expect(mockPush).toBeCalledWith(
+  expect(mockPush).toHaveBeenCalledTimes(1)
+  expect(mockPush).toHaveBeenCalledWith(
     '/projects?order=impact_cnt',
     '/projects?order=impact_cnt',
     {'scroll': false}

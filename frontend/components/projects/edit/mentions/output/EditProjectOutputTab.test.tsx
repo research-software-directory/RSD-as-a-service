@@ -168,14 +168,14 @@ describe('frontend/components/projects/edit/mentions/output/index.tsx', () => {
 
     await waitFor(() => {
       // call RSD api to find mention by DOI
-      expect(mockGetMentionByDoiFromRsd).toBeCalledTimes(1)
-      expect(mockGetMentionByDoiFromRsd).toBeCalledWith({
+      expect(mockGetMentionByDoiFromRsd).toHaveBeenCalledTimes(1)
+      expect(mockGetMentionByDoiFromRsd).toHaveBeenCalledWith({
         'doi': validDOI,
         'token': mockSession.token
       })
       // becase we did not found it in RSD we try doi.org
-      expect(mockGetMentionByDoi).toBeCalledTimes(1)
-      expect(mockGetMentionByDoi).toBeCalledWith(validDOI)
+      expect(mockGetMentionByDoi).toHaveBeenCalledTimes(1)
+      expect(mockGetMentionByDoi).toHaveBeenCalledWith(validDOI)
     })
   })
 
@@ -207,8 +207,8 @@ describe('frontend/components/projects/edit/mentions/output/index.tsx', () => {
 
     await waitFor(() => {
       // call RSD api to find mention by DOI
-      expect(mockFindPublicationByTitle).toBeCalledTimes(1)
-      expect(mockFindPublicationByTitle).toBeCalledWith({
+      expect(mockFindPublicationByTitle).toHaveBeenCalledTimes(1)
+      expect(mockFindPublicationByTitle).toHaveBeenCalledWith({
         'id': editProjectState.project.id,
         searchFor,
         'token': mockSession.token
@@ -278,8 +278,8 @@ describe('frontend/components/projects/edit/mentions/output/index.tsx', () => {
     fireEvent.click(save)
 
     await waitFor(() => {
-      expect(mockAddNewOutputToProject).toBeCalledTimes(1)
-      expect(mockAddNewOutputToProject).toBeCalledWith({
+      expect(mockAddNewOutputToProject).toHaveBeenCalledTimes(1)
+      expect(mockAddNewOutputToProject).toHaveBeenCalledWith({
         'item': {
           'authors': null,
           'doi': null,
@@ -332,8 +332,8 @@ describe('frontend/components/projects/edit/mentions/output/index.tsx', () => {
     // screen.debug(items)
 
     await waitFor(() => {
-      expect(mockRemoveOutputForProject).toBeCalledTimes(1)
-      expect(mockRemoveOutputForProject).toBeCalledWith({
+      expect(mockRemoveOutputForProject).toHaveBeenCalledTimes(1)
+      expect(mockRemoveOutputForProject).toHaveBeenCalledWith({
         'mention': outputForProject[0].id,
         'project': editProjectState.project.id,
         'token': mockSession.token,

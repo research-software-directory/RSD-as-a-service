@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -130,8 +130,8 @@ it('accepts TOS via modal and calls patch account', async() => {
   fireEvent.submit(acceptBtn)
 
   await waitFor(() => {
-    expect(mockPatchAccountTable).toBeCalledTimes(1)
-    expect(mockPatchAccountTable).toBeCalledWith({
+    expect(mockPatchAccountTable).toHaveBeenCalledTimes(1)
+    expect(mockPatchAccountTable).toHaveBeenCalledWith({
       account: mockSession.user?.account,
       data: {
         agree_terms: true,

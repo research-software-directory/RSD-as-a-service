@@ -50,10 +50,10 @@ it('calls ResizeObserver', () => {
   // render
   const {unmount} = render(<WrappedResizeObserver />)
   // expect observe to be called
-  expect(mockObserve).toBeCalledTimes(1)
+  expect(mockObserve).toHaveBeenCalledTimes(1)
 
   // remove component
   unmount()
   // expect unobserve to be called
-  expect(mockUnobserve).toBeCalledTimes(1)
+  expect(mockUnobserve).toHaveBeenCalledTimes(1)
 })

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -75,8 +75,8 @@ it('calls searchForOrganisation api with proper search term', async() => {
   // screen.debug(search)
 
   await waitFor(() => {
-    expect(mockSearchForOrganisation).toBeCalledTimes(1)
-    expect(mockSearchForOrganisation).toBeCalledWith({
+    expect(mockSearchForOrganisation).toHaveBeenCalledTimes(1)
+    expect(mockSearchForOrganisation).toHaveBeenCalledWith({
       'frontend': true,
       searchFor,
     })
@@ -122,8 +122,8 @@ it('can add funding organisation from rsd', async() => {
   fireEvent.click(options[0])
 
   await waitFor(() => {
-    expect(mockAddOrganisationToProject).toBeCalledTimes(1)
-    expect(mockAddOrganisationToProject).toBeCalledWith({
+    expect(mockAddOrganisationToProject).toHaveBeenCalledTimes(1)
+    expect(mockAddOrganisationToProject).toHaveBeenCalledWith({
       'organisation': foundOrgs[0].key,
       'position': null,
       'project': mockProps.id,
@@ -179,8 +179,8 @@ it('can add funding organisation from ROR', async() => {
 
   await waitFor(() => {
     // create new organisation in RSD
-    expect(mockCreateOrganisation).toBeCalledTimes(1)
-    expect(mockCreateOrganisation).toBeCalledWith({
+    expect(mockCreateOrganisation).toHaveBeenCalledTimes(1)
+    expect(mockCreateOrganisation).toHaveBeenCalledWith({
       'organisation': {
         'city': null,
         'country': null,
@@ -199,8 +199,8 @@ it('can add funding organisation from ROR', async() => {
     })
 
     // add as funding organisations to project
-    expect(mockAddOrganisationToProject).toBeCalledTimes(1)
-    expect(mockAddOrganisationToProject).toBeCalledWith({
+    expect(mockAddOrganisationToProject).toHaveBeenCalledTimes(1)
+    expect(mockAddOrganisationToProject).toHaveBeenCalledWith({
       'organisation': expectedId,
       'position': null,
       'project': mockProps.id,
@@ -226,8 +226,8 @@ it('can remove funding organisation', async() => {
   fireEvent.click(deleteBtn)
 
   await waitFor(() => {
-    expect(mockDeleteOrganisationFromProject).toBeCalledTimes(1)
-    expect(mockDeleteOrganisationFromProject).toBeCalledWith({
+    expect(mockDeleteOrganisationFromProject).toHaveBeenCalledTimes(1)
+    expect(mockDeleteOrganisationFromProject).toHaveBeenCalledWith({
       'organisation': mockFundingOrganisations[0].id,
       'project': mockProps.id,
       'role': 'funding',

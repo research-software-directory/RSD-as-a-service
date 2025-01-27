@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -47,8 +47,8 @@ it('addMarkdownPage', async() => {
 
   const resp = await addMarkdownPage(mockParams as any)
   // validate api params
-  expect(global.fetch).toBeCalledTimes(1)
-  expect(global.fetch).toBeCalledWith(expectUrl, expectBody)
+  expect(global.fetch).toHaveBeenCalledTimes(1)
+  expect(global.fetch).toHaveBeenCalledWith(expectUrl, expectBody)
   // validate return
   expect(resp).toEqual({
     'message': {
@@ -86,8 +86,8 @@ it('saveMarkdownPage', async () => {
 
   await saveMarkdownPage(mockParams as any)
   // validate api params
-  expect(global.fetch).toBeCalledTimes(1)
-  expect(global.fetch).toBeCalledWith(expectUrl, expectBody)
+  expect(global.fetch).toHaveBeenCalledTimes(1)
+  expect(global.fetch).toHaveBeenCalledWith(expectUrl, expectBody)
 })
 
 it('updatePagePositions/patchMarkdownData', async() => {
@@ -107,7 +107,7 @@ it('updatePagePositions/patchMarkdownData', async() => {
   // update position of 3 items
   const resp = await updatePagePositions(params)
   // validate fetch called 3 times
-  expect(global.fetch).toBeCalledTimes(3)
+  expect(global.fetch).toHaveBeenCalledTimes(3)
   // OK received
   expect(resp).toEqual({
     'message': 'OK',
@@ -134,8 +134,8 @@ it('deleteMarkdownPage', async() => {
 
   const resp = await deleteMarkdownPage(params)
 
-  expect(global.fetch).toBeCalledTimes(1)
-  expect(global.fetch).toBeCalledWith(expectedUrl, expectBody)
+  expect(global.fetch).toHaveBeenCalledTimes(1)
+  expect(global.fetch).toHaveBeenCalledWith(expectedUrl, expectBody)
 
   expect(resp).toEqual({
     message: params.slug,

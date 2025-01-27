@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -62,7 +62,7 @@ it('can DELETE organisation with zero software and projects', () => {
   fireEvent.click(deleteBtn)
 
   // check calling
-  expect(mockOnDelete).toBeCalledTimes(1)
+  expect(mockOnDelete).toHaveBeenCalledTimes(1)
 
   // screen.debug(deleteBtn)
 })
@@ -85,7 +85,7 @@ it('can DELETE organisation with software or projects', () => {
 
   // check calling
   fireEvent.click(deleteBtn)
-  expect(mockOnDelete).toBeCalledTimes(1)
+  expect(mockOnDelete).toHaveBeenCalledTimes(1)
 
   // screen.debug(deleteBtn)
 })

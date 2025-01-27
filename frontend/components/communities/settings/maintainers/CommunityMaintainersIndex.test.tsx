@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -218,7 +218,7 @@ describe('frontend/components/organisation/maintainers/index.tsx', () => {
     const btnInvite = screen.getByRole('button',{name:'Generate invite link'})
     fireEvent.click(btnInvite)
 
-    expect(mockCreateInvitation).toBeCalledTimes(1)
+    expect(mockCreateInvitation).toHaveBeenCalledTimes(1)
   })
 
   it('shows unused links list',()=>{

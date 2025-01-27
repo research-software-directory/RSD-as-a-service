@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -148,7 +148,7 @@ describe('components/mention/ImportMentions/index.tsx', () => {
 
     await waitFor(() => {
       // calls onSuccess fn
-      expect(mockProps.onSuccess).toBeCalledTimes(1)
+      expect(mockProps.onSuccess).toHaveBeenCalledTimes(1)
       // shows snackbar success message
       screen.getByTestId('SuccessOutlinedIcon')
       // screen.debug()

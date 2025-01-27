@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -56,7 +58,7 @@ it('calls action on item click', () => {
   const options = screen.getAllByRole('menuitem')
   fireEvent.click(options[0])
 
-  expect(mockAction).toBeCalledTimes(1)
+  expect(mockAction).toHaveBeenCalledTimes(1)
   expect(mockAction).toHaveBeenCalledWith(mockProps.options[0].action)
 
 })

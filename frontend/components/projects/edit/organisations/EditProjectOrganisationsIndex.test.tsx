@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -159,8 +159,8 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
 
     await waitFor(() => {
       // validate search organisation called
-      expect(mockSearchForOrganisation).toBeCalledTimes(1)
-      expect(mockSearchForOrganisation).toBeCalledWith({
+      expect(mockSearchForOrganisation).toHaveBeenCalledTimes(1)
+      expect(mockSearchForOrganisation).toHaveBeenCalledWith({
         'searchFor': searchFor,
       })
     })
@@ -197,8 +197,8 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
 
     await waitFor(() => {
       // call createOrganisation api
-      expect(mockCreateOrganisation).toBeCalledTimes(1)
-      expect(mockCreateOrganisation).toBeCalledWith({
+      expect(mockCreateOrganisation).toHaveBeenCalledTimes(1)
+      expect(mockCreateOrganisation).toHaveBeenCalledWith({
         'organisation': {
           'city': null,
           'country': null,
@@ -268,8 +268,8 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
     expect(organisations).toHaveLength(1)
 
     // validate api called to save
-    expect(mockAddOrganisationToProject).toBeCalledTimes(1)
-    expect(mockAddOrganisationToProject).toBeCalledWith({
+    expect(mockAddOrganisationToProject).toHaveBeenCalledTimes(1)
+    expect(mockAddOrganisationToProject).toHaveBeenCalledWith({
       'position': 1,
       'organisation': firstOrg.id,
       'project': editProjectState.project.id,
@@ -315,15 +315,15 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
     // validate api calls
     await waitFor(() => {
       // deleteOrganisation
-      expect(mockDeleteOrganisationFromProject).toBeCalledTimes(1)
-      expect(mockDeleteOrganisationFromProject).toBeCalledWith({
+      expect(mockDeleteOrganisationFromProject).toHaveBeenCalledTimes(1)
+      expect(mockDeleteOrganisationFromProject).toHaveBeenCalledWith({
         'organisation': mockOrganisationsOfProject[0].id,
         'project': editProjectState.project.id,
         'role': 'participating',
         'token': mockSession.token,
       })
       // patch organisation positions
-      expect(mockPatchOrganisationPositions).toBeCalledTimes(1)
+      expect(mockPatchOrganisationPositions).toHaveBeenCalledTimes(1)
       // confirm number of organisations remaining
       const remained = screen.getAllByTestId('organisation-list-item')
       expect(remained.length).toEqual(mockOrganisationsOfProject.length-1)

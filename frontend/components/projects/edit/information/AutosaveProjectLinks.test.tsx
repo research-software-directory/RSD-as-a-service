@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -111,7 +111,7 @@ it('can add new link', async() => {
   await waitForElementToBeRemoved(modal)
 
   // validate addProjectLink api called
-  expect(mockAddProjectLink).toBeCalledTimes(1)
+  expect(mockAddProjectLink).toHaveBeenCalledTimes(1)
   // get added links
   const links = screen.getAllByTestId('project-link-item')
   expect(links.length).toEqual(1)
@@ -168,7 +168,7 @@ it('can edit link', async() => {
   // wait for modal to close
   await waitForElementToBeRemoved(modal)
   // validate api call is made
-  expect(mockUpdateProjectLink).toBeCalledTimes(1)
+  expect(mockUpdateProjectLink).toHaveBeenCalledTimes(1)
   // validate link title is updated
   expect(links[0]).toHaveTextContent(mockInputs.title)
 })
@@ -193,9 +193,9 @@ it('can delete link', async() => {
 
   await waitFor(() => {
     // validate delete api called
-    expect(mockDeleteProjectLink).toBeCalledTimes(1)
+    expect(mockDeleteProjectLink).toHaveBeenCalledTimes(1)
     // validate link position patched
-    expect(mockPatchProjectLinkPositions).toBeCalledTimes(1)
+    expect(mockPatchProjectLinkPositions).toHaveBeenCalledTimes(1)
     // confirm link removed
     const remainedLinks = screen.getAllByTestId('project-link-item')
     expect(remainedLinks.length).toEqual(mockUrlProject.length-1)

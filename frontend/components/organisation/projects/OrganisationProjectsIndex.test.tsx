@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -140,8 +140,8 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
     fireEvent.click(pinBtn)
 
     // validate patchProject fn is called with expected params
-    expect(mockPatchProjectForOrganisation).toBeCalledTimes(1)
-    expect(mockPatchProjectForOrganisation).toBeCalledWith({
+    expect(mockPatchProjectForOrganisation).toHaveBeenCalledTimes(1)
+    expect(mockPatchProjectForOrganisation).toHaveBeenCalledWith({
       'data': {
         'is_featured': true,
       },
@@ -182,8 +182,8 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
     fireEvent.click(pinBtn)
 
     // validate patchProject fn is called with expected params
-    expect(mockPatchProjectForOrganisation).toBeCalledTimes(1)
-    expect(mockPatchProjectForOrganisation).toBeCalledWith({
+    expect(mockPatchProjectForOrganisation).toHaveBeenCalledTimes(1)
+    expect(mockPatchProjectForOrganisation).toHaveBeenCalledWith({
       'data': {
         'is_featured': false,
       },
@@ -224,8 +224,8 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
     fireEvent.click(actionBtn)
 
     // validate patchProject fn is called with expected params
-    expect(mockPatchProjectForOrganisation).toBeCalledTimes(1)
-    expect(mockPatchProjectForOrganisation).toBeCalledWith({
+    expect(mockPatchProjectForOrganisation).toHaveBeenCalledTimes(1)
+    expect(mockPatchProjectForOrganisation).toHaveBeenCalledWith({
       'data': {
         'status': 'rejected_by_relation'
       },
@@ -267,8 +267,8 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
     fireEvent.click(actionBtn)
 
     // validate patchProject fn is called with expected params
-    expect(mockPatchProjectForOrganisation).toBeCalledTimes(1)
-    expect(mockPatchProjectForOrganisation).toBeCalledWith({
+    expect(mockPatchProjectForOrganisation).toHaveBeenCalledTimes(1)
+    expect(mockPatchProjectForOrganisation).toHaveBeenCalledWith({
       'data': {
         'status': 'approved'
       },

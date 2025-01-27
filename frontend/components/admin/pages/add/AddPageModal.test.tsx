@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -51,8 +51,8 @@ it('add custom page', async() => {
 
   await waitFor(() => {
     // validate call
-    expect(mockValidPageSlug).toBeCalledTimes(1)
-    expect(mockValidPageSlug).toBeCalledWith({
+    expect(mockValidPageSlug).toHaveBeenCalledTimes(1)
+    expect(mockValidPageSlug).toHaveBeenCalledWith({
       'slug': 'test-title',
       'token': 'TEST_TOKEN'
     })
@@ -67,8 +67,8 @@ it('add custom page', async() => {
 
   await waitFor(() => {
     // validate call
-    expect(mockAddMarkdownPage).toBeCalledTimes(1)
-    expect(mockAddMarkdownPage).toBeCalledWith({
+    expect(mockAddMarkdownPage).toHaveBeenCalledTimes(1)
+    expect(mockAddMarkdownPage).toHaveBeenCalledWith({
       'page':{
         'is_published': false,
         'position': 1,

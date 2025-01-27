@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -141,8 +141,8 @@ describe('frontend/components/projects/edit/testimonials/index.tsx', () => {
 
     // validate api call
     await waitFor(() => {
-      expect(mockPostTestimonial).toBeCalledTimes(1)
-      expect(mockPostTestimonial).toBeCalledWith({
+      expect(mockPostTestimonial).toHaveBeenCalledTimes(1)
+      expect(mockPostTestimonial).toHaveBeenCalledWith({
         'testimonial': {
           'id': null,
           'message': newItem.message,
@@ -252,13 +252,13 @@ describe('frontend/components/projects/edit/testimonials/index.tsx', () => {
     // validate api calls
     await waitFor(() => {
       // validate delete testimonial api
-      expect(mockDeleteProjectTestimonial).toBeCalledTimes(1)
-      expect(mockDeleteProjectTestimonial).toBeCalledWith({
+      expect(mockDeleteProjectTestimonial).toHaveBeenCalledTimes(1)
+      expect(mockDeleteProjectTestimonial).toHaveBeenCalledWith({
         'id': mockTestimonials[0].id,
         'token': mockSession.token,
       })
       // validate patch testimonial positions called
-      expect(mockPatchTestimonialPositions).toBeCalledTimes(1)
+      expect(mockPatchTestimonialPositions).toHaveBeenCalledTimes(1)
     })
 
     await waitFor(async() => {

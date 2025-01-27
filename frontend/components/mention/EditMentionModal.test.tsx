@@ -130,7 +130,7 @@ it('calls onSave when minimum info provided', async () => {
   fireEvent.click(save)
   // we need to wait for events
   await waitFor(() => {
-    expect(mockOnSubmit).toBeCalledTimes(1)
-    expect(mockOnSubmit).toBeCalledWith({data:expectedItem, pos: undefined})
+    expect(mockOnSubmit).toHaveBeenCalledTimes(1)
+    expect(mockOnSubmit).toHaveBeenCalledWith({data:expectedItem, pos: undefined})
   })
 })

@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -129,7 +129,7 @@ describe('pages/organisations/[...slug].tsx', () => {
     const software = await screen.findAllByTestId('software-grid-card')
     expect(software.length).toEqual(mockSoftware.length)
     // validate api call - TODO! FIGURE WHY IS CALLED TWICE!!!
-    expect(mockSoftwareForOrganisation).toBeCalledTimes(1)
+    expect(mockSoftwareForOrganisation).toHaveBeenCalledTimes(1)
   })
 
   it('renders organisation projects page when page=projects', async () => {
@@ -157,7 +157,7 @@ describe('pages/organisations/[...slug].tsx', () => {
     const cards = await screen.findAllByTestId('project-grid-card')
     expect(cards.length).toEqual(mockProjects.length)
     // validate api call - TODO! FIGURE WHY IS CALLED TWICE!!!
-    expect(mockProjectsForOrganisation).toBeCalledTimes(1)
+    expect(mockProjectsForOrganisation).toHaveBeenCalledTimes(1)
   })
 
   it('shows organisation units', async() => {
@@ -181,7 +181,7 @@ describe('pages/organisations/[...slug].tsx', () => {
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     // validate api call
-    expect(mockGetOrganisationChildren).toBeCalledTimes(1)
+    expect(mockGetOrganisationChildren).toHaveBeenCalledTimes(1)
     // validate units
     const units = screen.getAllByTestId('research-unit-item')
     expect(units.length).toEqual(mockUnits.length)

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -64,8 +64,8 @@ it('handlesQueryChange with search param', () => {
 
   render(<WrappedHandleChangeHook param="search" value="test-value" />)
 
-  expect(mockPush).toBeCalledTimes(1)
-  expect(mockPush).toBeCalledWith(
+  expect(mockPush).toHaveBeenCalledTimes(1)
+  expect(mockPush).toHaveBeenCalledWith(
     {'query': {'page': 1, 'rows': 12, 'slug': 'test-slug-project','search': 'test-value'}},
     undefined,
     {'scroll': false}
@@ -76,8 +76,8 @@ it('handlesQueryChange pagination', () => {
 
   render(<WrappedHandleChangeHook param="page" value="2" />)
 
-  expect(mockPush).toBeCalledTimes(1)
-  expect(mockPush).toBeCalledWith(
+  expect(mockPush).toHaveBeenCalledTimes(1)
+  expect(mockPush).toHaveBeenCalledWith(
     {'query': {'page': '2', 'rows': 12, 'slug': 'test-slug-project'}},
     undefined,
     {'scroll': true}
@@ -88,8 +88,8 @@ it('resetFilters pagination', () => {
 
   render(<WrappedResetFilterHook tab="projects" />)
 
-  expect(mockPush).toBeCalledTimes(1)
-  expect(mockPush).toBeCalledWith(
+  expect(mockPush).toHaveBeenCalledTimes(1)
+  expect(mockPush).toHaveBeenCalledWith(
     {'query': {'slug': 'test-slug-project', 'tab': 'projects'}},
     undefined,
     {'scroll': false}

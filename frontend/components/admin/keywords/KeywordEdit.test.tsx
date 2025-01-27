@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -75,14 +75,14 @@ it('On blur updates keyword', async() => {
   // now use escape to reset
   fireEvent.blur(input)
 
-  expect(mockPatchKeyword).toBeCalledTimes(1)
+  expect(mockPatchKeyword).toHaveBeenCalledTimes(1)
 
   const expected = {
     'id': mockKeywordData[0].id,
     'token': 'TEST-TOKEN',
     'value': newValue,
   }
-  expect(mockPatchKeyword).toBeCalledWith(expected)
+  expect(mockPatchKeyword).toHaveBeenCalledWith(expected)
 
 })
 

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -131,8 +131,8 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     fireEvent.click(pinBtn)
 
     // validate patchSoftware fn is called with expected params
-    expect(mockPatchSoftwareForOrganisation).toBeCalledTimes(1)
-    expect(mockPatchSoftwareForOrganisation).toBeCalledWith({
+    expect(mockPatchSoftwareForOrganisation).toHaveBeenCalledTimes(1)
+    expect(mockPatchSoftwareForOrganisation).toHaveBeenCalledWith({
       'data': {
         'is_featured': true,
       },
@@ -173,8 +173,8 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     fireEvent.click(pinBtn)
 
     // validate patchSoftware fn is called with expected params
-    expect(mockPatchSoftwareForOrganisation).toBeCalledTimes(1)
-    expect(mockPatchSoftwareForOrganisation).toBeCalledWith({
+    expect(mockPatchSoftwareForOrganisation).toHaveBeenCalledTimes(1)
+    expect(mockPatchSoftwareForOrganisation).toHaveBeenCalledWith({
       'data': {
         'is_featured': false,
       },
@@ -216,8 +216,8 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     fireEvent.click(actionBtn)
 
     // validate patchSoftware fn is called with expected params
-    expect(mockPatchSoftwareForOrganisation).toBeCalledTimes(1)
-    expect(mockPatchSoftwareForOrganisation).toBeCalledWith({
+    expect(mockPatchSoftwareForOrganisation).toHaveBeenCalledTimes(1)
+    expect(mockPatchSoftwareForOrganisation).toHaveBeenCalledWith({
       'data': {
         'status': 'rejected_by_relation'
       },
@@ -258,8 +258,8 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     fireEvent.click(actionBtn)
 
     // validate patchSoftware fn is called with expected params
-    expect(mockPatchSoftwareForOrganisation).toBeCalledTimes(1)
-    expect(mockPatchSoftwareForOrganisation).toBeCalledWith({
+    expect(mockPatchSoftwareForOrganisation).toHaveBeenCalledTimes(1)
+    expect(mockPatchSoftwareForOrganisation).toHaveBeenCalledWith({
       'data': {
         'status': 'approved'
       },
