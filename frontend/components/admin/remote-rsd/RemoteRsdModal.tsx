@@ -84,7 +84,7 @@ export default function RemoteRsdModal({remoteRsd,onCancel,onSubmit}:RemoteRsdMo
         setRemoteName(remote)
         // set label name if not present
         if (!label) setValue('label',remote,{shouldDirty:true,shouldValidate:true})
-      }else{
+      }else if (isValid){
         const hostname = `@${new URL(bouncedDomain).hostname}`
         if (!label) setValue('label',hostname,{shouldDirty:true,shouldValidate:true})
       }
@@ -200,7 +200,7 @@ export default function RemoteRsdModal({remoteRsd,onCancel,onSubmit}:RemoteRsdMo
                 label: config.scrape_interval_minutes.label,
                 helperTextMessage: errors?.scrape_interval_minutes?.message ?? config.scrape_interval_minutes.help,
                 variant:'outlined',
-                defaultValue: remoteRsd?.scrape_interval_minutes.toString() ?? '5',
+                defaultValue: remoteRsd?.scrape_interval_minutes.toString() ?? '60',
                 endAdornment: 'min.'
               }}
               register={register('scrape_interval_minutes', {
