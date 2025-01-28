@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -220,14 +220,6 @@ $$
 	ORDER BY r_index DESC;
 $$;
 
--- returns a list of `category` entries traversing from the tree root to entry with `category_id`
-CREATE FUNCTION category_path_expanded(category_id UUID)
-RETURNS JSON
-LANGUAGE SQL STABLE AS
-$$
-	SELECT json_agg(row_to_json) AS path FROM (SELECT row_to_json(category_path(category_id))) AS cats;
-$$;
-
 
 -- TABLE FOR software categories
 -- includes organisation, community and general categories
@@ -242,22 +234,6 @@ CREATE TABLE category_for_software (
 
 CREATE INDEX category_for_software_category_id_idx ON category_for_software(category_id);
 
--- RPC for software page to show all software categories
-CREATE FUNCTION category_paths_by_software_expanded(software_id UUID)
-RETURNS JSON
-LANGUAGE SQL STABLE AS
-$$
-	WITH
-		cat_ids AS
-		(SELECT category_id FROM category_for_software AS c4s WHERE c4s.software_id = category_paths_by_software_expanded.software_id),
-	paths AS
-		(SELECT category_path_expanded(category_id) AS path FROM cat_ids)
-	SELECT
-		CASE WHEN EXISTS(SELECT 1 FROM cat_ids) THEN (SELECT json_agg(path) FROM paths)
-		ELSE '[]'::json
-		END AS result
-$$;
-
 
 -- TABLE FOR project categories
 -- currently used only for organisation categories
@@ -270,37 +246,6 @@ CREATE TABLE category_for_project (
 );
 
 CREATE INDEX category_for_project_category_id_idx ON category_for_project(category_id);
-
--- RPC for project page to show all project categories
-CREATE FUNCTION category_paths_by_project_expanded(project_id UUID)
-RETURNS JSON
-LANGUAGE SQL STABLE AS
-$$
-	WITH
-		cat_ids AS
-		(SELECT
-			category_id
-		FROM
-			category_for_project
-		WHERE
-			category_for_project.project_id = category_paths_by_project_expanded.project_id
-		),
-		paths AS
-		(
-			SELECT
-				category_path_expanded(category_id) AS path
-			FROM cat_ids
-		)
-	SELECT
-		CASE
-			WHEN EXISTS(
-				SELECT 1 FROM cat_ids
-			) THEN (
-				SELECT json_agg(path) FROM paths
-			)
-			ELSE '[]'::json
-		END AS result
-$$;
 
 
 CREATE FUNCTION software_of_category()
