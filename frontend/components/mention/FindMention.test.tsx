@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -150,8 +150,8 @@ it('does not show Add option when onCreate=undefined', async () => {
   expect(options.length).toEqual(2)
   // click first options
   fireEvent.click(options[0])
-  expect(mockAdd).toBeCalledTimes(1)
-  expect(mockAdd).toBeCalledWith(mockMentionItem)
+  expect(mockAdd).toHaveBeenCalledTimes(1)
+  expect(mockAdd).toHaveBeenCalledWith(mockMentionItem)
 })
 
 // NOT ALLOWED WITH MENTIONS but we test
@@ -189,8 +189,8 @@ it('shows Add option when onCreate defined', async () => {
   // select first option
   const firstOption = options[0]
   fireEvent.click(firstOption)
-  expect(mockCreate).toBeCalledTimes(1)
-  expect(mockCreate).toBeCalledWith(searchFor)
+  expect(mockCreate).toHaveBeenCalledTimes(1)
+  expect(mockCreate).toHaveBeenCalledWith(searchFor)
 })
 
 it('leaves input after selection when reset=false', async () => {

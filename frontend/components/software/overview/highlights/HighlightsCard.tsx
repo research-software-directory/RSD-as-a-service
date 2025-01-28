@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -53,11 +53,11 @@ export default function HighlightsCard(item: HighlightsCardProps) {
           Cover image, show only if valid image link! To avoid the layout shift we
           flip the logic to hide the image only when the image link is not valid.
         */}
-        { validImg === false ? null
+        { validImg === false || imgSrc === null ? null
           :
           <img
             className="object-contain object-left w-full rounded-tr-lg rounded-tl-lg sm:rounded-bl-lg sm:rounded-tl-lg sm:rounded-tr-none sm:h-[20rem]"
-            src={`${imgSrc ?? ''}`}
+            src={imgSrc ?? undefined}
             alt={`Cover image for ${item.brand_name}`}
             style={{maxWidth:'22rem'}}
             // lighthouse audit requires explicit width and height

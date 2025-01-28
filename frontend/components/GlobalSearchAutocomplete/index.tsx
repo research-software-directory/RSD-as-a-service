@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -9,21 +9,21 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React, {useCallback, useEffect, useRef, useState} from 'react'
-import {ClickAwayListener} from '@mui/base'
 import {useRouter} from 'next/router'
-
-import {useAuth} from '~/auth'
-import {getGlobalSearch,GlobalSearchResults} from '~/components/GlobalSearchAutocomplete/globalSearchAutocomplete.api'
-
-import EnterkeyIcon from '~/components/icons/enterkey.svg'
-import {useDebounce} from '~/utils/useDebounce'
+import ClickAwayListener from '@mui/material/ClickAwayListener'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import BusinessIcon from '@mui/icons-material/Business'
 import Diversity3Icon from '@mui/icons-material/Diversity3'
+
+import {useAuth} from '~/auth'
+import {useDebounce} from '~/utils/useDebounce'
 import logger from '~/utils/logger'
-import useSnackbar from '~/components/snackbar/useSnackbar'
 import {useModules} from '~/config/useModules'
+import {composeUrl} from '~/utils/fetchHelpers'
+import EnterkeyIcon from '~/components/icons/enterkey.svg'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import {getGlobalSearch,GlobalSearchResults} from './globalSearchAutocomplete.api'
 
 type Props = {
   className?: string
@@ -69,16 +69,16 @@ export default function GlobalSearchAutocomplete(props: Props) {
   const defaultValues: GlobalSearchResults[] = []
 
   if (isModuleEnabled('software')) {
-    defaultValues.push({name: 'Go to Software page', slug: '', source: 'software'})
+    defaultValues.push({name: 'Go to Software page', slug: '', source: 'software', domain: null, rsd_host: null})
   }
   if (isModuleEnabled('projects')) {
-    defaultValues.push({name: 'Go to Projects page', slug: '', source: 'projects'})
+    defaultValues.push({name: 'Go to Projects page', slug: '', source: 'projects', domain: null, rsd_host: null})
   }
   if (isModuleEnabled('organisations')) {
-    defaultValues.push({name: 'Go to Organisations page', slug: '', source: 'organisations'})
+    defaultValues.push({name: 'Go to Organisations page', slug: '', source: 'organisations', domain: null, rsd_host: null})
   }
   if (isModuleEnabled('communities')) {
-    defaultValues.push({name: 'Go to Communities page', slug: '', source: 'communities'})
+    defaultValues.push({name: 'Go to Communities page', slug: '', source: 'communities', domain: null, rsd_host: null})
   }
 
   async function fetchData(search: string) {
@@ -102,11 +102,26 @@ export default function GlobalSearchAutocomplete(props: Props) {
   }
 
   function handleClick() {
-    const slug = searchResults[selected]?.slug !== '' ? ('/' + searchResults[selected]?.slug) : ''
-    router.push(`/${searchResults[selected]?.source}${slug}`)
-    setSelected(0)
-    setOpen(false)
-    setInputValue('')
+    const selectedItem = searchResults[selected] ?? null
+    if (selectedItem){
+      // build url
+      const url = composeUrl({
+        domain: selectedItem.domain,
+        route: selectedItem.source,
+        slug: selectedItem.slug
+      })
+      // remote RSD
+      if (selectedItem.domain){
+        // open page in new tab
+        window.open(url,'_blank')?.focus()
+      }else{
+        // local page use next router
+        router.push(url)
+      }
+      setSelected(0)
+      setOpen(false)
+      setInputValue('')
+    }
   }
 
   // Handle keyup
@@ -225,44 +240,70 @@ export default function GlobalSearchAutocomplete(props: Props) {
             {!hasResults &&
               <div className="px-4 py-3 font-normal bg-base-200 mb-2 ">
                 <span className="animate-pulse">No results...</span>
-              </div>}
-            {searchResults.map((item, index) =>
-              <div key={index}
-                data-testid="global-search-list-item"
-                className={`${selected === index ? 'bg-base-200' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
-                onClick={handleClick}
-                onMouseEnter={() => setSelected(index)}
-                onTouchStart={() => setSelected(index)}
-              >
-                <div className="flex gap-3 w-full">
-                  {/*icon*/}
-                  <div className={selected === index ? 'text-content' : 'opacity-40'}>
-                    {item?.source === 'software' && <TerminalIcon/>}
-                    {item?.source === 'projects' && <ListAltIcon/>}
-                    {item?.source === 'organisations' && <BusinessIcon/>}
-                    {item?.source === 'communities' && <Diversity3Icon/>}
-                  </div>
-
-                  <div className="flex-grow ">
-                    <div className="font-normal line-clamp-1">{item?.name}</div>
-
-                    <div className="text-xs text-current text-opacity-40">
-                      {item?.source}{item?.is_published === false && <span
-                        className="flex-nowrap border px-1 py-[2px] rounded bg-warning ml-3 text-xs text-warning-content">unpublished</span>}
+              </div>
+            }
+            {searchResults.map((item, index) => {
+              const url = composeUrl({
+                domain: item?.domain,
+                route: item?.source,
+                slug: item?.slug ?? '/'
+              })
+              let rsd_host
+              if (item?.rsd_host){
+                rsd_host = item.rsd_host
+              } else if (item?.domain){
+                rsd_host = `@${new URL(url).hostname}`
+              } else {
+                rsd_host = `@${window.location.hostname}`
+              }
+              // debugger
+              return (
+                <div key={index}
+                  data-testid="global-search-list-item"
+                  className={`${selected === index ? 'bg-base-200' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
+                  onClick={handleClick}
+                  onMouseEnter={() => setSelected(index)}
+                  onTouchStart={() => setSelected(index)}
+                >
+                  <div className="flex gap-3 w-full">
+                    {/*icon*/}
+                    <div className={selected === index ? 'text-content' : 'opacity-40'}>
+                      {item?.source === 'software' && <TerminalIcon/>}
+                      {item?.source === 'projects' && <ListAltIcon/>}
+                      {item?.source === 'organisations' && <BusinessIcon/>}
+                      {item?.source === 'communities' && <Diversity3Icon/>}
                     </div>
 
-                  </div>
+                    <div className="flex-grow"
+                      title={url}
+                    >
+                      <div className="font-normal line-clamp-1">
+                        {item?.name}
+                      </div>
+                      <div className="text-xs text-current line-clamp-1">
+                        {item?.source}
+                      </div>
+                      <div className="text-xs text-base-content-secondary line-clamp-1">
+                        {rsd_host}
+                      </div>
+                      {item?.is_published === false ?
+                        <div className="flex-nowrap text-warning text-xs">
+                          Unpublished
+                        </div>
+                        : null
+                      }
+                    </div>
 
-                  {selected === index && <div>
-                    <EnterkeyIcon/>
-                  </div>}
+                    {selected === index && <div>
+                      <EnterkeyIcon/>
+                    </div>}
+                  </div>
                 </div>
-              </div>
-            )}
+              )
+            })}
           </div>
         }
       </div>
-
     </ClickAwayListener>
   )
 }

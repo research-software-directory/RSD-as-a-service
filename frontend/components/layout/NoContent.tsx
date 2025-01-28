@@ -29,7 +29,7 @@ const NoContentBody = styled('div')({
 
 export default function NoContent({message='nothing to show'}:{message?:string}) {
   const [show, setShow]=useState(false)
-  const containerRef = useRef()
+  const containerRef = useRef(undefined)
 
   useEffect(() => {
     let abort=false

@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +19,7 @@ const mockLineData= [
   {x: 1628380800000, y: 0}
 ]
 
-// MOCK resize obzerver hook
+// MOCK resize observer hook
 jest.mock('./useResizeObserver')
 
 it('renders chart with d3-line-chart svg group', async() => {

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -9,12 +9,12 @@ import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import Avatar from '@mui/material/Avatar'
-
+import useMediaQuery from '@mui/material/useMediaQuery'
 import {useSortable} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
-import SortableListItemActions from '~/components/layout/SortableListItemActions'
-import useMediaQuery from '@mui/material/useMediaQuery'
+
 import {getImageUrl} from '~/utils/editImage'
+import SortableListItemActions from '~/components/layout/SortableListItemActions'
 import {SoftwareHighlight} from './apiSoftwareHighlights'
 
 type HighlightProps = {

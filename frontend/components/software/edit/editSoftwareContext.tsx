@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -62,7 +62,7 @@ export function EditSoftwareProvider(props: any) {
     // loaded server side is passed into context we need to update the context state
     // using dispatch/reducer functions.
     if (props?.state && props.state.pageIndex) {
-      if (props.state.pageIndex !== state.pageIndex) {
+      if (props.state.pageIndex !== state?.pageIndex) {
         // debugger
         dispatch({
           type: EditSoftwareActionType.UPDATE_STATE,
@@ -70,7 +70,7 @@ export function EditSoftwareProvider(props: any) {
         })
       }
     }
-  },[props?.state, state.pageIndex])
+  },[props?.state, state?.pageIndex])
 
   return (
     <EditSoftwareContext.Provider value={{

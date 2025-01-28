@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -142,8 +142,8 @@ it('can add NEW license', async() => {
   fireEvent.click(saveBtn)
 
   await waitFor(() => {
-    expect(mockAddLicensesForSoftware).toBeCalledTimes(1)
-    expect(mockAddLicensesForSoftware).toBeCalledWith({
+    expect(mockAddLicensesForSoftware).toHaveBeenCalledTimes(1)
+    expect(mockAddLicensesForSoftware).toHaveBeenCalledWith({
       'license': {
         ...newLicense,
         software: softwareState.software.id
@@ -194,12 +194,12 @@ it('can import license from DOI', async() => {
 
   await waitFor(() => {
     // validate import api call
-    expect(mockGetLicensesFromDoi).toBeCalledTimes(1)
-    expect(mockGetLicensesFromDoi).toBeCalledWith(defaultValues.concept_doi)
+    expect(mockGetLicensesFromDoi).toHaveBeenCalledTimes(1)
+    expect(mockGetLicensesFromDoi).toHaveBeenCalledWith(defaultValues.concept_doi)
 
     // validate license save api call
-    expect(mockAddLicensesForSoftware).toBeCalledTimes(1)
-    expect(mockAddLicensesForSoftware).toBeCalledWith({
+    expect(mockAddLicensesForSoftware).toHaveBeenCalledTimes(1)
+    expect(mockAddLicensesForSoftware).toHaveBeenCalledWith({
       'license': {
         license: licenseForSoftware[0].license,
         name: licenseForSoftware[0].name,
@@ -249,8 +249,8 @@ it('can add license from list', async() => {
   fireEvent.click(addLicense)
 
   await waitFor(() => {
-    expect(mockAddLicensesForSoftware).toBeCalledTimes(1)
-    expect(mockAddLicensesForSoftware).toBeCalledWith({
+    expect(mockAddLicensesForSoftware).toHaveBeenCalledTimes(1)
+    expect(mockAddLicensesForSoftware).toHaveBeenCalledWith({
       'license': {
         ...newLicense,
         'software': softwareState.software.id
@@ -294,8 +294,8 @@ it('can remove license', async () => {
   fireEvent.click(delBtn)
 
   await waitFor(() => {
-    expect(mockDeleteLicense).toBeCalledTimes(1)
-    expect(mockDeleteLicense).toBeCalledWith({
+    expect(mockDeleteLicense).toHaveBeenCalledTimes(1)
+    expect(mockDeleteLicense).toHaveBeenCalledWith({
       'id': defaultValues.licenses[0].data.id,
       'token': mockSession.token,
     })

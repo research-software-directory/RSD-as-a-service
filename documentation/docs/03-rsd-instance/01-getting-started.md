@@ -114,7 +114,7 @@ cp .env.example .env
 and change, as described above, the values for `POSTGRES_PASSWORD`, `PGRST_JWT_SECRET` (with at least 32 characters) and `POSTGRES_AUTHENTICATOR_PASSWORD` to arbitrary values.
 Additionally set
 
-```
+```env
 POSTGREST_URL_EXTERNAL=http://fqdn.yourdomain.com/api/v1
 RSD_AUTH_URL=http://fqdn.yourdomain.com:7000
 ```

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -109,8 +109,8 @@ describe('frontend/components/projects/edit/related-projects/index.tsx', () => {
     fireEvent.click(options[0])
 
     // validate api calls
-    expect(mockAddRelatedProject).toBeCalledTimes(1)
-    expect(mockAddRelatedProject).toBeCalledWith({
+    expect(mockAddRelatedProject).toHaveBeenCalledTimes(1)
+    expect(mockAddRelatedProject).toHaveBeenCalledWith({
       'origin': editProjectState.project.id,
       'relation': relatedProjectsFound[0].id,
       'status': 'approved',
@@ -153,13 +153,13 @@ describe('frontend/components/projects/edit/related-projects/index.tsx', () => {
 
     await waitFor(() => {
       // delete (possible) 2 entries/references
-      expect(mockDeleteRelatedProject).toBeCalledTimes(2)
-      expect(mockDeleteRelatedProject).toBeCalledWith({
+      expect(mockDeleteRelatedProject).toHaveBeenCalledTimes(2)
+      expect(mockDeleteRelatedProject).toHaveBeenCalledWith({
         'origin': mockRelatedProjects[0].origin,
         'relation': mockRelatedProjects[0].relation,
         'token': mockSession.token,
       })
-      expect(mockDeleteRelatedProject).toBeCalledWith({
+      expect(mockDeleteRelatedProject).toHaveBeenCalledWith({
         'origin': mockRelatedProjects[0].relation,
         'relation': mockRelatedProjects[0].origin,
         'token': mockSession.token,

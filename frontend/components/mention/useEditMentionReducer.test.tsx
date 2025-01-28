@@ -3,8 +3,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -80,8 +80,8 @@ it('calls SET_LOADING action', () => {
     </EditMentionContext.Provider>
   )
 
-  expect(mockDispatch).toBeCalledTimes(1)
-  expect(mockDispatch).toBeCalledWith(action)
+  expect(mockDispatch).toHaveBeenCalledTimes(1)
+  expect(mockDispatch).toHaveBeenCalledWith(action)
 })
 
 it('calls SET_MENTIONS action', () => {
@@ -110,8 +110,8 @@ it('calls SET_MENTIONS action', () => {
     </EditMentionContext.Provider>
   )
   // assert
-  expect(mockDispatch).toBeCalledTimes(1)
-  expect(mockDispatch).toBeCalledWith(action)
+  expect(mockDispatch).toHaveBeenCalledTimes(1)
+  expect(mockDispatch).toHaveBeenCalledWith(action)
 
 })
 
@@ -141,8 +141,8 @@ it('calls ON_ADD action', () => {
     </EditMentionContext.Provider>
   )
   // assert
-  expect(mockDispatch).toBeCalledTimes(1)
-  expect(mockDispatch).toBeCalledWith(action)
+  expect(mockDispatch).toHaveBeenCalledTimes(1)
+  expect(mockDispatch).toHaveBeenCalledWith(action)
 
 })
 
@@ -172,8 +172,8 @@ it('calls SET_EDIT_MODAL action', () => {
     </EditMentionContext.Provider>
   )
   // assert
-  expect(mockDispatch).toBeCalledTimes(1)
-  expect(mockDispatch).toBeCalledWith(action)
+  expect(mockDispatch).toHaveBeenCalledTimes(1)
+  expect(mockDispatch).toHaveBeenCalledWith(action)
 
 })
 
@@ -203,8 +203,8 @@ it('calls ON_SUBMIT action', () => {
     </EditMentionContext.Provider>
   )
   // assert
-  expect(mockDispatch).toBeCalledTimes(1)
-  expect(mockDispatch).toBeCalledWith(action)
+  expect(mockDispatch).toHaveBeenCalledTimes(1)
+  expect(mockDispatch).toHaveBeenCalledWith(action)
 
 })
 
@@ -234,8 +234,8 @@ it('calls ON_UPDATE action', () => {
     </EditMentionContext.Provider>
   )
   // assert
-  expect(mockDispatch).toBeCalledTimes(1)
-  expect(mockDispatch).toBeCalledWith(action)
+  expect(mockDispatch).toHaveBeenCalledTimes(1)
+  expect(mockDispatch).toHaveBeenCalledWith(action)
 
 })
 
@@ -265,8 +265,8 @@ it('calls ON_DELETE action', () => {
     </EditMentionContext.Provider>
   )
   // assert
-  expect(mockDispatch).toBeCalledTimes(1)
-  expect(mockDispatch).toBeCalledWith(action)
+  expect(mockDispatch).toHaveBeenCalledTimes(1)
+  expect(mockDispatch).toHaveBeenCalledWith(action)
 
 })
 
@@ -299,8 +299,8 @@ it('calls SET_CONFIRM_MODAL action', () => {
     </EditMentionContext.Provider>
   )
   // assert
-  expect(mockDispatch).toBeCalledTimes(1)
-  expect(mockDispatch).toBeCalledWith(action)
+  expect(mockDispatch).toHaveBeenCalledTimes(1)
+  expect(mockDispatch).toHaveBeenCalledWith(action)
 
 })
 
@@ -332,8 +332,8 @@ it('calls SET_CONFIRM_MODAL to close modal', () => {
     </EditMentionContext.Provider>
   )
   // assert
-  expect(mockDispatch).toBeCalledTimes(1)
-  expect(mockDispatch).toBeCalledWith(action)
+  expect(mockDispatch).toHaveBeenCalledTimes(1)
+  expect(mockDispatch).toHaveBeenCalledWith(action)
 
 })
 
@@ -366,8 +366,8 @@ it('calls SET_EDIT_MODAL to open modal', () => {
     </EditMentionContext.Provider>
   )
   // assert
-  expect(mockDispatch).toBeCalledTimes(1)
-  expect(mockDispatch).toBeCalledWith(action)
+  expect(mockDispatch).toHaveBeenCalledTimes(1)
+  expect(mockDispatch).toHaveBeenCalledWith(action)
 
 })
 
@@ -399,7 +399,7 @@ it('calls SET_EDIT_MODAL to close modal', () => {
     </EditMentionContext.Provider>
   )
   // assert
-  expect(mockDispatch).toBeCalledTimes(1)
-  expect(mockDispatch).toBeCalledWith(action)
+  expect(mockDispatch).toHaveBeenCalledTimes(1)
+  expect(mockDispatch).toHaveBeenCalledWith(action)
 
 })

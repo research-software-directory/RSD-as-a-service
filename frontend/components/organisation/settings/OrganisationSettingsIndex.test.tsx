@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -139,8 +139,8 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
     // change & blur
     fireEvent.change(nameInput, {target: {value: updateName}})
     fireEvent.blur(nameInput)
-    expect(mockPatchOrganisationTable).toBeCalledTimes(1)
-    expect(mockPatchOrganisationTable).toBeCalledWith({
+    expect(mockPatchOrganisationTable).toHaveBeenCalledTimes(1)
+    expect(mockPatchOrganisationTable).toHaveBeenCalledWith({
       'data': {
         'name': updateName,
       },
@@ -157,8 +157,8 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
     fireEvent.change(slugInput, {target: {value: slugValue}})
     fireEvent.blur(slugInput)
     // validate
-    expect(mockPatchOrganisationTable).toBeCalledTimes(2)
-    expect(mockPatchOrganisationTable).toBeCalledWith({
+    expect(mockPatchOrganisationTable).toHaveBeenCalledTimes(2)
+    expect(mockPatchOrganisationTable).toHaveBeenCalledWith({
       'data': {
         'slug': slugValue,
       },

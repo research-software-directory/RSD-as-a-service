@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -49,8 +49,8 @@ it('handleQueryChange with search param', () => {
 
   render(<WrappedHandleChangeHook param="search" value="test-value" />)
 
-  expect(mockPush).toBeCalledTimes(1)
-  expect(mockPush).toBeCalledWith(
+  expect(mockPush).toHaveBeenCalledTimes(1)
+  expect(mockPush).toHaveBeenCalledWith(
     {'query': {'page': 1, 'rows': 12, 'slug': 'test-slug-project','search': 'test-value'}},
     undefined,
     {'scroll': false}
@@ -61,8 +61,8 @@ it('handleQueryChange pagination', () => {
 
   render(<WrappedHandleChangeHook param="page" value="2" />)
 
-  expect(mockPush).toBeCalledTimes(1)
-  expect(mockPush).toBeCalledWith(
+  expect(mockPush).toHaveBeenCalledTimes(1)
+  expect(mockPush).toHaveBeenCalledWith(
     {'query': {'page': '2', 'rows': 12, 'slug': 'test-slug-project'}},
     undefined,
     {'scroll': true}

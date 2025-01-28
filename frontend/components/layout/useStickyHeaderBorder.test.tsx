@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -50,8 +50,8 @@ it('hook calls observe method with proper element', () => {
   const h1 = screen.getByRole('heading')
   expect(h1).toBeInTheDocument()
   // validate observe call
-  expect(mockObserve).toBeCalledTimes(1)
-  expect(mockObserve).toBeCalledWith(h1)
+  expect(mockObserve).toHaveBeenCalledTimes(1)
+  expect(mockObserve).toHaveBeenCalledWith(h1)
 })
 
 it('hook calls unobserve method with proper element', () => {
@@ -63,6 +63,6 @@ it('hook calls unobserve method with proper element', () => {
   // unmount component
   unmount()
   // validate unobserve element is called
-  expect(mockUnobserve).toBeCalledTimes(1)
-  expect(mockUnobserve).toBeCalledWith(h1)
+  expect(mockUnobserve).toHaveBeenCalledTimes(1)
+  expect(mockUnobserve).toHaveBeenCalledWith(h1)
 })

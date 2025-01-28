@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -89,8 +89,8 @@ it('can add keyword from option list', async() => {
   )
 
   // initially we call search with ""
-  expect(mockSearchForProjectKeyword).toBeCalledTimes(1)
-  expect(mockSearchForProjectKeyword).toBeCalledWith({
+  expect(mockSearchForProjectKeyword).toHaveBeenCalledTimes(1)
+  expect(mockSearchForProjectKeyword).toHaveBeenCalledWith({
     searchFor:''
   })
 
@@ -110,8 +110,8 @@ it('can add keyword from option list', async() => {
   fireEvent.click(options[0])
 
   await waitFor(() => {
-    expect(mockAddKeywordsToProject).toBeCalledTimes(1)
-    expect(mockAddKeywordsToProject).toBeCalledWith({
+    expect(mockAddKeywordsToProject).toHaveBeenCalledTimes(1)
+    expect(mockAddKeywordsToProject).toHaveBeenCalledWith({
       'data': [
         {
           'keyword': keywords[0].id,
@@ -140,8 +140,8 @@ it('can add NEW keyword', async () => {
   )
 
   // initially we call search with ""
-  expect(mockSearchForProjectKeyword).toBeCalledTimes(1)
-  expect(mockSearchForProjectKeyword).toBeCalledWith({
+  expect(mockSearchForProjectKeyword).toHaveBeenCalledTimes(1)
+  expect(mockSearchForProjectKeyword).toHaveBeenCalledWith({
     searchFor:''
   })
 
@@ -159,7 +159,7 @@ it('can add NEW keyword', async () => {
   })
 
   // validate search is called with searchFor
-  expect(mockSearchForProjectKeyword).toBeCalledWith({
+  expect(mockSearchForProjectKeyword).toHaveBeenCalledWith({
     searchFor
   })
 
@@ -167,8 +167,8 @@ it('can add NEW keyword', async () => {
   fireEvent.click(addOption)
 
   await waitFor(() => {
-    expect(mockCreateOrGetKeyword).toBeCalledTimes(1)
-    expect(mockCreateOrGetKeyword).toBeCalledWith({
+    expect(mockCreateOrGetKeyword).toHaveBeenCalledTimes(1)
+    expect(mockCreateOrGetKeyword).toHaveBeenCalledWith({
       'keyword': searchFor,
       'token': mockSession.token,
     })
@@ -200,15 +200,15 @@ it('can REMOVE keyword', async () => {
 
   await waitFor(() => {
     // validate remove keyword from project
-    expect(mockDeleteKeywordFromProject).toBeCalledTimes(1)
-    expect(mockDeleteKeywordFromProject).toBeCalledWith({
+    expect(mockDeleteKeywordFromProject).toHaveBeenCalledTimes(1)
+    expect(mockDeleteKeywordFromProject).toHaveBeenCalledWith({
       'keyword': projectKeywords[0].id,
       'project': projectKeywords[0].project,
       'token': mockSession.token,
     })
     // validate silent keyword delete is called
-    expect(mockSilentKeywordDelete).toBeCalledTimes(1)
-    expect(mockSilentKeywordDelete).toBeCalledWith({
+    expect(mockSilentKeywordDelete).toHaveBeenCalledTimes(1)
+    expect(mockSilentKeywordDelete).toHaveBeenCalledWith({
       'keyword': projectKeywords[0].keyword,
       'token': mockSession.token,
     })

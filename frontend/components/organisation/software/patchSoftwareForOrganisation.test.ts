@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -35,8 +37,8 @@ it('calls api with proper params', async () => {
   mockResolvedValueOnce('OK', {status: 200})
 
   const resp = await patchSoftwareForOrganisation(mockData)
-  expect(global.fetch).toBeCalledTimes(1)
-  expect(global.fetch).toBeCalledWith(expectUrl, expectApi)
+  expect(global.fetch).toHaveBeenCalledTimes(1)
+  expect(global.fetch).toHaveBeenCalledWith(expectUrl, expectApi)
   expect(resp).toEqual({
     status: 200,
     message: 'OK'
@@ -49,7 +51,7 @@ it('returns api error', async () => {
   mockResolvedValueOnce({message: 'Custom error message'}, {status: 400})
 
   const resp = await patchSoftwareForOrganisation(mockData)
-  expect(global.fetch).toBeCalledTimes(1)
+  expect(global.fetch).toHaveBeenCalledTimes(1)
 
   expect(resp).toEqual({
     'status': 400,

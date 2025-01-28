@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -182,8 +182,8 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     expect(options.length).toEqual(mockSearchOptions.length + 1)
 
     // validate search called with proper param
-    expect(mockSearchForPerson).toBeCalledTimes(1)
-    expect(mockSearchForPerson).toBeCalledWith({
+    expect(mockSearchForPerson).toHaveBeenCalledTimes(1)
+    expect(mockSearchForPerson).toHaveBeenCalledWith({
       'searchFor': searchMember,
       'token': mockSession.token,
     })
@@ -244,8 +244,8 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
 
     // validate api call
     await waitFor(() => {
-      expect(mockPostTeamMember).toBeCalledTimes(1)
-      expect(mockPostTeamMember).toBeCalledWith({
+      expect(mockPostTeamMember).toHaveBeenCalledTimes(1)
+      expect(mockPostTeamMember).toHaveBeenCalledWith({
         'member': {
           'affiliation': newPerson.affiliation,
           'avatar_id': null,
@@ -301,8 +301,8 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
 
     await waitFor(() => {
       // validate delete called
-      expect(mockDeleteTeamMemberById).toBeCalledTimes(1)
-      expect(mockDeleteTeamMemberById).toBeCalledWith({
+      expect(mockDeleteTeamMemberById).toHaveBeenCalledTimes(1)
+      expect(mockDeleteTeamMemberById).toHaveBeenCalledWith({
         'ids': [
           mockTeamMembers[0].id,
         ],
@@ -314,11 +314,11 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
       expect(remainedMembers.length).toEqual(mockTeamMembers.length - 1)
 
       // confirm list position patched
-      expect(mockPatchTeamMemberPositions).toBeCalledTimes(1)
+      expect(mockPatchTeamMemberPositions).toHaveBeenCalledTimes(1)
       // confirm avatar image tied to be removed
       if (mockTeamMembers[0].avatar_id !== null) {
-        expect(mockDeleteImage).toBeCalledTimes(1)
-        expect(mockDeleteImage).toBeCalledWith({
+        expect(mockDeleteImage).toHaveBeenCalledTimes(1)
+        expect(mockDeleteImage).toHaveBeenCalledWith({
           'id': mockTeamMembers[0].avatar_id,
           'token': mockSession.token,
         })
@@ -376,14 +376,14 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
 
     await waitFor(() => {
       // confirm member patched called
-      expect(mockPatchTeamMember).toBeCalledTimes(1)
-      expect(mockPatchTeamMember).toBeCalledWith({
+      expect(mockPatchTeamMember).toHaveBeenCalledTimes(1)
+      expect(mockPatchTeamMember).toHaveBeenCalledWith({
         member: editedMember,
         token: mockSession.token
       })
       // validate delete image called
-      expect(mockDeleteImage).toBeCalledTimes(1)
-      expect(mockDeleteImage).toBeCalledWith({
+      expect(mockDeleteImage).toHaveBeenCalledTimes(1)
+      expect(mockDeleteImage).toHaveBeenCalledWith({
         'id': mockTeamMembers[0].avatar_id,
         'token': mockSession.token,
       })
@@ -439,9 +439,9 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
       // validate modal hidden
       expect(modal).not.toBeVisible()
       // confirm patch contributor is NOT called
-      expect(mockPatchTeamMember).toBeCalledTimes(0)
+      expect(mockPatchTeamMember).toHaveBeenCalledTimes(0)
       // delete image NOT called
-      expect(mockDeleteImage).toBeCalledTimes(0)
+      expect(mockDeleteImage).toHaveBeenCalledTimes(0)
     })
   })
 
@@ -495,7 +495,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     fireEvent.change(imageInput, {target: {file: fileToUpload}})
 
     // expect file upload to be called
-    expect(mockHandleFileUpload).toBeCalledTimes(1)
+    expect(mockHandleFileUpload).toHaveBeenCalledTimes(1)
 
     // save
     const saveBtn = within(modal).getByRole('button', {
@@ -508,20 +508,20 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
 
     await waitFor(() => {
       // validate new avatar upload
-      expect(mockSaveBase64Image).toBeCalledTimes(1)
-      expect(mockSaveBase64Image).toBeCalledWith({
+      expect(mockSaveBase64Image).toHaveBeenCalledTimes(1)
+      expect(mockSaveBase64Image).toHaveBeenCalledWith({
         'base64': mockImageData.image_b64,
         'token': mockSession.token,
       })
       // validate delete image called
-      expect(mockDeleteImage).toBeCalledTimes(1)
-      expect(mockDeleteImage).toBeCalledWith({
+      expect(mockDeleteImage).toHaveBeenCalledTimes(1)
+      expect(mockDeleteImage).toHaveBeenCalledWith({
         'id': oldAvatarId,
         'token': mockSession.token,
       })
       // confirm member patched called
-      expect(mockPatchTeamMember).toBeCalledTimes(1)
-      expect(mockPatchTeamMember).toBeCalledWith({
+      expect(mockPatchTeamMember).toHaveBeenCalledTimes(1)
+      expect(mockPatchTeamMember).toHaveBeenCalledWith({
         member: editedMember,
         token: mockSession.token
       })

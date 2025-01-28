@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -15,7 +15,6 @@ import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-
 import DescriptionIcon from '@mui/icons-material/Description'
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck'
 import GroupIcon from '@mui/icons-material/Group'
@@ -30,6 +29,9 @@ import Diversity3Icon from '@mui/icons-material/Diversity3'
 import CategoryIcon from '@mui/icons-material/Category'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
+import HubIcon from '@mui/icons-material/Hub'
+import InfoIcon from '@mui/icons-material/Info'
+
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 
@@ -105,6 +107,18 @@ export const adminPages = {
     subtitle: '',
     icon: <ReceiptLongIcon />,
     path: '/admin/mentions',
+  },
+  rsd_info:{
+    title: 'RSD info',
+    subtitle: '',
+    icon: <InfoIcon />,
+    path: '/admin/rsd-info',
+  },
+  remote_rsd: {
+    title: 'Remotes',
+    subtitle: '',
+    icon: <HubIcon />,
+    path: '/admin/remote-rsd',
   },
   logs:{
     title: 'Error logs',

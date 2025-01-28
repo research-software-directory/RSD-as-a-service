@@ -71,7 +71,8 @@ This section shows all RSD users who logged in to RSD at least once. You can sea
 
 - Removing account will remove all its maintainer roles.
 - You cannot delete account you are currently using.
-  :::
+
+:::
 
 ![animation](img/admin-rsd-users.gif)
 
@@ -193,6 +194,32 @@ In this section, admins can search for mentions and edit them. If you enter a DO
 Edit mentions with care: they might be referenced to in multiple places. If you want to fully change a mention attached to e.g. a software page, you should delete it there and create a new one instead of editing it.
 :::
 
+## RSD info
+
+Here you can define information about your RSD instance that you want to communicate to other RSD instances or other "third party services". The information is available at the endpoint /api/v1/rsd_info
+
+The core RSD service uses the following information from this section:
+
+- `remote_name`: This is the name of your RSD instance. It is used by other RSD instances to identify software from your RSD. It is also used by your RSD instance when you make use of [Remotes](#remotes).
+
+![image](img/admin-rsd-info.webp)
+
+## Remotes
+
+Here you can connect your RSD to remote RSD instances. These connections will be used to "enrich" your RSD instance with additional (remote) software entries.
+
+:::tip
+When connecting to remote RSD instances, each software card in the software overview shows the source RSD. The software from the your "local" RSD uses `remote_name` defined in [RSD Info section](#rsd-info).
+:::
+
+For each remote RSD you wish to connect to, you need to provide the URL to the homepage of that RSD instance. If the RSD remote is of version 3 or higher the instance will return an RSD instance name suggested by the instance owner. For the earlier RSD versions you need to provide remote name/label manually.
+
+![animation](img/admin-remotes.gif)
+
+:::tip
+For clarity, it is advised to use suggested RSD instance name configured by the instance owner. This ensures instance names across the RSD network remain the same.
+:::
+
 ## Error logs
 
 This section shows any errors originating from the background processes like data scrapers. Provided information should be understandable to rsd administrators in the most cases. The error object contains error response. The stacktrace is convenient for the programmers. The link will navigate you to the software or the project that triggers the error.
@@ -207,7 +234,7 @@ This section is used to show public announcements to all users of the RSD. It is
 
 ## Software
 
-### Slug
+### Software Slug
 
 When editing a software page, the **slug** of the page (called **RSD path**) can be changed by admins under the **Description** tab.
 
@@ -221,7 +248,7 @@ If you want to disable the harvesting of a package manager, you can do so by pro
 
 ## Project
 
-### Slug
+### Project Slug
 
 When editing a project page, the **slug** of the page (called **RSD path**) can be changed by admins under the **Project details** tab.
 

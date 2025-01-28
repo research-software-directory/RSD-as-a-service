@@ -1,53 +1,61 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Link from 'next/link'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
-import {getImageUrl} from '~/utils/editImage'
-import useValidateImageSrc from '~/utils/useValidateImageSrc'
 import KeywordList from '~/components/cards/KeywordList'
 import CardTitleSubtitle from '~/components/cards/CardTitleSubtitle'
+import RsdHostLabel from '~/components/cards/RsdHostLabel'
 import ProgrammingLanguageList from './ProgrammingLanguageList'
 import SoftwareMetrics from './SoftwareMetrics'
+import useSoftwareOverviewProps from '../useSoftwareOverviewProps'
+import ExternalLinkIcon from './ExternalLinkIcon'
 
 type SoftwareCardProps = {
   item: SoftwareOverviewItemProps
 }
 
 export default function SoftwareMasonryCard({item}:SoftwareCardProps){
-  const imgSrc = getImageUrl(item.image_id ?? null)
-  const validImg = useValidateImageSrc(imgSrc)
-
-  const visibleNumberOfKeywords: number = 3
-  const visibleNumberOfProgLang: number = 3
+  const {
+    imgUrl,pageUrl,
+    validImg,visibleNumberOfKeywords,
+    visibleNumberOfProgLang
+  } = useSoftwareOverviewProps({
+    id: item.id,
+    domain:item.domain,
+    image_id: item.image_id,
+    slug: item.slug
+  })
 
   return (
     <Link
       data-testid="software-masonry-card"
-      key={item.id}
-      href={`/software/${item.slug}`}
+      href={pageUrl}
       className="hover:text-inherit">
-      <div className="flex-shrink-0 transition bg-base-100 shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer h-full select-none flex-col">
+      <div className="flex-shrink-0 transition bg-base-100 shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer h-full select-none flex-col relative group">
         {/* Cover image, show only if valid image link */}
         { validImg === false ? null
           :
           <img
             className="object-cover w-full rounded-tr-lg rounded-tl-lg"
-            src={`${imgSrc ?? ''}`}
+            src={imgUrl ?? undefined}
             alt={`Cover image for ${item.brand_name}`}
-            loading='eager'
+            // loading = "lazy"
             // lighthouse audit requires explicit with and height
             height="100%"
             width="100%"
           />
         }
+        {/* Requires tailwind classes relative and group */}
+        <ExternalLinkIcon domain={item.domain} />
         {/* Card content */}
         <div className="flex flex-col p-4">
+          <RsdHostLabel rsd_host={item?.rsd_host} domain={item?.domain}/>
           <CardTitleSubtitle
             title={item.brand_name}
             subtitle={item.short_statement}

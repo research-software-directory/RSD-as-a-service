@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -63,6 +64,6 @@ it('renders component with text input', () => {
   // fire on blur action to trigger save
   fireEvent.blur(textArea!)
   // assert save action took place
-  expect(mockPatchFn).toBeCalledTimes(1)
-  expect(mockPatchFn).toBeCalledWith(expectedSave)
+  expect(mockPatchFn).toHaveBeenCalledTimes(1)
+  expect(mockPatchFn).toHaveBeenCalledWith(expectedSave)
 })

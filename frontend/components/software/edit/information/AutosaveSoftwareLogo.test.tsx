@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -104,20 +104,20 @@ it('can upload image', async() => {
   fireEvent.change(imageInput, {target: {file: fileToUpload}})
 
   // expect file upload to be called
-  expect(mockHandleFileUpload).toBeCalledTimes(1)
+  expect(mockHandleFileUpload).toHaveBeenCalledTimes(1)
 
   await waitFor(() => {
     // upload image
-    expect(mockUpsertImage).toBeCalledTimes(1)
-    expect(mockUpsertImage).toBeCalledWith({
+    expect(mockUpsertImage).toHaveBeenCalledTimes(1)
+    expect(mockUpsertImage).toHaveBeenCalledWith({
       'data': base64data,
       'mime_type': fileType,
       'token': mockSession.token,
     })
 
     // save as project image
-    expect(mockPatchSoftwareTable).toBeCalledTimes(1)
-    expect(mockPatchSoftwareTable).toBeCalledWith({
+    expect(mockPatchSoftwareTable).toHaveBeenCalledTimes(1)
+    expect(mockPatchSoftwareTable).toHaveBeenCalledWith({
       'data': {
         'image_id': newImageId,
       },
@@ -173,13 +173,13 @@ it('can replace existing image', async() => {
   fireEvent.change(imageInput, {target: {file: fileToUpload}})
 
   // expect file upload to be called
-  expect(mockHandleFileUpload).toBeCalledTimes(1)
+  expect(mockHandleFileUpload).toHaveBeenCalledTimes(1)
 
   await waitFor(() => {
     // patchProject table 2 calls
-    expect(mockPatchSoftwareTable).toBeCalledTimes(2)
+    expect(mockPatchSoftwareTable).toHaveBeenCalledTimes(2)
     // first call to remove old image
-    expect(mockPatchSoftwareTable).toBeCalledWith({
+    expect(mockPatchSoftwareTable).toHaveBeenCalledWith({
       'data': {
         'image_id': null,
       },
@@ -187,7 +187,7 @@ it('can replace existing image', async() => {
       'token': mockSession.token,
     })
     // second call to save new image
-    expect(mockPatchSoftwareTable).toBeCalledWith({
+    expect(mockPatchSoftwareTable).toHaveBeenCalledWith({
       'data': {
         'image_id': newImageId,
       },
@@ -195,14 +195,14 @@ it('can replace existing image', async() => {
       'token': mockSession.token,
     })
     // delete old image
-    expect(mockDeleteImage).toBeCalledTimes(1)
-    expect(mockDeleteImage).toBeCalledWith({
+    expect(mockDeleteImage).toHaveBeenCalledTimes(1)
+    expect(mockDeleteImage).toHaveBeenCalledWith({
       'id': oldImageId,
       'token': mockSession.token,
     })
     // upload image call
-    expect(mockUpsertImage).toBeCalledTimes(1)
-    expect(mockUpsertImage).toBeCalledWith({
+    expect(mockUpsertImage).toHaveBeenCalledTimes(1)
+    expect(mockUpsertImage).toHaveBeenCalledWith({
       'data': base64data,
       'mime_type': fileType,
       'token': mockSession.token,
@@ -241,8 +241,8 @@ it('can delete existing image', async() => {
   fireEvent.click(deleteBtn)
 
   // remove image reference in project table
-  expect(mockPatchSoftwareTable).toBeCalledTimes(1)
-  expect(mockPatchSoftwareTable).toBeCalledWith({
+  expect(mockPatchSoftwareTable).toHaveBeenCalledTimes(1)
+  expect(mockPatchSoftwareTable).toHaveBeenCalledWith({
     'data': {
       'image_id': null,
     },
@@ -253,8 +253,8 @@ it('can delete existing image', async() => {
   // we need to await prevoius calls to complete
   await waitFor(() => {
     // try to remove image
-    expect(mockDeleteImage).toBeCalledTimes(1)
-    expect(mockDeleteImage).toBeCalledWith({
+    expect(mockDeleteImage).toHaveBeenCalledTimes(1)
+    expect(mockDeleteImage).toHaveBeenCalledWith({
       'id': formValues.image_id,
       'token': mockSession.token,
     })

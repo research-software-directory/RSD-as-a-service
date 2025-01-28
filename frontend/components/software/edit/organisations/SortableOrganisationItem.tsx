@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,12 +10,12 @@ import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import Avatar from '@mui/material/Avatar'
 import BlockIcon from '@mui/icons-material/Block'
-
-import {EditOrganisation} from '../../../../types/Organisation'
-import {getImageUrl} from '~/utils/editImage'
-import SortableListItemActions from '~/components/layout/SortableListItemActions'
 import {useSortable} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
+
+import {EditOrganisation} from '~/types/Organisation'
+import {getImageUrl} from '~/utils/editImage'
+import SortableListItemActions from '~/components/layout/SortableListItemActions'
 
 type OrganisationsListItemProps = {
   organisation: EditOrganisation

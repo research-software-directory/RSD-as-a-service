@@ -3,8 +3,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 //
@@ -77,17 +77,19 @@ export type SoftwareItemFromDB = SoftwareTableItem & {
 
 export type SoftwareOverviewItemProps = {
   id:string
+  rsd_host: string | null
+  domain: string | null
   slug:string
   brand_name: string
   short_statement: string
+  image_id: string | null
   updated_at: string | null
   contributor_cnt: number | null
   mention_cnt: number | null
   is_published: boolean
-  image_id: string | null
-  keywords: string[],
-  prog_lang: string[],
-  licenses: string,
+  keywords: string[]
+  prog_lang: string[]
+  licenses: string
   downloads?: number
 }
 

@@ -1,8 +1,8 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -138,6 +138,6 @@ it('calls onUpdate with concept DOI when version DOI provided', async() => {
   await waitForElementToBeRemoved(within(validateBtn).getByRole('progressbar'))
   // valid DOI message shown
   // const versionDOI = screen.getByText(`This is a version DOI. The Concept DOI is ${conceptDOI}`)
-  expect(mockOnUpdate).toBeCalledTimes(1)
-  expect(mockOnUpdate).toBeCalledWith(conceptDOI)
+  expect(mockOnUpdate).toHaveBeenCalledTimes(1)
+  expect(mockOnUpdate).toHaveBeenCalledWith(conceptDOI)
 })

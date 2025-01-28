@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -110,7 +110,7 @@ it('deleteBtn is enabled when keyword is NOT used', async() => {
 
   fireEvent.click(deleteBtn[0])
   // validate call
-  expect(mockProps.deleteKeyword).toBeCalledTimes(1)
-  expect(mockProps.deleteKeyword).toBeCalledWith(mockKeywordData[0].id)
+  expect(mockProps.deleteKeyword).toHaveBeenCalledTimes(1)
+  expect(mockProps.deleteKeyword).toHaveBeenCalledWith(mockKeywordData[0].id)
   // screen.debug()
 })

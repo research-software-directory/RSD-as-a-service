@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,6 +14,7 @@ import Button from '@mui/material/Button'
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
+import {HostsFilterOption} from '~/components/filter/RsdHostFilter'
 import SoftwareFilters from './index'
 
 type SoftwareFiltersModalProps = {
@@ -24,6 +25,9 @@ type SoftwareFiltersModalProps = {
   languagesList: LanguagesFilterOption[],
   licenses?: string[],
   licensesList: LicensesFilterOption[],
+  rsd_host?: string
+  hostsList?: HostsFilterOption[]
+  hasRemotes?: boolean
   order: string,
   filterCnt: number,
   setModal:(open:boolean)=>void
@@ -33,7 +37,8 @@ export default function SoftwareFiltersModal({
   open, keywords, keywordsList,
   prog_lang, languagesList,
   licenses, licensesList,
-  filterCnt, order,
+  rsd_host, hostsList,
+  hasRemotes, filterCnt, order,
   setModal
 }:SoftwareFiltersModalProps) {
   const smallScreen = useMediaQuery('(max-width:640px)')
@@ -62,8 +67,11 @@ export default function SoftwareFiltersModal({
             languagesList={languagesList}
             licenses={licenses ?? []}
             licensesList={licensesList}
+            rsd_host={rsd_host}
+            hostsList={hostsList}
             orderBy={order ?? ''}
             filterCnt={filterCnt}
+            hasRemotes={hasRemotes}
           />
         </div>
       </DialogContent>

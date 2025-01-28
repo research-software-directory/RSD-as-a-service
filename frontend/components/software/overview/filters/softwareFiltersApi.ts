@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -10,6 +10,7 @@
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
 import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
+import {HostsFilterOption} from '~/components/filter/RsdHostFilter'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 
@@ -18,6 +19,7 @@ type SoftwareFilterProps = {
   keywords?: string[] | null
   prog_lang?: string[] | null
   licenses?: string[] | null
+  rsd_host?: string | null
 }
 
 type GenericSoftwareFilterProps = SoftwareFilterProps & {
@@ -29,9 +31,10 @@ type SoftwareFilterApiProps = {
   keyword_filter?: string[]
   prog_lang_filter?: string[]
   license_filter?: string[]
+  rsd_host_filter?: string | null
 }
 
-export function buildSoftwareFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
+export function buildSoftwareFilter({search, keywords, prog_lang, licenses, rsd_host}: SoftwareFilterProps) {
   const filter: SoftwareFilterApiProps={}
   if (search) {
     filter['search_filter'] = search
@@ -45,15 +48,22 @@ export function buildSoftwareFilter({search, keywords, prog_lang, licenses}: Sof
   if (licenses) {
     filter['license_filter'] = licenses
   }
+  if (rsd_host) {
+    if (rsd_host==='null') {
+      filter['rsd_host_filter'] = null
+    }else{
+      filter['rsd_host_filter'] = rsd_host
+    }
+  }
   // console.group('buildSoftwareFilter')
   // console.log('filter...', filter)
   // console.groupEnd()
   return filter
 }
 
-export async function softwareKeywordsFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
-  const rpc = 'software_keywords_filter'
-  return genericSoftwareKeywordsFilter({search, keywords, prog_lang, licenses, rpc})
+export async function softwareKeywordsFilter({search, keywords, prog_lang, licenses, rsd_host}: SoftwareFilterProps) {
+  const rpc = 'aggregated_software_keywords_filter'
+  return genericSoftwareKeywordsFilter({search, keywords, prog_lang, licenses, rsd_host, rpc})
 }
 
 export async function highlightKeywordsFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
@@ -61,7 +71,7 @@ export async function highlightKeywordsFilter({search, keywords, prog_lang, lice
   return genericSoftwareKeywordsFilter({search, keywords, prog_lang, licenses, rpc})
 }
 
-export async function genericSoftwareKeywordsFilter({search, keywords, prog_lang, licenses, rpc}: GenericSoftwareFilterProps) {
+export async function genericSoftwareKeywordsFilter({search, keywords, prog_lang, licenses, rsd_host, rpc}: GenericSoftwareFilterProps) {
   try {
     const query =`rpc/${rpc}?order=keyword`
     const url = `${getBaseUrl()}/${query}`
@@ -69,7 +79,8 @@ export async function genericSoftwareKeywordsFilter({search, keywords, prog_lang
       search,
       keywords,
       prog_lang,
-      licenses
+      licenses,
+      rsd_host
     })
 
     // console.group('softwareKeywordsFilter')
@@ -97,9 +108,9 @@ export async function genericSoftwareKeywordsFilter({search, keywords, prog_lang
   }
 }
 
-export async function softwareLanguagesFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
-  const rpc = 'software_languages_filter'
-  return genericSoftwareLanguagesFilter({search, keywords, prog_lang, licenses, rpc})
+export async function softwareLanguagesFilter({search, keywords, prog_lang, licenses, rsd_host}: SoftwareFilterProps) {
+  const rpc = 'aggregated_software_languages_filter'
+  return genericSoftwareLanguagesFilter({search, keywords, prog_lang, licenses, rsd_host, rpc})
 }
 
 export async function highlightLanguagesFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
@@ -107,7 +118,7 @@ export async function highlightLanguagesFilter({search, keywords, prog_lang, lic
   return genericSoftwareLanguagesFilter({search, keywords, prog_lang, licenses, rpc})
 }
 
-export async function genericSoftwareLanguagesFilter({search, keywords, prog_lang, licenses, rpc}: GenericSoftwareFilterProps) {
+export async function genericSoftwareLanguagesFilter({search, keywords, prog_lang, licenses, rsd_host, rpc}: GenericSoftwareFilterProps) {
   try {
     const query = `rpc/${rpc}?order=prog_language`
     const url = `${getBaseUrl()}/${query}`
@@ -115,7 +126,8 @@ export async function genericSoftwareLanguagesFilter({search, keywords, prog_lan
       search,
       keywords,
       prog_lang,
-      licenses
+      licenses,
+      rsd_host
     })
 
     // console.group('softwareLanguagesFilter')
@@ -143,9 +155,9 @@ export async function genericSoftwareLanguagesFilter({search, keywords, prog_lan
   }
 }
 
-export async function softwareLicensesFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
-  const rpc = 'software_licenses_filter'
-  return genericSoftwareLicensesFilter({search, keywords, prog_lang, licenses, rpc})
+export async function softwareLicensesFilter({search, keywords, prog_lang, licenses, rsd_host}: SoftwareFilterProps) {
+  const rpc = 'aggregated_software_licenses_filter'
+  return genericSoftwareLicensesFilter({search, keywords, prog_lang, licenses, rsd_host, rpc})
 }
 
 
@@ -154,7 +166,7 @@ export async function highlightLicensesFilter({search, keywords, prog_lang, lice
   return genericSoftwareLicensesFilter({search, keywords, prog_lang, licenses, rpc})
 }
 
-export async function genericSoftwareLicensesFilter({search, keywords, prog_lang, licenses, rpc}: GenericSoftwareFilterProps) {
+export async function genericSoftwareLicensesFilter({search, keywords, prog_lang, licenses, rsd_host, rpc}: GenericSoftwareFilterProps) {
   try {
     const query = `rpc/${rpc}?order=license`
     const url = `${getBaseUrl()}/${query}`
@@ -162,7 +174,8 @@ export async function genericSoftwareLicensesFilter({search, keywords, prog_lang
       search,
       keywords,
       prog_lang,
-      licenses
+      licenses,
+      rsd_host
     })
 
     const resp = await fetch(url, {
@@ -181,6 +194,37 @@ export async function genericSoftwareLicensesFilter({search, keywords, prog_lang
 
   } catch (e: any) {
     logger(`genericSoftwareLicensesFilter (${rpc}): ${e?.message}`, 'error')
+    return []
+  }
+}
+
+export async function softwareRsdHostsFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
+  try {
+    const query = 'aggregated_software_hosts_filter?order=rsd_host'
+    const url = `${getBaseUrl()}/rpc/${query}`
+    const filter = buildSoftwareFilter({
+      search,
+      keywords,
+      prog_lang,
+      licenses
+    })
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: createJsonHeaders(),
+      body: JSON.stringify(filter)
+    })
+
+    if (resp.status === 200) {
+      const json: HostsFilterOption[] = await resp.json()
+      return json
+    }
+
+    logger(`softwareRsdHostsFilter: ${resp.status} ${resp.statusText}`, 'warn')
+    return []
+
+  } catch (e: any) {
+    logger(`softwareRsdHostsFilter: ${e?.message}`, 'error')
     return []
   }
 }

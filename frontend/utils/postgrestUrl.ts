@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -33,6 +33,7 @@ type baseQueryStringProps = {
   domains?: string[] | null,
   prog_lang?: string[] | null,
   licenses?: string[] | null,
+  rsd_host?: string,
   organisations?: string[] | null,
   order?: string,
   limit?: number,
@@ -50,6 +51,7 @@ export type QueryParams={
   domains?:string[] | null,
   prog_lang?: string[] | null,
   licenses?: string[] | null,
+  rsd_host?: string,
   organisations?: string[] | null,
   project_status?: string | null,
   page?:number | null,
@@ -89,8 +91,9 @@ export function ssrProjectsUrl(params: QueryParams) {
 export function buildFilterUrl(params: QueryParams, view:string) {
   const {
     search, order, keywords, domains,
-    licenses, prog_lang, organisations,
-    project_status, rows, page
+    licenses, prog_lang, rsd_host,
+    organisations, project_status,
+    rows, page
   } = params
   // console.log('buildFilterUrl...params...', params)
   const url = `/${view}?`
@@ -125,6 +128,12 @@ export function buildFilterUrl(params: QueryParams, view:string) {
     query,
     param: 'licenses',
     value: licenses
+  })
+  // sources (rsd remote source)
+  query = encodeUrlQuery({
+    query,
+    param: 'rsd_host',
+    value: rsd_host
   })
   // organisations
   query = encodeUrlQuery({
@@ -183,15 +192,18 @@ export function paginationUrlParams({rows=12, page=0}:
  * Provides basic url query string for postgrest endpoints
  */
 export function baseQueryString(props: baseQueryStringProps) {
-  const {keywords,
+  const {
+    keywords,
     domains,
     prog_lang,
     licenses,
+    rsd_host,
     organisations,
     project_status,
     order,
     limit,
-    offset} = props
+    offset
+  } = props
   let query
   // console.group('baseQueryString')
   // console.log('keywords...', keywords)
@@ -200,6 +212,7 @@ export function baseQueryString(props: baseQueryStringProps) {
   // console.log('order...', order)
   // console.log('limit...', limit)
   // console.log('offset...', offset)
+  // console.groupEnd()
   // filter on keywords using AND
   if (keywords !== undefined &&
     keywords !== null &&
@@ -209,7 +222,9 @@ export function baseQueryString(props: baseQueryStringProps) {
     // and all keywords should be present (AND).
     // and it needs to be enclosed in {} uri encoded see
     // https://postgrest.org/en/v9.0/api.html?highlight=filter#calling-functions-with-array-parameters
-    const keywordsAll = [...keywords].sort(localeSort).map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    const keywordsAll = keywords
+      .toSorted(localeSort)
+      .map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
     // use cs. command to find
     query = `keywords=cs.%7B${keywordsAll}%7D`
   }
@@ -218,7 +233,9 @@ export function baseQueryString(props: baseQueryStringProps) {
     typeof domains === 'object') {
     // sort and convert research domains array to comma separated string
     // we need to sort because search is on ARRAY field in pgSql
-    const domainsAll = [...domains].sort(localeSort).map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    const domainsAll = domains
+      .toSorted(localeSort)
+      .map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
     // use cs. command to find
     if (query) {
       query = `${query}&research_domain=cs.%7B${domainsAll}%7D`
@@ -232,9 +249,11 @@ export function baseQueryString(props: baseQueryStringProps) {
     // sort and convert prog_lang array to comma separated string
     // we need to sort because search is on ARRAY field in pgSql
     // and all prog_lang should be present (AND).
-    // and it needs to be enclosed in {} uri encoded see
+    // It needs to be enclosed in {} uri encoded see
     // https://postgrest.org/en/v9.0/api.html?highlight=filter#calling-functions-with-array-parameters
-    const languagesAll = [...prog_lang].sort(localeSort).map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    const languagesAll = prog_lang
+      .toSorted(localeSort)
+      .map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
     // use cs. command to find
     if (query) {
       query = `${query}&prog_lang=cs.%7B${languagesAll}%7D`
@@ -246,7 +265,9 @@ export function baseQueryString(props: baseQueryStringProps) {
     licenses !== null &&
     typeof licenses === 'object') {
     // sort and convert array to comma separated string
-    const licensesAll = [...licenses].sort(localeSort).map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    const licensesAll = licenses
+      .toSorted(localeSort)
+      .map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
     // use cs. command to find
     if (query) {
       query = `${query}&licenses=cs.%7B${licensesAll}%7D`
@@ -254,12 +275,30 @@ export function baseQueryString(props: baseQueryStringProps) {
       query = `licenses=cs.%7B${licensesAll}%7D`
     }
   }
+  // RSD Host
+  if (rsd_host !== undefined){
+    if (query){
+      // the null value is passed as string in url query
+      if (rsd_host==='null'){
+        query = `${query}&rsd_host=is.null`
+      }else{
+        query = `${query}&rsd_host=eq.${rsd_host}`
+      }
+    }else if (rsd_host==='null' || rsd_host===null){
+      // the null value is passed as string in url query
+      query = 'rsd_host=is.null'
+    }else{
+      query = `rsd_host=eq.${rsd_host}`
+    }
+  }
   if (organisations !== undefined &&
     organisations !== null &&
     typeof organisations === 'object') {
     // sort and convert array to comma separated string
     // we need to sort because search is on ARRAY field in pgSql
-    const organisationsAll = [...organisations].sort(localeSort).map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    const organisationsAll = organisations
+      .toSorted(localeSort)
+      .map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
     // use cs. command to find
     if (query) {
       query = `${query}&participating_organisations=cs.%7B${organisationsAll}%7D`
@@ -308,12 +347,12 @@ export function softwareListUrl(props: PostgrestParams) {
     // check rpc in 105-project-views.sql for exact filtering
     query += `&search=${encodedSearch}`
 
-    const url = `${baseUrl}/rpc/software_search?${query}`
+    const url = `${baseUrl}/rpc/aggregated_software_search?${query}`
     // console.log('softwareListUrl...', url)
     return url
   }
 
-  const url = `${baseUrl}/rpc/software_overview?${query}`
+  const url = `${baseUrl}/rpc/aggregated_software_overview?${query}`
   // console.log('softwareListUrl...', url)
   return url
 }

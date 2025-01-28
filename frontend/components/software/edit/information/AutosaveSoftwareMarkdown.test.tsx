@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -166,8 +166,8 @@ it('saves custom markdown', async() => {
   })
 
   await waitFor(() => {
-    expect(mockPatchSoftwareTable).toBeCalledTimes(1)
-    expect(mockPatchSoftwareTable).toBeCalledWith({
+    expect(mockPatchSoftwareTable).toHaveBeenCalledTimes(1)
+    expect(mockPatchSoftwareTable).toHaveBeenCalledWith({
       'data': {
         'description': expectedMarkdown,
         'description_type': 'markdown',
@@ -218,7 +218,7 @@ it('saves remote markdown', async() => {
   expect(markdown).not.toBeChecked()
 
   await waitFor(() => {
-    expect(mockPatchSoftwareTable).toBeCalledTimes(1)
+    expect(mockPatchSoftwareTable).toHaveBeenCalledTimes(1)
   })
 
   // write url
@@ -229,8 +229,8 @@ it('saves remote markdown', async() => {
 
   await waitFor(() => {
     // called twice - first at change to link
-    expect(mockPatchSoftwareTable).toBeCalledTimes(2)
-    expect(mockPatchSoftwareTable).toBeCalledWith({
+    expect(mockPatchSoftwareTable).toHaveBeenCalledTimes(2)
+    expect(mockPatchSoftwareTable).toHaveBeenCalledWith({
       'data': {
         'description': null,
         'description_type': 'link',

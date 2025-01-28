@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -38,8 +38,8 @@ it('calls expected rpc', async () => {
   // get maintainer value
   await isMaintainerOfSoftware(mockData)
   // validate call
-  expect(global.fetch).toBeCalledTimes(1)
-  expect(global.fetch).toBeCalledWith(expectedUrl, expectedOptions)
+  expect(global.fetch).toHaveBeenCalledTimes(1)
+  expect(global.fetch).toHaveBeenCalledWith(expectedUrl, expectedOptions)
 })
 
 it('return isMaintainer true', async () => {

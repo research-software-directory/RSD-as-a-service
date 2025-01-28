@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -64,8 +64,8 @@ it('findInROR calls fetch with search param and json header', async () => {
     },
   ])
 
-  expect(mockFetch).toBeCalledTimes(1)
-  expect(mockFetch).toBeCalledWith(
+  expect(mockFetch).toHaveBeenCalledTimes(1)
+  expect(mockFetch).toHaveBeenCalledWith(
     `https://api.ror.org/organizations?query=${searchFor}`,
     {'headers': {'Content-Type': 'application/json'}}
   )

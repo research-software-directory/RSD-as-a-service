@@ -1,9 +1,9 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -169,14 +169,14 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
 
     await waitFor(() => {
       // call RSD api to find mention by DOI
-      expect(mockGetMentionByDoiFromRsd).toBeCalledTimes(1)
-      expect(mockGetMentionByDoiFromRsd).toBeCalledWith({
+      expect(mockGetMentionByDoiFromRsd).toHaveBeenCalledTimes(1)
+      expect(mockGetMentionByDoiFromRsd).toHaveBeenCalledWith({
         'doi': validDOI,
         'token': mockSession.token
       })
       // becase we did not found it in RSD we try doi.org
-      expect(mockGetMentionByDoi).toBeCalledTimes(1)
-      expect(mockGetMentionByDoi).toBeCalledWith(validDOI)
+      expect(mockGetMentionByDoi).toHaveBeenCalledTimes(1)
+      expect(mockGetMentionByDoi).toHaveBeenCalledWith(validDOI)
     })
   })
 
@@ -206,8 +206,8 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
 
     await waitFor(() => {
       // call RSD api to find mention by DOI
-      expect(mockFindPublicationByTitle).toBeCalledTimes(1)
-      expect(mockFindPublicationByTitle).toBeCalledWith({
+      expect(mockFindPublicationByTitle).toHaveBeenCalledTimes(1)
+      expect(mockFindPublicationByTitle).toHaveBeenCalledWith({
         'id': softwareState.software.id,
         searchFor,
         'token': mockSession.token
@@ -250,7 +250,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
     expect(selectGroup).toBeInTheDocument()
 
     // select button - for expanding
-    const select = within(selectGroup).getByRole('button')
+    const select = within(selectGroup).getByRole('combobox')
     fireEvent.mouseDown(select)
     // validate all options present
     const options = screen.getAllByRole('option')
@@ -277,8 +277,8 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
     fireEvent.click(save)
 
     await waitFor(() => {
-      expect(mockAddNewMentionToSoftware).toBeCalledTimes(1)
-      expect(mockAddNewMentionToSoftware).toBeCalledWith({
+      expect(mockAddNewMentionToSoftware).toHaveBeenCalledTimes(1)
+      expect(mockAddNewMentionToSoftware).toHaveBeenCalledWith({
         'item': {
           'authors': null,
           'doi': null,
@@ -327,8 +327,8 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
     fireEvent.click(confirm)
 
     await waitFor(() => {
-      expect(mockRemoveMentionForSoftware).toBeCalledTimes(1)
-      expect(mockRemoveMentionForSoftware).toBeCalledWith({
+      expect(mockRemoveMentionForSoftware).toHaveBeenCalledTimes(1)
+      expect(mockRemoveMentionForSoftware).toHaveBeenCalledWith({
         'mention': outputForSoftware[0].id,
         'software': softwareState.software.id,
         'token': mockSession.token,

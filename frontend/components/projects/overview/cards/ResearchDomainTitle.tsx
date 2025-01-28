@@ -1,9 +1,11 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
+
+import CardTitleMuted from '~/components/layout/CardTitleMuted'
 
 export default function ResearchDomainTitle({domains=[]}:{domains: string[]}) {
   const mainDomain:string[] = []
@@ -25,12 +27,13 @@ export default function ResearchDomainTitle({domains=[]}:{domains: string[]}) {
 
   if (mainDomain.length===0) return null
 
+  const mainDomains = mainDomain.join(', ')
+
   return (
-    <div
-      title={mainDomain.join(', ')}
-      className="line-clamp-1 text-sm text-base-content-disabled font-medium tracking-widest uppercase mb-2"
-    >
-      {mainDomain.join(', ')}
-    </div>
+    <CardTitleMuted
+      title={mainDomains}
+      label={mainDomains}
+    />
   )
+
 }

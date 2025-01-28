@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -92,7 +92,7 @@ describe('ssrSoftwareUrl', () => {
 describe('softwareListUrl', () => {
   it('returns overview rpc endpoint url when only baseUrl provided', () => {
     const baseUrl = 'http://test-base-url'
-    const expectUrl = `${baseUrl}/rpc/software_overview?limit=12&offset=0`
+    const expectUrl = `${baseUrl}/rpc/aggregated_software_overview?limit=12&offset=0`
     const url = softwareListUrl({
       baseUrl
     } as PostgrestParams)
@@ -103,7 +103,7 @@ describe('softwareListUrl', () => {
     const baseUrl = 'http://test-base-url'
     const searchTerm = 'test-search'
     // if you change search value then change expectedUrl values too
-    const expectUrl = `${baseUrl}/rpc/software_search?limit=12&offset=0&search=${searchTerm}`
+    const expectUrl = `${baseUrl}/rpc/aggregated_software_search?limit=12&offset=0&search=${searchTerm}`
     const url = softwareListUrl({
       baseUrl,
       // if you change search value then change expectedUrl values too
@@ -115,7 +115,7 @@ describe('softwareListUrl', () => {
   it('returns overview rpc endpoint url with keywords params', () => {
     const baseUrl = 'http://test-base-url'
     // if you change search value then change expectedUrl values too
-    const expectUrl = `${baseUrl}/rpc/software_overview?keywords=cs.%7B\"test-filter\"%7D&limit=12&offset=0`
+    const expectUrl = `${baseUrl}/rpc/aggregated_software_overview?keywords=cs.%7B\"test-filter\"%7D&limit=12&offset=0`
     const url = softwareListUrl({
       baseUrl,
       keywords: ['test-filter']

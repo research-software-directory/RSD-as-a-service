@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -42,8 +42,8 @@ it('calls api with proper params', async() => {
 
   await getMaintainersOfOrganisation(mockProps)
 
-  expect(global.fetch).toBeCalledTimes(1)
-  expect(global.fetch).toBeCalledWith(expectedUrl, expectedHeaders)
+  expect(global.fetch).toHaveBeenCalledTimes(1)
+  expect(global.fetch).toHaveBeenCalledWith(expectedUrl, expectedHeaders)
 })
 
 it('returns [] on error', async() => {

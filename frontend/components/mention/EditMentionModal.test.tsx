@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -77,7 +77,7 @@ it('calls onCancel when cancel button used', () => {
 
   fireEvent.click(cancel)
 
-  expect(mockOnCancel).toBeCalledTimes(1)
+  expect(mockOnCancel).toHaveBeenCalledTimes(1)
 })
 
 it('calls onSave when minimum info provided', async () => {
@@ -98,7 +98,7 @@ it('calls onSave when minimum info provided', async () => {
   expect(selectGroup).toBeInTheDocument()
 
   // select button - for expanding
-  const select = within(selectGroup).getByRole('button')
+  const select = within(selectGroup).getByRole('combobox')
   fireEvent.mouseDown(select)
 
   // validate all options present
@@ -130,7 +130,7 @@ it('calls onSave when minimum info provided', async () => {
   fireEvent.click(save)
   // we need to wait for events
   await waitFor(() => {
-    expect(mockOnSubmit).toBeCalledTimes(1)
-    expect(mockOnSubmit).toBeCalledWith({data:expectedItem, pos: undefined})
+    expect(mockOnSubmit).toHaveBeenCalledTimes(1)
+    expect(mockOnSubmit).toHaveBeenCalledWith({data:expectedItem, pos: undefined})
   })
 })

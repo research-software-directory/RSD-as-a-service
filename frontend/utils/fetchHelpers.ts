@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -146,5 +146,57 @@ export function isProperUrl(url:string){
     return true
   }catch{
     return false
+  }
+}
+
+type ComposeUrlType={
+  slug:string
+  route?:string|null
+  domain?:string|null
+}
+
+/**
+ * Compose url based on optionally provided values.
+ * @param domain: provide domain including https://
+ * @param route: optional route string
+ * @param slug: required slug string
+ * @returns domain + route + slug as string url
+ */
+export function composeUrl({domain,route,slug}:ComposeUrlType){
+  try{
+    let d, r, s
+    // domain without ending /
+    if (domain?.endsWith('/')){
+      d = domain.slice(0,domain.length-1)
+    } else {
+      d = domain
+    }
+    // route without starting or ending /
+    // remove
+    if (route?.startsWith('/')) route = route.slice(1)
+    if (route?.endsWith('/')){
+      r = route.slice(0,route.length-1)
+    }else{
+      r = route
+    }
+
+    // slug without starting on ending /
+    if (slug?.startsWith('/')) slug = slug.slice(1)
+    if (slug?.endsWith('/')){
+      s = slug.slice(0,slug.length-1)
+    }else{
+      s = slug
+    }
+
+    // compose url
+    let url = ''
+    if (d) url = d
+    if (r) url += `/${r}`
+    if (s) url += `/${s}`
+    // return url
+    return url
+  }catch(e:any){
+    logger(`composeUrl: ${e.message}`,'warn')
+    return '/'
   }
 }

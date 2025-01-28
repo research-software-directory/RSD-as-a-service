@@ -4,6 +4,8 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +19,7 @@ type SubmitButtonProps = {
 };
 
 export default function SubmitButtonWithListener({disabled,formId}: SubmitButtonProps) {
-  const btnRef = useRef<any>()
+  const btnRef:any = useRef(undefined)
 
   const handleCtrlEnter = useCallback((event: KeyboardEvent) => {
     if (event.key == 'Enter' && event.ctrlKey && disabled===false) {

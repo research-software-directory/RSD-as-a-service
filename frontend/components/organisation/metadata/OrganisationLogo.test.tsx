@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -142,8 +142,8 @@ it('removes logo', async () => {
   fireEvent.click(btnDelete)
 
   // validate patch call
-  expect(mockPatchOrganisation).toBeCalledTimes(1)
-  expect(mockPatchOrganisation).toBeCalledWith({
+  expect(mockPatchOrganisation).toHaveBeenCalledTimes(1)
+  expect(mockPatchOrganisation).toHaveBeenCalledWith({
     'data': {
       'id': mockProps.organisation.id,
       'logo_id': null,
@@ -155,8 +155,8 @@ it('removes logo', async () => {
   await waitForElementToBeRemoved(screen.getByRole('img'))
 
   // validate delete image api call
-  expect(mockDeleteImage).toBeCalledTimes(1)
-  expect(mockDeleteImage).toBeCalledWith({
+  expect(mockDeleteImage).toHaveBeenCalledTimes(1)
+  expect(mockDeleteImage).toHaveBeenCalledWith({
     'id': mockProps.organisation.logo_id,
     'token': mockSession.token,
   })
@@ -196,19 +196,19 @@ it('can change the logo', async () => {
   })
 
   // validate handleFileUpload call
-  expect(mockFileUpload).toBeCalledTimes(1)
+  expect(mockFileUpload).toHaveBeenCalledTimes(1)
 
   // validate upsertImage call
-  expect(mockUpsertImage).toBeCalledTimes(1)
-  expect(mockUpsertImage).toBeCalledWith({
+  expect(mockUpsertImage).toHaveBeenCalledTimes(1)
+  expect(mockUpsertImage).toHaveBeenCalledWith({
     'data': 'test-b64-encoded-as-string',
     'mime_type': 'image/png',
     'token': mockSession.token,
   })
 
   // validate patchOrganisation call
-  expect(mockPatchOrganisation).toBeCalledTimes(1)
-  expect(mockPatchOrganisation).toBeCalledWith({
+  expect(mockPatchOrganisation).toHaveBeenCalledTimes(1)
+  expect(mockPatchOrganisation).toHaveBeenCalledWith({
     'data': {
       'id': mockProps.organisation.id,
       'logo_id': mockProps.organisation.logo_id,

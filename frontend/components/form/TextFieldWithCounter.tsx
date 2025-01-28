@@ -1,11 +1,14 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useRef} from 'react'
+import {useEffect, useRef, JSX} from 'react'
 import TextField from '@mui/material/TextField'
 import HelperTextWithCounter from './HelperTextWithCounter'
+import InputAdornment from '@mui/material/InputAdornment'
 
 type TextFieldWidthCounterType = {
   autofocus?:boolean
@@ -22,10 +25,12 @@ type TextFieldWidthCounterType = {
   helperTextMessage?: string
   helperTextCnt?: string
   disabled?: boolean
+  startAdornment?: string | JSX.Element
+  endAdornment?: string | JSX.Element
 }
 
 export default function TextFieldWithCounter({options, register}:
-  { options: TextFieldWidthCounterType, register: any }) {
+  { options: TextFieldWidthCounterType, register: any}) {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
@@ -61,6 +66,10 @@ export default function TextFieldWithCounter({options, register}:
           count={options?.helperTextCnt ?? ''}
         />
       }
+      InputProps={{
+        startAdornment: options?.startAdornment ? <InputAdornment position="start">{options?.startAdornment}</InputAdornment> : undefined,
+        endAdornment: options?.endAdornment ? <InputAdornment position="end">{options?.endAdornment}</InputAdornment> : undefined
+      }}
       {...register}
     />
   )

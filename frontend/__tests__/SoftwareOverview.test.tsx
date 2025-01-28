@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,7 +23,8 @@ const mockProps = {
   keywords:null,
   prog_lang: null,
   licenses:null,
-  order:null,
+  sources: null,
+  order: '',
   page: 1,
   rows: 12,
   count: 408,
@@ -31,8 +32,10 @@ const mockProps = {
   keywordsList: mockData.keywordsList,
   languagesList: mockData.languagesList,
   licensesList: mockData.licensesList,
+  sourcesList: [],
   software: mockData.software as any,
-  highlights: mockData.highlights as any
+  highlights: mockData.highlights as any,
+  hasRemotes: false
 }
 
 describe('pages/software/index.tsx', () => {
@@ -57,7 +60,7 @@ describe('pages/software/index.tsx', () => {
         <SoftwareOverviewPage {...mockProps} />
       </WithAppContext>
     )
-    const carousel = screen.getByTestId('highlights-carousel')
+    screen.getByTestId('highlights-carousel')
     const cards = screen.getAllByTestId('highlights-card')
     expect(cards.length).toEqual(mockData.highlights.length)
   })
@@ -71,10 +74,10 @@ describe('pages/software/index.tsx', () => {
     // get reference to filter panel
     const panel = screen.getByTestId('filters-panel')
     // find order by testid
-    const order = within(panel).getByTestId('filters-order-by')
-    // should have 3 filters
+    // within(panel).getByTestId('filters-order-by')
+    // should have 4 filters
     const filters = within(panel).getAllByRole('combobox')
-    expect(filters.length).toEqual(3)
+    expect(filters.length).toEqual(4)
     // screen.debug(filters)
   })
 

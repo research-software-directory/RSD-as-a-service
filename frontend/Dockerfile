@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2021 - 2022 dv4all
-# SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-# SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+# SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+# SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -13,7 +13,7 @@
 # ----------------------------------------
 # 1. Install dependencies only when needed
 # ----------------------------------------
-FROM node:20.10-slim AS deps
+FROM node:22.13.0-bookworm-slim AS deps
 
 WORKDIR /app
 
@@ -48,7 +48,7 @@ RUN npm run build
 # ----------------------------------------
 # 3. Production image (standalone mode)
 # ----------------------------------------
-FROM node:20.10-slim AS runner
+FROM node:22.13.0-bookworm-slim AS runner
 
 # optional install updates
 # RUN apt-get upgrade -y

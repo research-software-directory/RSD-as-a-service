@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -68,7 +68,7 @@ it('can add domains', async() => {
 
   // SELECT L1 DOMAIN
   const l1 = screen.getByTestId('l1-domain-select')
-  const l1Btn = within(l1).getByRole('button')
+  const l1Btn = within(l1).getByRole('combobox')
   // we need to use mouseDown event for MUI select
   fireEvent.mouseDown(l1Btn)
   // and we need to wait for items to apprear
@@ -80,7 +80,7 @@ it('can add domains', async() => {
 
   // SELECT L2 DOMAIN
   const l2 = screen.getByTestId('l2-domain-select')
-  const l2Btn = within(l2).getByRole('button')
+  const l2Btn = within(l2).getByRole('combobox')
   // we need to use mouseDown event for MUI select
   fireEvent.mouseDown(l2Btn)
 
@@ -92,7 +92,7 @@ it('can add domains', async() => {
 
   // SELECT L3 DOMAIN
   const l3 = screen.getByTestId('l3-domain-select')
-  const l3Btn = within(l3).getByRole('button')
+  const l3Btn = within(l3).getByRole('combobox')
   // we need to use mouseDown event for MUI select
   fireEvent.mouseDown(l3Btn)
 
@@ -109,7 +109,7 @@ it('can add domains', async() => {
   fireEvent.click(addBtn)
 
   // validate API call
-  expect(mockAdResearchDomainToProject).toBeCalledTimes(1)
+  expect(mockAdResearchDomainToProject).toHaveBeenCalledTimes(1)
 
   await waitFor(() => {
     // validate 3 chips added
@@ -133,7 +133,7 @@ it('can delete research domain', async() => {
   const cancelIcon = within(domains[0]).getByTestId('CancelIcon')
   fireEvent.click(cancelIcon)
 
-  expect(mockDeleteResearchDomainFromProject).toBeCalledTimes(1)
+  expect(mockDeleteResearchDomainFromProject).toHaveBeenCalledTimes(1)
 
   await waitFor(() => {
     const remainedDomains = screen.getAllByTestId('research-domain-chip')

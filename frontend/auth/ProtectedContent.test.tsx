@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -143,9 +143,9 @@ it('renders content of type software when maintainer', async () => {
   expect(content).toBeInTheDocument()
 
   // ensure isMaintainerOfSoftware is called
-  expect(softwareMaintainer).toBeCalledTimes(1)
+  expect(softwareMaintainer).toHaveBeenCalledTimes(1)
   // with expected agrguments
-  expect(softwareMaintainer).toBeCalledWith({
+  expect(softwareMaintainer).toHaveBeenCalledWith({
     'account': 'test-account-string',
     'slug': '/test-software-1',
     'token': 'TEST_RANDOM_TOKEN',
@@ -178,9 +178,9 @@ it('renders content of type project when maintainer', async () => {
   expect(content).toBeInTheDocument()
 
   // ensure isMaintainerOfProject is called
-  expect(projectMaintainer).toBeCalledTimes(1)
+  expect(projectMaintainer).toHaveBeenCalledTimes(1)
   // with expected agrguments
-  expect(projectMaintainer).toBeCalledWith({
+  expect(projectMaintainer).toHaveBeenCalledWith({
     'account': 'test-account-string',
     'slug': '/test-project-1',
     'token': 'TEST_RANDOM_TOKEN',

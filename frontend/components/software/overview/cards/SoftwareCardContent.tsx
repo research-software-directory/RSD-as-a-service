@@ -1,19 +1,19 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {getImageUrl} from '~/utils/editImage'
 import KeywordList from '~/components/cards/KeywordList'
 import CardTitleSubtitle from '~/components/cards/CardTitleSubtitle'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
 import CardContentFrame from '~/components/cards/CardContentFrame'
 import CardImageFrame from '~/components/cards/CardImageFrame'
+import RsdHostLabel from '~/components/cards/RsdHostLabel'
 import ProgrammingLanguageList from './ProgrammingLanguageList'
 import SoftwareMetrics from './SoftwareMetrics'
+import {getImgUrl} from '../useSoftwareOverviewProps'
 
 type SoftwareCardContentProps = {
-  // slug:string
   brand_name: string
   short_statement: string
   image_id: string | null
@@ -24,10 +24,12 @@ type SoftwareCardContentProps = {
   downloads?: number
   visibleKeywords?: number
   visibleProgLang?: number
+  domain?: string|null
+  rsd_host?: string|null
 }
 
 export default function SoftwareCardContent(item:SoftwareCardContentProps) {
-
+  const imgUrl = getImgUrl({domain:item.domain,image_id:item.image_id})
   return (
     <div
       data-testid="software-card-content"
@@ -35,7 +37,7 @@ export default function SoftwareCardContent(item:SoftwareCardContentProps) {
 
       <CardImageFrame>
         <ImageWithPlaceholder
-          src={`${getImageUrl(item.image_id) ?? ''}`}
+          src={imgUrl}
           alt={`Logo for ${item.brand_name}`}
           type="gradient"
           className="w-full text-base-content-disabled p-4"
@@ -44,11 +46,11 @@ export default function SoftwareCardContent(item:SoftwareCardContentProps) {
       </CardImageFrame>
 
       <CardContentFrame>
+        <RsdHostLabel rsd_host={item?.rsd_host} domain={item?.domain}/>
         <CardTitleSubtitle
           title={item.brand_name}
           subtitle={item.short_statement}
         />
-
         {/* keywords */}
         <div className="flex-1 overflow-auto py-2">
           <KeywordList

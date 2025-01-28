@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -119,8 +119,8 @@ it('dispatch confirmDelete on delete click', () => {
   // click on delete
   fireEvent.click(deleteBtn)
   // validate dispatch call
-  expect(mockDispatch).toBeCalledTimes(1)
-  expect(mockDispatch).toBeCalledWith(expectedDispatch)
+  expect(mockDispatch).toHaveBeenCalledTimes(1)
+  expect(mockDispatch).toHaveBeenCalledWith(expectedDispatch)
 })
 
 it('edit action for rsd_admin when no doi', () => {
@@ -170,7 +170,7 @@ it('edit action for rsd_admin when no doi', () => {
   // click edit button
   fireEvent.click(editBtn as any)
 
-  expect(mockDispatch).toBeCalledTimes(1)
-  expect(mockDispatch).toBeCalledWith(expectedAction)
+  expect(mockDispatch).toHaveBeenCalledTimes(1)
+  expect(mockDispatch).toHaveBeenCalledWith(expectedAction)
 
 })

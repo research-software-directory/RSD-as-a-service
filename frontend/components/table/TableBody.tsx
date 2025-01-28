@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -15,25 +15,21 @@ import EditableCell from './EditableCell'
 
 function formatValue<T, K extends keyof T>(col: Column<T, K>, value: any) {
   if (value===null || typeof value==='undefined') return ''
-  let formatedValue = ''
+  let formattedValue = ''
   try {
     switch (col.type) {
-      case 'boolean':
-        formatedValue = value ? 'Y' : 'N'
-        return formatedValue
       case 'date':
-        formatedValue = new Date(value).toLocaleDateString()
-        return formatedValue
+        formattedValue = new Date(value).toLocaleDateString()
+        return formattedValue
       case 'datetime':
-        formatedValue = new Date(value).toLocaleString()
-        return formatedValue
+        formattedValue = new Date(value).toLocaleString()
+        return formattedValue
       default:
-        // formatedValue = value.toString()
         return value
     }
   } catch(e:any) {
     logger(`formatValue error: ${e.message}`, 'warn')
-    return formatedValue
+    return value
   }
 }
 
@@ -56,14 +52,16 @@ function TableRow<T extends {id:string,origin?:string}, K extends keyof T>({data
                     id: data.id,
                     key: col.key.toString(),
                     value,
-                    origin: data?.origin
+                    origin: data?.origin,
+                    type: col.type
                   }}
                   patchFn={col?.patchFn}
+                  disabledFn={col?.disabledFn}
                 />
               </MuiTableCell>
             )
           }
-          if (col.type === 'custom' && col.renderFn) {
+          if (col?.renderFn) {
             return (
               <MuiTableCell
                 key={key}
