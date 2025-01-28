@@ -11,19 +11,20 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {useRouter} from 'next/router'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
-import TerminalIcon from '@mui/icons-material/Terminal'
-import ListAltIcon from '@mui/icons-material/ListAlt'
-import BusinessIcon from '@mui/icons-material/Business'
-import Diversity3Icon from '@mui/icons-material/Diversity3'
 
 import {useAuth} from '~/auth'
 import {useDebounce} from '~/utils/useDebounce'
 import logger from '~/utils/logger'
-import {useModules} from '~/config/useModules'
 import {composeUrl} from '~/utils/fetchHelpers'
+import {useModules} from '~/config/useModules'
 import EnterkeyIcon from '~/components/icons/enterkey.svg'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {getGlobalSearch,GlobalSearchResults} from './globalSearchAutocomplete.api'
+import {getGlobalSearch,GlobalSearchResults} from './apiGlobalSearch'
+import RsdHostLabel from './RsdHostLabel'
+import UnpublishedLabel from './UnpublishedLabel'
+import SearchItemIcon from './SearchItemIcon'
+import {useHasRemotes} from './useHasRemotes'
+import NoResultsLabel from './NoResultsLabel'
 
 type Props = {
   className?: string
@@ -35,10 +36,11 @@ export default function GlobalSearchAutocomplete(props: Props) {
   const [isOpen, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [selected, setSelected] = useState(0)
-  const [hasResults, setHasResults] = useState(true)
+  const [hasResults, setHasResults] = useState(false)
   const [searchResults, setSearchResults] = useState<GlobalSearchResults[]>([])
   const [searchCombo, setSearchCombo] = useState('Ctrl K')
   const {isModuleEnabled} = useModules()
+  const {hasRemotes} = useHasRemotes()
 
   const lastValue = useDebounce(inputValue, 150)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -46,8 +48,10 @@ export default function GlobalSearchAutocomplete(props: Props) {
 
   // console.group('GlobalSearchAutocomplete')
   // console.log('inputValue...', inputValue)
+  // console.log('hasResults...',hasResults)
   // console.log('lastValue...', lastValue)
   // console.log('searchResults...',searchResults)
+  // console.log('hasRemotes...',hasRemotes)
   // console.groupEnd()
 
   useEffect(() => {
@@ -237,25 +241,17 @@ export default function GlobalSearchAutocomplete(props: Props) {
               zIndex: 7
             }}
           >
-            {!hasResults &&
-              <div className="px-4 py-3 font-normal bg-base-200 mb-2 ">
-                <span className="animate-pulse">No results...</span>
-              </div>
-            }
+            {/* Show no results message */}
+            <NoResultsLabel show={hasResults===false && inputValue!==''} />
+
             {searchResults.map((item, index) => {
+
               const url = composeUrl({
                 domain: item?.domain,
                 route: item?.source,
                 slug: item?.slug ?? '/'
               })
-              let rsd_host
-              if (item?.rsd_host){
-                rsd_host = item.rsd_host
-              } else if (item?.domain){
-                rsd_host = `@${new URL(url).hostname}`
-              } else {
-                rsd_host = `@${window.location.hostname}`
-              }
+
               // debugger
               return (
                 <div key={index}
@@ -268,10 +264,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
                   <div className="flex gap-3 w-full">
                     {/*icon*/}
                     <div className={selected === index ? 'text-content' : 'opacity-40'}>
-                      {item?.source === 'software' && <TerminalIcon/>}
-                      {item?.source === 'projects' && <ListAltIcon/>}
-                      {item?.source === 'organisations' && <BusinessIcon/>}
-                      {item?.source === 'communities' && <Diversity3Icon/>}
+                      <SearchItemIcon source={item.source} />
                     </div>
 
                     <div className="flex-grow"
@@ -283,17 +276,14 @@ export default function GlobalSearchAutocomplete(props: Props) {
                       <div className="text-xs text-current line-clamp-1">
                         {item?.source}
                       </div>
-                      <div className="text-xs text-base-content-secondary line-clamp-1">
-                        {rsd_host}
-                      </div>
-                      {item?.is_published === false ?
-                        <div className="flex-nowrap text-warning text-xs">
-                          Unpublished
-                        </div>
-                        : null
-                      }
+                      <RsdHostLabel
+                        hasResults={hasResults}
+                        hasRemotes={hasRemotes}
+                        domain={item.domain}
+                        rsd_host={item.rsd_host}
+                      />
+                      <UnpublishedLabel is_published={item?.is_published} />
                     </div>
-
                     {selected === index && <div>
                       <EnterkeyIcon/>
                     </div>}

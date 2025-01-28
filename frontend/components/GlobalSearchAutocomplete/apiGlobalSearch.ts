@@ -9,15 +9,17 @@
 import logger from '~/utils/logger'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 
+export type GlobalSearchResultsSource = 'software' | 'projects' | 'organisations' | 'communities'
+
 export type GlobalSearchResults = {
   rsd_host: string | null
   domain: string | null
   slug: string,
   name: string,
-  source: 'software' | 'projects' | 'organisations' | 'communities',
+  source: GlobalSearchResultsSource,
   is_published?: boolean,
   search_text?: string
-} | undefined
+}
 
 /**
  *
@@ -38,7 +40,7 @@ export async function getGlobalSearch(searchText: string, token: string,): Promi
     })
     if (resp.status === 200) {
       // already sorted by the backend, see the query above
-      return await resp.json()
+      return await resp.json() as GlobalSearchResults[]
     } else {
       throw new Error(`We received an error message when doing a global search, status code ${resp.status}, body ${await resp.text()}`)
     }

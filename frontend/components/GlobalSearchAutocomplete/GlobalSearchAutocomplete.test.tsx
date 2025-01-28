@@ -8,17 +8,31 @@
 
 import {render, screen, fireEvent} from '@testing-library/react'
 import {WrappedComponentWithProps} from '~/utils/jest/WrappedComponents'
-import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
 
 import GlobalSearchAutocomplete from '.'
 
+// MOCKS
 import apiResponse from './__mocks__/globalSearchApiResponse.json'
+const mockGetGlobalSearch = jest.fn()
+jest.mock('./apiGlobalSearch',()=>{
+  return {
+    getGlobalSearch: (props:any)=>mockGetGlobalSearch(props)
+  }
+})
+const mockUseHasRemotes = jest.fn()
+jest.mock('./useHasRemotes',()=>{
+  // console.log('useHasRemotes...MOCK')
+  return {
+    useHasRemotes: ()=>mockUseHasRemotes()
+  }
+})
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-it('renders component with testid global-search', () => {
+it('renders component with testid global-search', async() => {
+  mockUseHasRemotes.mockReturnValue({hasRemotes:false})
   // render component with session
   render(WrappedComponentWithProps(GlobalSearchAutocomplete))
   // find global search input
@@ -27,6 +41,7 @@ it('renders component with testid global-search', () => {
 })
 
 it('shows 3 navigation option on focus', async () => {
+  mockUseHasRemotes.mockReturnValue({hasRemotes:false})
   // render component with session
   render(WrappedComponentWithProps(GlobalSearchAutocomplete))
   // find input
@@ -40,32 +55,28 @@ it('shows 3 navigation option on focus', async () => {
 })
 
 it('calls search api on input', async () => {
-  const expectedUrl = '/api/v1/rpc/global_search?query=Search text&limit=30&order=rank.asc,index_found.asc'
-  const expectPayload = {
-    'headers': {
-      'Content-Type': 'application/json'
-    },
-    'method': 'GET'
-  }
-  mockResolvedValueOnce(apiResponse)
+  const expectedSearch = 'Search text'
+  mockUseHasRemotes.mockReturnValue({hasRemotes:false})
+  mockGetGlobalSearch.mockResolvedValue(apiResponse)
 
   // render component with session
   render(WrappedComponentWithProps(GlobalSearchAutocomplete))
   // find input
   const globalSearch = screen.getByTestId('global-search')
   // enter value
-  fireEvent.change(globalSearch, {target: {value: 'Search text'}})
+  fireEvent.change(globalSearch, {target: {value: expectedSearch}})
   // wait for list to return
   await screen.findAllByTestId('global-search-list-item')
   // expect(items.length).toEqual(apiResponse.length)
   // confirm api call
-  expect(global.fetch).toHaveBeenCalledTimes(1)
-  expect(global.fetch).toHaveBeenCalledWith(expectedUrl,expectPayload)
+  expect(mockGetGlobalSearch).toHaveBeenCalledTimes(1)
+  expect(mockGetGlobalSearch).toHaveBeenCalledWith(expectedSearch)
 })
 
 it('shows api response in the list', async () => {
   // return mocked api response
-  mockResolvedValueOnce(apiResponse)
+  mockGetGlobalSearch.mockResolvedValue(apiResponse)
+  mockUseHasRemotes.mockReturnValue({hasRemotes:false})
 
   // render component with session
   render(WrappedComponentWithProps(GlobalSearchAutocomplete))
@@ -80,7 +91,8 @@ it('shows api response in the list', async () => {
 
 it('shows no response message', async () => {
   // return mocked api response
-  mockResolvedValueOnce([])
+  mockGetGlobalSearch.mockResolvedValueOnce([])
+  mockUseHasRemotes.mockReturnValue({hasRemotes:false})
   // render component with session
   render(WrappedComponentWithProps(GlobalSearchAutocomplete))
   // find input
@@ -90,4 +102,38 @@ it('shows no response message', async () => {
   // wait for No results to appear
   const noResults = await screen.findByText('No results...')
   expect(noResults).toBeInTheDocument()
+})
+
+it('shows rsd_host value when hasRemotes=true', async () => {
+  // return mocked api response
+  mockGetGlobalSearch.mockResolvedValueOnce([apiResponse[0]])
+  mockUseHasRemotes.mockReturnValue({hasRemotes:true})
+  // render component with session
+  render(WrappedComponentWithProps(GlobalSearchAutocomplete))
+  // find input
+  const globalSearch = screen.getByTestId('global-search')
+  // enter value
+  fireEvent.change(globalSearch, {target: {value: 'ICD_GEMs.jl'}})
+  // wait for No results to appear
+  const items = await screen.findAllByTestId('global-search-list-item')
+  expect(items.length).toEqual(1)
+  // find host value
+  await screen.findByText('@research-software-directory.org')
+})
+
+it('shows Unpublished value', async () => {
+  // return mocked api response
+  mockGetGlobalSearch.mockResolvedValueOnce([apiResponse[1]])
+  mockUseHasRemotes.mockReturnValue({hasRemotes:false})
+  // render component with session
+  render(WrappedComponentWithProps(GlobalSearchAutocomplete))
+  // find input
+  const globalSearch = screen.getByTestId('global-search')
+  // enter value
+  fireEvent.change(globalSearch, {target: {value: 'iEnvironment'}})
+  // wait for No results to appear
+  const items = await screen.findAllByTestId('global-search-list-item')
+  expect(items.length).toEqual(1)
+  // find host value
+  await screen.findByText('Unpublished')
 })
