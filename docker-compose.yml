@@ -210,7 +210,7 @@ services:
       context: ./documentation
       # dockerfile to use for build
       dockerfile: Dockerfile
-    image: rsd/documentation:2.0.1
+    image: rsd/documentation:3.0.0
     expose:
       - "80"
     networks:
@@ -242,7 +242,7 @@ services:
   #----------------------------------------------
   data-generation:
     build: ./data-generation
-    image: rsd/generation:1.4.2
+    image: rsd/generation:1.5.0
     environment:
       # it needs to be here to use values from .env file
       - PGRST_JWT_SECRET
