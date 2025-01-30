@@ -8,7 +8,7 @@
 # ----------------------------------------
 # 1. Install dependencies only when needed
 # ----------------------------------------
-FROM node:22.13.0-bookworm-slim AS deps
+FROM node:22.13.1-bookworm-slim AS deps
 
 WORKDIR /app
 

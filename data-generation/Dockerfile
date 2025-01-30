@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM node:22.13.0-bookworm-slim
+FROM node:22.13.1-bookworm-slim
 WORKDIR /usr/app
 COPY ./package.json /usr/app
 RUN npm install
