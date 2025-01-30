@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -8,9 +8,11 @@
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
+import InputLabel from '@mui/material/InputLabel'
 
-import {setDocumentCookie} from '../../../../utils/userSettings'
+import {setDocumentCookie} from '~/utils/userSettings'
 import {rowsPerPageOptions} from '~/config/pagination'
+
 
 type SelectRowsProps = {
   rows: number
@@ -35,9 +37,11 @@ export default function SelectRows({rows, handleQueryChange}: SelectRowsProps) {
       }}
       title={`Show ${rows} items on page`}
     >
+      {/* need to add it for accessibility - Lighthouse audit */}
+      <InputLabel id="select-items" className="opacity-0">Items</InputLabel>
       <Select
         id="select-rows"
-        labelId="select-rows-label"
+        labelId="select-items"
         variant="outlined"
         value={rows}
         // label="Items"
