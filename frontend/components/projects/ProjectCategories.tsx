@@ -1,13 +1,13 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {CategoryPath} from '~/types/Category'
 import {useCategoryTree} from '~/components/category/useCategoryTree'
-import SidebarSection from '../layout/SidebarSection'
-import SidebarTitle from '../layout/SidebarTitle'
-import {CategoryChipFilter} from '../category/CategoryChipFilter'
+import SidebarSection from '~/components/layout/SidebarSection'
+import SidebarTitle from '~/components/layout/SidebarTitle'
+import {CategoryChipFilter} from '~/components/category/CategoryChipFilter'
 
 export default function ProjectCategories({categories}:{categories:CategoryPath[]}) {
   const tree = useCategoryTree(categories)
@@ -24,7 +24,7 @@ export default function ProjectCategories({categories}:{categories:CategoryPath[
 
     return (
       <SidebarSection key={category.id}>
-        <SidebarTitle>{category.name}</SidebarTitle>
+        <SidebarTitle title={category.name}>{category.short_name}</SidebarTitle>
         <div className="flex flex-wrap gap-2">
           <CategoryChipFilter nodes={children} />
         </div>
