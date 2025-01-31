@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,6 +17,11 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import ControlledSwitch from '../form/ControlledSwitch'
 
+export type CategoryEditFormLabels = Readonly<{
+  short_name: string,
+  name: string
+}>
+
 type CategoryEditFormProps=Readonly<{
   createNew: boolean
   data: CategoryEntry | null
@@ -24,10 +29,12 @@ type CategoryEditFormProps=Readonly<{
   organisation: string | null
   onSuccess: (category:CategoryEntry)=>void
   onCancel: ()=>void
+  labels?: CategoryEditFormLabels
 }>
 
 export default function CategoryEditForm({
-  createNew, data, community=null,organisation=null,onSuccess, onCancel
+  createNew, data, community=null,organisation=null,onSuccess, onCancel,
+  labels
 }:CategoryEditFormProps) {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
@@ -153,7 +160,7 @@ export default function CategoryEditForm({
           required: 'The short name is required'})
         }
         options={{
-          label: 'Short name *',
+          label: labels?.short_name ?? 'Short name *',
           defaultValue: createNew ? undefined : data?.short_name,
           helperTextCnt: `${watch('short_name')?.length ?? 0}/100`,
           helperTextMessage: `${formState.errors?.short_name?.message ?? ''}`,
@@ -167,7 +174,7 @@ export default function CategoryEditForm({
           required: 'The name is required'})
         }
         options={{
-          label: 'Name *',
+          label: labels?.name ?? 'Name *',
           defaultValue: createNew ? undefined : data?.name,
           helperTextCnt: `${watch('name')?.length ?? 0}/250`,
           helperTextMessage: `${formState.errors?.name?.message ?? ''}`,
