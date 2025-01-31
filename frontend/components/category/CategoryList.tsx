@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,6 +16,7 @@ import ListItemText from '@mui/material/ListItemText'
 
 import {TreeNode} from '~/types/TreeNode'
 import {CategoryEntry} from '~/types/Category'
+import ListItemIcon from '@mui/material/ListItemIcon'
 
 type NodeWithChildrenProps = Readonly<{
   node: TreeNode<CategoryEntry>
@@ -37,7 +38,7 @@ function NodeWithChildren({
     <>
       <ListItem
         key={cat.id}
-        title={cat.short_name}
+        title={cat.name}
         secondaryAction={
           <IconButton
             edge="end"
@@ -51,10 +52,14 @@ function NodeWithChildren({
         dense
       >
         <ListItemButton onClick={() => onSelect(node)}>
-          <Checkbox disableRipple checked={isSelected(node)} />
+          <ListItemIcon>
+            <Checkbox edge="start" disableRipple checked={isSelected(node)} />
+          </ListItemIcon>
           <ListItemText
-            primary={cat.name}
-            // secondary={cat.name}
+            // alias Label
+            primary={cat.short_name}
+            // alias Description
+            secondary={cat.name}
           />
         </ListItemButton>
       </ListItem>
@@ -96,19 +101,23 @@ export function CategoryList({
       return (
         <ListItem
           key={cat.id}
-          // title={cat.name}
-          title={cat.short_name}
+          title={cat.name}
           disablePadding
           dense
         >
           <ListItemButton onClick={() => onSelect(node)}>
-            <Checkbox
-              disableRipple
-              checked={isSelected(node)}
-            />
+            <ListItemIcon>
+              <Checkbox
+                edge="start"
+                disableRipple
+                checked={isSelected(node)}
+              />
+            </ListItemIcon>
             <ListItemText
-              primary={cat.name}
-              // secondary={cat.name}
+              // alias Label
+              primary={cat.short_name}
+              // alias Description
+              secondary={cat.name}
             />
           </ListItemButton>
         </ListItem>
