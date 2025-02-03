@@ -19,15 +19,16 @@ function PackageManagerItem({item}:{item:PackageManager}){
     const info = packageManagerSettings[item.package_manager ?? 'other']
     const link = new URL(item.url)
     return (
-      <a href={item.url} target="_blank">
+      <a href={item.url} target="_blank" rel="noreferrer">
         <LogoAvatar
           name={link.hostname}
           src={info.icon ?? undefined}
           sx={{
-            height: '4rem',
-            width: '4rem',
-            fontSize: '1.5rem',
-            // borderRadius: '0.25rem',
+            width: 'auto',
+            height: '3rem',
+            fontSize: '3rem',
+            // add 2 pixel margin to align it with same logo in source code
+            margin:'0.125rem',
             '& img': {
               // fit icon into area
               objectFit: 'scale-down'
@@ -51,7 +52,7 @@ export default function AboutPackageManagers({packages}:AboutPackageManagersProp
           </span>
           <span className="text-primary pl-2">Packages</span>
         </div>
-        <div className="flex gap-4 flex-wrap">
+        <div className="flex gap-4 flex-wrap py-2">
           {packages.map(item=><PackageManagerItem key={item.id} item={item} />)}
         </div>
       </>
