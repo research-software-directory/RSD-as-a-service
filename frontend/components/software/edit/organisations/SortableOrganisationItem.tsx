@@ -79,10 +79,10 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
   return (
     <ListItem
       data-testid="organisation-list-item"
+      key={organisation.id}
       // draggable
       ref={setNodeRef}
       {...attributes}
-      key={JSON.stringify(organisation)}
       secondaryAction={getSecondaryActions(listeners)}
       sx={{
         // position:'relative',

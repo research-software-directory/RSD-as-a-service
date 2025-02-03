@@ -9,12 +9,12 @@ import Chip from '@mui/material/Chip'
 import SearchIcon from '@mui/icons-material/Search'
 import Link from 'next/link'
 
-type TagChipFilterProps={
+type TagChipFilterProps=Readonly<{
   label: string,
   url?:string ,
   title?: string
   capitalize?: boolean
-}
+}>
 
 export default function TagChipFilter({
   url, label,

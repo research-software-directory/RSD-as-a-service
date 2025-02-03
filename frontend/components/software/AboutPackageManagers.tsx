@@ -45,8 +45,8 @@ function PackageManagerItem({item}:{item:PackageManager}){
 export default function AboutPackageManagers({packages}:AboutPackageManagersProps) {
   if (packages?.length > 0){
     return (
-      <>
-        <div className="pt-8 pb-2">
+      <div>
+        <div className="pb-2">
           <span className="font-bold text-primary">
             <WidgetsIcon />
           </span>
@@ -55,7 +55,7 @@ export default function AboutPackageManagers({packages}:AboutPackageManagersProp
         <div className="flex gap-4 flex-wrap py-2">
           {packages.map(item=><PackageManagerItem key={item.id} item={item} />)}
         </div>
-      </>
+      </div>
     )
   }
   // do not show section if no package managers

@@ -6,8 +6,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {MuiIconName} from '~/components/category/CategoryIcon'
+
 export type CategoryProperties = {
-  icon?: string
+  icon?: MuiIconName
   is_highlight?: boolean
   subtitle?: string
   description?: string

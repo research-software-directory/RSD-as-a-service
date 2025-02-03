@@ -1,14 +1,14 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Alert from '@mui/material/Alert'
+import List from '@mui/material/List'
 import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
 import ContentLoader from '../layout/ContentLoader'
 import {CategoryList} from './CategoryList'
-import List from '@mui/material/List'
 
 type CategoriesDialogBodyProps=Readonly<{
   categories: TreeNode<CategoryEntry>[],

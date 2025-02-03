@@ -392,7 +392,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
     fireEvent.click(categoriesBtn)
 
     // get organisation categories modal
-    const modal = screen.getByRole('dialog')
+    const modal = await screen.findByRole('dialog')
 
     // close modal
     const cancelBtn = within(modal).getByRole('button', {

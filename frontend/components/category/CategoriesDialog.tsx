@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -53,7 +53,10 @@ export default function CategoriesDialog({
   }
 
   return (
-    <Dialog open fullScreen={smallScreen}>
+    <Dialog
+      open = {state !== 'loading'}
+      fullScreen={smallScreen}
+    >
       <DialogTitle sx={{
         fontSize: '1.5rem',
         borderBottom: '1px solid',

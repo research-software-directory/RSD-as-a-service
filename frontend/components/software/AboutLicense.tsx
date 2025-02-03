@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,8 +12,8 @@ import {LicenseForSoftware} from '~/types/SoftwareTypes'
 export default function AboutLicense({licenses}:{licenses:LicenseForSoftware[]}) {
   // console.log('AboutLicense...', licenses)
   return (
-    <>
-      <div className="pt-8 pb-2">
+    <div>
+      <div className="pb-2">
         <AttachFileIcon color="primary" sx={{transform:'rotate(45deg)'}} />
         <span className="text-primary pl-2">License</span>
       </div>
@@ -42,6 +42,6 @@ export default function AboutLicense({licenses}:{licenses:LicenseForSoftware[]})
           })}
         </ul>
       }
-    </>
+    </div>
   )
 }
