@@ -12,9 +12,12 @@ import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import SaveIcon from '@mui/icons-material/Save'
+import InputAdornment from '@mui/material/InputAdornment'
+import SearchIcon from '@mui/icons-material/Search'
 
 import {TreeNode} from '~/types/TreeNode'
 import {CategoryEntry} from '~/types/Category'
+import SearchInput from '../search/SearchInput'
 import CategoriesDialogBody from './CategoriesDialogBody'
 
 type CategoriesDialogProps={
@@ -35,11 +38,13 @@ export default function CategoriesDialog({
 }:CategoriesDialogProps) {
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<Set<string>>(new Set())
+  const [searchFor, setSearchFor] = useState<string>()
 
   // console.group('CategoriesDialog')
   // console.log('state...', state)
   // console.log('selected...', selected)
   // console.log('selectedCategoryIds...',selectedCategoryIds)
+  // console.log('searchFor...', searchFor)
   // console.groupEnd()
 
   useEffect(()=>{
@@ -56,6 +61,12 @@ export default function CategoriesDialog({
     <Dialog
       open = {state !== 'loading'}
       fullScreen={smallScreen}
+      sx={{
+        '.MuiDialog-paper':{
+          height: smallScreen ? '100%' : '70%',
+          width: '100%'
+        }
+      }}
     >
       <DialogTitle sx={{
         fontSize: '1.5rem',
@@ -63,7 +74,19 @@ export default function CategoriesDialog({
         borderColor: 'divider',
         color: 'primary.main',
         fontWeight: 500
-      }}>{title}</DialogTitle>
+      }}>
+        {title}
+      </DialogTitle>
+      <div className="border-b flex py-2 px-6">
+        <SearchInput
+          placeholder='Find category'
+          onSearch={setSearchFor}
+          defaultValue={searchFor ?? ''}
+          InputProps={{
+            startAdornment:<InputAdornment position="start"><SearchIcon /></InputAdornment>
+          }}
+        />
+      </div>
       <DialogContent
         sx={{
           display: 'flex',
@@ -78,6 +101,7 @@ export default function CategoriesDialog({
           noItemsMsg={noItemsMsg}
           selectedCategoryIds={selectedCategoryIds}
           setSelectedCategoryIds={setSelectedCategoryIds}
+          searchFor={searchFor}
         />
 
       </DialogContent>

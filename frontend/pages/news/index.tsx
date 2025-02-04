@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -86,6 +86,9 @@ export default function NewsOverview({count,page,rows,layout,search,news}:NewsOv
               <ViewToggleGroup
                 layout={view}
                 onSetView={setLayout}
+                sx={{
+                  marginLeft:'0.5rem'
+                }}
               />
               <SelectRows
                 rows={rows}

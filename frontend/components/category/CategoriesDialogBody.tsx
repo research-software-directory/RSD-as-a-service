@@ -5,6 +5,8 @@
 
 import Alert from '@mui/material/Alert'
 import List from '@mui/material/List'
+import AlertTitle from '@mui/material/AlertTitle'
+
 import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
 import ContentLoader from '../layout/ContentLoader'
@@ -17,11 +19,13 @@ type CategoriesDialogBodyProps=Readonly<{
   noItemsMsg: string
   selectedCategoryIds: Set<string>,
   setSelectedCategoryIds: (ids:Set<string>)=>void
+  searchFor?: string
 }>
 
 export default function CategoriesDialogBody({
   categories,state,errorMsg,noItemsMsg,
-  selectedCategoryIds, setSelectedCategoryIds
+  selectedCategoryIds, setSelectedCategoryIds,
+  searchFor
 }:CategoriesDialogBodyProps) {
 
 
@@ -84,7 +88,8 @@ export default function CategoriesDialogBody({
 
     case 'error':
       return (
-        <Alert severity="error" sx={{marginTop: '0.5rem'}}>
+        <Alert severity="error" sx={{marginTop: '0.5rem', height:'inherit', width:'inherit'}}>
+          <AlertTitle sx={{fontWeight:500}}>Failed to load categories</AlertTitle>
           {errorMsg ?? '500 - Unexpected error'}
         </Alert>
       )
@@ -94,7 +99,8 @@ export default function CategoriesDialogBody({
         <>
           {(categories === null || categories.length === 0)
             ?
-            <Alert severity="info" sx={{'padding': '2rem'}}>
+            <Alert severity="info" sx={{'padding': '2rem', height:'inherit', width:'inherit'}}>
+              <AlertTitle sx={{fontWeight:500}}>No categories</AlertTitle>
               {noItemsMsg}
             </Alert>
             :
@@ -103,6 +109,7 @@ export default function CategoriesDialogBody({
                 categories={categories}
                 isSelected={isSelected}
                 onSelect={onSelect}
+                searchFor={searchFor}
               />
             </List>
           }
