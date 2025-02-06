@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,7 +13,7 @@ import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import {
   NewProject, ProjectLink, ResearchDomainForProject
 } from '~/types/Project'
-import {colForCreate, EditOrganisation, OrganisationRole, Status} from '~/types/Organisation'
+import {colForCreate, EditOrganisation, OrganisationRole, OrganisationStatus} from '~/types/Organisation'
 import {createOrganisation} from './editOrganisation'
 import {getPropsFromObject} from './getPropsFromObject'
 
@@ -448,7 +448,7 @@ export async function createMaintainerLink({project,account,token}:{project:stri
 }
 
 export async function addRelatedSoftware({project,software,status,token}: {
-  project: string, software: string, status: Status, token: string
+  project: string, software: string, status: OrganisationStatus, token: string
 }) {
   const url = '/api/v1/software_for_project'
 
@@ -485,7 +485,7 @@ export async function deleteRelatedSoftware({project, software, token}: {
 }
 
 export async function addRelatedProject({origin, relation, status, token}: {
-  origin: string, relation: string, status: Status, token: string
+  origin: string, relation: string, status: OrganisationStatus, token: string
 }) {
   const url = '/api/v1/project_for_project'
 

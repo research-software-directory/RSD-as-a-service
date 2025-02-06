@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -9,7 +9,7 @@
 import {ProjectStatusKey} from './Project'
 
 // based on ENUMS defined in 012-inter-relation-tables.sql
-export type Status = 'rejected_by_origin' | 'rejected_by_relation' | 'approved'
+export type OrganisationStatus = 'rejected_by_origin' | 'rejected_by_relation' | 'approved'
 export type OrganisationRole = 'participating' | 'funding' | 'hosting'
 export type OrganisationSource = 'RSD' | 'ROR' | 'MANUAL'
 
@@ -79,7 +79,7 @@ export type EditOrganisation = SearchOrganisation & {
   logo_b64: string | null
   logo_mime_type: string | null
   // source?: OrganisationSource
-  status?: Status
+  status?: OrganisationStatus
   // only maintainers can edit values
   canEdit?: boolean
   // used for children to have complete rsd_path
@@ -103,7 +103,7 @@ export type PatchOrganisation = {
 export type SoftwareForOrganisation = {
   software: string,
   organisation: string,
-  status: Status,
+  status: OrganisationStatus,
   position: number|null
 }
 
@@ -120,7 +120,7 @@ export type OrganisationsForSoftware={
   website: string | null
   rsd_path: string
   logo_id: string | null
-  status: Status
+  status: OrganisationStatus
   software: string
 }
 
@@ -156,7 +156,7 @@ export type SoftwareOfOrganisation = {
   is_published: boolean
   updated_at: string
   is_featured: boolean
-  status: Status
+  status: OrganisationStatus
   keywords: string[],
   prog_lang: string[],
   licenses: string,
@@ -178,7 +178,7 @@ export type ProjectOfOrganisation = {
   image_contain: boolean
   image_id: string | null
   // organisation: string
-  status: Status
+  status: OrganisationStatus
   keywords: string[] | null
   research_domain: string[] | null
   impact_cnt: number | null
