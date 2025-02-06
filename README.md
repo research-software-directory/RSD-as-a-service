@@ -2,8 +2,8 @@
 SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 SPDX-FileCopyrightText: 2021 - 2022 Jason Maassen (Netherlands eScience Center) <j.maassen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2021 - 2022 dv4all
-SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
+SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
 SPDX-FileCopyrightText: 2021 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -72,7 +72,13 @@ make stop
 docker compose down
 ```
 
-## Developing the frontend
+## Developing the RSD
+
+We discourage the use of Safari for developing the RSD. The reason is that it is not possible to sign in with Safari on localhost, because Safari handles [secure cookies differently](https://codedamn.com/news/web-development/safari-cookie-is-not-being-set) from other browsers.
+
+For more details on developing the RSD, see the respective readmes in the varying directories.
+
+### Developing the frontend
 
 You can run frontend in development mode as docker a service (called frontend-dev) that enables hot reloading. By default this frontend-dev service will not be started automatically. For more detailed instructions see [frontend/README.md](frontend/README.md).
 
@@ -83,7 +89,7 @@ make frontend-dev
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up 
 ```
 
-It is possible to directly run the frontend too (without using a docker container). You must then have NodeJS installed, preferably v18.
+It is possible to directly run the frontend too (without using a docker container). You must then have Node.js installed, see the `Dockerfile` in the frontend directory for the version in use.
 
 ```
 # Build and install all dependencies.
