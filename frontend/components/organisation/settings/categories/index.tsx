@@ -41,8 +41,8 @@ export default function OrganisationCategories() {
           onMutation={onMutation}
           // different labels for organisation
           labels={{
-            short_name:'Label',
-            name:'Description'
+            short_name:'Label shown on page',
+            name:'Full name or description shown on mouse over short name/label'
           }}
         />
       }

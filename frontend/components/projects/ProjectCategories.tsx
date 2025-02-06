@@ -22,13 +22,16 @@ export default function ProjectCategories({categories}:{categories:CategoryPath[
     const category = node.getValue()
     const children = node.children()
 
-    return (
-      <SidebarSection key={category.id}>
-        <SidebarTitle title={category.name}>{category.short_name}</SidebarTitle>
-        <div className="flex flex-wrap gap-2">
-          <CategoryChipFilter nodes={children} />
-        </div>
-      </SidebarSection>
-    )
+    // show category section only if it has children
+    if (children.length > 0){
+      return (
+        <SidebarSection key={category.id}>
+          <SidebarTitle title={category.name}>{category.short_name}</SidebarTitle>
+          <div className="flex flex-wrap gap-2">
+            <CategoryChipFilter nodes={children} />
+          </div>
+        </SidebarSection>
+      )
+    }
   })
 }

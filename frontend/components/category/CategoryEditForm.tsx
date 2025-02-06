@@ -127,7 +127,7 @@ export default function CategoryEditForm({
       if (data?.short_name){
         return `Add category to ${data?.short_name}`
       }
-      return 'Add top level category'
+      return 'Add section header'
     }else{
       return `Edit ${data?.short_name}`
     }
@@ -160,28 +160,29 @@ export default function CategoryEditForm({
           required: 'The short name is required'})
         }
         options={{
-          label: labels?.short_name ?? 'Short name *',
+          label: 'Short name *',
           defaultValue: createNew ? undefined : data?.short_name,
           helperTextCnt: `${watch('short_name')?.length ?? 0}/100`,
-          helperTextMessage: `${formState.errors?.short_name?.message ?? ''}`,
+          helperTextMessage: `${formState.errors?.short_name?.message ?? labels?.short_name ?? ''}`,
           error: formState.errors?.short_name?.message !== undefined,
           autofocus: true
         }}
       />
+      <div className="py-2"/>
       <TextFieldWithCounter
         register={register('name', {
           maxLength: {value: 250, message: 'max length is 250'},
           required: 'The name is required'})
         }
         options={{
-          label: labels?.name ?? 'Name *',
+          label: 'Name *',
           defaultValue: createNew ? undefined : data?.name,
           helperTextCnt: `${watch('name')?.length ?? 0}/250`,
-          helperTextMessage: `${formState.errors?.name?.message ?? ''}`,
+          helperTextMessage: `${formState.errors?.name?.message ?? labels?.name ?? ''}`,
           error: formState.errors?.name?.message !== undefined
         }}
       />
-
+      <div className="py-2"/>
       <TextFieldWithCounter
         register={register('provenance_iri', {
           maxLength: {value: 250, message: 'max length is 250'}

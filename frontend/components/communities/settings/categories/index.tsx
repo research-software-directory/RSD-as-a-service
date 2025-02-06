@@ -41,8 +41,8 @@ export default function CommunityCategories() {
           onMutation={onMutation}
           // different labels for communication
           labels={{
-            short_name:'Label',
-            name:'Description'
+            short_name:'Label shown on page',
+            name:'Full name or description shown on mouse over short name/label'
           }}
         />
       }

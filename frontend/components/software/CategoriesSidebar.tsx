@@ -23,19 +23,23 @@ export default function CategoriesSidebar({categories}:{categories:CategoryPath[
     const category = node.getValue()
     const children = node.children()
 
-    return (
-      <SidebarSection key={category.id}>
-        <SidebarTitle
-          title={category.name}
-          className='flex gap-2 items-center'
-        >
-          <span><CategoryIcon name={category.properties.icon} /></span>
-          <span>{category.short_name}</span>
-        </SidebarTitle>
-        <div className="flex flex-wrap gap-2">
-          <CategoryChipFilter nodes={children} />
-        </div>
-      </SidebarSection>
-    )
+    // show category section only if it has children
+    if (children.length > 0){
+      return (
+        <SidebarSection key={category.id}>
+          <SidebarTitle
+            title={category.name}
+            className='flex gap-2 items-center'
+          >
+            <span><CategoryIcon name={category.properties.icon} /></span>
+            <span>{category.short_name}</span>
+          </SidebarTitle>
+          <div className="flex flex-wrap gap-2">
+            <CategoryChipFilter nodes={children} />
+          </div>
+        </SidebarSection>
+      )
+    }
+
   })
 }

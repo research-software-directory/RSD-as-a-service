@@ -27,6 +27,49 @@ type NodeWithChildrenProps = Readonly<{
   searchFor?: string
 }>
 
+function CategoryContent({
+  cat,isSelected,onSelect
+}:{
+  cat: CategoryEntry
+  onSelect: () => void
+  isSelected: boolean
+}){
+  // top level category node
+  // this node cannot be selected/checked
+  if (cat.parent === null) {
+    return (
+      <ListItemText
+        // alias Label
+        primary={cat.short_name}
+        // alias Description
+        secondary={cat.name}
+      />
+    )
+  }
+  return (
+    <ListItemButton
+      onClick={onSelect}
+    >
+      {cat.parent!==null ?
+        <ListItemIcon>
+          <Checkbox
+            edge="start"
+            disableRipple
+            checked={isSelected}
+          />
+        </ListItemIcon>
+        : null
+      }
+      <ListItemText
+        // alias Label
+        primary={cat.short_name}
+        // alias Description
+        secondary={cat.name}
+      />
+    </ListItemButton>
+  )
+}
+
 function NodeWithChildren({
   node,
   isSelected,
@@ -55,17 +98,13 @@ function NodeWithChildren({
         disablePadding
         dense
       >
-        <ListItemButton onClick={() => onSelect(node)}>
-          <ListItemIcon>
-            <Checkbox edge="start" disableRipple checked={isSelected(node)} />
-          </ListItemIcon>
-          <ListItemText
-            // alias Label
-            primary={cat.short_name}
-            // alias Description
-            secondary={cat.name}
-          />
-        </ListItemButton>
+        <CategoryContent
+          cat={cat}
+          isSelected={isSelected(node)}
+          onSelect={()=>{
+            onSelect(node)
+          }}
+        />
       </ListItem>
       {/* Children block */}
       <Collapse
@@ -142,21 +181,13 @@ export function CategoryList({
             disablePadding
             dense
           >
-            <ListItemButton onClick={() => onSelect(node)}>
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  disableRipple
-                  checked={isSelected(node)}
-                />
-              </ListItemIcon>
-              <ListItemText
-              // alias Label
-                primary={cat.short_name}
-                // alias Description
-                secondary={cat.name}
-              />
-            </ListItemButton>
+            <CategoryContent
+              cat={cat}
+              isSelected={isSelected(node)}
+              onSelect={()=>{
+                onSelect(node)
+              }}
+            />
           </ListItem>
         )
       }
