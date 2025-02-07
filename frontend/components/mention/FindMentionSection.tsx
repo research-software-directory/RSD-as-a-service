@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -16,6 +16,7 @@ import FindMentionInfoPanel from '~/components/mention/FindMentionInfoPanel'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
 import {extractSearchTerm} from '~/components/software/edit/mentions/utils'
 import {getMentionByOpenalexId} from '~/utils/getOpenalex'
+import useSnackbar from '~/components/snackbar/useSnackbar'
 
 type FindProjectMentionProps={
   id:string,
@@ -39,6 +40,7 @@ type FindProjectMentionProps={
 export default function FindMentionSection({id,config,findPublicationByTitle}:FindProjectMentionProps) {
   const {session: {token}} = useAuth()
   const {onAdd} = useEditMentionReducer()
+  const {showErrorMessage} = useSnackbar()
 
   async function findPublication(searchFor: string): Promise<MentionItemProps[]> {
     const searchData = extractSearchTerm(searchFor)
@@ -59,8 +61,11 @@ export default function FindMentionSection({id,config,findPublicationByTitle}:Fi
         const resp = await getMentionByDoi(searchFor)
         if (resp?.status === 200) {
           return [resp.message as MentionItemProps]
+        } else {
+          const errorMessage = resp?.message ? 'Error importing mention: ' + resp.message : 'Error importing mention'
+          showErrorMessage(errorMessage)
+          return []
         }
-        return []
       }
       case 'openalex': {
         searchFor = searchData.term

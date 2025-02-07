@@ -1,14 +1,18 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {MentionItemProps} from '~/types/Mention'
 import {crossrefItemToMentionItem} from './getCrossref'
-import {dataCiteGraphQLItemToMentionItem, getDataciteItemByDoiGraphQL, getDataciteItemsByDoiGraphQL} from './getDataCite'
+import {
+  dataCiteGraphQLItemToMentionItem,
+  getDataciteItemByDoiGraphQL,
+  getDataciteItemsByDoiGraphQL
+} from './getDataCite'
 import logger from './logger'
 import {getOpenalexItemByDoi, getOpenalexItemsByDoi, openalexItemToMentionItem} from '~/utils/getOpenalex'
 
@@ -100,17 +104,24 @@ async function getItemFromCrossref(doi: string) {
   const resp = await mentionResponse.json()
   // debugger
   if (resp.status === 200) {
-    const mention = crossrefItemToMentionItem(resp.message)
-    return {
-      status: 200,
-      message: mention
+    try {
+      const mention = crossrefItemToMentionItem(resp.message)
+      return {
+        status: 200,
+        message: mention
+      }
+    } catch (e: any) {
+      return {
+        status: 400,
+        message: e?.message ?? `Unknown error when parsing Crossref mention with DOI ${doi}`
+      }
     }
   }
   // return error message
   return resp
 }
 
-export async function getItemsFromCrossref(dois: string[]){
+export async function getItemsFromCrossref(dois: string[]) {
   if (dois.length === 0) return []
 
   // debugger
@@ -225,13 +236,13 @@ export async function getMentionByDoi(doi: string) {
   }
   return {
     status: 400,
-    message: `Failed to retereive information for DOI: ${doi}. Check DOI value.`
+    message: `Failed to retrieve information for DOI: ${doi}. Check DOI value.`
   }
 }
 
 // This url will always redirect to the current url
 export function makeDoiRedirectUrl(doi: string) {
-  // we need to encode doi because it allows lot of
+  // we need to encode doi because it allows a lot of
   // "exotic" values like 10.1175/1520-0469(2003)60%3C1201:ALESIS%3E2.0.CO;2
   return `https://doi.org/${encodeURIComponent(doi)}`
 }

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -15,7 +15,7 @@ import {PromisePool} from '~/utils/promisePool'
 // size 5 got from email communication with Crossref and testing
 const promisePool = new PromisePool(5)
 
-export function addPoliteEmail(url:string) {
+export function addPoliteEmail(url: string) {
   const mailto = process.env.CROSSREF_CONTACT_EMAIL
   // console.log('addPoliteEmail...',mailto)
   if (mailto) {
@@ -59,12 +59,16 @@ function extractYearPublished(item: CrossrefSelectItem) {
   return null
 }
 
-export function crossrefItemToMentionItem(item: CrossrefSelectItem) {
+export function crossrefItemToMentionItem(item: CrossrefSelectItem): MentionItemProps {
+  if (!Array.isArray(item.title) || item.title.length == 0 || !item.title[0]) {
+    throw new Error(`Title is missing for mention with DOI ${item.DOI}`)
+  }
+
   const mention: MentionItemProps = {
     id: null,
     doi: item.DOI,
     url: makeDoiRedirectUrl(item.DOI),
-    // take first title from array returned
+    // take first title from the returned array
     title: item.title[0],
     authors: extractAuthors(item),
     publisher: item.publisher,
@@ -104,7 +108,7 @@ export async function getCrossrefItemByDoi(doi: string) {
       }
     }
     return await extractReturnMessage(resp)
-  }catch(e:any){
+  } catch (e: any) {
     logger(`getCrossrefItemByDoi: ${e?.message}`, 'error')
     return {
       status: 500,
