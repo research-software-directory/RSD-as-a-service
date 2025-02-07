@@ -16,25 +16,6 @@ import {
 import logger from './logger'
 import {getOpenalexItemByDoi, getOpenalexItemsByDoi, openalexItemToMentionItem} from '~/utils/getOpenalex'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const exampleUrlResponse = {
-  'responseCode': 1,
-  'handle': '10.5281/zenodo.3401363',
-  'values': [
-    {
-      'index': 1,
-      'type': 'URL',
-      'data': {
-        'format': 'string',
-        'value': 'https://zenodo.org/record/3401363'
-      },
-      'ttl': 86400,
-      'timestamp': '2019-09-06T13:29:11Z'
-    }
-  ]
-}
-
-type DoiUrlResponse = typeof exampleUrlResponse
 
 type DoiRA = {
   DOI: string,
@@ -75,26 +56,6 @@ export async function getDoiRAList(doiList: string[]) {
   } catch (e: any) {
     logger(`getDoiRA: ${e?.message}`, 'error')
     return []
-  }
-}
-
-export async function getUrlFromDoiOrg(doi: string) {
-  try {
-    const url = ` https://doi.org/api/handles/${encodeURIComponent(doi)}?type=URL`
-    const resp = await fetch(url)
-    // debugger
-    if (resp.status === 200) {
-      const json: DoiUrlResponse = await resp.json()
-      // extract
-      if (json.values.length > 0) {
-        const item = json.values[0]
-        if (item.type.toLowerCase() === 'url') {
-          return item.data.value
-        }
-      }
-    }
-  } catch (e: any) {
-    logger(`getUrlFromDoiOrg: ${e?.message}`, 'error')
   }
 }
 
