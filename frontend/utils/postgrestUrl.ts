@@ -35,6 +35,7 @@ type baseQueryStringProps = {
   licenses?: string[] | null,
   rsd_host?: string,
   organisations?: string[] | null,
+  categories?: string[] | null,
   order?: string,
   limit?: number,
   offset?: number
@@ -200,6 +201,7 @@ export function baseQueryString(props: baseQueryStringProps) {
     rsd_host,
     organisations,
     project_status,
+    categories,
     order,
     limit,
     offset
@@ -304,6 +306,21 @@ export function baseQueryString(props: baseQueryStringProps) {
       query = `${query}&participating_organisations=cs.%7B${organisationsAll}%7D`
     } else {
       query = `participating_organisations=cs.%7B${organisationsAll}%7D`
+    }
+  }
+  if (categories !== undefined &&
+    categories !== null &&
+    typeof categories === 'object') {
+    // sort and convert array to comma separated string
+    // we need to sort because search is on ARRAY field in pgSql
+    const categoriesAll = categories
+      .toSorted(localeSort)
+      .map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    // use cs. command to find
+    if (query) {
+      query = `${query}&categories=cs.%7B${categoriesAll}%7D`
+    } else {
+      query = `categories=cs.%7B${categoriesAll}%7D`
     }
   }
   if (project_status !== undefined &&

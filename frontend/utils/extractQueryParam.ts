@@ -361,6 +361,13 @@ export function getProjectsParams(query: ParsedUrlQuery) {
     param: 'organisations',
     defaultValue: null
   })
+  // string encoded array used to avoid
+  // useEffect change detection with string[]
+  const categories_json: string | null = decodeQueryParam({
+    query,
+    param: 'categories',
+    defaultValue: null
+  })
   const order: string | null = decodeQueryParam({
     query,
     param: 'order',
@@ -375,7 +382,8 @@ export function getProjectsParams(query: ParsedUrlQuery) {
     project_status,
     keywords_json,
     domains_json,
-    organisations_json
+    organisations_json,
+    categories_json
   }
 }
 
@@ -422,6 +430,13 @@ export function getSoftwareParams(query: ParsedUrlQuery) {
     param: 'licenses',
     defaultValue: null
   })
+  // string encoded array used to avoid
+  // useEffect change detection with string[]
+  const categories_json: string | null = decodeQueryParam({
+    query,
+    param: 'categories',
+    defaultValue: null
+  })
   const order: string | null = decodeQueryParam({
     query,
     param: 'order',
@@ -435,6 +450,7 @@ export function getSoftwareParams(query: ParsedUrlQuery) {
     page,
     keywords_json,
     prog_lang_json,
-    licenses_json
+    licenses_json,
+    categories_json
   }
 }

@@ -118,7 +118,23 @@ export default function CategoryEditTreeNode({node, community, organisation, lab
           }}
           onClick={() => setExpandChildren(!expandChildren)}
         >
-          <ListItemText primary={categoryData.short_name} secondary={categoryData.name} />
+          <ListItemText
+            primary={categoryData.short_name}
+            secondary={
+              <>
+                <span>{categoryData.name}</span>
+                {/* only for top level item of organisation */}
+                {organisation && categoryData.parent===null ?
+                  <>
+                    <br/>
+                    <span className="pr-2">For software: {categoryData.allow_software ? 'Yes' : 'No'}</span>
+                    <span>For projects: {categoryData.allow_projects ? 'Yes' : 'No'}</span>
+                  </>
+                  : null
+                }
+              </>
+            }
+          />
           <ListItemSecondaryAction sx={{
             display: 'flex',
             gap:'0.25rem'

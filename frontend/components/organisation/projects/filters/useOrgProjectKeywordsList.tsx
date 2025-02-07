@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,9 +10,9 @@ import logger from '~/utils/logger'
 import {decodeJsonParam} from '~/utils/extractQueryParam'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
+import {buildProjectFilter} from '~/components/projects/overview/filters/projectFiltersApi'
 import useOrganisationContext from '../../context/useOrganisationContext'
 import useProjectParams from '../useProjectParams'
-import {buildProjectFilter} from '~/components/projects/overview/filters/projectFiltersApi'
 
 export type OrgProjectFilterProps = {
   id: string
@@ -21,6 +21,7 @@ export type OrgProjectFilterProps = {
   keywords?: string[] | null
   domains?: string[] | null
   organisations?: string[] | null
+  categories?: string[] | null
   token?:string
 }
 
@@ -32,18 +33,12 @@ type OrgProjectFilterApiProps = {
   organisation_filter?: string[]
 }
 
-export function buildOrgProjectFilter({id, search, project_status, keywords, domains, organisations}: OrgProjectFilterProps) {
+export function buildOrgProjectFilter({id, ...params}: OrgProjectFilterProps) {
   const filter: OrgProjectFilterApiProps = {
     // additional organisation filter
     organisation_id: id,
     // add default project filter params
-    ...buildProjectFilter({
-      search,
-      keywords,
-      domains,
-      organisations,
-      project_status
-    })
+    ...buildProjectFilter(params)
   }
   // console.group('buildOrgProjectFilter')
   // console.log('filter...', filter)
@@ -51,21 +46,11 @@ export function buildOrgProjectFilter({id, search, project_status, keywords, dom
   return filter
 }
 
-export async function orgProjectKeywordsFilter({
-  id, search, project_status, keywords,
-  domains, organisations, token
-}: OrgProjectFilterProps) {
+export async function orgProjectKeywordsFilter({token, ...params}: OrgProjectFilterProps) {
   try {
     const query = 'rpc/org_project_keywords_filter?order=keyword'
     const url = `${getBaseUrl()}/${query}`
-    const filter = buildOrgProjectFilter({
-      id,
-      search,
-      keywords,
-      domains,
-      organisations,
-      project_status
-    })
+    const filter = buildOrgProjectFilter(params)
 
     const resp = await fetch(url, {
       method: 'POST',
@@ -92,7 +77,10 @@ export async function orgProjectKeywordsFilter({
 export default function useOrgProjectKeywordsList() {
   const {token} = useSession()
   const {id} = useOrganisationContext()
-  const {search,project_status,keywords_json,domains_json,organisations_json} = useProjectParams()
+  const {
+    search,project_status,keywords_json,domains_json,
+    organisations_json,categories_json
+  } = useProjectParams()
   const [keywordsList, setKeywordsList] = useState<KeywordFilterOption[]>([])
 
   // console.group('useOrgProjectKeywordsList')
@@ -110,6 +98,7 @@ export default function useOrgProjectKeywordsList() {
       const keywords = decodeJsonParam(keywords_json,null)
       const domains = decodeJsonParam(domains_json, null)
       const organisations = decodeJsonParam(organisations_json, null)
+      const categories = decodeJsonParam(categories_json, null)
 
       // get filter options
       orgProjectKeywordsFilter({
@@ -119,6 +108,7 @@ export default function useOrgProjectKeywordsList() {
         domains,
         organisations,
         project_status,
+        categories,
         token
       }).then(resp => {
         // abort
@@ -133,7 +123,8 @@ export default function useOrgProjectKeywordsList() {
   }, [
     search, keywords_json,
     domains_json, organisations_json,
-    id,token, project_status
+    project_status, categories_json,
+    id,token
   ])
 
   return {

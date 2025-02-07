@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -36,6 +36,7 @@ export type ProjectFilterProps = {
   keywords?: string[] | null
   domains?: string[] | null
   organisations?: string[] | null
+  categories?: string[] | null
 }
 
 type ProjectFilterApiProps = {
@@ -44,9 +45,12 @@ type ProjectFilterApiProps = {
   keyword_filter?: string[]
   research_domain_filter?: string[]
   organisation_filter?: string[]
+  category_filter?: string[]
 }
 
-export function buildProjectFilter({search, keywords, domains, organisations, project_status}: ProjectFilterProps) {
+export function buildProjectFilter({
+  search, keywords, domains, organisations, project_status, categories
+}: ProjectFilterProps) {
   const filter: ProjectFilterApiProps = {}
   if (search) {
     filter['search_filter'] = search
@@ -63,6 +67,9 @@ export function buildProjectFilter({search, keywords, domains, organisations, pr
   if (project_status) {
     filter['status_filter'] = project_status
   }
+  if (categories) {
+    filter['category_filter'] = categories
+  }
   // console.group('buildProjectFilter')
   // console.log('filter...', filter)
   // console.groupEnd()
@@ -70,17 +77,11 @@ export function buildProjectFilter({search, keywords, domains, organisations, pr
 }
 
 
-export async function projectKeywordsFilter({search, keywords, domains, organisations,project_status}: ProjectFilterProps) {
+export async function projectKeywordsFilter(params: ProjectFilterProps) {
   try {
     const query = 'rpc/project_keywords_filter?order=keyword'
     const url = `${getBaseUrl()}/${query}`
-    const filter = buildProjectFilter({
-      search,
-      keywords,
-      domains,
-      organisations,
-      project_status
-    })
+    const filter = buildProjectFilter(params)
 
     // console.group('projectKeywordsFilter')
     // console.log('filter...', JSON.stringify(filter))
@@ -107,10 +108,10 @@ export async function projectKeywordsFilter({search, keywords, domains, organisa
   }
 }
 
-export async function projectDomainsFilter({search, keywords, domains, organisations, project_status}: ProjectFilterProps) {
+export async function projectDomainsFilter(params: ProjectFilterProps) {
   try {
     // get possible options
-    const domainsOptions = await getDomainsFilterList({search, keywords, domains, organisations, project_status})
+    const domainsOptions = await getDomainsFilterList(params)
 
     if (domainsOptions.length > 0) {
       const keys = domainsOptions.map(item => item.domain)
@@ -131,17 +132,11 @@ export async function projectDomainsFilter({search, keywords, domains, organisat
   }
 }
 
-export async function getDomainsFilterList({search, keywords, domains, organisations, project_status}: ProjectFilterProps) {
+export async function getDomainsFilterList(params: ProjectFilterProps) {
   try {
     const query = 'rpc/project_domains_filter?order=domain'
     const url = `${getBaseUrl()}/${query}`
-    const filter = buildProjectFilter({
-      search,
-      keywords,
-      domains,
-      organisations,
-      project_status
-    })
+    const filter = buildProjectFilter(params)
 
     // console.group('softwareKeywordsFilter')
     // console.log('filter...', JSON.stringify(filter))

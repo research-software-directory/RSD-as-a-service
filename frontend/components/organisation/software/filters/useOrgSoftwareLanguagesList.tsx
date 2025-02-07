@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,18 +14,11 @@ import useOrganisationContext from '../../context/useOrganisationContext'
 import useSoftwareParams from './useSoftwareParams'
 import {OrgSoftwareFilterProps, buildOrgSoftwareFilter} from './useOrgSoftwareKeywordsList'
 
-export async function orgSoftwareLanguagesFilter({
-  id,search, keywords, prog_lang, licenses, token}: OrgSoftwareFilterProps) {
+export async function orgSoftwareLanguagesFilter({token, ...params}: OrgSoftwareFilterProps) {
   try {
     const query = 'rpc/org_software_languages_filter?order=prog_language'
     const url = `${getBaseUrl()}/${query}`
-    const filter = buildOrgSoftwareFilter({
-      id,
-      search,
-      keywords,
-      prog_lang,
-      licenses
-    })
+    const filter = buildOrgSoftwareFilter(params)
 
     const resp = await fetch(url, {
       method: 'POST',
@@ -52,7 +45,7 @@ export async function orgSoftwareLanguagesFilter({
 export default function useOrgSoftwareLanguagesList() {
   const {token} = useSession()
   const {id} = useOrganisationContext()
-  const {search,keywords_json,prog_lang_json,licenses_json} = useSoftwareParams()
+  const {search,keywords_json,prog_lang_json,licenses_json,categories_json} = useSoftwareParams()
   const [languagesList, setLangList] = useState<LanguagesFilterOption[]>([])
 
   // console.group('useOrgSoftwareLanguagesList')
@@ -67,9 +60,10 @@ export default function useOrgSoftwareLanguagesList() {
   useEffect(() => {
     let abort = false
     if (id) {
-      const keywords = decodeJsonParam(keywords_json,null)
+      const keywords = decodeJsonParam(keywords_json, null)
       const prog_lang = decodeJsonParam(prog_lang_json, null)
       const licenses = decodeJsonParam(licenses_json, null)
+      const categories = decodeJsonParam(categories_json, null)
 
       // get filter options
       orgSoftwareLanguagesFilter({
@@ -78,6 +72,7 @@ export default function useOrgSoftwareLanguagesList() {
         keywords,
         prog_lang,
         licenses,
+        categories,
         token
       }).then(resp => {
         // abort
@@ -92,6 +87,7 @@ export default function useOrgSoftwareLanguagesList() {
   }, [
     search, keywords_json,
     prog_lang_json, licenses_json,
+    categories_json,
     id,token
   ])
 

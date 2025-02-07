@@ -14,12 +14,13 @@ import OrganisationSoftware from './index'
 import mockOrganisation from '../__mocks__/mockOrganisation'
 import mockSoftware from './__mocks__/mockSoftware.json'
 
+// mock software categories api
+jest.mock('~/components/organisation/software/filters/useOrgSoftwareCategoriesList')
 
 const mockProps = {
   organisation: mockOrganisation,
   isMaintainer: false
 }
-
 // MOCK getSoftwareForOrganisation
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockUseOrganisationSoftware = jest.fn((props) => ({

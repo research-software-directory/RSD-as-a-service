@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
--- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -49,6 +49,33 @@ BEGIN
 END
 $$;
 
+-- CATEGORIES for projects of specific organisation
+CREATE FUNCTION org_project_categories(organisation_id UUID) RETURNS TABLE(
+	project UUID,
+	category VARCHAR[],
+	category_text TEXT
+) LANGUAGE sql STABLE AS
+$$
+	SELECT
+		category_for_project.project_id AS project,
+		ARRAY_AGG(
+			category.short_name
+			ORDER BY short_name
+		) AS category,
+		STRING_AGG(
+			category.short_name || ' ' || category."name",' '
+			ORDER BY short_name
+		) AS category_text
+	FROM
+		category_for_project
+	INNER JOIN
+		category ON category.id = category_for_project.category_id
+	WHERE
+		category.organisation = organisation_id
+	GROUP BY
+		category_for_project.project_id;
+$$;
+
 -- Project info by organisation
 -- we filter this view at least by organisation_id (uuid)
 CREATE FUNCTION projects_by_organisation(organisation_id UUID) RETURNS TABLE (
@@ -67,6 +94,7 @@ CREATE FUNCTION projects_by_organisation(organisation_id UUID) RETURNS TABLE (
 	keywords citext[],
 	research_domain VARCHAR[],
 	participating_organisations VARCHAR[],
+	categories VARCHAR[],
 	impact_cnt INTEGER,
 	output_cnt INTEGER,
 	project_status VARCHAR(20)
@@ -88,6 +116,7 @@ SELECT DISTINCT ON (project.id)
 	keyword_filter_for_project.keywords,
 	research_domain_filter_for_project.research_domain,
 	project_participating_organisations.organisations AS participating_organisations,
+	org_project_categories.category AS categories,
 	COALESCE(count_project_impact.impact_cnt, 0) AS impact_cnt,
 	COALESCE(count_project_output.output_cnt, 0) AS output_cnt,
 	project_status.status
@@ -101,6 +130,8 @@ LEFT JOIN
 	research_domain_filter_for_project() ON project.id=research_domain_filter_for_project.project
 LEFT JOIN
 	project_participating_organisations() ON project.id=project_participating_organisations.project
+LEFT JOIN
+	org_project_categories(organisation_id) ON project.id=org_project_categories.project
 LEFT JOIN
 	count_project_impact() ON project.id = count_project_impact.project
 LEFT JOIN
@@ -135,6 +166,7 @@ CREATE FUNCTION projects_by_organisation_search(
 	keywords citext[],
 	research_domain VARCHAR[],
 	participating_organisations VARCHAR[],
+	categories VARCHAR[],
 	impact_cnt INTEGER,
 	output_cnt INTEGER,
 	project_status VARCHAR(20)
@@ -156,6 +188,7 @@ SELECT DISTINCT ON (project.id)
 	keyword_filter_for_project.keywords,
 	research_domain_filter_for_project.research_domain,
 	project_participating_organisations.organisations AS participating_organisations,
+	org_project_categories.category AS categories,
 	COALESCE(count_project_impact.impact_cnt, 0) AS impact_cnt,
 	COALESCE(count_project_output.output_cnt, 0) AS output_cnt,
 	project_status.status
@@ -169,6 +202,8 @@ LEFT JOIN
 	research_domain_filter_for_project() ON project.id=research_domain_filter_for_project.project
 LEFT JOIN
 	project_participating_organisations() ON project.id=project_participating_organisations.project
+LEFT JOIN
+	org_project_categories(organisation_id) ON project.id=org_project_categories.project
 LEFT JOIN
 	count_project_impact() ON project.id = count_project_impact.project
 LEFT JOIN
@@ -212,7 +247,6 @@ ORDER BY
 ;
 $$;
 
-
 -- REACTIVE KEYWORD FILTER WITH COUNTS FOR PROJECTS
 -- PROVIDES AVAILABLE KEYWORDS FOR APPLIED FILTERS
 CREATE FUNCTION org_project_keywords_filter(
@@ -221,7 +255,8 @@ CREATE FUNCTION org_project_keywords_filter(
 	status_filter VARCHAR DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	research_domain_filter VARCHAR[] DEFAULT '{}',
-	organisation_filter VARCHAR[] DEFAULT '{}'
+	organisation_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
 	keyword CITEXT,
 	keyword_cnt INTEGER
@@ -239,6 +274,8 @@ WHERE
 	AND
 	COALESCE(participating_organisations, '{}') @> organisation_filter
 	AND
+	COALESCE(categories, '{}') @> category_filter
+	AND
 		CASE
 			WHEN status_filter <> '' THEN project_status = status_filter
 			ELSE true
@@ -248,7 +285,6 @@ GROUP BY
 ;
 $$;
 
-
 -- REACTIVE RESEARCH DOMAIN FILTER WITH COUNTS FOR PROJECTS
 -- PROVIDES AVAILABLE DOMAINS FOR APPLIED FILTERS
 CREATE FUNCTION org_project_domains_filter(
@@ -257,7 +293,8 @@ CREATE FUNCTION org_project_domains_filter(
 	status_filter VARCHAR DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	research_domain_filter VARCHAR[] DEFAULT '{}',
-	organisation_filter VARCHAR[] DEFAULT '{}'
+	organisation_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
 	domain VARCHAR,
 	domain_cnt INTEGER
@@ -275,6 +312,8 @@ WHERE
 	AND
 	COALESCE(participating_organisations, '{}') @> organisation_filter
 	AND
+	COALESCE(categories, '{}') @> category_filter
+	AND
 		CASE
 			WHEN status_filter <> '' THEN project_status = status_filter
 			ELSE true
@@ -284,7 +323,6 @@ GROUP BY
 ;
 $$;
 
-
 -- REACTIVE PARTICIPATING ORGANISATIONS FILTER WITH COUNTS FOR PROJECTS
 -- PROVIDES AVAILABLE DOMAINS FOR APPLIED FILTERS
 CREATE FUNCTION org_project_participating_organisations_filter(
@@ -293,7 +331,8 @@ CREATE FUNCTION org_project_participating_organisations_filter(
 	status_filter VARCHAR DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	research_domain_filter VARCHAR[] DEFAULT '{}',
-	organisation_filter VARCHAR[] DEFAULT '{}'
+	organisation_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
 	organisation VARCHAR,
 	organisation_cnt INTEGER
@@ -311,6 +350,8 @@ WHERE
 	AND
 	COALESCE(participating_organisations, '{}') @> organisation_filter
 	AND
+	COALESCE(categories, '{}') @> category_filter
+	AND
 		CASE
 			WHEN status_filter <> '' THEN project_status = status_filter
 			ELSE true
@@ -327,7 +368,8 @@ CREATE FUNCTION org_project_status_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	research_domain_filter VARCHAR[] DEFAULT '{}',
-	organisation_filter VARCHAR[] DEFAULT '{}'
+	organisation_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
 	project_status VARCHAR,
 	project_status_cnt INTEGER
@@ -344,9 +386,76 @@ WHERE
 	COALESCE(research_domain, '{}') @> research_domain_filter
 	AND
 	COALESCE(participating_organisations, '{}') @> organisation_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
 GROUP BY
 	project_status
 ;
+$$;
+
+-- REACTIVE ORGANISATION CATEGORIES FILTER WITH COUNTS FOR PROJECTS
+-- PROVIDES AVAILABLE CATEGORIES FOR APPLIED FILTERS
+CREATE FUNCTION org_project_categories_filter(
+	organisation_id UUID,
+	search_filter TEXT DEFAULT '',
+	status_filter VARCHAR DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	research_domain_filter VARCHAR[] DEFAULT '{}',
+	organisation_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	category VARCHAR,
+	category_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	UNNEST(categories) AS category,
+	COUNT(id) AS category_cnt
+FROM
+	projects_by_organisation_search(organisation_id,search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(research_domain, '{}') @> research_domain_filter
+	AND
+	COALESCE(participating_organisations, '{}') @> organisation_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
+	AND
+		CASE
+			WHEN status_filter <> '' THEN project_status = status_filter
+			ELSE true
+		END
+GROUP BY
+	category
+;
+$$;
+
+-- CATEGORIES for software of specific organisation
+CREATE FUNCTION org_software_categories(organisation_id UUID) RETURNS TABLE(
+	software UUID,
+	category VARCHAR[],
+	category_text TEXT
+) LANGUAGE sql STABLE AS
+$$
+	SELECT
+		category_for_software.software_id AS software,
+		ARRAY_AGG(
+			category.short_name
+			ORDER BY short_name
+		) AS category,
+		STRING_AGG(
+			category.short_name || ' ' || category."name",' '
+			ORDER BY short_name
+		) AS category_text
+	FROM
+		category_for_software
+	INNER JOIN
+		category ON category.id = category_for_software.category_id
+	WHERE
+		category.organisation = organisation_id
+	GROUP BY
+		category_for_software.software_id;
 $$;
 
 -- SOFTWARE info by organisation
@@ -364,11 +473,11 @@ CREATE FUNCTION software_by_organisation(organisation_id UUID) RETURNS TABLE (
 	keywords CITEXT[],
 	prog_lang TEXT[],
 	licenses VARCHAR[],
+	categories VARCHAR[],
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT
 ) LANGUAGE sql STABLE AS
 $$
-
 SELECT DISTINCT ON (software.id)
 	software.id,
 	software.slug,
@@ -382,6 +491,7 @@ SELECT DISTINCT ON (software.id)
 	keyword_filter_for_software.keywords,
 	prog_lang_filter_for_software.prog_lang,
 	license_filter_for_software.licenses,
+	org_software_categories.category AS categories,
 	count_software_contributors.contributor_cnt,
 	count_software_mentions.mention_cnt
 FROM
@@ -398,6 +508,8 @@ LEFT JOIN
 	prog_lang_filter_for_software() ON software.id=prog_lang_filter_for_software.software
 LEFT JOIN
 	license_filter_for_software() ON software.id=license_filter_for_software.software
+LEFT JOIN
+	org_software_categories(organisation_id) ON software.id=org_software_categories.software
 WHERE
 	software_for_organisation.organisation IN (
 		SELECT list_child_organisations.organisation_id FROM list_child_organisations(organisation_id)
@@ -423,6 +535,7 @@ CREATE FUNCTION software_by_organisation_search(
 	keywords CITEXT[],
 	prog_lang TEXT[],
 	licenses VARCHAR[],
+	categories VARCHAR[],
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT
 ) LANGUAGE sql STABLE AS
@@ -440,6 +553,7 @@ SELECT DISTINCT ON (software.id)
 	keyword_filter_for_software.keywords,
 	prog_lang_filter_for_software.prog_lang,
 	license_filter_for_software.licenses,
+	org_software_categories.category AS categories,
 	count_software_contributors.contributor_cnt,
 	count_software_mentions.mention_cnt
 FROM
@@ -456,6 +570,8 @@ LEFT JOIN
 	prog_lang_filter_for_software() ON software.id=prog_lang_filter_for_software.software
 LEFT JOIN
 	license_filter_for_software() ON software.id=license_filter_for_software.software
+LEFT JOIN
+	org_software_categories(organisation_id) ON software.id=org_software_categories.software
 WHERE
 	software_for_organisation.organisation IN (
 		SELECT list_child_organisations.organisation_id FROM list_child_organisations(organisation_id)
@@ -491,7 +607,6 @@ ORDER BY
 ;
 $$;
 
-
 -- REACTIVE KEYWORD FILTER WITH COUNTS FOR SOFTWARE
 -- PROVIDES AVAILABLE KEYWORDS FOR APPLIED FILTERS
 CREATE FUNCTION org_software_keywords_filter(
@@ -499,7 +614,8 @@ CREATE FUNCTION org_software_keywords_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
+	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
 	keyword CITEXT,
 	keyword_cnt INTEGER
@@ -516,6 +632,8 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
 GROUP BY
 	keyword
 ;
@@ -528,7 +646,8 @@ CREATE FUNCTION org_software_languages_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
+	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
 	prog_language TEXT,
 	prog_language_cnt INTEGER
@@ -545,6 +664,8 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
 GROUP BY
 	prog_language
 ;
@@ -557,7 +678,8 @@ CREATE FUNCTION org_software_licenses_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
+	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
 	license VARCHAR,
 	license_cnt INTEGER
@@ -574,7 +696,41 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
 GROUP BY
 	license
+;
+$$;
+
+-- REACTIVE LICENSES FILTER WITH COUNTS FOR SOFTWARE
+-- PROVIDES AVAILABLE LICENSES FOR APPLIED FILTERS
+CREATE FUNCTION org_software_categories_filter(
+	organisation_id UUID,
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	prog_lang_filter TEXT[] DEFAULT '{}',
+	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	category VARCHAR,
+	category_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	UNNEST(categories) AS category,
+	COUNT(id) AS category_cnt
+FROM
+	software_by_organisation_search(organisation_id,search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(prog_lang, '{}') @> prog_lang_filter
+	AND
+	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
+GROUP BY
+	category
 ;
 $$;
