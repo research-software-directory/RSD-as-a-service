@@ -76,6 +76,8 @@ docker compose down
 
 We discourage the use of Safari for developing the RSD. The reason is that it is not possible to sign in with Safari on localhost, because Safari handles [secure cookies differently](https://codedamn.com/news/web-development/safari-cookie-is-not-being-set) from other browsers.
 
+When you need DOIs to test out functionality involving mentions, some lists can be found at [pull request #808](https://github.com/research-software-directory/RSD-as-a-service/pull/808).
+
 For more details on developing the RSD, see the respective readmes in the varying directories.
 
 ### Developing the frontend
