@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -37,8 +37,12 @@ function getUrlForRelationType(relationType: RelationType): string {
  * Searching for items in mention table which are NOT assigned to impact of the project already.
  * @returns MentionItem[]
  */
-export async function searchForAvailableMentions({project, searchFor, token, relationType}:
-                                                 { project: string, searchFor: string, token: string, relationType: RelationType}) {
+export async function searchForAvailableMentions({project, searchFor, token, relationType}: {
+  project: string,
+  searchFor: string,
+  token: string,
+  relationType: RelationType
+}) {
 
   const url = getUrlForRelationType(relationType)
   try {
@@ -63,7 +67,12 @@ export async function searchForAvailableMentions({project, searchFor, token, rel
   }
 }
 
-export async function findPublicationByTitle({project, searchFor, token, relationType}: { project: string, searchFor: string, token: string, relationType: RelationType }) {
+export async function findPublicationByTitle({project, searchFor, token, relationType}: {
+  project: string,
+  searchFor: string,
+  token: string,
+  relationType: RelationType
+}) {
   const promises: Promise<any>[] = [
     promiseWithTimeout(getCrossrefItemsByTitle(searchFor), crossrefTimeoutSec),
     getDataciteItemsByTitleGraphQL(searchFor),
@@ -81,8 +90,13 @@ export async function findPublicationByTitle({project, searchFor, token, relatio
   let crosrefItems: MentionItemProps[] = []
   if (crossref.status === 'fulfilled') {
     crosrefItems = crossref?.value.map((item: CrossrefSelectItem) => {
-      return crossrefItemToMentionItem(item)
+      try {
+        return crossrefItemToMentionItem(item)
+      } catch {
+        return null
+      }
     })
+      .filter((item: MentionItemProps | null) => item !== null)
   } else {
     logger(`impact.findPublicationByTitle: Crossref request timeout after ${crossrefTimeoutSec}sec.`, 'warn')
   }
@@ -129,7 +143,7 @@ export async function findPublicationByTitle({project, searchFor, token, relatio
       key: 'doi'
     }),
     // OpenAlex items not existing in RSD
-    ...itemsNotInReferenceList( {
+    ...itemsNotInReferenceList({
       list: openalexMentions,
       referenceList: rsdItems,
       key: 'doi'
@@ -163,7 +177,7 @@ export default async function handler(
     const mentions = await findPublicationByTitle({
       project,
       searchFor,
-      token:session.token,
+      token: session.token,
       relationType: relationTypeChecked
     })
 
