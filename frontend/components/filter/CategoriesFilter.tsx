@@ -65,9 +65,10 @@ export default function CategoriesFilter({categories,categoryList,handleQueryCha
         }}
         defaultValue={[]}
         filterSelectedOptions
-        renderOption={(props, option) => (
+        // remove key from other props
+        renderOption={({key,...props}, option) => (
           <FilterOption
-            key={option.category}
+            key={key ?? option.category}
             props={props}
             label={option.category}
             count={option.category_cnt}
