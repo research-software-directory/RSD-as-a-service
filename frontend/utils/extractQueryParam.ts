@@ -140,6 +140,7 @@ export type SoftwareParams = {
   keywords?: string[],
   prog_lang?: string[],
   licenses?: string[],
+  categories?: string[],
   rsd_host?: string,
   page?: number,
   rows?: number
@@ -188,12 +189,17 @@ export function ssrSoftwareParams(query: ParsedUrlQuery): SoftwareParams {
     castToType: 'json-encoded',
     defaultValue: null
   })
+  const categories:string[]|undefined = decodeQueryParam({
+    query,
+    param: 'categories',
+    castToType: 'json-encoded',
+    defaultValue: null
+  })
   const rsd_host:string|undefined = decodeQueryParam({
     query,
     param: 'rsd_host',
     defaultValue: undefined
   })
-
   const order:string = decodeQueryParam({
     query,
     param: 'order',
@@ -208,6 +214,7 @@ export function ssrSoftwareParams(query: ParsedUrlQuery): SoftwareParams {
     keywords,
     prog_lang,
     licenses,
+    categories,
     rsd_host,
     order,
     rows,

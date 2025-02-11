@@ -1,6 +1,6 @@
--- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -210,6 +210,32 @@ LEFT JOIN
 ;
 $$;
 
+-- CATEGORIES for software of specific community
+CREATE FUNCTION com_software_categories(community_id UUID) RETURNS TABLE(
+	software UUID,
+	category VARCHAR[],
+	category_text TEXT
+) LANGUAGE sql STABLE AS
+$$
+	SELECT
+		category_for_software.software_id AS software,
+		ARRAY_AGG(
+			category.short_name
+			ORDER BY short_name
+		) AS category,
+		STRING_AGG(
+			category.short_name || ' ' || category."name",' '
+			ORDER BY short_name
+		) AS category_text
+	FROM
+		category_for_software
+	INNER JOIN
+		category ON category.id = category_for_software.category_id
+	WHERE
+		category.community = community_id
+	GROUP BY
+		category_for_software.software_id;
+$$;
 
 -- SOFTWARE info by community
 -- we filter this view at least by community_id (uuid)
@@ -225,11 +251,11 @@ CREATE FUNCTION software_by_community(community_id UUID) RETURNS TABLE (
 	keywords CITEXT[],
 	prog_lang TEXT[],
 	licenses VARCHAR[],
+	categories VARCHAR[],
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT
 ) LANGUAGE sql STABLE AS
 $$
-
 SELECT DISTINCT ON (software.id)
 	software.id,
 	software.slug,
@@ -242,6 +268,7 @@ SELECT DISTINCT ON (software.id)
 	keyword_filter_for_software.keywords,
 	prog_lang_filter_for_software.prog_lang,
 	license_filter_for_software.licenses,
+	com_software_categories.category AS categories,
 	count_software_contributors.contributor_cnt,
 	count_software_mentions.mention_cnt
 FROM
@@ -258,11 +285,12 @@ LEFT JOIN
 	prog_lang_filter_for_software() ON software.id=prog_lang_filter_for_software.software
 LEFT JOIN
 	license_filter_for_software() ON software.id=license_filter_for_software.software
+LEFT JOIN
+	com_software_categories(community_id) ON software.id=com_software_categories.software
 WHERE
 	software_for_community.community = community_id
 ;
 $$;
-
 
 -- SOFTWARE OF COMMUNITY LIST FOR SEARCH
 -- WITH keywords, programming languages and licenses for filtering
@@ -281,6 +309,7 @@ CREATE FUNCTION software_by_community_search(
 	keywords CITEXT[],
 	prog_lang TEXT[],
 	licenses VARCHAR[],
+	categories VARCHAR[],
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT
 ) LANGUAGE sql STABLE AS
@@ -297,6 +326,7 @@ SELECT DISTINCT ON (software.id)
 	keyword_filter_for_software.keywords,
 	prog_lang_filter_for_software.prog_lang,
 	license_filter_for_software.licenses,
+	com_software_categories.category AS categories,
 	count_software_contributors.contributor_cnt,
 	count_software_mentions.mention_cnt
 FROM
@@ -313,6 +343,8 @@ LEFT JOIN
 	prog_lang_filter_for_software() ON software.id=prog_lang_filter_for_software.software
 LEFT JOIN
 	license_filter_for_software() ON software.id=license_filter_for_software.software
+LEFT JOIN
+	com_software_categories(community_id) ON software.id=com_software_categories.software
 WHERE
 	software_for_community.community = community_id AND (
 		software.brand_name ILIKE CONCAT('%', search, '%')
@@ -346,7 +378,6 @@ ORDER BY
 ;
 $$;
 
-
 -- REACTIVE KEYWORD FILTER WITH COUNTS FOR SOFTWARE
 -- PROVIDES AVAILABLE KEYWORDS FOR APPLIED FILTERS
 CREATE FUNCTION com_software_keywords_filter(
@@ -355,7 +386,8 @@ CREATE FUNCTION com_software_keywords_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
+	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
 	keyword CITEXT,
 	keyword_cnt INTEGER
@@ -374,6 +406,8 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
 GROUP BY
 	keyword
 ;
@@ -387,7 +421,8 @@ CREATE FUNCTION com_software_languages_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
+	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
 	prog_language TEXT,
 	prog_language_cnt INTEGER
@@ -406,6 +441,8 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
 GROUP BY
 	prog_language
 ;
@@ -419,7 +456,8 @@ CREATE FUNCTION com_software_licenses_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
+	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
 	license VARCHAR,
 	license_cnt INTEGER
@@ -438,8 +476,45 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
 GROUP BY
 	license
+;
+$$;
+
+-- REACTIVE CATEGORIES FILTER WITH COUNTS FOR SOFTWARE
+-- PROVIDES AVAILABLE CATEGORIES FOR APPLIED FILTERS
+CREATE FUNCTION com_software_categories_filter(
+	community_id UUID,
+	software_status request_status DEFAULT 'approved',
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	prog_lang_filter TEXT[] DEFAULT '{}',
+	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	category VARCHAR,
+	category_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	UNNEST(categories) AS category,
+	COUNT(id) AS category_cnt
+FROM
+	software_by_community_search(community_id,search_filter)
+WHERE
+	software_by_community_search.status = software_status
+	AND
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(prog_lang, '{}') @> prog_lang_filter
+	AND
+	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
+GROUP BY
+	category
 ;
 $$;
 

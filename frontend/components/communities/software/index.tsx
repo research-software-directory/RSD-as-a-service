@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,6 +16,7 @@ import {useCommunityContext} from '~/components/communities/context'
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
+import {CategoryOption} from '~/components/filter/CategoriesFilter'
 import useFilterQueryChange from '~/components/filter/useFilterQueryChange'
 
 import CommunitySoftwareFilters from './filters'
@@ -32,11 +33,13 @@ type CommunitySoftwareProps={
   keywordsList: KeywordFilterOption[],
   languagesList: LanguagesFilterOption[],
   licensesList: LicensesFilterOption[],
+  categoryList: CategoryOption[]
 }
 
 export default function CommunitySoftware({
   software,count,page,rows,rsd_page_layout,
-  keywordsList, languagesList, licensesList
+  keywordsList, languagesList, licensesList,
+  categoryList
 }:CommunitySoftwareProps) {
   const smallScreen = useMediaQuery('(max-width:640px)')
   const {isMaintainer} = useCommunityContext()
@@ -66,6 +69,7 @@ export default function CommunitySoftware({
               keywordsList={keywordsList}
               languagesList={languagesList}
               licensesList={licensesList}
+              categoryList={categoryList}
             />
           </FiltersPanel>
         }
@@ -78,6 +82,7 @@ export default function CommunitySoftware({
             keywordsList={keywordsList}
             languagesList={languagesList}
             licensesList={licensesList}
+            categoryList={categoryList}
             smallScreen={smallScreen}
           />
           {/* software overview/content */}
