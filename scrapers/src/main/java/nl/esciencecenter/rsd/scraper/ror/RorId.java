@@ -1,21 +1,26 @@
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package nl.esciencecenter.rsd.scraper.ror;
 
 import java.net.URI;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This class represents ROR identifiers as described in <a href="https://ror.readme.io/docs/identifier">the ROR documentation</a>.
+ * <p>
+ * A {@link #isValidRorUrl(String) static factory method} is provided to construct instances of this class from a full URL string.
+ * As such, any instance of this class is guaranteed to contain a syntactically valid ROR ID.
+ * However, the last two digits of a ROR ID should be a checksum;  we don't currently validate this checksum.
+ */
 public class RorId {
 
 	private static final String ROR_BASE_URL = "https://ror.org/";
 	private static final String ROR_BASE_API_URL = "https://api.ror.org/organizations/";
-	// https://ror.readme.io/docs/identifier
-	// we haven't implemented the checksum of the last two digits, maybe something to do later;
-	// but we don't have this check in the database either
 	private static final Pattern ROR_URL_PATTERN = Pattern.compile("^https://ror\\.org/(0[a-hj-km-np-tv-z|\\d]{6}\\d{2})$");
 
 	private final String id;
@@ -24,13 +29,33 @@ public class RorId {
 		this.id = id;
 	}
 
+	/**
+	 * Tests if a URL string is a valid ROR ID as described in <a href="https://ror.readme.io/docs/identifier">the ROR documentation</a>.
+	 * The checksum is not validated though.
+	 *
+	 * @param url the URL string to validate
+	 * @return whether or not the provided URL is a valid ROR ID
+	 */
 	public static boolean isValidRorUrl(String url) {
 		return url != null && ROR_URL_PATTERN.asPredicate().test(url);
 	}
 
+	/**
+	 * A factory method to create instanced of RorId.
+	 * Only full URLs that look like {@code https://ror.org/02mhbdp94} are accepted.
+	 * <p>
+	 * Callers of this method should call {@link #isValidRorUrl(String)} first to validate their URL and
+	 * thus to prevent an exception from being thrown.
+	 *
+	 * @param url a non-null URL string that satisfies the conditions in <a href="https://ror.readme.io/docs/identifier">the ROR documentation</a>
+	 * @return a non-null instance of a RorId
+	 * @throws NullPointerException     when {@code url} is {@code null}
+	 * @throws IllegalArgumentException when {@code url} is not a valid ROR ID
+	 */
 	public static RorId fromUrlString(String url) {
+		Objects.requireNonNull(url);
 		if (!isValidRorUrl(url)) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("The url %s is not a valid ROR ID".formatted(url));
 		}
 
 		Matcher matcher = ROR_URL_PATTERN.matcher(url);
