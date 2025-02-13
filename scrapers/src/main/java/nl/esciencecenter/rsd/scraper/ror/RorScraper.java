@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -13,6 +13,7 @@ import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +28,7 @@ public class RorScraper {
 
 	private String getFromApi() throws IOException, InterruptedException, RsdResponseException {
 		// e.g https://api.ror.org/organizations/04tsk2644
-		return Utils.get(rorId.asApiUrl().toString());
+		return Utils.get(rorId.asApiV1Url().toString());
 	}
 
 	public RorData scrapeData() throws RsdResponseException, IOException, InterruptedException {
@@ -68,6 +69,42 @@ public class RorScraper {
 			.map(JsonElement::getAsString)
 			.toList()
 		);
+
+		List<String> rorNames = new ArrayList<>();
+		List<String> rorAliases = Utils.safelyGetOrNull(jsonElement, j -> j
+			.getAsJsonObject()
+			.getAsJsonArray("aliases")
+			.asList()
+			.stream()
+			.map(alias -> alias.getAsJsonPrimitive().getAsString())
+			.toList()
+		);
+		if (rorAliases != null) {
+			rorNames.addAll(rorAliases);
+		}
+		List<String> rorAcronyms = Utils.safelyGetOrNull(jsonElement, j -> j
+			.getAsJsonObject()
+			.getAsJsonArray("acronyms")
+			.asList()
+			.stream()
+			.map(acronym -> acronym.getAsJsonPrimitive().getAsString())
+			.toList()
+		);
+		if (rorAcronyms != null) {
+			rorNames.addAll(rorAcronyms);
+		}
+		List<String> rorLabels = Utils.safelyGetOrNull(jsonElement, j -> j
+			.getAsJsonObject()
+			.getAsJsonArray("labels")
+			.asList()
+			.stream()
+			.map(label -> label.getAsJsonObject().getAsJsonPrimitive("label").getAsString())
+			.toList()
+		);
+		if (rorLabels != null) {
+			rorNames.addAll(rorLabels);
+		}
+
 		Double lat = Utils.safelyGetOrNull(jsonElement, j -> j
 			.getAsJsonObject()
 			.getAsJsonArray(addressesKey)
@@ -88,6 +125,7 @@ public class RorScraper {
 			city,
 			wikipediaUrl,
 			rorTypes == null ? Collections.emptyList() : rorTypes,
+			rorNames,
 			lat,
 			lon
 		);

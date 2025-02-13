@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -51,6 +51,7 @@ public class RorPostgrestConnector {
 		jsonObject.addProperty("country", organisationData.data().country());
 		jsonObject.addProperty("city", organisationData.data().city());
 		jsonObject.addProperty("wikipedia_url", organisationData.data().wikipediaUrl());
+
 		JsonArray rorTypesJsonArray = new JsonArray();
 		List<String> rorTypes = organisationData.data().rorTypes();
 		if (rorTypes != null) {
@@ -59,6 +60,16 @@ public class RorPostgrestConnector {
 			}
 		}
 		jsonObject.add("ror_types", rorTypesJsonArray);
+
+		JsonArray rorNamesJsonArray = new JsonArray();
+		List<String> rorNames = organisationData.data().rorNames();
+		if (rorNames != null) {
+			for (String rorName : rorNames) {
+				rorNamesJsonArray.add(rorName);
+			}
+		}
+		jsonObject.add("ror_names", rorNamesJsonArray);
+
 		jsonObject.addProperty("lat", organisationData.data().lat());
 		jsonObject.addProperty("lon", organisationData.data().lon());
 

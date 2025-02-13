@@ -1,7 +1,7 @@
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2023 dv4all
--- SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 -- SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -22,6 +22,7 @@ CREATE TABLE organisation (
 	country VARCHAR(100),
 	city VARCHAR(100),
 	wikipedia_url VARCHAR(300),
+	ror_names VARCHAR(200)[],
 	ror_types VARCHAR(100)[],
 	lat float8,
 	lon float8,
