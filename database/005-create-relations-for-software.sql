@@ -188,6 +188,16 @@ $$;
 
 CREATE TRIGGER sanitise_update_contributor BEFORE UPDATE ON contributor FOR EACH ROW EXECUTE PROCEDURE sanitise_update_contributor();
 
+
+CREATE TABLE contact_address (
+	full_name VARCHAR(400),
+	email_address VARCHAR(200),
+	telephone_number VARCHAR(200),
+	website_url VARCHAR(200),
+	image_id VARCHAR(40) REFERENCES image(id)
+);
+
+
 CREATE TABLE testimonial (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	software UUID REFERENCES software (id) NOT NULL,
