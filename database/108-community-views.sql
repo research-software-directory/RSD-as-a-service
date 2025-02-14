@@ -500,7 +500,8 @@ CREATE FUNCTION com_software_categories_filter(
 $$
 SELECT
 	UNNEST(categories) AS category,
-	COUNT(id) AS category_cnt
+	-- count per software on unique software id
+	COUNT(DISTINCT(id)) AS category_cnt
 FROM
 	software_by_community_search(community_id,search_filter)
 WHERE

@@ -410,7 +410,8 @@ CREATE FUNCTION org_project_categories_filter(
 $$
 SELECT
 	UNNEST(categories) AS category,
-	COUNT(id) AS category_cnt
+	-- count per project on unique project id
+	COUNT(DISTINCT(id)) AS category_cnt
 FROM
 	projects_by_organisation_search(organisation_id,search_filter)
 WHERE
@@ -719,7 +720,8 @@ CREATE FUNCTION org_software_categories_filter(
 $$
 SELECT
 	UNNEST(categories) AS category,
-	COUNT(id) AS category_cnt
+	-- count per software on unique software id
+	COUNT(DISTINCT(id)) AS category_cnt
 FROM
 	software_by_organisation_search(organisation_id,search_filter)
 WHERE
