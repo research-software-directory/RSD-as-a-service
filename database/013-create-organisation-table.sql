@@ -8,6 +8,26 @@
 --
 -- SPDX-License-Identifier: Apache-2.0
 
+CREATE FUNCTION varchar_array_to_string(arr VARCHAR[])
+RETURNS VARCHAR
+LANGUAGE plpgsql
+IMMUTABLE
+AS
+$$
+	DECLARE entry VARCHAR;
+	DECLARE result VARCHAR := '';
+	BEGIN
+	IF arr IS NULL THEN
+		RETURN NULL;
+	END IF;
+	FOREACH entry IN ARRAY arr LOOP
+		CONTINUE WHEN entry IS NULL;
+		IF result = '' THEN result := entry; ELSE result := result || ';' || entry; END IF;
+	END LOOP;
+	RETURN result;
+	END;
+$$;
+
 CREATE TABLE organisation (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	parent UUID REFERENCES organisation (id),
@@ -23,6 +43,7 @@ CREATE TABLE organisation (
 	city VARCHAR(100),
 	wikipedia_url VARCHAR(300),
 	ror_names VARCHAR(200)[],
+	ror_names_string VARCHAR GENERATED ALWAYS AS (varchar_array_to_string(ror_names)) STORED,
 	ror_types VARCHAR(100)[],
 	lat float8,
 	lon float8,
