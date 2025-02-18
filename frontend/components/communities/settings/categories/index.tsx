@@ -39,7 +39,7 @@ export default function CommunityCategories() {
           community={community.id}
           organisation={null}
           onMutation={onMutation}
-          // different labels for communication
+          // different labels for communities
           labels={{
             short_name:'Label shown on page',
             name:'Full name or description shown on mouse over short name/label'
