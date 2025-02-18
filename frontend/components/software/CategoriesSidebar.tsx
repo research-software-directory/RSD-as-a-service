@@ -4,15 +4,16 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {CategoryPath} from '~/types/Category'
-import {useCategoryTree} from '~/components/category/useCategoryTree'
 import SidebarSection from '~/components/layout/SidebarSection'
 import SidebarTitle from '~/components/layout/SidebarTitle'
 import {CategoryChipFilter} from '~/components/category/CategoryChipFilter'
+import {useCategoryTree} from '~/components/category/useCategoryTree'
+import CategoryIcon from '~/components/category/CategoryIcon'
 
-export default function ProjectCategories({categories}:{categories:CategoryPath[]}) {
+export default function CategoriesSidebar({categories}:{categories:CategoryPath[]}) {
   const tree = useCategoryTree(categories)
 
-  // console.group('ProjectCategories')
+  // console.group('CategoriesSidebar')
   // console.log('categories...', categories)
   // console.log('tree...', tree)
   // console.groupEnd()
@@ -26,12 +27,19 @@ export default function ProjectCategories({categories}:{categories:CategoryPath[
     if (children.length > 0){
       return (
         <SidebarSection key={category.id}>
-          <SidebarTitle title={category.name}>{category.short_name}</SidebarTitle>
+          <SidebarTitle
+            title={category.name}
+            className='flex gap-2 items-center'
+          >
+            <span><CategoryIcon name={category.properties.icon} /></span>
+            <span>{category.short_name}</span>
+          </SidebarTitle>
           <div className="flex flex-wrap gap-2">
             <CategoryChipFilter nodes={children} />
           </div>
         </SidebarSection>
       )
     }
+
   })
 }

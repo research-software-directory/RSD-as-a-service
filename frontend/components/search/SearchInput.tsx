@@ -1,27 +1,36 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState, useEffect} from 'react'
-import {useDebounce} from '~/utils/useDebounce'
 import TextField from '@mui/material/TextField'
+import {FilledInputProps} from '@mui/material/FilledInput'
+import {OutlinedInputProps} from '@mui/material/OutlinedInput'
+import {InputProps} from '@mui/material/Input'
+import {SxProps, Theme} from '@mui/material/styles'
+
+import {useDebounce} from '~/utils/useDebounce'
 
 type SearchInputProps = {
   placeholder: string,
   onSearch: (search:string)=>void,
   delay?: number,
   defaultValue?: string,
+  InputProps?: Partial<FilledInputProps> | Partial<OutlinedInputProps> | Partial<InputProps>
+  sx?: SxProps<Theme>
 }
 
 export default function SearchInput({
   placeholder,
   onSearch,
   delay = 700,
-  defaultValue = ''
+  defaultValue = '',
+  InputProps,
+  sx
 }: SearchInputProps) {
   const [state, setState] = useState({
     value: defaultValue ?? '',
@@ -61,15 +70,16 @@ export default function SearchInput({
       sx={{
         // width: '100%',
         flex: 1,
-        margin: '0rem 0.5rem 0rem 0rem',
         backgroundColor: 'background.paper',
         '.MuiInputBase-root': {
           flex: 1
         },
         '.MuiOutlinedInput-notchedOutline': {
           border: 0
-        }
+        },
+        ...sx
       }}
+      InputProps={InputProps}
     />
   )
 }

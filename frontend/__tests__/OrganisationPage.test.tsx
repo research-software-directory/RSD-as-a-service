@@ -18,16 +18,20 @@ import mockSoftware from '~/components/organisation/software/__mocks__/mockSoftw
 import mockProjects from '~/components/organisation/projects/__mocks__/mockProjects.json'
 import mockUnits from '~/components/organisation/units/__mocks__/mockUnits.json'
 import {TabKey} from '~/components/organisation/tabs/OrganisationTabItems'
+import {OrganisationForContext} from '~/components/organisation/context/OrganisationContext'
 
 // MOCK user agreement call
 jest.mock('~/components/user/settings/useUserAgreements')
+// global search
+jest.mock('~/components/GlobalSearchAutocomplete/apiGlobalSearch')
+jest.mock('~/components/GlobalSearchAutocomplete/useHasRemotes')
 
 // use DEFAULT MOCK for login providers list
 // required when AppHeader component is used
 jest.mock('~/auth/api/useLoginProviders')
 
 const mockProps = {
-  organisation: mockOrganisation,
+  organisation: mockOrganisation as OrganisationForContext,
   slug:['dutch-research-council'],
   tab: 'software' as TabKey,
   ror: mockRORIinfo as any,

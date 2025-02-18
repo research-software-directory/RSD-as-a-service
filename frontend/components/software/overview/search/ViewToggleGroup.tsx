@@ -16,9 +16,10 @@ export type LayoutType = 'list'|'grid'|'masonry'
 type ViewToggleGroupProps = {
   layout: LayoutType
   onSetView: (view:LayoutType)=>void
+  sx?: any
 }
 
-export default function ViewToggleGroup({layout,onSetView}:ViewToggleGroupProps) {
+export default function ViewToggleGroup({layout,onSetView,sx}:ViewToggleGroupProps) {
   return (
     <ToggleButtonGroup
       data-testid="card-layout-options"
@@ -29,6 +30,7 @@ export default function ViewToggleGroup({layout,onSetView}:ViewToggleGroupProps)
       onChange={(e, view) => onSetView(view)}
       sx={{
         backgroundColor: 'background.paper',
+        ...sx
       }}
     >
       <ToggleButton value="grid" aria-label="grid">

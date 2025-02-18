@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +14,8 @@ export function CategoryChipFilter({nodes}:{nodes:TreeNode<CategoryEntry>[]}){
     const children = node.children()
     return (
       <Fragment key={cat.id}>
-        <TagChipFilter key={cat.id} title={cat.name} label={cat.short_name} />
+        {/* Do not capitalize category labels */}
+        <TagChipFilter key={cat.id} title={cat.name} label={cat.short_name} capitalize={false} />
         <CategoryChipFilter nodes={children} />
       </Fragment>
     )
