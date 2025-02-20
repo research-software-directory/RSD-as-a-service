@@ -1,6 +1,6 @@
--- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2023 dv4all
 -- SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -206,6 +206,34 @@ $$
 		mentions_by_software.software;
 $$;
 
+-- CATEGORIES for software overview filter (GLOBAL)
+CREATE FUNCTION software_categories() RETURNS TABLE(
+	software UUID,
+	category VARCHAR[],
+	category_text TEXT
+) LANGUAGE sql STABLE AS
+$$
+	SELECT
+		category_for_software.software_id AS software,
+		ARRAY_AGG(
+			category.short_name
+			ORDER BY short_name
+		) AS category,
+		STRING_AGG(
+			category.short_name || ' ' || category."name",' '
+			ORDER BY short_name
+		) AS category_text
+	FROM
+		category_for_software
+	INNER JOIN
+		category ON category.id = category_for_software.category_id
+	WHERE
+	-- FILTER FOR GLOBAL CATEGORIES
+		category.community IS NULL AND category.organisation IS NULL
+	GROUP BY
+		category_for_software.software_id;
+$$;
+
 -- SOFTWARE OVERVIEW LIST
 -- WITH COUNTS and KEYWORDS for filtering
 CREATE FUNCTION software_overview() RETURNS TABLE (
@@ -221,7 +249,8 @@ CREATE FUNCTION software_overview() RETURNS TABLE (
 	keywords CITEXT[],
 	keywords_text TEXT,
 	prog_lang TEXT[],
-	licenses VARCHAR[]
+	licenses VARCHAR[],
+	categories VARCHAR[]
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
@@ -237,7 +266,8 @@ SELECT
 	keyword_filter_for_software.keywords,
 	keyword_filter_for_software.keywords_text,
 	prog_lang_filter_for_software.prog_lang,
-	license_filter_for_software.licenses
+	license_filter_for_software.licenses,
+	software_categories.category AS categories
 FROM
 	software
 LEFT JOIN
@@ -250,6 +280,8 @@ LEFT JOIN
 	prog_lang_filter_for_software() ON software.id=prog_lang_filter_for_software.software
 LEFT JOIN
 	license_filter_for_software() ON software.id=license_filter_for_software.software
+LEFT JOIN
+	software_categories() ON software.id=software_categories.software
 ;
 $$;
 
@@ -269,6 +301,7 @@ CREATE FUNCTION highlight_overview() RETURNS TABLE (
 	keywords_text TEXT,
 	prog_lang TEXT[],
 	licenses VARCHAR[],
+	categories VARCHAR[],
 	"position" INT
 ) LANGUAGE sql STABLE AS
 $$
@@ -286,6 +319,7 @@ SELECT
 	software_overview.keywords_text,
 	software_overview.prog_lang,
 	software_overview.licenses,
+	software_overview.categories,
 	software_highlight.position
 FROM
 	software_overview()
@@ -310,7 +344,8 @@ CREATE FUNCTION software_search(search VARCHAR) RETURNS TABLE (
 	keywords CITEXT[],
 	keywords_text TEXT,
 	prog_lang TEXT[],
-	licenses VARCHAR[]
+	licenses VARCHAR[],
+	categories VARCHAR[]
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
@@ -326,7 +361,8 @@ SELECT
 	keyword_filter_for_software.keywords,
 	keyword_filter_for_software.keywords_text,
 	prog_lang_filter_for_software.prog_lang,
-	license_filter_for_software.licenses
+	license_filter_for_software.licenses,
+	software_categories.category AS categories
 FROM
 	software
 LEFT JOIN
@@ -339,6 +375,8 @@ LEFT JOIN
 	prog_lang_filter_for_software() ON software.id=prog_lang_filter_for_software.software
 LEFT JOIN
 	license_filter_for_software() ON software.id=license_filter_for_software.software
+LEFT JOIN
+	software_categories() ON software.id=software_categories.software
 WHERE
 	software.brand_name ILIKE CONCAT('%', search, '%')
 	OR
@@ -385,6 +423,7 @@ CREATE FUNCTION highlight_search(search VARCHAR) RETURNS TABLE (
 	keywords_text TEXT,
 	prog_lang TEXT[],
 	licenses VARCHAR[],
+	categories VARCHAR[],
 	"position" INT
 ) LANGUAGE sql STABLE AS
 $$
@@ -402,6 +441,7 @@ SELECT
 	software_search.keywords_text,
 	software_search.prog_lang,
 	software_search.licenses,
+	software_search.categories,
 	software_highlight.position
 FROM
 	software_search(search)
@@ -497,7 +537,8 @@ CREATE FUNCTION highlight_keywords_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
+	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
 	keyword CITEXT,
 	keyword_cnt INTEGER
@@ -514,6 +555,8 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
 GROUP BY
 	keyword
 ;
@@ -553,7 +596,8 @@ CREATE FUNCTION highlight_languages_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
+	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
 	prog_language TEXT,
 	prog_language_cnt INTEGER
@@ -570,6 +614,8 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
 GROUP BY
 	prog_language
 ;
@@ -610,7 +656,8 @@ CREATE FUNCTION highlight_licenses_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
+	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
 	license VARCHAR,
 	license_cnt INTEGER
@@ -627,8 +674,41 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
 GROUP BY
 	license
+;
+$$;
+
+-- REACTIVE CATEGORIES FILTER WITH COUNTS FOR HIGHLIGHTS
+-- PROVIDES AVAILABLE CATEGORIES FOR APPLIED FILTERS
+CREATE FUNCTION highlight_category_filter(
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	prog_lang_filter TEXT[] DEFAULT '{}',
+	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	category VARCHAR,
+	category_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	UNNEST(categories) AS category,
+	COUNT(DISTINCT(id)) AS category_cnt
+FROM
+	highlight_search(search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(prog_lang, '{}') @> prog_lang_filter
+	AND
+	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
+GROUP BY
+	category
 ;
 $$;
 

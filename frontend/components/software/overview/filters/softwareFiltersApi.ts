@@ -13,6 +13,7 @@ import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
 import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import {HostsFilterOption} from '~/components/filter/RsdHostFilter'
+import {CategoryOption} from '~/components/filter/CategoriesFilter'
 
 type SoftwareFilterProps = {
   search?: string | null
@@ -186,6 +187,33 @@ export async function genericSoftwareLicensesFilter({rpc,...params}: GenericSoft
     return []
   }
 }
+
+export async function softwareCategoriesFilter(props: SoftwareFilterProps,rpcName:string='aggregated_software_categories_filter') {
+  try {
+    const query = `/rpc/${rpcName}?order=category_cnt.desc,category`
+    const url = `${getBaseUrl()}${query}`
+    const filter = buildSoftwareFilter(props)
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: createJsonHeaders(),
+      body: JSON.stringify(filter)
+    })
+
+    if (resp.status === 200) {
+      const json: CategoryOption[] = await resp.json()
+      return json
+    }
+
+    logger(`softwareCategoriesFilter: ${resp.status} ${resp.statusText}`, 'warn')
+    return []
+
+  } catch (e: any) {
+    logger(`softwareCategoriesFilter: ${e?.message}`, 'error')
+    return []
+  }
+}
+
 
 export async function softwareRsdHostsFilter(props: SoftwareFilterProps) {
   try {

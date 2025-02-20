@@ -21,7 +21,8 @@ CREATE FUNCTION aggregated_software_overview() RETURNS TABLE (
 	keywords CITEXT[],
 	keywords_text TEXT,
 	prog_lang TEXT[],
-	licenses VARCHAR[]
+	licenses VARCHAR[],
+	categories VARCHAR[]
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
@@ -39,7 +40,8 @@ SELECT
 	software_overview.keywords,
 	software_overview.keywords_text,
 	software_overview.prog_lang,
-	software_overview.licenses
+	software_overview.licenses,
+	software_overview.categories
 FROM
 	software_overview()
 UNION ALL
@@ -58,7 +60,9 @@ SELECT
 	remote_software.keywords,
 	remote_software.keywords_text,
 	remote_software.prog_lang,
-	remote_software.licenses
+	remote_software.licenses,
+	--	WE DO NOT USE/SCRAPE categories from remotes
+	'{}' AS categories
 FROM
 	remote_software
 INNER JOIN
@@ -83,13 +87,14 @@ CREATE FUNCTION aggregated_software_search(search VARCHAR) RETURNS TABLE (
 	keywords CITEXT[],
 	keywords_text TEXT,
 	prog_lang TEXT[],
-	licenses VARCHAR[]
+	licenses VARCHAR[],
+	categories VARCHAR[]
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
 	id, rsd_host, domain, slug, brand_name, short_statement, image_id,
 	updated_at, contributor_cnt, mention_cnt, is_published, keywords,
-	keywords_text, prog_lang, licenses
+	keywords_text, prog_lang, licenses, categories
 FROM
 	aggregated_software_overview()
 WHERE
@@ -129,6 +134,7 @@ CREATE FUNCTION aggregated_software_keywords_filter(
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
 	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}',
 	rsd_host_filter VARCHAR DEFAULT ''
 ) RETURNS TABLE (
 	keyword CITEXT,
@@ -146,6 +152,8 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
 	AND
 		CASE
 			WHEN rsd_host_filter = '' THEN TRUE
@@ -165,6 +173,7 @@ CREATE FUNCTION aggregated_software_languages_filter(
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
 	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}',
 	rsd_host_filter VARCHAR DEFAULT ''
 ) RETURNS TABLE (
 	prog_language TEXT,
@@ -182,6 +191,8 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
 	AND
 		CASE
 			WHEN rsd_host_filter = '' THEN TRUE
@@ -201,6 +212,7 @@ CREATE FUNCTION aggregated_software_licenses_filter(
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
 	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}',
 	rsd_host_filter VARCHAR DEFAULT ''
 ) RETURNS TABLE (
 	license VARCHAR,
@@ -219,6 +231,8 @@ WHERE
 	AND
 	COALESCE(licenses, '{}') @> license_filter
 	AND
+	COALESCE(categories, '{}') @> category_filter
+	AND
 		CASE
 			WHEN rsd_host_filter = '' THEN TRUE
 			WHEN rsd_host_filter IS NULL THEN rsd_host IS NULL
@@ -230,6 +244,44 @@ GROUP BY
 ;
 $$;
 
+-- REACTIVE CATEGORIES FILTER WITH COUNTS FOR SOFTWARE
+-- DEPENDS ON: aggregated_software_search
+CREATE FUNCTION aggregated_software_categories_filter(
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	prog_lang_filter TEXT[] DEFAULT '{}',
+	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}',
+	rsd_host_filter VARCHAR DEFAULT ''
+) RETURNS TABLE (
+	category VARCHAR,
+	category_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	UNNEST(categories) AS category,
+	COUNT(DISTINCT(id)) AS category_cnt
+FROM
+	aggregated_software_search(search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(prog_lang, '{}') @> prog_lang_filter
+	AND
+	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
+	AND
+		CASE
+			WHEN rsd_host_filter = '' THEN TRUE
+			WHEN rsd_host_filter IS NULL THEN rsd_host IS NULL
+		ELSE
+			rsd_host = rsd_host_filter
+		END
+GROUP BY
+	category
+;
+$$;
 
 -- REACTIVE SOURCE FILTER WITH COUNTS FOR SOFTWARE
 -- DEPENDS ON: aggregated_software_search
@@ -237,7 +289,8 @@ CREATE FUNCTION aggregated_software_hosts_filter(
 	search_filter TEXT DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
+	license_filter VARCHAR[] DEFAULT '{}',
+	category_filter VARCHAR[] DEFAULT '{}'
 ) RETURNS TABLE (
 	rsd_host VARCHAR,
 	rsd_host_cnt INTEGER
@@ -254,6 +307,8 @@ WHERE
 	COALESCE(prog_lang, '{}') @> prog_lang_filter
 	AND
 	COALESCE(licenses, '{}') @> license_filter
+	AND
+	COALESCE(categories, '{}') @> category_filter
 GROUP BY
 	rsd_host
 ;

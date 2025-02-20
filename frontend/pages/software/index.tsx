@@ -42,6 +42,7 @@ import useSoftwareOverviewParams from '~/components/software/overview/useSoftwar
 import SoftwareOverviewContent from '~/components/software/overview/SoftwareOverviewContent'
 import SoftwareFilters from '~/components/software/overview/filters/index'
 import {
+  softwareCategoriesFilter,
   softwareKeywordsFilter,
   softwareLanguagesFilter,
   softwareLicensesFilter,
@@ -54,6 +55,7 @@ import {getRsdSettings} from '~/config/getSettingsServerSide'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import {HostsFilterOption} from '~/components/filter/RsdHostFilter'
 import {getRemoteRsd} from '~/components/admin/remote-rsd/apiRemoteRsd'
+import {CategoryOption} from '~/components/filter/CategoriesFilter'
 
 type SoftwareOverviewProps = {
   search?: string | null
@@ -63,6 +65,8 @@ type SoftwareOverviewProps = {
   languagesList: LanguagesFilterOption[],
   licenses?: string[] | null,
   licensesList: LicensesFilterOption[],
+  categories?: string[] | null,
+  categoriesList?: CategoryOption[]
   rsd_host?: string,
   hostsList: HostsFilterOption[]
   order: string,
@@ -84,6 +88,7 @@ export default function SoftwareOverviewPage({
   rsd_host, order, page,
   rows, count, layout,
   keywordsList, languagesList,
+  categories, categoriesList,
   licensesList, hostsList,
   software, highlights, hasRemotes
 }: SoftwareOverviewProps) {
@@ -112,6 +117,8 @@ export default function SoftwareOverviewPage({
   // console.log('languagesList...', languagesList)
   // console.log('licensesList...', licensesList)
   // console.log('hostsList...', hostsList)
+  // console.log('categories...', categories)
+  // console.log('categoriesList...', categoriesList)
   // console.log('software...', software)
   // console.log('highlights...', highlights)
   // console.log('hasRemotes...', hasRemotes)
@@ -123,6 +130,7 @@ export default function SoftwareOverviewPage({
     if (prog_lang) count++
     if (licenses) count++
     if (search) count++
+    if (categories) count++
     if (rsd_host) count++
     return count
   }
@@ -171,6 +179,8 @@ export default function SoftwareOverviewPage({
                   languagesList={languagesList}
                   licenses={licenses ?? []}
                   licensesList={licensesList}
+                  categories={categories ?? []}
+                  categoryList={categoriesList ?? []}
                   rsd_host={rsd_host}
                   hostsList={hostsList}
                   orderBy={order}
@@ -236,6 +246,8 @@ export default function SoftwareOverviewPage({
           languagesList={languagesList}
           licenses={licenses ?? []}
           licensesList={licensesList}
+          categories={categories ?? []}
+          categoryList={categoriesList ?? []}
           rsd_host={rsd_host}
           hostsList={hostsList}
           order={order ?? ''}
@@ -253,7 +265,7 @@ export default function SoftwareOverviewPage({
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   let offset=0
   // extract params from page-query
-  const {search, keywords, prog_lang, licenses, rsd_host, order, rows, page} = ssrSoftwareParams(context.query)
+  const {search, keywords, prog_lang, licenses, categories, rsd_host, order, rows, page} = ssrSoftwareParams(context.query)
   // extract user settings from cookie
   const {rsd_page_layout, rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings
@@ -285,6 +297,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     licenses,
     rsd_host,
     prog_lang,
+    categories,
     order: orderBy,
     limit: page_rows,
     offset
@@ -306,6 +319,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     keywordsList,
     languagesList,
     licensesList,
+    categoriesList,
     hostsList,
     // extract remotes count from fn response
     {count:remotesCount},
@@ -313,11 +327,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     {highlights}
   ] = await Promise.all([
     getSoftwareList({url}),
-    softwareKeywordsFilter({search, keywords, prog_lang, licenses, rsd_host}),
-    softwareLanguagesFilter({search, keywords, prog_lang, licenses, rsd_host}),
-    softwareLicensesFilter({search, keywords, prog_lang, licenses, rsd_host}),
+    softwareKeywordsFilter({search, keywords, prog_lang, licenses, categories, rsd_host}),
+    softwareLanguagesFilter({search, keywords, prog_lang, licenses, categories, rsd_host}),
+    softwareLicensesFilter({search, keywords, prog_lang, licenses, categories, rsd_host}),
+    softwareCategoriesFilter({search, keywords, prog_lang, licenses, categories, rsd_host}),
     // get sources list based on other filters
-    softwareRsdHostsFilter({search, keywords, prog_lang, licenses}),
+    softwareRsdHostsFilter({search, keywords, prog_lang, licenses, categories}),
     // get remotes count
     getRemoteRsd({page:0, rows:1}),
     page !== 1 ? Promise.resolve({highlights: []}) : getSoftwareHighlights({
@@ -337,6 +352,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     languagesList,
     licenses,
     licensesList,
+    categories,
+    categoriesList,
     hostsList,
     page: page ?? 0,
     order: softwareOrder,

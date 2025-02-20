@@ -52,6 +52,7 @@ export type QueryParams={
   domains?:string[] | null,
   prog_lang?: string[] | null,
   licenses?: string[] | null,
+  categories?: string[] | null,
   rsd_host?: string,
   organisations?: string[] | null,
   project_status?: string | null,
@@ -94,7 +95,7 @@ export function buildFilterUrl(params: QueryParams, view:string) {
     search, order, keywords, domains,
     licenses, prog_lang, rsd_host,
     organisations, project_status,
-    rows, page
+    categories, rows, page
   } = params
   // console.log('buildFilterUrl...params...', params)
   const url = `/${view}?`
@@ -129,6 +130,12 @@ export function buildFilterUrl(params: QueryParams, view:string) {
     query,
     param: 'licenses',
     value: licenses
+  })
+  // categories
+  query = encodeUrlQuery({
+    query,
+    param: 'categories',
+    value: categories
   })
   // sources (rsd remote source)
   query = encodeUrlQuery({
