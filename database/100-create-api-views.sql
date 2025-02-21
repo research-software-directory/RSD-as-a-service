@@ -59,6 +59,7 @@ $$;
 -- Keywords grouped by software for filtering
 -- We use array for selecting software with specific keywords
 -- We use text value for "wild card" search
+-- used by software_overview & software_search rpc
 CREATE FUNCTION keyword_filter_for_software() RETURNS TABLE (
 	software UUID,
 	keywords CITEXT[],
@@ -94,7 +95,7 @@ SELECT
 $$;
 
 -- programming language filter for software
--- used by software_overview func
+-- used by software_overview & software_search rpc
 CREATE FUNCTION prog_lang_filter_for_software() RETURNS TABLE (
 	software UUID,
 	prog_lang TEXT[]
@@ -112,7 +113,7 @@ $$
 $$;
 
 -- license filter for software
--- used by software_search func
+-- used by software_overview & software_search rpc
 CREATE FUNCTION license_filter_for_software() RETURNS TABLE (
 	software UUID,
 	licenses VARCHAR[]

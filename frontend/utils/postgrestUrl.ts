@@ -366,7 +366,7 @@ export function softwareListUrl(props: PostgrestParams) {
   if (search) {
     // console.log('softwareListUrl...keywords...', props.keywords)
     const encodedSearch = encodeURIComponent(search)
-    // search query is performed in software_search RPC
+    // search query is performed in aggregated_software_search RPC
     // we search in title,subtitle,slug,keywords_text and prog_lang
     // check rpc in 105-project-views.sql for exact filtering
     query += `&search=${encodedSearch}`

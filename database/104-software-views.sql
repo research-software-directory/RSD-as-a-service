@@ -231,6 +231,7 @@ $$;
 
 -- SOFTWARE OVERVIEW LIST
 -- WITH COUNTS and KEYWORDS for filtering
+-- USED BY remote RSD scraper!
 CREATE FUNCTION software_overview() RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
@@ -322,7 +323,6 @@ RIGHT JOIN
 	software_highlight ON software_overview.id=software_highlight.software
 ;
 $$;
-
 
 -- SOFTWARE OVERVIEW LIST FOR SEARCH
 -- WITH COUNTS and KEYWORDS for filtering
@@ -445,7 +445,6 @@ INNER JOIN
 ;
 $$;
 
-
 -- Get a list of all software highlights
 CREATE FUNCTION software_for_highlight() RETURNS TABLE (
 	id UUID,
@@ -496,36 +495,6 @@ LEFT JOIN
 ;
 $$;
 
-
--- REACTIVE KEYWORD FILTER WITH COUNTS FOR SOFTWARE
--- PROVIDES AVAILABLE KEYWORDS FOR APPLIED FILTERS
-CREATE FUNCTION software_keywords_filter(
-	search_filter TEXT DEFAULT '',
-	keyword_filter CITEXT[] DEFAULT '{}',
-	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
-) RETURNS TABLE (
-	keyword CITEXT,
-	keyword_cnt INTEGER
-) LANGUAGE sql STABLE AS
-$$
-SELECT
-	UNNEST(keywords) AS keyword,
-	COUNT(id) AS keyword_cnt
-FROM
-	software_search(search_filter)
-WHERE
-	COALESCE(keywords, '{}') @> keyword_filter
-	AND
-	COALESCE(prog_lang, '{}') @> prog_lang_filter
-	AND
-	COALESCE(licenses, '{}') @> license_filter
-GROUP BY
-	keyword
-;
-$$;
-
-
 -- REACTIVE KEYWORD FILTER WITH COUNTS FOR HIGHLIGHTS
 -- PROVIDES AVAILABLE KEYWORDS FOR APPLIED FILTERS
 CREATE FUNCTION highlight_keywords_filter(
@@ -557,34 +526,6 @@ GROUP BY
 ;
 $$;
 
--- REACTIVE PROGRAMMING LANGUAGES WITH COUNTS FOR SOFTWARE
--- PROVIDES AVAILABLE PROGRAMMING LANGUAGES FOR APPLIED FILTERS
-CREATE FUNCTION software_languages_filter(
-	search_filter TEXT DEFAULT '',
-	keyword_filter CITEXT[] DEFAULT '{}',
-	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
-) RETURNS TABLE (
-	prog_language TEXT,
-	prog_language_cnt INTEGER
-) LANGUAGE sql STABLE AS
-$$
-SELECT
-	UNNEST(prog_lang) AS prog_language,
-	COUNT(id) AS prog_language_cnt
-FROM
-	software_search(search_filter)
-WHERE
-	COALESCE(keywords, '{}') @> keyword_filter
-	AND
-	COALESCE(prog_lang, '{}') @> prog_lang_filter
-	AND
-	COALESCE(licenses, '{}') @> license_filter
-GROUP BY
-	prog_language
-;
-$$;
-
 -- REACTIVE PROGRAMMING LANGUAGES WITH COUNTS FOR HIGHLIGHTS
 -- PROVIDES AVAILABLE PROGRAMMING LANGUAGES FOR APPLIED FILTERS
 CREATE FUNCTION highlight_languages_filter(
@@ -613,35 +554,6 @@ WHERE
 	COALESCE(categories, '{}') @> category_filter
 GROUP BY
 	prog_language
-;
-$$;
-
-
--- REACTIVE LICENSES FILTER WITH COUNTS FOR SOFTWARE
--- PROVIDES AVAILABLE LICENSES FOR APPLIED FILTERS
-CREATE FUNCTION software_licenses_filter(
-	search_filter TEXT DEFAULT '',
-	keyword_filter CITEXT[] DEFAULT '{}',
-	prog_lang_filter TEXT[] DEFAULT '{}',
-	license_filter VARCHAR[] DEFAULT '{}'
-) RETURNS TABLE (
-	license VARCHAR,
-	license_cnt INTEGER
-) LANGUAGE sql STABLE AS
-$$
-SELECT
-	UNNEST(licenses) AS license,
-	COUNT(id) AS license_cnt
-FROM
-	software_search(search_filter)
-WHERE
-	COALESCE(keywords, '{}') @> keyword_filter
-	AND
-	COALESCE(prog_lang, '{}') @> prog_lang_filter
-	AND
-	COALESCE(licenses, '{}') @> license_filter
-GROUP BY
-	license
 ;
 $$;
 
