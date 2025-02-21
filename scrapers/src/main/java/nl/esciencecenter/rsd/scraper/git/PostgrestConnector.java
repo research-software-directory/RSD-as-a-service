@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,10 +14,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Utils;
 
+import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.UUID;
 
 public class PostgrestConnector {
@@ -51,6 +56,11 @@ public class PostgrestConnector {
 		return parseBasicJsonData(data);
 	}
 
+	public Collection<BasicRepositoryDataWithHistory> commitDataWithHistory(int limit) {
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url,commit_history_scraped_at,commit_history&order=commit_history_scraped_at.asc.nullsfirst&limit=" + limit + "&" + Utils.atLeastOneHourAgoFilter("commit_history_scraped_at"));
+		return parseBasicJsonDataWithHistory(data);
+	}
+
 	/**
 	 * Fetch basic data from PostgREST
 	 *
@@ -65,6 +75,31 @@ public class PostgrestConnector {
 	public Collection<BasicRepositoryData> contributorData(int limit) {
 		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=contributor_count_scraped_at.asc.nullsfirst&limit=" + limit + "&" + Utils.atLeastOneHourAgoFilter("contributor_count_scraped_at"));
 		return parseBasicJsonData(data);
+	}
+
+	static Collection<BasicRepositoryDataWithHistory> parseBasicJsonDataWithHistory(String data) {
+		JsonArray dataInArray = JsonParser.parseString(data).getAsJsonArray();
+		Collection<BasicRepositoryDataWithHistory> result = new ArrayList<>();
+		for (JsonElement element : dataInArray) {
+			JsonObject jsonObject = element.getAsJsonObject();
+			String softwareUuid = jsonObject.getAsJsonPrimitive("software").getAsString();
+			UUID software = UUID.fromString(softwareUuid);
+			String url = jsonObject.getAsJsonPrimitive("url").getAsString();
+			String commitHistoryScrapedAt = Utils.stringOrNull(jsonObject.get("commit_history_scraped_at"));
+			SortedMap<Instant, Long> commitHistory = null;
+			if (!jsonObject.get("commit_history").isJsonNull()) {
+				JsonObject commitHistoryJsonObject = jsonObject.getAsJsonObject("commit_history");
+				commitHistory = new TreeMap<>();
+				for (String key : commitHistoryJsonObject.keySet()) {
+					commitHistory.put(Instant.ofEpochSecond(Long.parseLong(key)), commitHistoryJsonObject.getAsJsonPrimitive(key).getAsLong());
+				}
+			}
+			CommitsPerWeek commitsPerWeek = new CommitsPerWeek();
+			commitsPerWeek.setData(commitHistory);
+
+			result.add(new BasicRepositoryDataWithHistory(software, url, commitHistoryScrapedAt, commitsPerWeek));
+		}
+		return result;
 	}
 
 	static Collection<BasicRepositoryData> parseBasicJsonData(String data) {

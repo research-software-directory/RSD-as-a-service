@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -158,5 +160,35 @@ export function useSoftwareServices(){
   return {
     loading,
     services
+  }
+}
+
+export async function deleteServiceDataFromDb({dbprop, software, token}:
+  {dbprop:string, software: string, token:string}){
+  try {
+    const query = `repository_url?software=eq.${software}`
+    const url = `${getBaseUrl()}/${query}`
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        ...createJsonHeaders(token),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        dbprop: null
+      })
+    })
+    if (resp.status === 201) {
+      return {
+        status: 201,
+        message: `${dbprop} cleared from database.`
+      }
+    }
+  } catch (e: any) {
+    logger(`deleteServiceDataFromDb: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
   }
 }
