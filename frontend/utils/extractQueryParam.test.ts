@@ -85,6 +85,7 @@ it('extracts ssrSoftwareParams from url query', () => {
     'keywords': '["BAM","FAIR Sofware"]',
     'prog_lang': '["Python","C++"]',
     'licenses': '["MIT","GPL-2.0-or-later"]',
+    'categories': '["Category 1","Category 2"]',
     'rsd_host': 'null',
     'order': 'test-order',
     'page': '0',
@@ -95,6 +96,7 @@ it('extracts ssrSoftwareParams from url query', () => {
     keywords: ['BAM', 'FAIR Sofware'],
     prog_lang: ['Python', 'C++'],
     licenses: ['MIT', 'GPL-2.0-or-later'],
+    categories: ['Category 1','Category 2'],
     // null value is string for localhost
     rsd_host: 'null',
     order: 'test-order',

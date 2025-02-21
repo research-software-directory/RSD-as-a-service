@@ -35,6 +35,7 @@ type baseQueryStringProps = {
   licenses?: string[] | null,
   rsd_host?: string,
   organisations?: string[] | null,
+  categories?: string[] | null,
   order?: string,
   limit?: number,
   offset?: number
@@ -51,6 +52,7 @@ export type QueryParams={
   domains?:string[] | null,
   prog_lang?: string[] | null,
   licenses?: string[] | null,
+  categories?: string[] | null,
   rsd_host?: string,
   organisations?: string[] | null,
   project_status?: string | null,
@@ -93,7 +95,7 @@ export function buildFilterUrl(params: QueryParams, view:string) {
     search, order, keywords, domains,
     licenses, prog_lang, rsd_host,
     organisations, project_status,
-    rows, page
+    categories, rows, page
   } = params
   // console.log('buildFilterUrl...params...', params)
   const url = `/${view}?`
@@ -128,6 +130,12 @@ export function buildFilterUrl(params: QueryParams, view:string) {
     query,
     param: 'licenses',
     value: licenses
+  })
+  // categories
+  query = encodeUrlQuery({
+    query,
+    param: 'categories',
+    value: categories
   })
   // sources (rsd remote source)
   query = encodeUrlQuery({
@@ -200,6 +208,7 @@ export function baseQueryString(props: baseQueryStringProps) {
     rsd_host,
     organisations,
     project_status,
+    categories,
     order,
     limit,
     offset
@@ -304,6 +313,21 @@ export function baseQueryString(props: baseQueryStringProps) {
       query = `${query}&participating_organisations=cs.%7B${organisationsAll}%7D`
     } else {
       query = `participating_organisations=cs.%7B${organisationsAll}%7D`
+    }
+  }
+  if (categories !== undefined &&
+    categories !== null &&
+    typeof categories === 'object') {
+    // sort and convert array to comma separated string
+    // we need to sort because search is on ARRAY field in pgSql
+    const categoriesAll = categories
+      .toSorted(localeSort)
+      .map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    // use cs. command to find
+    if (query) {
+      query = `${query}&categories=cs.%7B${categoriesAll}%7D`
+    } else {
+      query = `categories=cs.%7B${categoriesAll}%7D`
     }
   }
   if (project_status !== undefined &&

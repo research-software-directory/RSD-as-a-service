@@ -14,8 +14,10 @@ import KeywordsFilter, {KeywordFilterOption} from '~/components/filter/KeywordsF
 import ProgrammingLanguagesFilter, {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import LicensesFilter, {LicensesFilterOption} from '~/components/filter/LicensesFilter'
 import RsdSourceFilter, {HostsFilterOption} from '~/components/filter/RsdHostFilter'
+import CategoriesFilter, {CategoryOption} from '~/components/filter/CategoriesFilter'
 import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
 import OrderSoftwareBy, {OrderHighlightsBy} from './OrderSoftwareBy'
+import useHasCategories from './useHasCategories'
 
 type SoftwareFilterProps = {
   keywords: string[]
@@ -24,6 +26,8 @@ type SoftwareFilterProps = {
   languagesList: LanguagesFilterOption[]
   licenses: string[]
   licensesList: LicensesFilterOption[]
+  categories: string[]
+  categoryList: CategoryOption[]
   orderBy: string,
   filterCnt: number,
   highlightsOnly?: boolean
@@ -33,24 +37,21 @@ type SoftwareFilterProps = {
 }
 
 export default function SoftwareFilters({
-  keywords,
-  keywordsList,
-  languages,
-  languagesList,
-  licenses,
-  licensesList,
-  rsd_host,
-  hostsList,
-  filterCnt,
-  orderBy,
+  keywords, keywordsList,
+  languages, languagesList,
+  licenses, licensesList,
+  categories, categoryList,
+  rsd_host, hostsList,
+  filterCnt, orderBy,
   highlightsOnly = false,
   hasRemotes = false
 }:SoftwareFilterProps) {
   const {resetFilters,handleQueryChange} = useSoftwareOverviewParams()
+  const hasCategories = useHasCategories()
 
   // console.group('SoftwareFilters')
-  // console.log('sources...', sources)
-  // console.log('hostsList...', hostsList)
+  // console.log('hasCategories...', hasCategories)
+  // console.log('categoryList...', categoryList)
   // console.groupEnd()
 
   function clearDisabled() {
@@ -95,6 +96,18 @@ export default function SoftwareFilters({
           handleQueryChange={handleQueryChange}
         />
       </div>
+      {/* Custom categories */}
+      {hasCategories ?
+        <div>
+          <CategoriesFilter
+            title="Categories"
+            categories={categories}
+            categoryList={categoryList}
+            handleQueryChange={handleQueryChange}
+          />
+        </div>
+        : null
+      }
       {/* RSD hosts list only if remotes are defined */}
       {hasRemotes ?
         <RsdSourceFilter

@@ -1,17 +1,17 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
 import {useSession} from '~/auth'
+import logger from '~/utils/logger'
+import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
+import {decodeJsonParam} from '~/utils/extractQueryParam'
+import {StatusFilterOption} from '~/components/projects/overview/filters/ProjectStatusFilter'
 import useOrganisationContext from '../../context/useOrganisationContext'
 import useProjectParams from '../useProjectParams'
-import {StatusFilterOption} from '~/components/projects/overview/filters/ProjectStatusFilter'
-import {decodeJsonParam} from '~/utils/extractQueryParam'
-import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {buildOrgProjectFilter} from './useOrgProjectKeywordsList'
-import logger from '~/utils/logger'
 
 type OrgProjectStatusFilterProps = {
   id: string
@@ -19,25 +19,16 @@ type OrgProjectStatusFilterProps = {
   keywords?: string[] | null
   domains?: string[] | null
   organisations?: string[] | null
+  categories?: string[] | null
   token?:string
 }
 
 
-export async function orgProjectStatusFilter({
-  id, search, keywords,
-  domains, organisations, token
-}: OrgProjectStatusFilterProps) {
+export async function orgProjectStatusFilter({token, ...params}: OrgProjectStatusFilterProps) {
   try {
     const query = 'rpc/org_project_status_filter?order=project_status'
     const url = `${getBaseUrl()}/${query}`
-    const filter = buildOrgProjectFilter({
-      id,
-      search,
-      keywords,
-      domains,
-      organisations
-
-    })
+    const filter = buildOrgProjectFilter(params)
 
     const resp = await fetch(url, {
       method: 'POST',
@@ -64,7 +55,7 @@ export async function orgProjectStatusFilter({
 export default function useOrgProjectStatusList() {
   const {token} = useSession()
   const {id} = useOrganisationContext()
-  const {search,keywords_json,domains_json,organisations_json} = useProjectParams()
+  const {search,keywords_json,domains_json,organisations_json,categories_json} = useProjectParams()
   const [statusList, setStatusList] = useState<StatusFilterOption[]>([])
 
   // console.group('useOrgProjectStatusList')
@@ -82,6 +73,7 @@ export default function useOrgProjectStatusList() {
       const keywords = decodeJsonParam(keywords_json, null)
       const domains = decodeJsonParam(domains_json, null)
       const organisations = decodeJsonParam(organisations_json, null)
+      const categories = decodeJsonParam(categories_json, null)
 
       // get filter options
       orgProjectStatusFilter({
@@ -90,6 +82,7 @@ export default function useOrgProjectStatusList() {
         keywords,
         domains,
         organisations,
+        categories,
         token
       }).then(resp => {
         // abort
@@ -104,6 +97,7 @@ export default function useOrgProjectStatusList() {
   }, [
     search, keywords_json,
     domains_json, organisations_json,
+    categories_json,
     id,token
   ])
 

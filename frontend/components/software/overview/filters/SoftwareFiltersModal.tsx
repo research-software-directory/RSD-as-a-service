@@ -15,21 +15,24 @@ import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
 import {HostsFilterOption} from '~/components/filter/RsdHostFilter'
+import {CategoryOption} from '~/components/filter/CategoriesFilter'
 import SoftwareFilters from './index'
 
 type SoftwareFiltersModalProps = {
-  open: boolean,
+  open: boolean
   keywords?: string[]
-  keywordsList: KeywordFilterOption[],
-  prog_lang?: string[],
-  languagesList: LanguagesFilterOption[],
-  licenses?: string[],
-  licensesList: LicensesFilterOption[],
+  keywordsList: KeywordFilterOption[]
+  prog_lang?: string[]
+  languagesList: LanguagesFilterOption[]
+  licenses?: string[]
+  licensesList: LicensesFilterOption[]
+  categories: string[]
+  categoryList: CategoryOption[]
   rsd_host?: string
   hostsList?: HostsFilterOption[]
   hasRemotes?: boolean
-  order: string,
-  filterCnt: number,
+  order: string
+  filterCnt: number
   setModal:(open:boolean)=>void
 }
 
@@ -37,6 +40,7 @@ export default function SoftwareFiltersModal({
   open, keywords, keywordsList,
   prog_lang, languagesList,
   licenses, licensesList,
+  categories, categoryList,
   rsd_host, hostsList,
   hasRemotes, filterCnt, order,
   setModal
@@ -67,6 +71,8 @@ export default function SoftwareFiltersModal({
             languagesList={languagesList}
             licenses={licenses ?? []}
             licensesList={licensesList}
+            categories={categories ?? []}
+            categoryList={categoryList ?? []}
             rsd_host={rsd_host}
             hostsList={hostsList}
             orderBy={order ?? ''}

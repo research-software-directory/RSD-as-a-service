@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,13 +19,10 @@ import useProjectParams from '../useProjectParams'
 import {OrgProjectFilterProps, buildOrgProjectFilter} from './useOrgProjectKeywordsList'
 
 
-export async function orgProjectDomainsList({id,search,project_status,keywords,domains,organisations}: OrgProjectFilterProps) {
+export async function orgProjectDomainsList(params: OrgProjectFilterProps) {
   try {
     // get possible options
-    const domainsOptions = await orgProjectDomainsFilter({
-      id, search, project_status,
-      keywords, domains, organisations
-    })
+    const domainsOptions = await orgProjectDomainsFilter(params)
 
     if (domainsOptions.length > 0) {
       const keys = domainsOptions.map(item => item.domain)
@@ -46,18 +43,11 @@ export async function orgProjectDomainsList({id,search,project_status,keywords,d
   }
 }
 
-async function orgProjectDomainsFilter({id,search,project_status,keywords,domains,organisations}: OrgProjectFilterProps) {
+async function orgProjectDomainsFilter(params: OrgProjectFilterProps) {
   try {
     const query = 'rpc/org_project_domains_filter?order=domain'
     const url = `${getBaseUrl()}/${query}`
-    const filter = buildOrgProjectFilter({
-      id,
-      search,
-      keywords,
-      domains,
-      organisations,
-      project_status
-    })
+    const filter = buildOrgProjectFilter(params)
 
     // console.group('softwareKeywordsFilter')
     // console.log('filter...', JSON.stringify(filter))
@@ -87,7 +77,10 @@ async function orgProjectDomainsFilter({id,search,project_status,keywords,domain
 export default function useOrgProjectDomainsFilter(){
   const {token} = useSession()
   const {id} = useOrganisationContext()
-  const {search,project_status,keywords_json,domains_json,organisations_json} = useProjectParams()
+  const {
+    search,project_status,keywords_json,domains_json,
+    organisations_json,categories_json
+  } = useProjectParams()
   const [domainsList, setDomainsList] = useState<ResearchDomainOption[]>([])
 
   // console.group('useOrgProjectDomainsFilter')
@@ -105,6 +98,7 @@ export default function useOrgProjectDomainsFilter(){
       const keywords = decodeJsonParam(keywords_json,null)
       const domains = decodeJsonParam(domains_json, null)
       const organisations = decodeJsonParam(organisations_json, null)
+      const categories = decodeJsonParam(categories_json, null)
 
       // get filter options
       orgProjectDomainsList({
@@ -114,6 +108,7 @@ export default function useOrgProjectDomainsFilter(){
         domains,
         organisations,
         project_status,
+        categories,
         token
       }).then(resp => {
         // abort
@@ -128,7 +123,8 @@ export default function useOrgProjectDomainsFilter(){
   }, [
     search, keywords_json,
     domains_json, organisations_json,
-    id,token, project_status
+    project_status, categories_json,
+    id,token
   ])
 
   return {

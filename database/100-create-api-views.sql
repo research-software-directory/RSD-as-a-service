@@ -830,7 +830,6 @@ $$
 	GROUP BY research_domain_for_project.project;
 $$;
 
-
 -- Check whether user agreed on Terms of Service and read the Privacy Statement
 CREATE FUNCTION user_agreements_stored(account_id UUID) RETURNS BOOLEAN LANGUAGE sql STABLE AS
 $$

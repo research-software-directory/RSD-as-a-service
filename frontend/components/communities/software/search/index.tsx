@@ -16,6 +16,7 @@ import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
 import useFilterQueryChange from '~/components/filter/useFilterQueryChange'
+import {CategoryOption} from '~/components/filter/CategoriesFilter'
 import CommunitySoftwareFilters from '../filters/index'
 
 type SearchSoftwareSectionProps = {
@@ -23,6 +24,7 @@ type SearchSoftwareSectionProps = {
   keywordsList: KeywordFilterOption[],
   languagesList: LanguagesFilterOption[],
   licensesList: LicensesFilterOption[],
+  categoryList: CategoryOption[],
   smallScreen: boolean
   layout: ProjectLayoutType
   setView: (view:ProjectLayoutType) => void
@@ -30,7 +32,7 @@ type SearchSoftwareSectionProps = {
 
 export default function SearchCommunitySoftwareSection({
   count, layout, keywordsList, smallScreen,
-  languagesList, licensesList, setView
+  languagesList, licensesList, categoryList, setView
 }: SearchSoftwareSectionProps) {
   const {search,page,rows,filterCnt} = useSoftwareParams()
   const {handleQueryChange} = useFilterQueryChange()
@@ -86,6 +88,7 @@ export default function SearchCommunitySoftwareSection({
             keywordsList={keywordsList}
             languagesList={languagesList}
             licensesList={licensesList}
+            categoryList={categoryList}
           />
         </FiltersModal>
         : undefined

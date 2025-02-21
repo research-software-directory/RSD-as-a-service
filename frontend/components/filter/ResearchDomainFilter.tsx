@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -66,9 +66,9 @@ export default function ResearchDomainFilter({domains, domainsList,handleQueryCh
         }}
         defaultValue={[]}
         filterSelectedOptions
-        renderOption={(props, option) => (
+        renderOption={({key, ...props}, option) => (
           <FilterOption
-            key={option.domain}
+            key={key ?? option.domain}
             props={props}
             label={option.domain}
             count={option.domain_cnt}

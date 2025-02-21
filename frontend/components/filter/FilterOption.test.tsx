@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,16 @@ const mockProps = {
   // props: document.createAttribute('aria-label'),
   label: 'test label',
   count: 20,
-  capitalize: false
+  capitalize: false,
+  props:{
+    'tabIndex': -1,
+    'role': 'option',
+    'id': ':r1:-option-2',
+    'data-option-index': 2,
+    'aria-disabled': false,
+    'aria-selected': false,
+    'className': 'MuiAutocomplete-option'
+  }
 }
 
 it('renders filter option label', () => {

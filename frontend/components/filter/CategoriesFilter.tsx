@@ -12,47 +12,45 @@ import TextField from '@mui/material/TextField'
 import FilterTitle from '~/components/filter/FilterTitle'
 import FilterOption from '~/components/filter/FilterOption'
 
-export type OrganisationOption = {
-  organisation: string,
-  organisation_cnt: number
+export type CategoryOption = {
+  category: string,
+  category_cnt: number
 }
 
-type OrganisationFilterProps = {
-  organisations: string[],
-  organisationsList: OrganisationOption[],
+type CategoryFilterProps = Readonly<{
+  categories: string[],
+  categoryList: CategoryOption[]
   handleQueryChange: (key: string, value: string | string[]) => void
   title?: string
-}
+}>
 
-export default function OrganisationFilter({
-  organisations, organisationsList,
-  handleQueryChange, title = 'Participating organisations'
-}: OrganisationFilterProps) {
-  const [selected, setSelected] = useState<OrganisationOption[]>([])
-  const [options, setOptions] = useState<OrganisationOption[]>(organisationsList)
+export default function CategoriesFilter({categories,categoryList,handleQueryChange,title='Categories'}: CategoryFilterProps) {
 
-  // console.group('OrganisationFilter')
-  // console.log('organisationsList...', organisationsList)
+  const [selected, setSelected] = useState<CategoryOption[]>([])
+  const [options, setOptions] = useState<CategoryOption[]>(categoryList)
+
+  // console.group('CategoryFilter')
+  // console.log('categoryList...', categoryList)
   // console.log('options...', options)
   // console.groupEnd()
 
   useEffect(() => {
-    if (organisations.length > 0 && organisationsList.length) {
-      const selectedOptions = organisationsList.filter(option => {
-        return organisations.includes(option.organisation)
+    if (categories.length > 0 && categoryList.length) {
+      const selectedCategories = categoryList.filter(option => {
+        return categories.includes(option.category)
       })
-      setSelected(selectedOptions)
+      setSelected(selectedCategories)
     } else {
       setSelected([])
     }
-    setOptions(organisationsList)
-  },[organisations,organisationsList])
+    setOptions(categoryList)
+  },[categories,categoryList])
 
   return (
     <>
       <FilterTitle
         title={title}
-        count={organisationsList.length ?? ''}
+        count={categoryList.length ?? ''}
       />
       <Autocomplete
         className="mt-4"
@@ -61,18 +59,19 @@ export default function OrganisationFilter({
         multiple
         clearOnEscape
         options={options}
-        getOptionLabel={(option) => (option.organisation)}
+        getOptionLabel={(option) => (option.category)}
         isOptionEqualToValue={(option, value) => {
-          return option.organisation === value.organisation
+          return option.category === value.category
         }}
         defaultValue={[]}
         filterSelectedOptions
+        // remove key from other props
         renderOption={({key,...props}, option) => (
           <FilterOption
-            key={key ?? option.organisation}
+            key={key ?? option.category}
             props={props}
-            label={option.organisation}
-            count={option.organisation_cnt}
+            label={option.category}
+            count={option.category_cnt}
             capitalize={false}
           />
         )}
@@ -81,8 +80,8 @@ export default function OrganisationFilter({
         )}
         onChange={(event, newValue) => {
           // extract values into string[] for url query
-          const queryFilter = newValue.map(item => item.organisation)
-          handleQueryChange('organisations', queryFilter)
+          const queryFilter = newValue.map(item => item.category)
+          handleQueryChange('categories', queryFilter)
         }}
       />
     </>

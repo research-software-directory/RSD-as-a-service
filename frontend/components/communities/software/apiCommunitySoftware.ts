@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,7 +12,7 @@ import {baseQueryString} from '~/utils/postgrestUrl'
 import {ssrSoftwareParams} from '~/utils/extractQueryParam'
 import {getKeywordsByCommunity} from '~/components/communities/settings/general/apiCommunityKeywords'
 import {CommunityListProps} from '~/components/communities/apiCommunities'
-import {comSoftwareKeywordsFilter, comSoftwareLanguagesFilter, comSoftwareLicensesFilter} from './filters/apiCommunitySoftwareFilters'
+import {comSoftwareCategoriesFilter, comSoftwareKeywordsFilter, comSoftwareLanguagesFilter, comSoftwareLicensesFilter} from './filters/apiCommunitySoftwareFilters'
 import {getSoftwareOrderOptions} from './filters/OrderCommunitySoftwareBy'
 
 export type CommunityRequestStatus='approved'|'pending'|'rejected'
@@ -24,6 +24,7 @@ export type SoftwareForCommunityParams = {
   keywords?: string[] | null
   prog_lang?: string[] | null
   licenses?: string[] | null
+  categories?: string[] | null
   order?: string
   page: number,
   rows: number,
@@ -42,6 +43,7 @@ export type SoftwareOfCommunity = {
   status: CommunityRequestStatus
   keywords: string[],
   prog_lang: string[],
+  categories: string[],
   licenses: string,
   contributor_cnt: number | null
   mention_cnt: number | null
@@ -49,7 +51,7 @@ export type SoftwareOfCommunity = {
 
 export async function getSoftwareForCommunity({
   community, searchFor, keywords, prog_lang,
-  licenses, order, page, rows, token,
+  licenses, categories, order, page, rows, token,
   isMaintainer, software_status
 }: SoftwareForCommunityParams) {
   try {
@@ -73,6 +75,7 @@ export async function getSoftwareForCommunity({
       keywords,
       prog_lang,
       licenses,
+      categories,
       limit: rows,
       offset: page ? page * rows : undefined
     })
@@ -139,7 +142,7 @@ type SsrCommunitySoftwareDataProps={
 export async function ssrCommunitySoftwareProps({community,software_status,query,isMaintainer,token}:SsrCommunitySoftwareDataProps){
   try{
     // extract and decode query params
-    const {search, keywords, prog_lang, licenses, order, rows, page} = ssrSoftwareParams(query)
+    const {search, keywords, prog_lang, licenses, categories, order, rows, page} = ssrSoftwareParams(query)
 
     // get other data
     const [
@@ -147,6 +150,7 @@ export async function ssrCommunitySoftwareProps({community,software_status,query
       keywordsList,
       languagesList,
       licensesList,
+      categoryList,
       communityKeywords
     ] = await Promise.all([
       getSoftwareForCommunity({
@@ -156,6 +160,7 @@ export async function ssrCommunitySoftwareProps({community,software_status,query
         keywords,
         prog_lang,
         licenses,
+        categories,
         order,
         rows: rows ?? 12,
         page: page ? page-1 : 0,
@@ -168,7 +173,9 @@ export async function ssrCommunitySoftwareProps({community,software_status,query
         search,
         keywords,
         prog_lang,
-        licenses
+        licenses,
+        categories,
+        token
       }),
       comSoftwareLanguagesFilter({
         id: community.id,
@@ -176,7 +183,9 @@ export async function ssrCommunitySoftwareProps({community,software_status,query
         search,
         keywords,
         prog_lang,
-        licenses
+        licenses,
+        categories,
+        token
       }),
       comSoftwareLicensesFilter({
         id: community.id,
@@ -184,7 +193,19 @@ export async function ssrCommunitySoftwareProps({community,software_status,query
         search,
         keywords,
         prog_lang,
-        licenses
+        licenses,
+        categories,
+        token
+      }),
+      comSoftwareCategoriesFilter({
+        id: community.id,
+        software_status,
+        search,
+        keywords,
+        prog_lang,
+        licenses,
+        categories,
+        token
       }),
       getKeywordsByCommunity(community.id,token)
     ])
@@ -195,6 +216,7 @@ export async function ssrCommunitySoftwareProps({community,software_status,query
       keywordsList,
       languagesList,
       licensesList,
+      categoryList,
       community:{
         ...community,
         // use keywords for editing
@@ -216,6 +238,7 @@ export async function ssrCommunitySoftwareProps({community,software_status,query
       keywordsList:[],
       languagesList:[],
       licensesList:[],
+      categoryList:[],
       community
     }
   }

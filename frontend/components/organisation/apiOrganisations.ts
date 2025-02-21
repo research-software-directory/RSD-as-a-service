@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -265,6 +265,7 @@ export type OrganisationApiParams = {
   licenses?: string[] | null
   domains?: string[] | null
   organisations?: string[] | null
+  categories?: string[] | null
   order?: string
   page: number,
   rows: number,
@@ -274,7 +275,7 @@ export type OrganisationApiParams = {
 
 export async function getSoftwareForOrganisation({
   organisation, searchFor, keywords, prog_lang,
-  licenses, order, page, rows, token,
+  licenses, categories, order, page, rows, token,
   isMaintainer
 }: OrganisationApiParams) {
   try {
@@ -296,6 +297,7 @@ export async function getSoftwareForOrganisation({
       keywords,
       prog_lang,
       licenses,
+      categories,
       order,
       limit: rows,
       offset: page ? page * rows : undefined
@@ -346,7 +348,7 @@ export async function getSoftwareForOrganisation({
 export async function getProjectsForOrganisation({
   organisation, searchFor, keywords, domains,
   organisations, order, page, rows, token,
-  isMaintainer, project_status
+  isMaintainer, project_status, categories
 }: OrganisationApiParams) {
   try {
     // baseUrl
@@ -368,6 +370,7 @@ export async function getProjectsForOrganisation({
       keywords,
       domains,
       organisations,
+      categories,
       order,
       limit: rows,
       offset: page ? page * rows : undefined

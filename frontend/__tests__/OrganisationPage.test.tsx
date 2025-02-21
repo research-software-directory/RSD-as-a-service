@@ -29,6 +29,10 @@ jest.mock('~/components/GlobalSearchAutocomplete/useHasRemotes')
 // use DEFAULT MOCK for login providers list
 // required when AppHeader component is used
 jest.mock('~/auth/api/useLoginProviders')
+// mock project categories api
+jest.mock('~/components/organisation/projects/filters/useOrgProjectCategoriesList')
+// mock software categories api
+jest.mock('~/components/organisation/software/filters/useOrgSoftwareCategoriesList')
 
 const mockProps = {
   organisation: mockOrganisation as OrganisationForContext,

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -11,6 +11,7 @@ import {decodeJsonParam} from '~/utils/extractQueryParam'
 import KeywordsFilter from '~/components/filter/KeywordsFilter'
 import ResearchDomainFilter from '~/components/filter/ResearchDomainFilter'
 import OrganisationsFilter from '~/components/filter/OrganisationsFilter'
+import CategoriesFilter from '~/components/filter/CategoriesFilter'
 import ProjectStatusFilter from '~/components/projects/overview/filters/ProjectStatusFilter'
 import useQueryChange from '../useQueryChange'
 import useProjectParams from '../useProjectParams'
@@ -19,18 +20,26 @@ import useOrgProjectKeywordsList from './useOrgProjectKeywordsList'
 import useOrgProjectDomainsFilter from './useOrgProjectDomainsList'
 import useOrgProjectOrganisationList from './useOrgProjectOrganisationsList'
 import useOrgProjectStatusList from './useOrgProjectStatusList'
+import useOrgProjectCategoriesList from './useOrgProjectCategoriesList'
 
 export default function OrgProjectFilters() {
   const {resetFilters, handleQueryChange} = useQueryChange()
-  const {project_status,filterCnt,keywords_json,domains_json,organisations_json} = useProjectParams()
+  const {project_status,filterCnt,keywords_json,domains_json,organisations_json,categories_json} = useProjectParams()
   const {keywordsList} = useOrgProjectKeywordsList()
   const {domainsList} = useOrgProjectDomainsFilter()
   const {organisationList} = useOrgProjectOrganisationList()
   const {statusList} = useOrgProjectStatusList()
+  const {hasCategories, categoryList} = useOrgProjectCategoriesList()
 
   const keywords = decodeJsonParam(keywords_json, [])
   const domains = decodeJsonParam(domains_json, [])
-  const organisations= decodeJsonParam(organisations_json,[])
+  const organisations = decodeJsonParam(organisations_json,[])
+  const categories = decodeJsonParam(categories_json,[])
+
+  // console.group('OrgProjectFilters')
+  // console.log('hasCategories...', hasCategories)
+  // console.log('categoryList...', categoryList)
+  // console.groupEnd()
 
   // debugger
   function clearDisabled() {
@@ -77,6 +86,18 @@ export default function OrgProjectFilters() {
           handleQueryChange={handleQueryChange}
         />
       </div>
+      {/* Custom organisation categories */}
+      {hasCategories ?
+        <div>
+          <CategoriesFilter
+            title="Categories"
+            categories={categories}
+            categoryList={categoryList}
+            handleQueryChange={handleQueryChange}
+          />
+        </div>
+        : null
+      }
     </>
   )
 }

@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -59,9 +59,9 @@ export default function ProgrammingLanguagesFilter({prog_lang,languagesList,hand
         }}
         defaultValue={[]}
         filterSelectedOptions
-        renderOption={(props, option) => (
+        renderOption={({key, ...props}, option) => (
           <FilterOption
-            key={option.prog_language}
+            key={key ?? option.prog_language}
             props={props}
             label={option.prog_language}
             count={option.prog_language_cnt}
