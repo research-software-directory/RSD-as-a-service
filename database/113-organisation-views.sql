@@ -1,6 +1,6 @@
 -- SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
--- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -52,8 +52,7 @@ $$;
 -- CATEGORIES for projects of specific organisation
 CREATE FUNCTION org_project_categories(organisation_id UUID) RETURNS TABLE(
 	project UUID,
-	category VARCHAR[],
-	category_text TEXT
+	category VARCHAR[]
 ) LANGUAGE sql STABLE AS
 $$
 	SELECT
@@ -61,11 +60,7 @@ $$
 		ARRAY_AGG(
 			category.short_name
 			ORDER BY short_name
-		) AS category,
-		STRING_AGG(
-			category.short_name || ' ' || category."name",' '
-			ORDER BY short_name
-		) AS category_text
+		) AS category
 	FROM
 		category_for_project
 	INNER JOIN
@@ -435,8 +430,7 @@ $$;
 -- CATEGORIES for software of specific organisation
 CREATE FUNCTION org_software_categories(organisation_id UUID) RETURNS TABLE(
 	software UUID,
-	category VARCHAR[],
-	category_text TEXT
+	category VARCHAR[]
 ) LANGUAGE sql STABLE AS
 $$
 	SELECT
@@ -444,11 +438,7 @@ $$
 		ARRAY_AGG(
 			category.short_name
 			ORDER BY short_name
-		) AS category,
-		STRING_AGG(
-			category.short_name || ' ' || category."name",' '
-			ORDER BY short_name
-		) AS category_text
+		) AS category
 	FROM
 		category_for_software
 	INNER JOIN

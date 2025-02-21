@@ -1,6 +1,6 @@
 -- SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
--- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -213,8 +213,7 @@ $$;
 -- CATEGORIES for software of specific community
 CREATE FUNCTION com_software_categories(community_id UUID) RETURNS TABLE(
 	software UUID,
-	category VARCHAR[],
-	category_text TEXT
+	category VARCHAR[]
 ) LANGUAGE sql STABLE AS
 $$
 	SELECT
@@ -222,11 +221,7 @@ $$
 		ARRAY_AGG(
 			category.short_name
 			ORDER BY short_name
-		) AS category,
-		STRING_AGG(
-			category.short_name || ' ' || category."name",' '
-			ORDER BY short_name
-		) AS category_text
+		) AS category
 	FROM
 		category_for_software
 	INNER JOIN
