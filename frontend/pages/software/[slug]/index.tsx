@@ -2,9 +2,9 @@
 // SPDX-FileCopyrightText: 2021 - 2024 dv4all
 // SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -99,14 +99,14 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
     mentions, testimonials, contributors,
     relatedSoftware, relatedProjects, isMaintainer,
     slug, organisations, referencePapers, packages,
-    communities
+    communities, categories
   } = props
 
   const [highlightedCategories, otherCategories] = useMemo(() => {
     const highlightedCategories: CategoryPath[] = []
     const otherCategories: CategoryPath[] = []
 
-    for (const path of (props.categories || [])) {
+    for (const path of (categories || [])) {
       if (path[0].properties.is_highlight) {
         highlightedCategories.push(path)
       } else {
@@ -114,7 +114,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       }
     }
     return [highlightedCategories, otherCategories]
-  }, [props.categories])
+  }, [categories])
 
   useEffect(() => {
     const contact = contributors.filter(item => item.is_contact_person)
@@ -127,7 +127,10 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   if (!software?.brand_name){
     return <NoContent />
   }
-  // console.log('SoftwareIndexPage...communities...', communities)
+  // console.group('SoftwareIndexPage')
+  // console.log('otherCategories...', otherCategories)
+  // console.log('categories...', categories)
+  // console.groupEnd()
   return (
     <>
       {/* Page Head meta tags */}

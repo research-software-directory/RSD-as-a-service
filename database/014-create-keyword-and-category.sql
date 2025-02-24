@@ -1,9 +1,9 @@
 -- SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+-- SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
--- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -195,6 +195,7 @@ RETURNS TABLE (
 	id UUID,
 	parent UUID,
 	community UUID,
+	organisation UUID,
 	short_name VARCHAR,
 	name VARCHAR,
 	properties JSONB,
@@ -215,7 +216,7 @@ $$
 	-- 2. How a table row "type" could be used here Now we have to list all columns of `category` explicitly
 	--    I want to have something like `* without 'r_index'` to be independent from modifications of `category`
 	-- 3. Maybe this could be improved by using SEARCH keyword.
-	SELECT id, parent, community, short_name, name, properties, provenance_iri
+	SELECT id, parent, community, organisation, short_name, name, properties, provenance_iri
 	FROM cat_path
 	ORDER BY r_index DESC;
 $$;
@@ -249,7 +250,12 @@ LANGUAGE SQL STABLE AS
 $$
 	WITH
 		cat_ids AS
-		(SELECT category_id FROM category_for_software AS c4s WHERE c4s.software_id = category_paths_by_software_expanded.software_id),
+		(SELECT
+			category_id
+			FROM
+			category_for_software AS c4s
+			WHERE c4s.software_id = category_paths_by_software_expanded.software_id
+		),
 	paths AS
 		(SELECT category_path_expanded(category_id) AS path FROM cat_ids)
 	SELECT
