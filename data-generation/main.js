@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -15,6 +15,7 @@ import {conceptDois, dois, packageManagerLinks} from './real-data.js';
 import fs from 'fs/promises';
 
 const usedLowerCaseStrings = new Set();
+
 function generateUniqueCaseInsensitiveString(randomStringGenerator) {
 	for (let attempt = 0; attempt < 10000; attempt++) {
 		const nextString = randomStringGenerator();
@@ -311,6 +312,7 @@ function generateKeywordsForEntity(idsEntity, idsKeyword, nameEntity) {
 const categoriesPerCommunity = new Map();
 const categoriesPerOrganisation = new Map();
 const globalCategories = [];
+
 async function generateCategories(idsCommunities, idsOrganisations, maxDepth = 3) {
 	const promises = [];
 
@@ -538,7 +540,7 @@ function generatePeopleWithOrcids(orcids, imageIds) {
 	return result;
 }
 
-async function generateContributors(softwareIds, peopleWithOrcids, minPerSoftware = 0, maxPerSoftware = 15) {
+function generateContributors(softwareIds, peopleWithOrcids, minPerSoftware = 0, maxPerSoftware = 15) {
 	const result = [];
 
 	for (const softwareId of softwareIds) {
@@ -584,8 +586,8 @@ async function generateContributors(softwareIds, peopleWithOrcids, minPerSoftwar
 	return result;
 }
 
-async function generateTeamMembers(projectIds, peopleWithOrcids, minPerProject = 0, maxPerProject = 15) {
-	const result = await generateContributors(projectIds, peopleWithOrcids, minPerProject, maxPerProject);
+function generateTeamMembers(projectIds, peopleWithOrcids, minPerProject = 0, maxPerProject = 15) {
+	const result = generateContributors(projectIds, peopleWithOrcids, minPerProject, maxPerProject);
 	result.forEach(contributor => {
 		contributor['project'] = contributor['software'];
 		delete contributor['software'];
@@ -1060,11 +1062,11 @@ await Promise.all([mentionsPromise, keywordPromise, researchDomainsPromise]).the
 let idsSoftware, idsFakeSoftware, idsRealSoftware, idsProjects, idsOrganisations, idsCommunities;
 const softwarePromise = postToBackend('/software', generateSoftware())
 	.then(resp => resp.json())
-	.then(async swArray => {
+	.then(swArray => {
 		idsSoftware = swArray.map(sw => sw['id']);
 		idsFakeSoftware = swArray.filter(sw => sw['brand_name'].startsWith('Software')).map(sw => sw['id']);
 		idsRealSoftware = swArray.filter(sw => sw['brand_name'].startsWith('Real software')).map(sw => sw['id']);
-		postToBackend('/contributor', await generateContributors(idsSoftware, peopleWithOrcid));
+		postToBackend('/contributor', generateContributors(idsSoftware, peopleWithOrcid));
 		postToBackend('/testimonial', generateTestimonials(idsSoftware));
 		postToBackend('/repository_url', generateRepositoryUrls(idsSoftware));
 		postToBackend('/package_manager', generatePackageManagers(idsRealSoftware));
@@ -1076,9 +1078,9 @@ const softwarePromise = postToBackend('/software', generateSoftware())
 	});
 const projectPromise = postToBackend('/project', generateProjects())
 	.then(resp => resp.json())
-	.then(async pjArray => {
+	.then(pjArray => {
 		idsProjects = pjArray.map(sw => sw['id']);
-		postToBackend('/team_member', await generateTeamMembers(idsProjects, peopleWithOrcid));
+		postToBackend('/team_member', generateTeamMembers(idsProjects, peopleWithOrcid));
 		postToBackend('/url_for_project', generateUrlsForProjects(idsProjects));
 		postToBackend('/testimonial_for_project', generateProjectTestimonials(idsProjects));
 		postToBackend('/keyword_for_project', generateKeywordsForEntity(idsProjects, idsKeywords, 'project'));
