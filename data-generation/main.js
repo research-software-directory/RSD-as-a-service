@@ -58,16 +58,16 @@ function generateMentions(amountExtra = 1000) {
 			doi: doi,
 			url: 'https://doi.org/' + doi,
 			title: faker.music.songName(),
-			authors: faker.helpers.maybe(() => faker.person.fullName(), 0.8) ?? null,
-			publisher: faker.helpers.maybe(() => faker.company.name(), 0.8) ?? null,
+			authors: faker.helpers.maybe(() => faker.person.fullName(), {probability: 0.8}) ?? null,
+			publisher: faker.helpers.maybe(() => faker.company.name(), {probability: 0.8}) ?? null,
 			publication_year: faker.number.int({max: 2026, min: 2000}),
-			journal: faker.helpers.maybe(() => faker.company.name(), 0.8) ?? null,
-			page: faker.helpers.maybe(() => faker.number.int({max: 301, min: 0}), 0.1) ?? null,
+			journal: faker.helpers.maybe(() => faker.company.name(), {probability: 0.8}) ?? null,
+			page: faker.helpers.maybe(() => faker.number.int({max: 301, min: 0}), {probability: 0.1}) ?? null,
 			image_url: null,
 			mention_type: faker.helpers.arrayElement(mentionTypes),
 			source: 'faker',
-			version: faker.helpers.maybe(() => faker.system.semver(), 0.8) ?? null,
-			note: faker.helpers.maybe(() => faker.company.catchPhrase(), 0.3) ?? null,
+			version: faker.helpers.maybe(() => faker.system.semver(), {probability: 0.8}) ?? null,
+			note: faker.helpers.maybe(() => faker.company.catchPhrase(), {probability: 0.3}) ?? null,
 		});
 	}
 
@@ -76,23 +76,23 @@ function generateMentions(amountExtra = 1000) {
 			doi: null,
 			url: faker.internet.url(),
 			title: faker.music.songName(),
-			authors: faker.helpers.maybe(() => faker.person.fullName(), 0.8) ?? null,
-			publisher: faker.helpers.maybe(() => faker.company.name(), 0.8) ?? null,
+			authors: faker.helpers.maybe(() => faker.person.fullName(), {probability: 0.8}) ?? null,
+			publisher: faker.helpers.maybe(() => faker.company.name(), {probability: 0.8}) ?? null,
 			publication_year: faker.number.int({max: 2026, min: 2000}),
-			journal: faker.helpers.maybe(() => faker.company.name(), 0.8) ?? null,
-			page: faker.helpers.maybe(() => faker.number.int({max: 301, min: 0}), 0.1) ?? null,
+			journal: faker.helpers.maybe(() => faker.company.name(), {probability: 0.8}) ?? null,
+			page: faker.helpers.maybe(() => faker.number.int({max: 301, min: 0}), {probability: 0.1}) ?? null,
 			image_url: null,
 			mention_type: faker.helpers.arrayElement(mentionTypes),
 			source: 'faker',
-			version: faker.helpers.maybe(() => faker.system.semver(), 0.8) ?? null,
-			note: faker.helpers.maybe(() => faker.company.catchPhrase(), 0.3) ?? null,
+			version: faker.helpers.maybe(() => faker.system.semver(), {probability: 0.8}) ?? null,
+			note: faker.helpers.maybe(() => faker.company.catchPhrase(), {probability: 0.3}) ?? null,
 		});
 	}
 
 	return result;
 }
 
-function generateSoftware(amount = 1000) {
+function generateSoftware(localSoftwareLogoIds, amount = 1000) {
 	// real software has a real concept DOI
 	const amountRealSoftware = Math.min(conceptDois.length, amount);
 	const brandNames = [];
@@ -220,7 +220,7 @@ function generatePackageManagers(softwareIds) {
 	const result = [];
 
 	for (let index = 0; index < softwareIds.length; index++) {
-		// first assign each package manager entry to one software, then randomly assing package manager entries to the remaining ids
+		// first assign each package manager entry to one software, then randomly adding package manager entries to the remaining IDs
 		const packageManagerLink =
 			index < packageManagerLinks.length
 				? packageManagerLinks[index]
@@ -236,7 +236,7 @@ function generatePackageManagers(softwareIds) {
 	return result;
 }
 
-function generateLincensesForSoftware(ids) {
+function generateLicensesForSoftware(ids) {
 	const licenses = [
 		{
 			license: 'Apache-2.0',
@@ -309,11 +309,10 @@ function generateKeywordsForEntity(idsEntity, idsKeyword, nameEntity) {
 	return result;
 }
 
-const categoriesPerCommunity = new Map();
-const categoriesPerOrganisation = new Map();
-const globalCategories = [];
-
 async function generateCategories(idsCommunities, idsOrganisations, maxDepth = 3) {
+	const categoriesPerCommunity = new Map();
+	const categoriesPerOrganisation = new Map();
+	const globalCategories = [];
 	const promises = [];
 
 	for (const commId of idsCommunities) {
@@ -332,7 +331,8 @@ async function generateCategories(idsCommunities, idsOrganisations, maxDepth = 3
 	}
 	promises.push(generateAndSaveCategoriesForEntity(null, null, maxDepth).then(ids => globalCategories.push(...ids)));
 
-	return await Promise.all(promises);
+	await Promise.all(promises);
+	return {categoriesPerCommunity, categoriesPerOrganisation, globalCategories};
 }
 
 async function generateAndSaveCategoriesForEntity(idCommunity, idOrganisation, maxDepth) {
@@ -465,7 +465,7 @@ function generateSoftwareHighlights(ids) {
 	return result;
 }
 
-function generateProjects(amount = 1000) {
+function generateProjects(localImageIds, amount = 1000) {
 	const result = [];
 
 	const projectStatuses = ['finished', 'running', 'starting'];
@@ -543,7 +543,7 @@ function generatePeopleWithOrcids(orcids, imageIds) {
 	return result;
 }
 
-function generateContributors(softwareIds, peopleWithOrcids, minPerSoftware = 0, maxPerSoftware = 15) {
+function generateContributors(softwareIds, peopleWithOrcids, localImageIds, minPerSoftware = 0, maxPerSoftware = 15) {
 	const result = [];
 
 	for (const softwareId of softwareIds) {
@@ -571,9 +571,9 @@ function generateContributors(softwareIds, peopleWithOrcids, minPerSoftware = 0,
 			});
 		}
 
-		const randomPeopleWithOrcdid = faker.helpers.arrayElements(peopleWithOrcids, amountWithOrcid);
+		const randomPeopleWithOrcid = faker.helpers.arrayElements(peopleWithOrcids, amountWithOrcid);
 
-		for (const personWithOrcid of randomPeopleWithOrcdid) {
+		for (const personWithOrcid of randomPeopleWithOrcid) {
 			result.push({
 				...personWithOrcid,
 				software: softwareId,
@@ -616,7 +616,7 @@ function generateUrlsForProjects(ids) {
 	return result;
 }
 
-function generateOrganisations(amount = 500) {
+function generateOrganisations(localOrganisationLogoIds, amount = 500) {
 	const rorIds = [
 		'https://ror.org/000k1q888',
 		'https://ror.org/006hf6230',
@@ -698,7 +698,7 @@ function generateOrganisations(amount = 500) {
 	return result;
 }
 
-function generateCommunities(amount = 50) {
+function generateCommunities(localOrganisationLogoIds, amount = 50) {
 	const result = [];
 
 	for (let index = 0; index < amount; index++) {
@@ -713,8 +713,9 @@ function generateCommunities(amount = 50) {
 			short_description: faker.helpers.maybe(() => faker.lorem.paragraphs(1, '\n\n'), {probability: 0.8}) ?? null,
 			description: faker.helpers.maybe(() => faker.lorem.paragraphs(1, '\n\n'), {probability: 0.8}) ?? null,
 			logo_id:
-				faker.helpers.maybe(() => localOrganisationLogoIds[index % localImageIds.length], {probability: 0.8}) ??
-				null,
+				faker.helpers.maybe(() => localOrganisationLogoIds[index % localOrganisationLogoIds.length], {
+					probability: 0.8,
+				}) ?? null,
 		});
 	}
 
@@ -905,7 +906,7 @@ async function postToBackend(endpoint, body) {
 	});
 	if (!response.ok) {
 		console.warn(
-			'Warning: post request to ' +
+			'Warning: POST request to ' +
 				endpoint +
 				' had status code ' +
 				response.status +
@@ -920,7 +921,7 @@ async function getFromBackend(endpoint) {
 	const response = await fetch(backendUrl + endpoint, {headers: headers});
 	if (!response.ok) {
 		console.warn(
-			'Warning: post request to ' +
+			'Warning: GET request to ' +
 				endpoint +
 				' had status code ' +
 				response.status +
@@ -947,8 +948,7 @@ async function getLocalImageIds(fileNames) {
 
 	const resp = await postToBackend('/image?select=id', imagesAsBase64);
 	const idsAsObjects = await resp.json();
-	const ids = idsAsObjects.map(idAsObject => idAsObject.id);
-	return ids;
+	return idsAsObjects.map(idAsObject => idAsObject.id);
 }
 
 function mimeTypeFromFileName(fileName) {
@@ -1032,117 +1032,229 @@ function generateLoginForAccount(accountIds, orcids) {
 }
 
 // start of running code, main
+const globalPromises = [];
 const orcids = generateOrcids();
-const localImageIds = await getLocalImageIds(images);
-const peopleWithOrcid = generatePeopleWithOrcids(orcids, localImageIds);
 
-await postAccountsToBackend(100)
+const imageIdsPromise = getLocalImageIds(images).then(imageIds => {
+	console.log('images done');
+	return imageIds;
+});
+globalPromises.push(imageIdsPromise);
+
+const peopleWithOrcidsPromise = imageIdsPromise.then(imageIds => generatePeopleWithOrcids(orcids, imageIds));
+globalPromises.push(peopleWithOrcidsPromise);
+
+const localOrganisationLogoIdsPromise = getLocalImageIds(organisationLogos).then(logoIds => {
+	console.log('organisation images done');
+	return logoIds;
+});
+globalPromises.push(localOrganisationLogoIdsPromise);
+
+const localSoftwareLogoIdsPromise = getLocalImageIds(softwareLogos).then(logoIds => {
+	console.log('software logos done');
+	return logoIds;
+});
+globalPromises.push(localSoftwareLogoIdsPromise);
+
+const accountsPromise = postAccountsToBackend(100)
 	.then(() => getFromBackend('/account'))
 	.then(res => res.json())
 	.then(jsonAccounts => jsonAccounts.map(a => a.id))
 	.then(async accountIds => postToBackend('/login_for_account', generateLoginForAccount(accountIds, orcids)))
-	.then(() => console.log('accounts, login_for_accounts done'));
+	.then(accountIds => {
+		console.log('accounts, login_for_accounts done');
+		return accountIds;
+	});
+globalPromises.push(accountsPromise);
 
-const localOrganisationLogoIds = await getLocalImageIds(organisationLogos);
-const localSoftwareLogoIds = await getLocalImageIds(softwareLogos);
-
-let idsMentions, idsKeywords, idsResearchDomains;
 const mentionsPromise = postToBackend('/mention', generateMentions())
 	.then(() => getFromBackend('/mention?select=id'))
 	.then(res => res.json())
-	.then(jsonMentions => (idsMentions = jsonMentions.map(element => element.id)));
+	.then(jsonMentions => jsonMentions.map(element => element.id))
+	.then(mentionIds => {
+		console.log('mentions done');
+		return mentionIds;
+	});
+globalPromises.push(mentionsPromise);
+
 const keywordPromise = getFromBackend('/keyword?select=id')
 	.then(res => res.json())
-	.then(jsonKeywords => (idsKeywords = jsonKeywords.map(element => element.id)));
+	.then(jsonKeywords => jsonKeywords.map(element => element.id))
+	.then(keywordIds => {
+		console.log('keywords done');
+		return keywordIds;
+	});
+globalPromises.push(keywordPromise);
+
 const researchDomainsPromise = getFromBackend('/research_domain?select=id')
 	.then(res => res.json())
-	.then(jsonResearchDomains => (idsResearchDomains = jsonResearchDomains.map(element => element.id)));
+	.then(jsonResearchDomains => jsonResearchDomains.map(element => element.id))
+	.then(researchDomainIds => {
+		console.log('research domains done');
+		return researchDomainIds;
+	});
+globalPromises.push(researchDomainsPromise);
 
-await Promise.all([mentionsPromise, keywordPromise, researchDomainsPromise]).then(() =>
-	console.log('mentions, keywords, research domains done'),
-);
-
-let idsSoftware, idsFakeSoftware, idsRealSoftware, idsProjects, idsOrganisations, idsCommunities;
-const softwarePromise = postToBackend('/software', generateSoftware())
+const softwarePromise = localSoftwareLogoIdsPromise
+	.then(logoIds => postToBackend('/software', generateSoftware(logoIds)))
 	.then(resp => resp.json())
 	.then(swArray => {
-		idsSoftware = swArray.map(sw => sw['id']);
-		idsFakeSoftware = swArray.filter(sw => sw['brand_name'].startsWith('Software')).map(sw => sw['id']);
-		idsRealSoftware = swArray.filter(sw => sw['brand_name'].startsWith('Real software')).map(sw => sw['id']);
-		postToBackend('/contributor', generateContributors(idsSoftware, peopleWithOrcid));
-		postToBackend('/testimonial', generateTestimonials(idsSoftware));
-		postToBackend('/repository_url', generateRepositoryUrls(idsSoftware));
-		postToBackend('/package_manager', generatePackageManagers(idsRealSoftware));
-		postToBackend('/license_for_software', generateLincensesForSoftware(idsSoftware));
-		postToBackend('/keyword_for_software', generateKeywordsForEntity(idsSoftware, idsKeywords, 'software'));
-		postToBackend('/mention_for_software', generateMentionsForEntity(idsSoftware, idsMentions, 'software'));
-		postToBackend('/software_for_software', generateSoftwareForSoftware(idsSoftware));
-		postToBackend('/software_highlight', generateSoftwareHighlights(idsSoftware.slice(0, 10)));
+		const idsSoftware = swArray.map(sw => sw['id']);
+		const idsFakeSoftware = swArray.filter(sw => sw['brand_name'].startsWith('Software')).map(sw => sw['id']);
+		const idsRealSoftware = swArray.filter(sw => sw['brand_name'].startsWith('Real software')).map(sw => sw['id']);
+		console.log('software done');
+		return {idsSoftware, idsFakeSoftware, idsRealSoftware};
 	});
-const projectPromise = postToBackend('/project', generateProjects())
+globalPromises.push(softwarePromise);
+
+const relatedSoftwareItemsPromise = Promise.all([
+	softwarePromise,
+	peopleWithOrcidsPromise,
+	imageIdsPromise,
+	keywordPromise,
+	mentionsPromise,
+]).then(async ([{idsSoftware, idsRealSoftware}, peopleWithOrcid, imageIds, keywordIds, mentionIds]) => {
+	const promises = [
+		postToBackend('/contributor', generateContributors(idsSoftware, peopleWithOrcid, imageIds)),
+		postToBackend('/testimonial', generateTestimonials(idsSoftware)),
+		postToBackend('/repository_url', generateRepositoryUrls(idsSoftware)),
+		postToBackend('/package_manager', generatePackageManagers(idsRealSoftware)),
+		postToBackend('/license_for_software', generateLicensesForSoftware(idsSoftware)),
+		postToBackend('/keyword_for_software', generateKeywordsForEntity(idsSoftware, keywordIds, 'software')),
+		postToBackend('/mention_for_software', generateMentionsForEntity(idsSoftware, mentionIds, 'software')),
+		postToBackend('/software_for_software', generateSoftwareForSoftware(idsSoftware)),
+		postToBackend('/software_highlight', generateSoftwareHighlights(idsSoftware.slice(0, 10))),
+	];
+	await Promise.all(promises);
+	console.log('related items for software done');
+});
+globalPromises.push(relatedSoftwareItemsPromise);
+
+const projectPromise = imageIdsPromise
+	.then(imageIds => postToBackend('/project', generateProjects(imageIds)))
 	.then(resp => resp.json())
 	.then(pjArray => {
-		idsProjects = pjArray.map(sw => sw['id']);
-		postToBackend('/team_member', generateTeamMembers(idsProjects, peopleWithOrcid));
-		postToBackend('/url_for_project', generateUrlsForProjects(idsProjects));
-		postToBackend('/testimonial_for_project', generateProjectTestimonials(idsProjects));
-		postToBackend('/keyword_for_project', generateKeywordsForEntity(idsProjects, idsKeywords, 'project'));
-		postToBackend('/output_for_project', generateMentionsForEntity(idsProjects, idsMentions, 'project'));
-		postToBackend('/impact_for_project', generateMentionsForEntity(idsProjects, idsMentions, 'project'));
+		const projectIds = pjArray.map(sw => sw['id']);
+		console.log('projects done');
+		return projectIds;
+	});
+globalPromises.push(projectPromise);
+
+const relatedProjectItems = Promise.all([
+	projectPromise,
+	keywordPromise,
+	mentionsPromise,
+	peopleWithOrcidsPromise,
+	researchDomainsPromise,
+]).then(async ([projectIds, idsKeywords, idsMentions, peopleWithOrcid, idsResearchDomains]) => {
+	const promises = [
+		postToBackend('/team_member', generateTeamMembers(projectIds, peopleWithOrcid)),
+		postToBackend('/url_for_project', generateUrlsForProjects(projectIds)),
+		postToBackend('/testimonial_for_project', generateProjectTestimonials(projectIds)),
+		postToBackend('/keyword_for_project', generateKeywordsForEntity(projectIds, idsKeywords, 'project')),
+		postToBackend('/output_for_project', generateMentionsForEntity(projectIds, idsMentions, 'project')),
+		postToBackend('/impact_for_project', generateMentionsForEntity(projectIds, idsMentions, 'project')),
 		postToBackend(
 			'/research_domain_for_project',
-			generateResearchDomainsForProjects(idsProjects, idsResearchDomains),
-		);
-		postToBackend('/project_for_project', generateSoftwareForSoftware(idsProjects));
-	});
-const organisationPromise = postToBackend('/organisation', generateOrganisations())
-	.then(resp => resp.json())
-	.then(async orgArray => {
-		idsOrganisations = orgArray.map(org => org['id']);
-	});
-
-const communityPromise = postToBackend('/community', generateCommunities())
-	.then(resp => resp.json())
-	.then(async commArray => {
-		idsCommunities = commArray.map(comm => comm['id']);
-		postToBackend('/keyword_for_community', generateKeywordsForEntity(idsCommunities, idsKeywords, 'community'));
-		await organisationPromise;
-		await generateCategories(idsCommunities, idsOrganisations);
-	});
-
-await Promise.all([communityPromise, softwarePromise]).then(() => {
-	const globalCategoriesForSoftware = generateRelationsForDifferingEntities(
-		idsSoftware,
-		globalCategories.map(category => category.id),
-		'software_id',
-		'category_id',
-	);
-	postToBackend('/category_for_software', globalCategoriesForSoftware);
+			generateResearchDomainsForProjects(projectIds, idsResearchDomains),
+		),
+		postToBackend('/project_for_project', generateSoftwareForSoftware(projectIds)),
+	];
+	await Promise.all(promises);
+	console.log('related items for projects done');
 });
-await postToBackend('/meta_pages', generateMetaPages()).then(() => console.log('meta pages done'));
-await postToBackend('/news?select=id', generateNews())
-	.then(() => getFromBackend('/news'))
-	.then(res => res.json())
-	.then(jsonNewsIds => jsonNewsIds.map(news => news.id))
-	.then(newsIds => postToBackend('/image_for_news', generateImagesForNews(newsIds, localImageIds)))
-	.then(() => console.log('news done'));
+globalPromises.push(relatedProjectItems);
 
-await Promise.all([softwarePromise, projectPromise, organisationPromise, communityPromise]).then(() =>
-	console.log('sw, pj, org, comm done'),
-);
+const organisationPromise = localOrganisationLogoIdsPromise
+	.then(orgLogoIds => postToBackend('/organisation', generateOrganisations(orgLogoIds)))
+	.then(resp => resp.json())
+	.then(orgArray => {
+		const orgIds = orgArray.map(org => org['id']);
+		console.log('organisations done');
+		return orgIds;
+	});
+globalPromises.push(organisationPromise);
 
-await postToBackend(
-	'/software_for_project',
-	generateRelationsForDifferingEntities(idsSoftware, idsProjects, 'software', 'project'),
-).then(() => console.log('sw-pj done'));
-const softwareForOrganisation = generateRelationsForDifferingEntities(
-	idsSoftware,
-	idsOrganisations,
-	'software',
-	'organisation',
+const communityPromise = localOrganisationLogoIdsPromise.then(orgLogoIds =>
+	postToBackend('/community', generateCommunities(orgLogoIds))
+		.then(resp => resp.json())
+		.then(async commArray => {
+			const communityIds = commArray.map(comm => comm['id']);
+			console.log('communities done');
+			return communityIds;
+		}),
 );
-await postToBackend('/software_for_organisation', softwareForOrganisation)
-	.then(async () => {
+globalPromises.push(communityPromise);
+
+const communityKeywordPromise = Promise.all([communityPromise, keywordPromise]).then(
+	async ([communityIds, keywordIds]) => {
+		await postToBackend('/keyword_for_community', generateKeywordsForEntity(communityIds, keywordIds, 'community'));
+		console.log('keywords for communities done');
+	},
+);
+globalPromises.push(communityKeywordPromise);
+
+const categoryPromise = Promise.all([communityPromise, organisationPromise]).then(
+	([idsCommunities, idsOrganisations]) => {
+		console.log('categories done');
+		return generateCategories(idsCommunities, idsOrganisations);
+	},
+);
+globalPromises.push(categoryPromise);
+
+const globalCategoryPromise = Promise.all([softwarePromise, categoryPromise])
+	.then(([{idsSoftware}, {globalCategories}]) => {
+		const globalCategoriesForSoftware = generateRelationsForDifferingEntities(
+			idsSoftware,
+			globalCategories.map(category => category.id),
+			'software_id',
+			'category_id',
+		);
+		postToBackend('/category_for_software', globalCategoriesForSoftware);
+	})
+	.then(() => 'global categories for software done');
+globalPromises.push(globalCategoryPromise);
+
+const metaPagesPromise = postToBackend('/meta_pages', generateMetaPages()).then(() => console.log('meta pages done'));
+globalPromises.push(metaPagesPromise);
+
+const newsPromise = imageIdsPromise.then(imageIds =>
+	postToBackend('/news?select=id', generateNews())
+		.then(() => getFromBackend('/news'))
+		.then(res => res.json())
+		.then(jsonNewsIds => jsonNewsIds.map(news => news.id))
+		.then(newsIds => postToBackend('/image_for_news', generateImagesForNews(newsIds, imageIds)))
+		.then(() => console.log('news done')),
+);
+globalPromises.push(newsPromise);
+
+const softwareProjectPromise = Promise.all([softwarePromise, projectPromise])
+	.then(([{idsSoftware}, idsProjects]) =>
+		postToBackend(
+			'/software_for_project',
+			generateRelationsForDifferingEntities(idsSoftware, idsProjects, 'software', 'project'),
+		),
+	)
+	.then(() => console.log('sw-pj done'));
+globalPromises.push(softwareProjectPromise);
+
+const softwareForOrganisationPromise = Promise.all([softwarePromise, organisationPromise]).then(
+	async ([{idsSoftware}, idsOrganisations]) => {
+		const softwareForOrganisation = generateRelationsForDifferingEntities(
+			idsSoftware,
+			idsOrganisations,
+			'software',
+			'organisation',
+		);
+		await postToBackend('/software_for_organisation', softwareForOrganisation);
+		console.log('sw-org done');
+		return softwareForOrganisation;
+	},
+);
+globalPromises.push(softwareForOrganisationPromise);
+
+const organisationCategoriesForSoftwarePromise = Promise.all([softwareForOrganisationPromise, categoryPromise]).then(
+	async ([softwareForOrganisation, {categoriesPerOrganisation}]) => {
 		const allCategoriesForSoftware = [];
 		for (const entry of softwareForOrganisation) {
 			const orgId = entry.organisation;
@@ -1158,11 +1270,23 @@ await postToBackend('/software_for_organisation', softwareForOrganisation)
 			allCategoriesForSoftware.push(...relations);
 		}
 		await postToBackend('/category_for_software', allCategoriesForSoftware);
-	})
-	.then(() => console.log('sw-org done'));
-const projectForOrganisation = generateProjectForOrganisation(idsProjects, idsOrganisations);
-await postToBackend('/project_for_organisation', generateProjectForOrganisation(idsProjects, idsOrganisations))
-	.then(async () => {
+		console.log('organisation categories for software done');
+	},
+);
+globalPromises.push(organisationCategoriesForSoftwarePromise);
+
+const projectForOrganisationPromise = Promise.all([projectPromise, organisationPromise]).then(
+	async ([idsProjects, idsOrganisations]) => {
+		const projectsForOrganisations = generateProjectForOrganisation(idsProjects, idsOrganisations);
+		await postToBackend('/project_for_organisation', projectsForOrganisations);
+		console.log('pj-org done');
+		return projectsForOrganisations;
+	},
+);
+globalPromises.push(projectForOrganisationPromise);
+
+const organisationCategoriesForProjectsPromise = Promise.all([projectForOrganisationPromise, categoryPromise]).then(
+	async ([projectForOrganisation, {categoriesPerOrganisation}]) => {
 		const allCategoriesForProjects = [];
 		for (const entry of projectForOrganisation) {
 			const orgId = entry.organisation;
@@ -1178,11 +1302,23 @@ await postToBackend('/project_for_organisation', generateProjectForOrganisation(
 			allCategoriesForProjects.push(...relations);
 		}
 		await postToBackend('/category_for_project', allCategoriesForProjects);
-	})
-	.then(() => console.log('pj-org done'));
-const softwareForCommunities = generateSoftwareForCommunity(idsSoftware, idsCommunities);
-await postToBackend('/software_for_community', softwareForCommunities)
-	.then(async () => {
+		console.log('organisation categories for projects done');
+	},
+);
+globalPromises.push(organisationCategoriesForProjectsPromise);
+
+const softwareForCommunityPromise = Promise.all([softwarePromise, communityPromise]).then(
+	async ([{idsSoftware}, idsCommunities]) => {
+		const softwareForCommunities = generateSoftwareForCommunity(idsSoftware, idsCommunities);
+		await postToBackend('/software_for_community', softwareForCommunities);
+		console.log('sw-comm done');
+		return softwareForCommunities;
+	},
+);
+globalPromises.push(softwareForCommunityPromise);
+
+const communityCategoriesForSoftwarePromise = Promise.all([softwareForCommunityPromise, categoryPromise]).then(
+	async ([softwareForCommunities, {categoriesPerCommunity}]) => {
 		const allCategoriesForSoftware = [];
 		for (const entry of softwareForCommunities) {
 			const commId = entry.community;
@@ -1198,20 +1334,31 @@ await postToBackend('/software_for_community', softwareForCommunities)
 			allCategoriesForSoftware.push(...relations);
 		}
 		await postToBackend('/category_for_software', allCategoriesForSoftware);
-	})
-	.then(() => console.log('sw-comm done'));
-await postToBackend(
-	'/release',
-	idsSoftware.map(id => ({software: id})),
-)
-	.then(() =>
+		console.log('community categories for software done');
+	},
+);
+globalPromises.push(communityCategoriesForSoftwarePromise);
+
+const releasePromise = softwarePromise
+	.then(({idsSoftware}) =>
+		postToBackend(
+			'/release',
+			idsSoftware.map(id => ({software: id})),
+		),
+	)
+	.then(() => console.log('releases done'));
+globalPromises.push(releasePromise);
+
+const releaseVersionPromise = Promise.all([releasePromise, softwarePromise, mentionsPromise])
+	.then(([_, {idsFakeSoftware}, idsMentions]) =>
 		postToBackend(
 			'/release_version',
 			generateRelationsForDifferingEntities(idsFakeSoftware, idsMentions, 'release_id', 'mention_id', 100),
 		),
 	)
-	.then(() => console.log('releases done'));
+	.then(() => console.log('release versions done'));
+globalPromises.push(releaseVersionPromise);
 
-console.log('Done');
+await Promise.all(globalPromises).then(() => console.log('Done'));
 // This is unfortunately needed, because when using docker compose, the node process might hang for a long time
 process.exit(0);
