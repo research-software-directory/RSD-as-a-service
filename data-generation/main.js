@@ -340,8 +340,10 @@ async function generateAndSaveCategoriesForEntity(idCommunity, idOrganisation, m
 		let parentIdsAndFlags = [
 			{
 				id: null,
-				forSoftware: faker.datatype.boolean(),
-				forProjects: idCommunity ? false : faker.datatype.boolean(),
+				// global and community categories are always for software
+				forSoftware: idOrganisation ? faker.datatype.boolean() : true,
+				// only organisation categories can be for projects
+				forProjects: idOrganisation ? faker.datatype.boolean() : false,
 			},
 		];
 		const idsAndFlags = [];
@@ -352,6 +354,7 @@ async function generateAndSaveCategoriesForEntity(idCommunity, idOrganisation, m
 				if (idCommunity === null && idOrganisation === null && level === 1) {
 					toGenerateCount += 1;
 				}
+
 				for (let i = 0; i < toGenerateCount; i++) {
 					let name = `Global, level ${level}, item ${i + 1}${parent.id ? `, parent${parent.id.substring(0, 5)}` : ''}`;
 					let shortName = `G-${level}-${i + 1}${parent.id ? `, P-${parent.id.substring(0, 5)}` : ''}`;
@@ -1107,6 +1110,15 @@ const communityPromise = postToBackend('/community', generateCommunities())
 		await generateCategories(idsCommunities, idsOrganisations);
 	});
 
+await Promise.all([communityPromise, softwarePromise]).then(() => {
+	const globalCategoriesForSoftware = generateRelationsForDifferingEntities(
+		idsSoftware,
+		globalCategories.map(category => category.id),
+		'software_id',
+		'category_id',
+	);
+	postToBackend('/category_for_software', globalCategoriesForSoftware);
+});
 await postToBackend('/meta_pages', generateMetaPages()).then(() => console.log('meta pages done'));
 await postToBackend('/news?select=id', generateNews())
 	.then(() => getFromBackend('/news'))
@@ -1145,7 +1157,6 @@ await postToBackend('/software_for_organisation', softwareForOrganisation)
 			);
 			allCategoriesForSoftware.push(...relations);
 		}
-		// console.log(allCategoriesForSoftware);
 		await postToBackend('/category_for_software', allCategoriesForSoftware);
 	})
 	.then(() => console.log('sw-org done'));
@@ -1169,9 +1180,26 @@ await postToBackend('/project_for_organisation', generateProjectForOrganisation(
 		await postToBackend('/category_for_project', allCategoriesForProjects);
 	})
 	.then(() => console.log('pj-org done'));
-await postToBackend('/software_for_community', generateSoftwareForCommunity(idsSoftware, idsCommunities)).then(() =>
-	console.log('sw-comm done'),
-);
+const softwareForCommunities = generateSoftwareForCommunity(idsSoftware, idsCommunities);
+await postToBackend('/software_for_community', softwareForCommunities)
+	.then(async () => {
+		const allCategoriesForSoftware = [];
+		for (const entry of softwareForCommunities) {
+			const commId = entry.community;
+			const relations = generateRelationsForDifferingEntities(
+				[entry.software],
+				categoriesPerCommunity
+					.get(commId)
+					.filter(data => data.forSoftware)
+					.map(data => data.id),
+				'software_id',
+				'category_id',
+			);
+			allCategoriesForSoftware.push(...relations);
+		}
+		await postToBackend('/category_for_software', allCategoriesForSoftware);
+	})
+	.then(() => console.log('sw-comm done'));
 await postToBackend(
 	'/release',
 	idsSoftware.map(id => ({software: id})),
