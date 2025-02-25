@@ -8,6 +8,7 @@ import {useCategoryTree} from '~/components/category/useCategoryTree'
 import SidebarSection from '~/components/layout/SidebarSection'
 import SidebarTitle from '~/components/layout/SidebarTitle'
 import {CategoryChipFilter} from '~/components/category/CategoryChipFilter'
+import CategoryStatus from '../category/CategoryStatus'
 
 export default function ProjectCategories({categories}:{categories:CategoryPath[]}) {
   const tree = useCategoryTree(categories)
@@ -26,7 +27,11 @@ export default function ProjectCategories({categories}:{categories:CategoryPath[
     if (children.length > 0){
       return (
         <SidebarSection key={category.id}>
-          <SidebarTitle title={category.name}>{category.short_name}</SidebarTitle>
+          <SidebarTitle title={category.name}>
+            <span className="mr-2">{category.short_name}</span>
+            {/* show status if not not approved/global/other */}
+            <CategoryStatus category={category} />
+          </SidebarTitle>
           <div className="flex flex-wrap gap-2">
             <CategoryChipFilter nodes={children} />
           </div>

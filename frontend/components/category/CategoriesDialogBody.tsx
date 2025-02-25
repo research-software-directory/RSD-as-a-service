@@ -32,8 +32,8 @@ export default function CategoriesDialogBody({
   function isSelected(node: TreeNode<CategoryEntry>) {
     const val = node.getValue()
 
-    // directly selected
-    if (selectedCategoryIds.has(val.id)) return true
+    // directly selected child item
+    if (selectedCategoryIds.has(val.id) && val.parent!==null) return true
 
     // any of children selected?
     const found = node.children().find(item=>{
@@ -51,6 +51,15 @@ export default function CategoriesDialogBody({
         },0)
       }
       return true
+    }
+    // if top level item is in selected list BUT no children selected
+    // WE NEED TO REMOVE TOP LEVEL ITEM because it is not selectable
+    if (val.parent===null && selectedCategoryIds.has(val.id)){
+      selectedCategoryIds.delete(val.id)
+      // update state at the end of cycle to avoid render error
+      setTimeout(()=>{
+        setSelectedCategoryIds(new Set(selectedCategoryIds))
+      },0)
     }
     // none of children selected either
     return false

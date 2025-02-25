@@ -30,6 +30,7 @@ export default function AutosaveSoftwareCategories({softwareId, reorderedCategor
   const [_, setAssociatedCategories] = useState<Set<string>>(associatedCategoryIds)
   const {token} = useSession()
   const selectedNodes: TreeNode<CategoryEntry>[] = []
+
   for (const root of reorderedCategories.all) {
     const rootSelectedSubTree= root.subTreeWhereLeavesSatisfy(value => associatedCategoryIds.has(value.id))
     if (rootSelectedSubTree !== null) {
