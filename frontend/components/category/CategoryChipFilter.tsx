@@ -12,20 +12,19 @@ import {TreeNode} from '~/types/TreeNode'
 import TagChipFilter from '~/components/layout/TagChipFilter'
 import {getCommunitySlug, getOrganisationSlug} from './apiCategories'
 
-function useFilterUrl({category,organisation,community}:{
-  category:string,organisation:string|null,community:string|null,
-}){
+function useFilterUrl(cat:CategoryEntry){
   const [loading, setLoading] = useState(true)
   const [url, setUrl] = useState<string>()
   const router = useRouter()
+  const {short_name,community,organisation,status} = cat
   // extract tab from the pathname
   const tab = router.pathname.split('/')[1]
 
   useEffect(()=>{
-    if (category && tab){
+    if (short_name && tab){
       // GLOBAL category - software overview page
       if(community===null && organisation===null){
-        const url = ssrSoftwareUrl({categories: [category]})
+        const url = ssrSoftwareUrl({categories: [short_name]})
         setUrl(url)
         setLoading(false)
       }
@@ -34,7 +33,7 @@ function useFilterUrl({category,organisation,community}:{
         getOrganisationSlug(organisation).then(rsd_path=>{
           if (rsd_path){
             // build URL for organisation filter
-            const url = `/organisations${buildFilterUrl({categories: [category]},rsd_path)}&tab=${tab}`
+            const url = `/organisations${buildFilterUrl({categories: [short_name]},rsd_path)}&tab=${tab}`
             setUrl(url)
           }
           setLoading(false)
@@ -45,14 +44,21 @@ function useFilterUrl({category,organisation,community}:{
         getCommunitySlug(community).then(slug=>{
           if (slug){
             // build URL for community filter
-            const url = `/communities${buildFilterUrl({categories: [category]},`${slug}/${tab}`)}`
+            let url = `/communities${buildFilterUrl({categories: [short_name]},`${slug}/${tab}`)}`
+            if (status==='pending'){
+              // pending software is on requests tab
+              url = `/communities${buildFilterUrl({categories: [short_name]},`${slug}/requests`)}`
+            }else if (status==='rejected'){
+              url = `/communities${buildFilterUrl({categories: [short_name]},`${slug}/rejected`)}`
+            }
+            // update url
             setUrl(url)
           }
           setLoading(false)
         })
       }
     }
-  },[category,organisation,community,tab])
+  },[short_name,organisation,community,tab,status])
 
   return {
     loading,
@@ -62,11 +68,7 @@ function useFilterUrl({category,organisation,community}:{
 
 function CategoryChipItem({cat}:{cat:CategoryEntry}){
   // construct filter url
-  const {loading,url} = useFilterUrl({
-    category: cat.short_name,
-    organisation: cat.organisation,
-    community: cat.community
-  })
+  const {loading,url} = useFilterUrl(cat)
 
   return (
     <TagChipFilter
