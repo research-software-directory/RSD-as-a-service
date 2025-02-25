@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,7 +12,7 @@ import {getRelatedSoftwareForProject} from '~/utils/getProjects'
 import {addRelatedSoftware, deleteRelatedSoftware} from '~/utils/editProject'
 import {sortOnStrProp} from '~/utils/sortFn'
 import {RelatedSoftwareOfProject, SearchSoftware} from '~/types/SoftwareTypes'
-import {Status} from '~/types/Organisation'
+import {OrganisationStatus} from '~/types/Organisation'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import EditSection from '~/components/layout/EditSection'
@@ -57,7 +57,7 @@ export default function RelatedSoftwareForProject() {
     // debugger
     if (find.length === 0) {
       // default status is set to approved without validation
-      const status:Status = 'approved'
+      const status:OrganisationStatus = 'approved'
       // add selected item to related software
       const resp = await addRelatedSoftware({
         project: project.id,

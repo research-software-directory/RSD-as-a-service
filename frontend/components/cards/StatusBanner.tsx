@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Status} from '~/types/Organisation'
+import {OrganisationStatus} from '~/types/Organisation'
 
 type StatusBannerProps = {
-  status: Status
+  status: OrganisationStatus
   is_featured: boolean
   is_published: boolean
   width?: string
