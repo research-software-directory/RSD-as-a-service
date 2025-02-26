@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,6 +26,8 @@ import java.time.ZonedDateTime;
 public class GitlabScraper implements GitScraper {
 	private final String projectPath;
 	private final String apiUri;
+	private final String commitHistoryScrapedAt;
+	private final CommitsPerWeek existingCommitsPerWeek = new CommitsPerWeek();
 
 	/**
 	 * A GitLab scraper for API version 4.
@@ -36,6 +38,14 @@ public class GitlabScraper implements GitScraper {
 	public GitlabScraper(String gitLabApiUrl, String projectPath) {
 		this.projectPath = projectPath.endsWith(".git") ? projectPath.substring(0, projectPath.length() - 4) : projectPath;
 		this.apiUri = gitLabApiUrl + "/v4";
+		this.commitHistoryScrapedAt = null;
+	}
+
+	public GitlabScraper(String gitLabApiUrl, String projectPath, String commitHistoryScrapedAt, CommitsPerWeek existingCommitsPerWeek) {
+		this.projectPath = projectPath.endsWith(".git") ? projectPath.substring(0, projectPath.length() - 4) : projectPath;
+		this.apiUri = gitLabApiUrl + "/v4";
+		this.commitHistoryScrapedAt = commitHistoryScrapedAt;
+		if (existingCommitsPerWeek != null) this.existingCommitsPerWeek.setData(existingCommitsPerWeek.getData());
 	}
 
 	/**
@@ -81,12 +91,17 @@ public class GitlabScraper implements GitScraper {
 	@Override
 	public CommitsPerWeek contributions() throws IOException, InterruptedException, RsdResponseException {
 		CommitsPerWeek commits = new CommitsPerWeek();
+
+		String since="";
+		if (commitHistoryScrapedAt != null) {
+			since = "&since=" + commitHistoryScrapedAt;
+		}
 		String page = "1";
 		boolean done = false;
 		while (!done) {
 			HttpRequest request = HttpRequest.newBuilder().GET()
 				.uri(URI.create(apiUri + "/projects/" + Utils.urlEncode(projectPath)
-					+ "/repository/commits?per_page=100&order=default&page=" + page))
+					+ "/repository/commits?per_page=100&order=default&page=" + page + since))
 				.timeout(Duration.ofSeconds(30))
 				.build();
 			HttpResponse<String> response;
