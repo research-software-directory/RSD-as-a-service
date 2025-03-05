@@ -7,6 +7,9 @@
 
 package nl.esciencecenter.rsd.scraper.ror;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
@@ -18,7 +21,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+
 public class RorScraper {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(RorScraper.class);
 
 	private final RorId rorId;
 
@@ -32,7 +39,11 @@ public class RorScraper {
 	}
 
 	public RorData scrapeData() throws RsdResponseException, IOException, InterruptedException {
+
+		LOGGER.debug("Retrieving ROR: {}", rorId);
 		String json = getFromApi();
+
+		LOGGER.trace("Parsing ROR info: {} -> {}", rorId, json);		
 		return parseData(json);
 	}
 

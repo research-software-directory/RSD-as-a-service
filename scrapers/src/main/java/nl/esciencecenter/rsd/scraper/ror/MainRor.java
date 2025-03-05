@@ -17,20 +17,30 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainRor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainRor.class);
 	private static final int SCRAPING_LIMIT = Config.maxRequestsRor();
 
+	private static final AtomicInteger succes = new AtomicInteger();
+	private static final AtomicInteger failed = new AtomicInteger();
+
 	public static void main(String[] args) {
+
+		Utils.setLogging(args);
+
 		LOGGER.info("Start scraping ROR data.");
 		long t1 = System.currentTimeMillis();
 		scrapeLocationData();
 		long time = System.currentTimeMillis() - t1;
-		LOGGER.info("Done scraping ROR data ({} ms).", time);
+		LOGGER.info("Done scraping ROR data ({} ms, {} success, {} failed).", time, succes.get(), failed.get());
 	}
 
+	/**
+	 * Scrape location data for organizations. 
+	 */
 	private static void scrapeLocationData() {
 		RorPostgrestConnector organisationsInRSD = new RorPostgrestConnector();
 		Collection<OrganisationDatabaseData> organisationsToScrape = organisationsInRSD.organisationsWithoutLocation(SCRAPING_LIMIT);
@@ -48,15 +58,18 @@ public class MainRor {
 					RorData data = rorScraper.scrapeData();
 					OrganisationDatabaseData updatedOrganisationDatabaseData = new OrganisationDatabaseData(organisation.id(), organisation.rorId(), scrapedAt, data);
 					organisationsInRSD.saveLocationData(updatedOrganisationDatabaseData);
+					succes.incrementAndGet();
 				} catch (RsdResponseException | IOException | InterruptedException e) {
 					Utils.saveExceptionInDatabase("ROR location scraper", tableName, organisation.id(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), tableName, columnName, organisation.id().toString(), primaryKeyName, scrapedAt, scrapedAtName);
+					failed.incrementAndGet();
 					if (e instanceof InterruptedException) {
 						Thread.currentThread().interrupt();
 					}
 				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("ROR location scraper", tableName, organisation.id(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", tableName, columnName, organisation.id().toString(), primaryKeyName, scrapedAt, scrapedAtName);
+					failed.incrementAndGet();
 				}
 			});
 			futures[i] = future;

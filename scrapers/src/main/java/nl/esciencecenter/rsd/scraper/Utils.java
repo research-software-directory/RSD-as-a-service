@@ -43,6 +43,33 @@ public class Utils {
 	private Utils() {
 	}
 
+	/** 
+	 * Set the logging level based on the command line arguments of the scraper.
+	 */
+	public static void setLogging(String [] args) {
+
+		if (args == null || args.length == 0) { 
+			return;
+		}
+
+		ch.qos.logback.classic.Level level = ch.qos.logback.classic.Level.INFO;
+
+		for (String arg : args) { 
+
+			switch (arg) { 
+				case "--debug": 
+					level = ch.qos.logback.classic.Level.DEBUG;
+					break;
+				case "--trace": 
+					level = ch.qos.logback.classic.Level.TRACE;
+					break;
+			}
+		}
+
+    	ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+    	root.setLevel(level);
+	}
+
 	/**
 	 * Base64encode a string.
 	 *
@@ -232,12 +259,16 @@ public class Utils {
 	}
 
 	public static void saveExceptionInDatabase(String serviceName, String tableName, UUID referenceId, Exception e) {
+			
 		JsonObject logData = basicData(serviceName, tableName, referenceId, e);
 
+		LOGGER.debug("Saving exception: {}", logData.toString());
+		
 		postAsAdmin(Config.backendBaseUrl() + "/backend_log", logData.toString());
 	}
 
 	public static void saveExceptionInDatabase(String serviceName, String tableName, UUID referenceId, RsdResponseException e) {
+		
 		JsonObject logData = basicData(serviceName, tableName, referenceId, e);
 
 		JsonObject other = new JsonObject();
@@ -247,10 +278,13 @@ public class Utils {
 
 		logData.add("other_data", other);
 
+		LOGGER.debug("Saving exception: {}", logData.toString());
+		
 		postAsAdmin(Config.backendBaseUrl() + "/backend_log", logData.toString());
 	}
 
 	public static void saveExceptionInDatabase(String serviceName, String tableName, UUID referenceId, RsdRateLimitException e) {
+		
 		JsonObject logData = basicData(serviceName, tableName, referenceId, e);
 
 		JsonObject other = new JsonObject();
@@ -260,10 +294,15 @@ public class Utils {
 
 		logData.add("other_data", other);
 
+		LOGGER.debug("Saving exception: {}", logData.toString());
+		
 		postAsAdmin(Config.backendBaseUrl() + "/backend_log", logData.toString());
 	}
 
 	public static void saveErrorMessageInDatabase(String message, String tableName, String columnName, String primaryKey, String primaryKeyName, ZonedDateTime scrapedAt, String scrapedAtName) {
+		
+		LOGGER.debug("Saving error: {} {} {} {} {} {} {}", message, tableName, columnName, primaryKey, primaryKeyName, scrapedAt, scrapedAtName);
+		
 		JsonObject body = new JsonObject();
 		if (columnName != null) {
 			body.addProperty(columnName, message);
