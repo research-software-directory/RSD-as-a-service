@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,6 +16,10 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import ScheduleIcon from '@mui/icons-material/Schedule'
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn'
 import {CodePlatform} from '~/types/SoftwareTypes'
+import IconButton from '@mui/material/IconButton'
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
+import DeleteIcon from '@mui/icons-material/Delete'
+import {deleteServiceDataFromDb} from './apiSoftwareServices'
 
 type ServiceInfoListItemProps={
   readonly title:string
@@ -22,9 +28,16 @@ type ServiceInfoListItemProps={
   readonly url: string|null
   readonly platform: CodePlatform|null
   readonly scraping_disabled_reason: string|null
+  readonly dbprops: string[]
 }
 
-export function ServiceInfoListItem({title,scraped_at,last_error,url,platform,scraping_disabled_reason}:ServiceInfoListItemProps){
+const deleteAction = {
+  'Commit history': 'delete',
+  'Programming languages': 'delete prog',
+  'Repository statistics': 'delete'
+}
+
+export function ServiceInfoListItem({title,scraped_at,last_error,url,platform,scraping_disabled_reason,dbprops}:ServiceInfoListItemProps){
   let status:'error'|'success'|'not_active'|'scheduled'|'not_supported' = 'not_active'
 
   // set service status
@@ -79,6 +92,13 @@ export function ServiceInfoListItem({title,scraped_at,last_error,url,platform,sc
     )
   }
 
+  async function clearServiceData() {
+    dbprops.forEach((dbProp) => {
+      // const resp = await deleteServiceDataFromDb({})
+    })
+
+  }
+
   return (
     <ListItem
       data-testid="software-service-item"
@@ -101,6 +121,17 @@ export function ServiceInfoListItem({title,scraped_at,last_error,url,platform,sc
         primary={title}
         secondary={getStatusMsg()}
       />
+
+      <ListItemSecondaryAction>
+        <IconButton
+          onClick={() => {}}
+          aria-label="delete"
+          size="large"
+        >
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+
     </ListItem>
   )
 }
