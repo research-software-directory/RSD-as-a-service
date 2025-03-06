@@ -5,7 +5,7 @@
 
 import {CategoryEntry} from '~/types/Category'
 
-export default function CategoryStatus({category}:{category:CategoryEntry}){
+export default function CategoryStatus({category}:Readonly<{category:CategoryEntry}>){
   switch(category.status){
     case 'pending':
       return (
