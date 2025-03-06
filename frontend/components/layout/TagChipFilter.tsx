@@ -28,7 +28,7 @@ export default function TagChipFilter({
 
   if (loading) return (
     <Chip
-      title={title ? title : label}
+      title={title ?? label}
       label={label}
       icon={<div><CircularProgress size={16} /></div>}
       sx={{
@@ -46,7 +46,7 @@ export default function TagChipFilter({
   // simple chip without link
   if (!url) return (
     <Chip
-      title={title ? title : label}
+      title={title ?? label}
       label={label}
       sx={{
         maxWidth: '19rem',

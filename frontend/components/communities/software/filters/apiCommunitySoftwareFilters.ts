@@ -121,7 +121,7 @@ export async function comSoftwareLicensesFilter({token,...params}: CommunitySoft
 
 export async function comSoftwareCategoriesFilter({token,...params}: CommunitySoftwareFilterProps) {
   try {
-    const query = 'rpc/com_software_categories_filter?order=category'
+    const query = 'rpc/com_software_categories_filter?order=category_cnt.desc,category'
     const url = `${getBaseUrl()}/${query}`
     const filter = buildCommunitySoftwareFilter(params)
 

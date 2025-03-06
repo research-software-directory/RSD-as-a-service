@@ -29,7 +29,7 @@ function useFilterUrl(cat:CategoryEntry){
         setLoading(false)
       }
       // ORGANISATION category
-      if (organisation!==null){
+      if (organisation){
         getOrganisationSlug(organisation).then(rsd_path=>{
           if (rsd_path){
             // build URL for organisation filter
@@ -38,24 +38,27 @@ function useFilterUrl(cat:CategoryEntry){
           }
           setLoading(false)
         })
-      }
-      // COMMUNITIES category
-      if (community!==null){
+      } else if (community){
+        // COMMUNITIES category
         getCommunitySlug(community).then(slug=>{
           if (slug){
             // build URL for community filter
-            let url = `/communities${buildFilterUrl({categories: [short_name]},`${slug}/${tab}`)}`
+            let view = `${slug}/${tab}`
             if (status==='pending'){
               // pending software is on requests tab
-              url = `/communities${buildFilterUrl({categories: [short_name]},`${slug}/requests`)}`
+              view = `${slug}/requests`
             }else if (status==='rejected'){
-              url = `/communities${buildFilterUrl({categories: [short_name]},`${slug}/rejected`)}`
+              view = `${slug}/rejected`
             }
+            const url = `/communities${buildFilterUrl({categories: [short_name]},view)}`
             // update url
             setUrl(url)
           }
           setLoading(false)
         })
+      }else{
+        // no URL
+        setLoading(false)
       }
     }
   },[short_name,organisation,community,tab,status])
@@ -66,7 +69,7 @@ function useFilterUrl(cat:CategoryEntry){
   }
 }
 
-function CategoryChipItem({cat}:{cat:CategoryEntry}){
+function CategoryChipItem({cat}:Readonly<{cat:CategoryEntry}>){
   // construct filter url
   const {loading,url} = useFilterUrl(cat)
 
