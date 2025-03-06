@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -37,7 +37,7 @@ export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
   // console.log('avatars...', data.avatars)
   // console.groupEnd()
 
-  async function patchAvatar(avatar:string){
+  async function patchAvatar(avatar:string|null){
     // console.log('patchAvatar...', avatar)
     const resp = await patchPerson({
       id: data.id,
@@ -72,7 +72,7 @@ export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
   }
 
   // menu options to change avatar
-  if (data.avatars && data.avatars?.length > 1){
+  if (data.avatars && data.avatars?.length > 0){
     return (
       <>
         <Badge
@@ -107,15 +107,13 @@ export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
           anchorEl={anchorEl}
           onClose={handleClose}
         >
+          {/* LIST avatar options */}
           {data.avatars
             // show all options EXCEPT used one
             .filter(item=>item!==data.avatar_id)
             // render menu options
             .map((item:string)=>{
-              const displayInitials = getDisplayInitials({
-                given_names: data.given_names,
-                family_names: data.family_names
-              })
+
               const imageUrl = getImageUrl(item) ?? ''
               // debugger
               return (
@@ -137,12 +135,32 @@ export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
                 </MenuItem>
               )
             })}
+          {/* option to remove avatar */}
+          {data.avatar_id!==null ?
+            <MenuItem
+              data-testid="remove-avatar-option"
+              key={data.id}
+              onClick={()=>patchAvatar(null)}
+            >
+              <Avatar
+                src=""
+                sx={{
+                  width: '3rem',
+                  height: '3rem',
+                  fontSize: '1rem',
+                }}
+              >
+                {displayInitials}
+              </Avatar>
+            </MenuItem>
+            :null
+          }
         </Menu>
       </>
     )
   }
 
-  // one or NO avatar options
+  // NO avatar options
   return (
     <Badge
       overlap="circular"

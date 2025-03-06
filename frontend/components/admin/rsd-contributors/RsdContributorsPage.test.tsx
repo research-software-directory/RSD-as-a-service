@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -46,7 +46,7 @@ describe('components/admin/rsd-contributors/index.tsx', () => {
     // screen.debug(rows)
   })
 
-  it('shows avatar menu option', async()=>{
+  it('shows avatar menu options', async()=>{
     render(
       <WithAppContext options={{session: testSession}}>
         <RsdContributorsPage />
@@ -58,11 +58,15 @@ describe('components/admin/rsd-contributors/index.tsx', () => {
     // it should have menu options based on mocked data file person_mentions.json
     // const options = await screen.findAllByTestId('avatar-menu-options')
     // screen.debug(options)
-    const optionsBtn = screen.getByTestId('avatar-options')
+    const optionsBtn = screen.getAllByTestId('avatar-options')
     // click on options button
-    fireEvent.click(optionsBtn)
+    fireEvent.click(optionsBtn[0])
+
     // get menu items (it should be 1 option)
     const options = await screen.findAllByTestId('avatar-menu-option')
     expect(options.length).toBeGreaterThanOrEqual(1)
+
+    // it should also have option to remove avatar
+    screen.getByTestId('remove-avatar-option')
   })
 })
