@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,8 +12,9 @@ import Badge from '@mui/material/Badge'
 import IconButton from '@mui/material/IconButton'
 
 import {useSession} from '~/auth'
-import {deleteImage, getImageUrl} from '~/utils/editImage'
+import {getImageUrl} from '~/utils/editImage'
 import {getDisplayInitials} from '~/utils/getDisplayName'
+import useSnackbar from '~/components/snackbar/useSnackbar'
 import {RsdContributor} from './useContributors'
 import {patchPerson} from './apiRsdContributors'
 
@@ -23,6 +24,7 @@ type AvatarOptionsProps={
 
 export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
   const {token} = useSession()
+  const {showErrorMessage} = useSnackbar()
   const [anchorEl, setAnchorEl] = useState(null)
   const menu = Boolean(anchorEl)
   const displayInitials = getDisplayInitials({
@@ -37,7 +39,7 @@ export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
   // console.log('avatars...', data.avatars)
   // console.groupEnd()
 
-  async function patchAvatar(avatar:string){
+  async function patchAvatar(avatar:string|null){
     // console.log('patchAvatar...', avatar)
     const resp = await patchPerson({
       id: data.id,
@@ -47,16 +49,11 @@ export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
       token
     })
     // debugger
-    if (resp.status===200){
-      // try to remove old avatar image
-      if (data.avatar_id){
-        deleteImage({
-          id: data.avatar_id,
-          token
-        })
-      }
+    if (resp.status==200){
       // update image
       data.avatar_id = avatar
+    }else{
+      showErrorMessage(`Failed to update avatar. ${resp?.message ?? ''}`)
     }
     // NOTE! this will refresh state
     handleClose()
@@ -72,7 +69,7 @@ export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
   }
 
   // menu options to change avatar
-  if (data.avatars && data.avatars?.length > 1){
+  if (data.avatars && data.avatars?.length > 0){
     return (
       <>
         <Badge
@@ -107,15 +104,13 @@ export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
           anchorEl={anchorEl}
           onClose={handleClose}
         >
+          {/* LIST avatar options */}
           {data.avatars
             // show all options EXCEPT used one
             .filter(item=>item!==data.avatar_id)
             // render menu options
             .map((item:string)=>{
-              const displayInitials = getDisplayInitials({
-                given_names: data.given_names,
-                family_names: data.family_names
-              })
+
               const imageUrl = getImageUrl(item) ?? ''
               // debugger
               return (
@@ -137,12 +132,32 @@ export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
                 </MenuItem>
               )
             })}
+          {/* option to remove avatar */}
+          {data.avatar_id!==null ?
+            <MenuItem
+              data-testid="remove-avatar-option"
+              key={data.id}
+              onClick={()=>patchAvatar(null)}
+            >
+              <Avatar
+                src=""
+                sx={{
+                  width: '3rem',
+                  height: '3rem',
+                  fontSize: '1rem',
+                }}
+              >
+                {displayInitials}
+              </Avatar>
+            </MenuItem>
+            :null
+          }
         </Menu>
       </>
     )
   }
 
-  // one or NO avatar options
+  // NO avatar options
   return (
     <Badge
       overlap="circular"
