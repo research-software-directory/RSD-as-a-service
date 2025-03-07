@@ -50,16 +50,15 @@ function CategoryContent({
     <ListItemButton
       onClick={onSelect}
     >
-      {cat.parent!==null ?
-        <ListItemIcon>
-          <Checkbox
-            edge="start"
-            disableRipple
-            checked={isSelected}
-          />
-        </ListItemIcon>
-        : null
-      }
+
+      <ListItemIcon>
+        <Checkbox
+          edge="start"
+          disableRipple
+          checked={isSelected}
+        />
+      </ListItemIcon>
+
       <ListItemText
         // alias Label
         primary={cat.short_name}

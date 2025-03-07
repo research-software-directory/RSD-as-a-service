@@ -9,6 +9,8 @@ import SidebarTitle from '~/components/layout/SidebarTitle'
 import {CategoryChipFilter} from '~/components/category/CategoryChipFilter'
 import {useCategoryTree} from '~/components/category/useCategoryTree'
 import CategoryIcon from '~/components/category/CategoryIcon'
+import CategoryStatus from '../category/CategoryStatus'
+
 
 export default function CategoriesSidebar({categories}:{categories:CategoryPath[]}) {
   const tree = useCategoryTree(categories)
@@ -33,6 +35,8 @@ export default function CategoriesSidebar({categories}:{categories:CategoryPath[
           >
             <span><CategoryIcon name={category.properties.icon} /></span>
             <span>{category.short_name}</span>
+            {/* show status if not not approved/global/other */}
+            <CategoryStatus category={category} />
           </SidebarTitle>
           <div className="flex flex-wrap gap-2">
             <CategoryChipFilter nodes={children} />

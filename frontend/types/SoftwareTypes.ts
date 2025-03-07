@@ -16,7 +16,7 @@
 
 import {AutocompleteOption} from './AutocompleteOptions'
 import {CategoryPath} from './Category'
-import {Status} from './Organisation'
+import {OrganisationStatus} from './Organisation'
 
 export type CodePlatform = 'github' | 'gitlab' | 'bitbucket' | 'other'
 
@@ -139,6 +139,7 @@ export type KeywordForSoftware = {
   pos?: number
 }
 
+// NOTE: why not use CategoryPath[]?
 export type CategoriesForSoftware = CategoryPath[]
 
 export type CategoryForSoftwareIds = Set<string>
@@ -201,12 +202,12 @@ export type SearchSoftware = {
 export type RelatedSoftwareOfSoftware = SearchSoftware & {
   is_featured?: boolean
   updated_at?: string
-  status: Status
+  status: OrganisationStatus
 }
 
 export type RelatedSoftwareOfProject = SearchSoftware & {
   project: string
-  status: Status
+  status: OrganisationStatus
 }
 
 
