@@ -12,8 +12,9 @@ import Badge from '@mui/material/Badge'
 import IconButton from '@mui/material/IconButton'
 
 import {useSession} from '~/auth'
-import {deleteImage, getImageUrl} from '~/utils/editImage'
+import {getImageUrl} from '~/utils/editImage'
 import {getDisplayInitials} from '~/utils/getDisplayName'
+import useSnackbar from '~/components/snackbar/useSnackbar'
 import {RsdContributor} from './useContributors'
 import {patchPerson} from './apiRsdContributors'
 
@@ -23,6 +24,7 @@ type AvatarOptionsProps={
 
 export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
   const {token} = useSession()
+  const {showErrorMessage} = useSnackbar()
   const [anchorEl, setAnchorEl] = useState(null)
   const menu = Boolean(anchorEl)
   const displayInitials = getDisplayInitials({
@@ -47,16 +49,11 @@ export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
       token
     })
     // debugger
-    if (resp.status===200){
-      // try to remove old avatar image
-      if (data.avatar_id){
-        deleteImage({
-          id: data.avatar_id,
-          token
-        })
-      }
+    if (resp.status==200){
       // update image
       data.avatar_id = avatar
+    }else{
+      showErrorMessage(`Failed to update avatar. ${resp?.message ?? ''}`)
     }
     // NOTE! this will refresh state
     handleClose()
