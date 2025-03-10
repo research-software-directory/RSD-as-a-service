@@ -1,6 +1,9 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,6 +17,15 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import ScheduleIcon from '@mui/icons-material/Schedule'
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn'
 import {CodePlatform} from '~/types/SoftwareTypes'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
+import DeleteIcon from '@mui/icons-material/Delete'
+import {deleteServiceDataFromDb} from './apiSoftwareServices'
+import {useSession} from '~/auth'
+import useSoftwareContext from '../useSoftwareContext'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+
 
 type ServiceInfoListItemProps={
   readonly title:string
@@ -22,10 +34,15 @@ type ServiceInfoListItemProps={
   readonly url: string|null
   readonly platform: CodePlatform|null
   readonly scraping_disabled_reason: string|null
+  readonly dbprops?: string[]
 }
 
-export function ServiceInfoListItem({title,scraped_at,last_error,url,platform,scraping_disabled_reason}:ServiceInfoListItemProps){
+export function ServiceInfoListItem({title,scraped_at,last_error,url,platform,scraping_disabled_reason,dbprops}:ServiceInfoListItemProps){
   let status:'error'|'success'|'not_active'|'scheduled'|'not_supported' = 'not_active'
+  const {token} = useSession()
+  const {software} = useSoftwareContext()
+  const {showErrorMessage, showSuccessMessage} = useSnackbar()
+
 
   // set service status
   if (scraped_at) status='success'
@@ -79,6 +96,11 @@ export function ServiceInfoListItem({title,scraped_at,last_error,url,platform,sc
     )
   }
 
+  async function clearServiceData(dbprops: string[]) {
+    await deleteServiceDataFromDb({dbprops: dbprops, software: software.id, token: token})
+      .then(resp => (resp?.status === 204) ? showSuccessMessage(resp?.message) : showErrorMessage(resp?.message))
+  }
+
   return (
     <ListItem
       data-testid="software-service-item"
@@ -101,6 +123,26 @@ export function ServiceInfoListItem({title,scraped_at,last_error,url,platform,sc
         primary={title}
         secondary={getStatusMsg()}
       />
+
+      { dbprops && (
+        <ListItemSecondaryAction>
+          <Tooltip title={(status == 'not_active') ? 'No repository URL: No data to delete.' : 'Clear service data'}>
+            <span>
+              <IconButton
+                onClick={() => {
+                  clearServiceData(dbprops)
+                }}
+                aria-label="delete"
+                size="large"
+                disabled={(status == 'not_active')}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+        </ListItemSecondaryAction>
+      )}
+
     </ListItem>
   )
 }
