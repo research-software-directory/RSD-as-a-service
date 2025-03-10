@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,7 @@ import {useSession} from '~/auth'
 import {sortOnStrProp} from '~/utils/sortFn'
 import {addRelatedSoftware, deleteRelatedSoftware, getRelatedSoftwareForSoftware} from '~/utils/editRelatedSoftware'
 import {RelatedSoftwareOfSoftware, SearchSoftware} from '~/types/SoftwareTypes'
-import {Status} from '~/types/Organisation'
+import {OrganisationStatus} from '~/types/Organisation'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import FindRelatedSoftware from '~/components/projects/edit/related-software/FindRelatedSoftware'
 import RelatedSoftwareList from '~/components/projects/edit/related-software/RelatedSoftwareList'
@@ -44,7 +44,7 @@ export default function RelatedSoftwareForSoftware() {
             brand_name: item.brand_name,
             short_statement: item.short_statement,
             updated_at: item.updated_at ?? undefined,
-            status: 'approved' as Status
+            status: 'approved' as OrganisationStatus
           }
         }).sort((a, b) => sortOnStrProp(a, b, 'brand_name'))
 
@@ -78,7 +78,7 @@ export default function RelatedSoftwareForSoftware() {
         const newList = [
           ...relatedSoftware, {
             ...selected,
-            status: 'approved' as Status
+            status: 'approved' as OrganisationStatus
           }
 
         ].sort((a, b) => sortOnStrProp(a, b, 'brand_name'))

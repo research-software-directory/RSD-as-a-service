@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -7,7 +7,10 @@
 
 package nl.esciencecenter;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.http.Header;
@@ -35,14 +38,14 @@ public class AuthenticationIntegrationTest {
 
 		String expectedMessage = "You need to agree to our Terms of Service and the Privacy Statement before proceeding. Please open your user profile settings to agree.";
 		RestAssured.given()
-				.header(user.authHeader)
-				.contentType(ContentType.JSON)
-				.body("{\"slug\": \"test-slug-user\", \"brand_name\": \"Test software user\", \"is_published\": true, \"short_statement\": \"Test software for testing\"}")
-				.when()
-				.post("software")
-				.then()
-				.statusCode(400)
-				.body(CoreMatchers.containsString(expectedMessage));
+			.header(user.authHeader)
+			.contentType(ContentType.JSON)
+			.body("{\"slug\": \"test-slug-user\", \"brand_name\": \"Test software user\", \"is_published\": true, \"short_statement\": \"Test software for testing\"}")
+			.when()
+			.post("software")
+			.then()
+			.statusCode(400)
+			.body(CoreMatchers.containsString(expectedMessage));
 	}
 
 	@Test
@@ -50,38 +53,38 @@ public class AuthenticationIntegrationTest {
 		User user = User.create(false);
 
 		RestAssured.given()
-				.header(user.authHeader)
-				.contentType(ContentType.JSON)
-				.body("{\"agree_terms\": true, \"notice_privacy_statement\": true}")
-				.when()
-				.patch("account?id=eq." + user.accountId)
-				.then()
-				.statusCode(204);
+			.header(user.authHeader)
+			.contentType(ContentType.JSON)
+			.body("{\"agree_terms\": true, \"notice_privacy_statement\": true}")
+			.when()
+			.patch("account?id=eq." + user.accountId)
+			.then()
+			.statusCode(204);
 
 		String slug = Commons.createUUID();
 		RestAssured.given()
-				.header(user.authHeader)
-				.contentType(ContentType.JSON)
-				.body("{\"slug\": \"%s\", \"brand_name\": \"Test software user\", \"is_published\": true, \"short_statement\": \"Test software for testing\"}"
-						.formatted(slug))
-				.when()
-				.post("software")
-				.then()
-				.statusCode(201);
+			.header(user.authHeader)
+			.contentType(ContentType.JSON)
+			.body("{\"slug\": \"%s\", \"brand_name\": \"Test software user\", \"is_published\": true, \"short_statement\": \"Test software for testing\"}"
+				.formatted(slug))
+			.when()
+			.post("software")
+			.then()
+			.statusCode(201);
 
 		String getStartedUrl = "https://www.example.com";
 		String patchedGetStartedUrl = RestAssured.given()
-				.header(user.authHeader)
-				.header(Commons.requestEntry)
-				.contentType(ContentType.JSON)
-				.body("{\"get_started_url\": \"%s\"}".formatted(getStartedUrl))
-				.when()
-				.patch("software?select=get_started_url&slug=eq." + slug)
-				.then()
-				.statusCode(200)
-				.extract()
-				.jsonPath()
-				.getString("[0].get_started_url");
+			.header(user.authHeader)
+			.header(Commons.requestEntry)
+			.contentType(ContentType.JSON)
+			.body("{\"get_started_url\": \"%s\"}".formatted(getStartedUrl))
+			.when()
+			.patch("software?select=get_started_url&slug=eq." + slug)
+			.then()
+			.statusCode(200)
+			.extract()
+			.jsonPath()
+			.getString("[0].get_started_url");
 		Assertions.assertEquals(getStartedUrl, patchedGetStartedUrl);
 	}
 
@@ -89,97 +92,97 @@ public class AuthenticationIntegrationTest {
 	void givenUserWhoAgreedOnTerms_whenEditingSoftwareNotMaintainer_thenNowAllowed() {
 		String slug = Commons.createUUID();
 		RestAssured.given()
-				.header(SetupAllTests.adminAuthHeader)
-				.contentType(ContentType.JSON)
-				.body("{\"slug\": \"%s\", \"brand_name\": \"Test software user\", \"is_published\": true, \"short_statement\": \"Test software for testing\"}"
-						.formatted(slug))
-				.when()
-				.post("software")
-				.then()
-				.statusCode(201);
+			.header(SetupAllTests.adminAuthHeader)
+			.contentType(ContentType.JSON)
+			.body("{\"slug\": \"%s\", \"brand_name\": \"Test software user\", \"is_published\": true, \"short_statement\": \"Test software for testing\"}"
+				.formatted(slug))
+			.when()
+			.post("software")
+			.then()
+			.statusCode(201);
 
 		User user = User.create(false);
 
 		RestAssured.given()
-				.header(user.authHeader)
-				.contentType(ContentType.JSON)
-				.body("{\"agree_terms\": true, \"notice_privacy_statement\": true}")
-				.when()
-				.patch("account?id=eq." + user.accountId)
-				.then()
-				.statusCode(204);
+			.header(user.authHeader)
+			.contentType(ContentType.JSON)
+			.body("{\"agree_terms\": true, \"notice_privacy_statement\": true}")
+			.when()
+			.patch("account?id=eq." + user.accountId)
+			.then()
+			.statusCode(204);
 
 		String getStartedUrl = "https://www.example.com";
 		List response = RestAssured.given()
-				.header(user.authHeader)
-				.header(new Header("Prefer", "return=representation"))
-				.contentType(ContentType.JSON)
-				.body("{\"get_started_url\": \"%s\"}".formatted(getStartedUrl))
-				.when()
-				.patch("software?select=get_started_url&slug=eq." + slug)
-				.then()
-				.statusCode(200)
-				.extract()
-				.body()
-				.as(List.class);
+			.header(user.authHeader)
+			.header(new Header("Prefer", "return=representation"))
+			.contentType(ContentType.JSON)
+			.body("{\"get_started_url\": \"%s\"}".formatted(getStartedUrl))
+			.when()
+			.patch("software?select=get_started_url&slug=eq." + slug)
+			.then()
+			.statusCode(200)
+			.extract()
+			.body()
+			.as(List.class);
 		Assertions.assertTrue(response.isEmpty());
 	}
 
 	@Test
 	void givenUnauthenticatedUser_whenViewingTables_thenSuccess() {
 		RestAssured
-				.when()
-				.get("software")
-				.then()
-				.statusCode(200);
+			.when()
+			.get("software")
+			.then()
+			.statusCode(200);
 
 		RestAssured
-				.when()
-				.get("project")
-				.then()
-				.statusCode(200);
+			.when()
+			.get("project")
+			.then()
+			.statusCode(200);
 	}
 
 	@Test
 	void givenUnauthenticatedUser_whenViewingUnpublishedSoftware_thenNothingReturned() {
 		String slug = Commons.createUUID();
 		RestAssured.given()
-				.header(SetupAllTests.adminAuthHeader)
-				.contentType(ContentType.JSON)
-				.body("{\"slug\": \"%s\", \"brand_name\": \"Test software user\", \"is_published\": false, \"short_statement\": \"Test software for testing\"}"
-						.formatted(slug))
-				.when()
-				.post("software")
-				.then()
-				.statusCode(201);
+			.header(SetupAllTests.adminAuthHeader)
+			.contentType(ContentType.JSON)
+			.body("{\"slug\": \"%s\", \"brand_name\": \"Test software user\", \"is_published\": false, \"short_statement\": \"Test software for testing\"}"
+				.formatted(slug))
+			.when()
+			.post("software")
+			.then()
+			.statusCode(201);
 
 		List response = RestAssured.when()
-				.get("software?slug=eq." + slug)
-				.then()
-				.statusCode(200)
-				.extract()
-				.body()
-				.as(List.class);
+			.get("software?slug=eq." + slug)
+			.then()
+			.statusCode(200)
+			.extract()
+			.body()
+			.as(List.class);
 		Assertions.assertTrue(response.isEmpty());
 	}
 
 	@Test
 	void givenUnauthenticatedUser_whenEditingAnyTable_thenNotAllowed() {
 		RestAssured.given()
-				.contentType(ContentType.JSON)
-				.body("{\"short_statement\": \"invalid statement\"}")
-				.when()
-				.patch("software")
-				.then()
-				.statusCode(401);
+			.contentType(ContentType.JSON)
+			.body("{\"short_statement\": \"invalid statement\"}")
+			.when()
+			.patch("software")
+			.then()
+			.statusCode(401);
 
 		RestAssured.given()
-				.contentType(ContentType.JSON)
-				.body("{\"subtitle\": \"invalid subtitle\"}")
-				.when()
-				.patch("project")
-				.then()
-				.statusCode(401);
+			.contentType(ContentType.JSON)
+			.body("{\"subtitle\": \"invalid subtitle\"}")
+			.when()
+			.patch("project")
+			.then()
+			.statusCode(401);
 	}
 
 	/*
@@ -191,23 +194,23 @@ public class AuthenticationIntegrationTest {
 	@Test
 	void givenUnauthenticatedUser_createCategory() {
 		requestCreateDummyCategory(null)
-				.then()
-				.statusCode(401);
+			.then()
+			.statusCode(401);
 
 	}
 
 	@Test
 	void givenAuthenticatedUser_createCategory() {
 		requestCreateDummyCategory(User.create().authHeader)
-				.then()
-				.statusCode(403);
+			.then()
+			.statusCode(403);
 	}
 
 	@Test
 	void givenAdmin_createCategory() {
 		requestCreateDummyCategory(SetupAllTests.adminAuthHeader)
-				.then()
-				.statusCode(201);
+			.then()
+			.statusCode(201);
 	}
 
 	@Test
@@ -217,8 +220,8 @@ public class AuthenticationIntegrationTest {
 		User user = User.create();
 		String softwareId = user.createSoftware("Software 1");
 		requestAddCategoryForSoftware(user, softwareId, categoryId)
-				.then()
-				.statusCode(201);
+			.then()
+			.statusCode(201);
 	}
 
 	@Test
@@ -230,8 +233,8 @@ public class AuthenticationIntegrationTest {
 
 		User user2 = User.create();
 		requestAddCategoryForSoftware(user2, softwareId, categoryId)
-				.then()
-				.statusCode(403);
+			.then()
+			.statusCode(403);
 	}
 
 	@Test
@@ -244,19 +247,28 @@ public class AuthenticationIntegrationTest {
 		addCategoryForSoftware(user, softwareId, catIds[0]);
 		addCategoryForSoftware(user, softwareId, catIds[1]);
 
-		JsonObject obj = new JsonObject();
-		obj.addProperty("software_id", softwareId);
+		String response = RestAssured
+			.get("/rpc/category_paths_by_software_expanded?software_id=" + softwareId)
+			.then()
+			.contentType(ContentType.JSON)
+			.extract()
+			.asString();
 
-		RestAssured.given()
-				.contentType(ContentType.JSON)
-				.body(obj.toString())
-				.when()
-				.post("/rpc/category_paths_by_software_expanded")
-				.then()
-				.contentType(ContentType.JSON)
-				// check if category IDs appear in proper location of result (=CategoryPath[])
-				.body("[0][1].id", CoreMatchers.equalTo(catIds[0]))
-				.body("[1][1].id", CoreMatchers.equalTo(catIds[1]));
+		// check if category IDs appear in proper location of result (=CategoryPath[])
+		JsonArray jsonArray = JsonParser.parseString(response).getAsJsonArray();
+		Assertions.assertEquals(jsonArray.size(), 2);
+		for (JsonElement jsonElement : jsonArray) {
+			JsonArray categoryPath = jsonElement.getAsJsonArray();
+			String shortName = categoryPath.get(1).getAsJsonObject().getAsJsonPrimitive("short_name").getAsString();
+			String id = categoryPath.get(1).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
+			if (shortName.startsWith("sub category 1.1")) {
+				Assertions.assertEquals(id, catIds[0]);
+			} else if (shortName.startsWith("sub category 1.2")) {
+				Assertions.assertEquals(id, catIds[1]);
+			} else {
+				Assertions.fail("Category paths are incorrect");
+			}
+		}
 	}
 
 	@Test
@@ -270,14 +282,14 @@ public class AuthenticationIntegrationTest {
 		obj.addProperty("parent", catId3);
 
 		RestAssured.given()
-				.header(SetupAllTests.adminAuthHeader)
-				.contentType(ContentType.JSON)
-				.body(obj.toString())
-				.when()
-				.patch("category?id=eq." + catId1)
-				.then()
-				.statusCode(400)
-				.body("message", Matchers.containsStringIgnoringCase("cycle detected"));
+			.header(SetupAllTests.adminAuthHeader)
+			.contentType(ContentType.JSON)
+			.body(obj.toString())
+			.when()
+			.patch("category?id=eq." + catId1)
+			.then()
+			.statusCode(400)
+			.body("message", Matchers.containsStringIgnoringCase("cycle detected"));
 	}
 
 	String[] createCategoryTreeExample1() {
@@ -304,17 +316,17 @@ public class AuthenticationIntegrationTest {
 		obj.addProperty("parent", parentId);
 
 		return RestAssured.given()
-				.header(SetupAllTests.adminAuthHeader)
-				.header(Commons.requestEntry)
-				.contentType(ContentType.JSON)
-				.body(obj.toString())
-				.when()
-				.post("category")
-				.then()
-				.statusCode(201)
-				.extract()
-				.jsonPath()
-				.getString("[0].id");
+			.header(SetupAllTests.adminAuthHeader)
+			.header(Commons.requestEntry)
+			.contentType(ContentType.JSON)
+			.body(obj.toString())
+			.when()
+			.post("category")
+			.then()
+			.statusCode(201)
+			.extract()
+			.jsonPath()
+			.getString("[0].id");
 	}
 
 	String createUniqueCategory(String name, String short_name, String parentId) {
@@ -323,8 +335,8 @@ public class AuthenticationIntegrationTest {
 
 	void addCategoryForSoftware(User user, String softwareId, String categoryId) {
 		requestAddCategoryForSoftware(user, softwareId, categoryId)
-				.then()
-				.statusCode(201);
+			.then()
+			.statusCode(201);
 	}
 
 	Response requestAddCategoryForSoftware(User user, String softwareId, String categoryId) {
@@ -334,11 +346,11 @@ public class AuthenticationIntegrationTest {
 		obj.addProperty("category_id", categoryId);
 
 		return RestAssured.given()
-				.header(user.authHeader)
-				.contentType(ContentType.JSON)
-				.body(obj.toString())
-				.when()
-				.post("category_for_software");
+			.header(user.authHeader)
+			.contentType(ContentType.JSON)
+			.body(obj.toString())
+			.when()
+			.post("category_for_software");
 	}
 
 	Response requestCreateDummyCategory(Header authHeader) {
@@ -354,9 +366,9 @@ public class AuthenticationIntegrationTest {
 			request.header(authHeader);
 		}
 		return request
-				.contentType(ContentType.JSON)
-				.body(obj.toString())
-				.when()
-				.post("category");
+			.contentType(ContentType.JSON)
+			.body(obj.toString())
+			.when()
+			.post("category");
 	}
 }

@@ -1,8 +1,8 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,14 +20,15 @@ export default function CategoriesSection({categories}: CategoriesSectionProps) 
 
   return tree.map(node => {
     const category = node.getValue()
-
     const children = node.children()
 
     return (
-      <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]" key={category.id}>
+      <PageContainer
+        key={category.id}
+        className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
         <h2
           data-testid="software-categories-section-title"
-          className="pb-8 text-[2rem] text-primary">
+          className="pb-8 pr-4 text-[2rem] text-primary">
           {category.name}
         </h2>
         {/* Display as table and on small screens as bullet point list  */}
