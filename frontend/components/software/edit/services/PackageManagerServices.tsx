@@ -3,6 +3,7 @@
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: EUPL-1.2
 
 import List from '@mui/material/List'
 import {usePackageManagerServices} from './apiSoftwareServices'
