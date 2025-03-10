@@ -13,8 +13,8 @@ export const PageTitleSticky = styled('section')(({theme})=>({
   top: '0rem',
   padding: '1rem 0rem',
   alignItems: 'center',
-  // borderBottom: `1px solid ${theme.palette.divider}`,
-  backgroundColor: theme.palette.background.paper,
+  // add default because turbopack seem to crash here on undefined paper value
+  backgroundColor: theme.palette?.background?.paper ?? '#fff',
   zIndex: 9,
   '@media (max-width: 640px)':{
     flexDirection:'column',
