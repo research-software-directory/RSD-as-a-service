@@ -1,13 +1,16 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import Link from 'next/link'
+import SearchIcon from '@mui/icons-material/Search'
 import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
+import {ssrSoftwareUrl} from '~/utils/postgrestUrl'
 
 export function calcTreeLevelDepth(tree: TreeNode<CategoryEntry>): number {
 
@@ -28,9 +31,9 @@ export const CategoryTable = ({tree}: CategoryTableProps) => {
   const levelLables = category.properties.tree_level_labels
   const depth = calcTreeLevelDepth(tree)
   return (
-    <div className={`grid grid-cols-${depth} border-y-2`}>
+    <div className={`grid grid-cols-${depth} border-y`}>
       {levelLables &&
-        <div className={`grid grid-cols-subgrid col-span-${depth} border-b-2`}>
+        <div className={`grid grid-cols-subgrid col-span-${depth} border-b`}>
           {levelLables.map(label =>
             <div className="px-3 py-2" key={label}><b>{label}</b></div>
           )}
@@ -49,19 +52,29 @@ const Block = ({tree, depth}: BlockProps) => {
   const depth2 = depth - 1
   return tree.map((node, index) => {
     const category = node.getValue()
-
     const children = node.children()
-    const border = (index != tree.length-1) ? 'border-b-2' : ''
-    return <div key={category.id} className={`grid grid-cols-subgrid col-span-${depth} ${border}`}>
-      <div className="px-3 py-2">
-        {category.name}
-      </div>
-      {depth2 > 0 &&
+    const border = (index != tree.length-1) ? 'border-b' : ''
+    const url = ssrSoftwareUrl({categories: [category.short_name]})
+    return (
+      <div key={category.id} className={`grid grid-cols-subgrid col-span-${depth} ${border}`}>
+        {url ?
+          <Link href={url}>
+            <div className="px-3 py-2">
+              <span>{category.name}</span> <SearchIcon />
+            </div>
+          </Link>
+          :
+          <div className="px-3 py-2">
+            {category.name}
+          </div>
+        }
+        {depth2 > 0 &&
         <div className={`grid grid-cols-subgrid col-span-${depth2}`}>
           <Block tree={children} depth={depth2} />
         </div>
-      }
-    </div>
+        }
+      </div>
+    )
   })
 }
 
