@@ -1,8 +1,12 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: EUPL-1.2
 
 import {useEffect, useState} from 'react'
 import {useSession} from '~/auth'
@@ -158,5 +162,35 @@ export function useSoftwareServices(){
   return {
     loading,
     services
+  }
+}
+
+export async function deleteServiceDataFromDb({dbprops, software, token}:
+  {dbprops:string[], software: string, token:string}){
+  try {
+    const query = `repository_url?software=eq.${software}`
+    const url = `${getBaseUrl()}/${query}`
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        ...createJsonHeaders(token),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(
+        dbprops.reduce((acc, dbprop) => ({...acc, [dbprop]: null}), {})
+      )
+    })
+    if (resp.status === 204) {
+      return {
+        status: 204,
+        message: `${dbprops} cleared from database.`
+      }
+    }
+  } catch (e: any) {
+    logger(`deleteServiceDataFromDb: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
   }
 }
