@@ -483,10 +483,27 @@ func saveContributorsForSoftware(id string, software terms.SoftwareApplication, 
 			}
 		}
 
+		familyName := person.FamilyName
+		givenName := person.GivenName
+		if familyName == "" && givenName == "" {
+			name := person.Name
+			if name == "" {
+				log.Println("Skipping contributor without name")
+				continue
+			}
+			split := strings.SplitN(name, " ", 2)
+			if len(split) <= 1 {
+				log.Println("Skipping contributor without family and given name, full name is: " + name)
+				continue
+			}
+			familyName = split[1]
+			givenName = split[0]
+		}
+
 		contributor := rsdContributor{
 			Software:     id,
-			FamilyNames:  person.FamilyName,
-			GivenNames:   person.GivenName,
+			FamilyNames:  familyName,
+			GivenNames:   givenName,
 			Affiliation:  affiliation,
 			Orcid:        orcid,
 			EmailAddress: person.Email,
