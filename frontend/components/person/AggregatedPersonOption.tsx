@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,7 +21,7 @@ export default function AggregatedPersonOption({option}: { option: AutocompleteO
     // debugger
     if (affiliation_options && affiliation_options.length > 0 && orcid) {
       return (
-        <div className="grid grid-cols-[3fr,2fr] gap-2">
+        <div className="grid grid-cols-[3fr_2fr] gap-2">
           {affiliation_options.join('; ')}
           <div className="pl-4 text-right">{orcid}</div>
         </div>
@@ -27,7 +29,7 @@ export default function AggregatedPersonOption({option}: { option: AutocompleteO
     }
     if (orcid) {
       return (
-        <div className="grid grid-cols-[3fr,2fr] gap-2">
+        <div className="grid grid-cols-[3fr_2fr] gap-2">
           <div className="flex-1"></div>
           <div className="pl-4 text-right">{option.data?.orcid}</div>
         </div>
@@ -50,7 +52,7 @@ export default function AggregatedPersonOption({option}: { option: AutocompleteO
         displayInitials={displayInitials}
       />
       <section className="flex-1">
-        <div className="grid grid-cols-[3fr,1fr] gap-2">
+        <div className="grid grid-cols-[3fr_1fr] gap-2">
           <div className="flex items-center">
             <strong><span className="flex-1">{option.label}</span></strong>
           </div>

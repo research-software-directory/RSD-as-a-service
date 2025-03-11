@@ -31,13 +31,13 @@ export default function ImageWithPlaceholder({
     if (type === 'gradient') {
       return (
         <div
-          className="w-full bg-gradient-to-br from-base-300 from-0% via-base-100 via-50% to-base-100"
+          className="w-full bg-linear-to-br from-base-300 from-0% via-base-100 via-50% to-base-100"
         />
       )
     }
     return (
       <div
-        className={`flex flex-col justify-center items-center text-base-500 rounded-sm ${className ?? ''}`}
+        className={`flex flex-col justify-center items-center text-base-500 rounded-xs ${className ?? ''}`}
       >
         <PhotoSizeSelectActualOutlinedIcon
           sx={{
@@ -64,7 +64,7 @@ export default function ImageWithPlaceholder({
       }}
       aria-label={alt}
       alt={alt}
-      className={`rounded-sm ${className ?? ''}`}
+      className={`rounded-xs ${className ?? ''}`}
     ></img>
   )
 }

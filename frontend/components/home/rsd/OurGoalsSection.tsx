@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,7 +12,7 @@ export default function OurGoalsSection() {
   return (
     <section
       id="our-goals"
-      className="p-5 md:p-10 w-full max-w-screen-xl mx-auto">
+      className="p-5 md:p-10 w-full max-w-(--breakpoint-xl) mx-auto">
       <h2
         className="flex justify-start text-3xl lg:text-4xl font-rsd-titles font-bold mt-6"
         data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
@@ -21,7 +21,7 @@ export default function OurGoalsSection() {
 
       <div className="grid gap-20 grid-cols-1 md:grid-cols-2 pt-14">
         <article className="flex gap-4 items-start" data-aos="fade" data-aos-delay="0">
-          <LandingPageImpactIcon className="h-auto mr-5 pt-1 scale-125 flex-shrink-0" />
+          <LandingPageImpactIcon className="h-auto mr-5 pt-1 scale-125 shrink-0" />
           <div>
             <h3 className="mb-4 text-2xl font-medium">Show the impact of research software</h3>
             <p className="text-lg opacity-70">
@@ -31,7 +31,7 @@ export default function OurGoalsSection() {
           </div>
         </article>
         <article className="flex gap-4 items-start" data-aos="fade" data-aos-delay="100">
-          <LandingPageCiteIcon className="h-auto mr-5 pt-1 flex-shrink-0" />
+          <LandingPageCiteIcon className="h-auto mr-5 pt-1 shrink-0" />
           <div>
             <h3 className="mb-4 text-2xl font-medium">
                   Encourage proper citation of research software</h3>
@@ -42,7 +42,7 @@ export default function OurGoalsSection() {
           </div>
         </article>
         <article className="flex gap-4 items-start" data-aos="fade" data-aos-delay="0">
-          <LandingPageShowIcon className="h-auto mr-5 pt-1 flex-shrink-0" />
+          <LandingPageShowIcon className="h-auto mr-5 pt-1 shrink-0" />
           <div>
             <h3 className="mb-4 text-2xl font-medium">Make it easy to find and reuse research
                   software</h3>
@@ -51,7 +51,7 @@ export default function OurGoalsSection() {
           </div>
         </article>
         <article className="flex gap-4 items-start" data-aos="fade" data-aos-delay="100">
-          <LandingPageShareIcon className="h-auto mr-5 pt-1 flex-shrink-0 scale-105" />
+          <LandingPageShareIcon className="h-auto mr-5 pt-1 shrink-0 scale-105" />
           <div>
             <h3 className="mb-4 text-2xl font-medium">Share metadata about research
                   software</h3>

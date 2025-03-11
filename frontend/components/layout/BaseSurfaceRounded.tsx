@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,7 @@ type BaseSurfaceRoundedProps = {
 
 
 export default function BaseSurfaceRounded({children, className = '', type = 'div'}: BaseSurfaceRoundedProps) {
-  const classes =`bg-base-100 rounded ${className}`
+  const classes =`bg-base-100 rounded-sm ${className}`
 
   switch (type) {
     case 'section':

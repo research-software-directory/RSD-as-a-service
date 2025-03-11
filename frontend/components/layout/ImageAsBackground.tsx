@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,7 +26,7 @@ export default function ImageAsBackground(
     return (
       <div
         data-testid="image-as-background"
-        className={`${className} flex flex-col justify-center items-center text-base-300 rounded-sm`}
+        className={`${className} flex flex-col justify-center items-center text-base-300 rounded-xs`}
       >
         <PhotoSizeSelectActualOutlinedIcon
           sx={{
@@ -50,7 +50,7 @@ export default function ImageAsBackground(
         backgroundRepeat: 'no-repeat',
       }}
       aria-label={alt}
-      className={`${className} rounded-sm`}
+      className={`${className} rounded-xs`}
     ></div>
   )
 }

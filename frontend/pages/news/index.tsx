@@ -73,11 +73,11 @@ export default function NewsOverview({count,page,rows,layout,search,news}:NewsOv
 
         <MainContent className="py-4">
           {/* Page title with search and pagination */}
-          <div className="flex flex-wrap py-8 px-4 rounded-lg bg-base-100 lg:sticky top-0 border border-base-200 z-[11]">
+          <div className="flex flex-wrap py-8 px-4 rounded-lg bg-base-100 lg:sticky top-0 border border-base-200 z-11">
             <h1 role="heading" className="mr-4 lg:flex-1">
               News
             </h1>
-            <div className="flex-[2] flex min-w-[20rem]">
+            <div className="flex-2 flex min-w-[20rem]">
               <SearchInput
                 placeholder="Search news items by title, summary or author"
                 onSearch={(search: string) => handleQueryChange('search', search)}

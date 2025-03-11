@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -74,7 +74,7 @@ function aggregateProfiles(profiles:RsdContributor[]|null){
 export default function ProfileMetadata({profiles}:{profiles:RsdContributor[]|null}) {
   const {name, logo, initials, orcid} = aggregateProfiles(profiles)
   return (
-    <section className="grid md:grid-cols-[1fr,3fr] xl:grid-cols-[1fr,5fr] gap-4 mt-8">
+    <section className="grid md:grid-cols-[1fr_3fr] xl:grid-cols-[1fr_5fr] gap-4 mt-8">
       <BaseSurfaceRounded className="flex justify-center p-4 overflow-hidden relative">
         <Avatar
           alt={name[0] ?? ''}

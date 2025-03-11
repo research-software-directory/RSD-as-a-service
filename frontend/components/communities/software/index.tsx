@@ -61,7 +61,7 @@ export default function CommunitySoftware({
       {/* Only when maintainer */}
       {isMaintainer && <UserAgreementModal />}
       {/* Page grid with 2 sections: left filter panel and main content */}
-      <div className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-4 mb-12">
+      <div className="flex-1 grid md:grid-cols-[1fr_2fr] xl:grid-cols-[1fr_4fr] gap-4 mb-12">
         {/* Filters panel large screen */}
         {smallScreen === false &&
           <FiltersPanel>

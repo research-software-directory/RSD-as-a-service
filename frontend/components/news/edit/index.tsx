@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -44,7 +44,7 @@ export default function EditNewsItem({item}:{item:NewsItem}) {
           {...register('id', {required:'id is required'})}
         />
         <EditNewsStickyHeader />
-        <EditSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0 xl:gap-[3rem]'>
+        <EditSection className='xl:grid xl:grid-cols-[3fr_1fr] xl:px-0 xl:gap-[3rem]'>
           <div className="py-4 overflow-hidden">
             {/* TITLE */}
             <AutosaveNewsTextField

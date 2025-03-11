@@ -17,7 +17,7 @@ export default function ExternalLinkIcon({domain}:Readonly<{domain?:string|null}
     return (
       <div
         title={domain}
-        className="absolute right-0 top-0 p-2 z-[1] rounded-tr-md opacity-40 bg-base-100 group-hover:bg-primary group-hover:opacity-70 group-hover:text-primary-content">
+        className="absolute right-0 top-0 p-2 z-1 rounded-tr-md opacity-40 bg-base-100 group-hover:bg-primary group-hover:opacity-70 group-hover:text-primary-content">
         <OpenInNewIcon sx={{width:'1.5rem', height: '1.5rem'}} />
       </div>
     )

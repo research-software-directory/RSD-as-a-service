@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -44,7 +44,7 @@ export default function ContributorsSection({contributors, title='Contributors'}
   }
   return (
     <section className="bg-base-200">
-      <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
+      <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr_4fr]">
         <h2
           data-testid="software-contributors-section-title"
           className="pb-8 text-[2rem] text-primary">
@@ -54,7 +54,7 @@ export default function ContributorsSection({contributors, title='Contributors'}
           <div className="2xl:flex-1 lg:self-start">
             <ContactPersonCard person={contact} section={section}/>
           </div>
-          <div className="2xl:flex-[3]">
+          <div className="2xl:flex-3">
             <ContributorsList contributors={contributorList} section={section}/>
           </div>
         </section>
