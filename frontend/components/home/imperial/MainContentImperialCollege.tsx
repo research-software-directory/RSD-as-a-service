@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -39,7 +39,7 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
 
   return (
     <MainContent>
-      <div className="w-10/12 mx-auto p-5 md:p-10 grid lg:grid-cols-[1fr,1fr] gap-[2rem]">
+      <div className="w-10/12 mx-auto p-5 md:p-10 grid lg:grid-cols-[1fr_1fr] gap-[2rem]">
         <div className="flex flex-col justify-left">
           <Image
             src="/images/imperial-college-logo.svg"
@@ -75,7 +75,7 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
         </div>
       </div>
 
-      <div className="max-w-screen-xl mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
+      <div className="max-w-(--breakpoint-xl) mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
         <CounterBox
           label="Open-Source Software"
           value={counts.open_software_cnt.toString()}

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -43,7 +43,7 @@ export default function OrganisationItem({item, onDelete}: OrganisationItemProps
           </IconButton>
         </>
       }
-      className="transition shadow-sm border bg-base-100 rounded hover:shadow-lg"
+      className="transition shadow-xs border bg-base-100 rounded-sm hover:shadow-lg"
       sx={{
         // this makes space for buttons
         padding:'0.5rem 4.5rem 0.5rem 1rem',

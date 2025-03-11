@@ -16,7 +16,7 @@ export default function OverviewListItem({
   className=''
 }: OverviewListItemProps) {
   return (
-    <div className={`flex-1 flex items-center transition shadow-sm border bg-base-100 rounded hover:shadow-lg ${className ?? ''}`}
+    <div className={`flex-1 flex items-center transition shadow-xs border bg-base-100 rounded-sm hover:shadow-lg ${className ?? ''}`}
     >
       {children}
     </div>

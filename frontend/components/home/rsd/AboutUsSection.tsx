@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,7 +15,7 @@ export default function AboutUsSection() {
   return (
     <section
       id="about-us"
-      className="px-5 md:px-10 py-5 w-full max-w-screen-lg mx-auto mt-10">
+      className="px-5 md:px-10 py-5 w-full max-w-(--breakpoint-lg) mx-auto mt-10">
       <h2 className="flex justify-center text-3xl lg:text-4xl font-rsd-titles font-bold "
         data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
         About us
@@ -27,7 +27,7 @@ export default function AboutUsSection() {
         contact us or join our effort!
       </p>
       <div
-        className="max-w-screen-md mt-6 mx-auto flex flex-wrap justify-center gap-4 p-2 scale-90">
+        className="max-w-(--breakpoint-md) mt-6 mx-auto flex flex-wrap justify-center gap-4 p-2 scale-90">
         <div className="flex justify-center" data-aos="fade" data-aos-delay="100"
           data-aos-duration="500" data-aos-easing="ease-in-out">
           <GradientBorderButton

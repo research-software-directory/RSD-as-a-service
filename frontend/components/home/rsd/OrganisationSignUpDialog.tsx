@@ -28,7 +28,7 @@ type SignUpOrganisation = {
   description: string
 }
 
-const inputClasses='mb-4 placeholder:text-base-500 outline-0 p-2 w-full text-sm bg-transparent text-base-100 border border-base-600 rounded-sm'
+const inputClasses='mb-4 placeholder:text-base-500 outline-0 p-2 w-full text-sm bg-transparent text-base-100 border border-base-600 rounded-xs'
 
 export default function OrganisationSignUpDialog({
   title, open, onClose, initOrg,
@@ -133,7 +133,7 @@ export default function OrganisationSignUpDialog({
           {/* NAVIGATION */}
           <div className="flex justify-end items-center gap-4 my-2">
             <button
-              className="text-sm text-base-100 border border-base-500 text-opacity-60 rounded px-4 py-1 hover:opacity-90 active:opacity-95"
+              className="text-sm text-base-100 border border-base-500 text-opacity-60 rounded-sm px-4 py-1 hover:opacity-90 active:opacity-95"
               onClick={(e) => {
                 // stop click propagation
                 e.preventDefault()
@@ -148,7 +148,7 @@ export default function OrganisationSignUpDialog({
               onClick={() => {
                 closeAndReset()
               }}
-              className="text-sm text-base-100 hover:text-base-100 bg-primary px-4 py-1 rounded hover:opacity-90 active:opacity-95"
+              className="text-sm text-base-100 hover:text-base-100 bg-primary px-4 py-1 rounded-sm hover:opacity-90 active:opacity-95"
               target="_blank"
               rel="noreferrer"
               href={`mailto:${host.email}?subject=${encodeURIComponent(config.button.register.label)}&body=${mailBody()}`}

@@ -36,7 +36,7 @@ export default function ProjectSearchSection({
 
   return (
     <section data-testid="search-section">
-      <div className="flex border rounded-md shadow-sm bg-base-100 p-2">
+      <div className="flex border rounded-md shadow-xs bg-base-100 p-2">
         <SearchInput
           placeholder={placeholder}
           onSearch={(search: string) => handleQueryChange('search', search)}

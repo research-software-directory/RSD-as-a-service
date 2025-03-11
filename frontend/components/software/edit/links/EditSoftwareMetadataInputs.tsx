@@ -2,10 +2,10 @@
 // SPDX-FileCopyrightText: 2023 - 2024 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -38,7 +38,7 @@ export default function EditSoftwareMetadataInputs() {
   // console.groupEnd()
 
   return (
-    <EditSection className='xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem] py-4'>
+    <EditSection className='xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem] py-4'>
       <div className="overflow-hidden">
         <EditSectionTitle
           title='Software URLs'

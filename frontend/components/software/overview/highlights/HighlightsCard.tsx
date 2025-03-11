@@ -48,7 +48,7 @@ export default function HighlightsCard(item: HighlightsCardProps) {
       key={item.id}
       href={`/software/${item.slug}`}
       className="hover:text-inherit">
-      <div className="flex-shrink-0 transition bg-base-100 shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer h-full select-none flex flex-col sm:flex-row sm:w-full" >
+      <div className="shrink-0 transition bg-base-100 shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer h-full select-none flex flex-col sm:flex-row sm:w-full" >
         {/*
           Cover image, show only if valid image link! To avoid the layout shift we
           flip the logic to hide the image only when the image link is not valid.
