@@ -1,11 +1,29 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package nl.esciencecenter.rsd.scraper.package_manager;
+
+import nl.esciencecenter.rsd.scraper.Config;
+import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+import nl.esciencecenter.rsd.scraper.Utils;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.AnacondaScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.CranScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.CratesScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.DockerHubScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.FourTuScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.GoScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.MavenScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.NpmScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PackageManagerScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PixiScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PypiScraper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -17,24 +35,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import nl.esciencecenter.rsd.scraper.Config;
-import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
-import nl.esciencecenter.rsd.scraper.RsdResponseException;
-import nl.esciencecenter.rsd.scraper.Utils;
-import nl.esciencecenter.rsd.scraper.package_manager.scrapers.AnacondaScraper;
-import nl.esciencecenter.rsd.scraper.package_manager.scrapers.CranScraper;
-import nl.esciencecenter.rsd.scraper.package_manager.scrapers.CratesScraper;
-import nl.esciencecenter.rsd.scraper.package_manager.scrapers.DockerHubScraper;
-import nl.esciencecenter.rsd.scraper.package_manager.scrapers.GoScraper;
-import nl.esciencecenter.rsd.scraper.package_manager.scrapers.MavenScraper;
-import nl.esciencecenter.rsd.scraper.package_manager.scrapers.NpmScraper;
-import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PackageManagerScraper;
-import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PixiScraper;
-import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PypiScraper;
 
 public class MainPackageManager {
 
@@ -94,6 +94,7 @@ public class MainPackageManager {
 			case cran -> new CranScraper(url);
 			case crates -> new CratesScraper(url);
 			case dockerhub -> new DockerHubScraper(url);
+			case fourtu -> new FourTuScraper();
 			case golang -> new GoScraper(url);
 			case maven, sonatype -> new MavenScraper(url);
 			case npm -> new NpmScraper(url);
@@ -114,13 +115,16 @@ public class MainPackageManager {
 			postgrestConnector.saveDownloadCount(data.id(), downloads, scrapedAt);
 		} catch (RsdRateLimitException e) {
 			Utils.saveExceptionInDatabase("Package manager downloads scraper", "package_manager", data.id(), e);
-			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "download_count_last_error", data.id().toString(), "id", null, null);
+			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "download_count_last_error", data.id()
+				.toString(), "id", null, null);
 		} catch (RsdResponseException e) {
 			Utils.saveExceptionInDatabase("Package manager downloads scraper", "package_manager", data.id(), e);
-			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "download_count_last_error", data.id().toString(), "id", scrapedAt, "download_count_scraped_at");
+			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "download_count_last_error", data.id()
+				.toString(), "id", scrapedAt, "download_count_scraped_at");
 		} catch (IOException e) {
 			Utils.saveExceptionInDatabase("Package manager downloads scraper", "package_manager", data.id(), e);
-			Utils.saveErrorMessageInDatabase("Unknown error", "package_manager", "download_count_last_error", data.id().toString(), "id", scrapedAt, "download_count_scraped_at");
+			Utils.saveErrorMessageInDatabase("Unknown error", "package_manager", "download_count_last_error", data.id()
+				.toString(), "id", scrapedAt, "download_count_scraped_at");
 		}
 	}
 
@@ -135,13 +139,16 @@ public class MainPackageManager {
 			postgrestConnector.saveReverseDependencyCount(data.id(), revDeps, scrapedAt);
 		} catch (RsdRateLimitException e) {
 			Utils.saveExceptionInDatabase("Package manager reverse dependencies scraper", "package_manager", data.id(), e);
-			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "reverse_dependency_count_last_error", data.id().toString(), "id", null, null);
+			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "reverse_dependency_count_last_error", data.id()
+				.toString(), "id", null, null);
 		} catch (RsdResponseException e) {
 			Utils.saveExceptionInDatabase("Package manager reverse dependencies scraper", "package_manager", data.id(), e);
-			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "reverse_dependency_count_last_error", data.id().toString(), "id", scrapedAt, "reverse_dependency_count_scraped_at");
+			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "reverse_dependency_count_last_error", data.id()
+				.toString(), "id", scrapedAt, "reverse_dependency_count_scraped_at");
 		} catch (Exception e) {
 			Utils.saveExceptionInDatabase("Package manager reverse dependencies scraper", "package_manager", data.id(), e);
-			Utils.saveErrorMessageInDatabase("Unknown error", "package_manager", "reverse_dependency_count_last_error", data.id().toString(), "id", scrapedAt, "reverse_dependency_count_scraped_at");
+			Utils.saveErrorMessageInDatabase("Unknown error", "package_manager", "reverse_dependency_count_last_error", data.id()
+				.toString(), "id", scrapedAt, "reverse_dependency_count_scraped_at");
 		}
 	}
 }

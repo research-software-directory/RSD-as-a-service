@@ -200,6 +200,7 @@ func convertRsdToCodeMeta(bytes []byte) ([]byte, error) {
 		ProgrammingLanguage:  extractProgrammingLanguages(rsdResponse),
 		License:              extractLicenses(rsdResponse),
 		ReferencePublication: extractReferencePublications(rsdResponse),
+		DownloadUrl:          []string{},
 	}
 
 	if rsdResponse.RepositoryURL != nil {

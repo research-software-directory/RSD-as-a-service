@@ -56,6 +56,12 @@ export const packageManagerSettings = {
     hostname: ['hub.docker.com'],
     services: ['downloads']
   },
+  fourtu: {
+    name: '4TU.ResearchData',
+    icon: '/images/fourtu-researchdata.png',
+    hostname: ['data.4tu.nl'],
+    services: []
+  },
   ghcr: {
     name: 'Github Container Registry',
     icon: '/images/github-logo.svg',
@@ -351,7 +357,7 @@ export function getPackageManagerServices(pm_key: PackageManagerTypes | null) {
   // no services if no key
   if (pm_key === null) return []
   // return services if key found
-  if (Object.hasOwn(packageManagerSettings, pm_key) === true) {
+  if (Object.hasOwn(packageManagerSettings, pm_key)) {
     return packageManagerSettings[pm_key].services
   }
   // no services if key not found

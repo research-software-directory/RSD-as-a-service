@@ -113,4 +113,5 @@ type SoftwareApplication struct {
 	ProgrammingLanguage  []string                         `json:"programmingLanguage"`
 	License              SingleOrArray[CreativeWorkOrUrl] `json:"license"`
 	ReferencePublication []ScholarlyArticle               `json:"referencePublication"`
+	DownloadUrl          []string                         `json:"downloadUrl"`
 }
