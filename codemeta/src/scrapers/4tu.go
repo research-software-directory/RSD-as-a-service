@@ -234,6 +234,12 @@ func saveApplicationsInRsd(softwareSlice []terms.SoftwareApplication, adminJwt s
 			err = errors.Join(err, localErr)
 			continue
 		}
+
+		localErr = savePackageManagersForSoftware(id, software, adminJwt, backendUrl)
+		if localErr != nil {
+			err = errors.Join(err, localErr)
+			continue
+		}
 	}
 
 	return err
@@ -739,6 +745,42 @@ func saveReferencePublicationsForSoftware(softwareId string, software terms.Soft
 		request.Header.Add("Prefer", "resolution=ignore-duplicates")
 
 		resp, err = defaultClient.Do(request)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func savePackageManagersForSoftware(softwareId string, software terms.SoftwareApplication, adminJwt string, backendUrl string) error {
+	for _, downloadUrl := range software.DownloadUrl {
+
+		type RsdPackageManager struct {
+			Software       string `json:"software"`
+			Url            string `json:"url"`
+			PackageManager string `json:"package_manager"`
+		}
+
+		var rsdpackageManager = RsdPackageManager{
+			Software:       softwareId,
+			Url:            downloadUrl,
+			PackageManager: "fourtu",
+		}
+
+		jsonBytes, err := json.Marshal(&rsdpackageManager)
+		if err != nil {
+			return err
+		}
+
+		request, err := http.NewRequest("POST", backendUrl+"/package_manager", bytes.NewBuffer(jsonBytes))
+		if err != nil {
+			return err
+		}
+
+		request.Header.Add("Authorization", "Bearer "+adminJwt)
+
+		_, err = defaultClient.Do(request)
 		if err != nil {
 			return err
 		}
