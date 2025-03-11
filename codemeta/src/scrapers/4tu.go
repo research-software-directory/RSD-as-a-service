@@ -111,6 +111,7 @@ type RsdSoftwareTable struct {
 	ConceptDoi     *string `json:"concept_doi"`
 	Description    *string `json:"description"`
 	ShortStatement *string `json:"short_statement"`
+	GetStartedUrl  *string `json:"get_started_url"`
 }
 
 var nonLowerLetterOrDigit = regexp.MustCompile("[^a-z0-9]")
@@ -173,13 +174,21 @@ func saveApplicationsInRsd(softwareSlice []terms.SoftwareApplication, adminJwt s
 	var err error
 
 	for _, software := range softwareSlice {
+		conceptDoi := extractConceptDoi(software.Id)
+		var getStartedUrl *string = nil
+		if conceptDoi != nil {
+			getStartedUrlString := "https://doi.org/" + *conceptDoi
+			getStartedUrl = &getStartedUrlString
+		}
+
 		rsdSoftware := RsdSoftwareTable{
 			IsPublished:    true,
 			Slug:           nameToSlug(software.Name),
 			BrandName:      software.Name,
-			ConceptDoi:     extractConceptDoi(software.Id),
+			ConceptDoi:     conceptDoi,
 			Description:    extractDescription(software.Description),
 			ShortStatement: extractShortStatement(software.Description),
+			GetStartedUrl:  getStartedUrl,
 		}
 
 		id, localErr := createOrUpdateBasicSoftware(rsdSoftware, adminJwt, backendUrl)
