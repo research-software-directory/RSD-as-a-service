@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -323,6 +323,7 @@ func extractContributors(rsdSoftware RsdSoftware) []terms.Person {
 			Id:         jsonContributor.Orcid,
 			GivenName:  jsonContributor.GivenNames,
 			FamilyName: jsonContributor.FamilyNames,
+			Name:       jsonContributor.GivenNames + " " + jsonContributor.FamilyNames,
 			Email:      jsonContributor.EmailAddress,
 			RoleName:   jsonContributor.Role,
 		}
