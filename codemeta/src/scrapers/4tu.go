@@ -234,6 +234,12 @@ func saveApplicationsInRsd(softwareSlice []terms.SoftwareApplication, adminJwt s
 			err = errors.Join(err, localErr)
 			continue
 		}
+
+		localErr = savePackageManagersForSoftware(id, software, adminJwt, backendUrl)
+		if localErr != nil {
+			err = errors.Join(err, localErr)
+			continue
+		}
 	}
 
 	return err
@@ -298,11 +304,11 @@ func createOrUpdateBasicSoftware(rsdSoftware RsdSoftwareTable, adminJwt string, 
 		}
 
 		if resp.StatusCode >= 400 {
-			println(rsdSoftware.BrandName)
-			println(rsdSoftware.Slug)
-			println(resp.StatusCode)
-			respBody, _ := io.ReadAll(resp.Body)
-			println(string(respBody))
+			respBodyBytes, _ := io.ReadAll(resp.Body)
+			responseBody := string(respBodyBytes)
+			errorMessageUnformatted := "Error when creating new software with name %s,\n slug %s,\n got status code %d\n and got body:\n %s"
+			errorMessageFormatted := fmt.Sprintf(errorMessageUnformatted, rsdSoftware.BrandName, rsdSoftware.Slug, resp.StatusCode, responseBody)
+			log.Println(errorMessageFormatted)
 
 			return "", fmt.Errorf("got status code %d when creating new software", resp.StatusCode)
 		}
@@ -336,11 +342,11 @@ func createOrUpdateBasicSoftware(rsdSoftware RsdSoftwareTable, adminJwt string, 
 		}
 
 		if resp.StatusCode >= 400 {
-			println(rsdSoftware.BrandName)
-			println(rsdSoftware.Slug)
-			println(resp.StatusCode)
-			respBody, _ := io.ReadAll(resp.Body)
-			println(string(respBody))
+			respBodyBytes, _ := io.ReadAll(resp.Body)
+			responseBody := string(respBodyBytes)
+			errorMessageUnformatted := "Error when updating existing software with name %s,\n slug %s,\n got status code %d\n and got body:\n %s"
+			errorMessageFormatted := fmt.Sprintf(errorMessageUnformatted, rsdSoftware.BrandName, rsdSoftware.Slug, resp.StatusCode, responseBody)
+			log.Println(errorMessageFormatted)
 
 			return "", fmt.Errorf("got status code %d when updating existing software", resp.StatusCode)
 		}
@@ -739,6 +745,43 @@ func saveReferencePublicationsForSoftware(softwareId string, software terms.Soft
 		request.Header.Add("Prefer", "resolution=ignore-duplicates")
 
 		resp, err = defaultClient.Do(request)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func savePackageManagersForSoftware(softwareId string, software terms.SoftwareApplication, adminJwt string, backendUrl string) error {
+	for _, downloadUrl := range software.DownloadUrl {
+
+		type RsdPackageManager struct {
+			Software       string `json:"software"`
+			Url            string `json:"url"`
+			PackageManager string `json:"package_manager"`
+		}
+
+		var rsdpackageManager = RsdPackageManager{
+			Software:       softwareId,
+			Url:            downloadUrl,
+			PackageManager: "fourtu",
+		}
+
+		jsonBytes, err := json.Marshal(&rsdpackageManager)
+		if err != nil {
+			return err
+		}
+
+		request, err := http.NewRequest("POST", backendUrl+"/package_manager?on_conflict=software,url,package_manager", bytes.NewBuffer(jsonBytes))
+		if err != nil {
+			return err
+		}
+
+		request.Header.Add("Authorization", "Bearer "+adminJwt)
+		request.Header.Add("Prefer", "resolution=ignore-duplicates")
+
+		_, err = defaultClient.Do(request)
 		if err != nil {
 			return err
 		}
