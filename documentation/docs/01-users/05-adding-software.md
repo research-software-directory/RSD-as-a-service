@@ -174,6 +174,12 @@ This section allows you to add mentions to your software page. You can use this 
 
 ### Reference papers
 
+:::info
+A reference paper is an article or artifact with a DOI that primarily describes your software, such as analysing its implementation efficiency or detailing new features.
+
+If other researchers use your software and mention it in their studies, please list these papers under [Related output](#related-output).
+:::
+
 Use the _Search_ box on the right hand side to find papers by DOI, OpenAlex ID or title. All the relevant data about the publication will be retrieved automatically. A background scraper will use [OpenAlex](https://openalex.org/) to collect all citations of reference papers that have a DOI or an OpenAlex ID.
 
 ### Citations
