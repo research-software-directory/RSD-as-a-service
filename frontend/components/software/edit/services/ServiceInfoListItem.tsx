@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -21,23 +21,27 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
 import DeleteIcon from '@mui/icons-material/Delete'
-import {deleteServiceDataFromDb} from './apiSoftwareServices'
 import {useSession} from '~/auth'
-import useSoftwareContext from '../useSoftwareContext'
 import useSnackbar from '~/components/snackbar/useSnackbar'
+import useSoftwareContext from '../useSoftwareContext'
+import {deleteServiceDataFromDb} from './apiSoftwareServices'
 
 
-type ServiceInfoListItemProps={
-  readonly title:string
-  readonly scraped_at: string|null
-  readonly last_error: string|null
-  readonly url: string|null
-  readonly platform: CodePlatform|null
-  readonly scraping_disabled_reason: string|null
-  readonly dbprops?: string[]
-}
+type ServiceInfoListItemProps=Readonly<{
+  title:string
+  scraped_at: string|null
+  last_error: string|null
+  url: string|null
+  platform: CodePlatform|null
+  scraping_disabled_reason: string|null
+  dbprops?: string[]
+  onClear?:()=>void
+}>
 
-export function ServiceInfoListItem({title,scraped_at,last_error,url,platform,scraping_disabled_reason,dbprops}:ServiceInfoListItemProps){
+export function ServiceInfoListItem({
+  title,scraped_at,last_error,url,platform,
+  scraping_disabled_reason,dbprops, onClear
+}:ServiceInfoListItemProps){
   let status:'error'|'success'|'not_active'|'scheduled'|'not_supported' = 'not_active'
   const {token} = useSession()
   const {software} = useSoftwareContext()
@@ -97,8 +101,17 @@ export function ServiceInfoListItem({title,scraped_at,last_error,url,platform,sc
   }
 
   async function clearServiceData(dbprops: string[]) {
-    await deleteServiceDataFromDb({dbprops: dbprops, software: software.id, token: token})
-      .then(resp => (resp?.status === 204) ? showSuccessMessage(resp?.message) : showErrorMessage(resp?.message))
+    const resp = await deleteServiceDataFromDb({dbprops, software: software.id, token: token})
+    if (resp?.status === 200) {
+      const formattedProps = dbprops
+        .map((str, index) => (index === 0 ? str.replace(/_/g, ' ').replace(/^./, c => c.toUpperCase()) : str.replace(/_/g, ' ')))
+        .join(', ')
+      showSuccessMessage(`${formattedProps} cleared from database.`)
+      // reload data
+      if (onClear) onClear()
+    }else{
+      showErrorMessage(resp?.message)
+    }
   }
 
   return (
@@ -124,9 +137,9 @@ export function ServiceInfoListItem({title,scraped_at,last_error,url,platform,sc
         secondary={getStatusMsg()}
       />
 
-      { dbprops && (
+      { dbprops ?
         <ListItemSecondaryAction>
-          <Tooltip title={(status == 'not_active') ? 'No repository URL: No data to delete.' : 'Clear service data'}>
+          <Tooltip title={(status === 'success') ? 'Clear service data' : 'No repository URL or no data to delete.'}>
             <span>
               <IconButton
                 onClick={() => {
@@ -134,15 +147,15 @@ export function ServiceInfoListItem({title,scraped_at,last_error,url,platform,sc
                 }}
                 aria-label="delete"
                 size="large"
-                disabled={(status == 'not_active')}
+                disabled={status !== 'success'}
               >
                 <DeleteIcon />
               </IconButton>
             </span>
           </Tooltip>
         </ListItemSecondaryAction>
-      )}
-
+        : null
+      }
     </ListItem>
   )
 }
