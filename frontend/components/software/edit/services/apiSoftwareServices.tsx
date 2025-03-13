@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -7,10 +7,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {useSession} from '~/auth'
 import logger from '~/utils/logger'
-import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import {CodePlatform} from '~/types/SoftwareTypes'
 import {PackageManagerTypes} from '../package-managers/apiPackageManager'
 import useSoftwareContext from '../useSoftwareContext'
@@ -134,13 +134,8 @@ export function useSoftwareServices(){
   const [services,setServices] = useState<SoftwareServices>()
   const [loading, setLoading] = useState(true)
 
-
-  useEffect(()=>{
-    let abort=false
-
+  const loadServices = useCallback((abort:boolean)=>{
     if (token && software.id){
-      setLoading(true)
-
       getSoftwareServices(software.id,token)
         .then(item=>{
           if (abort===false) setServices(item)
@@ -153,14 +148,24 @@ export function useSoftwareServices(){
           if (abort===false) setLoading(false)
         })
     }
+  },[token,software.id])
+
+  useEffect(()=>{
+    let abort=false
+
+    if (token && software.id){
+      setLoading(true)
+      loadServices(abort)
+    }
 
     return ()=>{abort=true}
-  },[token,software.id])
+  },[token,software.id,loadServices])
 
 
   return {
     loading,
-    services
+    services,
+    loadServices
   }
 }
 
@@ -172,22 +177,13 @@ export async function deleteServiceDataFromDb({dbprops, software, token}:
     const resp = await fetch(url, {
       method: 'PATCH',
       headers: {
-        ...createJsonHeaders(token),
-        'Content-Type': 'application/json'
+        ...createJsonHeaders(token)
       },
       body: JSON.stringify(
         dbprops.reduce((acc, dbprop) => ({...acc, [dbprop]: null}), {})
       )
     })
-    if (resp.status === 204) {
-      const formattedProps = dbprops
-        .map((str, index) => (index === 0 ? str.replace(/_/g, ' ').replace(/^./, c => c.toUpperCase()) : str.replace(/_/g, ' ')))
-        .join(', ')
-      return {
-        status: 204,
-        message: `${formattedProps} cleared from database.`
-      }
-    }
+    return extractReturnMessage(resp)
   } catch (e: any) {
     logger(`deleteServiceDataFromDb: ${e?.message}`, 'error')
     return {
