@@ -219,15 +219,15 @@ $$
 	SELECT
 		category_for_software.software_id AS software,
 		ARRAY_AGG(
-			category.short_name
-			ORDER BY short_name
+			DISTINCT category_path.short_name
+			ORDER BY category_path.short_name
 		) AS category
 	FROM
 		category_for_software
 	INNER JOIN
-		category ON category.id = category_for_software.category_id
+		category_path(category_for_software.category_id) ON TRUE
 	WHERE
-		category.community = community_id
+		category_path.community = community_id
 	GROUP BY
 		category_for_software.software_id;
 $$;

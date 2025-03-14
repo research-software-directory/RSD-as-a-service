@@ -58,15 +58,15 @@ $$
 	SELECT
 		category_for_project.project_id AS project,
 		ARRAY_AGG(
-			category.short_name
-			ORDER BY short_name
+			DISTINCT category_path.short_name
+			ORDER BY category_path.short_name
 		) AS category
 	FROM
 		category_for_project
 	INNER JOIN
-		category ON category.id = category_for_project.category_id
+		category_path(category_for_project.category_id) ON TRUE
 	WHERE
-		category.organisation = organisation_id
+		category_path.organisation = organisation_id
 	GROUP BY
 		category_for_project.project_id;
 $$;
@@ -436,15 +436,15 @@ $$
 	SELECT
 		category_for_software.software_id AS software,
 		ARRAY_AGG(
-			category.short_name
-			ORDER BY short_name
+			DISTINCT category_path.short_name
+			ORDER BY category_path.short_name
 		) AS category
 	FROM
 		category_for_software
 	INNER JOIN
-		category ON category.id = category_for_software.category_id
+		category_path(category_for_software.category_id) ON TRUE
 	WHERE
-		category.organisation = organisation_id
+		category_path.organisation = organisation_id
 	GROUP BY
 		category_for_software.software_id;
 $$;

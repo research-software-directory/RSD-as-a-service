@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,11 +10,11 @@ import Check from '@mui/icons-material/Check'
 import UndoIcon from '@mui/icons-material/Undo'
 
 import {IconBtnMenuOption} from '~/components/menu/IconBtnMenuOnAction'
-import {Status} from '~/types/Organisation'
+import {OrganisationStatus} from '~/types/Organisation'
 import {ProjectMenuAction} from './card/useProjectCardActions'
 
 type AdminMenuOptionsProps = {
-  status: Status
+  status: OrganisationStatus
   is_published: boolean
   is_featured: boolean
   target: 'project'| 'software'

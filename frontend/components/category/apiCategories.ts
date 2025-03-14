@@ -1,12 +1,13 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {CategoryEntry} from '~/types/Category'
 import {getBaseUrl} from '~/utils/fetchHelpers'
 import {TreeNode} from '~/types/TreeNode'
+import logger from '~/utils/logger'
 
 type LoadCategoryProps={
   community?: string | null,
@@ -92,4 +93,50 @@ export function categoryEntriesToRoots(categoriesArr: CategoryEntry[]): TreeNode
   }
 
   return result
+}
+
+export async function getOrganisationSlug(id:string){
+  try{
+    const url=`${getBaseUrl()}/rpc/organisation_route?id=${id}`
+
+    const resp = await fetch(url)
+
+    if (resp.ok){
+      const data:any = await resp.json()
+      if (data[0]?.rsd_path){
+        return data[0].rsd_path
+      }
+      return undefined
+    }
+
+    logger(`getOrganisationSlug ${resp.status}: ${resp.statusText}`)
+    return undefined
+
+  }catch(e:any){
+    logger(`getOrganisationSlug: ${e?.message}`,'error')
+    return undefined
+  }
+}
+
+export async function getCommunitySlug(id:string){
+  try{
+    const url=`${getBaseUrl()}/community?id=eq.${id}&select=slug`
+
+    const resp = await fetch(url)
+
+    if (resp.ok){
+      const data:any = await resp.json()
+      if (data[0]?.slug){
+        return data[0].slug
+      }
+      return undefined
+    }
+
+    logger(`getCommunitySlug ${resp.status}: ${resp.statusText}`)
+    return undefined
+
+  }catch(e:any){
+    logger(`getCommunitySlug: ${e?.message}`,'error')
+    return undefined
+  }
 }

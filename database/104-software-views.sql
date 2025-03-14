@@ -215,16 +215,16 @@ $$
 	SELECT
 		category_for_software.software_id AS software,
 		ARRAY_AGG(
-			category.short_name
-			ORDER BY short_name
+			DISTINCT category_path.short_name
+			ORDER BY category_path.short_name
 		) AS category
 	FROM
 		category_for_software
 	INNER JOIN
-		category ON category.id = category_for_software.category_id
+		category_path(category_for_software.category_id) ON TRUE
 	WHERE
 	-- FILTER FOR GLOBAL CATEGORIES
-		category.community IS NULL AND category.organisation IS NULL
+		category_path.community IS NULL AND category_path.organisation IS NULL
 	GROUP BY
 		category_for_software.software_id;
 $$;

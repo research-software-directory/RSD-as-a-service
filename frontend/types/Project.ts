@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {SearchOrganisation, OrganisationRole, Status} from './Organisation'
+import {SearchOrganisation, OrganisationRole, OrganisationStatus} from './Organisation'
 import {Person} from './Contributor'
 
 export type NewProject = {
@@ -73,7 +73,7 @@ export type OrganisationsOfProject = {
   website: string | null
   rsd_path: string
   logo_id: string | null
-  status: Status
+  status: OrganisationStatus
   role: OrganisationRole
   project: string
   parent: string | null
@@ -97,7 +97,7 @@ export type SearchProject = {
   slug: string
   title: string
   subtitle: string | null
-  status: Status
+  status: OrganisationStatus
   image_id: string | null
 }
 

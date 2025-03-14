@@ -7,6 +7,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {MuiIconName} from '~/components/category/CategoryIcon'
+import {CommunityRequestStatus} from '~/components/communities/software/apiCommunitySoftware'
+import {OrganisationStatus} from './Organisation'
 
 export type CategoryProperties = {
   icon?: MuiIconName
@@ -29,6 +31,8 @@ export type CategoryEntry = {
   name: string
   properties: CategoryProperties
   provenance_iri: string | null
+  // values: global, other + organisation and community acceptance statuses
+  status: 'global' | 'other' | CommunityRequestStatus | OrganisationStatus
 }
 
 
