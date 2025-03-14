@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -42,6 +42,16 @@ export class TreeNode<T> {
     }
   }
 
+  clone(): TreeNode<T> {
+    const clone = new TreeNode(this.#value)
+
+    for (const child of this.#children) {
+      clone.addChild(child.clone())
+    }
+
+    return clone
+  }
+
   subTreeWhereLeavesSatisfy(predicate: (value: T) => boolean): TreeNode<T> | null {
     if (this.#children.size === 0) {
       return predicate(this.#value) ? new TreeNode<T>(this.#value) : null
@@ -50,6 +60,22 @@ export class TreeNode<T> {
     const newNode = new TreeNode<T>(this.#value)
     for (const child of this.#children) {
       const newSubTree = child.subTreeWhereLeavesSatisfy(predicate)
+      if (newSubTree !== null) {
+        newNode.addChild(newSubTree)
+      }
+    }
+
+    return newNode.#children.size === 0 ? null : newNode
+  }
+
+  subTreeWhereNodesSatisfy(predicate: (value: T) => boolean): TreeNode<T> | null {
+    if (predicate(this.#value)) {
+      return this.clone()
+    }
+
+    const newNode = new TreeNode<T>(this.#value)
+    for (const child of this.#children) {
+      const newSubTree = child.subTreeWhereNodesSatisfy(predicate)
       if (newSubTree !== null) {
         newNode.addChild(newSubTree)
       }

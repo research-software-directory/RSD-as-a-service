@@ -50,7 +50,6 @@ function CategoryContent({
     <ListItemButton
       onClick={onSelect}
     >
-
       <ListItemIcon>
         <Checkbox
           edge="start"
@@ -58,7 +57,6 @@ function CategoryContent({
           checked={isSelected}
         />
       </ListItemIcon>
-
       <ListItemText
         // alias Label
         primary={cat.short_name}

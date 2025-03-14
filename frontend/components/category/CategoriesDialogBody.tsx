@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -104,25 +105,51 @@ export default function CategoriesDialogBody({
       )
 
     case 'ready':
-      return (
-        <>
-          {(categories === null || categories.length === 0)
-            ?
-            <Alert severity="info" sx={{'padding': '2rem', height:'inherit', width:'inherit'}}>
-              <AlertTitle sx={{fontWeight:500}}>No categories</AlertTitle>
-              {noItemsMsg}
-            </Alert>
-            :
-            <List>
-              <CategoryList
-                categories={categories}
-                isSelected={isSelected}
-                onSelect={onSelect}
-                searchFor={searchFor}
-              />
-            </List>
+      if (categories.length === 0) {
+        return (
+          <Alert severity="info" sx={{'padding': '2rem', height:'inherit', width:'inherit'}}>
+            <AlertTitle sx={{fontWeight:500}}>No categories</AlertTitle>
+            {noItemsMsg}
+          </Alert>
+        )
+      }
+
+
+      // copy to filtered
+      let filtered = [...categories]
+      // filter if search provided
+      if (searchFor){
+        filtered = []
+        const lowerCaseQuery = searchFor.toLocaleLowerCase()
+        for (const root of categories) {
+          const filteredTree = root.subTreeWhereNodesSatisfy(item =>
+            item.short_name.toLocaleLowerCase().includes(lowerCaseQuery) ||
+            item.name.toLocaleLowerCase().includes(lowerCaseQuery)
+          )
+
+          if (filteredTree !== null) {
+            filtered.push(filteredTree)
           }
-        </>
+        }
+      }
+
+      if (filtered.length === 0) {
+        return (
+          <Alert severity="info">
+            <AlertTitle sx={{fontWeight:500}}>No match</AlertTitle>
+            No category label or description found for <strong>{searchFor}</strong>.
+          </Alert>
+        )
+      }
+
+      return (
+        <List>
+          <CategoryList
+            categories={filtered}
+            isSelected={isSelected}
+            onSelect={onSelect}
+          />
+        </List>
       )
   }
 
