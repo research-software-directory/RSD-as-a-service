@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 dv4all
 -- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
@@ -13,8 +13,8 @@ CREATE TABLE team_member (
 	email_address VARCHAR(200),
 	family_names VARCHAR(200) NOT NULL,
 	given_names VARCHAR(200) NOT NULL,
-	affiliation VARCHAR(200),
-	role VARCHAR(200),
+	affiliation VARCHAR(200) CHECK (affiliation ~ '^\S+( \S+)*$'),
+	role VARCHAR(200) CHECK (role ~ '^\S+( \S+)*$'),
 	orcid VARCHAR(19) CHECK (orcid ~ '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$'),
 	position INTEGER,
 	avatar_id VARCHAR(40) REFERENCES image(id),
