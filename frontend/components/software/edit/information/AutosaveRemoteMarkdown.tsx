@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -163,7 +163,7 @@ export default function AutosaveRemoteMarkdown({rules,options,onSaveField}: Auto
         onSaveField={onSaveField}
       />
       <h2 className="py-4 text-sm font-medium text-primary tracking-[0.125rem]">Preview</h2>
-      <div className="border rounded-sm min-h-[34rem] flex">
+      <div className="border rounded-xs min-h-[34rem] flex">
         {renderContent()}
       </div>
     </div>

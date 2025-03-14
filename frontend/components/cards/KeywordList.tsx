@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -22,7 +22,7 @@ export default function KeywordList({keywords=[], visibleNumberOfKeywords = 3}: 
             <li
               title={keyword}
               key={keyword}
-              className="bg-base-200 px-2 rounded capitalize line-clamp-1 leading-[1.5rem]"
+              className="bg-base-200 px-2 rounded-sm capitalize line-clamp-1 leading-[1.5rem]"
             >{keyword}</li>
           ))}
 

@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -156,7 +156,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             }}
             rules={config.authors.validation}
           />
-          <div className="grid grid-cols-[2fr,1fr] gap-4 py-4">
+          <div className="grid grid-cols-[2fr_1fr] gap-4 py-4">
             <ControlledTextField
               control={control}
               options={{
@@ -182,7 +182,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
               rules={config.publication_year.validation}
             />
           </div>
-          <div className="grid grid-cols-[2fr,1fr] gap-4 py-4">
+          <div className="grid grid-cols-[2fr_1fr] gap-4 py-4">
             <ControlledSelect
               name="mention_type"
               label={config.mentionType.label}

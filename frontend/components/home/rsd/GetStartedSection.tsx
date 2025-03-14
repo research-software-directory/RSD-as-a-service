@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,9 +17,9 @@ function GlowingButton({text, url, target = '_self', minWidth = '9rem'}: { text:
   >
     <div className="relative group">
       <div
-        className="absolute -inset-1 bg-gradient-to-r from-glow-start to-glow-end rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300" />
+        className="absolute -inset-1 bg-linear-to-r from-glow-start to-glow-end rounded-lg blur-sm opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300" />
       <div
-        className="flex gap-3 text-base-900 relative px-8 py-3 bg-base-100 ring-1 rounded leading-none items-center justify-center space-x-2"
+        className="flex gap-3 text-base-900 relative px-8 py-3 bg-base-100 ring-1 rounded-sm leading-none items-center justify-center space-x-2"
         style={{minWidth}}
       >
         <span className="space-y-2 text-xl font-medium whitespace-nowrap">
@@ -45,7 +45,7 @@ export default function GetStartedSection() {
         Get more information on how to add your own software or organization.
       </p>
       <div
-        className="max-w-screen-lg mt-6 mx-auto flex flex-wrap justify-center gap-4 p-2 scale-90">
+        className="max-w-(--breakpoint-lg) mt-6 mx-auto flex flex-wrap justify-center gap-4 p-2 scale-90">
         <div className="flex justify-center"
           data-aos="fade" data-aos-duration="600" data-aos-easing="ease-in-out"
         >

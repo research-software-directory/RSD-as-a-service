@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +17,7 @@ function TopNewsItem({item}:{item:TopNewsProps}){
       href={`/news/${item.publication_date}/${item.slug}`}
     >
       <article className="flex gap-4 items-start" data-aos="fade" data-aos-delay="0">
-        {/* <LandingPageImpactIcon className="h-auto mr-5 pt-1 scale-125 flex-shrink-0" /> */}
+        {/* <LandingPageImpactIcon className="h-auto mr-5 pt-1 scale-125 shrink-0" /> */}
         <div>
           <h3 className="mb-4 text-2xl font-medium">{item.title}</h3>
           <p className="text-lg opacity-70">{item.summary}</p>
@@ -43,7 +43,7 @@ export default function TopNewsSection({news}:{news:TopNewsProps[]}) {
         <HomepageDivider />
         <section
           id="top-news"
-          className="p-5 md:p-10 w-full max-w-screen-xl mx-auto">
+          className="p-5 md:p-10 w-full max-w-(--breakpoint-xl) mx-auto">
 
           <h2 className="flex justify-start text-3xl lg:text-4xl font-rsd-titles font-bold mt-6"
             data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">

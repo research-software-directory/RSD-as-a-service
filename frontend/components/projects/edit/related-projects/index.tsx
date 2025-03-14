@@ -125,7 +125,7 @@ export default function RelatedProjectsForProject() {
   }
 
   return (
-    <EditSection className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem]">
+    <EditSection className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]">
       <section className="py-4">
         <EditSectionTitle
           title={config.title}

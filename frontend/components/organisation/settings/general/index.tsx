@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -80,7 +80,7 @@ export default function OrganisationGeneralSettings() {
             rules={config.short_description.validation}
           />
           <div className="py-4"></div>
-          <section className="grid grid-cols-[1fr,1fr] gap-8">
+          <section className="grid grid-cols-[1fr_1fr] gap-8">
             <AutosaveOrganisationTextField
               options={{
                 name: 'website',

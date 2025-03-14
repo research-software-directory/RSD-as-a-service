@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -36,7 +36,7 @@ export default function ProjectInfo({
   categories
 }: ProjectInfoProps) {
   return (
-    <section className="px-4 sm:pb-8 sm:grid sm:gap-8 lg:grid-cols-[3fr,1fr] lg:gap-16">
+    <section className="px-4 sm:pb-8 sm:grid sm:gap-8 lg:grid-cols-[3fr_1fr] lg:gap-16">
       <ProjectDescription
         image_id={image_id}
         image_caption={image_caption ?? ''}

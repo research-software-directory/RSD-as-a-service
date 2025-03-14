@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -45,7 +45,7 @@ export default function ListItemNews({item}: {item:NewsListItem}) {
         data-testid="project-list-item"
         key={item.id}
         href={`/news/${item.publication_date}/${item.slug}`}
-        className='flex-1 flex items-center hover:text-inherit bg-base-100 rounded-sm'
+        className='flex-1 flex items-center hover:text-inherit bg-base-100 rounded-xs'
       >
         <ListImageWithGradientPlaceholder
           imgSrc={imgUrl}

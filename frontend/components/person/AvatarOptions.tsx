@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -47,7 +47,7 @@ export default function AvatarOptions(props: AvatarOptionsProps) {
   // console.groupEnd()
 
   return (
-    <div className="grid grid-cols-[1fr,3fr] gap-4">
+    <div className="grid grid-cols-[1fr_3fr] gap-4">
       <div>
         <label htmlFor="upload-avatar-image"
           title="Click to upload new image"

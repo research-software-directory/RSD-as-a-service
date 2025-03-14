@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,7 +34,7 @@ export default function PageEditorBody({links,selected,onSelect,onSorted,onDelet
   }
 
   return (
-    <section className="flex-1 xl:grid xl:grid-cols-[3fr,1fr] gap-8">
+    <section className="flex-1 xl:grid xl:grid-cols-[3fr_1fr] gap-8">
       {/* use form provider to pull isDirty state into sortablenav component */}
       <FormProvider {...methods} >
         {/* grid position on the right side, after edit content */}

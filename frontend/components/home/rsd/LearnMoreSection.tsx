@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,7 +13,7 @@ export default function LearnMoreSection() {
   return (
     <section
       id="learn-more"
-      className="p-5 md:p-10 grid gap-12 grid-cols-1 sm:grid-cols-2 max-w-screen-xl mt-20 mx-auto">
+      className="p-5 md:p-10 grid gap-12 grid-cols-1 sm:grid-cols-2 max-w-(--breakpoint-xl) mt-20 mx-auto">
       <div className="relative">
 
         <div className='sm:absolute -top-0 lg:-top-10 xl:-top-32 left-0 z-0'>
