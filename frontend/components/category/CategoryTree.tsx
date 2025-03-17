@@ -14,12 +14,13 @@ import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
 import {ssrSoftwareUrl} from '~/utils/postgrestUrl'
 
-export type CategoryTreeLevelProps = {
+export type CategoryTreeLevelProps = Readonly<{
   items: TreeNode<CategoryEntry>[]
   selectedList?: Set<string>
   showLongNames?: boolean
   onRemove?: (categoryId: string) => void
-}
+}>
+
 export default function CategoryTree({onRemove,items,showLongNames,selectedList}: CategoryTreeLevelProps){
   return (
     <ul className={'list-disc list-outside pl-6'}>
@@ -35,10 +36,8 @@ export default function CategoryTree({onRemove,items,showLongNames,selectedList}
                   <span className='pb-1'>{showLongNames ? category.name : category.short_name}</span>
                 </Tooltip>
               </Link>
-              { onRemove && selectedList && selectedList.has(category.id) ?
+              { onRemove && selectedList?.has(category.id) ?
 				        <IconButton
-                  // sx={{top: '-0.25rem'}}
-                  // data-id={category.id}
                   size='small'
                   onClick={()=>onRemove(category.id)}>
                   <CancelIcon fontSize='small'/>
