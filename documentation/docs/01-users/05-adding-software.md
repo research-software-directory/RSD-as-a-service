@@ -253,6 +253,8 @@ Here, you can see all the people who can maintain this software page. You can al
 
 Here you can find the information about the background services that RSD offers and their last status.
 
+You can clear the data that the scrapers collected by clicking on the delete icons next to the individual services. This is useful for example if you changed your default branch or rebased your git commit history.
+
 :::tip
 Please check this section from time to time to confirm that information you provided is correct and that RSD background services are able to use provided information in the proper way.
 :::
