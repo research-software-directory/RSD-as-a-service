@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
-// SPDX-FileCopyrightText: 2022 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -50,7 +50,7 @@ public class GitlabScraper implements GitScraper {
 	public GitlabScraper(String gitLabApiUrl, String projectPath, ZonedDateTime lastCommitHistoryTimestamp, CommitsPerWeek existingCommitsPerWeek) {
 		this.projectPath = projectPath.endsWith(".git") ? projectPath.substring(0, projectPath.length() - 4) : projectPath;
 		this.apiUri = gitLabApiUrl + "/v4";
-    this.graphqlUri = gitLabApiUrl + "/graphql";
+		this.graphqlUri = gitLabApiUrl + "/graphql";
 		this.lastCommitHistoryTimestamp = lastCommitHistoryTimestamp;
 		this.commitsPerWeek = existingCommitsPerWeek == null ? new CommitsPerWeek() : existingCommitsPerWeek;
 	}
