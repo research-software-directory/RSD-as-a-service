@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,7 +30,7 @@ export const modalConfig = {
   email_address: {
     label: 'Email',
     help: 'Contact person should have an email',
-    validation: (required:boolean) => ({
+    validation: (required: boolean) => ({
       required: required ? 'Contact person should have an email' : false,
       minLength: {value: 5, message: 'Minimum length is 5'},
       maxLength: {value: 200, message: 'Maximum length is 200'},
@@ -45,14 +46,23 @@ export const modalConfig = {
     validation: {
       minLength: {value: 2, message: 'Minimum length is 2'},
       maxLength: {value: 200, message: 'Maximum length is 200'},
+      pattern: {
+        value: /^\S+( \S+)*$/,
+        message: 'Make sure to remove all redundant spaces'
+      },
     }
   },
   role: {
     label: 'Role',
+    // language=text
     help: 'Select from list or type in',
     validation: {
       minLength: {value: 2, message: 'Minimum length is 2'},
       maxLength: {value: 200, message: 'Maximum length is 200'},
+      pattern: {
+        value: /^\S+( \S+)*$/,
+        message: 'Make sure to remove all redundant spaces'
+      },
     }
   },
   orcid: {
