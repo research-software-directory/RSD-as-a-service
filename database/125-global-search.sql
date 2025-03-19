@@ -1,7 +1,44 @@
 -- SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
+
+-- returns 0 when any of the ror_names is an exact (ignoring case) match, -1 when not found as substring, the least index otherwise (1-based)
+CREATE FUNCTION index_of_ror_query(query VARCHAR, organisation_id UUID)
+RETURNS INTEGER
+LANGUAGE plpgsql
+STABLE
+AS
+$$
+	DECLARE query_lower VARCHAR := LOWER(query);
+	DECLARE ror_names VARCHAR[];
+	DECLARE ror_name VARCHAR;
+	DECLARE ror_name_lower VARCHAR;
+	DECLARE min_index INTEGER;
+	BEGIN
+	ror_names := (SELECT organisation.ror_names FROM organisation WHERE id = organisation_id);
+	IF ror_names IS NULL THEN
+		RETURN -1;
+	ELSE
+		FOREACH ror_name IN ARRAY ror_names LOOP
+			CONTINUE WHEN ror_name IS NULL;
+			ror_name_lower := LOWER(ror_name);
+			IF ror_name_lower = query_lower THEN
+				RETURN 0;
+			ELSIF POSITION(query_lower IN ror_name_lower) <> 0 THEN
+				min_index := LEAST(min_index, POSITION(query_lower IN ror_name_lower));
+			END IF;
+		END LOOP;
+	END IF;
+	IF min_index IS NULL THEN
+		RETURN -1;
+	ELSE
+		RETURN min_index;
+	END IF;
+	END;
+$$;
+
 
 -- GLOBAL SEARCH
 -- depends on: aggregated_software_search
@@ -36,7 +73,7 @@ $$
 			WHEN aggregated_software_search.keywords_text ILIKE CONCAT('%', query, '%') THEN 0
 			WHEN aggregated_software_search.slug ILIKE CONCAT(query, '%') OR aggregated_software_search.brand_name ILIKE CONCAT(query, '%') THEN 0
 			WHEN aggregated_software_search.slug ILIKE CONCAT('%', query, '%') OR aggregated_software_search.brand_name ILIKE CONCAT('%', query, '%')
-				THEN LEAST(NULLIF(POSITION(query IN aggregated_software_search.slug), 0), NULLIF(POSITION(query IN aggregated_software_search.brand_name), 0))
+				THEN LEAST(NULLIF(POSITION(LOWER(query) IN aggregated_software_search.slug), 0), NULLIF(POSITION(LOWER(query) IN LOWER(aggregated_software_search.brand_name)), 0))
 			ELSE 0
 		END) AS index_found
 	FROM
@@ -62,7 +99,7 @@ $$
 			WHEN BOOL_OR(keyword.value ILIKE query) THEN 0
 			WHEN project.slug ILIKE CONCAT(query, '%') OR project.title ILIKE CONCAT(query, '%') THEN 0
 			WHEN project.slug ILIKE CONCAT('%', query, '%') OR project.title ILIKE CONCAT('%', query, '%')
-				THEN LEAST(NULLIF(POSITION(query IN project.slug), 0), NULLIF(POSITION(query IN project.title), 0))
+				THEN LEAST(NULLIF(POSITION(LOWER(query) IN project.slug), 0), NULLIF(POSITION(LOWER(query) IN LOWER(project.title)), 0))
 			ELSE 0
 		END) AS index_found
 	FROM
@@ -88,15 +125,15 @@ $$
 		'organisations' AS "source",
 		TRUE AS is_published,
 		(CASE
-			WHEN organisation.slug ILIKE query OR organisation."name" ILIKE query THEN 0
-			WHEN organisation.slug ILIKE CONCAT(query, '%') OR organisation."name" ILIKE CONCAT(query, '%') THEN 2
+			WHEN organisation.slug ILIKE query OR organisation."name" ILIKE query OR index_of_ror_query(query, organisation.id) = 0 THEN 0
+			WHEN organisation.slug ILIKE CONCAT(query, '%') OR organisation."name" ILIKE CONCAT(query, '%') OR index_of_ror_query(query, organisation.id) = 1 THEN 2
 			ELSE 3
 		END) AS rank,
 		(CASE
-			WHEN organisation.slug ILIKE query OR organisation."name" ILIKE query THEN 0
-			WHEN organisation.slug ILIKE CONCAT(query, '%') OR organisation."name" ILIKE CONCAT(query, '%') THEN 0
+			WHEN organisation.slug ILIKE query OR organisation."name" ILIKE query OR index_of_ror_query(query, organisation.id) = 0 THEN 0
+			WHEN organisation.slug ILIKE CONCAT(query, '%') OR organisation."name" ILIKE CONCAT(query, '%') OR index_of_ror_query(query, organisation.id) = 1 THEN 0
 			ELSE
-				LEAST(NULLIF(POSITION(query IN organisation.slug), 0), NULLIF(POSITION(query IN organisation."name"), 0))
+				LEAST(NULLIF(POSITION(LOWER(query) IN organisation.slug), 0), NULLIF(POSITION(LOWER(query) IN LOWER(organisation."name")), 0), NULLIF(index_of_ror_query(query, organisation.id), -1))
 		END) AS index_found
 	FROM
 		organisation
@@ -104,7 +141,7 @@ $$
 	-- ONLY TOP LEVEL ORGANISATIONS
 		organisation.parent IS NULL
 		AND
-		(organisation.slug ILIKE CONCAT('%', query, '%') OR organisation."name" ILIKE CONCAT('%', query, '%'))
+		(organisation.slug ILIKE CONCAT('%', query, '%') OR organisation."name" ILIKE CONCAT('%', query, '%') OR index_of_ror_query(query, organisation.id) >= 0)
 	UNION ALL
 	-- COMMUNITY search
 	SELECT
@@ -123,7 +160,7 @@ $$
 			WHEN community.slug ILIKE query OR community."name" ILIKE query THEN 0
 			WHEN community.slug ILIKE CONCAT(query, '%') OR community."name" ILIKE CONCAT(query, '%') THEN 0
 			ELSE
-				LEAST(NULLIF(POSITION(query IN community.slug), 0), NULLIF(POSITION(query IN community."name"), 0))
+				LEAST(NULLIF(POSITION(LOWER(query) IN community.slug), 0), NULLIF(POSITION(LOWER(query) IN LOWER(community."name")), 0))
 		END) AS index_found
 	FROM
 		community

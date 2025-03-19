@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -59,9 +59,9 @@ export default function LicensesFilter({licenses, licensesList,handleQueryChange
         }}
         defaultValue={[]}
         filterSelectedOptions
-        renderOption={(props, option) => (
+        renderOption={({key,...props}, option) => (
           <FilterOption
-            key={option.license}
+            key={key ?? option.license}
             props={props}
             label={option.license}
             count={option.license_cnt}

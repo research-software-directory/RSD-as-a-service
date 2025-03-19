@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,7 +19,7 @@ export type RsdContributor = {
   affiliation: string
   role: string
   orcid: string
-  avatar_id: string
+  avatar_id: string | null
   origin: 'contributor' | 'team_member'
   slug: string
   public_orcid_profile: null | string

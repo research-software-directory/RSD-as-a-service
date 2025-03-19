@@ -174,6 +174,12 @@ This section allows you to add mentions to your software page. You can use this 
 
 ### Reference papers
 
+:::info
+A reference paper is an article or artifact with a DOI that primarily describes your software, such as analysing its implementation efficiency or detailing new features.
+
+If other researchers use your software and mention it in their studies, please list these papers under [Related output](#related-output).
+:::
+
 Use the _Search_ box on the right hand side to find papers by DOI, OpenAlex ID or title. All the relevant data about the publication will be retrieved automatically. A background scraper will use [OpenAlex](https://openalex.org/) to collect all citations of reference papers that have a DOI or an OpenAlex ID.
 
 ### Citations
@@ -246,6 +252,8 @@ Here, you can see all the people who can maintain this software page. You can al
 ## Background services
 
 Here you can find the information about the background services that RSD offers and their last status.
+
+You can clear the data that the scrapers collected by clicking on the delete icons next to the individual services. This is useful for example if you changed your default branch or rebased your git commit history.
 
 :::tip
 Please check this section from time to time to confirm that information you provided is correct and that RSD background services are able to use provided information in the proper way.

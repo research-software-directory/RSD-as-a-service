@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,6 +29,11 @@ export default function AdminCategories() {
           community={null}
           organisation={null}
           onMutation={onMutation}
+          // different labels for global categories
+          labels={{
+            short_name:'Name displayed in sidebar if category is not a highlight',
+            name:'Full name displayed in table view if category is a highlighted category'
+          }}
         />
       }
     </section>

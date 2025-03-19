@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,6 +25,7 @@ export default function useSoftwareParams() {
     if (params?.keywords_json) count++
     if (params?.prog_lang_json) count++
     if (params?.licenses_json) count++
+    if (params?.categories_json) count++
     if (params?.search) count++
     return count
   }

@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,16 +22,17 @@ import {useSession} from '~/auth'
 import {TreeNode} from '~/types/TreeNode'
 import {CategoryEntry} from '~/types/Category'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
-import CategoryEditForm from '~/components/category/CategoryEditForm'
+import CategoryEditForm, {CategoryEditFormLabels} from '~/components/category/CategoryEditForm'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 
-export default function CategoryEditTreeNode({node, community, organisation, onDelete, onMutation}: Readonly<{
+export default function CategoryEditTreeNode({node, community, organisation, labels, onDelete, onMutation}: Readonly<{
   node: TreeNode<CategoryEntry>
   community: string | null
   organisation: string | null
   onDelete: (node: TreeNode<CategoryEntry>) => void
   onMutation: ()=>void
+  labels?: CategoryEditFormLabels
 }>) {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
@@ -117,7 +118,23 @@ export default function CategoryEditTreeNode({node, community, organisation, onD
           }}
           onClick={() => setExpandChildren(!expandChildren)}
         >
-          <ListItemText primary={categoryData.short_name} secondary={categoryData.name} />
+          <ListItemText
+            primary={categoryData.short_name}
+            secondary={
+              <>
+                <span>{categoryData.name}</span>
+                {/* only for top level item of organisation */}
+                {organisation && categoryData.parent===null ?
+                  <>
+                    <br/>
+                    <span className="pr-2">For software: {categoryData.allow_software ? 'Yes' : 'No'}</span>
+                    <span>For projects: {categoryData.allow_projects ? 'Yes' : 'No'}</span>
+                  </>
+                  : null
+                }
+              </>
+            }
+          />
           <ListItemSecondaryAction sx={{
             display: 'flex',
             gap:'0.25rem'
@@ -157,6 +174,7 @@ export default function CategoryEditTreeNode({node, community, organisation, onD
             data={categoryData}
             onSuccess={onEditSuccess}
             onCancel={()=>setShowItem('none')}
+            labels={labels}
           />
           :null
         }
@@ -168,6 +186,7 @@ export default function CategoryEditTreeNode({node, community, organisation, onD
             data={categoryData}
             onSuccess={onNewChildSuccess}
             onCancel={()=>setShowItem('none')}
+            labels={labels}
           />
           :null
         }
@@ -182,6 +201,7 @@ export default function CategoryEditTreeNode({node, community, organisation, onD
                   organisation={organisation}
                   onDelete={onDeleteChild}
                   onMutation={onMutation}
+                  labels={labels}
                 />
               )
             })}

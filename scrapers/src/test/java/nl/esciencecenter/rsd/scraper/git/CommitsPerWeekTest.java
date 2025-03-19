@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,11 +24,12 @@ class CommitsPerWeekTest {
 	@Test
 	void givenInstance_whenValidOperations_thenCorrectResults() {
 		CommitsPerWeek commitsPerWeek = new CommitsPerWeek();
-		Map<Instant, Long> underlyingMap = commitsPerWeek.data;
+		Map<Instant, Long> underlyingMap;
 
 		Instant sundayMidnight1 = Instant.ofEpochSecond(1670716800);
 		commitsPerWeek.addCommits(sundayMidnight1, 10);
 
+		underlyingMap = commitsPerWeek.getData();
 		Assertions.assertEquals(1, underlyingMap.size());
 		Assertions.assertTrue(underlyingMap.containsKey(sundayMidnight1));
 		Assertions.assertEquals(10, underlyingMap.get(sundayMidnight1));
@@ -34,6 +37,7 @@ class CommitsPerWeekTest {
 
 		commitsPerWeek.addCommits(sundayMidnight1, 20);
 
+		underlyingMap = commitsPerWeek.getData();
 		Assertions.assertEquals(1, underlyingMap.size());
 		Assertions.assertTrue(underlyingMap.containsKey(sundayMidnight1));
 		Assertions.assertEquals(30, underlyingMap.get(sundayMidnight1));
@@ -43,6 +47,7 @@ class CommitsPerWeekTest {
 			.plus(Duration.ofSeconds(12345));
 		commitsPerWeek.addCommits(smallTimeAfterSundayMidnight1, 10);
 
+		underlyingMap = commitsPerWeek.getData();
 		Assertions.assertEquals(1, underlyingMap.size());
 		Assertions.assertTrue(underlyingMap.containsKey(sundayMidnight1));
 		Assertions.assertEquals(40, underlyingMap.get(sundayMidnight1));
@@ -51,6 +56,7 @@ class CommitsPerWeekTest {
 		Instant sundayMidnight2 = sundayMidnight1.plus(Period.ofWeeks(5));
 		commitsPerWeek.addCommits(sundayMidnight2, 5);
 
+		underlyingMap = commitsPerWeek.getData();
 		Assertions.assertEquals(2, underlyingMap.size());
 		Assertions.assertTrue(underlyingMap.containsKey(sundayMidnight2));
 		Assertions.assertEquals(5, underlyingMap.get(sundayMidnight2));
@@ -58,6 +64,7 @@ class CommitsPerWeekTest {
 
 
 		commitsPerWeek.addMissingZeros();
+		underlyingMap = commitsPerWeek.getData();
 		Assertions.assertEquals(6, underlyingMap.size());
 		Assertions.assertEquals(0, underlyingMap.get(sundayMidnight1.plus(Period.ofWeeks(1))));
 		Assertions.assertEquals(0, underlyingMap.get(sundayMidnight1.plus(Period.ofWeeks(2))));

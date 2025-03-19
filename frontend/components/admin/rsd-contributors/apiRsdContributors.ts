@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -85,6 +85,8 @@ export async function patchPerson({id, key, value, origin, token}: {
         message: 'Property origin is missing'
       }
     }
+    // convert empty string value to null
+    if (value === '') value = null
     const url = `${getBaseUrl()}/${origin}?id=eq.${id}`
     // debugger
     const resp = await fetch(url, {

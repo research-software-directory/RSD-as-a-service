@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -87,6 +87,9 @@ export default function ContributorsTable() {
       <div className="py-4 text-sm">
         * Avatars are aggregated by combination of Given names and Family names or ORCID.
         If there is more than one avatar option you can click on the avatar to change it.
+        <div className="text-sm">
+          * Unused avatar images are not removed from RSD database.
+        </div>
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,9 +10,9 @@ import logger from '~/utils/logger'
 import {decodeJsonParam} from '~/utils/extractQueryParam'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
+import {buildSoftwareFilter} from '~/components/software/overview/filters/softwareFiltersApi'
 import useOrganisationContext from '../../context/useOrganisationContext'
 import useSoftwareParams from './useSoftwareParams'
-import {buildSoftwareFilter} from '~/components/software/overview/filters/softwareFiltersApi'
 
 export type OrgSoftwareFilterProps = {
   id: string
@@ -20,20 +20,16 @@ export type OrgSoftwareFilterProps = {
   keywords?: string[] | null
   prog_lang?: string[] | null
   licenses?: string[] | null
+  categories?: string[] | null
   token?:string
 }
 
-export function buildOrgSoftwareFilter({id, search, keywords, prog_lang, licenses}: OrgSoftwareFilterProps) {
+export function buildOrgSoftwareFilter({id, ...params}: OrgSoftwareFilterProps) {
   const filter = {
     // additional organisation filter
     organisation_id: id,
     // add default software filter params
-    ...buildSoftwareFilter({
-      search,
-      keywords,
-      prog_lang,
-      licenses
-    })
+    ...buildSoftwareFilter(params)
   }
   // console.group('buildOrgProjectFilter')
   // console.log('filter...', filter)
@@ -41,18 +37,11 @@ export function buildOrgSoftwareFilter({id, search, keywords, prog_lang, license
   return filter
 }
 
-export async function orgSoftwareKeywordsFilter({
-  id,search, keywords, prog_lang, licenses, token}: OrgSoftwareFilterProps) {
+export async function orgSoftwareKeywordsFilter({token,...params}: OrgSoftwareFilterProps) {
   try {
     const query = 'rpc/org_software_keywords_filter?order=keyword'
     const url = `${getBaseUrl()}/${query}`
-    const filter = buildOrgSoftwareFilter({
-      id,
-      search,
-      keywords,
-      prog_lang,
-      licenses
-    })
+    const filter = buildOrgSoftwareFilter(params)
 
     const resp = await fetch(url, {
       method: 'POST',
@@ -79,7 +68,7 @@ export async function orgSoftwareKeywordsFilter({
 export default function useOrgSoftwareKeywordsList() {
   const {token} = useSession()
   const {id} = useOrganisationContext()
-  const {search,keywords_json,prog_lang_json,licenses_json} = useSoftwareParams()
+  const {search,keywords_json,prog_lang_json,licenses_json,categories_json} = useSoftwareParams()
   const [keywordsList, setKeywordsList] = useState<KeywordFilterOption[]>([])
 
   // console.group('useOrgSoftwareKeywordsList')
@@ -97,6 +86,7 @@ export default function useOrgSoftwareKeywordsList() {
       const keywords = decodeJsonParam(keywords_json,null)
       const prog_lang = decodeJsonParam(prog_lang_json, null)
       const licenses = decodeJsonParam(licenses_json, null)
+      const categories = decodeJsonParam(categories_json, null)
 
       // get filter options
       orgSoftwareKeywordsFilter({
@@ -105,6 +95,7 @@ export default function useOrgSoftwareKeywordsList() {
         keywords,
         prog_lang,
         licenses,
+        categories,
         token
       }).then(resp => {
         // abort
@@ -119,6 +110,7 @@ export default function useOrgSoftwareKeywordsList() {
   }, [
     search, keywords_json,
     prog_lang_json, licenses_json,
+    categories_json,
     id,token
   ])
 

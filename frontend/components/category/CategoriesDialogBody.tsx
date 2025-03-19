@@ -1,14 +1,17 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Alert from '@mui/material/Alert'
+import List from '@mui/material/List'
+import AlertTitle from '@mui/material/AlertTitle'
+
 import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
 import ContentLoader from '../layout/ContentLoader'
 import {CategoryList} from './CategoryList'
-import List from '@mui/material/List'
 
 type CategoriesDialogBodyProps=Readonly<{
   categories: TreeNode<CategoryEntry>[],
@@ -17,19 +20,21 @@ type CategoriesDialogBodyProps=Readonly<{
   noItemsMsg: string
   selectedCategoryIds: Set<string>,
   setSelectedCategoryIds: (ids:Set<string>)=>void
+  searchFor?: string
 }>
 
 export default function CategoriesDialogBody({
   categories,state,errorMsg,noItemsMsg,
-  selectedCategoryIds, setSelectedCategoryIds
+  selectedCategoryIds, setSelectedCategoryIds,
+  searchFor
 }:CategoriesDialogBodyProps) {
 
 
   function isSelected(node: TreeNode<CategoryEntry>) {
     const val = node.getValue()
 
-    // directly selected
-    if (selectedCategoryIds.has(val.id)) return true
+    // directly selected child item
+    if (selectedCategoryIds.has(val.id) && val.parent!==null) return true
 
     // any of children selected?
     const found = node.children().find(item=>{
@@ -47,6 +52,15 @@ export default function CategoriesDialogBody({
         },0)
       }
       return true
+    }
+    // if top level item is in selected list BUT no children selected
+    // WE NEED TO REMOVE TOP LEVEL ITEM because it is not selectable
+    if (val.parent===null && selectedCategoryIds.has(val.id)){
+      selectedCategoryIds.delete(val.id)
+      // update state at the end of cycle to avoid render error
+      setTimeout(()=>{
+        setSelectedCategoryIds(new Set(selectedCategoryIds))
+      },0)
     }
     // none of children selected either
     return false
@@ -84,29 +98,58 @@ export default function CategoriesDialogBody({
 
     case 'error':
       return (
-        <Alert severity="error" sx={{marginTop: '0.5rem'}}>
+        <Alert severity="error" sx={{marginTop: '0.5rem', height:'inherit', width:'inherit'}}>
+          <AlertTitle sx={{fontWeight:500}}>Failed to load categories</AlertTitle>
           {errorMsg ?? '500 - Unexpected error'}
         </Alert>
       )
 
     case 'ready':
-      return (
-        <>
-          {(categories === null || categories.length === 0)
-            ?
-            <Alert severity="info" sx={{'padding': '2rem'}}>
-              {noItemsMsg}
-            </Alert>
-            :
-            <List>
-              <CategoryList
-                categories={categories}
-                isSelected={isSelected}
-                onSelect={onSelect}
-              />
-            </List>
+      if (categories.length === 0) {
+        return (
+          <Alert severity="info" sx={{'padding': '2rem', height:'inherit', width:'inherit'}}>
+            <AlertTitle sx={{fontWeight:500}}>No categories</AlertTitle>
+            {noItemsMsg}
+          </Alert>
+        )
+      }
+
+
+      // copy to filtered
+      let filtered = [...categories]
+      // filter if search provided
+      if (searchFor){
+        filtered = []
+        const lowerCaseQuery = searchFor.toLocaleLowerCase()
+        for (const root of categories) {
+          const filteredTree = root.subTreeWhereNodesSatisfy(item =>
+            item.short_name.toLocaleLowerCase().includes(lowerCaseQuery) ||
+            item.name.toLocaleLowerCase().includes(lowerCaseQuery)
+          )
+
+          if (filteredTree !== null) {
+            filtered.push(filteredTree)
           }
-        </>
+        }
+      }
+
+      if (filtered.length === 0) {
+        return (
+          <Alert severity="info">
+            <AlertTitle sx={{fontWeight:500}}>No match</AlertTitle>
+            No category label or description found for <strong>{searchFor}</strong>.
+          </Alert>
+        )
+      }
+
+      return (
+        <List>
+          <CategoryList
+            categories={filtered}
+            isSelected={isSelected}
+            onSelect={onSelect}
+          />
+        </List>
       )
   }
 

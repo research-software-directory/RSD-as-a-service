@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -22,6 +22,9 @@ import mockProjectToEdit from '~/components/projects/edit/information/__mocks__/
 jest.mock('~/auth/api/useLoginProviders')
 // mock user agreement call
 jest.mock('~/components/user/settings/useUserAgreements')
+// global search
+jest.mock('~/components/GlobalSearchAutocomplete/apiGlobalSearch')
+jest.mock('~/components/GlobalSearchAutocomplete/useHasRemotes')
 
 // MOCK isMaintainerOf
 const mockIsMaintainer = jest.fn(props => Promise.resolve(false))
@@ -43,7 +46,6 @@ window.IntersectionObserver = jest.fn(() => ({
   observe: mockObserve,
   unobserve: mockUnobserve,
 } as any))
-
 
 const mockProps = {
   // information page

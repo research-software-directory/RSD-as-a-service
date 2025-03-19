@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -80,6 +80,6 @@ class RorIdTest {
 		RorId rorId = RorId.fromUrlString("https://ror.org/04tsk2644");
 
 		Assertions.assertEquals(URI.create("https://ror.org/04tsk2644"), rorId.asUrl());
-		Assertions.assertEquals(URI.create("https://api.ror.org/organizations/04tsk2644"), rorId.asApiUrl());
+		Assertions.assertEquals(URI.create("https://api.ror.org/v1/organizations/04tsk2644"), rorId.asApiV1Url());
 	}
 }

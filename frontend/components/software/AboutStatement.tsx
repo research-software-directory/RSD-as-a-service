@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,7 +24,7 @@ export default function AboutStatement({brand_name = '', description = '', descr
         className="text-[2rem] text-primary pb-4"
         data-testid="about-statement-title"
       >
-        What {brand_name} can do for you
+        Description
       </h2>
       <ReactMarkdownWithSettings
         markdown={description}

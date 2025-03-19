@@ -28,16 +28,18 @@ type EditableCellProps = Readonly<{
 export default function EditableCell({params,patchFn,disabledFn}: EditableCellProps) {
   const {showErrorMessage} = useSnackbar()
   const {value} = params
-  const [localValue, setValue] = useState(value)
+  const [localValue, setLocalValue] = useState(value)
+  const [lastSaved, setLastSaved] = useState()
 
   // console.group('EditableCell')
   // console.log('params...', params)
-  // console.log('localValue...', localValue)
   // console.log('value...', value)
+  // console.log('lastSaved...', lastSaved)
+  // console.log('localValue...', localValue)
   // console.groupEnd()
 
   useEffect(() => {
-    setValue(value)
+    setLocalValue(value)
   },[value])
 
   async function patchValue(newValue:any) {
@@ -46,11 +48,21 @@ export default function EditableCell({params,patchFn,disabledFn}: EditableCellPr
         ...params,
         value: newValue
       })
-      if (resp.status !== 200) {
+
+      if (resp.status === 200){
+        // save last value in local memory
+        // for the recovery if next value fails
+        setLastSaved(newValue)
+      }else {
         // show error message
         showErrorMessage(`Failed to update value. ${resp.message}`)
-        // reverse back to original value
-        setValue(value)
+        // reverse back to last saved value
+        if (typeof lastSaved != 'undefined'){
+          setLocalValue(lastSaved)
+        } else if (value!==localValue) {
+          // reverse to initial value
+          setLocalValue(value)
+        }
       }
     }
   }
@@ -62,7 +74,7 @@ export default function EditableCell({params,patchFn,disabledFn}: EditableCellPr
         data-testid="edit-cell-switch"
         checked={localValue}
         onChange={({target}) => {
-          setValue(target.checked)
+          setLocalValue(target.checked)
           patchValue(target.checked)
         }}
       />
@@ -76,7 +88,7 @@ export default function EditableCell({params,patchFn,disabledFn}: EditableCellPr
       type="text"
       value={localValue}
       onChange={({target})=>{
-        setValue(target.value)
+        setLocalValue(target.value)
       }}
       onBlur={({target})=>patchValue(target.value)}
     />

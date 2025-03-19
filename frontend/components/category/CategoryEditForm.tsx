@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,6 +17,11 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import ControlledSwitch from '../form/ControlledSwitch'
 
+export type CategoryEditFormLabels = Readonly<{
+  short_name: string,
+  name: string
+}>
+
 type CategoryEditFormProps=Readonly<{
   createNew: boolean
   data: CategoryEntry | null
@@ -24,10 +29,12 @@ type CategoryEditFormProps=Readonly<{
   organisation: string | null
   onSuccess: (category:CategoryEntry)=>void
   onCancel: ()=>void
+  labels?: CategoryEditFormLabels
 }>
 
 export default function CategoryEditForm({
-  createNew, data, community=null,organisation=null,onSuccess, onCancel
+  createNew, data, community=null,organisation=null,onSuccess, onCancel,
+  labels
 }:CategoryEditFormProps) {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
@@ -120,7 +127,7 @@ export default function CategoryEditForm({
       if (data?.short_name){
         return `Add category to ${data?.short_name}`
       }
-      return 'Add top level category'
+      return 'Add section header'
     }else{
       return `Edit ${data?.short_name}`
     }
@@ -156,11 +163,12 @@ export default function CategoryEditForm({
           label: 'Short name *',
           defaultValue: createNew ? undefined : data?.short_name,
           helperTextCnt: `${watch('short_name')?.length ?? 0}/100`,
-          helperTextMessage: `${formState.errors?.short_name?.message ?? ''}`,
+          helperTextMessage: `${formState.errors?.short_name?.message ?? labels?.short_name ?? ''}`,
           error: formState.errors?.short_name?.message !== undefined,
           autofocus: true
         }}
       />
+      <div className="py-2"/>
       <TextFieldWithCounter
         register={register('name', {
           maxLength: {value: 250, message: 'max length is 250'},
@@ -170,11 +178,11 @@ export default function CategoryEditForm({
           label: 'Name *',
           defaultValue: createNew ? undefined : data?.name,
           helperTextCnt: `${watch('name')?.length ?? 0}/250`,
-          helperTextMessage: `${formState.errors?.name?.message ?? ''}`,
+          helperTextMessage: `${formState.errors?.name?.message ?? labels?.name ?? ''}`,
           error: formState.errors?.name?.message !== undefined
         }}
       />
-
+      <div className="py-2"/>
       <TextFieldWithCounter
         register={register('provenance_iri', {
           maxLength: {value: 250, message: 'max length is 250'}

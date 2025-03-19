@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -78,9 +78,9 @@ export default function KeywordsFilter({keywords, keywordsList, handleQueryChang
         }}
         defaultValue={[]}
         filterSelectedOptions
-        renderOption={(props, option) => (
+        renderOption={({key,...props}, option) => (
           <FilterOption
-            key={option.keyword}
+            key={key ?? option.keyword}
             props={props}
             label={option.keyword}
             count={option.keyword_cnt}

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +24,10 @@ type State = {
 export default function useOrganisationProjects() {
   const {token} = useSession()
   const {id,isMaintainer} = useOrganisationContext()
-  const {search, keywords_json, domains_json, organisations_json, project_status, order, page, rows} = useProjectParams()
+  const {
+    search, keywords_json, domains_json, organisations_json,
+    project_status, categories_json, order, page, rows
+  } = useProjectParams()
   // we need to memo orderOptions array to avoid useEffect dependency loop
   const orderOptions = useMemo(()=>getProjectOrderOptions(isMaintainer),[isMaintainer])
 
@@ -40,7 +43,7 @@ export default function useOrganisationProjects() {
 
     async function getProjects() {
       if (id) {
-        // set loding done
+        // set loading start
         setLoading(true)
 
         if (order) {
@@ -52,12 +55,13 @@ export default function useOrganisationProjects() {
         }
 
         const projects: State = await getProjectsForOrganisation({
-          organisation:id,
+          organisation: id,
           searchFor: search ?? undefined,
           project_status: project_status ?? undefined,
           keywords: decodeJsonParam(keywords_json,null),
           domains: decodeJsonParam(domains_json,null),
           organisations: decodeJsonParam(organisations_json,null),
+          categories: decodeJsonParam(categories_json, null),
           order: orderBy ?? undefined,
           // api works with zero
           page:page ? page-1 : 0,
@@ -69,7 +73,7 @@ export default function useOrganisationProjects() {
         if (abort) return
         // set state
         setState(projects)
-        // set loding done
+        // set loading done
         setLoading(false)
       }
     }
@@ -84,7 +88,7 @@ export default function useOrganisationProjects() {
     search, keywords_json, domains_json,
     organisations_json, order, page, rows,
     id, token, isMaintainer, orderOptions,
-    project_status
+    project_status, categories_json
   ])
 
   return {

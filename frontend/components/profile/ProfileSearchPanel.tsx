@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -30,6 +30,9 @@ export default function ProfileSearchPanel({
       <ViewToggleGroup
         layout={layout}
         onSetView={onSetView}
+        sx={{
+          marginLeft:'0.5rem'
+        }}
       />
       <SelectRows
         rows={rows}

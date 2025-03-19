@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,7 +8,7 @@ import {getProjectsParams} from '~/utils/extractQueryParam'
 import {useUserSettings} from '../context/UserSettingsContext'
 
 export default function useProjectParams() {
-  // initalise router
+  // initialise router
   const router = useRouter()
   // get user preferences
   const {rsd_page_rows} = useUserSettings()
@@ -22,11 +22,12 @@ export default function useProjectParams() {
 
   function getFilterCount() {
     let count = 0
+    if (params?.search) count++
+    if (params?.project_status) count++
     if (params?.keywords_json) count++
     if (params?.domains_json) count++
     if (params?.organisations_json) count++
-    if (params?.search) count++
-    if (params?.project_status) count++
+    if (params?.categories_json) count++
     return count
   }
 

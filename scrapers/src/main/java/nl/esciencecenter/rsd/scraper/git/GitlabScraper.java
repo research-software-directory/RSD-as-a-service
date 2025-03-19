@@ -1,8 +1,8 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
+// SPDX-FileCopyrightText: 2022 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -30,6 +30,8 @@ public class GitlabScraper implements GitScraper {
 	private final String projectPath;
 	private final String apiUri;
 	private final String graphqlUri;
+	private final CommitsPerWeek commitsPerWeek;
+	private final ZonedDateTime lastCommitHistoryTimestamp;
 
 	/**
 	 * A GitLab scraper for API version 4.
@@ -41,6 +43,16 @@ public class GitlabScraper implements GitScraper {
 		this.projectPath = projectPath.endsWith(".git") ? projectPath.substring(0, projectPath.length() - 4) : projectPath;
 		this.apiUri = gitLabApiUrl + "/v4";
 		this.graphqlUri = gitLabApiUrl + "/graphql";
+		this.lastCommitHistoryTimestamp = null;
+		this.commitsPerWeek = new CommitsPerWeek();
+	}
+
+	public GitlabScraper(String gitLabApiUrl, String projectPath, ZonedDateTime lastCommitHistoryTimestamp, CommitsPerWeek existingCommitsPerWeek) {
+		this.projectPath = projectPath.endsWith(".git") ? projectPath.substring(0, projectPath.length() - 4) : projectPath;
+		this.apiUri = gitLabApiUrl + "/v4";
+    this.graphqlUri = gitLabApiUrl + "/graphql";
+		this.lastCommitHistoryTimestamp = lastCommitHistoryTimestamp;
+		this.commitsPerWeek = existingCommitsPerWeek == null ? new CommitsPerWeek() : existingCommitsPerWeek;
 	}
 
 	/**
@@ -86,13 +98,16 @@ public class GitlabScraper implements GitScraper {
 	 */
 	@Override
 	public CommitsPerWeek contributions() throws IOException, InterruptedException, RsdResponseException {
-		CommitsPerWeek commits = new CommitsPerWeek();
+		String since="";
+		if (lastCommitHistoryTimestamp != null) {
+			since = "&since=" + lastCommitHistoryTimestamp.toString();
+		}
 		String page = "1";
 		boolean done = false;
 		while (!done) {
 			HttpRequest request = HttpRequest.newBuilder().GET()
 				.uri(URI.create(apiUri + "/projects/" + Utils.urlEncode(projectPath)
-					+ "/repository/commits?per_page=100&order=default&page=" + page))
+					+ "/repository/commits?per_page=100&order=default&page=" + page + since))
 				.timeout(Duration.ofSeconds(30))
 				.build();
 			HttpResponse<String> response;
@@ -105,12 +120,12 @@ public class GitlabScraper implements GitScraper {
 				throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
 
 			String body = response.body();
-			parseCommitPage(body, commits);
+			parseCommitPage(body, commitsPerWeek);
 
 			page = response.headers().firstValue("x-next-page").orElseThrow();
 			done = page.isEmpty();
 		}
-		return commits;
+		return commitsPerWeek;
 	}
 
 	// Example URL: https://gitlab.com/api/v4/projects/gitlab-org%2Fgitlab-shell/repository/contributors

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -40,31 +40,35 @@ public class MainCommits {
 
 	private static void scrapeGitLab() {
 		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB);
-		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.commitData(Config.maxRequestsGitLab());
+		Collection<BasicRepositoryDataWithHistory> dataToScrape = softwareInfoRepository.commitDataWithHistory(Config.maxRequestsGitLab());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
-		for (BasicRepositoryData commitData : dataToScrape) {
+		for (BasicRepositoryDataWithHistory repositoryDataToScrape : dataToScrape) {
 			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
 				try {
-					String repoUrl = commitData.url();
+					String repoUrl = repositoryDataToScrape.url();
 					String hostname = URI.create(repoUrl).getHost();
 					String apiUrl = "https://" + hostname + "/api";
 					String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 					if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
 
-					CommitsPerWeek scrapedCommits = new GitlabScraper(apiUrl, projectPath).contributions();
-					CommitData updatedData = new CommitData(commitData, scrapedCommits, scrapedAt);
+					CommitsPerWeek existingCommitsPerWeek = repositoryDataToScrape.commitsPerWeek();
+					ZonedDateTime lastCommitHistoryTimestamp = existingCommitsPerWeek.popLatestTimestamp();
+					CommitsPerWeek scrapedCommits = new GitlabScraper(apiUrl, projectPath, lastCommitHistoryTimestamp, existingCommitsPerWeek).contributions();
+
+					BasicRepositoryData basicData = new BasicRepositoryData(repositoryDataToScrape.software(), repositoryDataToScrape.url());
+					CommitData updatedData = new CommitData(basicData, scrapedCommits, scrapedAt);
 					softwareInfoRepository.saveCommitData(updatedData);
 				} catch (RsdRateLimitException e) {
-					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", commitData.software(), e);
-					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", null, null);
+					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", repositoryDataToScrape.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", repositoryDataToScrape.software().toString(), "software", null, null);
 				} catch (RsdResponseException e) {
-					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", commitData.software(), e);
-					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
+					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", repositoryDataToScrape.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", repositoryDataToScrape.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				} catch (Exception e) {
-					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", commitData.software(), e);
-					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
+					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", repositoryDataToScrape.software(), e);
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "commit_history_last_error", repositoryDataToScrape.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				}
 			});
 			futures[i] = future;

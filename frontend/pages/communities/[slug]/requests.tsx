@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,33 +10,29 @@ import {getUserFromToken} from '~/auth'
 import {getUserSettings} from '~/utils/userSettings'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
-import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
-import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
-import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
-import {EditCommunityProps, getCommunityBySlug} from '~/components/communities/apiCommunities'
+import {getCommunityBySlug} from '~/components/communities/apiCommunities'
 import CommunityPage from '~/components/communities/CommunityPage'
 import CommunitySoftware from '~/components/communities/software'
-import {SoftwareOfCommunity, ssrCommunitySoftwareProps} from '~/components/communities/software/apiCommunitySoftware'
+import {ssrCommunitySoftwareProps} from '~/components/communities/software/apiCommunitySoftware'
+import {CommunitySoftwareProps} from './software'
 
-type CommunitySoftwareProps={
-  community: EditCommunityProps,
-  software: SoftwareOfCommunity[],
-  slug: string[],
-  isMaintainer: boolean,
-  rsd_page_rows: number,
-  rsd_page_layout: LayoutType,
-  count: number,
-  keywordsList: KeywordFilterOption[],
-  languagesList: LanguagesFilterOption[],
-  licensesList: LicensesFilterOption[],
-}
+// type CommunitySoftwareProps={
+//   community: EditCommunityProps,
+//   software: SoftwareOfCommunity[],
+//   slug: string[],
+//   isMaintainer: boolean,
+//   rsd_page_rows: number,
+//   rsd_page_layout: LayoutType,
+//   count: number,
+//   keywordsList: KeywordFilterOption[],
+//   languagesList: LanguagesFilterOption[],
+//   licensesList: LicensesFilterOption[],
+// }
 
 export default function RequestsToJoinCommunity({
-  community,slug,isMaintainer,
-  rsd_page_rows, rsd_page_layout,
-  software, count, keywordsList,
-  languagesList, licensesList
+  community,slug,isMaintainer,rsd_page_rows, rsd_page_layout,
+  software, count, keywordsList, languagesList, licensesList,
+  categoryList
 }:CommunitySoftwareProps) {
 
   // console.group('RequestsToJoinCommunity')
@@ -83,6 +79,7 @@ export default function RequestsToJoinCommunity({
           keywordsList={keywordsList}
           languagesList={languagesList}
           licensesList={licensesList}
+          categoryList={categoryList}
         />
       </CommunityPage>
     </>
@@ -121,6 +118,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       keywordsList,
       languagesList,
       licensesList,
+      categoryList,
       // community with updated keywords
       community
     } = await ssrCommunitySoftwareProps({
@@ -145,7 +143,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         software: software.data,
         keywordsList,
         languagesList,
-        licensesList
+        licensesList,
+        categoryList
       },
     }
   }catch{

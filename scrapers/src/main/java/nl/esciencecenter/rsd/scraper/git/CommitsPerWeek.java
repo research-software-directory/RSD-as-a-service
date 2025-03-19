@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,6 +15,7 @@ import com.google.gson.JsonSerializer;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -26,11 +29,15 @@ import java.util.TreeMap;
  */
 public class CommitsPerWeek {
 
-	final SortedMap<Instant, Long> data = new TreeMap<>();
+	private final SortedMap<Instant, Long> data = new TreeMap<>();
 	static final Gson gson = new GsonBuilder()
 			.enableComplexMapKeySerialization()
 			.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (src, typeOfSrc, context) -> new JsonPrimitive(src.getEpochSecond()))
 			.create();
+
+	SortedMap<Instant, Long> getData() {
+		return new TreeMap<>(data);
+	}
 
 	public void addCommits(ZonedDateTime zonedDateTime, long count) {
 		ZonedDateTime utcTime = zonedDateTime.withZoneSameInstant(ZoneOffset.UTC);
@@ -41,6 +48,15 @@ public class CommitsPerWeek {
 	public void addCommits(Instant instant, long count) {
 		ZonedDateTime utcTime = ZonedDateTime.ofInstant(instant, ZoneOffset.UTC);
 		addCommits(utcTime, count);
+	}
+
+	public ZonedDateTime popLatestTimestamp() {
+		if (this.data.size() > 0) {
+			Instant lastTimeStamp = this.data.lastKey();
+			this.data.remove(lastTimeStamp);
+			return ZonedDateTime.ofInstant(lastTimeStamp, ZoneId.systemDefault());
+		}
+		return null;
 	}
 
 	/**
