@@ -2,18 +2,11 @@
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package nl.esciencecenter.rsd.scraper.git;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
-import nl.esciencecenter.rsd.scraper.RsdResponseException;
-import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.io.IOException;
 import java.net.URI;
@@ -23,9 +16,20 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+import nl.esciencecenter.rsd.scraper.Utils;
+
 public class GitlabScraper implements GitScraper {
+
 	private final String projectPath;
 	private final String apiUri;
+	private final String graphqlUri;
 	private final CommitsPerWeek commitsPerWeek;
 	private final ZonedDateTime lastCommitHistoryTimestamp;
 
@@ -38,6 +42,7 @@ public class GitlabScraper implements GitScraper {
 	public GitlabScraper(String gitLabApiUrl, String projectPath) {
 		this.projectPath = projectPath.endsWith(".git") ? projectPath.substring(0, projectPath.length() - 4) : projectPath;
 		this.apiUri = gitLabApiUrl + "/v4";
+		this.graphqlUri = gitLabApiUrl + "/graphql";
 		this.lastCommitHistoryTimestamp = null;
 		this.commitsPerWeek = new CommitsPerWeek();
 	}
@@ -45,6 +50,7 @@ public class GitlabScraper implements GitScraper {
 	public GitlabScraper(String gitLabApiUrl, String projectPath, ZonedDateTime lastCommitHistoryTimestamp, CommitsPerWeek existingCommitsPerWeek) {
 		this.projectPath = projectPath.endsWith(".git") ? projectPath.substring(0, projectPath.length() - 4) : projectPath;
 		this.apiUri = gitLabApiUrl + "/v4";
+		this.graphqlUri = gitLabApiUrl + "/graphql";
 		this.lastCommitHistoryTimestamp = lastCommitHistoryTimestamp;
 		this.commitsPerWeek = existingCommitsPerWeek == null ? new CommitsPerWeek() : existingCommitsPerWeek;
 	}
@@ -61,7 +67,8 @@ public class GitlabScraper implements GitScraper {
 	@Override
 	public BasicGitData basicData() throws IOException, InterruptedException, RsdResponseException {
 		String response = Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "?license=True");
-		return parseBasicData(response);
+
+		return parseBasicData(response, checkIfArchived());
 	}
 
 	/**
@@ -148,7 +155,24 @@ public class GitlabScraper implements GitScraper {
 		}
 	}
 
-	static BasicGitData parseBasicData(String json) {
+	private Boolean checkIfArchived() throws IOException, InterruptedException, RsdResponseException {
+		String graphqlQuery = String.format("""
+				{
+					project(fullPath: "%s/%s") {
+						archived
+					}
+				}
+				""",
+				projectPath.substring(0, projectPath.indexOf("/")),
+				projectPath.substring(projectPath.indexOf("/") + 1));
+		JsonObject body = new JsonObject();
+		body.addProperty("query", graphqlQuery);
+		String response = Utils.post(graphqlUri, body.toString(), "Content-Type", "application/json");
+		JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
+		return jsonObject.getAsJsonObject("data").getAsJsonObject("project").getAsJsonPrimitive("archived").getAsBoolean();
+	}
+
+	static BasicGitData parseBasicData(String json, Boolean archived) {
 		JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
 
 		JsonElement jsonLicense = jsonObject.get("license");
@@ -157,7 +181,7 @@ public class GitlabScraper implements GitScraper {
 		Integer forkCount = jsonObject.getAsJsonPrimitive("forks_count").getAsInt();
 
 		return new BasicGitData(
-			null,
+			archived,
 			license,
 			starCount,
 			forkCount,
