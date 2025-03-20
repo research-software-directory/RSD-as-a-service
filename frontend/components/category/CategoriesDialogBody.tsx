@@ -122,7 +122,7 @@ export default function CategoriesDialogBody({
         filtered = []
         const lowerCaseQuery = searchFor.toLocaleLowerCase()
         for (const root of categories) {
-          const filteredTree = root.subTreeWhereNodesSatisfy(item =>
+          const filteredTree = root.subTreeWhereNodesSatisfyWithChildren(item =>
             item.short_name.toLocaleLowerCase().includes(lowerCaseQuery) ||
             item.name.toLocaleLowerCase().includes(lowerCaseQuery)
           )

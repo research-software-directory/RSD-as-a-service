@@ -68,20 +68,32 @@ export class TreeNode<T> {
     return newNode.#children.size === 0 ? null : newNode
   }
 
-  subTreeWhereNodesSatisfy(predicate: (value: T) => boolean): TreeNode<T> | null {
+  subTreeWhereNodesSatisfyWithChildren(predicate: (value: T) => boolean): TreeNode<T> | null {
     if (predicate(this.#value)) {
       return this.clone()
     }
 
     const newNode = new TreeNode<T>(this.#value)
     for (const child of this.#children) {
-      const newSubTree = child.subTreeWhereNodesSatisfy(predicate)
+      const newSubTree = child.subTreeWhereNodesSatisfyWithChildren(predicate)
       if (newSubTree !== null) {
         newNode.addChild(newSubTree)
       }
     }
 
     return newNode.#children.size === 0 ? null : newNode
+  }
+
+  subTreeWhereNodesSatisfyWithoutChildren(predicate: (value: T) => boolean): TreeNode<T> | null {
+    const newNode = new TreeNode<T>(this.#value)
+    for (const child of this.#children) {
+      const newSubTree = child.subTreeWhereNodesSatisfyWithoutChildren(predicate)
+      if (newSubTree !== null) {
+        newNode.addChild(newSubTree)
+      }
+    }
+
+    return newNode.#children.size === 0 && !predicate(this.#value) ? null : newNode
   }
 
   sortRecursively(comparator: (val1: T, val2: T) => number) {

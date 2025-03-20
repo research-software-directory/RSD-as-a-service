@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,7 +32,7 @@ export default function AutosaveSoftwareCategories({softwareId, reorderedCategor
   const selectedNodes: TreeNode<CategoryEntry>[] = []
 
   for (const root of reorderedCategories.all) {
-    const rootSelectedSubTree= root.subTreeWhereNodesSatisfy(value => associatedCategoryIds.has(value.id))
+    const rootSelectedSubTree= root.subTreeWhereNodesSatisfyWithoutChildren(value => associatedCategoryIds.has(value.id))
     if (rootSelectedSubTree !== null) {
       selectedNodes.push(rootSelectedSubTree)
     }
