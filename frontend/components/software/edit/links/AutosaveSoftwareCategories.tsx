@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +14,7 @@ import {addCategoryToSoftware, deleteCategoryToSoftware} from '~/utils/getSoftwa
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {categoryTreeNodesSort} from '~/components/category/useCategoryTree'
 import TreeSelect from '~/components/category/TreeSelect'
-import {CategoryTreeLevel} from '~/components/category/CategoryTree'
+import CategoryTree from '~/components/category/CategoryTree'
 import {ReorderedCategories} from '~/components/category/useReorderedCategories'
 import {config} from '~/components/software/edit/links/config'
 
@@ -32,7 +32,7 @@ export default function AutosaveSoftwareCategories({softwareId, reorderedCategor
   const selectedNodes: TreeNode<CategoryEntry>[] = []
 
   for (const root of reorderedCategories.all) {
-    const rootSelectedSubTree= root.subTreeWhereLeavesSatisfy(value => associatedCategoryIds.has(value.id))
+    const rootSelectedSubTree= root.subTreeWhereNodesSatisfyWithoutChildren(value => associatedCategoryIds.has(value.id))
     if (rootSelectedSubTree !== null) {
       selectedNodes.push(rootSelectedSubTree)
     }
@@ -116,11 +116,23 @@ export default function AutosaveSoftwareCategories({softwareId, reorderedCategor
     return result
   }
 
+  // console.group('AutosaveSoftwareCategories')
+  // console.log('associatedCategoryIds...',associatedCategoryIds)
+  // console.log('availableCategoriesTree...',availableCategoriesTree)
+  // console.groupEnd()
+
   return (
     <>
       {availableCategoriesTree.map(root => {
         const rootValue = root.getValue()
         const children = root.children()
+        const selected = extractSelectedRoots(root)
+
+        // console.group('availableCategoriesTree.map')
+        // console.log('rootValue...',rootValue)
+        // console.log('children...',children)
+        // console.log('selected...',selected)
+        // console.groupEnd()
 
         return (
           <Fragment key={rootValue.id}>
@@ -142,7 +154,13 @@ export default function AutosaveSoftwareCategories({softwareId, reorderedCategor
 
             <div className="mt-6"/>
 
-            <CategoryTreeLevel showLongNames items={extractSelectedRoots(root)} onRemove={deleteCategoryId}/>
+            <CategoryTree
+              showLongNames
+              items={selected}
+              onRemove={deleteCategoryId}
+              selectedList={associatedCategoryIds}
+            />
+
           </Fragment>
         )
       })}

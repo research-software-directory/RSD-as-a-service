@@ -14,29 +14,14 @@ import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
 import {ssrSoftwareUrl} from '~/utils/postgrestUrl'
 
-export type CategoryTreeLevelProps = {
+export type CategoryTreeLevelProps = Readonly<{
   items: TreeNode<CategoryEntry>[]
+  selectedList?: Set<string>
   showLongNames?: boolean
   onRemove?: (categoryId: string) => void
-}
-export const CategoryTreeLevel = ({onRemove, ...props}: CategoryTreeLevelProps) => {
+}>
 
-  const onRemoveHandler = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation()
-    const categoryId = event.currentTarget.dataset.id!
-    onRemove?.(categoryId)
-  }
-
-  return <TreeLevel {...props} onRemoveHandler={onRemove && onRemoveHandler}/>
-}
-
-
-type TreeLevelProps = {
-  items: TreeNode<CategoryEntry>[]
-  showLongNames?: boolean
-  onRemoveHandler? : (event: React.MouseEvent<HTMLElement>) => void
-}
-const TreeLevel = ({items, showLongNames, onRemoveHandler}: TreeLevelProps) => {
+export default function CategoryTree({onRemove,items,showLongNames,selectedList}: CategoryTreeLevelProps){
   return (
     <ul className={'list-disc list-outside pl-6'}>
       {items.map((item) => {
@@ -51,15 +36,22 @@ const TreeLevel = ({items, showLongNames, onRemoveHandler}: TreeLevelProps) => {
                   <span className='pb-1'>{showLongNames ? category.name : category.short_name}</span>
                 </Tooltip>
               </Link>
-              { onRemoveHandler && children.length === 0 ?
-				          <IconButton sx={{top: '-0.25rem'}} data-id={category.id} size='small'onClick={onRemoveHandler}>
+              { onRemove && selectedList?.has(category.id) ?
+				        <IconButton
+                  size='small'
+                  onClick={()=>onRemove(category.id)}>
                   <CancelIcon fontSize='small'/>
                 </IconButton>
                 :null
               }
             </div>
             {children.length > 0 ?
-			        <TreeLevel items={children} showLongNames={showLongNames} onRemoveHandler={onRemoveHandler}/>
+			        <CategoryTree
+                items={children}
+                showLongNames={showLongNames}
+                selectedList={selectedList}
+                onRemove={onRemove}
+              />
               : null
             }
           </li>

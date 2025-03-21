@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -41,7 +41,9 @@ export function RecursivelyGenerateItems<T>({
 
     const key = keyExtractor(val)
     const text = textExtractor(val)
-    if (node.childrenCount() === 0) {
+
+    // show checkbox only on 'lower level' items where parent!=null
+    if (node.childrenCount() === 0 && (val as any)?.parent !== null) {
       return (
         <MenuItem dense disableRipple key={key} onClick={() => onSelect(node)}>
           <Checkbox disableRipple checked={isSelected(node)} />

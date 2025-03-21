@@ -101,7 +101,6 @@ it('can add NEW license', async() => {
   defaultValues.licenses = []
   defaultValues.concept_doi = null
 
-
   // render
   render(
     <WithAppContext options={{session: mockSession}}>
@@ -116,10 +115,11 @@ it('can add NEW license', async() => {
   const combo = screen.getByRole('combobox')
   fireEvent.change(combo, {target: {value: newLicense.name}})
 
-  // find Add option
-  const addLicense = await screen.findByRole('option', {
-    name: `Add "${newLicense.name}"`
-  })
+  // find Add option by testId
+  const addLicense = await screen.findByTestId('add-license-option')
+  // const addLicense = await screen.findByRole('option', {
+  //   name: `Add "${newLicense.name}"`
+  // })
   // select to add new license
   fireEvent.click(addLicense)
 
