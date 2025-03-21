@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -68,7 +68,7 @@ export default function ProjectCard(
       <article className="flex-1 flex flex-col lg:flex-row h-full p-4 gap-4 overflow-hidden">
         <section
           title={subtitle ?? title}
-          className="flex-[3] h-full"
+          className="flex-3 h-full"
         >
           <ImageAsBackground
             alt={title}
@@ -79,7 +79,7 @@ export default function ProjectCard(
             noImgMsg='no image'
           />
         </section>
-        <section className="flex-[4] flex flex-col">
+        <section className="flex-4 flex flex-col">
           <CardTitle
             title={title}
             className={titleMargin}

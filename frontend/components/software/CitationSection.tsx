@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -75,9 +75,8 @@ export default function CitationSection({releases,concept_doi}:
                 :null
             }
           </div>
-          <div className="flex-[3] flex flex-col justify-between md:px-4">
+          <div className="flex-3 flex flex-col justify-between md:px-4">
             <CitationDoi doi={citation?.doi ?? concept_doi ?? ''} />
-            {/* NOTE! temporarly dissabled  */}
             <CitationDownload doi={citation?.doi ?? concept_doi ?? ''} />
           </div>
         </DarkThemeProvider>

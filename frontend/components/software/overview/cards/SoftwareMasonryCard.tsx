@@ -37,7 +37,7 @@ export default function SoftwareMasonryCard({item}:SoftwareCardProps){
       data-testid="software-masonry-card"
       href={pageUrl}
       className="hover:text-inherit">
-      <div className="flex-shrink-0 transition bg-base-100 shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer h-full select-none flex-col relative group">
+      <div className="shrink-0 transition bg-base-100 shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer h-full select-none flex-col relative group">
         {/* Cover image, show only if valid image link */}
         { validImg === false ? null
           :

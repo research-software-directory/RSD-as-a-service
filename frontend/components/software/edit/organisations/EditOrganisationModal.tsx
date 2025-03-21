@@ -2,9 +2,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2024 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -130,7 +130,7 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
           width: ['100%', '37rem'],
           padding: '2rem 1.5rem 2.5rem'
         }}>
-          <section className="grid grid-cols-[1fr,3fr] gap-8">
+          <section className="grid grid-cols-[1fr_3fr] gap-8">
             <ControlledImageInput
               name={formData?.name}
               logo_id={formData?.logo_id}

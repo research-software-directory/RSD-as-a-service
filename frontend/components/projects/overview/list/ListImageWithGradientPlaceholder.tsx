@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +17,7 @@ export default function ListImageWithGradientPlaceholder({imgSrc,alt}:{imgSrc:st
     // return gradient square as placeholder
     return (
       <div
-        className="w-[6rem] self-stretch bg-gradient-to-br from-base-300 from-0% via-base-100 via-50% to-base-100"
+        className="w-[6rem] self-stretch bg-linear-to-br from-base-300 from-0% via-base-100 via-50% to-base-100"
       />
     )
   }

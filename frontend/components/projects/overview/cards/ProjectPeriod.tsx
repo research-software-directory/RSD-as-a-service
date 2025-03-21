@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,7 +25,7 @@ export default function ProjectPeriod({date_start, date_end}: ProjectPeriodProps
       <PeriodProgressBar
         date_start={date_start}
         date_end={date_end}
-        className="mt-[0.0625rem] rounded"
+        className="mt-[0.0625rem] rounded-sm"
         height="0.375rem"
       />
     </>

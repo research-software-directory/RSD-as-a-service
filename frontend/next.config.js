@@ -56,7 +56,19 @@ module.exports = {
       },
     ]
   },
-
+  experimental: {
+    // turbopack config
+    turbo: {
+      rules: {
+        // convert svg to react component
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.jsx',
+        },
+      },
+    },
+  },
+  // webpack config (old dev)
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,

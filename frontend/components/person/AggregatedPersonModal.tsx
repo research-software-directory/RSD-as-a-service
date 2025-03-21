@@ -137,7 +137,7 @@ export default function AggregatedPersonModal({
             loading={loading}
           />
           <div className="py-2"/>
-          <section className="py-4 grid grid-cols-[1fr,1fr] gap-4">
+          <section className="py-4 grid grid-cols-[1fr_1fr] gap-4">
             <ControlledTextField
               control={control}
               options={{

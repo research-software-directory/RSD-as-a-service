@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,7 +20,7 @@ export default function OrganisationListItem({organisation}:{readonly organisati
         data-testid="organisation-list-item"
         key={organisation.id}
         href={`/organisations/${organisation.rsd_path}`}
-        className='flex-1 flex items-center hover:text-inherit bg-base-100 rounded-sm'
+        className='flex-1 flex items-center hover:text-inherit bg-base-100 rounded-xs'
       >
         <ListImageWithGradientPlaceholder
           imgSrc={imgSrc}

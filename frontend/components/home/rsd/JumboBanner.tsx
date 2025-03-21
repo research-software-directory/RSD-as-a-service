@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 export default function JumboBanner() {
   return (
-    <div className="max-w-screen-xl mx-auto p-4  grid lg:grid-cols-[1fr,1fr] gap-8 md:gap-20 lg:my-20 md:px-10">
+    <div className="max-w-(--breakpoint-xl) mx-auto p-4  grid lg:grid-cols-[1fr_1fr] gap-8 md:gap-20 lg:my-20 md:px-10">
       {/* Jumbo Text*/}
       <div className="flex flex-col justify-center"
         data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000"
@@ -15,7 +15,7 @@ export default function JumboBanner() {
         </h1>
         <div className="mt-8 text-lg">
             The <span
-            className="text-transparent font-medium bg-clip-text bg-gradient-to-tr from-[#03A9F1] to-[#09FBD3] px-1">
+            className="text-transparent font-medium bg-clip-text bg-linear-to-tr from-[#03A9F1] to-[#09FBD3] px-1">
               Research Software Directory
           </span>
             is designed to show the impact research software has on research and society. We stimulate

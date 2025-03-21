@@ -21,7 +21,7 @@ export default function ProfileSearchPanel({
   onSetView,handleQueryChange
 }:ProfileSearchPanelProps) {
   return (
-    <div className="flex border rounded-md shadow-sm bg-base-100 p-2">
+    <div className="flex border rounded-md shadow-xs bg-base-100 p-2">
       <SearchInput
         placeholder={placeholder}
         onSearch={(search: string) => handleQueryChange('search', search)}

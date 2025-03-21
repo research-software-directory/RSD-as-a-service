@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -137,8 +139,8 @@ export default function EditMarkdownPage({slug,onDelete,onSubmit}:EditMarkdownPa
       <input type="hidden"
         {...register('position')}
       />
-      <div className="flex flex-col-reverse lg:grid lg:grid-cols-[3fr,1fr] lg:gap-8">
-        <div className="grid grid-cols-[4fr,1fr] gap-8">
+      <div className="flex flex-col-reverse lg:grid lg:grid-cols-[3fr_1fr] lg:gap-8">
+        <div className="grid grid-cols-[4fr_1fr] gap-8">
           <ControlledTextField
             options={{
               name: 'title',
