@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2024 dv4all
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2025 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -22,7 +23,7 @@ export const softwareInformation = {
     validation: {
       required: 'Slug is required',
       minLength: {value: 3, message: 'Minimum length is 3'},
-      maxLength: {value: 200, message: 'Maximum length is 200'},
+      maxLength: {value: 250, message: 'Maximum length is 250'},
       pattern: {
         value: /^[a-z0-9]+(-[a-z0-9]+)*$/,
         message: 'Use letters, numbers and dash "-". Other characters are not allowed.'
@@ -36,7 +37,7 @@ export const softwareInformation = {
     validation: {
       required: 'Name is required',
       minLength: {value: 3, message: 'Minimum length is 3'},
-      maxLength: {value: 200, message: 'Maximum length is 200'},
+      maxLength: {value: 250, message: 'Maximum length is 250'},
     }
   },
   short_statement: {

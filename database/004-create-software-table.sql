@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
@@ -22,8 +22,8 @@ CREATE TYPE description_type AS ENUM (
 
 CREATE TABLE software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	slug VARCHAR(200) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
-	brand_name VARCHAR(200) NOT NULL,
+	slug VARCHAR(250) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+	brand_name VARCHAR(250) NOT NULL,
 	closed_source BOOLEAN DEFAULT FALSE NOT NULL,
 	concept_doi CITEXT CHECK (concept_doi ~ '^10(\.\w+)+/\S+$' AND LENGTH(concept_doi) <= 255),
 	description VARCHAR(10000),
