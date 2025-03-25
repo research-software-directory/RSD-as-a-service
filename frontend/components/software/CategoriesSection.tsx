@@ -25,7 +25,8 @@ export default function CategoriesSection({categories}: CategoriesSectionProps) 
     return (
       <PageContainer
         key={category.id}
-        className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
+        className="py-12 px-4 lg:grid lg:grid-cols-[1fr_4fr]"
+      >
         <h2
           data-testid="software-categories-section-title"
           className="pb-8 pr-4 text-[2rem] text-primary">
@@ -41,5 +42,4 @@ export default function CategoriesSection({categories}: CategoriesSectionProps) 
       </PageContainer>
     )
   })
-
 }

@@ -149,7 +149,7 @@ export default function SpotlightsOverviewPage({
             <p>{host.software_highlights?.description}</p>
           }
           {/* Page grid with 2 sections: left filter panel and main content */}
-          <div className="flex-1 grid md:grid-cols-[2fr,3fr] lg:grid-cols-[1fr,3fr] xl:grid-cols-[1fr,4fr] my-4 gap-8">
+          <div className="flex-1 grid md:grid-cols-[2fr_3fr] lg:grid-cols-[1fr_3fr] xl:grid-cols-[1fr_4fr] my-4 gap-8">
             {/* Filters panel large screen */}
             {smallScreen===false &&
               <FiltersPanel>

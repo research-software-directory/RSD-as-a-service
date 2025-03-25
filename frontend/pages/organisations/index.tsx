@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -88,7 +88,7 @@ export default function OrganisationsOverviewPage({
 
         <MainContent className="py-4">
           {/* Page title with search and pagination */}
-          <div className="px-4 rounded-lg bg-base-100 lg:sticky top-0 border border-base-200 z-[9]">
+          <div className="px-4 rounded-lg bg-base-100 lg:sticky top-0 border border-base-200 z-9">
             <PageTitle title="Organisations">
               <div className="md:flex flex-wrap justify-end">
                 <div className="flex items-center lg:ml-4">

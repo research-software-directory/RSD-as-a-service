@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,7 +20,7 @@ export default function CommunitySettingsContent({isMaintainer}:{isMaintainer:bo
       isMaintainer={isMaintainer}
     >
       <UserAgreementModal />
-      <div className="flex-1 grid grid-cols-[1fr,4fr] gap-4">
+      <div className="flex-1 grid grid-cols-[1fr_4fr] gap-4">
         <BaseSurfaceRounded
           className="mb-12 p-4"
         >

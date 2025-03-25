@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,7 +21,7 @@ export default function SoftwareOutputTab() {
   const {software} = useSoftwareContext()
   return (
     <EditRelatedOutputProvider>
-      <EditSection className="xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem]">
+      <EditSection className="xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]">
         <div className="pt-4 pb-8">
           <RelatedOutputInfo />
           <div className="py-2" />

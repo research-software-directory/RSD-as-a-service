@@ -3,8 +3,8 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -74,7 +74,7 @@ export default function CommitsChart({
     return (
       <div className={`flex-1 w-full ${className ?? ''}`}>
         <SingleLineChart data={lineData} />
-        <div className="flex pt-4 px-2 [&>*]:border-l [&>*]:border-base-700 [&>*]:px-2 [&>*]:text-center" id="commitsStat">
+        <div className="flex pt-4 px-2 *:border-l *:border-base-700 *:px-2 *:text-center" id="commitsStat">
           <ArchivedRepo archived={archived} />
           <Commits commits={totalCountY} lastCommitDate={lastCommitDate}/>
           <StarCount star_count={star_count} />

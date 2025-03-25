@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -63,7 +65,7 @@ export default function LoginDialog({providers,open, onClose}: LoginDialogProps)
                 >
                   <ListItem
                     alignItems="flex-start"
-                    className="rounded-[0.25rem] border outline-1 my-2"
+                    className="rounded-[0.25rem] border my-2"
                     sx={{
                       opacity: 0.75,
                       '&:hover': {

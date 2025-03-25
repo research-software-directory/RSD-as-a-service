@@ -213,7 +213,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
               fill="#707070"/>
           </svg>
         </div>
-        <input className="px-2 pl-8 py-2 bg-transparent rounded-sm border border-base-600 focus:outline-0 w-full focus:bg-base-100 focus:text-base-900 duration-200"
+        <input className="px-2 pl-8 py-2 bg-transparent rounded-xs border border-base-600 focus:outline-0 w-full focus:bg-base-100 focus:text-base-900 duration-200"
           ref={inputRef}
           data-testid="global-search"
           name="global-search"
@@ -234,7 +234,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
         {isOpen &&
           <div
             data-testid="global-search-list"
-            className="shadow-xl absolute top-[50px] w-full left-0 bg-base-100 text-base-900 py-2 rounded-sm"
+            className="shadow-xl absolute top-[50px] w-full left-0 bg-base-100 text-base-900 py-2 rounded-xs"
             style={{
               maxHeight: '50vh',
               overflow: 'auto',
@@ -267,7 +267,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
                       <SearchItemIcon source={item.source} />
                     </div>
 
-                    <div className="flex-grow"
+                    <div className="grow"
                       title={url}
                     >
                       <div className="font-normal line-clamp-1">

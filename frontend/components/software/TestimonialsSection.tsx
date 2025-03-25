@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,7 +14,7 @@ export default function TestimonialSection({testimonials = []}: { testimonials: 
   if (testimonials?.length === 0) return null
 
   return (
-    <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
+    <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr_4fr]">
       <h2
         data-testid="software-contributors-section-title"
         className="pb-8 text-[2rem] text-primary">

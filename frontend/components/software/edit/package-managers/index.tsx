@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -137,7 +137,7 @@ export default function PackageManagers() {
             Add
           </Button>
         </EditSectionTitle>
-        <div className="flex-1 xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem] items-start">
+        <div className="flex-1 xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem] items-start">
           <div className="flex-1">
             <PackageManagersList
               loading={loading}

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,7 +20,7 @@ export default function CommunityMetadata() {
   // console.groupEnd()
 
   return (
-    <section className="grid  md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-4">
+    <section className="grid  md:grid-cols-[1fr_2fr] xl:grid-cols-[1fr_4fr] gap-4">
       <BaseSurfaceRounded className="flex justify-center p-8 overflow-hidden relative">
         <CommunityLogo
           id={community?.id ?? ''}

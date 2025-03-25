@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -67,7 +67,7 @@ export default function OrganisationMaintainers() {
   return (
     <>
       <BaseSurfaceRounded
-        className="flex-1 p-4 mb-12 xl:grid xl:grid-cols-[1fr,1fr] xl:gap-8"
+        className="flex-1 p-4 mb-12 xl:grid xl:grid-cols-[1fr_1fr] xl:gap-8"
         type="section"
       >
         <div className="py-4">

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,7 +19,7 @@ export default function CommunityAdminSection() {
   return (
     <>
       <h3 className='pb-4'>Admin section</h3>
-      <section className="grid grid-cols-[1fr,1fr] gap-8 py-4">
+      <section className="grid grid-cols-[1fr_1fr] gap-8 py-4">
         <AutosaveOrganisationTextField
           options={{
             name: 'slug',

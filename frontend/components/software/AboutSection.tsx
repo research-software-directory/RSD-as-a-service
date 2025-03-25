@@ -50,7 +50,7 @@ export default function AboutSection(props:AboutSectionType) {
 
   return (
     <PageContainer className="flex flex-col px-4 py-12 lg:flex-row lg:gap-12 lg:pb-12">
-      <div className="flex-[3] overflow-hidden md:pb-12">
+      <div className="flex-3 overflow-hidden md:pb-12">
         <AboutStatement
           brand_name={brand_name}
           description={description}

@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2024 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2024 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,7 +22,7 @@ export default function MentionEditFeatured({item}: MentionListItem) {
   return (
     <article className="mb-8 md:flex">
       <ImageAsBackground className="flex-1 min-h-[6rem]" src={item.image_url} alt={item.title ?? 'image'} />
-      <div className="flex flex-col py-4 px-0 md:py-0 md:px-6 md:flex-1 lg:flex-[2]">
+      <div className="flex flex-col py-4 px-0 md:py-0 md:px-6 md:flex-1 lg:flex-2">
         <MentionTitle
           title={item.title ?? ''}
           url={item.url}

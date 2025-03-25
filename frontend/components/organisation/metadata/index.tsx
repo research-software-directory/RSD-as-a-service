@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -76,11 +76,11 @@ export default function OrganisationMetadata() {
   }
 
   return (
-    <section className="grid  md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-4">
+    <section className="grid  md:grid-cols-[1fr_2fr] xl:grid-cols-[1fr_4fr] gap-4">
       <BaseSurfaceRounded className="flex justify-center p-8 overflow-hidden relative">
         <OrganisationLogo isMaintainer={isMaintainer} />
       </BaseSurfaceRounded>
-      <BaseSurfaceRounded className="grid lg:grid-cols-[3fr,1fr] lg:gap-8 xl:grid-cols-[4fr,1fr] p-4">
+      <BaseSurfaceRounded className="grid lg:grid-cols-[3fr_1fr] lg:gap-8 xl:grid-cols-[4fr_1fr] p-4">
         <div>
           <h1
             title={name}
