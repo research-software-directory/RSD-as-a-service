@@ -82,6 +82,26 @@ The page shows the list of all contributors and team members. You can search by 
 
 ![animation](img/admin-rsd-contributor.gif)
 
+## Software
+
+The page shows list of all software entries, unpublished first. You can search by title or short description. From this overview you have option to remove software entry from RSD completely including all related information. In order to prevent accidental deletion you need to type software name in the delete modal.
+
+:::danger
+The software entry and all related information will be removed from RSD.
+:::
+
+![delete-software](img/admin-delete-software.webp)
+
+## Projects
+
+The page shows list of all project entries, unpublished first. You can search by title or short description. From this overview you have option to remove software entry from RSD completely including all related information. In order to prevent accidental deletion you need to type software name in the delete modal.
+
+:::danger
+The project entry and all related information will be removed from RSD.
+:::
+
+![delete-software](img/admin-delete-project.webp)
+
 ## Organisations
 
 This page allows management of all organisations added to RSD. RSD users can add new organisation on the software or project pages. We use ROR database to retrieve additional information about the organisation.
@@ -107,7 +127,7 @@ Only the organisation's primary maintainer or RSD administrator can create resea
 To delete organisation use delete button.
 
 :::warning
-You can delete organisation only if there are no software and project items associated with it.
+The organisation will be permanently removed including all its references in software and project items.
 :::
 
 ### Edit organisation
@@ -145,19 +165,14 @@ To create new community use "Add" button. Provide a name, short description and 
 
 ### Edit community
 
-Use "edit" button to open all community settings. You will be forwarded to community settings page.
+To edit community settings click on the community and you will be forwarded to [community settings page](/users/community/#settings).
 
 ### Delete community
 
-Use "delete" button to delete a community. If "delete" button is disabled you will need to remove "related" items first.
+Use "delete" button to delete a community.
 
-:::tip
-
-To enable delete button:
-
-- remove the community from all software (accepted, pending and rejected) requests
-- remove all keywords in community settings
-
+:::warning
+The community will be permanently removed including all its references in software items.
 :::
 
 ## Keywords

@@ -1,7 +1,6 @@
 # Maintaining an organisation
 
-Organisations have the opportunity to maintain their representation within the RSD.
-In order to achieve this, official representatives of the organisation can take on the role of maintainers of their organisation.
+Organisations have the opportunity to maintain their representation within the RSD. In order to achieve this, official representatives of the organisation can take on the role of maintainers of their organisation.
 
 ## How to claim an organisation?
 

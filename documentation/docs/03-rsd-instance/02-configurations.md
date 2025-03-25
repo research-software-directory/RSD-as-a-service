@@ -178,17 +178,17 @@ The `host` section of settings.json defines following settings. **Most of them s
       "limit": 5,
       "description": null
     },
-    "modules":["software","projects","organisations"]
+    "modules":["software","projects","organisations","communities"]
   }
 ...
 ```
 
 :::tip host modules
 
-- Note that the communities module is not included in the default settings definitions.
+- Note that the communities module is included in the default settings definitions.
 - Note that disabled module pages still can be accessed when "proper" url is used.
 - You can enable it by adding "communities" into the modules array and the menu option will appear.
-  :::
+:::
 
 ## UI theming
 
@@ -244,9 +244,15 @@ RSD uses default settings.json if alternative is not mounted into `/app/public/d
       "url": "rsd@esciencecenter.nl",
       "issues_page_url": "https://github.com/research-software-directory/RSD-as-a-service/issues"
     },
-    "login_info_url": "https://research-software-directory.github.io/documentation/getting-access.html",
+    "login_info_url":"https://research-software-directory.github.io/documentation/getting-access.html",
     "terms_of_service_url": "/page/terms-of-service/",
-    "privacy_statement_url": "/page/privacy-statement/"
+    "privacy_statement_url": "/page/privacy-statement/",
+    "software_highlights": {
+      "title": "Software Highlights",
+      "limit": 5,
+      "description": null
+    },
+    "modules":["software","projects","organisations","communities"]
   },
   "links": [
     {
@@ -256,18 +262,23 @@ RSD uses default settings.json if alternative is not mounted into `/app/public/d
     },
     {
       "label": "User Documentation",
-      "url": "/documentation/category/users/",
+      "url": "/documentation/users/",
       "target": "_blank"
     },
     {
       "label": "Technical Documentation",
-      "url": "/documentation/category/developers/",
+      "url": "/documentation/rsd-instance/",
       "target": "_blank"
     },
     {
       "label": "Netherlands eScienceCenter",
       "url": "https://www.esciencecenter.nl/",
       "target": "_blank"
+    },
+    {
+      "label": "News",
+      "url": "/news",
+      "target": "_self"
     }
   ],
   "theme": {

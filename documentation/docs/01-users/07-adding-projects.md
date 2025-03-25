@@ -149,6 +149,12 @@ If the publication has no DOI you can create a new item manually. Each manually 
 Please check if the information is complete and correct. A manual item cannot be edited after it has been saved! You can, however, delete an item and create a new one.
 :::
 
+## Testimonials
+
+This section allows user testimonials to be added to the project page. A testimonial consist of a quote and a source. The source is a `free text` field. In the source field you can provide the name, date, location or anything else in any order and format you wish.
+
+![video](img/project-testimonial.gif)
+
 ## Related projects
 
 Here you can link related project pages in the RSD to this project page. Items can be added by simply typing (part) of the name in the search and selecting the desired item from the search result list.
