@@ -174,6 +174,11 @@ func saveApplicationsInRsd(softwareSlice []terms.SoftwareApplication, adminJwt s
 	var err error
 
 	for _, software := range softwareSlice {
+		if strings.HasPrefix(software.Name, "https://") || strings.HasPrefix(software.Name, "http://") {
+			log.Println("Skipping entry because its title seems to be a URL: " + software.Name)
+			continue
+		}
+
 		conceptDoi := extractConceptDoi(software.Id)
 		var getStartedUrl *string = nil
 		if conceptDoi != nil {
