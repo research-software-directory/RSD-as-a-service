@@ -9,6 +9,10 @@ import (
 	"bytes"
 	"codemeta/terms"
 	"codemeta/utils"
+	"crypto/sha1"
+	_ "embed"
+	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -20,6 +24,9 @@ import (
 	"regexp"
 	"strings"
 )
+
+//go:embed 4tu-logo.png
+var fourTuLogoBytes []byte
 
 func main() {
 	isEnabled, ok := os.LookupEnv("ENABLE_4TU_SCRAPER")
@@ -39,6 +46,11 @@ func main() {
 	backendUrl, ok := os.LookupEnv("POSTGREST_URL")
 	if !ok {
 		log.Fatalln("No PostgREST URL found")
+	}
+
+	logoId, err := save4tuLogoInDatabase(backendUrl, adminJwt)
+	if err != nil {
+		log.Fatalln("Error saving 4TU logo in database: " + err.Error())
 	}
 
 	//https://djehuty.4tu.nl/#x1-560005.1.1 for query parameters, including paging
@@ -66,13 +78,84 @@ func main() {
 	}
 
 	log.Println("Processing and saving software in RSD")
-	err = saveApplicationsInRsd(items, adminJwt, backendUrl, fourTuCommunityId)
+	err = saveApplicationsInRsd(items, adminJwt, backendUrl, fourTuCommunityId, logoId)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	log.Println("Done processing and saving software in RSD")
 
 	log.Println("Done with 4TU scraper")
+}
+
+func save4tuLogoInDatabase(backendUrl string, adminJwt string) (string, error) {
+	//fileData, err := os.ReadFile("./src/scrapers/4tu-logo.png")
+	//if err != nil {
+	//	return "", err
+	//}
+
+	base64Encoder := base64.StdEncoding.WithPadding(base64.StdPadding)
+	fileDataBase64EncodedBytes := make([]byte, base64Encoder.EncodedLen(len(fourTuLogoBytes)))
+	base64Encoder.Encode(fileDataBase64EncodedBytes, fourTuLogoBytes)
+	fileDataBase64Encoded := string(fileDataBase64EncodedBytes)
+
+	type rsdImage struct {
+		Data     string `json:"data"`
+		MimeType string `json:"mime_type"`
+	}
+
+	imageData := rsdImage{fileDataBase64Encoded, "image/png"}
+	jsonBytes, err := json.Marshal(&imageData)
+	if err != nil {
+		return "", err
+	}
+
+	request, err := http.NewRequest("POST", backendUrl+"/image?select=id", bytes.NewBuffer(jsonBytes))
+	if err != nil {
+		return "", err
+	}
+
+	request.Header.Add("Authorization", "Bearer "+adminJwt)
+	request.Header.Add("Prefer", "return=representation,resolution=ignore-duplicates")
+	request.Header.Add("Accept", "application/vnd.pgrst.object+json")
+
+	resp, err := defaultClient.Do(request)
+	if err != nil {
+		return "", err
+	}
+
+	// image already exists, get ID by mimicking SHA1 hash
+	if resp.StatusCode == 406 {
+		hasher := sha1.New()
+		hasher.Write(fileDataBase64EncodedBytes)
+		shaBytes := hasher.Sum(nil)
+		return hex.EncodeToString(shaBytes), nil
+	}
+	if resp.StatusCode >= 400 {
+		respBodyBytes, _ := io.ReadAll(resp.Body)
+		responseBody := string(respBodyBytes)
+		errorMessageUnformatted := "Error when uploading 4TU logo,\n got status code %d\n and got body:\n %s"
+		errorMessageFormatted := fmt.Sprintf(errorMessageUnformatted, resp.StatusCode, responseBody)
+		log.Println(errorMessageFormatted)
+
+		return "", fmt.Errorf("got status code %d when uploading 4TU logo", resp.StatusCode)
+	}
+
+	responseBytes, err := utils.ReadBody(resp)
+	if err != nil {
+		return "", err
+	}
+
+	type response struct {
+		Id string `json:"id"`
+	}
+
+	idContainer := response{}
+	err = json.Unmarshal(responseBytes, &idContainer)
+	if err != nil {
+		return "", err
+	}
+
+	return idContainer.Id, nil
 }
 
 func get4tuCommunityId(backendUrl string) (*string, error) {
@@ -112,6 +195,7 @@ type RsdSoftwareTable struct {
 	Description    *string `json:"description"`
 	ShortStatement *string `json:"short_statement"`
 	GetStartedUrl  *string `json:"get_started_url"`
+	ImageId        string  `json:"image_id"`
 }
 
 var nonLowerLetterOrDigit = regexp.MustCompile("[^a-z0-9]")
@@ -170,7 +254,7 @@ func extractDescription(description terms.SingleOrArray[string]) *string {
 	return nil
 }
 
-func saveApplicationsInRsd(softwareSlice []terms.SoftwareApplication, adminJwt string, backendUrl string, fourTuCommunityId *string) error {
+func saveApplicationsInRsd(softwareSlice []terms.SoftwareApplication, adminJwt string, backendUrl string, fourTuCommunityId *string, logoId string) error {
 	var err error
 
 	for _, software := range softwareSlice {
@@ -194,6 +278,7 @@ func saveApplicationsInRsd(softwareSlice []terms.SoftwareApplication, adminJwt s
 			Description:    extractDescription(software.Description),
 			ShortStatement: extractShortStatement(software.Description),
 			GetStartedUrl:  getStartedUrl,
+			ImageId:        logoId,
 		}
 
 		id, localErr := createOrUpdateBasicSoftware(rsdSoftware, adminJwt, backendUrl)
@@ -203,7 +288,7 @@ func saveApplicationsInRsd(softwareSlice []terms.SoftwareApplication, adminJwt s
 		}
 
 		if fourTuCommunityId != nil {
-			localErr := attachSoftwareToCommunity(id, *fourTuCommunityId, adminJwt, backendUrl)
+			localErr = attachSoftwareToCommunity(id, *fourTuCommunityId, adminJwt, backendUrl)
 			if localErr != nil {
 				err = errors.Join(err, localErr)
 				continue
@@ -733,8 +818,8 @@ func saveReferencePublicationsForSoftware(softwareId string, software terms.Soft
 
 			err = json.Unmarshal(respBytes, &responseContainer)
 			if err != nil {
-				println(string(respBytes))
-				println("ERROR")
+				log.Println(string(respBytes))
+				log.Println("ERROR")
 				return err
 			}
 		}
