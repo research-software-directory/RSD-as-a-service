@@ -22,6 +22,9 @@ CREATE TABLE team_member (
 	updated_at TIMESTAMPTZ NOT NULL
 );
 
+CREATE INDEX team_member_project_idx ON team_member(project);
+CREATE INDEX team_member_orcid_idx ON team_member(orcid);
+
 CREATE FUNCTION sanitise_insert_team_member() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
@@ -55,6 +58,8 @@ CREATE TABLE testimonial_for_project (
 	source VARCHAR(200) NOT NULL,
 	position INTEGER
 );
+
+CREATE INDEX testimonial_for_project_project_idx ON testimonial_for_project(project);
 
 CREATE FUNCTION sanitise_insert_testimonial_for_project() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$

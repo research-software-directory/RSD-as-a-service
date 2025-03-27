@@ -1,6 +1,6 @@
 -- SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
--- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -153,7 +153,7 @@ WHERE
 	AND
 	COALESCE(licenses, '{}') @> license_filter
 	AND
-	COALESCE(categories, '{}') @> category_filter
+	CASE WHEN COALESCE(category_filter, '{}') = '{}' THEN TRUE ELSE COALESCE(categories, '{}') @> category_filter END
 	AND
 		CASE
 			WHEN rsd_host_filter = '' THEN TRUE
@@ -192,7 +192,7 @@ WHERE
 	AND
 	COALESCE(licenses, '{}') @> license_filter
 	AND
-	COALESCE(categories, '{}') @> category_filter
+	CASE WHEN COALESCE(category_filter, '{}') = '{}' THEN TRUE ELSE COALESCE(categories, '{}') @> category_filter END
 	AND
 		CASE
 			WHEN rsd_host_filter = '' THEN TRUE
@@ -231,7 +231,7 @@ WHERE
 	AND
 	COALESCE(licenses, '{}') @> license_filter
 	AND
-	COALESCE(categories, '{}') @> category_filter
+	CASE WHEN COALESCE(category_filter, '{}') = '{}' THEN TRUE ELSE COALESCE(categories, '{}') @> category_filter END
 	AND
 		CASE
 			WHEN rsd_host_filter = '' THEN TRUE
@@ -308,7 +308,7 @@ WHERE
 	AND
 	COALESCE(licenses, '{}') @> license_filter
 	AND
-	COALESCE(categories, '{}') @> category_filter
+	CASE WHEN COALESCE(category_filter, '{}') = '{}' THEN TRUE ELSE COALESCE(categories, '{}') @> category_filter END
 GROUP BY
 	rsd_host
 ;
