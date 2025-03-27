@@ -151,7 +151,7 @@ Please check if the information is complete and correct. A manual item cannot be
 
 ## Testimonials
 
-This section allows user testimonials to be added to the project page. A testimonial consist of a quote and a source. The source is a `free text` field. In the source field you can provide the name, date, location or anything else in any order and format you wish.
+This section allows user testimonials to be added to the project page. A testimonial consist of a quote and a source. The source is a free text field. In the source field, you can provide the name, date, location or anything else in any order and format you wish.
 
 ![video](img/project-testimonial.gif)
 

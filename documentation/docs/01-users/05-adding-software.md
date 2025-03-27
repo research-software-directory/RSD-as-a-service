@@ -196,7 +196,7 @@ Here you can add all additional related output. Use search to find papers or oth
 
 ## Testimonials
 
-This section allows user testimonials to be added to the software page. A testimonial consist of a quote and a source. The source is a `free text` field. In the source field you can provide the name, date, location or anything else in any order and format you wish.
+This section allows user testimonials to be added to the software page. A testimonial consist of a quote and a source. The source is a free text field. In the source field, you can provide the name, date, location or anything else in any order and format you wish.
 
 ![image](img/software-testimonials.gif)
 

@@ -1,7 +1,7 @@
 # CodeMeta
 
-RSD also support codemeta format for data exchange.
+The RSD also exports to the CodeMeta format. **Note:** this feature is still experimental.
 
-The codemeta can endpoint is available at `/metadata/codemeta/` endpoint.
+The CodeMeta endpoint is available at <a target="_blank" href="/metadata/codemeta/">/metadata/codemeta/</a>.
 
-More information about CodeMeta format can be found [at official website](https://codemeta.github.io/).
+More information about the CodeMeta format can be found [at the official website](https://codemeta.github.io/).

@@ -69,6 +69,6 @@ between pages.
 
 ![image](img/community-overview.webp)
 
-The community overview page provides a list of all communities present in the RSD. For each community a __card__ shows basic information including the number of software packages. The communities are ordered by the number of software.
+The community overview page provides a list of all communities present in the RSD. For each community, a __card__ shows basic information, including the number of software packages. The communities are ordered by the number of related software pages.
 
-You can use search option at the top of the page to find specific community by name or description. If you wish to register your own community please contact core RSD team on rsd@esciencecenter.nl.
+You can use search bar at the top of the page to find a specific community by name or description. If you wish to register your own community, please contact the core RSD team on rsd@esciencecenter.nl.

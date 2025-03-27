@@ -1,6 +1,6 @@
 # Maintaining a community
 
-After the community is created by RSD adminstator you can be invited to be maintainer of the community.
+After the community is created by an RSD administrator, you can be invited to become a maintainer of the community.
 
 The RSD distinguishes between different community roles. Here is an overview of what each of them can do:
 
@@ -16,11 +16,11 @@ The RSD distinguishes between different community roles. Here is an overview of 
 | Remove/change primary maintainer \*  |     x     |                      |
 | Change community URL path \*         |     x     |                      |
 
-(\*) These actions can only be performed by administators (see [Administration section](/rsd-instance/administration/#edit-organisation)). If necessary, contact us via [rsd@esciencecenter.nl](mailto:rsd@esciencecenter.nl).
+(\*) These actions can only be performed by administrators (see [Administration section](/rsd-instance/administration/#edit-organisation)). If necessary, contact us via [rsd@esciencecenter.nl](mailto:rsd@esciencecenter.nl).
 
-## How to register community?
+## How to register a community?
 
-If you have group of software that belongs to specific research community, it can be beneficial to register this community within RSD. Contact us at rsd@esciencecenter.nl with your request and a short description about the community.
+If you have group of software that belongs to specific research community, it can be beneficial to register this community in the RSD. Contact us at rsd@esciencecenter.nl with your request and a short description about the community.
 
 ## Edit logo
 
@@ -29,7 +29,7 @@ You can change the logo of your community.
 ![Upload community logo](img/community-logo.webp)
 
 You can upload a new logo or remove it.
-The RSD supports common image formats, e.g. jpg, png or svg.
+The RSD supports common image formats, e.g. JPG, PNG or SVG.
 
 :::tip
 If possible, please upload an **SVG** version of your organisation's logo for optimal visual presentation within the RSD.
@@ -45,7 +45,7 @@ On the community page, there are three tabs containing software: `Software` (con
 
 ## Settings
 
-The community settings has following sections: General settings, Categories, Maintainers and About page.
+The community settings has the following sections: General settings, Categories, Maintainers and About page.
 
 ### General settings
 
@@ -53,7 +53,7 @@ In this section you can:
 
 - change name and short description of the community
 - you can assign community keywords that will be shown in the card on the community overview page
-- rsd admin can change community slug and assign the primary maintainer
+- only RSD admins can change the community slug and edit the primary maintainer
 
 ### Categories
 
@@ -68,7 +68,7 @@ The **Short name** of a category is what will be shown on the public facing soft
 The field **Provenance identifier** can be used to register some official identifier that contains more information about this category (for example, a URL or some ontology identifier). We currently do not display this information on the software pages. If you have suggestions for us on how to display these, please let us know.
 
 :::warning
-You cannot delete categories that are used by the software items. If category is assigned to a software entry the delete action will end in the error (as shown in the demo animation). To be able to delete a category entry you need to remove all references from the software items first, then the category entry can be deleted.
+You cannot delete categories that are used by any software page. If the category is assigned to a software entry, the delete action will result in an error (as shown in the demo animation). To be able to delete a category entry, you need to remove all references from the software pages first, then the category entry can be deleted.
 :::
 
 ![video](img/community-settings.gif)

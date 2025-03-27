@@ -27,7 +27,7 @@ Here is an overview of what each of them can do:
 | Set parent organisation \*              |                    |                    |
 | Set as official member \*               |                    |                    |
 
-(\*) These actions can only be performed by administators (see [Administration section](/rsd-instance/administration/#edit-organisation)). If necessary, contact us via [rsd@esciencecenter.nl](mailto:rsd@esciencecenter.nl).
+(\*) These actions can only be performed by administrators (see [Administration section](/rsd-instance/administration/#edit-organisation)). If necessary, contact us via [rsd@esciencecenter.nl](mailto:rsd@esciencecenter.nl).
 
 ## My organisations
 
@@ -42,7 +42,7 @@ You can edit the logo of your organisation
 ![Upload organisation logo](img/organisation-edit-logo.webp)
 
 You can upload a new logo or remove it.
-The RSD supports common image formats, e.g. jpg, png or svg.
+The RSD supports common image formats, e.g. JPG, PNG or SVG.
 
 :::tip
 If possible, please upload an **SVG** version of your organisation's logo for optimal visual presentation within the RSD.
@@ -50,7 +50,7 @@ If possible, please upload an **SVG** version of your organisation's logo for op
 
 ## Settings
 
-The organisation settings has following sections: General settings, Categories, Maintainers and About page.
+The organisation settings has the following sections: General settings, Categories, Maintainers and About page.
 
 ### General settings
 
