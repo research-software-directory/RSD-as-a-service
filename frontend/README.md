@@ -4,8 +4,8 @@ SPDX-FileCopyrightText: 2021 - 2023 dv4all
 SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -81,32 +81,39 @@ It can be useful to intercept HTTP requests made by the Next.js server in order 
 ```javascript
 function replaceFetch(originalFetch: any) {
   const newFetch = async function (url: any, conf: any) {
-    const tik = Date.now();
-    const resp = await originalFetch(url, conf);
-    const tok = Date.now();
-    console.log(`${tok - tik} ms for URL: ${url}`);
-    return resp;
-  };
+    const tik = Date.now()
+    const resp = await originalFetch(url, conf)
+    const tok = Date.now()
 
-  global.fetch = newFetch;
+    if (conf) {
+      // eslint-disable-next-line no-console
+      console.log(`${tok - tik} ms for ${conf.method ?? 'GET'} for URL: ${url} with body ${conf.body ?? 'no body'}`)
+    } else {
+      // eslint-disable-next-line no-console
+      console.log(`${tok - tik} ms for GET for URL: ${url}`)
+    }
+    return resp
+  }
+
+  global.fetch = newFetch
 }
 
-// @ts-ignore
+// @ts-expect-error will be removed later
 if (!global.originalFetch) {
-  const originalFetch = global.fetch;
-  // @ts-ignore
-  global.originalFetch = originalFetch;
+  const originalFetch = global.fetch
+  // @ts-expect-error will be removed later
+  global.originalFetch = originalFetch
 
-  replaceFetch(originalFetch);
+  replaceFetch(originalFetch)
 }
 
 // because Next.js overwrites global.fetch again...
 setInterval(() => {
-  // @ts-ignore
-  const originalFetch = global.originalFetch;
+  // @ts-expect-error will be removed later
+  const originalFetch = global.originalFetch
 
-  replaceFetch(originalFetch);
-}, 10);
+  replaceFetch(originalFetch)
+}, 10)
 ```
 
 It will print each HTTP request and the time it took to complete.

@@ -1,0 +1,1 @@
+* * * * * source /cron-env && PGPASSWORD=$POSTGRES_PASSWORD psql --dbname=$POSTGRES_DB --username=$POSTGRES_USER --command="REFRESH MATERIALIZED VIEW CONCURRENTLY count_software_mentions_cached;" > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
