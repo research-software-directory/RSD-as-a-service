@@ -6,9 +6,13 @@
 import {GetServerSidePropsContext} from 'next'
 
 import {getRsdTokenNode, useSession} from '~/auth'
+import MainContent from '~/components/layout/MainContent'
+import PageBackground from '~/components/layout/PageBackground'
+import AppHeader from '~/components/AppHeader'
+import AppFooter from '~/components/AppFooter'
 import LoginProviders from '~/components/login/LoginProviders'
 import {getLoginProviders} from '~/auth/api/getLoginProviders'
-import {Provider} from '../api/fe/auth'
+import {Provider} from 'pages/api/fe/auth'
 
 export default function LoginPage({providers}:Readonly<{providers:Provider[]}>) {
   const {status} = useSession()
@@ -23,13 +27,16 @@ export default function LoginPage({providers}:Readonly<{providers:Provider[]}>) 
   }
 
   return (
-    <article className="flex-1 flex flex-col items-center justify-center">
-      <section className="border p-12 rounded-md m-8">
-        <h1 className="flex-1">Sign in with</h1>
-        <LoginProviders providers={providers} />
-      </section>
-    </article>
-
+    <PageBackground>
+      <AppHeader />
+      <MainContent className="justify-center items-center">
+        <section className="bg-base-100 p-12 rounded-md">
+          <h1 className="flex-1">Sign in with</h1>
+          <LoginProviders providers={providers} />
+        </section>
+      </MainContent>
+      <AppFooter />
+    </PageBackground>
   )
 }
 
