@@ -16,7 +16,7 @@ The RSD distinguishes between different community roles. Here is an overview of 
 | Remove/change primary maintainer \*  |     x     |                      |
 | Change community URL path \*         |     x     |                      |
 
-(\*) These actions can only be performed by administrators (see [Administration section](/rsd-instance/administration/#edit-organisation)). If necessary, contact us via [rsd@esciencecenter.nl](mailto:rsd@esciencecenter.nl).
+(\*) These actions can only be performed by administrators (see [Settings section](#settings)). If necessary, contact us via [rsd@esciencecenter.nl](mailto:rsd@esciencecenter.nl).
 
 ## How to register a community?
 
