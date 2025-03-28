@@ -82,6 +82,26 @@ The page shows the list of all contributors and team members. You can search by 
 
 ![animation](img/admin-rsd-contributor.gif)
 
+## Software
+
+The page shows list of all software entries, unpublished first. You can search by title or short description. From this overview, you have the option to remove a software entry from the RSD completely, including all related data. In order to prevent accidental deletion, you need to type the software name in the delete modal.
+
+:::danger
+The software entry and all related information will be removed from the RSD.
+:::
+
+![delete-software](img/admin-delete-software.webp)
+
+## Projects
+
+The page shows list of all project entries, unpublished first. You can search by title or short description. From this overview, you have the option to remove a project entry from the RSD completely, including all related data. In order to prevent accidental deletion, you need to type project title in the delete modal.
+
+:::danger
+The project entry and all related information will be removed from the RSD.
+:::
+
+![delete-software](img/admin-delete-project.webp)
+
 ## Organisations
 
 This page allows management of all organisations added to RSD. RSD users can add new organisation on the software or project pages. We use ROR database to retrieve additional information about the organisation.
@@ -107,7 +127,7 @@ Only the organisation's primary maintainer or RSD administrator can create resea
 To delete organisation use delete button.
 
 :::warning
-You can delete organisation only if there are no software and project items associated with it.
+The organisation will be permanently removed, including all its references in software and project pages.
 :::
 
 ### Edit organisation
@@ -141,23 +161,18 @@ Only RSD administrators can create communities.
 
 ### Add community
 
-To create new community use "Add" button. Provide a name, short description and logo in the modal.
+To create a new community, use the "Add" button. Provide a name, short description and logo in the modal.
 
 ### Edit community
 
-Use "edit" button to open all community settings. You will be forwarded to community settings page.
+To edit the community settings, click on the community and you will be forwarded to the [community settings page](/users/community/#settings).
 
 ### Delete community
 
-Use "delete" button to delete a community. If "delete" button is disabled you will need to remove "related" items first.
+Use the "delete" button to delete a community.
 
-:::tip
-
-To enable delete button:
-
-- remove the community from all software (accepted, pending and rejected) requests
-- remove all keywords in community settings
-
+:::warning
+The community will be permanently removed, including all its references in software items.
 :::
 
 ## Keywords
@@ -209,10 +224,10 @@ The core RSD service uses the following information from this section:
 Here you can connect your RSD to remote RSD instances. These connections will be used to "enrich" your RSD instance with additional (remote) software entries.
 
 :::tip
-When connecting to remote RSD instances, each software card in the software overview shows the source RSD. The software from the your "local" RSD uses `remote_name` defined in [RSD Info section](#rsd-info).
+When connecting to remote RSD instances, each software card in the software overview shows the source RSD. The software from your "local" RSD uses the `remote_name` property defined in the [RSD Info section](#rsd-info).
 :::
 
-For each remote RSD you wish to connect to, you need to provide the URL to the homepage of that RSD instance. If the RSD remote is of version 3 or higher the instance will return an RSD instance name suggested by the instance owner. For the earlier RSD versions you need to provide remote name/label manually.
+For each remote RSD you wish to connect to, you need to provide the URL to the homepage of that RSD instance. If the RSD remote is of version 3 or higher the instance will return an RSD instance name suggested by the instance owner. For the earlier RSD versions, you need to provide a remote name/label manually.
 
 ![animation](img/admin-remotes.gif)
 

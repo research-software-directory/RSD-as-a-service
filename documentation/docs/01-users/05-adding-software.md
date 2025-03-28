@@ -196,7 +196,7 @@ Here you can add all additional related output. Use search to find papers or oth
 
 ## Testimonials
 
-This section allows user testimonials to be added to the software page. A testimonial consist of a quote and a source. The source is a `free text` field. In the source field you can provide the name, date, location or anything else in any order and format you wish.
+This section allows user testimonials to be added to the software page. A testimonial consist of a quote and a source. The source is a free text field. In the source field, you can provide the name, date, location or anything else in any order and format you wish.
 
 ![image](img/software-testimonials.gif)
 
@@ -212,7 +212,9 @@ If your package manager is not listed above, you can still add it, but we will c
 
 ## Communities
 
+:::tip
 If communities are enabled for this RSD instance, you will be able to see this section.
+:::
 
 In this section, you can see the communities this software page is affiliated with and its status (accepted, pending or rejected). Only if the status is accepted, the community will be shown on the software page. The RSD doesn't have an internal messaging system yes, so if you want to know more about e.g. why your software is rejected, you should contact someone from the community directly.
 
@@ -223,12 +225,10 @@ When you join a community, this community may ask you to select certain communit
 After selecting the relevant categories for your software, click **Save** to complete the join request. You will now see the community listed with your software. The community will be set to **Pending** until a community maintainer accepts or rejects your join request.
 
 You can still edit the categories of a community that assigned to your software page afterwards, just click on the categories icon.
-
-![image](img/community-categories-edit.jpg)
-
-It is currently only possible to select categories on the lowest level (i.e., categories that have no further children). We are aware that there might also be use cases in which it should be possible to select categories higher up in the hierarchy. Please let us know of the use cases you have.
-
 If you leave a community, any associated categories of that community will automatically be deleted from your software page.
+
+![video](img/software-add-community.gif)
+
 
 ## Related software
 
