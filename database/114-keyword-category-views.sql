@@ -50,7 +50,7 @@ WITH
 SELECT
 	CASE
 		WHEN (SELECT organisation FROM category_data) IS NULL THEN 'global'
-		WHEN (SELECT organisation FROM category_data AS organisation_id) IS NOT NULL THEN (SELECT status FROM project_for_organisation WHERE project_for_organisation.project = project_id AND project_for_organisation.organisation = (SELECT organisation FROM category_data AS organisation_id))::VARCHAR
+		WHEN (SELECT organisation FROM category_data AS organisation_id) IS NOT NULL THEN (SELECT status FROM project_for_organisation WHERE project_for_organisation.project = project_id AND project_for_organisation.organisation = (SELECT organisation FROM category_data AS organisation_id) AND role = 'participating')::VARCHAR
 		ELSE 'other'
 		END
 $$;
