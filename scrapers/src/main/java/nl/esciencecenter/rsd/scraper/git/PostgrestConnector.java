@@ -30,7 +30,11 @@ public class PostgrestConnector {
 	public PostgrestConnector(String backendUrl, CodePlatformProvider codePlatform) {
 		this.backendUrl = Objects.requireNonNull(backendUrl);
 		Objects.requireNonNull(codePlatform);
-		this.filter = "scraping_disabled_reason=is.null&code_platform=eq." + codePlatform.name().toLowerCase();
+		String codePlatformQueryValue = switch (codePlatform) {
+			case FOURTU -> "4tu";
+			default -> codePlatform.name().toLowerCase();
+		};
+		this.filter = "scraping_disabled_reason=is.null&code_platform=eq." + codePlatformQueryValue;
 	}
 
 	/**

@@ -30,6 +30,7 @@ public class MainProgrammingLanguages {
 
 		scrapeGithub();
 		scrapeGitLab();
+		scrape4tu();
 
 		long time = System.currentTimeMillis() - t1;
 
@@ -56,13 +57,16 @@ public class MainProgrammingLanguages {
 					softwareInfoRepository.saveLanguagesData(updatedData);
 				} catch (RsdRateLimitException e) {
 					Utils.saveExceptionInDatabase("GitLab programming languages scraper", "repository_url", programmingLanguageData.software(), e);
-					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", null, null);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software()
+						.toString(), "software", null, null);
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitLab programming languages scraper", "repository_url", programmingLanguageData.software(), e);
-					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software()
+						.toString(), "software", scrapedAt, "languages_scraped_at");
 				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitLab programming languages scraper", "repository_url", programmingLanguageData.software(), e);
-					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "languages_last_error", programmingLanguageData.software()
+						.toString(), "software", scrapedAt, "languages_scraped_at");
 				}
 			});
 			futures[i] = future;
@@ -84,7 +88,8 @@ public class MainProgrammingLanguages {
 
 					Optional<GithubScraper> githubScraperOptional = GithubScraper.create(repoUrl);
 					if (githubScraperOptional.isEmpty()) {
-						Utils.saveErrorMessageInDatabase("Not a valid GitHub URL: " + repoUrl, "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
+						Utils.saveErrorMessageInDatabase("Not a valid GitHub URL: " + repoUrl, "repository_url", "languages_last_error", programmingLanguageData.software()
+							.toString(), "software", scrapedAt, "languages_scraped_at");
 						return;
 					}
 
@@ -94,13 +99,51 @@ public class MainProgrammingLanguages {
 					softwareInfoRepository.saveLanguagesData(updatedData);
 				} catch (RsdRateLimitException e) {
 					Utils.saveExceptionInDatabase("GitHub programming languages scraper", "repository_url", programmingLanguageData.software(), e);
-					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", null, null);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software()
+						.toString(), "software", null, null);
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitHub programming languages scraper", "repository_url", programmingLanguageData.software(), e);
-					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software()
+						.toString(), "software", scrapedAt, "languages_scraped_at");
 				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitHub programming languages scraper", "repository_url", programmingLanguageData.software(), e);
-					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "languages_last_error", programmingLanguageData.software()
+						.toString(), "software", scrapedAt, "languages_scraped_at");
+				}
+			});
+			futures[i] = future;
+			i++;
+		}
+		CompletableFuture.allOf(futures).join();
+	}
+
+	private static void scrape4tu() {
+		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.FOURTU);
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.languagesData(10);
+		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
+		ZonedDateTime scrapedAt = ZonedDateTime.now();
+		int i = 0;
+		for (BasicRepositoryData programmingLanguageData : dataToScrape) {
+			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+				try {
+					String repoUrl = programmingLanguageData.url();
+
+					FourTuGitScraper fourTuGitScraper = new FourTuGitScraper(repoUrl);
+					String scrapedLanguages = fourTuGitScraper.languages();
+					LanguagesData updatedData = new LanguagesData(new BasicRepositoryData(programmingLanguageData.software(), null), scrapedLanguages, scrapedAt);
+					softwareInfoRepository.saveLanguagesData(updatedData);
+				} catch (RsdRateLimitException e) {
+					Utils.saveExceptionInDatabase("4TU programming languages scraper", "repository_url", programmingLanguageData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software()
+						.toString(), "software", null, null);
+				} catch (RsdResponseException e) {
+					Utils.saveExceptionInDatabase("4TU programming languages scraper", "repository_url", programmingLanguageData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software()
+						.toString(), "software", scrapedAt, "languages_scraped_at");
+				} catch (Exception e) {
+					Utils.saveExceptionInDatabase("4TU programming languages scraper", "repository_url", programmingLanguageData.software(), e);
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "languages_last_error", programmingLanguageData.software()
+						.toString(), "software", scrapedAt, "languages_scraped_at");
 				}
 			});
 			futures[i] = future;
