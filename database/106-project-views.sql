@@ -1,4 +1,4 @@
--- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
@@ -881,7 +881,7 @@ $$
 $$;
 
 -- PROJECTS BY MAINTAINER
--- NOTE! updated by Dusan on 2022-07-27
+-- NOTE! updated by Dusan on 2025-04-07
 -- we filter this view at least by user account (uuid)
 CREATE FUNCTION projects_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	id UUID,
@@ -890,6 +890,7 @@ CREATE FUNCTION projects_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	subtitle VARCHAR,
 	current_state VARCHAR,
 	date_start DATE,
+	date_end DATE,
 	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
 	image_contain BOOLEAN,
@@ -905,6 +906,7 @@ $$
 		project.subtitle,
 		project_status.status AS current_state,
 		project.date_start,
+		project.date_end,
 		project.updated_at,
 		project.is_published,
 		project.image_contain,

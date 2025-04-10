@@ -1,57 +1,107 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
+import {useState} from 'react'
+import Pagination from '@mui/material/Pagination'
 
-import ContentLoader from '~/components/layout/ContentLoader'
-import NoContent from '~/components/layout/NoContent'
-import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
-import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
-import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
+import {getPageRange} from '~/utils/pagination'
+import {setDocumentCookie} from '~/utils/userSettings'
+import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import {useUserSettings} from '~/components/organisation/context/UserSettingsContext'
+import {useUserContext} from '~/components/user/context/UserContext'
+import SearchPanel from '~/components/user/search/SearchPanel'
 import useUserSoftware from './useUserSoftware'
+import UserSoftwareOverview from './UserSoftwareOverview'
 
 export default function UserSoftware() {
-  const {loading, software} = useUserSoftware()
+  const {rsd_page_layout,rsd_page_rows} = useUserSettings()
+  const {counts:{software_cnt}} = useUserContext()
+  // if masonry we change to grid
+  const layout = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
+  const [view, setView] = useState<ProjectLayoutType>(layout)
+  const [searchFor, setSearchFor] = useState<string>()
+  const [rows, setRows] = useState<number>(rsd_page_rows)
+  const [page, setPage] = useState<number>(0)
+  const {loading, software, count} = useUserSoftware({
+    searchFor,
+    page,
+    rows
+  })
+  // number of items to show in skeleton while loading
+  const skeleton_items = rsd_page_rows < software_cnt ? rsd_page_rows : software_cnt ?? 3
+  // number of pages for pagination at the bottom of the page
+  const numPages = Math.ceil(count / rows)
 
   // console.group('UserSoftware')
+  // console.log('rsd_page_layout...', rsd_page_layout)
+  // console.log('layout...', layout)
+  // console.log('view...', view)
+  // console.log('rows...', rows)
+  // console.log('page...', page)
   // console.log('loading...', loading)
   // console.log('software...', software)
+  // console.log('count...', count)
+  // console.log('skeleton_items...', skeleton_items)
   // console.groupEnd()
 
-  // if loading show loader
-  if (loading) return (
-    <ContentLoader />
-  )
+  function onSetView(view: ProjectLayoutType) {
+    // update local view
+    setView(view)
+    // save to cookie
+    setDocumentCookie(view,'rsd_page_layout')
+  }
 
-  if (software.length === 0) {
-    return <NoContent />
+  function onSetRows(rows:number) {
+    // update local view
+    setRows(rows)
+    // save to cookie
+    setDocumentCookie(rows.toString(),'rsd_page_rows')
   }
 
   return (
-    <div>
-      <SoftwareOverviewList>
-        {software.map(item => {
-          return (
-            <Link
-              data-testid="software-list-item"
-              key={item.id}
-              href={`/software/${item.slug}`}
-              className='flex-1 hover:text-inherit'
-              title={item.brand_name}
-            >
-              <OverviewListItem className='pr-4'>
-                <SoftwareListItemContent key={item.id} {...item} />
-              </OverviewListItem>
-            </Link>
-          )
-        })
-        }
-      </SoftwareOverviewList>
+    <div className="flex-1">
+      {/* SEARCH */}
+      <SearchPanel
+        placeholder='Find software'
+        layout={view}
+        rows={rows}
+        search={searchFor ?? null}
+        onSearch={setSearchFor}
+        onSetView={onSetView}
+        onSetRows={onSetRows}
+      />
+      <div className="flex justify-between items-center px-1 py-2">
+        <div className="text-sm opacity-70">
+          {getPageRange(rows, page, count)}
+        </div>
+      </div>
+
+      {/* SOFTWARE ITEMS */}
+      <UserSoftwareOverview
+        skeleton_items={skeleton_items}
+        layout={view}
+        loading={loading}
+        software={software}
+      />
+
+      {/* Pagination */}
+      {numPages > 1 &&
+        <div className="flex flex-wrap justify-center mt-8">
+          <Pagination
+            count={numPages}
+            page={page + 1}
+            onChange={(_, page) => {
+              // handleQueryChange('page',page.toString())
+              setPage(page-1)
+            }}
+          />
+        </div>
+      }
     </div>
   )
 

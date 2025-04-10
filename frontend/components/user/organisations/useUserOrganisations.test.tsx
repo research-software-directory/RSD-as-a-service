@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +14,10 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
 
 function WithUserOrganisationsHook() {
-  const {loading, organisations} = useUserOrganisations()
+  const {loading, organisations} = useUserOrganisations({
+    page:0,
+    rows:12
+  })
 
   if (loading) {
     return (

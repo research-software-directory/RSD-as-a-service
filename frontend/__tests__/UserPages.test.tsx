@@ -16,14 +16,18 @@ import mockSoftwareByMaintainer from '~/components/user/software/__mocks__/softw
 import mockProjectsByMaintainer from '~/components/user/project/__mocks__/projectsByMaintainer.json'
 import mockOrganisationsByMaintainer from '~/components/user/organisations/__mocks__/organisationsByMaintainer.json'
 import mockCommunitiesByMaintainer from '~/components/user/communities/__mocks__/communitiesByMaintainer.json'
-import {UserPageId} from '~/components/user/UserNavItems'
+import loginForAccount from '~/components/user/settings/profile/__mocks__/logins.json'
+import {UserPageId} from '~/components/user/tabs/UserTabItems'
+import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
+import {getDisplayName} from '~/utils/getDisplayName'
+// import {UserPageId} from '~/components/user/UserNavItems'
 // use DEFAULT MOCK for login providers list
 // required when AppHeader component is used
 jest.mock('~/auth/api/useLoginProviders')
-// MOCK user agreement call
-jest.mock('~/components/user/settings/useUserAgreements')
+// mock user agreement call
+jest.mock('~/components/user/settings/agreements/useUserAgreements')
 // MOCK user logins call
-jest.mock('~/components/user/settings/useLoginForAccount')
+jest.mock('~/components/user/settings/profile/useLoginForUser')
 // MOCK user project list
 jest.mock('~/components/user/project/useUserProjects')
 // MOCK user software list
@@ -47,7 +51,18 @@ const mockProps = {
   },
   orcidAuthLink:null,
   rsd_page_rows: 12,
-  showSearch: false
+  rsd_page_layout: 'list' as LayoutType,
+  profile:{
+    account: 'test-account-id',
+    given_names: 'Test given names',
+    family_names: 'Test family names',
+    email_address: null,
+    role: null,
+    affiliation: null,
+    is_public: false,
+    avatar_id: null
+  },
+  logins:loginForAccount
 }
 
 describe('pages/user/[section].tsx', () => {
@@ -68,38 +83,37 @@ describe('pages/user/[section].tsx', () => {
     expect(p401).toBeInTheDocument()
   })
 
-  it('renders user nav items', () => {
+  it('renders user name', () => {
     mockProps.section = 'software'
+    const userName = getDisplayName(mockProps.profile) ?? 'No name'
     render(
       <WithAppContext options={{session:mockSession}}>
         <UserPages {...mockProps} />
       </WithAppContext>
     )
 
-    const navItems = screen.getAllByTestId('user-nav-item')
-    expect(navItems.length).toEqual(5)
+    screen.getByText(RegExp(userName))
+    // expect(navItems.length).toEqual(5)
   })
 
-  it('renders user settings section', async() => {
+  it('renders user settings with User profile heading', async() => {
     mockProps.section = 'settings'
     render(
       <WithAppContext options={{session:mockSession}}>
         <UserPages {...mockProps} />
       </WithAppContext>
     )
-
     // settings page
-    const settings = await screen.findByTestId('user-settings-section')
+    await screen.findByTestId('user-profile-page-title')
+    // await screen.findByRole('heading',{name:'User profile'})
     // shows user account
     if (mockSession.user?.account) {
-      const userId = screen.getByText(RegExp(mockSession.user?.account))
+      screen.getByText(RegExp(mockSession.user?.account))
     }
   })
 
-  it('renders user software section', async() => {
-
+  it('renders user software list items', async() => {
     mockProps.section = 'software'
-
     render(
       <WithAppContext options={{session:mockSession}}>
         <UserPages {...mockProps} />
@@ -109,12 +123,26 @@ describe('pages/user/[section].tsx', () => {
     // validate software cards are shown
     const software = await screen.findAllByTestId('software-list-item')
     expect(software.length).toEqual(mockSoftwareByMaintainer.length)
-
   })
 
-  it('renders user projects section', async() => {
-    mockProps.section = 'projects'
+  it('renders user software grid items', async() => {
+    mockProps.section = 'software'
+    mockProps.rsd_page_layout = 'grid'
+    render(
+      <WithAppContext options={{session:mockSession}}>
+        <UserPages {...mockProps} />
+      </WithAppContext>
+    )
 
+    // validate software cards are shown
+    const software = await screen.findAllByTestId('software-grid-card')
+    expect(software.length).toEqual(mockSoftwareByMaintainer.length)
+  })
+
+
+  it('renders user projects list items', async() => {
+    mockProps.section = 'projects'
+    mockProps.rsd_page_layout = 'list'
     render(
       <WithAppContext options={{session:mockSession}}>
         <UserPages {...mockProps} />
@@ -126,8 +154,23 @@ describe('pages/user/[section].tsx', () => {
     expect(project.length).toEqual(mockProjectsByMaintainer.length)
   })
 
-  it('renders user organisation section', async() => {
+  it('renders user projects grid items', async() => {
+    mockProps.section = 'projects'
+    mockProps.rsd_page_layout = 'grid'
+    render(
+      <WithAppContext options={{session:mockSession}}>
+        <UserPages {...mockProps} />
+      </WithAppContext>
+    )
+
+    // validate project cards are shown
+    const project = await screen.findAllByTestId('project-grid-card')
+    expect(project.length).toEqual(mockProjectsByMaintainer.length)
+  })
+
+  it('renders user organisations list items', async() => {
     mockProps.section = 'organisations'
+    mockProps.rsd_page_layout = 'list'
 
     render(
       <WithAppContext options={{session:mockSession}}>
@@ -140,8 +183,24 @@ describe('pages/user/[section].tsx', () => {
     expect(project.length).toEqual(mockOrganisationsByMaintainer.length)
   })
 
-  it('renders user communities section', async() => {
+  it('renders user organisations grid items', async() => {
+    mockProps.section = 'organisations'
+    mockProps.rsd_page_layout = 'grid'
+
+    render(
+      <WithAppContext options={{session:mockSession}}>
+        <UserPages {...mockProps} />
+      </WithAppContext>
+    )
+
+    // validate project cards are shown
+    const project = await screen.findAllByTestId('organisation-card-link')
+    expect(project.length).toEqual(mockOrganisationsByMaintainer.length)
+  })
+
+  it('renders user communities list items', async() => {
     mockProps.section = 'communities'
+    mockProps.rsd_page_layout = 'list'
 
     render(
       <WithAppContext options={{session:mockSession}}>
@@ -151,6 +210,21 @@ describe('pages/user/[section].tsx', () => {
 
     // validate community cards are shown
     const project = await screen.findAllByTestId('community-list-item')
+    expect(project.length).toEqual(mockCommunitiesByMaintainer.length)
+  })
+
+  it('renders user communities card items', async() => {
+    mockProps.section = 'communities'
+    mockProps.rsd_page_layout = 'grid'
+
+    render(
+      <WithAppContext options={{session:mockSession}}>
+        <UserPages {...mockProps} />
+      </WithAppContext>
+    )
+
+    // validate community cards are shown
+    const project = await screen.findAllByTestId('community-card-link')
     expect(project.length).toEqual(mockCommunitiesByMaintainer.length)
   })
 

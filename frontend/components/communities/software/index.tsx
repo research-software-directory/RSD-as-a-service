@@ -8,7 +8,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import Pagination from '@mui/material/Pagination'
 
 import {setDocumentCookie} from '~/utils/userSettings'
-import UserAgreementModal from '~/components/user/settings/UserAgreementModal'
+import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 import FiltersPanel from '~/components/filter/FiltersPanel'

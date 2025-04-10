@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,31 +21,34 @@ import ProfileTabs from '~/components/profile/tabs'
 import ProfileTabContent from '~/components/profile/tabs/ProfileTabContent'
 import {ProfileContextProvider} from '~/components/profile/context/ProfileContext'
 import {ProfileTabKey} from '~/components/profile/tabs/ProfileTabItems'
+import {getPublicUserProfile, UserProfile} from '~/components/user/settings/profile/apiUserProfile'
 
-type SoftwareByOrcidProps={
+type SoftwareByOrcidProps=Readonly<{
   orcid: string
   rsd_page_layout: LayoutType,
   rsd_page_rows: number,
   tab: ProfileTabKey
   profiles: RsdContributor[],
+  publicProfile: UserProfile,
   software_cnt: number,
   software: SoftwareOverviewItemProps[],
   project_cnt: number,
   projects: ProjectListItem[]
-}
+}>
 
 export default function PublicProfileByOrcidPage({
   orcid,rsd_page_rows,rsd_page_layout,
-  tab,profiles,software_cnt,
+  tab,profiles,publicProfile, software_cnt,
   software, project_cnt, projects
 }:SoftwareByOrcidProps) {
 
-  // console.group('SoftwareByOrcid')
+  // console.group('PublicProfileByOrcidPage')
   // console.log('orcid...', orcid)
   // console.log('rsd_page_rows....', rsd_page_rows)
   // console.log('rsd_page_layout....', rsd_page_layout)
   // console.log('tab....', tab)
   // console.log('profiles....', profiles)
+  // console.log('publicProfile....', publicProfile)
   // console.log('software....', software)
   // console.log('software_cnt....', software_cnt)
   // console.log('projects....', projects)
@@ -74,7 +77,7 @@ export default function PublicProfileByOrcidPage({
             projects
           }}>
             {/* PROFILE METADATA */}
-            <ProfileMetadata profiles={profiles} />
+            <ProfileMetadata profiles={profiles} user={publicProfile} />
             {/* TABS */}
             <BaseSurfaceRounded
               className="my-4 p-2"
@@ -127,8 +130,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const tab = params?.tab ?? 'software'
     const search = query?.search as string
 
-    // get both software and projects
-    const [software, projects] = await Promise.all([
+    // get software, projects and public profile
+    const [software, projects, publicProfile] = await Promise.all([
       getProfileSoftware({
         page: tab==='software' ? page : 0,
         search: tab==='software' && search ? search : undefined,
@@ -142,7 +145,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         orcid,
         rows,
         token
-      })
+      }),
+      getPublicUserProfile({orcid,token})
     ])
     // return data
     return {
@@ -152,6 +156,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         orcid,
         tab,
         profiles,
+        publicProfile,
         ...software,
         ...projects
       }

@@ -9,7 +9,7 @@ import {useState} from 'react'
 import Pagination from '@mui/material/Pagination'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import UserAgreementModal from '~/components/user/settings/UserAgreementModal'
+import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
 import FiltersPanel from '~/components/filter/FiltersPanel'
 import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 import {setDocumentCookie} from '~/utils/userSettings'

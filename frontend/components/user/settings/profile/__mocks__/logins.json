@@ -1,0 +1,26 @@
+[
+  {
+    "id": "98dca794-5889-4cad-a3c3-b00b1a6d1335",
+    "account": "c19ac7b3-8be8-48a0-8eef-4d99b6a89b5e",
+    "provider": "surfconext",
+    "sub": "2deb1badd600c38d8db24cffdba3eea38f8d54d7",
+    "name": "Jordan Ross Belfort",
+    "email": "Jordan.Belfort@harvard-example.edu",
+    "home_organisation": "harvard-example.edu",
+    "last_login_date": "2025-04-10T07:55:49.140902+00:00",
+    "created_at": "2025-04-04T19:51:48.190965+00:00",
+    "updated_at": "2025-04-10T07:55:49.146093+00:00"
+  },
+  {
+    "id": "49274b8d-4477-4e81-a900-13acadee592d",
+    "account": "c19ac7b3-8be8-48a0-8eef-4d99b6a89b5e",
+    "provider": "orcid",
+    "sub": "0000-0001-7055-0057",
+    "name": "Dusan Mijatovic",
+    "email": null,
+    "home_organisation": null,
+    "last_login_date": "2025-04-10T09:49:11.346559+00:00",
+    "created_at": "2025-04-10T09:49:11.361946+00:00",
+    "updated_at": "2025-04-10T09:49:11.361946+00:00"
+  }
+]

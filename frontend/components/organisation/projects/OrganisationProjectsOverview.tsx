@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -17,14 +17,14 @@ import OverviewListItem from '~/components/software/overview/list/OverviewListIt
 import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
 import AdminProjectListItem from './list/AdminProjectListItem'
 import ProjectCardContent from '~/components/projects/overview/cards/ProjectCardContent'
-import GridCardSkeleton from '../software/card/GridCardSkeleton'
+import CardSkeleton from '~/components/cards/CardSkeleton'
 
-type OrganisationProjectsOverviewProps = {
+type OrganisationProjectsOverviewProps = Readonly<{
   layout: ProjectLayoutType
   projects: ProjectOfOrganisation[]
   loading: boolean
   rows: number
-}
+}>
 
 export default function OrganisationProjectsOverview({layout,projects,loading,rows}: OrganisationProjectsOverviewProps) {
   const {isMaintainer, project_cnt} = useOrganisationContext()
@@ -37,6 +37,11 @@ export default function OrganisationProjectsOverview({layout,projects,loading,ro
   // console.log('layout...', layout)
   // console.log('isMaintainer...',isMaintainer)
   // console.groupEnd()
+
+  // if loading show skeleton loader
+  if (loading) {
+    return <CardSkeleton layout={layout} count={itemCnt} />
+  }
 
   if (loading===false && (!projects || projects.length === 0)) {
     return <NoContent />
@@ -70,14 +75,6 @@ export default function OrganisationProjectsOverview({layout,projects,loading,ro
           )
         })}
       </ProjectOverviewList>
-    )
-  }
-
-  if (loading === true) {
-    return (
-      <GridCardSkeleton
-        count={itemCnt}
-      />
     )
   }
 
