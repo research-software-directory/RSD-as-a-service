@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -18,14 +18,14 @@ import SoftwareOverviewGrid from '~/components/software/overview/cards/SoftwareO
 import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
 import AdminSoftwareListItem from './list/AdminSoftwareListItem'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
-import GridCardSkeleton from './card/GridCardSkeleton'
+import CardSkeleton from '~/components/cards/CardSkeleton'
 
-type OrganisationSoftwareOverviewProps = {
+type OrganisationSoftwareOverviewProps = Readonly<{
   layout: ProjectLayoutType
   software: SoftwareOfOrganisation[]
   loading: boolean
   rows: number
-}
+}>
 
 export default function OrganisationSoftwareOverview({layout,software,loading,rows}: OrganisationSoftwareOverviewProps) {
   const {isMaintainer, software_cnt} = useOrganisationContext()
@@ -41,7 +41,11 @@ export default function OrganisationSoftwareOverview({layout,software,loading,ro
   // console.log('layout...', layout)
   // console.groupEnd()
 
-  if (!loading && (!software || software.length === 0)) {
+  if (loading) {
+    return <CardSkeleton layout={layout} count={itemCnt} />
+  }
+
+  if (!software || software.length === 0) {
     return <NoContent />
   }
 
@@ -68,14 +72,6 @@ export default function OrganisationSoftwareOverview({layout,software,loading,ro
           )
         })}
       </SoftwareOverviewList>
-    )
-  }
-
-  if (loading) {
-    return (
-      <GridCardSkeleton
-        count={itemCnt}
-      />
     )
   }
 

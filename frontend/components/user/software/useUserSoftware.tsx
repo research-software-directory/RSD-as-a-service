@@ -2,21 +2,20 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect,useState} from 'react'
 
 import {useSession} from '~/auth'
+import logger from '~/utils/logger'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
-import logger from '~/utils/logger'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
-import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
-type SoftwareByMaintainer={
+export type SoftwareByMaintainer={
   id:string ,
 	slug:string,
 	brand_name:string,
@@ -28,17 +27,12 @@ type SoftwareByMaintainer={
 	mention_cnt:number
 }
 
-type UserSoftwareProp = {
+export type UserSoftwareProp = {
   searchFor?: string
   page: number,
   rows: number,
   token?: string,
   account: string
-}
-
-type State = {
-  count: number,
-  data: SoftwareByMaintainer[]
 }
 
 export async function getSoftwareForMaintainer({
@@ -66,7 +60,7 @@ export async function getSoftwareForMaintainer({
       const json: SoftwareByMaintainer[] = await resp.json()
       return {
         count: extractCountFromHeader(resp.headers) ?? 0,
-        data: json
+        software: json
       }
     }
     // otherwise request failed
@@ -74,7 +68,7 @@ export async function getSoftwareForMaintainer({
     // we log and return zero
     return {
       count: 0,
-      data:[]
+      software:[]
     }
 
   } catch (e:any) {
@@ -83,18 +77,27 @@ export async function getSoftwareForMaintainer({
     // we log and return zero
     return {
       count: 0,
-      data: []
+      software: []
     }
   }
 }
 
+type UseUserSoftwareProps={
+  searchFor?: string
+  page: number
+  rows: number
+}
 
-export default function useUserSoftware() {
+type UserSoftware = {
+  count: number,
+  software: SoftwareByMaintainer[]
+}
+
+export default function useUserSoftware({searchFor,page,rows}:UseUserSoftwareProps) {
   const {user,token} = useSession()
-  const {searchFor,page,rows,setCount} = usePaginationWithSearch('Search software')
-  const [state, setState] = useState<State>({
+  const [state, setState] = useState<UserSoftware>({
     count: 0,
-    data: []
+    software: []
   })
   const [loading, setLoading] = useState(true)
 
@@ -104,7 +107,7 @@ export default function useUserSoftware() {
     async function getSoftware() {
       // set loading done
       // setLoading(true)
-      const software:State = await getSoftwareForMaintainer({
+      const state:UserSoftware = await getSoftwareForMaintainer({
         searchFor,
         page,
         rows,
@@ -114,8 +117,7 @@ export default function useUserSoftware() {
       // abort
       if (abort) return
       // set state
-      setState(software)
-      setCount(software.count)
+      setState(state)
       // set loading done
       setLoading(false)
     }
@@ -125,12 +127,11 @@ export default function useUserSoftware() {
     }
 
     return ()=>{abort = true}
-  // ignore setCount dependency warning
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   },[searchFor,page,rows,token,user?.account])
 
   return {
-    software:state.data,
+    ...state,
     loading
   }
 }

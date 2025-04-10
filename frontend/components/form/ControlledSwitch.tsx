@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,22 +11,22 @@ import {Controller} from 'react-hook-form'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
 
-type ControlledSwitchProps = {
+export type ControlledSwitchProps<T> = Readonly<{
+  name: keyof T,
   label: ReactNode | string,
-  name: string,
   control: any,
   defaultValue?: boolean
   disabled?: boolean
   onSave?:(value:boolean)=>void
-}
+}>
 
 
-export default function ControlledSwitch({label, name,
-  defaultValue = false, control, disabled = false, onSave}: ControlledSwitchProps) {
+export default function ControlledSwitch<T>({label, name,
+  defaultValue = false, control, disabled = false, onSave}: ControlledSwitchProps<T>) {
   // console.log('ControlledSwitch.defaultValue...', defaultValue)
   return (
     <Controller
-      name={name}
+      name={name.toString()}
       defaultValue={defaultValue}
       control={control}
       render={({field}) => {

@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -36,7 +36,7 @@ export async function acceptUserAgreementInSettings(page: Page) {
 
 export async function acceptUserAgreement(page: Page) {
   // wait for user agreement api call
-  const uaModal = page.getByTestId('user-agreement-modal',)
+  const uaModal = page.getByTestId('user-agreement-modal')
 
   // check if user agreement modal is shown
   if (await uaModal.isVisible() === false) {
