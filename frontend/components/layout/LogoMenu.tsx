@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -79,8 +79,8 @@ export default function LogoMenu({logo, onAddLogo, onRemoveLogo}: AdminMenuLogoP
         sx={{
           position: 'absolute',
           // backgroundColor: 'background.default',
-          right: '0.125rem',
-          top: '0.125rem',
+          right: '0.25rem',
+          top: '0.25rem',
           // opacity: 0.90,
           // '&:hover':{
           //   opacity: 1,

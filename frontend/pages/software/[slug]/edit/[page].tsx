@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -17,7 +17,7 @@ import {getSoftwareToEdit} from '~/utils/editSoftware'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import ContentLoader from '~/components/layout/ContentLoader'
 import {EditSoftwareProvider, SoftwareInfo} from '~/components/software/edit/editSoftwareContext'
-import UserAgreementModal from '~/components/user/settings/UserAgreementModal'
+import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
 import {editSoftwarePage} from '~/components/software/edit/editSoftwarePages'
 import EditSoftwareStickyHeader from '~/components/software/edit/EditSoftwareStickyHeader'
 import EditSoftwareNav from '~/components/software/edit/EditSoftwareNav'

@@ -11,8 +11,8 @@ import {defaultSession} from '~/auth'
 import CommunityMaintainers from './index'
 import mockCommunity from '../../__mocks__/mockCommunity'
 
-// MOCK user agreement call
-// jest.mock('~/components/user/settings/useUserAgreements')
+// mock user agreement call
+jest.mock('~/components/user/settings/agreements/useUserAgreements')
 
 // MOCK useCommunityMaintainers hook
 const mockDeleteMaintainer = jest.fn()

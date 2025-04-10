@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -29,7 +29,7 @@ import ResearchUnitList from './ResearchUnitList'
 import ResearchUnitModal from './ResearchUnitModal'
 import {upsertImage} from '~/utils/editImage'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
-import UserAgreementModal from '~/components/user/settings/UserAgreementModal'
+import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
 import useOrganisationContext from '../context/useOrganisationContext'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 
