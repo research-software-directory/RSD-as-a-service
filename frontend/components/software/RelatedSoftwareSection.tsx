@@ -8,9 +8,9 @@
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import PageContainer from '../layout/PageContainer'
-import SoftwareGrid, {SoftwareGridType} from '../user/software/SoftwareGrid'
+import RelatedSoftwareGrid, {SoftwareGridType} from './RelatedSoftwareGrid'
 
-export default function RelatedSoftwareSection({relatedSoftware = []}: { relatedSoftware: SoftwareGridType[] }) {
+export default function RelatedSoftwareSection({relatedSoftware = []}:Readonly<{relatedSoftware:SoftwareGridType[]}>) {
   // use media query hook for small screen logic
   const smallScreen = useMediaQuery('(max-width:600px)')
   // adjust grid min width for mobile
@@ -25,7 +25,7 @@ export default function RelatedSoftwareSection({relatedSoftware = []}: { related
         className="pb-8 text-[2rem] text-primary">
         Related software
       </h2>
-      <SoftwareGrid
+      <RelatedSoftwareGrid
         className="gap-[0.125rem]"
         software={relatedSoftware}
         grid={{

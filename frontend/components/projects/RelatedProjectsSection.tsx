@@ -9,10 +9,10 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {RelatedProject} from '../../types/Project'
 import PageContainer from '../layout/PageContainer'
-import ProjectsGrid from '../user/project/ProjectsGrid'
+import RelatedProjectsGrid from './RelatedProjectsGrid'
 
 export default function RelatedProjectsSection({relatedProjects}:
-  { relatedProjects: RelatedProject[] }) {
+  Readonly<{relatedProjects: RelatedProject[]}>) {
   // use media query hook for small screen logic
   const smallScreen = useMediaQuery('(max-width:600px)')
   // adjust grid min width for mobile
@@ -27,7 +27,7 @@ export default function RelatedProjectsSection({relatedProjects}:
         className="pb-8 text-[2rem] text-primary">
         Related projects
       </h2>
-      <ProjectsGrid
+      <RelatedProjectsGrid
         className='gap-[0.125rem]'
         minWidth={minWidth}
         maxWidth='1fr'

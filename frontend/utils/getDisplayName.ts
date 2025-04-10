@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -35,7 +37,7 @@ export function getDisplayInitials({given_names, family_names}:
 }
 
 /**
- * Spliting display name in given_names and family_names.
+ * Splitting display name in given_names and family_names.
  * Simply we use first word as given name and the rest as family names
  * @param name
  * @returns

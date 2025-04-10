@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,20 +14,29 @@ import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
-import {ProjectOfOrganisation} from '~/types/Organisation'
-import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
-export type UserProjectsProp = {
+export type ProjectByMaintainer={
+  id: string
+	slug: string,
+	title: string,
+	subtitle: string | null
+	current_state: string
+	date_start: string
+  date_end: string
+	updated_at: string
+	is_published: boolean
+	image_contain: boolean,
+	image_id: string | null
+	impact_cnt: number
+	output_cnt: number
+}
+
+type UserProjectsProp = {
   searchFor?: string
   page: number,
   rows: number,
   account: string
   token?: string,
-}
-
-type State = {
-  count: number,
-  data: ProjectOfOrganisation[]
 }
 
 export async function getProjectsForMaintainer(
@@ -56,10 +65,10 @@ export async function getProjectsForMaintainer(
     })
 
     if ([200, 206].includes(resp.status)) {
-      const json: ProjectOfOrganisation[] = await resp.json()
+      const json: ProjectByMaintainer[] = await resp.json()
       return {
         count: extractCountFromHeader(resp.headers) ?? 0,
-        data: json
+        projects: json
       }
     }
 
@@ -69,7 +78,7 @@ export async function getProjectsForMaintainer(
     // we log and return zero
     return {
       count: 0,
-      data: []
+      projects: []
     }
   } catch (e: any) {
     // otherwise request failed
@@ -78,18 +87,28 @@ export async function getProjectsForMaintainer(
     // we log and return zero
     return {
       count: 0,
-      data: []
+      projects: []
     }
   }
 }
 
+type UseUserProjectsProps={
+  searchFor?: string
+  page: number
+  rows: number
+}
 
-export default function useUserProjects() {
+type UserProjects = {
+  count: number,
+  projects: ProjectByMaintainer[]
+}
+
+
+export default function useUserProjects({searchFor,page,rows}:UseUserProjectsProps) {
   const {user,token} = useSession()
-  const {searchFor,page,rows, setCount} = usePaginationWithSearch('Search project')
-  const [state, setState] = useState<State>({
+  const [state, setState] = useState<UserProjects>({
     count: 0,
-    data: []
+    projects: []
   })
   const [loading, setLoading] = useState(true)
 
@@ -97,7 +116,7 @@ export default function useUserProjects() {
     let abort = false
 
     async function getProjects() {
-      const projects: State = await getProjectsForMaintainer({
+      const projects = await getProjectsForMaintainer({
         searchFor,
         page,
         rows,
@@ -111,8 +130,6 @@ export default function useUserProjects() {
 
       // set state
       setState(projects)
-      // set count
-      setCount(projects.count)
       // set loading done
       setLoading(false)
     }
@@ -122,12 +139,11 @@ export default function useUserProjects() {
     }
 
     return () => {abort = true}
-  // ignore setCount dependency
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [searchFor, page, rows, token, user?.account])
 
   return {
-    projects: state.data,
+    ...state,
     loading
   }
 }

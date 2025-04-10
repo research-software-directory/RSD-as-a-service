@@ -15,7 +15,7 @@ import mockOrganisation from '../__mocks__/mockOrganisation'
 import mockProjects from './__mocks__/mockProjects.json'
 
 // mock user agreement call
-jest.mock('~/components/user/settings/useUserAgreements')
+jest.mock('~/components/user/settings/agreements/useUserAgreements')
 // mock project categories api
 jest.mock('~/components/organisation/projects/filters/useOrgProjectCategoriesList')
 
