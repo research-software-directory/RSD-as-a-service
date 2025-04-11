@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -10,15 +10,16 @@ import {useState} from 'react'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import Fab from '@mui/material/Fab'
 
 import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import NoContent from '~/components/layout/NoContent'
+import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import TableWrapper from './TableWrapper'
 import SortableTable from './SortableTable'
 import {useProjectQuality} from './apiProjectQuality'
 import FullScreenTable from './FullScreenTable'
-import Fab from '@mui/material/Fab'
 
 export default function ProjectQuality() {
   const {token,user} = useSession()
@@ -41,7 +42,7 @@ export default function ProjectQuality() {
           sx={{
             position:'relative',
             minHeight:'40rem',
-            marginBottom:'2rem'
+            // marginBottom:'2rem'
           }}
           nav={
             <Fab
@@ -90,7 +91,14 @@ export default function ProjectQuality() {
   }
 
   if (dataLoaded === false) {
-    return <ContentLoader />
+    return (
+      <BaseSurfaceRounded
+        className="flex-1 flex p-4"
+        type="section"
+      >
+        <ContentLoader />
+      </BaseSurfaceRounded>
+    )
   }
   // debugger
   if (data.length === 0) {
@@ -98,9 +106,13 @@ export default function ProjectQuality() {
   }
 
   return (
-    <div className="flex flex-col overflow-hidden">
-      <div className="flex justify-end">
-        {isAdmin &&
+    <BaseSurfaceRounded
+      className="flex-1 p-4"
+      type="section"
+    >
+      <div className="flex flex-col overflow-hidden">
+        <div className="flex justify-end">
+          {isAdmin &&
           <FormControlLabel
             label="Show all"
             control={
@@ -111,10 +123,10 @@ export default function ProjectQuality() {
               />
             }
           />
-        }
+          }
+        </div>
+        {renderContent()}
       </div>
-
-      {renderContent()}
-    </div>
+    </BaseSurfaceRounded>
   )
 }
