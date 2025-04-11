@@ -2,6 +2,8 @@
 -- SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 dv4all
+-- SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+-- SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -32,14 +34,14 @@ CREATE TABLE mention (
 	doi CITEXT UNIQUE CHECK (doi ~ '^10(\.\w+)+/\S+$' AND LENGTH(doi) <= 255),
 	doi_registration_date TIMESTAMPTZ,
 	openalex_id CITEXT UNIQUE CHECK (openalex_id ~ '^https://openalex\.org/[WwAaSsIiCcPpFf]\d{3,13}$'),
-	url VARCHAR(500) CHECK (url ~ '^https?://'),
+	url VARCHAR(500) CHECK (url ~ '^https?://\S+$'),
 	title VARCHAR(3000) NOT NULL,
 	authors VARCHAR(50000),
 	publisher VARCHAR(255),
 	publication_year SMALLINT,
 	journal VARCHAR(500),
 	page VARCHAR(50),
-	image_url VARCHAR(500) CHECK (image_url ~ '^https?://'),
+	image_url VARCHAR(500) CHECK (image_url ~ '^https?://\S+$'),
 	mention_type mention_type NOT NULL,
 	source VARCHAR(50) NOT NULL,
 	version VARCHAR(100),
