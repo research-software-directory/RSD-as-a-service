@@ -2,10 +2,11 @@
 -- SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2024 dv4all
+-- SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
--- SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
+-- SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -55,6 +56,7 @@ CREATE TYPE package_manager_type AS ENUM (
 	'golang',
 	'maven',
 	'npm',
+	'pixi',
 	'pypi',
 	'snapcraft',
 	'sonatype',
