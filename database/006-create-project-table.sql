@@ -2,6 +2,8 @@
 -- SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 dv4all
+-- SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+-- SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -57,7 +59,7 @@ CREATE TABLE url_for_project (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	project UUID REFERENCES project (id),
 	title VARCHAR(100) NOT NULL,
-	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://'),
+	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://\S+$'),
 	position INTEGER
 );
 
