@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 
 import {useSession} from '~/auth'
 import {patchOrganisation} from '~/utils/editOrganisation'
@@ -29,7 +29,7 @@ export default function OrganisationLogo({isMaintainer}:OrganisationLogoProps) {
   const {id,name,logo_id} = useOrganisationContext()
   const {showErrorMessage} = useSnackbar()
   // currently shown image
-  const [logo, setLogo] = useState<string|null>(null)
+  const [logo, setLogo] = useState<string|null>(logo_id ?? null)
 
   // console.group('OrganisationLogo')
   // console.log('id...', id)
@@ -38,15 +38,6 @@ export default function OrganisationLogo({isMaintainer}:OrganisationLogoProps) {
   // console.log('logo...', logo)
   // console.log('isMaintainer...', isMaintainer)
   // console.groupEnd()
-
-  // Update logo when new value
-  // received from parent,
-  // can be null, indicating no logo exists for the org
-  useEffect(() => {
-    if (logo_id !== undefined) {
-      setLogo(logo_id)
-    }
-  },[logo_id])
 
   async function addLogo({data, mime_type}: ImageDataProps) {
     // split base64 to use only encoded content

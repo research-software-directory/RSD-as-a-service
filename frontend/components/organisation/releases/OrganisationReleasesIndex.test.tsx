@@ -1,9 +1,10 @@
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render, screen, waitForElementToBeRemoved} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithOrganisationContext} from '~/utils/jest/WithOrganisationContext'
 
@@ -33,31 +34,17 @@ jest.mock('~/components/organisation/releases/apiOrganisationReleases')
 
 describe('components/organisation/releases/index.tsx', () => {
 
-  it('shows loader', () => {
-    render(
-      <WithAppContext options={{session: testSession}}>
-        <WithOrganisationContext {...mockProps}>
-          <OrganisationSoftwareReleases />
-        </WithOrganisationContext>
-      </WithAppContext>
-    )
-
-    screen.getByRole('progressbar')
-  })
-
   it('shows releases page', async() => {
     render(
       <WithAppContext options={{session: testSession}}>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationSoftwareReleases />
+          <OrganisationSoftwareReleases releaseCountsByYear={mockReleaseCount} releases={mockReleases} />
         </WithOrganisationContext>
       </WithAppContext>
     )
 
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
-
     // buttons
-    const years = screen.getAllByRole('button')
+    const years = screen.getAllByRole('release-year-button')
     expect(years.length).toEqual(mockReleaseCount.length)
 
     // find release items

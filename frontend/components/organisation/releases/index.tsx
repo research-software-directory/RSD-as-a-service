@@ -1,33 +1,27 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
-
-import {useSession} from '~/auth'
-import ContentLoader from '~/components/layout/ContentLoader'
 import NoContent from '~/components/layout/NoContent'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
-import useOrganisationContext from '../context/useOrganisationContext'
 
 import ReleaseList from './ReleaseList'
 import ReleaseNavButton from './ReleaseNavButton'
 import ScrollToTopButton from './ScrollToTopButton'
-import useReleaseCount from './useReleaseCount'
+import {ReleaseCountByYear, SoftwareReleaseInfo} from '~/components/organisation/releases/apiOrganisationReleases'
+import {useRouter} from 'next/router'
 
-export default function SoftwareReleases() {
-  const {token} = useSession()
-  const {id} = useOrganisationContext()
-  const {loading, countsByYear} = useReleaseCount({
-    organisation_id: id,
-    token
-  })
-  const [selected_year,setSelected]=useState<number>()
-  // const release_year = router.query['release_year']
+type SoftwareReleasesProps = {
+  releaseCountsByYear: ReleaseCountByYear[] | null
+  releases: SoftwareReleaseInfo[] | null
+}
+
+export default function SoftwareReleases({releaseCountsByYear: countsByYear, releases}: Readonly<SoftwareReleasesProps>) {
+  const router = useRouter()
   // console.group('SoftwareReleases')
   // console.log('loading...', loading)
   // console.log('releases...', releases)
@@ -35,15 +29,16 @@ export default function SoftwareReleases() {
   // console.log('countsByYear...', countsByYear)
   // console.groupEnd()
 
-  useEffect(() => {
-    if (countsByYear && countsByYear.length > 0) {
-      setSelected(countsByYear[0].release_year)
-    }
-  },[countsByYear])
+  if (!countsByYear || countsByYear.length === 0) return <NoContent />
 
-  // show loader
-  if (loading === true) return <ContentLoader />
-  if (countsByYear?.length === 0) return <NoContent />
+  const queryYear = router.query['year']
+  let release_year: number = parseInt(queryYear as string)
+  if (isNaN(release_year)) {
+    release_year = countsByYear[0].release_year
+  }
+
+  const path = router.asPath
+  const newPath = path.split('?')[0] + '?tab=releases'
 
   // releases per year
   return (
@@ -58,14 +53,14 @@ export default function SoftwareReleases() {
               key={count.release_year}
               year={count.release_year}
               release_cnt={count.release_cnt}
-              selected = {selected_year===count.release_year}
-              onSelectYear={setSelected}
+              selected = {release_year===count.release_year}
+              link={newPath + `&year=${count.release_year}`}
             />
           })
         }
       </nav>
       {/* Release items of selected year */}
-      <ReleaseList release_year={selected_year} />
+      <ReleaseList release_year={release_year} releases={releases ?? []} />
       <ScrollToTopButton minOffset={200} />
     </BaseSurfaceRounded>
   )
