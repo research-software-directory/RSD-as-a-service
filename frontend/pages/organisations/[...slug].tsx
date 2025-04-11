@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -105,7 +105,7 @@ export default function OrganisationPage({
 }
 
 // fetching data server side
-// see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
+// see documentation https://nextjs.org/docs/pages/building-your-application/data-fetching/get-server-side-props
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
     const {params, req, query} = context
