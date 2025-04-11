@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 - 2023 dv4all
@@ -565,7 +565,7 @@ CREATE POLICY admin_all_rights ON reference_paper_for_software TO rsd_admin
 ALTER TABLE citation_for_mention ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY anyone_can_read ON citation_for_mention FOR SELECT TO rsd_web_anon, rsd_user
-	USING (mention IN (SELECT id FROM mention));
+	USING (TRUE);
 
 CREATE POLICY admin_all_rights ON citation_for_mention TO rsd_admin
 	USING (TRUE)

@@ -3,8 +3,8 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -23,7 +23,7 @@ export type ApiParams<T, K extends keyof T> = {
   page: number
   rows: number
   searchFor?: string
-  orderBy?: OrderByProps<T,K>
+  orderBy?: OrderByProps<T, K>
 }
 
 type baseQueryStringProps = {
@@ -42,22 +42,22 @@ type baseQueryStringProps = {
 }
 
 export type PostgrestParams = baseQueryStringProps & {
-  baseUrl:string
+  baseUrl: string
 }
 
-export type QueryParams={
-  search?:string | null
+export type QueryParams = {
+  search?: string | null
   order?: string | null,
-  keywords?:string[] | null
-  domains?:string[] | null,
+  keywords?: string[] | null
+  domains?: string[] | null,
   prog_lang?: string[] | null,
   licenses?: string[] | null,
   categories?: string[] | null,
   rsd_host?: string,
   organisations?: string[] | null,
   project_status?: string | null,
-  page?:number | null,
-  rows?:number | null
+  page?: number | null,
+  rows?: number | null
 }
 
 export type ViewQueryParams = {
@@ -65,13 +65,13 @@ export type ViewQueryParams = {
   params: QueryParams
 }
 
-export function ssrViewUrl(viewParams:ViewQueryParams) {
+export function ssrViewUrl(viewParams: ViewQueryParams) {
   const {view, params} = viewParams
   const url = buildFilterUrl(params, view)
   return url
 }
 
-export function ssrSoftwareUrl(params:QueryParams){
+export function ssrSoftwareUrl(params: QueryParams) {
   const view = 'software'
   const url = buildFilterUrl(params, view)
   return url
@@ -79,7 +79,7 @@ export function ssrSoftwareUrl(params:QueryParams){
 
 export function ssrOrganisationUrl(params: QueryParams) {
   const view = 'organisations'
-  const url = buildFilterUrl(params,view)
+  const url = buildFilterUrl(params, view)
   return url
 }
 
@@ -90,7 +90,7 @@ export function ssrProjectsUrl(params: QueryParams) {
 }
 
 
-export function buildFilterUrl(params: QueryParams, view:string) {
+export function buildFilterUrl(params: QueryParams, view: string) {
   const {
     search, order, keywords, domains,
     licenses, prog_lang, rsd_host,
@@ -174,7 +174,7 @@ export function buildFilterUrl(params: QueryParams, view:string) {
     value: rows
   })
   // debugger
-  if (query!=='') {
+  if (query !== '') {
     return `${url}${query}`
   }
   return url
@@ -183,8 +183,8 @@ export function buildFilterUrl(params: QueryParams, view:string) {
 /**
  * Provides url params for postgrest api pagination
  */
-export function paginationUrlParams({rows=12, page=0}:
-  {rows:number,page:number}) {
+export function paginationUrlParams({rows = 12, page = 0}:
+                                      { rows: number, page: number }) {
   let params = ''
 
   if (rows) {
@@ -285,18 +285,18 @@ export function baseQueryString(props: baseQueryStringProps) {
     }
   }
   // RSD Host
-  if (rsd_host !== undefined){
-    if (query){
+  if (rsd_host !== undefined) {
+    if (query) {
       // the null value is passed as string in url query
-      if (rsd_host==='null'){
+      if (rsd_host === 'null') {
         query = `${query}&rsd_host=is.null`
-      }else{
+      } else {
         query = `${query}&rsd_host=eq.${rsd_host}`
       }
-    }else if (rsd_host==='null' || rsd_host===null){
+    } else if (rsd_host === 'null' || rsd_host === null) {
       // the null value is passed as string in url query
       query = 'rsd_host=is.null'
-    }else{
+    } else {
       query = `rsd_host=eq.${rsd_host}`
     }
   }
@@ -362,6 +362,7 @@ export function baseQueryString(props: baseQueryStringProps) {
 export function softwareListUrl(props: PostgrestParams) {
   const {baseUrl, search} = props
   let query = baseQueryString(props)
+  let url = ''
 
   if (search) {
     // console.log('softwareListUrl...keywords...', props.keywords)
@@ -371,12 +372,18 @@ export function softwareListUrl(props: PostgrestParams) {
     // check rpc in 105-project-views.sql for exact filtering
     query += `&search=${encodedSearch}`
 
-    const url = `${baseUrl}/rpc/aggregated_software_search?${query}`
+    url = `${baseUrl}/rpc/aggregated_software_search`
     // console.log('softwareListUrl...', url)
-    return url
+  } else {
+    url = `${baseUrl}/rpc/aggregated_software_overview`
   }
 
-  const url = `${baseUrl}/rpc/aggregated_software_overview?${query}`
+  if (!props.categories) {
+    const selectList = 'id,rsd_host,domain,slug,brand_name,short_statement,image_id,updated_at,contributor_cnt,mention_cnt,is_published,keywords,keywords_text,prog_lang,licenses'
+    query += `&select=${selectList}`
+  }
+
+  url += `?${query}`
   // console.log('softwareListUrl...', url)
   return url
 }

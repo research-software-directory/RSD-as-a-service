@@ -1,7 +1,9 @@
--- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
+
+ALTER DATABASE "_database_name_" SET JIT = OFF;
 
 CREATE ROLE rsd_authenticator NOINHERIT LOGIN PASSWORD 'POSTGRES_AUTHENTICATOR_PASSWORD';
 

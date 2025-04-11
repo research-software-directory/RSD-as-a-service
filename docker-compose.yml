@@ -105,6 +105,20 @@ services:
         "nl.esciencecenter.rsd.authentication.Main"
       ]
 
+  background-services:
+    build: ./background-services
+    environment:
+    # it uses values from .env file
+      - POSTGRES_DB_HOST
+      - POSTGRES_DB_HOST_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    depends_on:
+      - database
+    networks:
+      - net
+
   frontend:
     build:
       context: ./frontend
@@ -167,6 +181,9 @@ services:
     image: rsd/scrapers:1.9.0
     environment:
       # it uses values from .env file
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
       - POSTGREST_URL
       - PGRST_JWT_SECRET
       - MAX_REQUESTS_GITHUB

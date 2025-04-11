@@ -206,6 +206,10 @@ $$
 		mentions_by_software.software;
 $$;
 
+CREATE MATERIALIZED VIEW count_software_mentions_cached AS SELECT * FROM count_software_mentions();
+
+CREATE UNIQUE INDEX ON count_software_mentions_cached(software);
+
 -- CATEGORIES for software overview filter (GLOBAL)
 CREATE FUNCTION software_categories() RETURNS TABLE(
 	software UUID,
@@ -257,7 +261,7 @@ SELECT
 	software.image_id,
 	software.updated_at,
 	count_software_contributors.contributor_cnt,
-	count_software_mentions.mention_cnt,
+	count_software_mentions_cached.mention_cnt,
 	software.is_published,
 	keyword_filter_for_software.keywords,
 	keyword_filter_for_software.keywords_text,
@@ -269,7 +273,7 @@ FROM
 LEFT JOIN
 	count_software_contributors() ON software.id=count_software_contributors.software
 LEFT JOIN
-	count_software_mentions() ON software.id=count_software_mentions.software
+	count_software_mentions_cached ON software.id=count_software_mentions_cached.software
 LEFT JOIN
 	keyword_filter_for_software() ON software.id=keyword_filter_for_software.software
 LEFT JOIN
@@ -472,7 +476,7 @@ SELECT
 	software.updated_at,
 	software.is_published,
 	count_software_contributors.contributor_cnt,
-	count_software_mentions.mention_cnt,
+	count_software_mentions_cached.mention_cnt,
 	keyword_filter_for_software.keywords,
 	keyword_filter_for_software.keywords_text,
 	prog_lang_filter_for_software.prog_lang,
@@ -485,7 +489,7 @@ INNER JOIN
 LEFT JOIN
 	count_software_contributors() ON software.id=count_software_contributors.software
 LEFT JOIN
-	count_software_mentions() ON software.id=count_software_mentions.software
+	count_software_mentions_cached ON software.id=count_software_mentions_cached.software
 LEFT JOIN
 	keyword_filter_for_software() ON software.id=keyword_filter_for_software.software
 LEFT JOIN

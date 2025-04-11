@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,7 +23,7 @@ describe('baseQueryString', () => {
   })
 
   it('make custom encoded keywords url query string', () => {
-    const keywords=['filter-1', 'filter-2']
+    const keywords = ['filter-1', 'filter-2']
     const expected = 'keywords=cs.%7B\"filter-1\",\"filter-2\"%7D&limit=12&offset=0'
     const url = baseQueryString({keywords})
     expect(url).toEqual(expected)
@@ -55,7 +56,7 @@ describe('baseQueryString', () => {
     const limit = 24
     const offset = 101
     const expected = 'keywords=cs.%7B\"filter-1\",\"filter-2\"%7D&order=pass,any,order,you will&limit=24&offset=101'
-    const url = baseQueryString({keywords,order,limit,offset})
+    const url = baseQueryString({keywords, order, limit, offset})
     expect(url).toEqual(expected)
   })
 
@@ -92,7 +93,8 @@ describe('ssrSoftwareUrl', () => {
 describe('softwareListUrl', () => {
   it('returns overview rpc endpoint url when only baseUrl provided', () => {
     const baseUrl = 'http://test-base-url'
-    const expectUrl = `${baseUrl}/rpc/aggregated_software_overview?limit=12&offset=0`
+    const selectList = 'id,rsd_host,domain,slug,brand_name,short_statement,image_id,updated_at,contributor_cnt,mention_cnt,is_published,keywords,keywords_text,prog_lang,licenses'
+    const expectUrl = `${baseUrl}/rpc/aggregated_software_overview?limit=12&offset=0&select=${selectList}`
     const url = softwareListUrl({
       baseUrl
     } as PostgrestParams)
@@ -102,8 +104,9 @@ describe('softwareListUrl', () => {
   it('returns search rpc endpoint url with search params', () => {
     const baseUrl = 'http://test-base-url'
     const searchTerm = 'test-search'
+    const selectList = 'id,rsd_host,domain,slug,brand_name,short_statement,image_id,updated_at,contributor_cnt,mention_cnt,is_published,keywords,keywords_text,prog_lang,licenses'
     // if you change search value then change expectedUrl values too
-    const expectUrl = `${baseUrl}/rpc/aggregated_software_search?limit=12&offset=0&search=${searchTerm}`
+    const expectUrl = `${baseUrl}/rpc/aggregated_software_search?limit=12&offset=0&search=${searchTerm}&select=${selectList}`
     const url = softwareListUrl({
       baseUrl,
       // if you change search value then change expectedUrl values too
@@ -115,7 +118,8 @@ describe('softwareListUrl', () => {
   it('returns overview rpc endpoint url with keywords params', () => {
     const baseUrl = 'http://test-base-url'
     // if you change search value then change expectedUrl values too
-    const expectUrl = `${baseUrl}/rpc/aggregated_software_overview?keywords=cs.%7B\"test-filter\"%7D&limit=12&offset=0`
+    const selectList = 'id,rsd_host,domain,slug,brand_name,short_statement,image_id,updated_at,contributor_cnt,mention_cnt,is_published,keywords,keywords_text,prog_lang,licenses'
+    const expectUrl = `${baseUrl}/rpc/aggregated_software_overview?keywords=cs.%7B"test-filter"%7D&limit=12&offset=0&select=${selectList}`
     const url = softwareListUrl({
       baseUrl,
       keywords: ['test-filter']

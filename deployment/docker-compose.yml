@@ -97,6 +97,22 @@ services:
       - net
     restart: unless-stopped
 
+  background-services:
+    container_name: background-services
+    image: ghcr.io/research-software-directory/rsd-saas/background-services:latest
+    environment:
+      # it uses values from .env file
+      - POSTGRES_DB_HOST
+      - POSTGRES_DB_HOST_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    depends_on:
+      - database
+    networks:
+      - net
+    restart: unless-stopped
+
   frontend:
     container_name: frontend
     image: ghcr.io/research-software-directory/rsd-saas/frontend:latest
