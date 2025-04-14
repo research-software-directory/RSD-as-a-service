@@ -1,9 +1,25 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package nl.esciencecenter.rsd.scraper.package_manager;
+
+import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
@@ -17,20 +33,8 @@ import nl.esciencecenter.rsd.scraper.package_manager.scrapers.GoScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.MavenScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.NpmScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PackageManagerScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PixiScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PypiScraper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class MainPackageManager {
 
@@ -94,6 +98,7 @@ public class MainPackageManager {
 			case maven, sonatype -> new MavenScraper(url);
 			case npm -> new NpmScraper(url);
 			case pypi -> new PypiScraper(url);
+			case pixi -> new PixiScraper(url);
 			case other -> throw new RuntimeException("Package manager scraper requested for 'other'");
 		};
 	}

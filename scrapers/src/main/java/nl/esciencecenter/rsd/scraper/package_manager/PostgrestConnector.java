@@ -1,15 +1,11 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package nl.esciencecenter.rsd.scraper.package_manager;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,6 +13,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import nl.esciencecenter.rsd.scraper.Utils;
 
 public class PostgrestConnector {
 
@@ -27,7 +30,7 @@ public class PostgrestConnector {
 	}
 
 	public Collection<BasicPackageManagerData> oldestDownloadCounts(int limit) {
-		String filter = "download_count_scraping_disabled_reason=is.null&or=(package_manager.eq.dockerhub)";
+		String filter = "download_count_scraping_disabled_reason=is.null&or=(package_manager.eq.dockerhub,package_manager.eq.pixi)";
 		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=id,url,package_manager&order=download_count_scraped_at.asc.nullsfirst&limit=" + limit
 				+ "&" + Utils.atLeastOneHourAgoFilter("download_count_scraped_at")
 		);
