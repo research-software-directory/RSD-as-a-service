@@ -2,8 +2,9 @@
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,8 +33,8 @@ export const generalSettingsConfig = {
       minLength: {value: 6, message: 'Minimum length is 6'},
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
-        value: /^https?:\/\/.+\..+/,
-        message: 'Url should start with http(s):// and have at least one dot (.)'
+        value: /^https?:\/\/\S+$/,
+        message: 'Url should start with http(s):// and cannot contain white spaces'
       }
     }
   },
@@ -65,8 +66,8 @@ export const generalSettingsConfig = {
       minLength: {value: 16, message: 'Minimum length is 16'},
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
-        value: /^https:\/\/ror.org\/.+/,
-        message: 'ROR id is url and starts with https://ror.org/'
+        value: /^https:\/\/ror.org\/\S+$/,
+        message: 'ROR ID must start with https://ror.org/ and cannot include white spaces'
       }
     }
   },

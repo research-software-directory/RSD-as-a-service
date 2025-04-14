@@ -1,13 +1,14 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 dv4all
+// SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -141,8 +142,8 @@ export const organisationInformation = {
       minLength: {value: 6, message: 'Minimum length is 6'},
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
-        value: /^https?:\/\/.+\..+/,
-        message: 'URL should start with http(s):// and have at least one dot (.)'
+        value: /^https?:\/\/\S+$/,
+        message: 'URL should start with http(s):// and cannot include white spaces'
       }
     }
   },
@@ -217,8 +218,8 @@ export const mentionInformation = {
     help: 'Provide URL to publication',
     validation: {
       pattern: {
-        value: /^https?:\/\/.+\..+/,
-        message: 'URL should start with http(s):// have at least one dot (.)'
+        value: /^https?:\/\/\S+$/,
+        message: 'URL should start with http(s):// and cannot include white spaces'
       }
     }
   },
@@ -233,8 +234,8 @@ export const mentionInformation = {
     help: 'Provide URL to image',
     validation: {
       pattern: {
-        value: /^https?:\/\/.+\..+/,
-        message: 'URL should start with http(s):// have at least one dot (.)'
+        value: /^https?:\/\/\S+$/,
+        message: 'URL must start with http(s):// and cannot include white spaces'
       }
     }
   },
