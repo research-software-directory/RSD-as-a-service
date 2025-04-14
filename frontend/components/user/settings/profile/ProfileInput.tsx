@@ -3,8 +3,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
 import {useFormContext} from 'react-hook-form'
+import LaunchIcon from '@mui/icons-material/Launch'
 
 import modalConfig from '~/components/person/config'
 import {useUserContext} from '~/components/user/context/UserContext'
@@ -26,9 +26,9 @@ export default function ProfileInput() {
   const {watch,control} = useFormContext()
   // watch value changes
   const [
-    given_names,family_names,email_address, role, affiliation
+    given_names,family_names,email_address, role, affiliation, is_public
   ] = watch([
-    'given_names','family_names','email_address','role','affiliation'
+    'given_names','family_names','email_address','role','affiliation', 'is_public'
   ])
 
   return (
@@ -88,24 +88,30 @@ export default function ProfileInput() {
             label: modalConfig.email_address.label,
             useNull: true,
             // defaultValue: profile.email_address,
-            helperTextMessage: modalConfig.email_address.help,
+            helperTextMessage: 'Type in your contact email',
             helperTextCnt: `${email_address?.length ?? 0}/${modalConfig.email_address.validation(false).maxLength.value}`,
           }}
           rules={modalConfig.email_address.validation}
         />
-        {
-          publicProfile?.show ?
-            <AutosaveProfileSwitch
-              disabled={publicProfile.disabled}
-              // defaultValue={is_public}
-              name='is_public'
-              control={control}
-              label={
-                <span>Enable my <Link className="underline" target='_blank' href="/documentation/users/user-settings/#public-profile">Public Profile</Link></span>
-              }
-            />
-            : null
-        }
+        <div className="flex items-center justify-between gap-4">
+          {
+            publicProfile?.show ?
+              <AutosaveProfileSwitch
+                disabled={publicProfile.disabled}
+                // defaultValue={is_public}
+                name='is_public'
+                control={control}
+                label="Public Profile"
+              />
+              : null
+          }
+          {is_public === true && orcid ?
+            <a href={`/profile/${orcid}/software`} className="flex gap-2 items-center" target='_blank'>
+              Enabled <LaunchIcon sx={{width:'1rem'}}/>
+            </a>
+            :<span>Disabled (<a href="/documentation/users/user-settings/#public-profile" target='_blank'>how to enable? <LaunchIcon sx={{width:'1rem'}}/></a>)</span>
+          }
+        </div>
       </div>
     </div>
   )

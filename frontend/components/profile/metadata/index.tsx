@@ -20,13 +20,20 @@ function aggregateProfiles(profiles:RsdContributor[]|null,user:UserProfile|null)
     orcid:string|null=null,
     initials:string|null=null
 
+  // if both present we use user as much as possible
   if (user && profiles){
     name = getDisplayName(user)
     initials = getDisplayInitials(user)
     role = user.role
     affiliation = user.affiliation
-    avatar_id = user.avatar_id
-    orcid = profiles[0].orcid
+    // use image if present
+    if (user.avatar_id){
+      avatar_id = user.avatar_id
+    }else{
+      // otherwise find the first image from contributor/team member entries
+      avatar_id = profiles.find(item=>item.avatar_id!==null)?.avatar_id ?? null
+    }
+    orcid = profiles[0]?.orcid ?? null
   }else {
     // extract info from contributor/team member entries
     profiles?.forEach(item=>{
@@ -35,7 +42,7 @@ function aggregateProfiles(profiles:RsdContributor[]|null,user:UserProfile|null)
       // validate display name
       if (name===null && displayName){
         name = displayName
-        // initals - to be used if no image present
+        // initials - to be used if no image present
         if (initials===null) initials = getDisplayInitials(item)
       }
       // orcid - should be only 1 orcid
