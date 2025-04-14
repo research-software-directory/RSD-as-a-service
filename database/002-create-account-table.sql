@@ -71,6 +71,8 @@ CREATE TABLE login_for_account (
 	UNIQUE(provider, sub)
 );
 
+CREATE INDEX login_for_account_account_idx ON login_for_account(account);
+
 CREATE FUNCTION sanitise_insert_login_for_account() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN

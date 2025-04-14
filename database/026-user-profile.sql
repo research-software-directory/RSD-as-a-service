@@ -59,18 +59,18 @@ ALTER TABLE user_profile ENABLE ROW LEVEL SECURITY;
 -- Step 2: Define RLS policies
 ------------------------------------
 -- RLS policy for rsd_web_anon (only public profiles)
-CREATE POLICY public_user_profile ON user_profile FOR SELECT TO rsd_web_anon
+CREATE POLICY public_user_profile ON user_profile FOR SELECT TO rsd_web_anon, rsd_user
 	USING (is_public);
 
--- RLS policy for rsd_web_anon (only public profiles)
-CREATE POLICY search_user_profile ON user_profile FOR SELECT TO rsd_user
-	USING (TRUE);
-
--- RLS policy for rsd_user INSERT
+-- RLS INSERT policy for rsd_user
 CREATE POLICY maintainer_insert_rights ON user_profile FOR INSERT TO rsd_user
 	WITH CHECK (account = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
 
--- RLS policy for rsd_user UPDATE
+-- RLS DELETE policy for rsd_user
+CREATE POLICY maintainer_delete_rights ON user_profile FOR DELETE TO rsd_user
+	USING (account = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
+
+-- RLS UPDATE policy for rsd_user
 CREATE POLICY maintainer_update_rights ON user_profile FOR UPDATE TO rsd_user
 	USING (account = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'))
 	WITH CHECK (account = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
@@ -93,11 +93,9 @@ SELECT
 FROM
 	login_for_account
 INNER JOIN
-	account ON login_for_account.account = account.id
-INNER JOIN
 	user_profile ON login_for_account.account = user_profile.account
 WHERE
-	login_for_account.provider='orcid' AND user_profile.is_public = TRUE
+	login_for_account.provider='orcid' AND user_profile.is_public
 $$;
 
 -- Public user profile information for profile page
@@ -113,7 +111,7 @@ CREATE FUNCTION public_user_profile() RETURNS TABLE (
 	is_public BOOLEAN,
 	sub VARCHAR,
 	description VARCHAR(10000)
-) LANGUAGE sql STABLE AS
+) LANGUAGE sql STABLE SECURITY DEFINER AS
 $$
 SELECT
 	user_profile.account,
@@ -130,7 +128,7 @@ FROM
 INNER JOIN
 	login_for_account ON user_profile.account = login_for_account.account
 WHERE
-	user_profile.is_public = TRUE
+	user_profile.is_public
 	AND
 	login_for_account.provider = 'orcid'
 $$;

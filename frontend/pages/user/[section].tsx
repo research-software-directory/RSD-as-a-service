@@ -16,13 +16,6 @@ import {getUserFromToken, useSession} from '~/auth'
 import ProtectedContent from '~/auth/ProtectedContent'
 import {getRedirectUrl} from '~/auth/api/authHelpers'
 import {getUserSettings} from '~/utils/userSettings'
-// import DefaultLayout from '~/components/layout/DefaultLayout'
-// import {userMenu, UserPageId} from '~/components/user/UserNavItems'
-// import {PaginationProvider} from '~/components/pagination/PaginationContext'
-// import {SearchProvider} from '~/components/search/SearchContext'
-// import UserTitle from '~/components/user/UserTitle'
-// import UserNav from '~/components/user/UserNav'
-// import UserSection from '~/components/user/UserSection'
 import PageMeta from '~/components/seo/PageMeta'
 import BackgroundAndLayout from '~/components/layout/BackgroundAndLayout'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
@@ -77,7 +70,6 @@ export default function UserPages({
       <BackgroundAndLayout>
         <ProtectedContent>
           <UserAgreementModal />
-          {/* TODO! refactor to use  UserSettingsProvider context from config instead*/}
           <UserSettingsProvider
             settings={{
               rsd_page_layout,

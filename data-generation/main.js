@@ -899,7 +899,7 @@ const headers = {
 const backendUrl = process.env.POSTGREST_URL || 'http://localhost/api/v1';
 
 async function postToBackend(endpoint, body) {
-	const url = `${backendUrl}${endpoint}`
+	const url = `${backendUrl}${endpoint}`;
 	// console.log("postToBackend...",url)
 	const response = await fetch(url, {
 		method: 'POST',
@@ -1034,8 +1034,8 @@ function generateLoginForAccount(accountIds, orcids) {
 	return login_for_accounts;
 }
 
-function generateUserProfiles(accountIds){
-	const user_profiles = accountIds.map(account=>{
+function generateUserProfiles(accountIds) {
+	const user_profiles = accountIds.map(account => {
 		let given_names = faker.person.firstName();
 		let family_names = faker.person.lastName();
 		// user_profile table props
@@ -1049,14 +1049,15 @@ function generateUserProfiles(accountIds){
 			}),
 			role: faker.person.jobTitle(),
 			affiliation: faker.company.name(),
-			is_public: faker.helpers.maybe(() => true, {
-				probability: 0.5,
-			}) ?? false,
+			is_public:
+				faker.helpers.maybe(() => true, {
+					probability: 0.5,
+				}) ?? false,
 			avatar_id: null,
-			description: null
-		}
-	})
-	return user_profiles
+			description: null,
+		};
+	});
+	return user_profiles;
 }
 
 // start of running code, main
@@ -1085,26 +1086,28 @@ const localSoftwareLogoIdsPromise = getLocalImageIds(softwareLogos).then(logoIds
 globalPromises.push(localSoftwareLogoIdsPromise);
 
 // create accounts, login entries and user profiles
-postAccountsToBackend(100)
+const accountsPromise = postAccountsToBackend(100)
 	.then(() => getFromBackend('/account'))
 	.then(res => res.json())
 	.then(jsonAccounts => jsonAccounts.map(a => a.id))
 	.then(accountIds => {
-		console.log(`${accountIds.length} accounts in RSD`)
-		const profiles = generateUserProfiles(accountIds)
-		const logins = generateLoginForAccount(accountIds, orcids)
+		console.log(`${accountIds.length} accounts in RSD`);
+		const logins = generateLoginForAccount(accountIds, orcids);
+		const profiles = generateUserProfiles(accountIds);
 		// console.log("profiles...", profiles)
 		return Promise.allSettled([
 			postToBackend('/login_for_account', logins),
-			postToBackend('/user_profile', profiles)
-		])
+			postToBackend('/user_profile', profiles),
+		]);
 	})
-	.then(([login_for_account,user_profile]) => {
+	.then(([login_for_account, user_profile]) => {
 		// log status of api post
-		console.log(`login_for_account...${login_for_account.status}`)
-		console.log(`user_profile...${user_profile.status}`)
+		console.log(`login_for_account...${login_for_account.status}`);
+		console.log(`user_profile...${user_profile.status}`);
 	})
-	.catch((e)=>console.error(`postAccountsToBackend: ${e.message}`))
+	.catch(e => console.error(`postAccountsToBackend: ${e.message}`));
+
+globalPromises.push(accountsPromise);
 
 const mentionsPromise = postToBackend('/mention', generateMentions())
 	.then(() => getFromBackend('/mention?select=id'))
@@ -1222,7 +1225,7 @@ const communityPromise = localOrganisationLogoIdsPromise.then(orgLogoIds =>
 			console.log('communities done');
 			return communityIds;
 		})
-		.catch((e)=>console.error("community: ", e.message))
+		.catch(e => console.error('community: ', e.message)),
 );
 globalPromises.push(communityPromise);
 
@@ -1401,11 +1404,11 @@ globalPromises.push(releaseVersionPromise);
 
 Promise.all(globalPromises)
 	.then(() => {
-		console.log('data generation DONE')
+		console.log('data generation DONE');
 		// This is unfortunately needed, because when using docker compose, the node process might hang for a long time
 		process.exit(0);
 	})
-	.catch(()=>{
-		console.error("data generation FAILED")
-		process.exit(1)
+	.catch(e => {
+		console.error(`data generation FAILED: ${e.message}`);
+		process.exit(1);
 	});
