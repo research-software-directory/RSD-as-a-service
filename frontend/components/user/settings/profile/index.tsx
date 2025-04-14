@@ -12,7 +12,6 @@ import AccountInfo from './AccountInfo'
 import ProfileInput from './ProfileInput'
 import LinkAccounts from './LinkAccounts'
 
-
 export default function UserProfilePage() {
   const {profile} = useUserContext()
   const methods = useForm<UserProfile>({
@@ -22,8 +21,7 @@ export default function UserProfilePage() {
 
   return (
     <>
-      <h2 data-testid="user-profile-page-title">Profile</h2>
-      <AccountInfo />
+      <h2 data-testid="user-profile-page-title" className="mb-8">Profile</h2>
 
       <FormProvider {...methods}>
         <form
@@ -44,6 +42,7 @@ export default function UserProfilePage() {
           </div>
         </form>
       </FormProvider>
+      <AccountInfo />
     </>
   )
 }
