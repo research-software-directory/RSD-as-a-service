@@ -87,11 +87,13 @@ $$;
 CREATE FUNCTION count_software_contributors() RETURNS TABLE (software UUID, contributor_cnt BIGINT) LANGUAGE sql STABLE AS
 $$
 SELECT
-		contributor.software, COUNT(contributor.id) AS contributor_cnt
+		software.id, COUNT(*) AS contributor_cnt
 	FROM
-		contributor
+		software
+	INNER JOIN
+		contributor ON contributor.software = software.id
 	GROUP BY
-		contributor.software;
+	software.id;
 $$;
 
 -- programming language filter for software

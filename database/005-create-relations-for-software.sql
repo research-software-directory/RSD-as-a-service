@@ -165,6 +165,9 @@ CREATE TABLE contributor (
 	updated_at TIMESTAMPTZ NOT NULL
 );
 
+CREATE INDEX contributor_software_idx ON contributor(software);
+CREATE INDEX contributor_orcid_idx ON contributor(orcid);
+
 CREATE FUNCTION sanitise_insert_contributor() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
@@ -197,6 +200,8 @@ CREATE TABLE testimonial (
 	source VARCHAR(200) NOT NULL,
 	position INTEGER
 );
+
+CREATE INDEX testimonial_software_idx ON testimonial(software);
 
 CREATE FUNCTION sanitise_insert_testimonial() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
