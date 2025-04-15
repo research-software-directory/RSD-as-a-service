@@ -10,11 +10,11 @@ import modalConfig from '~/components/person/config'
 import {useUserContext} from '~/components/user/context/UserContext'
 import AutosaveProfileTextField from './AutosaveProfileTextField'
 import AutosaveProfileSwitch from './AutosaveProfileSwitch'
-import {findOrcidInLogin} from './apiLoginForAccount'
+import {findProviderSubInLogin} from './apiLoginForAccount'
 
 export default function ProfileInput() {
   const {orcidAuthLink, logins} = useUserContext()
-  const orcid = findOrcidInLogin(logins)
+  const orcid = findProviderSubInLogin(logins,'orcid')
   const publicProfile = {
     show: orcidAuthLink !== null,
     // disabled if ORCID account is not linked

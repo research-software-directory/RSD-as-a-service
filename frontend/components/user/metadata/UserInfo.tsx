@@ -7,12 +7,12 @@
 import {getDisplayName} from '~/utils/getDisplayName'
 import PersonalInfo from '~/components/software/PersonalInfo'
 import {useUserContext} from '~/components/user/context/UserContext'
-import {findOrcidInLogin} from '~/components/user/settings/profile/apiLoginForAccount'
+import {findProviderSubInLogin} from '~/components/user/settings/profile/apiLoginForAccount'
 
 export default function UserInfo() {
   const {profile,logins} = useUserContext()
   const name = getDisplayName(profile)
-  const orcid = findOrcidInLogin(logins)
+  const orcid = findProviderSubInLogin(logins,'orcid')
 
   // console.group('UserInfo')
   // console.log('name...', name)

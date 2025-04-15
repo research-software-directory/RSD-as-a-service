@@ -31,11 +31,13 @@ import UserTabContent from '~/components/user/tabs/UserTabContent'
 import {UserPageId} from '~/components/user/tabs/UserTabItems'
 import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
 import {LoginForAccount} from '~/components/user/settings/profile/apiLoginForAccount'
+import {linkedInCoupleProps} from '~/components/user/settings/apiLinkLinkedInProps'
 
 type UserPagesProps = Readonly<{
   section: UserPageId,
   counts: UserCounts,
   orcidAuthLink: string|null,
+  linkedInAuthLink: string|null,
   rsd_page_rows: number,
   rsd_page_layout: LayoutType,
   profile: UserProfile
@@ -43,8 +45,8 @@ type UserPagesProps = Readonly<{
 }>
 
 export default function UserPages({
-  section,counts,orcidAuthLink,rsd_page_rows,
-  rsd_page_layout,profile,logins
+  section,counts,orcidAuthLink,linkedInAuthLink,
+  rsd_page_rows,rsd_page_layout,profile,logins
 }:UserPagesProps) {
   const {user} = useSession()
   const pageTitle = `${user?.name ?? 'User'} | ${app.title}`
@@ -53,6 +55,7 @@ export default function UserPages({
   // console.log('pageSection...', pageSection)
   // console.log('pageTitle...', pageTitle)
   // console.log('orcidAuthLink...', orcidAuthLink)
+  // console.log('linkedInAuthLink...', linkedInAuthLink)
   // console.log('section...', section)
   // console.log('counts...', counts)
   // console.log('rsd_page_rows...', rsd_page_rows)
@@ -81,6 +84,7 @@ export default function UserPages({
               logins={logins}
               counts={counts}
               orcidAuthLink={orcidAuthLink}
+              linkedInAuthLink={linkedInAuthLink}
             >
               {/* USER PAGE HEADER */}
               <UserMetadata/>
@@ -110,8 +114,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const {params, req} = context
     const section = params?.section
     const token = req?.cookies['rsd_token']
-    // placeholder for orcid couple link
+    // placeholder for orcid/linkedIn couple link
     let orcidAuthLink:string|null=null
+    let linkedInAuthLink:string|null=null
     // extract user settings from cookie
     const {rsd_page_layout, rsd_page_rows} = getUserSettings(req)
     const user = getUserFromToken(token)
@@ -128,11 +133,13 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const [
       counts,
       profile_logins,
-      orcid
+      orcid,
+      linkedIn
     ] = await Promise.all([
       getUserCounts({token}),
       loadUserProfile({account:user?.account,token}),
-      orcidCoupleProps()
+      orcidCoupleProps(),
+      linkedInCoupleProps()
     ])
 
     if (profile_logins?.profile === null) {
@@ -147,6 +154,11 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       orcid.redirect_uri = orcid.redirect_couple_uri
       orcidAuthLink = getRedirectUrl(orcid)
     }
+    if (linkedIn?.redirect_couple_uri){
+      // getRedirectUrl uses redirect_uri to construct redirectURL
+      linkedIn.redirect_uri = linkedIn.redirect_couple_uri
+      linkedInAuthLink = getRedirectUrl(linkedIn)
+    }
 
     return {
       // passed to page component as props
@@ -154,6 +166,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         section,
         counts,
         orcidAuthLink,
+        linkedInAuthLink,
         rsd_page_rows,
         rsd_page_layout,
         ...profile_logins

@@ -17,11 +17,11 @@ export type LoginForAccount={
   home_organisation:string|null
 }
 
-export function findOrcidInLogin(logins:LoginForAccount[]){
+export function findProviderSubInLogin(logins:LoginForAccount[],provider:string){
   try{
-    const orcid = logins.find(item=>item?.provider==='orcid')
-    if (orcid){
-      return orcid.sub
+    const login = logins.find(item=>item?.provider===provider)
+    if (login){
+      return login.sub
     }
     return null
   }catch{
