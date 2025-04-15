@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,13 +22,13 @@ export async function orcidCoupleProps() {
     if (wellknownUrl) {
       // get (cached) authorisation endpoint from well known url
       const authorization_endpoint = await getAuthEndpoint(wellknownUrl,'orcid')
-      if (authorization_endpoint) {
+      if (authorization_endpoint && process.env.ORCID_CLIENT_ID) {
         // construct all props needed for redirectUrl
         const props: RedirectToProps = {
           authorization_endpoint,
           redirect_uri: process.env.ORCID_REDIRECT ?? 'https://research-software.nl/auth/login/orcid',
           redirect_couple_uri: process.env.ORCID_REDIRECT_COUPLE ?? null,
-          client_id: process.env.ORCID_CLIENT_ID ?? 'www.research-software.nl',
+          client_id: process.env.ORCID_CLIENT_ID,
           scope: process.env.ORCID_SCOPES ?? 'openid',
           response_mode: process.env.ORCID_RESPONSE_MODE ?? 'query'
         }

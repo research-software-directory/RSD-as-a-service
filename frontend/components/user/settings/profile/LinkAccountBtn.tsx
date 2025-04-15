@@ -5,12 +5,14 @@
 
 import Button from '@mui/material/Button'
 
-type LinkOrcidButtonProps=Readonly<{
+type LinkAccountBtnProps=Readonly<{
+  label: string
   disabled: boolean
-  href?:string|null
+  href?: string|null
+  sxStyle?: any
 }>
 
-export default function LinkOrcidButton({disabled,href}:LinkOrcidButtonProps) {
+export default function LinkAccountBtn({label,disabled,href,sxStyle}:LinkAccountBtnProps) {
   if (href){
     return (
       <Button
@@ -22,10 +24,12 @@ export default function LinkOrcidButton({disabled,href}:LinkOrcidButtonProps) {
           // because the type of button is a link (we use href param)
           ':hover':{
             color:'primary.contrastText'
-          }
+          },
+          ...sxStyle
         }}
       >
-        Link my ORCID account
+        {/* Link my account */}
+        {label}
       </Button>
     )
   }

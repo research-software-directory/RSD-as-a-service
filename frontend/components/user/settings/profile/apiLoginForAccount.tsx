@@ -5,6 +5,7 @@
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
+import {Providers} from '~/auth/api/authEndpoint'
 
 export type LoginForAccount={
   id:string
@@ -81,11 +82,11 @@ export async function deleteFromOrcidList(orcid:string,token:string){
   }
 }
 
-export function findOrcidInLogin(logins:LoginForAccount[]){
+export function findProviderSubInLogin(logins:LoginForAccount[],provider:Providers){
   try{
-    const orcid = logins.find(item=>item?.provider==='orcid')
-    if (orcid){
-      return orcid.sub
+    const login = logins.find(item=>item?.provider===provider)
+    if (login){
+      return login.sub
     }
     return null
   }catch{
