@@ -18,6 +18,7 @@ import io.javalin.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
@@ -25,8 +26,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class Main {
-	static final long ONE_HOUR_IN_SECONDS = 3600; // 60 * 60
-	static final long ONE_MINUTE_IN_SECONDS = 60;
+	static final Duration AUTH_COOKIE_DURATION = Duration.ofHours(1);
+	static final Duration FAILURE_COOKIE_DURATION = Duration.ofMinutes(1);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 	private static final String LOGIN_FAILED_PATH = "/login/failed";
@@ -98,9 +99,9 @@ public class Main {
 		app.get("/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
 
 		if (Config.isLocalLoginEnabled()) {
-			System.out.println("********************");
-			System.out.println("Warning: local accounts are enabled, this is not safe for production!");
-			System.out.println("********************");
+			LOGGER.warn("********************");
+			LOGGER.warn("Warning: local accounts are enabled, this is not safe for production!");
+			LOGGER.warn("********************");
 			app.post("/login/local", ctx -> {
 				String sub = ctx.formParam("sub");
 				if (sub == null || sub.isBlank()) throw new RuntimeException("Please provide a username");
@@ -156,7 +157,7 @@ public class Main {
 			});
 		}
 
-		if (Config.isOrcidCoupleEnabled()) {
+		if (Config.isOrcidCouplingEnabled()) {
 			app.get("/couple/orcid", ctx -> {
 				String code = ctx.queryParam("code");
 				String redirectUrl = Config.orcidRedirectCouple();
@@ -193,6 +194,24 @@ public class Main {
 				OpenIdInfo linkedinInfo = new LinkedinLogin(code, redirectUrl).openidInfo();
 				AccountInfo accountInfo = new PostgrestAccount().account(linkedinInfo, OpenidProvider.linkedin);
 				createAndSetToken(ctx, accountInfo);
+			});
+		}
+
+		if (Config.isLinkedinCouplingEnabled()) {
+			app.get("/couple/linkedin", ctx -> {
+				String code = ctx.queryParam("code");
+				String redirectUrl = Config.linkedinRedirectCouple();
+				OpenIdInfo linkedinInfo = new LinkedinLogin(code, redirectUrl).openidInfo();
+
+				String tokenToVerify = ctx.cookie("rsd_token");
+				String signingSecret = Config.jwtSigningSecret();
+				JwtVerifier verifier = new JwtVerifier(signingSecret);
+				DecodedJWT decodedJWT = verifier.verify(tokenToVerify);
+				UUID accountId = UUID.fromString(decodedJWT.getClaim("account").asString());
+
+				new PostgrestAccount().coupleLogin(accountId, linkedinInfo, OpenidProvider.linkedin);
+
+				setRedirectFromCookie(ctx);
 			});
 		}
 
@@ -245,11 +264,11 @@ public class Main {
 	}
 
 	static void setJwtCookie(Context ctx, String token) {
-		ctx.header("Set-Cookie", "rsd_token=" + token + "; Secure; HttpOnly; Path=/; SameSite=Lax; Max-Age=" + ONE_HOUR_IN_SECONDS);
+		ctx.header("Set-Cookie", "rsd_token=" + token + "; Secure; HttpOnly; Path=/; SameSite=Lax; Max-Age=" + AUTH_COOKIE_DURATION.toSeconds());
 	}
 
 	static void setLoginFailureCookie(Context ctx, String message) {
-		ctx.header("Set-Cookie", "rsd_login_failure_message=" + message + "; Secure; Path=/login/failed; SameSite=Lax; Max-Age=" + ONE_MINUTE_IN_SECONDS);
+		ctx.header("Set-Cookie", "rsd_login_failure_message=" + message + "; Secure; Path=/login/failed; SameSite=Lax; Max-Age=" + FAILURE_COOKIE_DURATION.toSeconds());
 	}
 
 	static void setRedirectFromCookie(Context ctx) {
