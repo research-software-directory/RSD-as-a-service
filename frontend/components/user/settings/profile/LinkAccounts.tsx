@@ -4,28 +4,43 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useUserContext} from '~/components/user/context/UserContext'
-import LinkOrcidButton from './LinkOrcidButton'
-import {findOrcidInLogin} from './apiLoginForAccount'
+import LinkAccountBtn from './LinkAccountBtn'
+import {findProviderSubInLogin} from './apiLoginForAccount'
 
 export default function LinkAccounts() {
-  const {logins,orcidAuthLink} = useUserContext()
-  const orcid = findOrcidInLogin(logins)
+  const {logins,orcidAuthLink,linkedInAuthLink} = useUserContext()
+  const orcid = findProviderSubInLogin(logins,'orcid')
+  const linkedIn = findProviderSubInLogin(logins,'linkedin')
 
-  // console.group('LinkOrcidButton')
-  // console.log('orcidAuthLink...', orcidAuthLink)
-  // console.log('orcid...',orcid)
+  console.group('LinkAccounts')
+  console.log('orcidAuthLink...', orcidAuthLink)
+  console.log('linkedInAuthLink...', linkedInAuthLink)
+  console.log('orcid...',orcid)
+  console.log('linkedIn...',linkedIn)
   // console.log('logins...',logins)
-  // console.groupEnd()
+  console.groupEnd()
 
-  if (orcidAuthLink){
+  if (orcidAuthLink || linkedIn){
     return (
       <div>
         <h3>Link your accounts</h3>
         <div className="flex gap-8 py-8">
-          <LinkOrcidButton
-            disabled={orcid!==null}
-            href={orcidAuthLink}
-          />
+          {orcidAuthLink ?
+            <LinkAccountBtn
+              disabled={orcid!==null}
+              href={orcidAuthLink}
+              label='Link my ORCID'
+            />
+            : null
+          }
+          {linkedInAuthLink ?
+            <LinkAccountBtn
+              disabled={linkedIn!==null}
+              href={linkedInAuthLink}
+              label='Link my LinkedIn'
+            />
+            : null
+          }
         </div>
       </div>
     )
