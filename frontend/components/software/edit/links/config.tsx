@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2024 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,8 +15,8 @@ export const config={
     validation: {
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
-        value: /^https?:\/\/.+\..+/,
-        message: 'URL should start with http(s):// and use at least one dot (.)'
+        value: /^https?:\/\/\S+$/,
+        message: 'URL must start with http(s):// and cannot include white spaces'
       }
     }
   },
@@ -25,8 +26,8 @@ export const config={
     validation: {
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
-        value: /^https?:\/\/.+\..+/,
-        message: 'URL should start with http(s)://, have at least one dot (.) and at least one slash (/).'
+        value: /^https?:\/\/\S+$/,
+        message: 'URL must start with http(s):// and cannot include white spaces.'
       }
     }
   },
@@ -124,8 +125,8 @@ export const config={
           minLength: {value: 10, message: 'Minimum length is 10'},
           maxLength: {value: 200, message: 'Maximum length is 200'},
           pattern: {
-            value: /^https?:\/\/.+\..+/,
-            message: 'URL should start with http(s):// and use at least one dot (.)'
+            value: /^https?:\/\/\S+$/,
+            message: 'URL must start with http(s):// and cannot include white spaces'
           }
         }
       },

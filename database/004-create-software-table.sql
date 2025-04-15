@@ -1,11 +1,12 @@
 -- SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
--- SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 dv4all
 -- SPDX-FileCopyrightText: 2023 Diego Alonso Alvarez (ICL) <d.alonso-alvarez@imperial.ac.uk>
 -- SPDX-FileCopyrightText: 2023 Imperial College London
+-- SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -26,9 +27,9 @@ CREATE TABLE software (
 	closed_source BOOLEAN DEFAULT FALSE NOT NULL,
 	concept_doi CITEXT CHECK (concept_doi ~ '^10(\.\w+)+/\S+$' AND LENGTH(concept_doi) <= 255),
 	description VARCHAR(10000),
-	description_url VARCHAR(200) CHECK (description_url ~ '^https?://'),
+	description_url VARCHAR(200) CHECK (description_url ~ '^https?://\S+$'),
 	description_type description_type DEFAULT 'markdown' NOT NULL,
-	get_started_url VARCHAR(200) CHECK (get_started_url ~ '^https?://'),
+	get_started_url VARCHAR(200) CHECK (get_started_url ~ '^https?://\S+$'),
 	image_id VARCHAR(40) REFERENCES image(id),
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,
 	short_statement VARCHAR(300),

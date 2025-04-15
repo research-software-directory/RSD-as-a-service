@@ -19,7 +19,7 @@ CREATE TYPE platform_type AS ENUM (
 
 CREATE TABLE repository_url (
 	software UUID REFERENCES software (id) PRIMARY KEY,
-	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://'),
+	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://\S+$'),
 	code_platform platform_type NOT NULL DEFAULT 'other',
 	archived BOOLEAN,
 	license VARCHAR(200),
@@ -66,7 +66,7 @@ CREATE TYPE package_manager_type AS ENUM (
 CREATE TABLE package_manager (
 	id UUID PRIMARY KEY,
 	software UUID REFERENCES software (id) NOT NULL,
-	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://'),
+	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://\S+$'),
 	package_manager package_manager_type NOT NULL DEFAULT 'other',
 	download_count BIGINT,
 	download_count_last_error VARCHAR(500),
@@ -115,7 +115,7 @@ CREATE TABLE license_for_software (
 	software UUID REFERENCES software (id) NOT NULL,
 	license VARCHAR(100) NOT NULL,
 	name VARCHAR(200) NULL,
-	reference VARCHAR(200) NULL CHECK (reference ~ '^https?://'),
+	reference VARCHAR(200) NULL CHECK (reference ~ '^https?://\S+$'),
 	open_source BOOLEAN NOT NULL DEFAULT TRUE,
 	UNIQUE(software, license),
 	created_at TIMESTAMPTZ NOT NULL,

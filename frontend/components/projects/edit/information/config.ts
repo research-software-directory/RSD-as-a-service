@@ -1,11 +1,12 @@
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2024 dv4all
+// SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -113,8 +114,8 @@ export const projectInformation = {
       validation: {
         required: 'Link url is required',
         pattern: {
-          value: /^https?:\/\/.+\..+/,
-          message: 'Url should start with http(s):// and have at least one dot (.)'
+          value: /^https?:\/\/\S+$/,
+          message: 'Url should start with http(s):// and cannot include white spaces'
         }
       }
     }
