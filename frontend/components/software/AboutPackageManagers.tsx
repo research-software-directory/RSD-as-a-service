@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,7 +21,7 @@ function PackageManagerItem({item}:{item:PackageManager}){
     const info = packageManagerSettings[item.package_manager ?? 'other']
     const link = new URL(item.url)
     return (
-      <a href={item.url} target="_blank" rel="noreferrer">
+      <a href={item.url} target="_blank" rel="noreferrer" className="basis-17 shrink-0">
         <LogoAvatar
           name={link.hostname}
           src={info.icon ?? undefined}
