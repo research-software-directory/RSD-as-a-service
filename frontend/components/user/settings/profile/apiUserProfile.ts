@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -50,7 +52,7 @@ export async function loadUserProfile({account,token}:{account?:string,token?:st
             logins
           }
         }
-        logger(`loadUserProfile: ${resp?.status}: ${resp?.message}`,'error')
+        logger(`loadUserProfile.insertUserProfile: ${resp?.status}: ${resp?.message}`,'error')
         return {
           profile,
           logins

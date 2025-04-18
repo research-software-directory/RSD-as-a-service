@@ -1,5 +1,7 @@
 -- SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2025 Dusan Mijatovic (dv4all) (dv4all)
 -- SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2025 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -59,8 +61,12 @@ ALTER TABLE user_profile ENABLE ROW LEVEL SECURITY;
 -- Step 2: Define RLS policies
 ------------------------------------
 -- RLS policy for rsd_web_anon (only public profiles)
-CREATE POLICY public_user_profile ON user_profile FOR SELECT TO rsd_web_anon, rsd_user
+CREATE POLICY public_user_profile ON user_profile FOR SELECT TO rsd_web_anon
 	USING (is_public);
+
+-- RLS policy for rsd_user (only your profile)
+CREATE POLICY my_user_profile ON user_profile FOR SELECT TO rsd_user
+	USING (account = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
 
 -- RLS INSERT policy for rsd_user
 CREATE POLICY maintainer_insert_rights ON user_profile FOR INSERT TO rsd_user
