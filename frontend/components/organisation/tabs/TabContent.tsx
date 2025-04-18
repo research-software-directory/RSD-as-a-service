@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,6 +13,9 @@ import {TabKey} from './OrganisationTabItems'
 // default tab is software
 import OrganisationSoftware from '../software'
 import useSelectedTab from './useSelectedTab'
+import {ReleaseCountByYear, SoftwareReleaseInfo} from '~/components/organisation/releases/apiOrganisationReleases'
+
+import {OrganisationUnitsForOverview} from '~/types/Organisation'
 // use dynamic imports instead
 const AboutOrganisation = dynamic(() => import('../about'),{
   loading: ()=><ContentLoader />
@@ -31,9 +35,12 @@ const OrganisationSettings = dynamic(() => import('../settings'),{
 
 type TabContentProps = {
   tab_id: TabKey|null
+  units: OrganisationUnitsForOverview[]
+  releaseCountsByYear: ReleaseCountByYear[] | null
+  releases: SoftwareReleaseInfo[] | null
 }
 
-export default function TabContent({tab_id}: TabContentProps) {
+export default function TabContent({tab_id, units, releaseCountsByYear, releases}: Readonly<TabContentProps>) {
   const select_tab = useSelectedTab(tab_id)
   // tab router
   switch (select_tab) {
@@ -42,13 +49,13 @@ export default function TabContent({tab_id}: TabContentProps) {
     case 'projects':
       return <OrganisationProjects />
     case 'releases':
-      return <SoftwareReleases />
+      return <SoftwareReleases releaseCountsByYear={releaseCountsByYear} releases={releases} />
     case 'settings':
       return <OrganisationSettings />
     case 'software':
       return <OrganisationSoftware />
     case 'units':
-      return <OrganisationUnits />
+      return <OrganisationUnits units={units} />
     default:
       logger(`Unknown tab_id ${tab_id}...returning default software tab`,'warn')
       return <OrganisationSoftware />

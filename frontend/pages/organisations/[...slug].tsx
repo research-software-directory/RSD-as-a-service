@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,10 @@ import {GetServerSidePropsContext} from 'next/types'
 import {app} from '~/config/app'
 import {getUserFromToken} from '~/auth'
 import {getUserSettings} from '~/utils/userSettings'
-import {getOrganisationBySlug} from '~/components/organisation/apiOrganisations'
+import {
+  getOrganisationBySlug,
+  getOrganisationChildren,
+} from '~/components/organisation/apiOrganisations'
 import OrganisationMetadata from '~/components/organisation/metadata'
 import PageMeta from '~/components/seo/PageMeta'
 import BackgroundAndLayout from '~/components/layout/BackgroundAndLayout'
@@ -24,6 +27,13 @@ import {TabKey} from '~/components/organisation/tabs/OrganisationTabItems'
 import {OrganisationForContext, OrganisationProvider} from '~/components/organisation/context/OrganisationContext'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {UserSettingsProvider} from '~/components/organisation/context/UserSettingsContext'
+import {
+  getReleasesCountForOrganisation, getReleasesForOrganisation,
+  ReleaseCountByYear,
+  SoftwareReleaseInfo
+} from '~/components/organisation/releases/apiOrganisationReleases'
+
+import {OrganisationUnitsForOverview} from '~/types/Organisation'
 
 export type OrganisationPageProps = {
   organisation: OrganisationForContext,
@@ -32,11 +42,15 @@ export type OrganisationPageProps = {
   isMaintainer: boolean,
   rsd_page_rows: number,
   rsd_page_layout: LayoutType
+  units: OrganisationUnitsForOverview[]
+  releaseCountsByYear: ReleaseCountByYear[] | null
+  releases: SoftwareReleaseInfo[] | null
 }
 
 export default function OrganisationPage({
   organisation, slug, tab,
-  isMaintainer, rsd_page_rows, rsd_page_layout
+  isMaintainer, rsd_page_rows, rsd_page_layout,
+  units, releaseCountsByYear, releases
 }: OrganisationPageProps) {
 
   // console.group('OrganisationPage')
@@ -95,7 +109,7 @@ export default function OrganisationPage({
             </BaseSurfaceRounded>
             {/* TAB CONTENT */}
             <section className="flex md:min-h-[55rem]">
-              <TabContent tab_id={tab} />
+              <TabContent tab_id={tab} units={units} releaseCountsByYear={releaseCountsByYear} releases={releases} />
             </section>
           </OrganisationProvider>
         </UserSettingsProvider>
@@ -105,18 +119,19 @@ export default function OrganisationPage({
 }
 
 // fetching data server side
-// see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
+// see documentation https://nextjs.org/docs/pages/building-your-application/data-fetching/get-server-side-props
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
     const {params, req, query} = context
     // extract user settings from cookie
     const {rsd_page_layout, rsd_page_rows} = getUserSettings(req)
-    // extract user id from session
-    const user = getUserFromToken(req?.cookies['rsd_token'] ?? null)
+    // extract user ID from session
+    const token = req?.cookies['rsd_token']
+    const user = getUserFromToken(token ?? null)
     // find organisation by slug
     const resp = await getOrganisationBySlug({
       slug: params?.slug as string[] ?? [],
-      token: req?.cookies['rsd_token'],
+      token: token,
       user
     })
     // console.log('organisation...', organisation)
@@ -128,6 +143,40 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     }
     // extract data from response
     const {organisation,isMaintainer} = resp
+
+    const tabId = query?.tab ?? null
+    let units: OrganisationUnitsForOverview[] = []
+    let releaseCountsByYear: ReleaseCountByYear[] | null = null
+    let releases: SoftwareReleaseInfo[] | null = null
+    //
+    if (organisation.id !== undefined) {
+
+      if (tabId === 'units') {
+        units = await getOrganisationChildren({
+          uuid: organisation.id,
+          token: token ?? ''
+        })
+      } else if (tabId === 'releases') {
+        releaseCountsByYear = await getReleasesCountForOrganisation({
+          organisation_id: organisation.id,
+          token: token ?? ''})
+
+        if (releaseCountsByYear?.length) {
+          const queryYear = query.year
+          let release_year: number = parseInt(queryYear as string)
+          if (isNaN(release_year)) {
+            release_year = releaseCountsByYear[0].release_year
+          }
+
+          releases = await getReleasesForOrganisation({
+            organisation_id: organisation.id,
+            token: token ?? '',
+            release_year: release_year.toString()
+          })
+        }
+      }
+    }
+
     return {
       // passed to the page component as props
       props: {
@@ -136,7 +185,10 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         tab: query?.tab ?? null,
         isMaintainer,
         rsd_page_layout,
-        rsd_page_rows
+        rsd_page_rows,
+        units: units,
+        releaseCountsByYear: releaseCountsByYear,
+        releases: releases
       },
     }
   }catch{

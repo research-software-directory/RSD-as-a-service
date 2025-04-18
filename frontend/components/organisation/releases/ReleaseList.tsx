@@ -1,20 +1,18 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useSession} from '~/auth'
 import NoContent from '~/components/layout/NoContent'
 import ReleaseItem from './ReleaseItem'
-import useSoftwareRelease from './useSoftwareReleases'
-import useOrganisationContext from '../context/useOrganisationContext'
+import {SoftwareReleaseInfo} from '~/components/organisation/releases/apiOrganisationReleases'
 
 type ReleaseYearProps = {
-  organisation_id?: string
   release_year?: number
+  releases: SoftwareReleaseInfo[]
 }
 
 const smoothScrollSection = {
@@ -23,15 +21,7 @@ const smoothScrollSection = {
   scrollMarginTop: '7rem'
 }
 
-export default function ReleaseList({release_year}: ReleaseYearProps) {
-  const {token} = useSession()
-  const {id} = useOrganisationContext()
-  const {releases} = useSoftwareRelease({
-    organisation_id: id,
-    release_year: release_year?.toString(),
-    token
-  })
-
+export default function ReleaseList({release_year, releases}: Readonly<ReleaseYearProps>) {
   // console.group('ReleaseList')
   // console.log('id...', id)
   // console.log('release_year...', release_year)

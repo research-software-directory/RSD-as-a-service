@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,13 +14,14 @@ import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import List from '@mui/material/List'
 
-import {OrganisationForOverview} from '~/types/Organisation'
 import ContentLoader from '~/components/layout/ContentLoader'
 import ResearchUnitItem from './ResearchUnitItem'
 
+import {OrganisationUnitsForOverview} from '~/types/Organisation'
+
 type UnitsListProps = {
   loading: boolean
-  units: OrganisationForOverview[]
+  units: OrganisationUnitsForOverview[]
   isPrimaryMaintainer: boolean
   onEdit: (pos: number) => void
 }

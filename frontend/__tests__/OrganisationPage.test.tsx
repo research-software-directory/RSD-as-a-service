@@ -3,6 +3,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -41,7 +42,10 @@ const mockProps = {
   ror: mockRORIinfo as any,
   isMaintainer: false,
   rsd_page_rows: 12,
-  rsd_page_layout: 'grid'
+  rsd_page_layout: 'grid',
+  units: mockUnits,
+  releaseCountsByYear: [],
+  releases: []
 } as OrganisationPageProps
 
 // MOCK isMaintainerOfOrganisation
@@ -189,7 +193,7 @@ describe('pages/organisations/[...slug].tsx', () => {
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     // validate api call
-    expect(mockGetOrganisationChildren).toHaveBeenCalledTimes(1)
+    expect(mockGetOrganisationChildren).toHaveBeenCalledTimes(0)
     // validate units
     const units = screen.getAllByTestId('research-unit-item')
     expect(units.length).toEqual(mockUnits.length)
