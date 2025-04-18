@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,7 @@ export type ImageDataProps = {
   mime_type: string
 }
 
-type LogoProps = {
+type LogoProps = Readonly<{
   name: string,
   logo: string | null
   onAddLogo: ({data, mime_type}: ImageDataProps) => void
@@ -19,12 +19,16 @@ type LogoProps = {
   canEdit?:boolean
   src?: string
   sx?: any
+  variant?: 'square' | 'circular' | 'rounded'
+  initials?: string
   props?: any
-}
+}>
 
 export default function Logo({
   name,logo,onAddLogo,onRemoveLogo,
   canEdit=false,src,sx,
+  initials,
+  variant='square',
   // other avatar props
   ...props
 }:LogoProps) {
@@ -47,11 +51,11 @@ export default function Logo({
           },
           ...sx
         }}
-        variant="square"
+        variant={variant}
         title={name}
         {...props}
       >
-        {name.slice(0,3)}
+        {initials ?? name.slice(0,3)}
       </Avatar>
       {canEdit ?
         <LogoMenu

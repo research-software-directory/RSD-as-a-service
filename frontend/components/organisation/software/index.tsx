@@ -9,7 +9,7 @@ import {useState} from 'react'
 import Pagination from '@mui/material/Pagination'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import UserAgreementModal from '~/components/user/settings/UserAgreementModal'
+import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
 import useOrganisationContext from '../context/useOrganisationContext'
 import {useUserSettings} from '../context/UserSettingsContext'
 import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'

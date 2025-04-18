@@ -7,78 +7,83 @@ import Avatar from '@mui/material/Avatar'
 
 import {getImageUrl} from '~/utils/editImage'
 import {getDisplayInitials, getDisplayName} from '~/utils/getDisplayName'
-import {RsdContributor} from '~/components/admin/rsd-contributors/useContributors'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
-import OrcidLink from '~/components/layout/OrcidLink'
+import PersonalInfo from '~/components/software/PersonalInfo'
+import {RsdContributor} from '~/components/admin/rsd-contributors/useContributors'
+import {UserProfile} from '~/components/user/settings/profile/apiUserProfile'
 
-/**
- * Add new string value to a list of UNIQUE string values.
- * New value will be trimmed and transformed to locale-lower-case before comparison.
- * It ignores null and undefined values.
- * @param list
- * @param value
- * @returns
- */
-function addToList(list:string[],value?:string|null){
-  // if no value to add we return
-  if (!value) return list
+function aggregateProfiles(profiles:RsdContributor[]|null,user:UserProfile|null){
+  let name:string|null=null,
+    affiliation:string|null=null,
+    role:string|null=null,
+    avatar_id:string|null=null,
+    orcid:string|null=null,
+    initials:string|null=null
 
-  // try to find trimmed and lowercased value
-  const found = list.find(item=>item.trim().toLocaleLowerCase()===value.trim().toLocaleLowerCase())
-
-  if (found){
-    // already present in the list
-    return list
-  }else{
-    // new item to add to the list
-    list.push(value)
-    return list
+  // if both present we use user as much as possible
+  if (user && profiles){
+    name = getDisplayName(user)
+    initials = getDisplayInitials(user)
+    role = user.role
+    affiliation = user.affiliation
+    // use image if present
+    if (user.avatar_id){
+      avatar_id = user.avatar_id
+    }else{
+      // otherwise find the first image from contributor/team member entries
+      avatar_id = profiles.find(item=>item.avatar_id!==null)?.avatar_id ?? null
+    }
+    orcid = profiles[0]?.orcid ?? null
+  }else {
+    // extract info from contributor/team member entries
+    profiles?.forEach(item=>{
+      // name
+      const displayName = getDisplayName(item)
+      // validate display name
+      if (name===null && displayName){
+        name = displayName
+        // initials - to be used if no image present
+        if (initials===null) initials = getDisplayInitials(item)
+      }
+      // orcid - should be only 1 orcid
+      if (item.orcid && orcid===null) orcid=item.orcid
+      // logo - use first image found
+      if (avatar_id===null && item?.avatar_id) avatar_id = item.avatar_id
+      // affiliation
+      if (affiliation===null && item.affiliation){
+        affiliation = item.affiliation
+      }
+      // roles
+      if (role===null && item.role){
+        role = item.role
+      }
+    })
   }
-}
-
-function aggregateProfiles(profiles:RsdContributor[]|null){
-  const name:string[]=[],affiliation:string[]=[],role:string[]=[],email:string[]=[]
-  let logo:string|null=null, orcid:string|null=null, initials:string|null=null
-
-  // const name:string =
-  profiles?.forEach(item=>{
-    // name
-    const displayName = getDisplayName(item)
-    // validate display name
-    addToList(name,displayName)
-    // initals - to be used if no image present
-    if (initials===null) initials = getDisplayInitials(item)
-    // orcid - should be only 1 orcid
-    if (item.orcid && orcid===null) orcid=item.orcid
-    // logo - use first image found
-    if (logo===null && item?.avatar_id) logo = item.avatar_id
-    // affiliation
-    addToList(affiliation,item.affiliation)
-    // roles
-    addToList(role,item.role)
-    // emails - we force all emails to lower case
-    addToList(email,item?.email_address?.toLocaleLowerCase())
-  })
 
   return {
     name,
     initials,
-    logo,
+    avatar_id,
     affiliation,
     role,
-    email,
     orcid
   }
 }
 
-export default function ProfileMetadata({profiles}:{profiles:RsdContributor[]|null}) {
-  const {name, logo, initials, orcid} = aggregateProfiles(profiles)
+
+type ProfileMetadataProps= Readonly<{
+  profiles:RsdContributor[]|null
+  user: UserProfile|null
+}>
+
+export default function ProfileMetadata({profiles,user}:ProfileMetadataProps) {
+  const {name, avatar_id, initials, orcid, role, affiliation} = aggregateProfiles(profiles,user)
   return (
     <section className="grid md:grid-cols-[1fr_3fr] xl:grid-cols-[1fr_5fr] gap-4 mt-8">
       <BaseSurfaceRounded className="flex justify-center p-4 overflow-hidden relative">
         <Avatar
-          alt={name[0] ?? ''}
-          src={getImageUrl(logo ?? null) ?? ''}
+          alt={name ?? ''}
+          src={getImageUrl(avatar_id ?? null) ?? ''}
           sx={{
             width: '10rem',
             height: '10rem',
@@ -89,15 +94,16 @@ export default function ProfileMetadata({profiles}:{profiles:RsdContributor[]|nu
         </Avatar>
       </BaseSurfaceRounded>
       <BaseSurfaceRounded className="p-4">
-        {/* Just name and ORCID in the first version 2023-11-27 */}
         <h1
-          title={name[0]}
-          className="text-2xl font-medium line-clamp-1">
-          {name[0] ?? ''}
+          title={name ?? ''}
+          className="text-2xl font-medium line-clamp-1 pb-4">
+          {name ?? ''}
         </h1>
-        <p className="py-2">
-          <OrcidLink orcid={orcid} />
-        </p>
+        <PersonalInfo
+          role={role}
+          affiliation={affiliation}
+          orcid={orcid}
+        />
       </BaseSurfaceRounded>
     </section>
   )

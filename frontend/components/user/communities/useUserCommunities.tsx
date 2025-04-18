@@ -1,20 +1,19 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
 
+import {useSession} from '~/auth'
 import logger from '~/utils/logger'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
 import {CommunityListProps} from '~/components/communities/apiCommunities'
-import {useSession} from '~/auth'
-import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
 type UserCommunitiesProps={
-  searchFor: string
+  searchFor?: string
   page: number
   rows: number
 }
@@ -48,11 +47,11 @@ export async function getCommunitiesForMaintainer({searchFor,page,rows,account,t
     })
 
     if ([200, 206].includes(resp.status)) {
-      const items: CommunityListProps[] = await resp.json()
+      const communities: CommunityListProps[] = await resp.json()
       const count = extractCountFromHeader(resp.headers) ?? 0
       return {
         count,
-        items
+        communities
       }
     }
 
@@ -62,7 +61,7 @@ export async function getCommunitiesForMaintainer({searchFor,page,rows,account,t
     // we log and return zero
     return {
       count: 0,
-      items: []
+      communities: []
     }
 
   }catch(e:any){
@@ -72,22 +71,21 @@ export async function getCommunitiesForMaintainer({searchFor,page,rows,account,t
     // we log and return zero
     return {
       count: 0,
-      items: []
+      communities: []
     }
   }
 }
 
 
-export default function useUserCommunities(){
+export default function useUserCommunities({searchFor,page,rows}:UserCommunitiesProps){
   const {user,token} = useSession()
-  const {searchFor,page,rows,setCount} = usePaginationWithSearch('Search community')
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<{
     count: number,
-    items: CommunityListProps[]
+    communities: CommunityListProps[]
   }>({
     count: 0,
-    items: []
+    communities: []
   })
 
   useEffect(()=>{
@@ -98,18 +96,16 @@ export default function useUserCommunities(){
       })
         .then(data=>{
           setData(data)
-          setCount(data.count)
         })
         .finally(()=>{
           setLoading(false)
         })
     }
-  // ignore setCount dependency
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   },[searchFor,page,rows,token,user?.account])
 
   return {
-    loading,
-    communities: data.items
+    ...data,
+    loading
   }
 }

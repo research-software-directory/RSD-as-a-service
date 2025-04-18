@@ -61,7 +61,7 @@ public class Config {
 		return rsdLoginProviders().contains("HELMHOLTZID");
 	}
 
-	public static boolean isOrcidCoupleEnabled() {
+	public static boolean isOrcidCouplingEnabled() {
 		return rsdAuthCoupleProviders().contains("ORCID");
 	}
 
@@ -71,6 +71,10 @@ public class Config {
 
 	public static boolean isAzureLoginEnabled() {
 		return rsdLoginProviders().contains("AZURE");
+	}
+
+	public static boolean isLinkedinCouplingEnabled() {
+		return rsdAuthCoupleProviders().contains("LINKEDIN");
 	}
 
 	public static boolean isLinkedinLoginEnabled() {
@@ -189,6 +193,10 @@ public class Config {
 	// LinkedIn
 	public static String linkedinRedirect() {
 		return System.getenv("LINKEDIN_REDIRECT");
+	}
+
+	public static String linkedinRedirectCouple() {
+		return System.getenv("LINKEDIN_REDIRECT_COUPLE");
 	}
 
 	public static String linkedinClientId() {

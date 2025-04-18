@@ -24,6 +24,11 @@ It is possible to list all projects where you are mentioned as team member by li
 
 This section list all organisations where you are one of the maintainers.
 
+## My communities
+
+This section list all communities where you are one of the maintainers.
+If the community module is not enabled at the RSD instance this section is omitted.
+
 ## User agreements
 
 To be able to contribute to the RSD, we need to know that you agree to our Terms of Service, and that you have read the Privacy Statement.

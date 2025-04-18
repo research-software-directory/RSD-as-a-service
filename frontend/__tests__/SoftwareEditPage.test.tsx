@@ -23,7 +23,7 @@ import {RsdSettingsState} from '~/config/rsdSettingsReducer'
 // we mock default providers used in page header
 jest.mock('~/auth/api/useLoginProviders')
 // mock user agreement call
-jest.mock('~/components/user/settings/useUserAgreements')
+jest.mock('~/components/user/settings/agreements/useUserAgreements')
 // MOCK global search
 jest.mock('~/components/GlobalSearchAutocomplete/apiGlobalSearch')
 jest.mock('~/components/GlobalSearchAutocomplete/useHasRemotes')

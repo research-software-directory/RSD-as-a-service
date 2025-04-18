@@ -1,10 +1,13 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {Page, expect} from '@playwright/test'
+import { acceptUserAgreement } from './userAgreement'
 
 type LocalLogin = {
   page: Page,
@@ -113,11 +116,15 @@ export async function logoutUser(page: Page) {
 }
 
 export async function validateUserName(page: Page, name: string, debug=false) {
-  // validate user name
+  // accept user agreement if present (due to redirect to user page)
+  await acceptUserAgreement(page)
+  // navigate to settings
   await page.getByTestId('user-menu-button').click()
   await page.getByRole('menuitem', {name: 'My settings'}).click()
-  // get user name
-  const userName = await page.getByTestId('user-settings-username').innerText()
+  // accept user agreement if modal present (it shows on first login)
+  await acceptUserAgreement(page)
+  // get user name from user page header
+  const userName = await page.getByTestId('user-settings-h1').innerText()
   // we stop here (need to be in debug mode)
   if (debug === true && userName !== name) {
     await page.pause()
