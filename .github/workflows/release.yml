@@ -192,7 +192,7 @@ jobs:
   deployment_files:
     # it needs to be checked on string value
     if: needs.release_tag.outputs.skipped == 'false'
-    needs: [ release_tag,auth,database,backend,frontend,nginx,scrapers,documentation ]
+    needs: [ release_tag,auth,database,backend,frontend,nginx,scrapers,documentation,codemeta,background-services ]
     name: create deployment.zip
     runs-on: ubuntu-22.04
     steps:
