@@ -56,6 +56,10 @@ authors:
     email: norman.ziegner@ufz.de
     affiliation: Helmholtz Centre for Environmental Research GmbH - UFZ
     orcid: 'https://orcid.org/0000-0001-7579-216X'
+  - given-names: Paula
+    family-names: Stock
+    email: paula.stock@gfz.de
+    affiliation: Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 identifiers:
   - type: doi
     value: 10.5281/zenodo.6379973
