@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,13 +14,13 @@ export default function LinkAccounts() {
   const orcid = findProviderSubInLogin(logins,'orcid')
   const linkedIn = findProviderSubInLogin(logins,'linkedin')
 
-  console.group('LinkAccounts')
-  console.log('orcidAuthLink...', orcidAuthLink)
-  console.log('linkedInAuthLink...', linkedInAuthLink)
-  console.log('orcid...',orcid)
-  console.log('linkedIn...',linkedIn)
+  // console.group('LinkAccounts')
+  // console.log('orcidAuthLink...', orcidAuthLink)
+  // console.log('linkedInAuthLink...', linkedInAuthLink)
+  // console.log('orcid...',orcid)
+  // console.log('linkedIn...',linkedIn)
   // console.log('logins...',logins)
-  console.groupEnd()
+  // console.groupEnd()
 
   if (orcidAuthLink || linkedIn){
     return (
