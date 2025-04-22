@@ -1,15 +1,14 @@
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useRouter} from 'next/router'
-import Link from 'next/link'
 import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
 
-import {useProfileContext} from '../context/ProfileContext'
+import TabAsLink from '~/components/layout/TabAsLink'
+import {useProfileContext} from '~/components/profile/context/ProfileContext'
 import {ProfileTabKey, profileTabItems} from './ProfileTabItems'
 
 type ProfileTabsProps={
@@ -25,6 +24,7 @@ export default function ProfileTabs({tab_id, isMaintainer}:ProfileTabsProps) {
   const {software_cnt,project_cnt} = useProfileContext()
   return (
     <Tabs
+      component="nav"
       variant="scrollable"
       allowScrollButtonsMobile
       value={tab_id}
@@ -33,27 +33,18 @@ export default function ProfileTabs({tab_id, isMaintainer}:ProfileTabsProps) {
       {tabItems.map(key => {
         const item = profileTabItems[key]
         if (item.isVisible({isMaintainer})===true){
-          // @ts-expect-error scroll is not present in Tab
-          return <Tab
-            LinkComponent={Link}
-            scroll={false}
-            href={`../${router.query['orcid']}/${key}`}
-            icon={item.icon}
-            key={key}
-            label={item.label({
-              software_cnt,
-              project_cnt
-            })}
-            value={key}
-            sx={{
-              '&:hover':{
-                color:'text.secondary'
-              },
-              '&.Mui-selected:hover':{
-                color:'primary.main'
-              }
-            }}
-          />
+          return (
+            <TabAsLink
+              key={key}
+              href={`../${router.query['orcid']}/${key}`}
+              value={key}
+              icon={item.icon}
+              label={item.label({
+                software_cnt,
+                project_cnt
+              })}
+            />
+          )
         }
       })}
     </Tabs>
