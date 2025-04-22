@@ -41,11 +41,11 @@ type Data = Provider[] | ApiError
 
 async function getRedirectInfo(provider: string) {
   // select provider
-  switch (provider.toLocaleLowerCase()) {
+  switch (provider.toLocaleLowerCase().split(':')[0]) {
     case 'surfconext':
       // get props needed
       return surfconextInfo()
-    case 'helmholtzid':
+    case 'helmholtz':
       return helmholtzInfo()
     case 'local':
       return localInfo()
