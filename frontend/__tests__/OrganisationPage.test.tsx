@@ -21,8 +21,8 @@ import mockUnits from '~/components/organisation/units/__mocks__/mockUnits.json'
 import {TabKey} from '~/components/organisation/tabs/OrganisationTabItems'
 import {OrganisationForContext} from '~/components/organisation/context/OrganisationContext'
 
-// MOCK user agreement call
-jest.mock('~/components/user/settings/useUserAgreements')
+// mock user agreement call
+jest.mock('~/components/user/settings/agreements/useUserAgreements')
 // global search
 jest.mock('~/components/GlobalSearchAutocomplete/apiGlobalSearch')
 jest.mock('~/components/GlobalSearchAutocomplete/useHasRemotes')

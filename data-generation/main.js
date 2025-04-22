@@ -4,7 +4,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -899,7 +899,9 @@ const headers = {
 const backendUrl = process.env.POSTGREST_URL || 'http://localhost/api/v1';
 
 async function postToBackend(endpoint, body) {
-	const response = await fetch(backendUrl + endpoint, {
+	const url = `${backendUrl}${endpoint}`;
+	// console.log("postToBackend...",url)
+	const response = await fetch(url, {
 		method: 'POST',
 		body: JSON.stringify(body),
 		headers: headers,
@@ -965,9 +967,10 @@ async function postAccountsToBackend(amount = 100) {
 	const accounts = [];
 	for (let i = 0; i < amount; i++) {
 		accounts.push({
-			public_orcid_profile: !!faker.helpers.maybe(() => true, {
-				probability: 0.8,
-			}),
+			// moved to user_profile
+			// public_orcid_profile: !!faker.helpers.maybe(() => true, {
+			// 	probability: 0.8,
+			// }),
 			agree_terms: !!faker.helpers.maybe(() => true, {probability: 0.8}),
 			notice_privacy_statement: !!faker.helpers.maybe(() => true, {
 				probability: 0.8,
@@ -1031,6 +1034,32 @@ function generateLoginForAccount(accountIds, orcids) {
 	return login_for_accounts;
 }
 
+function generateUserProfiles(accountIds) {
+	const user_profiles = accountIds.map(account => {
+		let given_names = faker.person.firstName();
+		let family_names = faker.person.lastName();
+		// user_profile table props
+		return {
+			account,
+			given_names,
+			family_names,
+			email_address: faker.internet.email({
+				firstName: given_names,
+				lastName: family_names,
+			}),
+			role: faker.person.jobTitle(),
+			affiliation: faker.company.name(),
+			is_public:
+				faker.helpers.maybe(() => true, {
+					probability: 0.5,
+				}) ?? false,
+			avatar_id: null,
+			description: null,
+		};
+	});
+	return user_profiles;
+}
+
 // start of running code, main
 const globalPromises = [];
 const orcids = generateOrcids();
@@ -1056,15 +1085,28 @@ const localSoftwareLogoIdsPromise = getLocalImageIds(softwareLogos).then(logoIds
 });
 globalPromises.push(localSoftwareLogoIdsPromise);
 
+// create accounts, login entries and user profiles
 const accountsPromise = postAccountsToBackend(100)
 	.then(() => getFromBackend('/account'))
 	.then(res => res.json())
 	.then(jsonAccounts => jsonAccounts.map(a => a.id))
-	.then(async accountIds => postToBackend('/login_for_account', generateLoginForAccount(accountIds, orcids)))
 	.then(accountIds => {
-		console.log('accounts, login_for_accounts done');
-		return accountIds;
-	});
+		console.log(`${accountIds.length} accounts in RSD`);
+		const logins = generateLoginForAccount(accountIds, orcids);
+		const profiles = generateUserProfiles(accountIds);
+		// console.log("profiles...", profiles)
+		return Promise.allSettled([
+			postToBackend('/login_for_account', logins),
+			postToBackend('/user_profile', profiles),
+		]);
+	})
+	.then(([login_for_account, user_profile]) => {
+		// log status of api post
+		console.log(`login_for_account...${login_for_account.status}`);
+		console.log(`user_profile...${user_profile.status}`);
+	})
+	.catch(e => console.error(`postAccountsToBackend: ${e.message}`));
+
 globalPromises.push(accountsPromise);
 
 const mentionsPromise = postToBackend('/mention', generateMentions())
@@ -1178,11 +1220,12 @@ globalPromises.push(organisationPromise);
 const communityPromise = localOrganisationLogoIdsPromise.then(orgLogoIds =>
 	postToBackend('/community', generateCommunities(orgLogoIds))
 		.then(resp => resp.json())
-		.then(async commArray => {
+		.then(commArray => {
 			const communityIds = commArray.map(comm => comm['id']);
 			console.log('communities done');
 			return communityIds;
-		}),
+		})
+		.catch(e => console.error('community: ', e.message)),
 );
 globalPromises.push(communityPromise);
 
@@ -1359,6 +1402,13 @@ const releaseVersionPromise = Promise.all([releasePromise, softwarePromise, ment
 	.then(() => console.log('release versions done'));
 globalPromises.push(releaseVersionPromise);
 
-await Promise.all(globalPromises).then(() => console.log('Done'));
-// This is unfortunately needed, because when using docker compose, the node process might hang for a long time
-process.exit(0);
+Promise.all(globalPromises)
+	.then(() => {
+		console.log('data generation DONE');
+		// This is unfortunately needed, because when using docker compose, the node process might hang for a long time
+		process.exit(0);
+	})
+	.catch(e => {
+		console.error(`data generation FAILED: ${e.message}`);
+		process.exit(1);
+	});

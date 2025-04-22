@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useSession} from '~/auth'
-import UserAgreementModal from '~/components/user/settings/UserAgreementModal'
+import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
 import ProtectedContent from '~/components/layout/ProtectedContent'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import SettingsNav from './SettingsNav'

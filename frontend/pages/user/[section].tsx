@@ -9,33 +9,45 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next/types'
 
-import {useSession} from '~/auth'
+import {app} from '~/config/app'
+import {getUserFromToken, useSession} from '~/auth'
 import ProtectedContent from '~/auth/ProtectedContent'
 import {getRedirectUrl} from '~/auth/api/authHelpers'
-import {app} from '~/config/app'
 import {getUserSettings} from '~/utils/userSettings'
-import DefaultLayout from '~/components/layout/DefaultLayout'
-import {userMenu, UserPageId} from '~/components/user/UserNavItems'
-import {PaginationProvider} from '~/components/pagination/PaginationContext'
-import {SearchProvider} from '~/components/search/SearchContext'
-import UserTitle from '~/components/user/UserTitle'
-import UserNav, {UserCounts} from '~/components/user/UserNav'
+import PageMeta from '~/components/seo/PageMeta'
+import BackgroundAndLayout from '~/components/layout/BackgroundAndLayout'
+import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
+import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
+import {UserSettingsProvider} from '~/components/organisation/context/UserSettingsContext'
 import {getUserCounts} from '~/components/user/getUserCounts'
 import {orcidCoupleProps} from '~/components/user/settings/apiLinkOrcidProps'
-import UserSection from '~/components/user/UserSection'
+import {loadUserProfile, UserProfile} from '~/components/user/settings/profile/apiUserProfile'
+import {UserContextProvider, UserCounts} from '~/components/user/context/UserContext'
+import UserMetadata from '~/components/user/metadata'
+import UserTabs from '~/components/user/tabs/UserTabs'
+import UserTabContent from '~/components/user/tabs/UserTabContent'
+import {UserPageId} from '~/components/user/tabs/UserTabItems'
+import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
+import {LoginForAccount} from '~/components/user/settings/profile/apiLoginForAccount'
+import {linkedInCoupleProps} from '~/components/user/settings/apiLinkLinkedInProps'
 
 type UserPagesProps = Readonly<{
   section: UserPageId,
   counts: UserCounts,
   orcidAuthLink: string|null,
+  linkedInAuthLink: string|null,
   rsd_page_rows: number,
-  showSearch: boolean
+  rsd_page_layout: LayoutType,
+  profile: UserProfile
+  logins: LoginForAccount[]
 }>
 
-export default function UserPages({section,counts,orcidAuthLink,rsd_page_rows,showSearch}:UserPagesProps) {
+export default function UserPages({
+  section,counts,orcidAuthLink,linkedInAuthLink,
+  rsd_page_rows,rsd_page_layout,profile,logins
+}:UserPagesProps) {
   const {user} = useSession()
   const pageTitle = `${user?.name ?? 'User'} | ${app.title}`
 
@@ -43,38 +55,55 @@ export default function UserPages({section,counts,orcidAuthLink,rsd_page_rows,sh
   // console.log('pageSection...', pageSection)
   // console.log('pageTitle...', pageTitle)
   // console.log('orcidAuthLink...', orcidAuthLink)
+  // console.log('linkedInAuthLink...', linkedInAuthLink)
+  // console.log('section...', section)
   // console.log('counts...', counts)
   // console.log('rsd_page_rows...', rsd_page_rows)
+  // console.log('rsd_page_layout...', rsd_page_layout)
+  // console.log('profile...', profile)
+  // console.log('logins...', logins)
   // console.groupEnd()
 
   return (
-    <DefaultLayout>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
-      <ProtectedContent>
-        <SearchProvider>
-          <PaginationProvider pagination={{rows:rsd_page_rows}}>
-            <UserTitle
-              title={user?.name ?? 'User'}
-              showSearch={showSearch ?? false}
-            />
-            <section className="flex-1 grid md:grid-cols-[1fr_2fr] xl:grid-cols-[1fr_4fr] gap-[3rem] pb-12">
-              <div>
-                <UserNav
-                  selected={section}
-                  counts={counts}
-                />
-              </div>
-              <UserSection
-                section={section}
-                orcidAuthLink={orcidAuthLink}
-              />
-            </section>
-          </PaginationProvider>
-        </SearchProvider>
-      </ProtectedContent>
-    </DefaultLayout>
+    <>
+      <PageMeta
+        title={pageTitle}
+        description={`${user?.name ?? 'User'} pages`}
+      />
+      <BackgroundAndLayout>
+        <ProtectedContent>
+          <UserAgreementModal />
+          <UserSettingsProvider
+            settings={{
+              rsd_page_layout,
+              rsd_page_rows
+            }}
+          >
+            <UserContextProvider
+              profile={profile}
+              logins={logins}
+              counts={counts}
+              orcidAuthLink={orcidAuthLink}
+              linkedInAuthLink={linkedInAuthLink}
+            >
+              {/* USER PAGE HEADER */}
+              <UserMetadata/>
+              {/* TABS */}
+              <BaseSurfaceRounded
+                className="my-4 p-2"
+                type="section"
+              >
+                <UserTabs tab={section} counts={counts}/>
+              </BaseSurfaceRounded>
+              {/* TAB CONTENT */}
+              <section className="flex md:min-h-[45rem] mb-12">
+                <UserTabContent tab={section} />
+              </section>
+            </UserContextProvider>
+          </UserSettingsProvider>
+        </ProtectedContent>
+      </BackgroundAndLayout>
+    </>
   )
 }
 
@@ -85,42 +114,50 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const {params, req} = context
     const section = params?.section
     const token = req?.cookies['rsd_token']
-    // placeholder for orcid couple link
+    // placeholder for orcid/linkedIn couple link
     let orcidAuthLink:string|null=null
+    let linkedInAuthLink:string|null=null
     // extract user settings from cookie
-    const {rsd_page_rows} = getUserSettings(req)
+    const {rsd_page_layout, rsd_page_rows} = getUserSettings(req)
+    const user = getUserFromToken(token)
     // console.log('getServerSideProps...params...', params)
     // console.log('getServerSideProps...token...', token)
     // console.log('getServerSideProps...user...', user)
-
     if (typeof section == 'undefined') {
       // 404 if no section parameter
       return {
         notFound: true,
       }
     }
-    // try to load menu item
-    const sectionItem = userMenu.find(item=>item.id===section)
-    if (typeof sectionItem == 'undefined') {
-      // 404 is section key does not exist
+
+    const [
+      counts,
+      profile_logins,
+      orcid,
+      linkedIn
+    ] = await Promise.all([
+      getUserCounts({token}),
+      loadUserProfile({account:user?.account,token}),
+      orcidCoupleProps(),
+      linkedInCoupleProps()
+    ])
+
+    if (profile_logins?.profile === null) {
+      // 404 if no profile
       return {
         notFound: true,
       }
     }
 
-    // load counts for user
-    const counts = await getUserCounts({
-      token
-    })
-
-    if (section === 'settings') {
-      // only relevant for settings page
-      const orcid = await orcidCoupleProps()
-      if (orcid && orcid?.redirect_couple_uri){
-        // getRedirectUrl uses redirect_uri to construct redirectURL
-        orcid.redirect_uri = orcid.redirect_couple_uri
-        orcidAuthLink = getRedirectUrl(orcid)
-      }
+    if (orcid?.redirect_couple_uri){
+      // getRedirectUrl uses redirect_uri to construct redirectURL
+      orcid.redirect_uri = orcid.redirect_couple_uri
+      orcidAuthLink = getRedirectUrl(orcid)
+    }
+    if (linkedIn?.redirect_couple_uri){
+      // getRedirectUrl uses redirect_uri to construct redirectURL
+      linkedIn.redirect_uri = linkedIn.redirect_couple_uri
+      linkedInAuthLink = getRedirectUrl(linkedIn)
     }
 
     return {
@@ -129,8 +166,10 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         section,
         counts,
         orcidAuthLink,
+        linkedInAuthLink,
         rsd_page_rows,
-        showSearch: sectionItem?.showSearch ?? false
+        rsd_page_layout,
+        ...profile_logins
       },
     }
   }catch{

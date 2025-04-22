@@ -14,8 +14,8 @@ import OrganisationSettings from './index'
 import config from './general/generalSettingsConfig'
 import mockOrganisation from '../__mocks__/mockOrganisation'
 
-// MOCK user agreement call
-jest.mock('~/components/user/settings/useUserAgreements')
+// mock user agreement call
+jest.mock('~/components/user/settings/agreements/useUserAgreements')
 
 const mockProps = {
   organisation: mockOrganisation,

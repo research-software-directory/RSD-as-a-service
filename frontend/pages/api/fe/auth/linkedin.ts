@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
@@ -57,8 +58,8 @@ async function linkedinRedirectProps() {
       authorization_endpoint,
       redirect_uri,
       client_id,
-      scope: 'openid%20profile%20email',
-      response_mode: 'code'
+      scope: process.env.LINKEDIN_SCOPES ?? 'openid%20profile%20email',
+      response_mode: process.env.LINKEDIN_RESPONSE_MODE ?? 'code'
     }
     return props
   } catch (e: any) {

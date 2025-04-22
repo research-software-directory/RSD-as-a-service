@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +14,6 @@ import {OrganisationForOverview} from '~/types/Organisation'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
-import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
 export type UserOrganisationProp = {
   searchFor?: string
@@ -22,11 +21,6 @@ export type UserOrganisationProp = {
   rows: number,
   token?: string,
   account: string
-}
-
-type State = {
-  count: number,
-  data: OrganisationForOverview[]
 }
 
 export async function getOrganisationsForMaintainer(
@@ -57,11 +51,11 @@ export async function getOrganisationsForMaintainer(
     })
 
     if ([200, 206].includes(resp.status)) {
-      const data: OrganisationForOverview[] = await resp.json()
+      const organisations: OrganisationForOverview[] = await resp.json()
       const count = extractCountFromHeader(resp.headers) ?? 0
       return {
         count,
-        data
+        organisations
       }
     }
 
@@ -71,7 +65,7 @@ export async function getOrganisationsForMaintainer(
     // we log and return zero
     return {
       count: 0,
-      data: []
+      organisations: []
     }
 
   } catch (e: any) {
@@ -81,18 +75,27 @@ export async function getOrganisationsForMaintainer(
     // we log and return zero
     return {
       count: 0,
-      data: []
+      organisations: []
     }
   }
 }
 
+type UseUserOrganisationsProps={
+  searchFor?: string
+  page: number
+  rows: number
+}
 
-export default function useUserOrganisations() {
+type UserOrganisations = {
+  count: number,
+  organisations: OrganisationForOverview[]
+}
+
+export default function useUserOrganisations({searchFor,page,rows}:UseUserOrganisationsProps) {
   const {user,token} = useSession()
-  const {searchFor,page,rows,setCount} = usePaginationWithSearch('Search organisation')
-  const [state, setState] = useState<State>({
+  const [state, setState] = useState<UserOrganisations>({
     count: 0,
-    data: []
+    organisations: []
   })
   const [loading, setLoading] = useState(true)
 
@@ -100,7 +103,7 @@ export default function useUserOrganisations() {
     let abort = false
 
     async function getOrganisations() {
-      const organisations: State = await getOrganisationsForMaintainer({
+      const organisations = await getOrganisationsForMaintainer({
         searchFor,
         page,
         rows,
@@ -111,7 +114,6 @@ export default function useUserOrganisations() {
       if (abort) return
       // set state
       setState(organisations)
-      setCount(organisations.count)
       // set loading done
       setLoading(false)
     }
@@ -121,12 +123,11 @@ export default function useUserOrganisations() {
     }
 
     return () => {abort = true}
-  // ignore setCount dependency to avoid cycle loop
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [searchFor, page, rows, token, user?.account])
 
   return {
-    organisations: state.data,
+    ...state,
     loading
   }
 }
