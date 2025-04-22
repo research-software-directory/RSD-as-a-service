@@ -28,31 +28,6 @@ export default function MarkdownInputWithPreview({markdown, register, disabled =
   const [tab, setTab] = useState(0)
 
   useEffect(() => {
-    // NOTE! useRef seems not to work properly when used
-    // in combination with react-form-hook
-    // this is quickfix using object id
-    const textInput = document.getElementById('markdown-textarea')
-    if (textInput) {
-      // save scroll position
-      const scrollLeft = window.scrollX || (document.documentElement || document.body.parentNode || document.body).scrollLeft
-      const scrollTop = window.scrollY || (document.documentElement || document.body.parentNode || document.body).scrollTop
-      // reset height
-      textInput.style.height = 'auto'
-      // get new height
-      const height = textInput.scrollHeight
-      // assign the height
-      if (height > 600) {
-        textInput.style.height = `${height}px`
-      } else {
-        // default height
-        textInput.style.height = '600px'
-      }
-      // recover scroll position
-      window.scrollTo(scrollLeft, scrollTop)
-    }
-  }, [markdown])
-
-  useEffect(() => {
     if (autofocus === true) {
       // NOTE! useRef seems not to work properly when used
       // in combination with react-form-hook
@@ -87,7 +62,7 @@ export default function MarkdownInputWithPreview({markdown, register, disabled =
   }
 
   return (
-    <article className="flex-1 border rounded-xs min-h-[43rem]">
+    <article className="flex-1 border rounded-xs relative">
       <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center">
         <Tabs
           value={tab}
@@ -111,32 +86,34 @@ export default function MarkdownInputWithPreview({markdown, register, disabled =
         {getHelperTextMsg()}
       </div>
       <div
-        id={`markdown-tabpanel-${tab}`}
+        id={'markdown-tabpanel-0'}
         role="tabpanel"
         hidden={tab !== 0}
+        style={{
+          padding:'1rem 0.25rem 0rem 0.25rem',
+        }}
       >
         <textarea
           autoFocus={autofocus}
           disabled={disabled}
           name="markdown-input"
           id="markdown-textarea"
-          rows={20}
-          className="text-base-content w-full h-full pt-4 px-8 font-mono text-sm"
+          rows={30}
+          className="text-base-content w-full h-full px-8 font-mono text-sm min-h-[10rem]"
           {...register}
           onBlur={onBlur}
         ></textarea>
       </div>
       <div
-        id={`markdown-tabpanel-${tab}`}
+        id={'markdown-tabpanel-1'}
         role="tabpanel"
         hidden={tab!==1}
+        style={{padding:'1rem 0.25rem 4rem 0.25rem'}}
       >
-        <div>
-          <ReactMarkdownWithSettings
-            className='py-4 px-8'
-            markdown={markdown}
-          />
-        </div>
+        <ReactMarkdownWithSettings
+          className='px-8'
+          markdown={markdown}
+        />
       </div>
     </article>
   )
