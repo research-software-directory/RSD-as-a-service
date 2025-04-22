@@ -2,10 +2,11 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {fireEvent, render, screen, waitFor, waitForElementToBeRemoved, within} from '@testing-library/react'
+import {fireEvent, render, screen, waitFor, within} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithOrganisationContext} from '~/utils/jest/WithOrganisationContext'
 
@@ -21,16 +22,6 @@ const mockProps = {
   isMaintainer: false
 }
 
-// MOCK getOrganisationChildren
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockGetOrganisationChildren = jest.fn((props) => Promise.resolve([]))
-jest.mock('~/components/organisation/apiOrganisations', () => ({
-  getOrganisationChildren: jest.fn((props)=>mockGetOrganisationChildren(props))
-}))
-
-// MOCK createOrganisation (research unit)
-// const mockCreateOrganisation = jest.fn((props)=>Promise.resolve({status:201}))
-
 describe('frontend/components/organisation/software/index.tsx', () => {
   beforeEach(() => {
     // reset mock counters
@@ -41,12 +32,10 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     render(
       <WithAppContext>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits />
+          <ResearchUnits units={[]}/>
         </WithOrganisationContext>
       </WithAppContext>
     )
-
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     const noUnitsMsg = screen.getByText('The organisation has no research units')
     expect(noUnitsMsg).toBeInTheDocument()
@@ -59,12 +48,10 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits />
+          <ResearchUnits units={[]}/>
         </WithOrganisationContext>
       </WithAppContext>
     )
-
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     const addBtn = screen.getByRole('button', {name: 'Add'})
     expect(addBtn).toBeInTheDocument()
@@ -80,12 +67,10 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits />
+          <ResearchUnits units={[]}/>
         </WithOrganisationContext>
       </WithAppContext>
     )
-
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     const addBtn = screen.getByRole('button', {name: 'Add'})
     expect(addBtn).toBeInTheDocument()
@@ -102,12 +87,10 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits />
+          <ResearchUnits units={[]} />
         </WithOrganisationContext>
       </WithAppContext>
     )
-
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     const addBtn = screen.queryByRole('button', {name: 'Add'})
     expect(addBtn).not.toBeInTheDocument()
@@ -120,18 +103,14 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     if (mockSession.user) {
       mockSession.user.role='rsd_user'
     }
-    // mock unit response
-    mockGetOrganisationChildren.mockResolvedValueOnce(mockUnits as any)
 
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits />
+          <ResearchUnits units={mockUnits}/>
         </WithOrganisationContext>
       </WithAppContext>
     )
-
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     const units = screen.getAllByTestId('research-unit-item')
     expect(units.length).toEqual(mockUnits.length)
@@ -143,18 +122,14 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     if (mockSession.user) {
       mockSession.user.role='rsd_user'
     }
-    // mock unit response
-    mockGetOrganisationChildren.mockResolvedValueOnce(mockUnits as any)
 
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits />
+          <ResearchUnits units={mockUnits}/>
         </WithOrganisationContext>
       </WithAppContext>
     )
-
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     const units = screen.getAllByTestId('research-unit-item')
 
@@ -168,18 +143,14 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     if (mockSession.user) {
       mockSession.user.role='rsd_admin'
     }
-    // mock unit response
-    mockGetOrganisationChildren.mockResolvedValueOnce(mockUnits as any)
 
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits />
+          <ResearchUnits units={mockUnits}/>
         </WithOrganisationContext>
       </WithAppContext>
     )
-
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     const units = screen.getAllByTestId('research-unit-item')
 
@@ -193,8 +164,6 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     if (mockSession.user) {
       mockSession.user.role='rsd_user'
     }
-    // mock unit response
-    mockGetOrganisationChildren.mockResolvedValueOnce(mockUnits as any)
     // mock inputData
     const mockInputs = {
       name: 'Test unit name',
@@ -204,12 +173,10 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits />
+          <ResearchUnits units={mockUnits}/>
         </WithOrganisationContext>
       </WithAppContext>
     )
-
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     // ADD new unit
     const addBtn = screen.getByRole('button', {name: 'Add'})
@@ -244,7 +211,7 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     mockResolvedValueOnce('OK', {
       status: 201,
       headers: {
-        // mock get fn to return new id in the header - required by createOrganisation
+        // mock get fn to return new ID in the header - required by createOrganisation
         get: (prop:string) => {
           if (prop === 'location') return '/organisation?id=eq.ad13eb96-dd3e-4f8b-9b9f-d63ee7a078b8'
           return prop

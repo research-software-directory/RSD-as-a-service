@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,16 +16,14 @@ import Button from '@mui/material/Button'
 import {useSession} from '~/auth'
 import useSnackbar from '../../snackbar/useSnackbar'
 import {
-  colForCreate, colForUpdate, CoreOrganisationProps,
-  EditOrganisation, Organisation, OrganisationForOverview
+  colForCreate,
+  colForUpdate,
+  CoreOrganisationProps,
+  EditOrganisation,
+  Organisation,
+  OrganisationUnitsForOverview
 } from '../../../types/Organisation'
-import {
-  createOrganisation,
-  newOrganisationProps,
-  updateOrganisation
-} from '../../../utils/editOrganisation'
-import useOrganisationUnits from './useOrganisationUnits'
-import {sortOnStrProp} from '../../../utils/sortFn'
+import {createOrganisation, newOrganisationProps, updateOrganisation} from '../../../utils/editOrganisation'
 import ResearchUnitList from './ResearchUnitList'
 import ResearchUnitModal from './ResearchUnitModal'
 import {upsertImage} from '~/utils/editImage'
@@ -32,6 +31,7 @@ import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import UserAgreementModal from '~/components/user/settings/UserAgreementModal'
 import useOrganisationContext from '../context/useOrganisationContext'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
+import {useRouter} from 'next/router'
 
 type EditOrganisationModal = {
   open: boolean,
@@ -39,11 +39,16 @@ type EditOrganisationModal = {
   organisation?: EditOrganisation
 }
 
-export default function ResearchUnits() {
+type ResearchUnitsProps = {
+  units: OrganisationUnitsForOverview[]
+}
+
+export default function ResearchUnits({units}: Readonly<ResearchUnitsProps>) {
+  const router = useRouter()
   const {token, user} = useSession()
   const {id,primary_maintainer,isMaintainer} = useOrganisationContext()
   const {showErrorMessage} = useSnackbar()
-  const {units, setUnits, count, loading} = useOrganisationUnits()
+  // const {units, setUnits, count, loading} = useOrganisationUnits()
   const [modal, setModal] = useState<EditOrganisationModal>({
     open: false
   })
@@ -98,32 +103,6 @@ export default function ResearchUnits() {
     })
   }
 
-  function addUnitToCollection(unit:EditOrganisation) {
-    const newUnits = [
-      ...units,
-      unit
-    ].sort((a,b)=>sortOnStrProp(a,b,'name'))
-    setUnits({
-      // cast type for now and improve later
-      data: newUnits as OrganisationForOverview[],
-      count: newUnits.length
-    })
-  }
-
-  function updateUnitInList(unit:EditOrganisation,pos:number) {
-    const newList = [
-      ...units.slice(0, pos),
-      ...units.slice(pos+1),
-      unit
-    ].sort((a, b) => sortOnStrProp(a, b, 'name'))
-    // debugger
-    setUnits({
-      // cast type for now and improve later
-      data: newList as OrganisationForOverview[],
-      count: newList.length
-    })
-  }
-
   async function saveOrganisation({data, pos}:{data: EditOrganisation, pos?: number }) {
     try {
       // console.log('saveOrganisation...', data)
@@ -160,7 +139,8 @@ export default function ResearchUnits() {
         if (resp.status !== 200) {
           showErrorMessage(resp.message)
         } else {
-          updateUnitInList(data,pos)
+          // updateUnitInList(data,pos)
+          router.replace(router.asPath)
           closeModals()
         }
       } else {
@@ -174,7 +154,8 @@ export default function ResearchUnits() {
         // debugger
         if (resp.status === 201) {
           data.id = resp.message
-          addUnitToCollection(data)
+          // addUnitToCollection(data)
+          router.replace(router.asPath)
           closeModals()
         } else {
           showErrorMessage(resp.message)
@@ -214,12 +195,13 @@ export default function ResearchUnits() {
       {/* Only when maintainer */}
       {isMaintainer && <UserAgreementModal />}
       <section className="flex justify-between py-4">
-        <h2>Research Units ({count ?? 0})</h2>
+        {/*<h2>Research Units ({count ?? 0})</h2>*/}
+        <h2>Research Units ({units.length})</h2>
         {renderAddBtn()}
       </section>
       <section>
         <ResearchUnitList
-          loading={loading}
+          loading={false}
           units={units}
           isPrimaryMaintainer={isPrimary}
           onEdit={onEditUnit}
