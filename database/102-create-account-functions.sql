@@ -1,5 +1,5 @@
+-- SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
--- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -38,10 +38,6 @@ BEGIN
 	UPDATE contributor SET account = NULL WHERE account = account_id;
 	UPDATE team_member SET account = NULL WHERE account = account_id;
 	DELETE FROM admin_account WHERE admin_account.account_id = delete_account.account_id;
-	DELETE FROM orcid_whitelist WHERE orcid IN (
-		SELECT sub FROM login_for_account
-		WHERE account = account_id AND provider = 'orcid'
-	);
 	DELETE FROM login_for_account WHERE account = account_id;
 	DELETE FROM user_profile WHERE account = account_id;
 	DELETE FROM account WHERE id = account_id;

@@ -225,8 +225,6 @@ public class Main {
 
 				new PostgrestAccount(Config.backendBaseUrl()).coupleLogin(accountId, orcidInfo, OpenidProvider.orcid);
 
-				PostgrestConnector.addOrcidToAllowList(orcidInfo.sub());
-
 				setRedirectFromCookie(ctx);
 			});
 		}

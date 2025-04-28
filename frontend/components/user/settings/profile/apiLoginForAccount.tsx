@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -46,26 +47,6 @@ export async function deleteLoginForAccount(id:string,token:string){
   try{
     const query=`id=eq.${id}`
     const url = `${getBaseUrl()}/login_for_account?${query}`
-
-    const resp = await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        ...createJsonHeaders(token)
-      }
-    })
-    return extractReturnMessage(resp)
-  }catch(e:any){
-    return {
-      status:500,
-      message: e.message
-    }
-  }
-}
-
-export async function deleteFromOrcidList(orcid:string,token:string){
-  try{
-    const query=`orcid=eq.${orcid}`
-    const url = `${getBaseUrl()}/orcid_whitelist?${query}`
 
     const resp = await fetch(url, {
       method: 'DELETE',

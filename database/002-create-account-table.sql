@@ -104,11 +104,6 @@ CREATE TABLE admin_account (
 );
 
 
-CREATE TABLE orcid_whitelist (
-	orcid VARCHAR(19) PRIMARY KEY CHECK (orcid ~ '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$')
-);
-
-
 CREATE TABLE account_invite (
 	id UUID PRIMARY KEY,
 	uses_left INTEGER, --NULL means bulk (i.e. infinite use) invite
