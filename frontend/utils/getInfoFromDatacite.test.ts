@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -414,7 +414,8 @@ it('returns expected contributors', async () => {
         id: null,
         position: null,
         role: null,
-        avatar_id: null
+        avatar_id: null,
+        account: null
       }
     ]
   )
@@ -435,7 +436,8 @@ it('returns authors and contributors (without duplicates)', async () => {
       id: null,
       position: null,
       role: null,
-      avatar_id: null
+      avatar_id: null,
+      account: null
     },
     {
       given_names: 'Michael',
@@ -448,7 +450,8 @@ it('returns authors and contributors (without duplicates)', async () => {
       id: null,
       position: null,
       role: null,
-      avatar_id: null
+      avatar_id: null,
+      account: null
     }
   ]
   const resp = await getContributorsFromDoi('0', 'DOI')

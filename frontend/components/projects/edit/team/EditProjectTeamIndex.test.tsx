@@ -255,6 +255,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
           'id': memberId,
           'is_contact_person': true,
           'orcid': null,
+          'account': null,
           'position': 1,
           'project': editProjectState.project.id,
           'role': newPerson.role,

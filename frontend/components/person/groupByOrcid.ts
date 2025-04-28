@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,6 +12,7 @@ import {OrcidRecord} from '~/utils/getORCID'
 import {UniqueRsdPerson} from './findRSDPerson'
 
 export type AggregatedPerson = {
+  account: string | null
   orcid: string | null
   display_name: string
   given_names: string
@@ -49,6 +50,8 @@ export function groupByOrcid(rsdPersons: UniqueRsdPerson[], orcidPersons: OrcidR
         })
         // create new person
         const newPerson: AggregatedPerson = {
+          // ORCID entry has no account (RSD account id)
+          account: null,
           orcid: item['orcid-id'],
           display_name: name ?? 'Name missing',
           given_names: item['given-names'],
@@ -82,6 +85,7 @@ export function groupByOrcid(rsdPersons: UniqueRsdPerson[], orcidPersons: OrcidR
         if (personsByOrcid.hasOwnProperty(item['orcid']) === false) {
           // create new person
           const newPerson: AggregatedPerson = {
+            account: item['account'],
             orcid: item['orcid'],
             display_name: item.display_name,
             given_names: item.given_names,
@@ -98,7 +102,7 @@ export function groupByOrcid(rsdPersons: UniqueRsdPerson[], orcidPersons: OrcidR
         // get reference to existing entry
         let aggregatedPerson: AggregatedPerson = personsByOrcid[item['orcid']]
 
-        // agregate email,affiliation and avatars
+        // aggregate email, affiliation and avatars
         rsdKeys.forEach(rsd => {
           aggregatedPerson = addValueToObjectArray({
             target: aggregatedPerson,
@@ -107,14 +111,18 @@ export function groupByOrcid(rsdPersons: UniqueRsdPerson[], orcidPersons: OrcidR
             sourceKey: rsd.sourceKey,
           })
         })
+        // save RSD account to aggregated RSD person if missing
+        if (item.account!==null && aggregatedPerson.account===null){
+          aggregatedPerson.account = item.account
+        }
         // add source
         if (aggregatedPerson.sources.includes('RSD') === false) {
           aggregatedPerson.sources.push('RSD')
         }
-
       } else {
         // entry without orcid
         let newPerson: AggregatedPerson = {
+          account: item['account'],
           orcid: null,
           display_name: item.display_name,
           given_names: item.given_names,
@@ -125,7 +133,7 @@ export function groupByOrcid(rsdPersons: UniqueRsdPerson[], orcidPersons: OrcidR
           avatar_options: [],
           sources: []
         }
-        // agregate email,affiliation and avatars
+        // aggregate email,affiliation and avatars
         rsdKeys.forEach(rsd => {
           newPerson = addValueToObjectArray({
             target: newPerson,
@@ -160,7 +168,7 @@ export function personsToAutocompleteOptions(persons:AggregatedPerson[]) {
   if (!persons) return []
   const options = persons.map(item => {
     return {
-      key: item['orcid'] ?? `${item.display_name}${Math.random()}`,
+      key: item['account'] ?? item['orcid'] ?? `${item.display_name}`,
       label: item.display_name ?? '',
       data: item
     }

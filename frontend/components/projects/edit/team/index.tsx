@@ -96,6 +96,14 @@ export default function ProjectTeam() {
       member.avatar_id = person.avatar_options[0] ?? null
       // use affiliation (if exists)
       member.affiliation = person.affiliation_options[0] ?? null
+      // use role (if one)
+      if (person.role_options.length===1){
+        member.role = person.role_options[0]
+      }
+      // use email (if one)
+      if (person.email_options.length===1){
+        member.email_address = person.email_options[0]
+      }
       // flag contact person to false
       member.is_contact_person = false
       // add position

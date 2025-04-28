@@ -108,33 +108,36 @@ $$;
 -- this info overwrites aggregated contributors/team member info
 -- from /rpc/person_mentions in 104-person-views
 CREATE FUNCTION public_user_profile() RETURNS TABLE (
-	account UUID,
+	display_name VARCHAR,
 	given_names VARCHAR,
 	family_names VARCHAR,
+	email_address VARCHAR,
 	affiliation VARCHAR,
 	"role" VARCHAR,
 	avatar_id VARCHAR(40),
-	is_public BOOLEAN,
-	sub VARCHAR,
-	description VARCHAR(10000)
+	orcid VARCHAR,
+	account UUID,
+	is_public BOOLEAN
 ) LANGUAGE sql STABLE SECURITY DEFINER AS
 $$
 SELECT
-	user_profile.account,
+	(CONCAT(user_profile.given_names,' ',user_profile.family_names)) AS display_name,
 	user_profile.given_names,
 	user_profile.family_names,
+	user_profile.email_address,
 	user_profile.affiliation,
 	user_profile.role,
 	user_profile.avatar_id,
-	user_profile.is_public,
-	login_for_account.sub,
-	user_profile.description
+	login_for_account.sub AS orcid,
+	user_profile.account,
+	user_profile.is_public
 FROM
 	user_profile
-INNER JOIN
-	login_for_account ON user_profile.account = login_for_account.account
+LEFT JOIN
+	login_for_account ON
+		user_profile.account = login_for_account.account
+		AND
+		login_for_account.provider = 'orcid'
 WHERE
 	user_profile.is_public
-	AND
-	login_for_account.provider = 'orcid'
 $$;

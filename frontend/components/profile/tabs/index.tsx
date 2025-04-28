@@ -36,7 +36,7 @@ export default function ProfileTabs({tab_id, isMaintainer}:ProfileTabsProps) {
           return (
             <TabAsLink
               key={key}
-              href={`../${router.query['orcid']}/${key}`}
+              href={`../${router.query['id']}/${key}`}
               value={key}
               icon={item.icon}
               label={item.label({

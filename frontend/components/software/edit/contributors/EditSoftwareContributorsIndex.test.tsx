@@ -267,6 +267,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
       expect(mockPostContributor).toHaveBeenCalledTimes(1)
       expect(mockPostContributor).toHaveBeenCalledWith({
         'contributor': {
+          'account': null,
           'affiliation': newPerson.affiliation,
           'avatar_id': null,
           'email_address': newPerson.email,
@@ -545,7 +546,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
       // we have new avatar id
       avatar_id: newAvatarId,
       // software id received from software context
-      software: editSoftwareState.software.id
+      software: editSoftwareState.software.id,
     }
     // mock no members
     mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)

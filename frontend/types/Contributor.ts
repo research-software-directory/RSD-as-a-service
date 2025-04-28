@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,6 +20,8 @@ export type Person = {
   orcid: string | null
   position: number | null
   avatar_id: string | null
+  account: string | null
+  is_public?: boolean
 }
 
 export type PatchPerson = Person & {
@@ -31,6 +33,7 @@ export type PatchPerson = Person & {
   affiliation?: string | null
   role?: string | null
   orcid?: string | null
+  account?: string | null
   avatar_id?: string | null
   position?: number | null
 }
@@ -52,10 +55,6 @@ export type Contributor = Person & {
   avatar_mime_type?: string | null
 }
 
-export type Profile = Person & {
-  public_orcid_profile?: string | null
-}
-
 export type SourceType = 'RSD' | 'ORCID'
 
 export const PersonProps = [
@@ -68,7 +67,8 @@ export const PersonProps = [
   'role',
   'orcid',
   'avatar_id',
-  'position'
+  'position',
+  'account'
 ]
 
 export const TeamMemberProps = [

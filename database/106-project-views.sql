@@ -737,7 +737,7 @@ $$;
 
 -- FILTER PROJECTS by orcid
 -- OPT-IN ONLY, uses public_profile table as filter
--- UNIQUE entries by ORCID & project.id
+-- UNIQUE entries project.id
 CREATE FUNCTION project_by_public_profile() RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
@@ -756,11 +756,11 @@ CREATE FUNCTION project_by_public_profile() RETURNS TABLE (
 	impact_cnt INTEGER,
 	output_cnt INTEGER,
 	project_status VARCHAR(20),
-	orcid VARCHAR
+	orcid VARCHAR,
+	account UUID
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
-	DISTINCT ON (project.id,public_profile.orcid)
 	project.id,
 	project.slug,
 	project.title,
@@ -778,11 +778,16 @@ SELECT
 	COALESCE(count_project_impact.impact_cnt, 0) AS impact_cnt,
 	COALESCE(count_project_output.output_cnt, 0) AS output_cnt,
 	project_status.status,
-	public_profile.orcid
+	public_user_profile.orcid,
+	public_user_profile.account
 FROM
-	public_profile()
+	public_user_profile()
 INNER JOIN
-	team_member ON public_profile.orcid = team_member.orcid
+	team_member ON (
+		public_user_profile.orcid = team_member.orcid
+		OR
+		public_user_profile.account = team_member.account
+	)
 LEFT JOIN
 	project ON project.id=team_member.project
 LEFT JOIN
@@ -814,10 +819,11 @@ CREATE FUNCTION project_team(project_id UUID) RETURNS TABLE (
 	avatar_id VARCHAR,
 	"position" INT,
 	project UUID,
-	public_orcid_profile VARCHAR
+	account UUID,
+	is_public VARCHAR
 ) LANGUAGE sql STABLE AS
 $$
-SELECT
+SELECT DISTINCT ON (team_member.id)
 	team_member.id,
 	team_member.is_contact_person,
 	team_member.email_address,
@@ -829,15 +835,21 @@ SELECT
 	team_member.avatar_id,
 	team_member."position",
 	team_member.project,
-	public_profile.orcid as public_orcid_profile
+	public_user_profile.account,
+	public_user_profile.is_public
 FROM
 	team_member
 LEFT JOIN
-	public_profile() ON team_member.orcid = public_profile.orcid
+	public_user_profile() ON (
+		team_member.orcid = public_user_profile.orcid
+		OR
+		team_member.account = public_user_profile.account
+	)
 WHERE
 	team_member.project = project_id
 ;
 $$;
+
 
 -- RELATED PROJECTS for software
 -- NOTE! updated by Dusan 2022-07-27

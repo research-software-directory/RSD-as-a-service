@@ -1,17 +1,17 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Profile} from '~/types/Contributor'
+import {Person} from '~/types/Contributor'
 
 type UseContributorListProps={
-  items: Profile[]
+  items: Person[]
   limit: number,
 }
 
 export default function useContributorList({items,limit=12}:UseContributorListProps){
-  let persons:Profile[] = []
+  let persons:Person[] = []
 
   if (limit >= items.length && persons.length < items.length){
     persons = [

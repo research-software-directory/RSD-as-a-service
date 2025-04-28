@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,7 +12,7 @@
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
-import {Contributor, NewContributor, PatchContributor, Profile} from '~/types/Contributor'
+import {Contributor, NewContributor, PatchContributor, Person} from '~/types/Contributor'
 
 export async function getContributorsForSoftware({software, token}:
   { software: string, token?: string}) {
@@ -29,7 +29,7 @@ export async function getContributorsForSoftware({software, token}:
     })
 
     if (resp.status === 200) {
-      const data: Profile[] = await resp.json()
+      const data: Person[] = await resp.json()
       return data
     } else if (resp.status === 404) {
       logger(`getContributorsForSoftware: 404 [${url}]`, 'error')

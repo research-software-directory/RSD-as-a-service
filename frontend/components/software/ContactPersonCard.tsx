@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,13 +10,13 @@ import EmailIcon from '@mui/icons-material/Email'
 import Avatar from '@mui/material/Avatar'
 import LaunchIcon from '@mui/icons-material/Launch'
 
-import {Profile} from '~/types/Contributor'
+import {Person} from '~/types/Contributor'
 import {getImageUrl} from '~/utils/editImage'
 import {getDisplayName, getDisplayInitials} from '~/utils/getDisplayName'
 import LogoOrcid from '~/assets/logos/logo-orcid.svg'
 
 
-export default function ContactPersonCard({person,section='software'}: {person: Profile|null,section:'software'|'projects'}) {
+export default function ContactPersonCard({person,section='software'}: {person: Person|null,section:'software'|'projects'}) {
   // what to render if no contact person?
   if (!person) return null
   const displayName = getDisplayName(person)
@@ -61,8 +61,8 @@ export default function ContactPersonCard({person,section='software'}: {person: 
         </Avatar>
         <div className="flex-1 flex flex-col items-start">
           <h4 className="text-primary text-2xl">
-            {person?.public_orcid_profile ?
-              <a href={`/profile/${person.public_orcid_profile}/${section}`}>
+            {person?.is_public ?
+              <a href={`/profile/${person.account}/${section}`}>
                 {displayName} <LaunchIcon sx={{width:'1rem'}}/>
               </a>
               :

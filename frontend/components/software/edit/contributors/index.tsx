@@ -100,6 +100,14 @@ export default function SoftwareContributors() {
       contributor.avatar_id = person.avatar_options[0] ?? null
       // use affiliation (if exists)
       contributor.affiliation = person.affiliation_options[0] ?? null
+      // use role (if one)
+      if (person.role_options.length===1){
+        contributor.role = person.role_options[0]
+      }
+      // use email (if one)
+      if (person.email_options.length===1){
+        contributor.email_address = person.email_options[0]
+      }
       // flag contact person to false
       contributor.is_contact_person = false
       // add position
