@@ -162,7 +162,7 @@ CREATE TABLE contributor (
 	position INTEGER,
 	avatar_id VARCHAR(40) REFERENCES image(id),
 	-- support for (loosely) linking of user_profile entry without ORCID
-	account UUID,
+	account UUID REFERENCES account (id),
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
 );
@@ -190,6 +190,11 @@ BEGIN
 	NEW.id = OLD.id;
 	NEW.created_at = OLD.created_at;
 	NEW.updated_at = LOCALTIMESTAMP;
+	IF OLD.account IS NOT NULL AND (CURRENT_USER = 'rsd_admin' OR (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER)) IS DISTINCT FROM TRUE THEN
+		NEW.family_names = OLD.family_names;
+		NEW.given_names = OLD.given_names;
+		NEW.orcid = OLD.orcid;
+	END IF;
 	return NEW;
 END
 $$;
