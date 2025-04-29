@@ -43,34 +43,6 @@ class MainTest {
 	}
 
 	@Test
-	void testUserIsAllowedEmptyWhitelist() {
-		utilities.when(Config::userMailWhitelist).thenReturn(null);
-		assertTrue(Main.userIsAllowed(userinfo));
-	}
-
-	@Test
-	void testUserIsAllowedEmptyStringWhitelist() {
-		utilities.when(Config::userMailWhitelist).thenReturn("");
-		assertTrue(Main.userIsAllowed(userinfo));
-	}
-
-	@Test
-	void testUserIsAllowedWhitelistIsAllowed() {
-		utilities.when(Config::userMailWhitelist).thenReturn(
-			"user@example.com;test@example.com;example@example.com"
-		);
-		assertTrue(Main.userIsAllowed(userinfo));
-	}
-
-	@Test
-	void testUserIsAllowedWhitelistIsNotAllowed() {
-		utilities.when(Config::userMailWhitelist).thenReturn(
-			"test@example.com;example@example.com"
-		);
-		assertFalse(Main.userIsAllowed(userinfo));
-	}
-
-	@Test
 	void testIdAllowListDisabled() {
 		utilities.when(Config::helmholtzIdUseAllowList).thenReturn(false);
 		assertFalse(Main.idUserIsAllowed(userinfoNullOrganisation));

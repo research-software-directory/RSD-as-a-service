@@ -96,10 +96,6 @@ public class Config {
 		return rsdAuthCoupleProviders().contains("LINKEDIN");
 	}
 
-	public static String userMailWhitelist() {
-		return System.getenv("RSD_AUTH_USER_MAIL_WHITELIST");
-	}
-
 	public static String backendBaseUrl() {
 		return System.getenv("POSTGREST_URL");
 	}

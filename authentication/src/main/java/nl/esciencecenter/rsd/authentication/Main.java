@@ -35,28 +35,6 @@ public class Main {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 	private static final String LOGIN_FAILED_PATH = "/login/failed";
 
-	public static boolean userIsAllowed(OpenIdInfo info) {
-		String whitelist = Config.userMailWhitelist();
-
-		if (whitelist == null || whitelist.isEmpty()) {
-			// allow any user
-			return true;
-		}
-
-		if (info == null || info.email() == null || info.email().isEmpty()) {
-			throw new Error("Unexpected parameters for 'userIsAllowed'");
-		}
-
-		String[] allowed = whitelist.split(";");
-
-		for (String s : allowed) {
-			if (s.equalsIgnoreCase(info.email())) {
-				return true;
-			}
-		}
-
-		return false;
-	}
 
 	public static boolean userInIdAllowList(OpenIdInfo info) {
 		String allowList = Config.helmholtzIdAllowList();
@@ -141,18 +119,10 @@ public class Main {
 				case INVITE_ONLY -> {
 					OpenIdInfo surfconextInfo = extractSurfInfo(ctx);
 
-					if (!userIsAllowed(surfconextInfo)) {
-						throw new RsdAuthenticationException("Your email address (" + surfconextInfo.email() + ") is not whitelisted.");
-					}
-
 					handleAccountInviteOnly(surfconextInfo, surfProvider, ctx);
 				}
 				case EVERYONE -> {
 					OpenIdInfo surfconextInfo = extractSurfInfo(ctx);
-
-					if (!userIsAllowed(surfconextInfo)) {
-						throw new RsdAuthenticationException("Your email address (" + surfconextInfo.email() + ") is not whitelisted.");
-					}
 
 					handleAccountEveryoneAllowed(surfconextInfo, surfProvider, ctx);
 				}
