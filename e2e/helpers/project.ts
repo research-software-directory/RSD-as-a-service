@@ -314,19 +314,20 @@ export async function importTeamMemberByOrcid(page: Page, contact: Person) {
   // fake api response
   await listenForOrcidCalls(page)
   // search for contact
-  await Promise.all([
-    page.waitForResponse(RegExp(contact.apiUrl)),
-    findContributor.fill(contact.orcid ?? 'Dusan Mijatovic')
-  ])
+  await findContributor.fill(contact.orcid ?? '0000-0002-1898-4461')
+  // wait for response
+  await page.waitForResponse(RegExp(contact.apiUrl))
   // set breakpoint
   // await page.pause()
   // select add new person option
   await Promise.all([
     page.waitForSelector('[role="dialog"]'),
-    page.getByRole('option').first().click()
+    // select option by Name
+    page.getByText(contact.name).click()
   ])
   // add email
   await page.getByLabel('Email').fill(contact.email)
+  // await page.pause()
   // save imported contact
   const saveBtn = page.getByRole('button', {
     name: 'Save'
@@ -338,6 +339,7 @@ export async function importTeamMemberByOrcid(page: Page, contact: Person) {
     }),
     saveBtn.click()
   ])
+  // await page.pause()
   // validate last item - the one we just created
   const members = page.getByTestId('team-member-item')
   // validate contact person primary text
@@ -345,6 +347,6 @@ export async function importTeamMemberByOrcid(page: Page, contact: Person) {
     .locator('.MuiListItemText-primary')
     .textContent()
   // validate name
-  // console.log('member...',member)
+  // await page.pause()
   expect(member).toContain(contact.name)
 }
