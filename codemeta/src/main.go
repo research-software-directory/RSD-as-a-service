@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,6 +7,8 @@ package main
 
 import (
 	"bytes"
+	"codemeta/terms"
+	"codemeta/utils"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -49,48 +51,6 @@ type RsdSoftware struct {
 	} `json:"reference_papers"`
 }
 
-type Organization struct {
-	Type string `json:"@type"`
-	Name string `json:"name"`
-}
-
-type Person struct {
-	Type        string        `json:"@type"`
-	Id          *string       `json:"@id"`
-	GivenName   string        `json:"givenName"`
-	FamilyName  string        `json:"familyName"`
-	Email       *string       `json:"email"`
-	RoleName    *string       `json:"roleName"`
-	Affiliation *Organization `json:"affiliation,omitempty"`
-}
-
-type CreativeWork struct {
-	Type string `json:"@type"`
-	Name string `json:"name"`
-}
-
-type ScholarlyArticle struct {
-	Type       string  `json:"@type"`
-	Id         *string `json:"@id"`
-	Name       string  `json:"name"`
-	Pagination *string `json:"pagination"`
-	Url        *string `json:"url"`
-}
-
-type SoftwareApplication struct {
-	Context              string             `json:"@context"`
-	Type                 string             `json:"@type"`
-	Id                   *string            `json:"@id"`
-	Name                 string             `json:"name"`
-	Description          []string           `json:"description"`
-	CodeRepository       *string            `json:"codeRepository"`
-	Author               []Person           `json:"author"`
-	Keywords             []string           `json:"keywords"`
-	ProgrammingLanguage  []string           `json:"programmingLanguage"`
-	License              []CreativeWork     `json:"license"`
-	ReferencePublication []ScholarlyArticle `json:"referencePublication"`
-}
-
 var slugRegex *regexp.Regexp = regexp.MustCompile("^[a-z0-9]+(-[a-z0-9]+)*$")
 
 func main() {
@@ -107,7 +67,7 @@ func main() {
 	http.HandleFunc("GET /", func(writer http.ResponseWriter, request *http.Request) {
 		urlUnformatted := "%v/software?select=slug,brand_name,short_statement&order=brand_name"
 		url := fmt.Sprintf(urlUnformatted, postgrestUrl)
-		bodyBytes, err := GetAndReadBody(url)
+		bodyBytes, err := utils.GetAndReadBody(url)
 		if err != nil {
 			log.Print("Unknown error when downloading software overview: ", err)
 			writer.WriteHeader(http.StatusInternalServerError)
@@ -170,7 +130,7 @@ func main() {
 		urlUnformatted := "%v/software?slug=eq.%v&select=brand_name,concept_doi,short_statement,description_type,description,description_url,contributor(family_names,given_names,affiliation,role,orcid,email_address),keyword(value),license_for_software(license),repository_url(url,languages),reference_papers:mention!reference_paper_for_software(doi,title,page,url)"
 		url := fmt.Sprintf(urlUnformatted, postgrestUrl, slug)
 
-		bodyBytes, err := GetAndReadBody(url)
+		bodyBytes, err := utils.GetAndReadBody(url)
 		if err != nil {
 			log.Print("Unknown error when downloading data for slug "+slug+": ", err)
 			writer.WriteHeader(http.StatusInternalServerError)
@@ -229,7 +189,7 @@ func convertRsdToCodeMeta(bytes []byte) ([]byte, error) {
 
 	rsdResponse := rsdResponseArray[0]
 
-	var codemetaData = SoftwareApplication{
+	var codemetaData = terms.SoftwareApplication{
 		Context:              "https://w3id.org/codemeta/v3.0",
 		Id:                   rsdResponse.ConceptDoi,
 		Type:                 "SoftwareApplication",
@@ -240,6 +200,7 @@ func convertRsdToCodeMeta(bytes []byte) ([]byte, error) {
 		ProgrammingLanguage:  extractProgrammingLanguages(rsdResponse),
 		License:              extractLicenses(rsdResponse),
 		ReferencePublication: extractReferencePublications(rsdResponse),
+		DownloadUrl:          []string{},
 	}
 
 	if rsdResponse.RepositoryURL != nil {
@@ -254,22 +215,25 @@ func convertRsdToCodeMeta(bytes []byte) ([]byte, error) {
 	return jsonBytes, nil
 }
 
-func extractDescription(rsdSoftware RsdSoftware) []string {
-	result := []string{}
+func extractDescription(rsdSoftware RsdSoftware) terms.SingleOrArray[string] {
+	descriptions := []string{}
 
 	if rsdSoftware.ShortStatement != nil {
-		result = append(result, *rsdSoftware.ShortStatement)
+		descriptions = append(descriptions, *rsdSoftware.ShortStatement)
 	}
 
 	if rsdSoftware.DescriptionType == "markdown" && rsdSoftware.Description != nil {
-		result = append(result, *rsdSoftware.Description)
+		descriptions = append(descriptions, *rsdSoftware.Description)
 	}
 
 	if rsdSoftware.DescriptionType == "link" && rsdSoftware.DescriptionUrl != nil {
-		result = append(result, *rsdSoftware.DescriptionUrl)
+		descriptions = append(descriptions, *rsdSoftware.DescriptionUrl)
 	}
 
-	return result
+	return terms.SingleOrArray[string]{
+		Single: nil,
+		Array:  descriptions,
+	}
 }
 
 func extractKeywords(rsdSoftware RsdSoftware) []string {
@@ -311,26 +275,33 @@ func extractProgrammingLanguages(rsdSoftware RsdSoftware) []string {
 	return result
 }
 
-func extractLicenses(rsdSoftware RsdSoftware) []CreativeWork {
-	result := []CreativeWork{}
+func extractLicenses(rsdSoftware RsdSoftware) terms.SingleOrArray[terms.CreativeWorkOrUrl] {
+	licenses := []terms.CreativeWorkOrUrl{}
 
 	for _, jsonLicense := range rsdSoftware.License {
-		license := CreativeWork{
+		license := terms.CreativeWork{
 			Type: "creativeWork",
 			Name: jsonLicense.License,
 		}
 
-		result = append(result, license)
+		creativeWorkOrUrl := terms.CreativeWorkOrUrl{
+			CreativeWork: &license,
+			Url:          nil,
+		}
+		licenses = append(licenses, creativeWorkOrUrl)
 	}
 
-	return result
+	return terms.SingleOrArray[terms.CreativeWorkOrUrl]{
+		Single: nil,
+		Array:  licenses,
+	}
 }
 
-func extractReferencePublications(rsdSoftware RsdSoftware) []ScholarlyArticle {
-	result := []ScholarlyArticle{}
+func extractReferencePublications(rsdSoftware RsdSoftware) []terms.ScholarlyArticle {
+	result := []terms.ScholarlyArticle{}
 
 	for _, referencePaper := range rsdSoftware.ReferencePapers {
-		referencePublication := ScholarlyArticle{
+		referencePublication := terms.ScholarlyArticle{
 			Type:       "ScholarlyArticle",
 			Id:         referencePaper.Doi,
 			Name:       referencePaper.Title,
@@ -344,15 +315,16 @@ func extractReferencePublications(rsdSoftware RsdSoftware) []ScholarlyArticle {
 	return result
 }
 
-func extractContributors(rsdSoftware RsdSoftware) []Person {
-	result := []Person{}
+func extractContributors(rsdSoftware RsdSoftware) []terms.Person {
+	result := []terms.Person{}
 
 	for _, jsonContributor := range rsdSoftware.Contributor {
-		person := Person{
+		person := terms.Person{
 			Type:       "Person",
 			Id:         jsonContributor.Orcid,
 			GivenName:  jsonContributor.GivenNames,
 			FamilyName: jsonContributor.FamilyNames,
+			Name:       jsonContributor.GivenNames + " " + jsonContributor.FamilyNames,
 			Email:      jsonContributor.EmailAddress,
 			RoleName:   jsonContributor.Role,
 		}
@@ -365,7 +337,7 @@ func extractContributors(rsdSoftware RsdSoftware) []Person {
 		}
 
 		if jsonContributor.Affiliation != nil {
-			person.Affiliation = &Organization{
+			person.Affiliation = &terms.Organization{
 				Type: "Organization",
 				Name: *jsonContributor.Affiliation,
 			}
