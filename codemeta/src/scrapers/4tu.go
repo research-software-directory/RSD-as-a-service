@@ -208,6 +208,7 @@ func nameToSlug(name string) string {
 	slug := multipleDashes.ReplaceAllString(lowerWithDashes, "-")
 	slug = strings.TrimPrefix(slug, "-")
 	slug = strings.TrimSuffix(slug, "-")
+	slug = "4tu-" + slug
 	return slug
 }
 
