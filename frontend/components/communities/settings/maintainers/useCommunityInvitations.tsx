@@ -1,14 +1,15 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useCallback, useEffect, useState} from 'react'
 
 import {useSession} from '~/auth'
-import {Invitation, deleteMaintainerLink, getUnusedInvitations} from '~/components/maintainers/apiMaintainers'
-import {communityMaintainerLink} from './apiCommunityMaintainers'
+import {deleteMaintainerLink, getUnusedInvitations} from '~/components/maintainers/apiMaintainers'
 import useSnackbar from '~/components/snackbar/useSnackbar'
+import {Invitation} from '~/components/maintainers/InvitationList'
+import {communityMaintainerLink} from './apiCommunityMaintainers'
 
 export function useCommunityInvitations({community}:{community?:string}) {
   const {token,user} = useSession()

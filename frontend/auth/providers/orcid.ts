@@ -4,7 +4,7 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,16 +13,11 @@
  * It provides frontend with redirect uri for the login button
  */
 
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type {NextApiRequest, NextApiResponse} from 'next'
 import logger from '~/utils/logger'
 import {RedirectToProps, getRedirectUrl} from '~/auth/api/authHelpers'
 import {getAuthEndpoint} from '~/auth/api/authEndpoint'
-import {Provider, ApiError} from '.'
 
-type Data = Provider | ApiError
-
-export async function orcidRedirectProps() {
+async function orcidRedirectProps() {
   try {
     // extract well known url from env
     const wellknownUrl = process.env.ORCID_WELL_KNOWN_URL ?? null
@@ -66,36 +61,8 @@ export async function orcidInfo() {
     return {
       name: 'ORCID',
       redirectUrl,
-      html: `
-        Sign in with ORCID is supported <strong>only for persons approved by the RSD administrators</strong>.
-        Contact us on rsd@esciencecenter.nl if you wish to login with your ORCID.
-      `
+      html: 'Sign in with your ORCID account.'
     }
   }
   return null
-}
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  try {
-    // extract all props from env and wellknown endpoint
-    // and create return url and the name to use in login button
-    const loginInfo = await orcidInfo()
-    if (loginInfo) {
-      res.status(200).json(loginInfo)
-    } else {
-      res.status(400).json({
-        status: 400,
-        message: 'loginInfo missing'
-      })
-    }
-  } catch (e: any) {
-    logger(`api/fe/auth/orcid: ${e?.message}`, 'error')
-    res.status(500).json({
-      status: 500,
-      message: e?.message
-    })
-  }
 }

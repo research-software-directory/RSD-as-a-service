@@ -30,7 +30,7 @@ import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import HubIcon from '@mui/icons-material/Hub'
 import InfoIcon from '@mui/icons-material/Info'
-
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 
@@ -46,6 +46,12 @@ export const adminPages = {
     subtitle: '',
     icon: <FluorescentIcon />,
     path: '/admin/software-highlights',
+  },
+  rsd_invites:{
+    title: 'RSD invites',
+    subtitle: '',
+    icon: <PersonAddIcon />,
+    path: '/admin/rsd-invites',
   },
   accounts:{
     title: 'RSD users',

@@ -1,10 +1,11 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
+import {Invitation, InvitationType} from './InvitationList'
 
 export type RawMaintainerProps = {
   // unique maintainer id
@@ -84,15 +85,6 @@ export async function deleteMaintainerLink({invitation,token}:{invitation: Invit
       message: e.message
     }
   }
-}
-
-export type InvitationType = 'software' | 'project' | 'organisation' | 'community'
-
-export type Invitation = {
-    id: string,
-    created_at: string,
-    expires_at: string,
-    type: InvitationType
 }
 
 type getUnusedInvitationsProps={

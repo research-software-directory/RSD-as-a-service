@@ -27,7 +27,7 @@ export function saveLocationCookie() {
     default:
       // write simple browser cookie
       // auth module use this cookie to redirect
-      // after succefull authentications
+      // after successful authentications
       document.cookie = `rsd_pathname=${location.href};path=/auth;SameSite=None;Secure`
   }
 }

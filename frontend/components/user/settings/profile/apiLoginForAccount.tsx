@@ -6,12 +6,12 @@
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
-import {Providers} from '~/auth/api/authEndpoint'
+import {ProviderName} from '~/auth/api/authEndpoint'
 
 export type LoginForAccount={
   id:string
   account:string
-  provider:string
+  provider:ProviderName
   sub:string
   name:string
   email:string|null
@@ -63,7 +63,7 @@ export async function deleteLoginForAccount(id:string,token:string){
   }
 }
 
-export function findProviderSubInLogin(logins:LoginForAccount[],provider:Providers){
+export function findProviderSubInLogin(logins:LoginForAccount[],provider:ProviderName){
   try{
     const login = logins.find(item=>item?.provider===provider)
     if (login){

@@ -4,25 +4,21 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * Azure Active Directory OpenID endpoint
+ * Azure Active Directory OpenID info
  * It provides frontend with redirect uri for the login button
  */
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type {NextApiRequest, NextApiResponse} from 'next'
 import logger from '~/utils/logger'
 import {RedirectToProps, getRedirectUrl} from '~/auth/api/authHelpers'
 import {getAuthEndpoint} from '~/auth/api/authEndpoint'
-import {Provider, ApiError} from '.'
 
-type Data = Provider | ApiError
-
-export async function azureRedirectProps() {
+async function azureRedirectProps() {
   // extract wellknown url from env
   const wellknownUrl = process.env.AZURE_WELL_KNOWN_URL ?? null
   if (wellknownUrl) {
@@ -59,35 +55,10 @@ export async function azureInfo() {
     const redirectUrl = getRedirectUrl(redirectProps)
     // provide redirectUrl and name/label
     return {
-      name: process.env.AZURE_DISPLAY_NAME || 'Azure Active Directory',
+      name: process.env.AZURE_DISPLAY_NAME ?? 'Azure Active Directory',
       redirectUrl,
-      html: process.env.AZURE_DESCRIPTION_HTML || 'Login with your institutional credentials.'
+      html: process.env.AZURE_DESCRIPTION_HTML ?? 'Login with your institutional credentials.'
     }
   }
   return null
-}
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  try {
-    // extract all props from env and wellknown endpoint
-    // and create return url and the name to use in login button
-    const loginInfo = await azureInfo()
-    if (loginInfo) {
-      res.status(200).json(loginInfo)
-    } else {
-      res.status(400).json({
-        status: 400,
-        message: 'loginInfo missing'
-      })
-    }
-  } catch (e: any) {
-    logger(`api/fe/auth/azure: ${e?.message}`, 'error')
-    res.status(500).json({
-      status: 500,
-      message: e?.message
-    })
-  }
 }
