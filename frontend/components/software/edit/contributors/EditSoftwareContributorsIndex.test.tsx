@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 - 2025 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
@@ -207,7 +207,8 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     expect(mockSearchForPerson).toHaveBeenCalledTimes(1)
     expect(mockSearchForPerson).toHaveBeenCalledWith({
       searchFor,
-      'token': mockSession.token,
+      token: mockSession.token,
+      include_orcid: true
     })
 
     // select first option: "Add"

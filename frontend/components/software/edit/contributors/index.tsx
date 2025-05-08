@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 - 2024 dv4all
+// SPDX-FileCopyrightText: 2022 - 2025 dv4all
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
@@ -15,6 +15,7 @@ import {useState} from 'react'
 import {PersonProps, Person} from '~/types/Contributor'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import {getDisplayName} from '~/utils/getDisplayName'
+import useRsdSettings from '~/config/useRsdSettings'
 import ContentLoader from '~/components/layout/ContentLoader'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import EditSection from '~/components/layout/EditSection'
@@ -35,6 +36,7 @@ type EditContributorModal = ModalProps & {
 }
 
 export default function SoftwareContributors() {
+  const {host} = useRsdSettings()
   const {software} = useSoftwareContext()
   const {
     loading,contributors,addContributor,
@@ -188,7 +190,7 @@ export default function SoftwareContributors() {
         <section className="py-4">
           <EditSectionTitle
             title={config.findContributor.title}
-            subtitle={config.findContributor.subtitle}
+            subtitle={config.findContributor.subtitle(host?.orcid_search)}
           />
           <FindPerson
             onCreate={onCreateContributor}
@@ -198,7 +200,9 @@ export default function SoftwareContributors() {
               label: config.findContributor.label,
               help: config.findContributor.help,
               // clear options after selection
-              reset: true
+              reset: true,
+              // include ORCID api?
+              include_orcid: host?.orcid_search
             }}
           />
           <ContributorPrivacyHint />

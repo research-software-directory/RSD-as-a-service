@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -184,8 +184,9 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     // validate search called with proper param
     expect(mockSearchForPerson).toHaveBeenCalledTimes(1)
     expect(mockSearchForPerson).toHaveBeenCalledWith({
-      'searchFor': searchMember,
-      'token': mockSession.token,
+      searchFor: searchMember,
+      token: mockSession.token,
+      include_orcid: true
     })
 
     // select first option: "Add"
