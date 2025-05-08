@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -94,7 +96,7 @@ export default function ProfileInput() {
             <a href={`/profile/${account}/software`} className="flex gap-2 items-center" target='_blank'>
               Enabled <LaunchIcon sx={{width:'1rem'}}/>
             </a>
-            :<span>Disabled (<a href="/documentation/users/user-settings/#public-profile" target='_blank'>how to enable? <LaunchIcon sx={{width:'1rem'}}/></a>)</span>
+            :<span>Disabled (<a href="/documentation/users/user-settings/#public-profile" target='_blank'>Why should I enable it? <LaunchIcon sx={{width:'1rem'}}/></a>)</span>
           }
         </div>
       </div>
