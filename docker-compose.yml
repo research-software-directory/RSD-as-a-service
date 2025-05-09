@@ -93,10 +93,6 @@ services:
       - AUTH_AZURE_CLIENT_SECRET
       - AUTH_LINKEDIN_CLIENT_SECRET
       - PGRST_JWT_SECRET
-      - JAVA_TOOL_OPTIONS
-      - MAVEN_OPTS
-      - JAVA_OPTS
-      - JAVA_OPTIONS
     depends_on:
       - database
       - backend
@@ -182,10 +178,6 @@ services:
       - MAX_REQUESTS_DOI
       - CROSSREF_CONTACT_EMAIL
       - LIBRARIES_IO_ACCESS_TOKEN
-      - JAVA_TOOL_OPTIONS
-      - MAVEN_OPTS
-      - JAVA_OPTS
-      - JAVA_OPTIONS
     depends_on:
       - database
       - backend
