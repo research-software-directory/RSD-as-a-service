@@ -32,9 +32,9 @@ export async function getAggregatedPersons({searchFor,token,include_orcid}:
   {searchFor:string,token:string, include_orcid?:boolean}) {
   try {
     const [rsdPersons, orcidPersons, profiles] = await Promise.all([
-      rsdUniquePersonEntries({searchFor, token}),
-      include_orcid ? searchORCID({searchFor}) : [],
-      rsdPublicProfiles({searchFor})
+      rsdUniquePersonEntries({searchFor, token, limit:30}),
+      include_orcid ? searchORCID({searchFor, limit:30}) : [],
+      rsdPublicProfiles({searchFor, limit:30})
     ])
     // aggregate contributors/team member and ORCID entries by ORCID
     const aggPersons = groupByOrcid(rsdPersons, orcidPersons)

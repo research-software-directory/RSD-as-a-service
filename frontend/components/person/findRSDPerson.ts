@@ -21,7 +21,7 @@ export type UniqueRsdPerson = {
   account: string | null,
 }
 
-export async function rsdUniquePersonEntries({searchFor,limit=100,token}:
+export async function rsdUniquePersonEntries({searchFor,limit=30,token}:
   { searchFor: string, limit?:number, token?: string}) {
   try {
     // we search for all persons in RSD (contributors + team members)
@@ -56,7 +56,7 @@ export async function rsdUniquePersonEntries({searchFor,limit=100,token}:
   }
 }
 
-export async function rsdPublicProfiles({searchFor,limit=100}:
+export async function rsdPublicProfiles({searchFor,limit=30}:
   {searchFor: string, limit?:number}) {
   try {
     // we search in RSD public user profile entries
