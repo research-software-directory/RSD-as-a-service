@@ -3,11 +3,12 @@
 # SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-# SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+# SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre for Environmental Research (UFZ)
 # SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 # SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 # SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+# SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -92,6 +93,10 @@ services:
       - AUTH_AZURE_CLIENT_SECRET
       - AUTH_LINKEDIN_CLIENT_SECRET
       - PGRST_JWT_SECRET
+      - JAVA_TOOL_OPTIONS
+      - MAVEN_OPTS
+      - JAVA_OPTS
+      - JAVA_OPTIONS
     depends_on:
       - database
       - backend
@@ -177,6 +182,10 @@ services:
       - MAX_REQUESTS_DOI
       - CROSSREF_CONTACT_EMAIL
       - LIBRARIES_IO_ACCESS_TOKEN
+      - JAVA_TOOL_OPTIONS
+      - MAVEN_OPTS
+      - JAVA_OPTS
+      - JAVA_OPTIONS
     depends_on:
       - database
       - backend
@@ -205,6 +214,42 @@ services:
     networks:
       - net
 
+  rabbitmq:
+    image: rabbitmq:4.0
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+    networks:
+      - net
+
+  mail:
+    build: ./mail
+    image: rsd/mail:1.0.0
+    depends_on:
+      - rabbitmq
+    environment:
+      - MAIL_SMTP_SERVER
+      - MAIL_SMTP_PORT
+      - MAIL_SMTP_SECURITY
+      - MAIL_SMTP_LOGIN
+      - MAIL_SMTP_PASSWORD
+      - MAIL_FROM_ADDRESS
+      - MAIL_REPLY_TO
+    networks:
+      - net
+    restart: on-failure
+
+  publisher:
+    build: ./publisher
+    image: rsd/publisher:1.0.0
+    depends_on:
+      - rabbitmq
+    environment:
+      - PUBLISHER_JWT_SECRET_KEY
+    networks:
+      - net
+    restart: on-failure
+    
   documentation:
     build:
       context: ./documentation
