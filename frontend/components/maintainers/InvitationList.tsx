@@ -40,11 +40,18 @@ function getInviteText(invite:Invitation){
   const expiresAt = new Date(invite.expires_at)
   const daysValid = Math.ceil((expiresAt.valueOf() - new Date().valueOf()) / (1000 * 60 * 60 * 24))
   let usesText: string|null = null
+  let linkIsValid:boolean = true
 
   if (invite?.uses_left===null){
     usesText = 'Unlimited number of registrations left'
   }else if (invite?.uses_left===0){
-    usesText = 'Registration limit reached (expired)'
+    usesText = 'Registration limit reached'
+    linkIsValid = false
+    return {
+      expiredText: 'EXPIRED!',
+      usesText,
+      linkIsValid
+    }
   }else if (invite?.uses_left===1){
     usesText = '1 registration left'
   }else if (invite?.uses_left && invite?.uses_left > 1){
@@ -52,19 +59,23 @@ function getInviteText(invite:Invitation){
   }
 
   if (daysValid <= 0) {
+    linkIsValid = false
     return {
       expiredText: 'EXPIRED!',
-      usesText
+      usesText,
+      linkIsValid
     }
   } else if (daysValid === 1) {
     return {
       expiredText: 'expires in less than a day',
-      usesText
+      usesText,
+      linkIsValid
     }
   } else {
     return {
       expiredText: `expires in ${daysValid} days`,
-      usesText
+      usesText,
+      linkIsValid
     }
   }
 }
@@ -100,7 +111,7 @@ export default function InvitationList({
       <List>
         {invitations.map(inv => {
           const currentLink = `${location.origin}/invite/${inv.type}/${inv.id}`
-          const {expiredText, usesText} = getInviteText(inv)
+          const {expiredText, usesText, linkIsValid} = getInviteText(inv)
 
           return (
             <ListItem
@@ -110,6 +121,7 @@ export default function InvitationList({
               secondaryAction={
                 <div className="flex gap-2">
                   <IconButton
+                    disabled = {!linkIsValid}
                     title="Email invitation using my email app"
                     href={`mailto:?subject=${subject}&body=${body}${encodeURIComponent('\n')}${currentLink}`}
                     target='_blank'
@@ -118,6 +130,7 @@ export default function InvitationList({
                     <EmailIcon/>
                   </IconButton>
                   <IconButton
+                    disabled = {!linkIsValid}
                     title="Copy link to clipboard"
                     onClick={() => toClipboard(currentLink)}>
                     <CopyIcon/>

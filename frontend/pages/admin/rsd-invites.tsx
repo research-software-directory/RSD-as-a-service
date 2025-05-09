@@ -9,7 +9,7 @@ import {app} from '~/config/app'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import AdminPageWithNav from '~/components/admin/AdminPageWithNav'
 import {adminPages} from '~/components/admin/AdminNav'
-import RsdInvitePage from '~/components/admin/rsd-invite'
+import RsdInvitePage from '~/components/admin/rsd-invites'
 
 const pageTitle = `${adminPages['rsd_invites'].title} | Admin page | ${app.title}`
 

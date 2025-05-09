@@ -25,7 +25,7 @@ export default function RsdInvites() {
     <section className="flex-1 flex flex-col gap-8 xl:grid xl:grid-cols-[3fr_2fr]">
       <div className="order-2 xl:order-1">
         <h2 className="flex pr-4 pb-4 justify-between font-medium">
-          <span>Active invitations</span>
+          <span>Invitations</span>
           <span>{activeInvites.length}</span>
         </h2>
 
@@ -33,7 +33,7 @@ export default function RsdInvites() {
           activeInvites.length === 0 ?
             <div className="pt-4">
               <Alert severity="info">
-                No active invitations.
+                No invitations.
               </Alert>
             </div>
             :
