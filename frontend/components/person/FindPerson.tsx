@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,7 +27,8 @@ type FindPersonProps = Readonly<{
     minLength: number,
     label: string,
     help: string,
-    reset?: boolean
+    reset?: boolean,
+    include_orcid?: boolean,
   }
 }>
 
@@ -41,11 +43,18 @@ export default function FindPerson({onCreate,onAdd,config}:FindPersonProps) {
     foundFor: undefined
   })
 
+  // console.group('FindPerson')
+  // console.log('options...',options)
+  // console.log('status...', status)
+  // console.groupEnd()
+
   async function searchContributor(searchFor: string) {
     setStatus({loading:true,foundFor:undefined})
     const resp = await searchForPerson({
       searchFor,
-      token
+      token,
+      // by default we include ORCID api in the search
+      include_orcid: config?.include_orcid ?? true
     })
     // set options
     setOptions(resp)
@@ -64,6 +73,10 @@ export default function FindPerson({onCreate,onAdd,config}:FindPersonProps) {
       if (config?.reset){
         setOptions([])
       }
+      setStatus({
+        loading: false,
+        foundFor: undefined
+      })
     }
   }
 
@@ -79,12 +92,17 @@ export default function FindPerson({onCreate,onAdd,config}:FindPersonProps) {
       orcid: null,
       avatar_id: null,
       position: null,
+      account: null,
       ...name
     })
     // reset options
     if (config?.reset){
       setOptions([])
     }
+    setStatus({
+      loading: false,
+      foundFor: undefined
+    })
   }
 
   function renderAddOption(props: HTMLAttributes<HTMLLIElement>,

@@ -8,6 +8,7 @@
     "affiliation": "Netherlands eScience Center",
     "role": "Developer 70464",
     "orcid": null,
+    "account": null,
     "avatar_id": "f312b64a21770404f839beffdda250ea2acf7f2c",
     "position": 1,
     "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
@@ -21,6 +22,7 @@
     "affiliation": "Created by msedge 8350",
     "role": "Senior Developer 12547",
     "orcid": null,
+    "account": "81f776ba-a3b7-4b64-b842-d3f744872d49",
     "avatar_id": "f312b64a21770404f839beffdda250ea2acf7f2c",
     "position": 10,
     "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
@@ -34,6 +36,7 @@
     "affiliation": "Netherlands eScience Center",
     "role": null,
     "orcid": "0000-0002-1898-4461",
+    "account": "e79a09de-228e-478c-933b-ea61d20fe7d9",
     "avatar_id": null,
     "position": 2,
     "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
@@ -47,6 +50,7 @@
     "affiliation": "Netherlands eScience Center",
     "role": null,
     "orcid": "0000-0002-2170-3253",
+    "account": null,
     "avatar_id": null,
     "position": 3,
     "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
@@ -60,6 +64,7 @@
     "affiliation": "Netherlands eScience Center",
     "role": null,
     "orcid": "0000-0002-8172-4865",
+    "account": null,
     "avatar_id": null,
     "position": 4,
     "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
@@ -73,6 +78,7 @@
     "affiliation": "Netherlands eScience Center",
     "role": null,
     "orcid": "0000-0003-4803-7411",
+    "account": null,
     "avatar_id": null,
     "position": 5,
     "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
@@ -86,6 +92,7 @@
     "affiliation": "Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences",
     "role": null,
     "orcid": "0000-0001-8151-8722",
+    "account": null,
     "avatar_id": null,
     "position": 6,
     "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
@@ -99,6 +106,7 @@
     "affiliation": "Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences",
     "role": null,
     "orcid": "0000-0001-7305-9044",
+    "account": null,
     "avatar_id": null,
     "position": 7,
     "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
@@ -112,6 +120,7 @@
     "affiliation": "Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences",
     "role": null,
     "orcid": "0000-0001-5272-4674",
+    "account": null,
     "avatar_id": null,
     "position": 8,
     "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
@@ -125,6 +134,7 @@
     "affiliation": "Helmholtz Centre for Environmental Research GmbH - UFZ",
     "role": null,
     "orcid": "0000-0001-7579-216X",
+    "account": null,
     "avatar_id": null,
     "position": 9,
     "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"

@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
--- SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2023 dv4all
 -- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -11,36 +11,39 @@
 -- NOTE! UNION takes care of duplicate entries
 CREATE FUNCTION unique_person_entries() RETURNS TABLE (
 	display_name TEXT,
-	affiliation VARCHAR,
-	orcid VARCHAR,
 	given_names VARCHAR,
 	family_names VARCHAR,
 	email_address VARCHAR,
+	affiliation VARCHAR,
 	"role" VARCHAR,
-	avatar_id VARCHAR
+	avatar_id VARCHAR,
+	orcid VARCHAR,
+	account UUID
 ) LANGUAGE sql STABLE AS
 $$
 SELECT DISTINCT
 	(CONCAT(contributor.given_names,' ',contributor.family_names)) AS display_name,
-	contributor.affiliation,
-	contributor.orcid,
 	contributor.given_names,
 	contributor.family_names,
 	contributor.email_address,
+	contributor.affiliation,
 	contributor.role,
-	contributor.avatar_id
+	contributor.avatar_id,
+	contributor.orcid,
+	contributor.account
 FROM
 	contributor
 UNION
 SELECT DISTINCT
 	(CONCAT(team_member.given_names,' ',team_member.family_names)) AS display_name,
-	team_member.affiliation,
-	team_member.orcid,
 	team_member.given_names,
 	team_member.family_names,
 	team_member.email_address,
+	team_member.affiliation,
 	team_member.role,
-	team_member.avatar_id
+	team_member.avatar_id,
+	team_member.orcid,
+	team_member.account
 FROM
 	team_member
 ORDER BY

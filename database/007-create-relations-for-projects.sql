@@ -2,7 +2,7 @@
 -- SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 dv4all
--- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -18,12 +18,15 @@ CREATE TABLE team_member (
 	orcid VARCHAR(19) CHECK (orcid ~ '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$'),
 	position INTEGER,
 	avatar_id VARCHAR(40) REFERENCES image(id),
+	-- support for (loosely) linking of user_profile entry without ORCID
+	account UUID REFERENCES account (id),
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE INDEX team_member_project_idx ON team_member(project);
 CREATE INDEX team_member_orcid_idx ON team_member(orcid);
+CREATE INDEX team_member_account_idx ON team_member(account);
 
 CREATE FUNCTION sanitise_insert_team_member() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
@@ -44,6 +47,11 @@ BEGIN
 	NEW.id = OLD.id;
 	NEW.created_at = OLD.created_at;
 	NEW.updated_at = LOCALTIMESTAMP;
+	IF OLD.account IS NOT NULL AND (CURRENT_USER = 'rsd_admin' OR (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER)) IS DISTINCT FROM TRUE THEN
+		NEW.family_names = OLD.family_names;
+		NEW.given_names = OLD.given_names;
+		NEW.orcid = OLD.orcid;
+	END IF;
 	return NEW;
 END
 $$;

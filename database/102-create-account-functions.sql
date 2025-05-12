@@ -35,6 +35,8 @@ BEGIN
 	DELETE FROM invite_maintainer_for_community WHERE created_by = account_id OR claimed_by = account_id;
 	UPDATE organisation SET primary_maintainer = NULL WHERE primary_maintainer = account_id;
 	UPDATE community SET primary_maintainer = NULL WHERE primary_maintainer = account_id;
+	UPDATE contributor SET account = NULL WHERE account = account_id;
+	UPDATE team_member SET account = NULL WHERE account = account_id;
 	DELETE FROM admin_account WHERE admin_account.account_id = delete_account.account_id;
 	DELETE FROM orcid_whitelist WHERE orcid IN (
 		SELECT sub FROM login_for_account

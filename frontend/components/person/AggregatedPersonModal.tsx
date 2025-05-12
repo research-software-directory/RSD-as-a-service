@@ -119,6 +119,12 @@ export default function AggregatedPersonModal({
       >
         {/* hidden inputs */}
         <input type="hidden"
+          {...register('id')}
+        />
+        <input type="hidden"
+          {...register('account')}
+        />
+        <input type="hidden"
           {...register('position')}
         />
         <input type="hidden"
@@ -141,6 +147,8 @@ export default function AggregatedPersonModal({
             <ControlledTextField
               control={control}
               options={{
+                // user cannot edit specific public profile information (account!==null)
+                disabled: formData.account!==null,
                 name: 'given_names',
                 label: config.given_names.label,
                 useNull: true,
@@ -153,6 +161,8 @@ export default function AggregatedPersonModal({
             <ControlledTextField
               control={control}
               options={{
+                // user cannot edit specific public profile information (account!==null)
+                disabled: formData.account!==null,
                 name: 'family_names',
                 label: config.family_names.label,
                 useNull: true,
@@ -177,6 +187,8 @@ export default function AggregatedPersonModal({
             />
             <ControlledTextField
               options={{
+                // user cannot edit specific public profile information (account!==null)
+                disabled: formData.account!==null,
                 name: 'orcid',
                 label: config.orcid.label,
                 useNull: true,

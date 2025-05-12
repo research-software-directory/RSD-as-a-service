@@ -35,13 +35,19 @@ To be able to contribute to the RSD, we need to know that you agree to our Terms
 
 ## Public profile
 
-If you have ORCID you can link you ORCID account to RSD. There are two benefits of linking ORCID
+By enabling public profile you are giving permission to RSD users to:
 
-- You can login to RSD using your ORCID credentials
-- You can enable your public profile and see all software and project items that mention you by ORCID
+- include your profile in the search for software contributor or project team member.
+- include a link to your public profile page on the software or project pages.
 
-### How the public profile works?
+The benefit of public profile is that you have an overview of all software and project entries where you are mentioned as contributor or team member.
 
-After you link your ORCID account in RSD you can enable your public profile in the settings. By enabling public profile you are giving the permission to RSD to link all contributor and team member entries in the RSD that use your ORCID into your public profile. By enabling the public profile you will be able to see all software and projects where are you mentioned as contributor or team member.
+:::tip
+If you have ORCID you can link your ORCID account to RSD. There are two benefits of linking ORCID
+
+- You can login to RSD using your ORCID credentials too
+- Your public profile will include all software and project entries that mention you by your ORCID
+
+:::
 
 ![animation](img/user-public-profile.gif)

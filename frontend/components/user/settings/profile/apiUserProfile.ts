@@ -22,6 +22,10 @@ export type UserProfile = {
   description?: string | null
 }
 
+export type PublicUserProfile = UserProfile & {
+  orcid: string | null
+}
+
 export async function loadUserProfile({account,token}:{account?:string,token?:string}){
   try{
     // only if account and token provided
@@ -171,17 +175,23 @@ export async function insertUserProfile({profile,token}:{profile:UserProfile,tok
   }
 }
 
-export async function getPublicUserProfile({orcid,token}:{orcid:string,token?:string}){
+export async function getPublicUserProfile({orcid,account}:{orcid:string|null,account:string|null}){
   try{
-    const url = `${getBaseUrl()}/rpc/public_user_profile?sub=eq.${orcid}`
+    // filter on ORCID, order by image first
+    let query = `orcid=eq.${orcid}`
+    // if account provided use account
+    if (account!==null){
+      query = `account=eq.${account}`
+    }
+    const url = `${getBaseUrl()}/rpc/public_user_profile?${query}`
     const resp = await fetch(url,{
       method: 'GET',
       headers: {
-        ...createJsonHeaders(token)
+        ...createJsonHeaders()
       }
     })
     if (resp.ok){
-      const profiles:UserProfile[] = await resp.json()
+      const profiles:PublicUserProfile[] = await resp.json()
       if (profiles.length>0){
         // just return first instance
         return profiles[0]

@@ -7,7 +7,6 @@ import {useState} from 'react'
 import List from '@mui/material/List'
 
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
-import {useUserContext} from '~/components/user/context/UserContext'
 import {LoginForAccount} from './apiLoginForAccount'
 import {LoginItem} from './LoginItem'
 import {useLoginForUser} from './useLoginForUser'
@@ -18,7 +17,6 @@ type DeleteAccountModal={
 }
 
 export default function AuthenticationMethods() {
-  const {profile} = useUserContext()
   const {logins,deleteLogin} = useLoginForUser()
   const [modal, setModal] = useState<DeleteAccountModal>({
     open: false
@@ -31,7 +29,7 @@ export default function AuthenticationMethods() {
         {logins.map(account=>{
           // when only one account left we cannot delete it
           // we cannot delete ORCID account as long as profile is public
-          if (logins.length===1 || (account.provider==='orcid' && profile?.is_public)){
+          if (logins.length===1){
             return <LoginItem
               key={account.id}
               account={account}

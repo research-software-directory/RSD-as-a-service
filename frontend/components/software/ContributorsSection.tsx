@@ -5,14 +5,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Profile} from '../../types/Contributor'
-import PageContainer from '../layout/PageContainer'
+import {Person} from '~/types/Contributor'
+import PageContainer from '~/components/layout/PageContainer'
 import ContributorsList from './ContributorsList'
 import ContactPersonCard from './ContactPersonCard'
 
-function clasifyContributors(contributors: Profile[]) {
-  const contributorList:Profile[] = []
-  let contact: Profile | null = null
+function clasifyContributors(contributors: Person[]) {
+  const contributorList:Person[] = []
+  let contact: Person | null = null
 
   contributors.forEach(item => {
     // take first contact person to be show as contact
@@ -32,7 +32,7 @@ function clasifyContributors(contributors: Profile[]) {
 
 // shared component with project page for team members
 export default function ContributorsSection({contributors, title='Contributors'}:
-  { contributors: Profile[], title?:string }) {
+  { contributors: Person[], title?:string }) {
   // do not show section if no content
   if (typeof contributors == 'undefined' || contributors?.length===0) return null
   // clasify

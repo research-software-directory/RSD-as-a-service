@@ -8,6 +8,7 @@ import {app} from '~/config/app'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {ProjectListItem} from '~/types/Project'
 import {getUserSettings} from '~/utils/userSettings'
+import {isOrcid} from '~/utils/getORCID'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import BackgroundAndLayout from '~/components/layout/BackgroundAndLayout'
@@ -15,21 +16,20 @@ import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {RsdContributor} from '~/components/admin/rsd-contributors/useContributors'
 import {UserSettingsProvider} from '~/components/organisation/context/UserSettingsContext'
-import {getPublicProfile,getProfileProjects,getProfileSoftware} from '~/components/profile/apiProfile'
+import {getProfileProjects,getProfileSoftware} from '~/components/profile/apiProfile'
 import ProfileMetadata from '~/components/profile/metadata'
 import ProfileTabs from '~/components/profile/tabs'
 import ProfileTabContent from '~/components/profile/tabs/ProfileTabContent'
 import {ProfileContextProvider} from '~/components/profile/context/ProfileContext'
 import {ProfileTabKey} from '~/components/profile/tabs/ProfileTabItems'
-import {getPublicUserProfile, UserProfile} from '~/components/user/settings/profile/apiUserProfile'
+import {getPublicUserProfile, PublicUserProfile} from '~/components/user/settings/profile/apiUserProfile'
 
 type SoftwareByOrcidProps=Readonly<{
-  orcid: string
   rsd_page_layout: LayoutType,
   rsd_page_rows: number,
   tab: ProfileTabKey
   profiles: RsdContributor[],
-  publicProfile: UserProfile,
+  publicProfile: PublicUserProfile,
   software_cnt: number,
   software: SoftwareOverviewItemProps[],
   project_cnt: number,
@@ -37,8 +37,8 @@ type SoftwareByOrcidProps=Readonly<{
 }>
 
 export default function PublicProfileByOrcidPage({
-  orcid,rsd_page_rows,rsd_page_layout,
-  tab,profiles,publicProfile, software_cnt,
+  rsd_page_rows,rsd_page_layout,
+  tab,publicProfile, software_cnt,
   software, project_cnt, projects
 }:SoftwareByOrcidProps) {
 
@@ -59,7 +59,7 @@ export default function PublicProfileByOrcidPage({
     <>
       {/* Page Head meta tags */}
       <PageMeta
-        title={`${orcid} | ${app.title}`}
+        title={`${publicProfile.given_names} ${publicProfile.family_names} | ${app.title}`}
         description="Software overview by orcid"
       />
       <CanonicalUrl />
@@ -77,7 +77,7 @@ export default function PublicProfileByOrcidPage({
             projects
           }}>
             {/* PROFILE METADATA */}
-            <ProfileMetadata profiles={profiles} user={publicProfile} />
+            <ProfileMetadata profile={publicProfile} />
             {/* TABS */}
             <BaseSurfaceRounded
               className="my-4 p-2"
@@ -102,18 +102,25 @@ export default function PublicProfileByOrcidPage({
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
     const {params, req, query} = context
-    // check if orcid provided
-    if (!params?.orcid){
+    // check if id provided
+    if (!params?.id){
       return {
         notFound: true,
       }
     }
     // find person by orcid
     const token = req?.cookies['rsd_token']
-    const orcid = params?.orcid as string
-    const profiles = await getPublicProfile({orcid,token})
-    // 404 if profiles is null (not found in the list of public profile)
-    if (profiles === null){
+    let account:string|null = null
+    let orcid:string|null = null
+    // ID can be ORCID or account id
+    if (isOrcid(params?.id.toString())){
+      orcid = params?.id.toString()
+    } else {
+      account = params?.id.toString()
+    }
+    const publicProfile = await getPublicUserProfile({orcid,account})
+    // 404 if profile is null (not found in public_user_profile)
+    if (publicProfile === null){
       return {
         notFound: true,
       }
@@ -131,31 +138,30 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const search = query?.search as string
 
     // get software, projects and public profile
-    const [software, projects, publicProfile] = await Promise.all([
+    const [software, projects] = await Promise.all([
       getProfileSoftware({
         page: tab==='software' ? page : 0,
         search: tab==='software' && search ? search : undefined,
-        orcid,
+        orcid: publicProfile.orcid,
+        account: publicProfile.account,
         rows,
         token
       }),
       getProfileProjects({
         page: tab==='projects' ? page : 0,
         search: tab==='projects' && search ? search : undefined,
-        orcid,
+        orcid: publicProfile.orcid,
+        account: publicProfile.account,
         rows,
         token
-      }),
-      getPublicUserProfile({orcid,token})
+      })
     ])
     // return data
     return {
       props:{
         rsd_page_layout,
         rsd_page_rows,
-        orcid,
         tab,
-        profiles,
         publicProfile,
         ...software,
         ...projects

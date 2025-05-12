@@ -18,6 +18,7 @@
       "limit": 5,
       "description": null
     },
+    "orcid_search":true,
     "modules":["software","projects","organisations"]
   },
   "links": [

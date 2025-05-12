@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,28 +9,17 @@ import {useFormContext} from 'react-hook-form'
 import LaunchIcon from '@mui/icons-material/Launch'
 
 import modalConfig from '~/components/person/config'
-import {useUserContext} from '~/components/user/context/UserContext'
 import AutosaveProfileTextField from './AutosaveProfileTextField'
 import AutosaveProfileSwitch from './AutosaveProfileSwitch'
-import {findProviderSubInLogin} from './apiLoginForAccount'
 
 export default function ProfileInput() {
-  const {orcidAuthLink, logins} = useUserContext()
-  const orcid = findProviderSubInLogin(logins,'orcid')
-  const publicProfile = {
-    show: orcidAuthLink !== null,
-    // disabled if ORCID account is not linked
-    disabled: orcid===null,
-    // orcid id linked
-    orcid
-  }
   // extract used methods
   const {watch,control} = useFormContext()
   // watch value changes
   const [
-    given_names,family_names,email_address, role, affiliation, is_public
+    given_names,family_names,email_address, role, affiliation, is_public, account
   ] = watch([
-    'given_names','family_names','email_address','role','affiliation', 'is_public'
+    'given_names','family_names','email_address','role','affiliation', 'is_public', 'account'
   ])
 
   return (
@@ -94,22 +85,18 @@ export default function ProfileInput() {
           rules={modalConfig.email_address.validation}
         />
         <div className="flex items-center justify-between gap-4">
-          {
-            publicProfile?.show ?
-              <AutosaveProfileSwitch
-                disabled={publicProfile.disabled}
-                // defaultValue={is_public}
-                name='is_public'
-                control={control}
-                label="Public Profile"
-              />
-              : null
-          }
-          {is_public === true && orcid ?
-            <a href={`/profile/${orcid}/software`} className="flex gap-2 items-center" target='_blank'>
+
+          <AutosaveProfileSwitch
+            name='is_public'
+            control={control}
+            label="Public Profile"
+          />
+
+          {is_public === true && account ?
+            <a href={`/profile/${account}/software`} className="flex gap-2 items-center" target='_blank'>
               Enabled <LaunchIcon sx={{width:'1rem'}}/>
             </a>
-            :<span>Disabled (<a href="/documentation/users/user-settings/#public-profile" target='_blank'>how to enable? <LaunchIcon sx={{width:'1rem'}}/></a>)</span>
+            :<span>Disabled (<a href="/documentation/users/user-settings/#public-profile" target='_blank'>Why should I enable it? <LaunchIcon sx={{width:'1rem'}}/></a>)</span>
           }
         </div>
       </div>

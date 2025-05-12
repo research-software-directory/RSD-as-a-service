@@ -4,7 +4,7 @@
 -- SPDX-FileCopyrightText: 2022 - 2024 dv4all
 -- SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
--- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
 -- SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 --
@@ -161,12 +161,15 @@ CREATE TABLE contributor (
 	orcid VARCHAR(19) CHECK (orcid ~ '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$'),
 	position INTEGER,
 	avatar_id VARCHAR(40) REFERENCES image(id),
+	-- support for (loosely) linking of user_profile entry without ORCID
+	account UUID REFERENCES account (id),
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE INDEX contributor_software_idx ON contributor(software);
 CREATE INDEX contributor_orcid_idx ON contributor(orcid);
+CREATE INDEX contributor_account_idx ON contributor(account);
 
 CREATE FUNCTION sanitise_insert_contributor() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
@@ -187,6 +190,11 @@ BEGIN
 	NEW.id = OLD.id;
 	NEW.created_at = OLD.created_at;
 	NEW.updated_at = LOCALTIMESTAMP;
+	IF OLD.account IS NOT NULL AND (CURRENT_USER = 'rsd_admin' OR (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER)) IS DISTINCT FROM TRUE THEN
+		NEW.family_names = OLD.family_names;
+		NEW.given_names = OLD.given_names;
+		NEW.orcid = OLD.orcid;
+	END IF;
 	return NEW;
 END
 $$;

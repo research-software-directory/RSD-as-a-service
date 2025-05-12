@@ -623,9 +623,9 @@ GROUP BY
 ;
 $$;
 
--- FILTER SOFTWARE by orcid
--- OPT-IN ONLY, uses public_profile table as filter
--- UNIQUE entries by ORCID & software.id
+-- FILTER SOFTWARE by ORCID or account ID
+-- OPT-IN ONLY, uses public_user_profile as filter
+-- UNIQUE entries by software.id
 CREATE FUNCTION software_by_public_profile() RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
@@ -640,11 +640,11 @@ CREATE FUNCTION software_by_public_profile() RETURNS TABLE (
 	keywords_text TEXT,
 	prog_lang TEXT[],
 	licenses VARCHAR[],
-	orcid VARCHAR
+	orcid VARCHAR,
+	account UUID
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
-	DISTINCT ON (software.id,public_profile.orcid)
 	software.id,
 	software.slug,
 	software.brand_name,
@@ -658,11 +658,15 @@ SELECT
 	keyword_filter_for_software.keywords_text,
 	prog_lang_filter_for_software.prog_lang,
 	license_filter_for_software.licenses,
-	public_profile.orcid
+	public_user_profile.orcid,
+	public_user_profile.account
 FROM
-	public_profile()
+	public_user_profile()
 INNER JOIN
-	contributor ON public_profile.orcid = contributor.orcid
+	contributor ON (
+		public_user_profile.orcid = contributor.orcid
+		OR public_user_profile.account = contributor.account
+	)
 LEFT JOIN
 	software ON software.id = contributor.software
 LEFT JOIN
@@ -677,7 +681,6 @@ LEFT JOIN
 	license_filter_for_software() ON software.id=license_filter_for_software.software
 ;
 $$;
-
 -- contributors for software
 -- public_profile.orcid indicates public profile OPT-IN
 CREATE FUNCTION software_contributors(software_id UUID) RETURNS TABLE (
@@ -692,10 +695,11 @@ CREATE FUNCTION software_contributors(software_id UUID) RETURNS TABLE (
 	avatar_id VARCHAR,
 	"position" INT,
 	software UUID,
-	public_orcid_profile VARCHAR
+	account UUID,
+	is_public VARCHAR
 ) LANGUAGE sql STABLE AS
 $$
-SELECT
+SELECT DISTINCT ON (contributor.id)
 	contributor.id,
 	contributor.is_contact_person,
 	contributor.email_address,
@@ -707,11 +711,16 @@ SELECT
 	contributor.avatar_id,
 	contributor."position",
 	contributor.software,
-	public_profile.orcid as public_orcid_profile
+	public_user_profile.account,
+	public_user_profile.is_public
 FROM
 	contributor
 LEFT JOIN
-	public_profile() ON contributor.orcid = public_profile.orcid
+	public_user_profile() ON (
+		contributor.orcid = public_user_profile.orcid
+		OR
+		contributor.account = public_user_profile.account
+	)
 WHERE
 	contributor.software = software_id
 ;

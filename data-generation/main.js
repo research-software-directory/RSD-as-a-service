@@ -566,6 +566,7 @@ function generateContributors(softwareIds, peopleWithOrcids, localImageIds, minP
 				affiliation: faker.company.name(),
 				role: faker.person.jobTitle(),
 				orcid: null,
+				account: null,
 				avatar_id:
 					faker.helpers.maybe(() => faker.helpers.arrayElement(localImageIds), {probability: 0.8}) ?? null,
 			});
@@ -582,6 +583,7 @@ function generateContributors(softwareIds, peopleWithOrcids, localImageIds, minP
 				}),
 				affiliation: faker.company.name(),
 				role: faker.person.jobTitle(),
+				account: null,
 			});
 		}
 	}
@@ -1104,8 +1106,8 @@ const accountsPromise = postAccountsToBackend(100)
 		// log status of api post
 		console.log(`login_for_account...${login_for_account.status}`);
 		console.log(`user_profile...${user_profile.status}`);
-	})
-	.catch(e => console.error(`postAccountsToBackend: ${e.message}`));
+	});
+// .catch(e => console.error(`postAccountsToBackend: ${e.message}`));
 
 globalPromises.push(accountsPromise);
 
