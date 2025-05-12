@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -24,12 +24,12 @@ export function getUserSettings(req: IncomingMessage) {
     const cookies = parse(req.headers.cookie)
     // validate and decode
     return {
-      rsd_page_layout: (cookies?.rsd_page_layout ?? 'masonry') as LayoutType,
+      rsd_page_layout: cookies?.rsd_page_layout as LayoutType ?? 'grid' as LayoutType,
       rsd_page_rows: cookies?.rsd_page_rows ? parseInt(cookies?.rsd_page_rows) : rowsPerPageOptions[0]
     }
   } else {
     return {
-      rsd_page_layout: 'masonry' as LayoutType,
+      rsd_page_layout: 'grid' as LayoutType,
       rsd_page_rows: rowsPerPageOptions[0]
     }
   }

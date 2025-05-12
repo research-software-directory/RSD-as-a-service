@@ -3,14 +3,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Pagination from '@mui/material/Pagination'
 
-import {setDocumentCookie} from '~/utils/userSettings'
 import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 import FiltersPanel from '~/components/filter/FiltersPanel'
 import {useCommunityContext} from '~/components/communities/context'
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
@@ -18,6 +14,7 @@ import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFil
 import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
 import {CategoryOption} from '~/components/filter/CategoriesFilter'
 import useFilterQueryChange from '~/components/filter/useFilterQueryChange'
+import useSoftwareParams from '~/components/organisation/software/filters/useSoftwareParams'
 
 import CommunitySoftwareFilters from './filters'
 import SearchCommunitySoftwareSection from './search'
@@ -27,9 +24,7 @@ import {SoftwareOfCommunity} from './apiCommunitySoftware'
 type CommunitySoftwareProps={
   software: SoftwareOfCommunity[]
   count: number
-  rows: number
   page: number
-  rsd_page_layout: LayoutType
   keywordsList: KeywordFilterOption[],
   languagesList: LanguagesFilterOption[],
   licensesList: LicensesFilterOption[],
@@ -37,24 +32,21 @@ type CommunitySoftwareProps={
 }
 
 export default function CommunitySoftware({
-  software,count,page,rows,rsd_page_layout,
-  keywordsList, languagesList, licensesList,
+  software,count,page,
+  keywordsList,languagesList,licensesList,
   categoryList
 }:CommunitySoftwareProps) {
   const smallScreen = useMediaQuery('(max-width:640px)')
   const {isMaintainer} = useCommunityContext()
   const {handleQueryChange} = useFilterQueryChange()
-  // if masonry we change to grid
-  const initView = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
-  const [view, setView] = useState<ProjectLayoutType>(initView ?? 'grid')
+  const {rows,view,setPageLayout} = useSoftwareParams()
   const numPages = Math.ceil(count / rows)
 
-  function setLayout(view: ProjectLayoutType) {
-    // update local view
-    setView(view)
-    // save to cookie
-    setDocumentCookie(view,'rsd_page_layout')
-  }
+  // console.group('CommunitySoftware')
+  // console.log('isMaintainer...', isMaintainer)
+  // console.log('view...', view)
+  // console.log('rows...', rows)
+  // console.groupEnd()
 
   return (
     <>
@@ -78,7 +70,7 @@ export default function CommunitySoftware({
           <SearchCommunitySoftwareSection
             count={count}
             layout={view}
-            setView={setLayout}
+            setView={setPageLayout}
             keywordsList={keywordsList}
             languagesList={languagesList}
             licensesList={licensesList}

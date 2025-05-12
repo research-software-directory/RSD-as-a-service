@@ -17,8 +17,8 @@ import {ssrCommunitySoftwareProps} from '~/components/communities/software/apiCo
 import {CommunitySoftwareProps} from './software'
 
 export default function CommunityRejectedSoftwarePage({
-  community,slug,isMaintainer,rsd_page_rows,rsd_page_layout,
-  software, count, keywordsList, languagesList, licensesList,
+  community,slug,isMaintainer, software, count,
+  keywordsList, languagesList, licensesList,
   categoryList
 }:CommunitySoftwareProps) {
 
@@ -53,16 +53,12 @@ export default function CommunityRejectedSoftwarePage({
         community={community}
         slug={slug}
         isMaintainer={isMaintainer}
-        rsd_page_rows={rsd_page_rows}
-        rsd_page_layout={rsd_page_layout}
         selectTab='rejected'
       >
         <CommunitySoftware
           software={software}
           page={0}
           count={count}
-          rows={rsd_page_rows}
-          rsd_page_layout={rsd_page_layout}
           keywordsList={keywordsList}
           languagesList={languagesList}
           licensesList={licensesList}
@@ -80,7 +76,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
     const {params, req, query} = context
     // extract user settings from cookie
-    const {rsd_page_layout, rsd_page_rows} = getUserSettings(req)
+    const {rsd_page_rows} = getUserSettings(req)
 
     // extract user id from session
     const token = req?.cookies['rsd_token']
@@ -113,6 +109,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       software_status: 'rejected',
       query: query,
       isMaintainer,
+      rsd_page_rows,
       token
     })
 
@@ -124,8 +121,6 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         community,
         slug: [params?.slug],
         isMaintainer,
-        rsd_page_layout,
-        rsd_page_rows,
         count: software.count,
         software: software.data,
         keywordsList,

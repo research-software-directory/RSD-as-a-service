@@ -5,16 +5,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
 import Pagination from '@mui/material/Pagination'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
 import FiltersPanel from '~/components/filter/FiltersPanel'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
-import {setDocumentCookie} from '~/utils/userSettings'
 import useOrganisationContext from '../context/useOrganisationContext'
-import {useUserSettings} from '../context/UserSettingsContext'
 import OrgProjectFilters from './filters'
 import useOrganisationProjects from './useOrganisationProjects'
 import OrgSearchProjectSection from './search/OrgSearchProjectSection'
@@ -26,28 +22,17 @@ export default function OrganisationProjects() {
   const smallScreen = useMediaQuery('(max-width:767px)')
   const {isMaintainer} = useOrganisationContext()
   const {handleQueryChange} = useQueryChange()
-  const {page, rows} = useProjectParams()
-  const {rsd_page_layout} = useUserSettings()
-  // if masonry we change to grid
-  const initView = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
+  const {page, rows, view, setPageLayout} = useProjectParams()
   const {projects, count, loading} = useOrganisationProjects()
-  const [view, setView] = useState<ProjectLayoutType>(initView ?? 'grid')
   const numPages = Math.ceil(count / rows)
 
   // console.group('OrganisationProjects')
   // console.log('projects...',projects)
   // console.log('view...', view)
+  // console.log('rows...', rows)
   // console.log('count...', count)
   // console.log('isMaintainer...',isMaintainer)
   // console.groupEnd()
-
-  function setLayout(view: ProjectLayoutType) {
-    // update local view
-    setView(view)
-    // save to cookie
-    setDocumentCookie(view,'rsd_page_layout')
-  }
-
 
   return (
     <>
@@ -65,7 +50,7 @@ export default function OrganisationProjects() {
           <OrgSearchProjectSection
             count={count}
             layout={view}
-            setView={setLayout}
+            setView={setPageLayout}
           />
           {/* Project overview/content */}
           <OrganisationProjectsOverview

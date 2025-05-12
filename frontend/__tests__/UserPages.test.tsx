@@ -8,7 +8,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {render, screen} from '@testing-library/react'
-import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
+import {WithAppContext, mockSession, defaultUserSettings} from '~/utils/jest/WithAppContext'
 
 import UserPages from '../pages/user/[section]'
 
@@ -50,8 +50,7 @@ const mockProps = {
     community_cnt: 0
   },
   orcidAuthLink:null,
-  rsd_page_rows: 12,
-  rsd_page_layout: 'list' as LayoutType,
+  linkedInAuthLink: null,
   profile:{
     account: 'test-account-id',
     given_names: 'Test given names',
@@ -114,8 +113,9 @@ describe('pages/user/[section].tsx', () => {
 
   it('renders user software list items', async() => {
     mockProps.section = 'software'
+    defaultUserSettings.rsd_page_layout = 'list'
     render(
-      <WithAppContext options={{session:mockSession}}>
+      <WithAppContext options={{session:mockSession, user:defaultUserSettings}}>
         <UserPages {...mockProps} />
       </WithAppContext>
     )
@@ -127,9 +127,12 @@ describe('pages/user/[section].tsx', () => {
 
   it('renders user software grid items', async() => {
     mockProps.section = 'software'
-    mockProps.rsd_page_layout = 'grid'
+    defaultUserSettings.rsd_page_layout = 'grid'
     render(
-      <WithAppContext options={{session:mockSession}}>
+      <WithAppContext options={{
+        session:mockSession,
+        user:defaultUserSettings
+      }}>
         <UserPages {...mockProps} />
       </WithAppContext>
     )
@@ -142,9 +145,12 @@ describe('pages/user/[section].tsx', () => {
 
   it('renders user projects list items', async() => {
     mockProps.section = 'projects'
-    mockProps.rsd_page_layout = 'list'
+    defaultUserSettings.rsd_page_layout = 'list'
     render(
-      <WithAppContext options={{session:mockSession}}>
+      <WithAppContext options={{
+        session:mockSession,
+        user:defaultUserSettings
+      }}>
         <UserPages {...mockProps} />
       </WithAppContext>
     )
@@ -156,7 +162,7 @@ describe('pages/user/[section].tsx', () => {
 
   it('renders user projects grid items', async() => {
     mockProps.section = 'projects'
-    mockProps.rsd_page_layout = 'grid'
+    defaultUserSettings.rsd_page_layout = 'grid'
     render(
       <WithAppContext options={{session:mockSession}}>
         <UserPages {...mockProps} />
@@ -170,10 +176,13 @@ describe('pages/user/[section].tsx', () => {
 
   it('renders user organisations list items', async() => {
     mockProps.section = 'organisations'
-    mockProps.rsd_page_layout = 'list'
+    defaultUserSettings.rsd_page_layout = 'list'
 
     render(
-      <WithAppContext options={{session:mockSession}}>
+      <WithAppContext options={{
+        session:mockSession,
+        user: defaultUserSettings
+      }}>
         <UserPages {...mockProps} />
       </WithAppContext>
     )
@@ -185,10 +194,13 @@ describe('pages/user/[section].tsx', () => {
 
   it('renders user organisations grid items', async() => {
     mockProps.section = 'organisations'
-    mockProps.rsd_page_layout = 'grid'
+    defaultUserSettings.rsd_page_layout = 'grid'
 
     render(
-      <WithAppContext options={{session:mockSession}}>
+      <WithAppContext options={{
+        session:mockSession,
+        user: defaultUserSettings
+      }}>
         <UserPages {...mockProps} />
       </WithAppContext>
     )
@@ -200,10 +212,13 @@ describe('pages/user/[section].tsx', () => {
 
   it('renders user communities list items', async() => {
     mockProps.section = 'communities'
-    mockProps.rsd_page_layout = 'list'
+    defaultUserSettings.rsd_page_layout = 'list'
 
     render(
-      <WithAppContext options={{session:mockSession}}>
+      <WithAppContext options={{
+        session:mockSession,
+        user: defaultUserSettings
+      }}>
         <UserPages {...mockProps} />
       </WithAppContext>
     )
@@ -215,10 +230,13 @@ describe('pages/user/[section].tsx', () => {
 
   it('renders user communities card items', async() => {
     mockProps.section = 'communities'
-    mockProps.rsd_page_layout = 'grid'
+    defaultUserSettings.rsd_page_layout = 'grid'
 
     render(
-      <WithAppContext options={{session:mockSession}}>
+      <WithAppContext options={{
+        session:mockSession,
+        user: defaultUserSettings
+      }}>
         <UserPages {...mockProps} />
       </WithAppContext>
     )

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,11 +10,14 @@ import {loadMuiTheme} from '../../styles/rsdMuiTheme'
 import {AuthProvider,defaultSession,Session} from '../../auth'
 import {RsdSettingsState,defaultRsdSettings} from '~/config/rsdSettingsReducer'
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
+import {UserSettingsProps, UserSettingsProvider} from '~/config/UserSettingsContext'
+import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 
 export type WrapProps = {
   props?: any
   session?: Session
   settings?: RsdSettingsState
+  user?: UserSettingsProps
 }
 
 type WithAppContextProps = {
@@ -37,6 +40,11 @@ export const mockSession:Session = {
   status: 'authenticated'
 }
 
+export const defaultUserSettings={
+  rsd_page_layout:'grid' as LayoutType,
+  rsd_page_rows: 12
+}
+
 /**
  * Wraps the component with main app contexts: ThemeProvider, AuthProvider and RsdSettingsProvider
  * Component is provided as children
@@ -48,6 +56,8 @@ export function WithAppContext({children,options}:WithAppContextProps) {
   const settings = options?.settings ?? defaultRsdSettings
   // load MUI theme
   const {muiTheme} = loadMuiTheme(settings.theme)
+  // user settings
+  const user = options?.user ?? defaultUserSettings
 
   // console.group('WithAppContext')
   // console.log('session...', session)
@@ -59,7 +69,10 @@ export function WithAppContext({children,options}:WithAppContextProps) {
     <ThemeProvider theme={muiTheme}>
       <AuthProvider session={session}>
         <RsdSettingsProvider settings={settings}>
-          {children}
+          {/* User settings rows, page layout etc. */}
+          <UserSettingsProvider user={user}>
+            {children}
+          </UserSettingsProvider>
         </RsdSettingsProvider>
       </AuthProvider>
     </ThemeProvider>
