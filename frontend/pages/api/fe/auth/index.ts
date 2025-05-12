@@ -60,8 +60,7 @@ async function getRedirectInfo(provider: string) {
       }
       return null
     }
-    case 'helmholtz':
-    case 'helmholtzid':{
+    case 'helmholtz':{
       const helm = await helmholtzInfo()
       if (helm){
         return {
@@ -131,6 +130,11 @@ export async function ssrProvidersInfo(filter:ProviderFilter='ENABLED') {
     .filter(provider=>{
       // filter out DISABLED providers
       if (filter==='ENABLED') return !provider.toLowerCase().includes(':disabled')
+      // always show HELMHOLTZ on invite only page, if present
+      if (filter==='INVITE_ONLY' &&
+        provider.toLowerCase().includes('helmholtz:')){
+        return true
+      }
       // match
       return provider.toLowerCase().includes(`:${filter.toLowerCase()}`)
     })

@@ -78,7 +78,7 @@ export default function LoginProviders({providers,login_info_url}:LoginProviders
                   provider?.accessType==='INVITE_ONLY' ?
                     <Chip
                       size='small'
-                      label={provider?.accessType}
+                      label={'INVITE ONLY'}
                       color={color as any}
                       sx={{
                         minWidth:'6rem',
