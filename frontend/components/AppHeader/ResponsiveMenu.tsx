@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -67,11 +67,18 @@ export default function ResponsiveMenu({activePath}:{activePath:string}) {
         {menuItems.map(item => {
           const isActive = isActiveMenuItem({item, activePath})
           return (
-            <MenuItem onClick={handleCloseResponsiveMenu} key={item.path}>
-              <Link href={item.path ?? ''} className={`${isActive ? 'nav-active' : ''}`}>
+            <Link
+              key={item.path}
+              href={item.path ?? ''}
+            >
+              <MenuItem
+                key={item.path}
+                onClick={handleCloseResponsiveMenu}
+                selected={isActive}
+              >
                 {item.label}
-              </Link>
-            </MenuItem>
+              </MenuItem>
+            </Link>
           )
         })}
       </Menu>
