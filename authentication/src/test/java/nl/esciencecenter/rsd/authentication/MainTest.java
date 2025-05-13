@@ -10,17 +10,12 @@ package nl.esciencecenter.rsd.authentication;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MainTest {
 	Map<String, List<String>> emptyData = Collections.emptyMap();
@@ -41,25 +36,4 @@ class MainTest {
 	static void cleanup() {
 		utilities.close();
 	}
-
-	@Test
-	void testIdAllowListDisabled() {
-		utilities.when(Config::helmholtzIdUseAllowList).thenReturn(false);
-		assertFalse(Main.idUserIsHelmholtzMember(userinfoNullOrganisation));
-		assertTrue(Main.idUserIsHelmholtzMember(userinfo));
-	}
-
-	// @Test
-	// void testIdAllowListEnabled() {
-	// 	utilities.when(Config::helmholtzIdUseAllowList).thenReturn(true);
-	// 	utilities.when(Config::helmholtzIdAllowList).thenReturn(null);
-	// 	assertThrowsExactly(
-	// 		RsdAuthenticationException.class,
-	// 		() -> Main.idUserIsAllowed(userinfoNullOrganisation),
-	// 		"Your email address (user@example.com) is not in the allow list."
-	// 	);
-	// 	utilities.when(Config::helmholtzIdAllowList).thenReturn("user@example.com");
-	// 	assertTrue(Main.idUserIsAllowed(userinfoNullOrganisation));
-	// 	assertTrue(Main.idUserIsAllowed(userinfo));
-	// }
 }

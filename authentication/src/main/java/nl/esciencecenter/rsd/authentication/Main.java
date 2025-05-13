@@ -35,29 +35,6 @@ public class Main {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 	private static final String LOGIN_FAILED_PATH = "/login/failed";
 
-
-	public static boolean userInIdAllowList(OpenIdInfo info) {
-		String allowList = Config.helmholtzIdAllowList();
-
-		if (!Config.helmholtzIdUseAllowList() || allowList == null || allowList.isEmpty()) {
-			return false;
-		}
-
-		if (info == null || info.email() == null || info.email().isEmpty()) {
-			throw new Error("Unexpected parameters for 'userInIdAllowList'");
-		}
-
-		String[] allowed = allowList.split(";");
-
-		for (String s : allowed) {
-			if (s.equalsIgnoreCase(info.email())) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	public static boolean idUserIsHelmholtzMember(OpenIdInfo helmholtzInfo) {
 		if (helmholtzInfo.organisation() == null) {
 			return false;
