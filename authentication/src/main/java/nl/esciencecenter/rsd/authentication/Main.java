@@ -58,21 +58,12 @@ public class Main {
 		return false;
 	}
 
-	public static boolean idUserIsAllowed(OpenIdInfo helmholtzInfo) {
-		if (Config.helmholtzIdAllowExternalUsers()) {
-			return true;
-		}
+	public static boolean idUserIsHelmholtzMember(OpenIdInfo helmholtzInfo) {
 		if (helmholtzInfo.organisation() == null) {
-			if (Config.helmholtzIdUseAllowList() && userInIdAllowList(helmholtzInfo)) {
-				return true;
-			} else if (Config.helmholtzIdUseAllowList()) {
-				throw new RsdAuthenticationException("Your email address (" + helmholtzInfo.email() + ") is not in the allow list.");
-			}
+			return false;
 		} else {
-			// User is in HGF organisation
 			return true;
 		}
-		return false;
 	}
 
 	public static void main(String[] args) {
@@ -146,11 +137,12 @@ public class Main {
 				case EVERYONE -> {
 					OpenIdInfo helmholtzInfo = extractHelmholtzInfo(ctx);
 
-					if (!idUserIsAllowed(helmholtzInfo)) {
-						throw new RsdAuthenticationException("You are not allowed to log in.");
+					if (!idUserIsHelmholtzMember(helmholtzInfo) && !Config.helmholtzIdAllowExternalUsers()) {
+						// If no external members can login by default, access can be granted via invites
+						handleAccountInviteOnly(helmholtzInfo, helmholtzProvider, ctx);
+					} else {
+						handleAccountEveryoneAllowed(helmholtzInfo, helmholtzProvider, ctx);
 					}
-
-					handleAccountEveryoneAllowed(helmholtzInfo, helmholtzProvider, ctx);
 				}
 			}
 		});
