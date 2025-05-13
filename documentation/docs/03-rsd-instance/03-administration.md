@@ -51,17 +51,20 @@ You can customise the software highlights section in the `settings.json` by chan
 
 ![animation](img/admin-software-highlights.gif)
 
-## ORCID users
 
-This section shows the list of ORCIDs that are allowed to log in to the RSD. Because anyone can create an ORCID account, we decided to limit access only to ORCID users that are approved by an RSD administrator.
+## RSD invites
 
-:::warning
-In order to be able to log in with ORCID credentials, the [ORCID authentication provider needs to be enabled](/rsd-instance/configurations/#enable-orcid-authentication-and-coupling) and the ORCID of that user need to be added to this list.
+Here, you can create, view and delete RSD invites. These invites allow users to create an account when using auth providers that require them.
+
+An invite can be configured to have a fixed amount of uses, or to have unlimited uses (by leaving the "How many users" field empty). Existing invites can also be deleted, rendering them useless, which is useful when an invite has leaked out.
+
+Each invite also has an expiration date, after which the invite cannot be used any more.
+
+:::danger
+
+We recommend to use short-lived, single-use invites whenever possible, as these cause the least damage when leaked out.
+
 :::
-
-You can add, search and delete ORCIDs from the RSD. Use the bulk import button to add up to 50 ORCID users to the RSD at once.
-
-![animation](img/admin-orcid-users.gif)
 
 ## RSD users
 

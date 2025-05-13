@@ -7,7 +7,7 @@
 import logger from '~/utils/logger'
 import {getAuthorisationEndpoint} from './authHelpers'
 
-export type Providers = 'surfconext'|'helmholtzid'|'orcid'|'azure'|'linkedin'
+export type ProviderName = 'surfconext'|'helmholtzid'|'helmholtz'|'orcid'|'azure'|'linkedin'|'local'
 // how often we refresh auth endpoint
 const refreshInterval = 60*60*1000
 // save timer as public variable
@@ -25,7 +25,7 @@ const cache:{
  * refreshInterval defined how often we refresh auth endpoint info.
  *
  */
-export async function getAuthEndpoint(wellknownUrl:string,provider:Providers){
+export async function getAuthEndpoint(wellknownUrl:string,provider:ProviderName){
   try{
     // if already present return existing value
     if (cache?.[provider]?.authEndpoint) {

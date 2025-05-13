@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,6 +12,9 @@ package nl.esciencecenter.rsd.authentication;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -40,49 +43,57 @@ public class Config {
 		}
 	}
 
-	private static Collection<String> rsdLoginProviders() {
-		return Optional.ofNullable(System.getenv("RSD_AUTH_PROVIDERS"))
-			.map(String::toUpperCase)
-			.map(s -> s.split(";"))
-			.map(Set::of)
-			.orElse(Collections.emptySet());
+	private static final Map<OpenidProvider, OpenidProviderAccessMethod> ACCESS_METHOD_MAP = parseAuthProvidersEnvString(System.getenv("RSD_AUTH_PROVIDERS"));
+
+	static Map<OpenidProvider, OpenidProviderAccessMethod> parseAuthProvidersEnvString(String authConf) {
+		Map<OpenidProvider, OpenidProviderAccessMethod> result = new EnumMap<>(OpenidProvider.class);
+
+		if (authConf == null) {
+			return result;
+		}
+		String[] split = authConf.split(";");
+		for (String providerConf : split) {
+			String[] providerSplit = providerConf.split(":");
+			if (providerSplit.length == 0) {
+				continue;
+			}
+			OpenidProvider openidProvider;
+			try {
+				openidProvider = OpenidProvider.valueOf(providerSplit[0].toLowerCase());
+			} catch (IllegalArgumentException e) {
+				continue;
+			}
+
+			if (providerSplit.length != 2) {
+				result.put(openidProvider, OpenidProviderAccessMethod.MISCONFIGURED);
+				continue;
+			}
+
+			OpenidProviderAccessMethod accessMethod;
+			try {
+				accessMethod = OpenidProviderAccessMethod.valueOf(providerSplit[1]);
+			} catch (IllegalArgumentException e) {
+				result.put(openidProvider, OpenidProviderAccessMethod.MISCONFIGURED);
+				continue;
+			}
+
+			result.compute(openidProvider, (_key, oldValue) -> oldValue == null ? accessMethod : OpenidProviderAccessMethod.MISCONFIGURED);
+		}
+
+		return result;
 	}
 
-	public static boolean isLocalLoginEnabled() {
-		return rsdLoginProviders().contains("LOCAL");
-	}
-
-	public static boolean isSurfConextLoginEnabled() {
-		Collection<String> enabledProviders = rsdLoginProviders();
-		return enabledProviders.isEmpty() || enabledProviders.contains("SURFCONEXT");
-	}
-
-	public static boolean isHelmholtzLoginEnabled() {
-		return rsdLoginProviders().contains("HELMHOLTZID");
+	public static OpenidProviderAccessMethod accessMethodOfProvider(OpenidProvider provider) {
+		Objects.requireNonNull(provider);
+		return ACCESS_METHOD_MAP.getOrDefault(provider, OpenidProviderAccessMethod.DISABLED);
 	}
 
 	public static boolean isOrcidCouplingEnabled() {
 		return rsdAuthCoupleProviders().contains("ORCID");
 	}
 
-	public static boolean isOrcidLoginEnabled() {
-		return rsdLoginProviders().contains("ORCID");
-	}
-
-	public static boolean isAzureLoginEnabled() {
-		return rsdLoginProviders().contains("AZURE");
-	}
-
 	public static boolean isLinkedinCouplingEnabled() {
 		return rsdAuthCoupleProviders().contains("LINKEDIN");
-	}
-
-	public static boolean isLinkedinLoginEnabled() {
-		return rsdLoginProviders().contains("LINKEDIN");
-	}
-
-	public static String userMailWhitelist() {
-		return System.getenv("RSD_AUTH_USER_MAIL_WHITELIST");
 	}
 
 	public static String backendBaseUrl() {
@@ -134,17 +145,6 @@ public class Config {
 			System.getenv("HELMHOLTZID_ALLOW_EXTERNAL_USERS")
 		);
 	}
-
-	public static String helmholtzIdAllowList() {
-		return System.getenv("HELMHOLTZID_ALLOW_LIST");
-	}
-
-	public static boolean helmholtzIdUseAllowList() {
-		return Boolean.parseBoolean(
-			System.getenv("HELMHOLTZID_USE_ALLOW_LIST")
-		);
-	}
-
 
 	// ORCID
 	public static String orcidRedirect() {

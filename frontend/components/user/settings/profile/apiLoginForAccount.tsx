@@ -1,16 +1,17 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
-import {Providers} from '~/auth/api/authEndpoint'
+import {ProviderName} from '~/auth/api/authEndpoint'
 
 export type LoginForAccount={
   id:string
   account:string
-  provider:string
+  provider:ProviderName
   sub:string
   name:string
   email:string|null
@@ -62,27 +63,7 @@ export async function deleteLoginForAccount(id:string,token:string){
   }
 }
 
-export async function deleteFromOrcidList(orcid:string,token:string){
-  try{
-    const query=`orcid=eq.${orcid}`
-    const url = `${getBaseUrl()}/orcid_whitelist?${query}`
-
-    const resp = await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        ...createJsonHeaders(token)
-      }
-    })
-    return extractReturnMessage(resp)
-  }catch(e:any){
-    return {
-      status:500,
-      message: e.message
-    }
-  }
-}
-
-export function findProviderSubInLogin(logins:LoginForAccount[],provider:Providers){
+export function findProviderSubInLogin(logins:LoginForAccount[],provider:ProviderName){
   try{
     const login = logins.find(item=>item?.provider===provider)
     if (login){

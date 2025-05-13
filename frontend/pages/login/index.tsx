@@ -11,8 +11,7 @@ import PageBackground from '~/components/layout/PageBackground'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import LoginProviders from '~/components/login/LoginProviders'
-import {getLoginProviders} from '~/auth/api/getLoginProviders'
-import {Provider} from 'pages/api/fe/auth'
+import {Provider, ssrProvidersInfo} from 'pages/api/fe/auth'
 
 export default function LoginPage({providers}:Readonly<{providers:Provider[]}>) {
   const {status} = useSession()
@@ -59,9 +58,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   // get list of available providers
-  // on server side we need complete url incl. domain
-  // we can use localhost because this is "internal communication"
-  const providers = await getLoginProviders('http://localhost:3000')
+  const providers = await ssrProvidersInfo()
 
   // if no providers we show 404 page
   if (providers?.length === 0){

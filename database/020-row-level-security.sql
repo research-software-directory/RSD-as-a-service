@@ -659,12 +659,6 @@ CREATE POLICY admin_all_rights ON admin_account TO rsd_admin
 	WITH CHECK (TRUE);
 
 
-ALTER TABLE orcid_whitelist ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY admin_all_rights ON orcid_whitelist TO rsd_admin
-	USING (TRUE)
-	WITH CHECK (TRUE);
-
 
 -- organisation
 ALTER TABLE organisation ENABLE ROW LEVEL SECURITY;

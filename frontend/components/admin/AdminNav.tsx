@@ -4,7 +4,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,7 +16,6 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import DescriptionIcon from '@mui/icons-material/Description'
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck'
 import GroupIcon from '@mui/icons-material/Group'
 import SpellcheckIcon from '@mui/icons-material/Spellcheck'
 import DomainAddIcon from '@mui/icons-material/DomainAdd'
@@ -31,7 +30,7 @@ import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import HubIcon from '@mui/icons-material/Hub'
 import InfoIcon from '@mui/icons-material/Info'
-
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 
@@ -48,11 +47,11 @@ export const adminPages = {
     icon: <FluorescentIcon />,
     path: '/admin/software-highlights',
   },
-  orcid:{
-    title: 'ORCID users',
+  rsd_invites:{
+    title: 'RSD invites',
     subtitle: '',
-    icon: <PlaylistAddCheckIcon />,
-    path: '/admin/orcid-users',
+    icon: <PersonAddIcon />,
+    path: '/admin/rsd-invites',
   },
   accounts:{
     title: 'RSD users',

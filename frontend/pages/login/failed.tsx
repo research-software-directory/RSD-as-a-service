@@ -10,9 +10,11 @@
 import {useEffect, useState} from 'react'
 import Link from 'next/link'
 
-import ContentInTheMiddle from '../../components/layout/ContentInTheMiddle'
+import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
+import useRsdSettings from '~/config/useRsdSettings'
 
 export default function LoginFailed() {
+  const {host} = useRsdSettings()
   const [errorMessage, setErrorMessage] = useState<string>()
 
   useEffect(() => {
@@ -28,15 +30,21 @@ export default function LoginFailed() {
   return (
     <ContentInTheMiddle>
       <div className="border p-12">
-        <h1>Login failed</h1>
-        <p className="py-8">
+        <h1 className="pb-4">Login failed</h1>
+        <p className="py-4">
           Unfortunately, something went wrong during the login process.
         </p>
-        {errorMessage && <p className="pb-8 text-error">
+        {errorMessage && <p className="py-4 text-error">
           {errorMessage}
         </p>}
+        {
+          host.email ?
+            <p className='pb-8'>If the problem persist please contact us at {host.email}</p>
+            :null
+        }
+
         <Link href="/" passHref>
-          Homepage
+          <u>Homepage</u>
         </Link>
       </div>
     </ContentInTheMiddle>

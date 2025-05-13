@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -22,21 +22,25 @@ import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 public class PostgrestAccount implements Account {
-
 
 	private static final String AUTHORIZATION_HEADER_KEY = "Authorization";
 	private static final String BEARER_HEADER_VALUE_PREFIX = "bearer";
 	private static final String PREFER_HEADER_KEY = "Prefer";
 
-	@Override
-	public AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException {
+	private final String backendUri;
+
+	public PostgrestAccount(String backendUri) {
+		this.backendUri = backendUri;
+	}
+
+	public Optional<AccountInfo> getAccountIfExists(OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException {
 		Objects.requireNonNull(openIdInfo);
 		Objects.requireNonNull(provider);
 
-		String backendUri = Config.backendBaseUrl();
 		String subject = openIdInfo.sub();
 		String subjectUrlEncoded = URLEncoder.encode(subject, StandardCharsets.UTF_8);
 		String providerUrlEncoded = URLEncoder.encode(provider.toString(), StandardCharsets.UTF_8);
@@ -78,11 +82,24 @@ public class PostgrestAccount implements Account {
 				isAdmin = true;
 			}
 
-			return new AccountInfo(account, name, isAdmin, openIdInfo.data());
+			return Optional.of(new AccountInfo(account, name, isAdmin, openIdInfo.data()));
+		}
+
+		return Optional.empty();
+	}
+
+	@Override
+	public AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException {
+		Optional<AccountInfo> maybeExistingAccount = getAccountIfExists(openIdInfo, provider);
+
+		if (maybeExistingAccount.isPresent()) {
+			return maybeExistingAccount.get();
 		}
 		// The login credentials do no exist yet, create a new account and return it.
 		else {
 			// create account
+			JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
+			String token = jwtCreator.createAdminJwt();
 			URI createAccountEndpoint = URI.create(backendUri + "/account");
 			String newAccountJson = postJsonAsAdmin(createAccountEndpoint, "{}", token);
 			String newAccountId = JsonParser.parseString(newAccountJson)
@@ -101,9 +118,52 @@ public class PostgrestAccount implements Account {
 		}
 	}
 
-	public static boolean isAdmin(UUID accountId) throws IOException, InterruptedException {
+	public AccountInfo useInviteToCreateAccount(UUID inviteId, OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException, RsdAccountInviteException {
+		Objects.requireNonNull(inviteId);
+		URI accountInviteUrl = URI.create(backendUri + "/account_invite?select=uses_left,expires_at&id=eq.%s".formatted(inviteId));
+		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
+		String token = jwtCreator.createAdminJwt();
+
+		String response = getAsAdmin(accountInviteUrl, token);
+
+		Integer usesLeft = checkInviteResponseGetUsesLeft(inviteId, response);
+
+		// invite is valid
+		// decrease uses if finite
+		if (usesLeft != null) {
+			int usesDecreased = usesLeft - 1;
+			String patchInviteJson = "{\"uses_left\": %d}".formatted(usesDecreased);
+			URI accountInvitePatchUrl = URI.create(backendUri + "/account_invite?id=eq." + inviteId);
+			patchJsonAsAdmin(accountInvitePatchUrl, patchInviteJson, token);
+		}
+
+		return account(openIdInfo, provider);
+	}
+
+	static Integer checkInviteResponseGetUsesLeft(UUID inviteId, String json) throws RsdAccountInviteException {
+		// check if invite exists and is valid
+		JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
+		if (jsonArray.isEmpty()) {
+			throw new RsdAccountInviteException("No invite with ID %s found".formatted(inviteId));
+		}
+
+		JsonObject inviteObject = jsonArray.get(0).getAsJsonObject();
+
+		ZonedDateTime expiresAt = ZonedDateTime.parse(inviteObject.getAsJsonPrimitive("expires_at").getAsString());
+		if (expiresAt.isBefore(ZonedDateTime.now())) {
+			throw new RsdAccountInviteException("The invite with ID %s is expired".formatted(inviteId));
+		}
+
+		JsonElement usesLeft = inviteObject.get("uses_left");
+		if (usesLeft.isJsonPrimitive() && usesLeft.getAsInt() <= 0) {
+			throw new RsdAccountInviteException("The invite with ID %s has been used up".formatted(inviteId));
+		}
+
+		return usesLeft.isJsonPrimitive() ? usesLeft.getAsInt() : null;
+	}
+
+	public boolean isAdmin(UUID accountId) throws IOException, InterruptedException {
 		Objects.requireNonNull(accountId);
-		String backendUri = Config.backendBaseUrl();
 		URI accountUrl = URI.create(backendUri + "/admin_account?account_id=eq.%s".formatted(accountId));
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
 		String token = jwtCreator.createAdminJwt();
@@ -128,7 +188,6 @@ public class PostgrestAccount implements Account {
 	}
 
 	public void coupleLogin(UUID accountId, OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException {
-		String backendUri = Config.backendBaseUrl();
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
 		String adminJwt = jwtCreator.createAdminJwt();
 		createLoginForAccount(accountId, openIdInfo, provider, backendUri, adminJwt);
@@ -182,7 +241,6 @@ public class PostgrestAccount implements Account {
 			.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		String resultingJson = loginForAccountData.toString();
 
-		String backendUri = Config.backendBaseUrl();
 		URI patchLoginForAccountUri = URI.create(backendUri + "/login_for_account?id=eq." + id.toString());
 
 		patchJsonAsAdmin(patchLoginForAccountUri, resultingJson, authToken);

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -55,7 +55,7 @@ public class JwtCreator {
 	String refreshToken(String token) throws IOException, InterruptedException {
 		DecodedJWT oldJwt = JWT.decode(token);
 		UUID accountId = UUID.fromString(oldJwt.getClaim("account").asString());
-		boolean isAdmin = PostgrestAccount.isAdmin(accountId);
+		boolean isAdmin = new PostgrestAccount(Config.backendBaseUrl()).isAdmin(accountId);
 		String payloadEncoded = oldJwt.getPayload();
 		String payloadDecoded = Main.decode(payloadEncoded);
 		Gson gson = new Gson();

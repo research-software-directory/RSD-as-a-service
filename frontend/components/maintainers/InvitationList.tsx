@@ -1,8 +1,8 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,27 +17,72 @@ import ListItemText from '@mui/material/ListItemText'
 import copyToClipboard from '~/utils/copyToClipboard'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {Invitation} from './apiMaintainers'
 
+export type InvitationType = 'software' | 'project' | 'organisation' | 'community' | 'rsd'
 
-type InvitationListProps={
+export type Invitation = {
+    id: string,
+    created_at: string,
+    expires_at: string,
+    type: InvitationType,
+    uses_left?: number | null
+}
+
+type InvitationListProps=Readonly<{
   subject:string
   body:string
   invitations: Invitation[],
   onDelete: (invitation:Invitation)=>Promise<void>
-}
+  showTitle?: boolean
+}>
 
-function getExpiredText(daysValid: number): string {
+function getInviteText(invite:Invitation){
+  const expiresAt = new Date(invite.expires_at)
+  const daysValid = Math.ceil((expiresAt.valueOf() - new Date().valueOf()) / (1000 * 60 * 60 * 24))
+  let usesText: string|null = null
+  let linkIsValid:boolean = true
+
+  if (invite?.uses_left===null){
+    usesText = 'Unlimited number of registrations left'
+  }else if (invite?.uses_left===0){
+    usesText = 'Registration limit reached'
+    linkIsValid = false
+    return {
+      expiredText: 'EXPIRED!',
+      usesText,
+      linkIsValid
+    }
+  }else if (invite?.uses_left===1){
+    usesText = '1 registration left'
+  }else if (invite?.uses_left && invite?.uses_left > 1){
+    usesText = `${invite?.uses_left} registrations left`
+  }
+
   if (daysValid <= 0) {
-    return 'this invitation is expired'
+    linkIsValid = false
+    return {
+      expiredText: 'EXPIRED!',
+      usesText,
+      linkIsValid
+    }
   } else if (daysValid === 1) {
-    return 'expires in less than a day'
+    return {
+      expiredText: 'expires in less than a day',
+      usesText,
+      linkIsValid
+    }
   } else {
-    return `expires in ${daysValid} days`
+    return {
+      expiredText: `expires in ${daysValid} days`,
+      usesText,
+      linkIsValid
+    }
   }
 }
 
-export default function InvitationList({subject,body,invitations,onDelete}:InvitationListProps) {
+export default function InvitationList({
+  subject,body,invitations,onDelete,showTitle=true
+}:InvitationListProps) {
   const {showErrorMessage, showInfoMessage} = useSnackbar()
 
   async function toClipboard(message?: string) {
@@ -56,16 +101,18 @@ export default function InvitationList({subject,body,invitations,onDelete}:Invit
 
   return (
     <>
-      <EditSectionTitle
-        title={'Unused invitations'}
-        subtitle={'These invitations are not used yet'}
-      />
+      {showTitle ?
+        <EditSectionTitle
+          title={'Unused invitations'}
+          subtitle={'These invitations are not used yet'}
+        />
+        : null
+      }
       <List>
         {invitations.map(inv => {
           const currentLink = `${location.origin}/invite/${inv.type}/${inv.id}`
-          const expiresAt = new Date(inv.expires_at)
-          const daysValid = Math.ceil((expiresAt.valueOf() - new Date().valueOf()) / (1000 * 60 * 60 * 24))
-          const expiredText = getExpiredText(daysValid)
+          const {expiredText, usesText, linkIsValid} = getInviteText(inv)
+
           return (
             <ListItem
               data-testid="unused-invitation-item"
@@ -74,6 +121,7 @@ export default function InvitationList({subject,body,invitations,onDelete}:Invit
               secondaryAction={
                 <div className="flex gap-2">
                   <IconButton
+                    disabled = {!linkIsValid}
                     title="Email invitation using my email app"
                     href={`mailto:?subject=${subject}&body=${body}${encodeURIComponent('\n')}${currentLink}`}
                     target='_blank'
@@ -82,12 +130,13 @@ export default function InvitationList({subject,body,invitations,onDelete}:Invit
                     <EmailIcon/>
                   </IconButton>
                   <IconButton
-                    title="Copy to clipboard"
+                    disabled = {!linkIsValid}
+                    title="Copy link to clipboard"
                     onClick={() => toClipboard(currentLink)}>
                     <CopyIcon/>
                   </IconButton>
                   <IconButton
-                    title="Delete unused invitation"
+                    title="Delete invitation"
                     onClick={() => onDelete(inv)}>
                     <DeleteIcon/>
                   </IconButton>
@@ -100,7 +149,12 @@ export default function InvitationList({subject,body,invitations,onDelete}:Invit
             >
               <ListItemText
                 primary={`Created on ${new Date(inv.created_at).toLocaleString()} [${expiredText}]`}
-                secondary={currentLink}
+                secondary={
+                  usesText ?
+                    <span className="font-medium leading-[2rem]">{usesText}</span>
+                    :
+                    <span>{currentLink}</span>
+                }
               />
             </ListItem>
           )

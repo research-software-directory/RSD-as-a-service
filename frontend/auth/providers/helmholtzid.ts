@@ -3,25 +3,20 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * Helmholz ID OpenID endpoint
+ * Helmholz ID OpenID info
  * It provides frontend with redirect uri for the login button
  */
 
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type {NextApiRequest, NextApiResponse} from 'next'
 import logger from '~/utils/logger'
 import {RedirectToProps, getRedirectUrl} from '~/auth/api/authHelpers'
 import {getAuthEndpoint} from '~/auth/api/authEndpoint'
-import {Provider, ApiError} from '.'
-
-type Data = Provider | ApiError
 
 const claims = {
   id_token: {
@@ -77,29 +72,4 @@ export async function helmholtzInfo() {
     }
   }
   return null
-}
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  try {
-    // extract all props from env and wellknown endpoint
-    // and create return url and the name to use in login button
-    const loginInfo = await helmholtzInfo()
-    if (loginInfo) {
-      res.status(200).json(loginInfo)
-    } else {
-      res.status(400).json({
-        status: 400,
-        message: 'loginInfo missing'
-      })
-    }
-  } catch (e: any) {
-    logger(`api/fe/auth/helmholtzid: ${e?.message}`, 'error')
-    res.status(500).json({
-      status: 500,
-      message: e?.message
-    })
-  }
 }

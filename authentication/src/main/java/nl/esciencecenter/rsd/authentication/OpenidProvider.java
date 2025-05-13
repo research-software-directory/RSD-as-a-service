@@ -11,5 +11,16 @@ public enum OpenidProvider {
 	helmholtz,
 	orcid,
 	azure,
-	linkedin
+	linkedin;
+
+	public String toUserFriendlyString() {
+		return switch (this) {
+			case local -> "local accounts";
+			case surfconext -> "SURFconext";
+			case helmholtz -> "Helmholtz";
+			case orcid -> "ORCID";
+			case azure -> "Azure";
+			case linkedin -> "LinkedIn";
+		};
+	}
 }

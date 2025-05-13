@@ -4,24 +4,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import logger from '~/utils/logger'
 import {getAuthEndpoint} from '~/auth/api/authEndpoint'
 import {getRedirectUrl, RedirectToProps} from '~/auth/api/authHelpers'
-import logger from '~/utils/logger'
-
-export async function linkedinInfo() {
-  const redirectProps = await linkedinRedirectProps()
-  if (!redirectProps) {
-    return null
-  }
-
-  const redirectUrl = getRedirectUrl(redirectProps)
-
-  return {
-    name: 'LinkedIn',
-    redirectUrl,
-    html: 'Sign in with your LinkedIn account'
-  }
-}
 
 async function linkedinRedirectProps() {
   try {
@@ -65,5 +50,20 @@ async function linkedinRedirectProps() {
   } catch (e: any) {
     logger(`orcidRedirectProps: ${e.message}`, 'error')
     return null
+  }
+}
+
+export async function linkedinInfo() {
+  const redirectProps = await linkedinRedirectProps()
+  if (!redirectProps) {
+    return null
+  }
+
+  const redirectUrl = getRedirectUrl(redirectProps)
+
+  return {
+    name: 'LinkedIn',
+    redirectUrl,
+    html: 'Sign in with your LinkedIn account.'
   }
 }
