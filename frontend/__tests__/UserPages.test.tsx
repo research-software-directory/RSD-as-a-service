@@ -18,8 +18,8 @@ import mockOrganisationsByMaintainer from '~/components/user/organisations/__moc
 import mockCommunitiesByMaintainer from '~/components/user/communities/__mocks__/communitiesByMaintainer.json'
 import loginForAccount from '~/components/user/settings/profile/__mocks__/logins.json'
 import {UserPageId} from '~/components/user/tabs/UserTabItems'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {getDisplayName} from '~/utils/getDisplayName'
+import {LoginForAccount} from '~/components/user/settings/profile/apiLoginForAccount'
 // import {UserPageId} from '~/components/user/UserNavItems'
 // use DEFAULT MOCK for login providers list
 // required when AppHeader component is used
@@ -61,7 +61,7 @@ const mockProps = {
     is_public: false,
     avatar_id: null
   },
-  logins:loginForAccount
+  logins:loginForAccount as LoginForAccount[]
 }
 
 describe('pages/user/[section].tsx', () => {

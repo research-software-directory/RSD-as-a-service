@@ -42,7 +42,8 @@ export const mockSession:Session = {
 
 export const defaultUserSettings={
   rsd_page_layout:'grid' as LayoutType,
-  rsd_page_rows: 12
+  rsd_page_rows: 12,
+  avatar_id: null
 }
 
 /**
