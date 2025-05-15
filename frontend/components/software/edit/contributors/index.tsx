@@ -16,6 +16,7 @@ import {PersonProps, Person} from '~/types/Contributor'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import {getDisplayName} from '~/utils/getDisplayName'
 import useRsdSettings from '~/config/useRsdSettings'
+import useSnackbar from '~/components/snackbar/useSnackbar'
 import ContentLoader from '~/components/layout/ContentLoader'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import EditSection from '~/components/layout/EditSection'
@@ -24,10 +25,11 @@ import ContributorPrivacyHint from '~/components/layout/ContributorPrivacyHint'
 import AggregatedPersonModal, {FormPerson} from '~/components/person/AggregatedPersonModal'
 import {AggregatedPerson} from '~/components/person/groupByOrcid'
 import FindPerson from '~/components/person/FindPerson'
+import {personAlreadyPresent} from '~/components/person/searchForPerson'
 import {contributorInformation as config} from '../editSoftwareConfig'
 import {ModalProps, ModalStates} from '../editSoftwareTypes'
-import GetContributorsFromDoi from './GetContributorsFromDoi'
 import useSoftwareContext from '../useSoftwareContext'
+import GetContributorsFromDoi from './GetContributorsFromDoi'
 import useSoftwareContributors from './useSoftwareContributors'
 import SortableContributorsList from './SortableContributorsList'
 
@@ -38,6 +40,7 @@ type EditContributorModal = ModalProps & {
 export default function SoftwareContributors() {
   const {host} = useRsdSettings()
   const {software} = useSoftwareContext()
+  const {showInfoMessage} = useSnackbar()
   const {
     loading,contributors,addContributor,
     updateContributor,deleteContributor,
@@ -96,6 +99,11 @@ export default function SoftwareContributors() {
   function onFoundPerson(person:AggregatedPerson){
     // debugger
     if (person && software?.id) {
+      // check if this person is already in the list
+      if (personAlreadyPresent(contributors,person)===true){
+        showInfoMessage(`${person.display_name} already in the list, based on ORCID or account id.`)
+        return true
+      }
       // extract person props as much as possible (use null if not found)
       const contributor:Person = getPropsFromObject(person, PersonProps, true)
       // use first avatar (if exists)

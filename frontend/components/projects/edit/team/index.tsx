@@ -15,6 +15,7 @@ import {getDisplayName} from '~/utils/getDisplayName'
 import {Person, PersonProps} from '~/types/Contributor'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import useRsdSettings from '~/config/useRsdSettings'
+import useSnackbar from '~/components/snackbar/useSnackbar'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
@@ -23,6 +24,7 @@ import ContributorPrivacyHint from '~/components/layout/ContributorPrivacyHint'
 import AggregatedPersonModal, {FormPerson} from '~/components/person/AggregatedPersonModal'
 import {AggregatedPerson} from '~/components/person/groupByOrcid'
 import FindPerson from '~/components/person/FindPerson'
+import {personAlreadyPresent} from '~/components/person/searchForPerson'
 import useProjectContext from '../useProjectContext'
 import {cfgTeamMembers} from './config'
 import {ModalProps, ModalStates} from './apiTeamMembers'
@@ -36,6 +38,7 @@ type EditMemberModal = ModalProps & {
 export default function ProjectTeam() {
   const {host} = useRsdSettings()
   const {project} = useProjectContext()
+  const {showInfoMessage} = useSnackbar()
   const {
     loading,members,addMember,
     updateMember,sortedMembers,deleteMember
@@ -92,6 +95,11 @@ export default function ProjectTeam() {
   function onFoundPerson(person:AggregatedPerson){
     // debugger
     if (person && project?.id) {
+      // check if this person is already in the list
+      if (personAlreadyPresent(members,person)===true){
+        showInfoMessage(`${person.display_name} already in the list, based on ORCID or account id.`)
+        return true
+      }
       // extract person props as much as possible (use null if not found)
       const member:Person = getPropsFromObject(person, PersonProps, true)
       // use first avatar (if exists)

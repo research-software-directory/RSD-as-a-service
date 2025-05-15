@@ -10,6 +10,8 @@
 import {sortBySearchFor} from '~/utils/sortFn'
 import logger from '~/utils/logger'
 import {searchORCID} from '~/utils/getORCID'
+import {TeamMember} from '~/types/Project'
+import {Contributor} from '~/types/Contributor'
 import {rsdPublicProfiles, rsdUniquePersonEntries, UniqueRsdPerson} from './findRSDPerson'
 import {AggregatedPerson, groupByOrcid, personsToAutocompleteOptions} from './groupByOrcid'
 
@@ -95,4 +97,20 @@ function joinPublicProfiles({aggPersons,profiles}:{
     })
   })
   return persons
+}
+
+export function personAlreadyPresent(collection:TeamMember[]|Contributor[],person:AggregatedPerson){
+  const found = collection.find(item=>{
+    if (item.account && person.account){
+      return item.account === person.account
+    }
+    if (item.orcid && person.orcid){
+      return item.orcid === person.orcid
+    }
+    return false
+  })
+  // true if person found in collection
+  if (found) return true
+  // otherwise false (not found)
+  return false
 }
