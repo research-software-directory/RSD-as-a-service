@@ -16,7 +16,7 @@ import {useAuth} from '~/auth'
 import {useDebounce} from '~/utils/useDebounce'
 import logger from '~/utils/logger'
 import {composeUrl} from '~/utils/fetchHelpers'
-import {useModules} from '~/config/useModules'
+import useRsdSettings from '~/config/useRsdSettings'
 import EnterkeyIcon from '~/components/icons/enterkey.svg'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {getGlobalSearch,GlobalSearchResults} from './apiGlobalSearch'
@@ -33,13 +33,13 @@ type Props = {
 export default function GlobalSearchAutocomplete(props: Props) {
   const {session} = useAuth()
   const router = useRouter()
+  const {host} = useRsdSettings()
   const [isOpen, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [selected, setSelected] = useState(0)
   const [hasResults, setHasResults] = useState(false)
   const [searchResults, setSearchResults] = useState<GlobalSearchResults[]>([])
   const [searchCombo, setSearchCombo] = useState('Ctrl K')
-  const {isModuleEnabled} = useModules()
   const {hasRemotes} = useHasRemotes()
 
   const lastValue = useDebounce(inputValue, 150)
@@ -72,24 +72,25 @@ export default function GlobalSearchAutocomplete(props: Props) {
 
   const defaultValues: GlobalSearchResults[] = []
 
-  if (isModuleEnabled('software')) {
+  if (host.modules?.includes('software')) {
     defaultValues.push({name: 'Go to Software page', slug: '', source: 'software', domain: null, rsd_host: null})
   }
-  if (isModuleEnabled('projects')) {
+  if (host.modules?.includes('projects')) {
     defaultValues.push({name: 'Go to Projects page', slug: '', source: 'projects', domain: null, rsd_host: null})
   }
-  if (isModuleEnabled('organisations')) {
+  if (host.modules?.includes('organisations')) {
     defaultValues.push({name: 'Go to Organisations page', slug: '', source: 'organisations', domain: null, rsd_host: null})
   }
-  if (isModuleEnabled('communities')) {
+  if (host.modules?.includes('communities')) {
     defaultValues.push({name: 'Go to Communities page', slug: '', source: 'communities', domain: null, rsd_host: null})
   }
+
 
   async function fetchData(search: string) {
     // Fetch api
     let data: GlobalSearchResults[]
     try {
-      data = await getGlobalSearch(search, session.token) || []
+      data = await getGlobalSearch(search, session.token, host.modules) || []
     } catch (e: any) {
       logger(e?.message, 'error')
       showErrorMessage('Something went wrong getting the search results')
