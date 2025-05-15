@@ -7,7 +7,7 @@
 import logger from '~/utils/logger'
 import {getAuthorisationEndpoint} from './authHelpers'
 
-export type ProviderName = 'surfconext'|'helmholtzid'|'helmholtz'|'orcid'|'azure'|'linkedin'|'local'
+export type ProviderName = 'surfconext'|'helmholtz'|'orcid'|'azure'|'linkedin'|'local'
 // how often we refresh auth endpoint
 const refreshInterval = 60*60*1000
 // save timer as public variable

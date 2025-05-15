@@ -31,7 +31,7 @@ async function helmholtzRedirectProps() {
   const wellknownUrl = process.env.HELMHOLTZID_WELL_KNOWN_URL ?? null
   if (wellknownUrl) {
     // get (cached) authorisation endpoint from wellknown url
-    const authorization_endpoint = await getAuthEndpoint(wellknownUrl, 'helmholtzid')
+    const authorization_endpoint = await getAuthEndpoint(wellknownUrl, 'helmholtz')
     if (authorization_endpoint) {
       // construct all props needed for redirectUrl
       // use default values if env not provided
