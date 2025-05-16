@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
@@ -10,7 +10,6 @@ import {GetServerSidePropsContext} from 'next/types'
 
 import {app} from '~/config/app'
 import {getUserFromToken} from '~/auth'
-import {getUserSettings} from '~/utils/userSettings'
 import {
   getOrganisationBySlug,
   getOrganisationChildren,
@@ -25,8 +24,6 @@ import OrganisationTabs from '~/components/organisation/tabs/OrganisationTabs'
 import TabContent from '~/components/organisation/tabs/TabContent'
 import {TabKey} from '~/components/organisation/tabs/OrganisationTabItems'
 import {OrganisationForContext, OrganisationProvider} from '~/components/organisation/context/OrganisationContext'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
-import {UserSettingsProvider} from '~/components/organisation/context/UserSettingsContext'
 import {
   getReleasesCountForOrganisation, getReleasesForOrganisation,
   ReleaseCountByYear,
@@ -40,8 +37,6 @@ export type OrganisationPageProps = {
   slug: string[],
   tab: TabKey | null,
   isMaintainer: boolean,
-  rsd_page_rows: number,
-  rsd_page_layout: LayoutType
   units: OrganisationUnitsForOverview[]
   releaseCountsByYear: ReleaseCountByYear[] | null
   releases: SoftwareReleaseInfo[] | null
@@ -49,8 +44,8 @@ export type OrganisationPageProps = {
 
 export default function OrganisationPage({
   organisation, slug, tab,
-  isMaintainer, rsd_page_rows, rsd_page_layout,
-  units, releaseCountsByYear, releases
+  isMaintainer, units,
+  releaseCountsByYear, releases
 }: OrganisationPageProps) {
 
   // console.group('OrganisationPage')
@@ -80,39 +75,32 @@ export default function OrganisationPage({
       />
       <CanonicalUrl />
       <BackgroundAndLayout>
-        <UserSettingsProvider
-          settings={{
-            rsd_page_layout,
-            rsd_page_rows
-          }}
+        <OrganisationProvider
+          organisation={organisation}
+          isMaintainer={isMaintainer}
         >
-          <OrganisationProvider
-            organisation={organisation}
-            isMaintainer={isMaintainer}
-          >
-            {/* ORGANISATION HEADER */}
-            <PageBreadcrumbs
-              slug={slug}
-              root={{
-                label:'organisations',
-                path:'/organisations'
-              }}
-            />
-            <OrganisationMetadata />
+          {/* ORGANISATION HEADER */}
+          <PageBreadcrumbs
+            slug={slug}
+            root={{
+              label:'organisations',
+              path:'/organisations'
+            }}
+          />
+          <OrganisationMetadata />
 
-            {/* TABS */}
-            <BaseSurfaceRounded
-              className="my-4 p-2"
-              type="section"
-            >
-              <OrganisationTabs tab_id={tab} />
-            </BaseSurfaceRounded>
-            {/* TAB CONTENT */}
-            <section className="flex md:min-h-[55rem]">
-              <TabContent tab_id={tab} units={units} releaseCountsByYear={releaseCountsByYear} releases={releases} />
-            </section>
-          </OrganisationProvider>
-        </UserSettingsProvider>
+          {/* TABS */}
+          <BaseSurfaceRounded
+            className="my-4 p-2"
+            type="section"
+          >
+            <OrganisationTabs tab_id={tab} />
+          </BaseSurfaceRounded>
+          {/* TAB CONTENT */}
+          <section className="flex md:min-h-[55rem]">
+            <TabContent tab_id={tab} units={units} releaseCountsByYear={releaseCountsByYear} releases={releases} />
+          </section>
+        </OrganisationProvider>
       </BackgroundAndLayout>
     </>
   )
@@ -123,8 +111,6 @@ export default function OrganisationPage({
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
     const {params, req, query} = context
-    // extract user settings from cookie
-    const {rsd_page_layout, rsd_page_rows} = getUserSettings(req)
     // extract user ID from session
     const token = req?.cookies['rsd_token']
     const user = getUserFromToken(token ?? null)
@@ -184,8 +170,6 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         slug: params?.slug,
         tab: query?.tab ?? null,
         isMaintainer,
-        rsd_page_layout,
-        rsd_page_rows,
         units: units,
         releaseCountsByYear: releaseCountsByYear,
         releases: releases

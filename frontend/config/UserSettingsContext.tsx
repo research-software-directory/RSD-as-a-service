@@ -13,7 +13,8 @@ import {setDocumentCookie} from '~/utils/userSettings'
 
 export type UserSettingsProps={
   rsd_page_layout: LayoutType,
-  rsd_page_rows: number
+  rsd_page_rows: number,
+  avatar_id: string | null
 }
 
 export type UserSettingsContextProps={
@@ -23,7 +24,8 @@ export type UserSettingsContextProps={
 
 const defaultUserProps:UserSettingsProps={
   rsd_page_layout: 'grid',
-  rsd_page_rows: rowsPerPageOptions[0]
+  rsd_page_rows: rowsPerPageOptions[0],
+  avatar_id: null
 }
 
 
@@ -74,10 +76,19 @@ export function useUserSettings(){
     })
   }
 
+  function setAvatarId(avatar_id:string|null){
+    // save to state
+    setUser({
+      ...user,
+      avatar_id
+    })
+  }
+
   return {
     ...user,
     setPageLayout,
-    setPageRows
+    setPageRows,
+    setAvatarId
   }
 }
 

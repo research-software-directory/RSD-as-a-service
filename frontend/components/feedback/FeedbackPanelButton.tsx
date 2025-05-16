@@ -5,7 +5,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// import * as React from 'react'
 import {useState} from 'react'
 import MailOutlineOutlined from '@mui/icons-material/MailOutlineOutlined'
 import Dialog from '@mui/material/Dialog'
@@ -18,9 +17,17 @@ import getBrowser from '~/utils/getBrowser'
 import useDisableScrollLock from '~/utils/useDisableScrollLock'
 import CaretIcon from '~/components/icons/caret.svg'
 
-export default function FeedbackPanelButton({feedback_email, issues_page_url, closeFeedbackPanel}:
-  { feedback_email: string, issues_page_url: string, closeFeedbackPanel?: () => void }
-) {
+export type FeedbackPanelButtonProps=Readonly<{
+  feedback_email: string,
+  issues_page_url: string,
+  host_label?: string,
+  closeFeedbackPanel?: () => void
+}>
+
+export default function FeedbackPanelButton({
+  feedback_email, issues_page_url,
+  host_label='RSD', closeFeedbackPanel
+}:FeedbackPanelButtonProps) {
   const disable = useDisableScrollLock()
   const [text, setText] = useState('')
   const [open, setOpen] = useState(false)
@@ -48,12 +55,16 @@ export default function FeedbackPanelButton({feedback_email, issues_page_url, cl
     return `${browser?.name} ${browser?.version}`
   }
 
+  function mailSubject(){
+    return encodeURIComponent(`Feedback about ${host_label}`)
+  }
+
   function mailBody(): string | undefined {
     if (typeof location === 'undefined') return
 
-    return encodeURIComponent(`Hi RSD Team,
+    return encodeURIComponent(`Hi ${host_label} Team,
 
-I would like to give some feedback about the RSD for the browser ${browserNameAndVersion()} on the page ${location.href}:
+I would like to give some feedback about the ${host_label} for the browser ${browserNameAndVersion()} on the page ${location.href}:
 ---
 ${text}
 ---
@@ -112,7 +123,7 @@ User Agent: ${navigator.userAgent}`
                 className="text-sm text-base-100 hover:text-base-100 bg-primary px-3 py-1 rounded-sm hover:opacity-90 active:opacity-95"
                 target="_blank"
                 rel="noreferrer"
-                href={`mailto:${feedback_email}?subject=${encodeURIComponent('Feedback about the RSD')}&body=${mailBody()}`}
+                href={`mailto:${feedback_email}?subject=${mailSubject()}&body=${mailBody()}`}
               >
                 <MailOutlineOutlined/> Send feedback
               </a>
@@ -129,5 +140,3 @@ User Agent: ${navigator.userAgent}`
     </div>
   )
 }
-
-

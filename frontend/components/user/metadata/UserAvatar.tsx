@@ -6,6 +6,7 @@
 import {useSession} from '~/auth'
 import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
 import {getDisplayInitials, getDisplayName} from '~/utils/getDisplayName'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import Logo, {ImageDataProps} from '~/components/layout/Logo'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {useUserContext} from '~/components/user/context/UserContext'
@@ -15,6 +16,7 @@ export default function UserAvatar() {
   const {token,user} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {profile,updateUserProfile} = useUserContext()
+  const {setAvatarId} = useUserSettings()
   const name = getDisplayName(profile)
   const initials = getDisplayInitials(profile)
   // rsd_admin and your own profile
@@ -38,11 +40,13 @@ export default function UserAvatar() {
     })
     // console.log('addLogo...resp...', resp)
     if (resp.status === 201) {
+      // avatar_id is returned
+      const avatar_id = resp.message
       // update logo_id reference
       const patch = await patchUserProfile({
         account: profile.account,
         data: {
-          avatar_id: resp.message
+          avatar_id
         },
         token
       })
@@ -61,6 +65,8 @@ export default function UserAvatar() {
           })
         }
         updateUserProfile({key:'avatar_id',value:resp.message})
+        // update avatar_id in the userSettings
+        setAvatarId(avatar_id)
       } else {
         showErrorMessage(`Failed to upload avatar. ${resp.message}`)
       }
@@ -87,6 +93,7 @@ export default function UserAvatar() {
           token
         })
         updateUserProfile({key:'avatar_id',value:null})
+        setAvatarId(null)
       } else {
         showErrorMessage(`Failed to remove avatar. ${resp.message}`)
       }

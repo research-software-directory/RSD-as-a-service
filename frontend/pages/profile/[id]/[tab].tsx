@@ -13,9 +13,6 @@ import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import BackgroundAndLayout from '~/components/layout/BackgroundAndLayout'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
-import {RsdContributor} from '~/components/admin/rsd-contributors/useContributors'
-import {UserSettingsProvider} from '~/components/organisation/context/UserSettingsContext'
 import {getProfileProjects,getProfileSoftware} from '~/components/profile/apiProfile'
 import ProfileMetadata from '~/components/profile/metadata'
 import ProfileTabs from '~/components/profile/tabs'
@@ -25,10 +22,8 @@ import {ProfileTabKey} from '~/components/profile/tabs/ProfileTabItems'
 import {getPublicUserProfile, PublicUserProfile} from '~/components/user/settings/profile/apiUserProfile'
 
 type SoftwareByOrcidProps=Readonly<{
-  rsd_page_layout: LayoutType,
-  rsd_page_rows: number,
+  orcid: string
   tab: ProfileTabKey
-  profiles: RsdContributor[],
   publicProfile: PublicUserProfile,
   software_cnt: number,
   software: SoftwareOverviewItemProps[],
@@ -37,7 +32,6 @@ type SoftwareByOrcidProps=Readonly<{
 }>
 
 export default function PublicProfileByOrcidPage({
-  rsd_page_rows,rsd_page_layout,
   tab,publicProfile, software_cnt,
   software, project_cnt, projects
 }:SoftwareByOrcidProps) {
@@ -64,33 +58,26 @@ export default function PublicProfileByOrcidPage({
       />
       <CanonicalUrl />
       <BackgroundAndLayout>
-        <UserSettingsProvider
-          settings={{
-            rsd_page_layout,
-            rsd_page_rows
-          }}
-        >
-          <ProfileContextProvider value={{
-            software_cnt,
-            software,
-            project_cnt,
-            projects
-          }}>
-            {/* PROFILE METADATA */}
-            <ProfileMetadata profile={publicProfile} />
-            {/* TABS */}
-            <BaseSurfaceRounded
-              className="my-4 p-2"
-              type="section"
-            >
-              <ProfileTabs tab_id={tab} isMaintainer={false} />
-            </BaseSurfaceRounded>
-            {/* TAB CONTENT */}
-            <section className="flex md:min-h-[60rem] mb-12">
-              <ProfileTabContent tab_id={tab} />
-            </section>
-          </ProfileContextProvider>
-        </UserSettingsProvider>
+        <ProfileContextProvider value={{
+          software_cnt,
+          software,
+          project_cnt,
+          projects
+        }}>
+          {/* PROFILE METADATA */}
+          <ProfileMetadata profile={publicProfile}/>
+          {/* TABS */}
+          <BaseSurfaceRounded
+            className="my-4 p-2"
+            type="section"
+          >
+            <ProfileTabs tab_id={tab} isMaintainer={false} />
+          </BaseSurfaceRounded>
+          {/* TAB CONTENT */}
+          <section className="flex md:min-h-[60rem] mb-12">
+            <ProfileTabContent tab_id={tab} />
+          </section>
+        </ProfileContextProvider>
       </BackgroundAndLayout>
     </>
   )
@@ -126,7 +113,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       }
     }
     // extract user settings from cookie
-    const {rsd_page_layout, rsd_page_rows} = getUserSettings(req)
+    const {rsd_page_rows} = getUserSettings(req)
     // for rows we use query param or user settings definition
     const rows = parseInt(query['rows'] as string ?? rsd_page_rows)
     // get page for pagination
@@ -159,8 +146,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     // return data
     return {
       props:{
-        rsd_page_layout,
-        rsd_page_rows,
+        orcid,
         tab,
         publicProfile,
         ...software,

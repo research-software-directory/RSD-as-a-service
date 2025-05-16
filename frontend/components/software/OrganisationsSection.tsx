@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import styled from '@mui/system/styled'
+import {styled} from '@mui/material/styles'
 import {ParticipatingOrganisationProps} from '../../types/Organisation'
 import PageContainer from '../layout/PageContainer'
 import ParticipatingOrganisation from './ParticipatingOrganisation'

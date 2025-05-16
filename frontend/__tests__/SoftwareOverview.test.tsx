@@ -6,10 +6,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {render, screen, within} from '@testing-library/react'
-import {WithAppContext} from '~/utils/jest/WithAppContext'
+import {WithAppContext,defaultUserSettings} from '~/utils/jest/WithAppContext'
 
 import SoftwareOverviewPage from '../pages/software/index'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 
 // use DEFAULT MOCK for login providers list
 // required when AppHeader component is used
@@ -28,14 +27,14 @@ const mockProps = {
   page: 1,
   rows: 12,
   count: 408,
-  layout: 'masonry' as LayoutType,
   keywordsList: mockData.keywordsList,
   languagesList: mockData.languagesList,
   licensesList: mockData.licensesList,
   sourcesList: [],
+  hostsList: [],
   software: mockData.software as any,
   highlights: mockData.highlights as any,
-  hasRemotes: false
+  hasRemotes: false,
 }
 
 describe('pages/software/index.tsx', () => {
@@ -91,19 +90,19 @@ describe('pages/software/index.tsx', () => {
   })
 
   it('renders layout options (toggle button group)', async () => {
-    mockProps.layout='masonry'
+    defaultUserSettings.rsd_page_layout='masonry'
     render(
-      <WithAppContext>
+      <WithAppContext options={{user:defaultUserSettings}}>
         <SoftwareOverviewPage {...mockProps} />
       </WithAppContext>
     )
-    const buttonGroup = screen.getByTestId('card-layout-options')
+    screen.getByTestId('card-layout-options')
   })
 
   it('renders (12) masonry cards', async () => {
-    mockProps.layout='masonry'
+    defaultUserSettings.rsd_page_layout='masonry'
     render(
-      <WithAppContext>
+      <WithAppContext options={{user:defaultUserSettings}}>
         <SoftwareOverviewPage {...mockProps} />
       </WithAppContext>
     )
@@ -112,9 +111,9 @@ describe('pages/software/index.tsx', () => {
   })
 
   it('renders (12) grid cards', async () => {
-    mockProps.layout='grid'
+    defaultUserSettings.rsd_page_layout='grid'
     render(
-      <WithAppContext>
+      <WithAppContext options={{user:defaultUserSettings}}>
         <SoftwareOverviewPage {...mockProps} />
       </WithAppContext>
     )
@@ -123,9 +122,9 @@ describe('pages/software/index.tsx', () => {
   })
 
   it('renders (12) list items', async () => {
-    mockProps.layout='list'
+    defaultUserSettings.rsd_page_layout='list'
     render(
-      <WithAppContext>
+      <WithAppContext options={{user:defaultUserSettings}}>
         <SoftwareOverviewPage {...mockProps} />
       </WithAppContext>
     )

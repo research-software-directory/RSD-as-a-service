@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,16 +18,25 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import {useAuth} from '~/auth/index'
 import {MenuItemType} from '~/config/menuItems'
 import useUserMenuItems from '~/config/useUserMenuItems'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import {getDisplayInitials, splitName} from '~/utils/getDisplayName'
+import {getImageUrl} from '~/utils/editImage'
 import useDisableScrollLock from '~/utils/useDisableScrollLock'
 import CaretIcon from '~/components/icons/caret.svg'
 
 export default function UserMenu() {
   const {session} = useAuth()
+  const {avatar_id} = useUserSettings()
   const disable = useDisableScrollLock()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const menuItems = useUserMenuItems()
+  const avatarUrl = getImageUrl(avatar_id)
+
+  // console.group('UserMenu')
+  // console.log('avatar_id...', avatar_id)
+  // console.log('avatarUrl...', avatarUrl)
+  // console.groupEnd()
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget)
@@ -104,7 +113,7 @@ export default function UserMenu() {
       >
         <Avatar
           alt={session?.user?.name ?? ''}
-          src={''}
+          src={avatarUrl ?? ''}
           sx={{
             width: '3rem',
             height: '3rem',
@@ -119,9 +128,6 @@ export default function UserMenu() {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'menu-button',
-        }}
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
         // disable adding styles to body (overflow:hidden & padding-right)

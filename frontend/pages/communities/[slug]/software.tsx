@@ -14,7 +14,6 @@ import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
 import {CategoryOption} from '~/components/filter/CategoriesFilter'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {EditCommunityProps, getCommunityBySlug} from '~/components/communities/apiCommunities'
 import CommunityPage from '~/components/communities/CommunityPage'
 import CommunitySoftware from '~/components/communities/software'
@@ -25,8 +24,6 @@ export type CommunitySoftwareProps={
   software: SoftwareOfCommunity[],
   slug: string[],
   isMaintainer: boolean,
-  rsd_page_rows: number,
-  rsd_page_layout: LayoutType,
   count: number,
   keywordsList: KeywordFilterOption[],
   languagesList: LanguagesFilterOption[],
@@ -35,8 +32,8 @@ export type CommunitySoftwareProps={
 }
 
 export default function CommunitySoftwarePage({
-  community,slug,isMaintainer,rsd_page_rows,rsd_page_layout,
-  software, count, keywordsList,languagesList,licensesList,
+  community,slug,isMaintainer,software, count,
+  keywordsList,languagesList,licensesList,
   categoryList
 }:CommunitySoftwareProps) {
 
@@ -72,16 +69,12 @@ export default function CommunitySoftwarePage({
         community={community}
         slug={slug}
         isMaintainer={isMaintainer}
-        rsd_page_rows={rsd_page_rows}
-        rsd_page_layout={rsd_page_layout}
         selectTab='software'
       >
         <CommunitySoftware
           software={software}
           page={0}
           count={count}
-          rows={rsd_page_rows}
-          rsd_page_layout={rsd_page_layout}
           keywordsList={keywordsList}
           languagesList={languagesList}
           licensesList={licensesList}
@@ -99,7 +92,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
     const {params, req, query} = context
     // extract user settings from cookie
-    const {rsd_page_layout, rsd_page_rows} = getUserSettings(req)
+    const {rsd_page_rows} = getUserSettings(req)
 
     // extract user id from session
     const token = req?.cookies['rsd_token']
@@ -132,7 +125,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       software_status: 'approved',
       query: query,
       isMaintainer,
-      token
+      rsd_page_rows,
+      token,
     })
 
     // update community count to actual count
@@ -143,8 +137,6 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         community,
         slug: [params?.slug],
         isMaintainer,
-        rsd_page_layout,
-        rsd_page_rows,
         count: software.count,
         software: software.data,
         keywordsList,

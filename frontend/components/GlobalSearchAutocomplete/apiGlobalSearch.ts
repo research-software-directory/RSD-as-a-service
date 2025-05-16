@@ -7,7 +7,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
-import {createJsonHeaders} from '~/utils/fetchHelpers'
+import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 
 export type GlobalSearchResultsSource = 'software' | 'projects' | 'organisations' | 'communities'
 
@@ -26,11 +26,17 @@ export type GlobalSearchResults = {
  * @param searchText
  * @param token
  */
-export async function getGlobalSearch(searchText: string, token: string,): Promise<GlobalSearchResults[]> {
+export async function getGlobalSearch(searchText: string, token: string, rsd_modules?: string[]): Promise<GlobalSearchResults[]> {
   try {
     // call the function query
-    const query = `rpc/global_search?query=${searchText}&limit=30&order=rank.asc,index_found.asc`
-    const url = `/api/v1/${query}`
+    let query = `query=${searchText}&limit=30&order=rank.asc,index_found.asc`
+    if (rsd_modules){
+      // get active modules
+      const source = `"${rsd_modules?.join('","')}"`
+      query+=`&source=in.(${source})`
+    }
+
+    const url = `${getBaseUrl()}/rpc/global_search?${query}`
 
     const resp = await fetch(url, {
       method: 'GET',

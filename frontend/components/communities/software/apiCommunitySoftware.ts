@@ -134,12 +134,15 @@ type SsrCommunitySoftwareDataProps={
   query: ParsedUrlQuery
   isMaintainer: boolean
   token?: string
+  rsd_page_rows?: number
 }
 
 /**
  * Get community software page data server side.
  */
-export async function ssrCommunitySoftwareProps({community,software_status,query,isMaintainer,token}:SsrCommunitySoftwareDataProps){
+export async function ssrCommunitySoftwareProps({
+  community,software_status,query,isMaintainer,token,rsd_page_rows
+}:SsrCommunitySoftwareDataProps){
   try{
     // extract and decode query params
     const {search, keywords, prog_lang, licenses, categories, order, rows, page} = ssrSoftwareParams(query)
@@ -162,7 +165,7 @@ export async function ssrCommunitySoftwareProps({community,software_status,query
         licenses,
         categories,
         order,
-        rows: rows ?? 12,
+        rows: rows ?? rsd_page_rows ?? 12,
         page: page ? page-1 : 0,
         isMaintainer,
         token

@@ -15,12 +15,9 @@ import {app} from '~/config/app'
 import {getUserFromToken, useSession} from '~/auth'
 import ProtectedContent from '~/auth/ProtectedContent'
 import {getRedirectUrl} from '~/auth/api/authHelpers'
-import {getUserSettings} from '~/utils/userSettings'
 import PageMeta from '~/components/seo/PageMeta'
 import BackgroundAndLayout from '~/components/layout/BackgroundAndLayout'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
-import {UserSettingsProvider} from '~/components/organisation/context/UserSettingsContext'
 import {getUserCounts} from '~/components/user/getUserCounts'
 import {orcidCoupleProps} from '~/components/user/settings/apiLinkOrcidProps'
 import {loadUserProfile, UserProfile} from '~/components/user/settings/profile/apiUserProfile'
@@ -38,15 +35,13 @@ type UserPagesProps = Readonly<{
   counts: UserCounts,
   orcidAuthLink: string|null,
   linkedInAuthLink: string|null,
-  rsd_page_rows: number,
-  rsd_page_layout: LayoutType,
   profile: UserProfile
   logins: LoginForAccount[]
 }>
 
 export default function UserPages({
   section,counts,orcidAuthLink,linkedInAuthLink,
-  rsd_page_rows,rsd_page_layout,profile,logins
+  profile,logins
 }:UserPagesProps) {
   const {user} = useSession()
   const pageTitle = `${user?.name ?? 'User'} | ${app.title}`
@@ -73,34 +68,27 @@ export default function UserPages({
       <BackgroundAndLayout>
         <ProtectedContent>
           <UserAgreementModal />
-          <UserSettingsProvider
-            settings={{
-              rsd_page_layout,
-              rsd_page_rows
-            }}
+          <UserContextProvider
+            profile={profile}
+            logins={logins}
+            counts={counts}
+            orcidAuthLink={orcidAuthLink}
+            linkedInAuthLink={linkedInAuthLink}
           >
-            <UserContextProvider
-              profile={profile}
-              logins={logins}
-              counts={counts}
-              orcidAuthLink={orcidAuthLink}
-              linkedInAuthLink={linkedInAuthLink}
+            {/* USER PAGE HEADER */}
+            <UserMetadata/>
+            {/* TABS */}
+            <BaseSurfaceRounded
+              className="my-4 p-2"
+              type="section"
             >
-              {/* USER PAGE HEADER */}
-              <UserMetadata/>
-              {/* TABS */}
-              <BaseSurfaceRounded
-                className="my-4 p-2"
-                type="section"
-              >
-                <UserTabs tab={section} counts={counts}/>
-              </BaseSurfaceRounded>
-              {/* TAB CONTENT */}
-              <section className="flex md:min-h-[45rem] mb-12">
-                <UserTabContent tab={section} />
-              </section>
-            </UserContextProvider>
-          </UserSettingsProvider>
+              <UserTabs tab={section} counts={counts}/>
+            </BaseSurfaceRounded>
+            {/* TAB CONTENT */}
+            <section className="flex md:min-h-[45rem] mb-12">
+              <UserTabContent tab={section} />
+            </section>
+          </UserContextProvider>
         </ProtectedContent>
       </BackgroundAndLayout>
     </>
@@ -118,7 +106,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     let orcidAuthLink:string|null=null
     let linkedInAuthLink:string|null=null
     // extract user settings from cookie
-    const {rsd_page_layout, rsd_page_rows} = getUserSettings(req)
+    // const {rsd_page_layout, rsd_page_rows} = getUserSettings(req)
     const user = getUserFromToken(token)
     // console.log('getServerSideProps...params...', params)
     // console.log('getServerSideProps...token...', token)
@@ -167,8 +155,6 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         counts,
         orcidAuthLink,
         linkedInAuthLink,
-        rsd_page_rows,
-        rsd_page_layout,
         ...profile_logins
       },
     }

@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,7 +10,6 @@ import {app} from '~/config/app'
 import {getUserFromToken} from '~/auth'
 import {getUserSettings} from '~/utils/userSettings'
 import {EditCommunityProps, getCommunityBySlug} from '~/components/communities/apiCommunities'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import CommunitySettingsContent from '~/components/communities/settings'
@@ -20,14 +19,11 @@ import {getKeywordsByCommunity} from '~/components/communities/settings/general/
 type CommunitySoftwareProps={
   community: EditCommunityProps,
   slug: string[],
-  isMaintainer: boolean,
-  rsd_page_rows: number,
-  rsd_page_layout: LayoutType
+  isMaintainer: boolean
 }
 
 export default function CommunitySettingsPage({
-  community,slug, isMaintainer,
-  rsd_page_rows, rsd_page_layout
+  community,slug, isMaintainer
 }:CommunitySoftwareProps) {
 
   // console.group('CommunitySettingsPage')
@@ -58,8 +54,6 @@ export default function CommunitySettingsPage({
         community={community}
         slug={slug}
         isMaintainer={isMaintainer}
-        rsd_page_rows={rsd_page_rows}
-        rsd_page_layout={rsd_page_layout}
         selectTab='settings'
       >
         <CommunitySettingsContent

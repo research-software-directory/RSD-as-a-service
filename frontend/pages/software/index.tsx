@@ -50,7 +50,6 @@ import {
 } from '~/components/software/overview/filters/softwareFiltersApi'
 import SoftwareFiltersModal from '~/components/software/overview/filters/SoftwareFiltersModal'
 import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {getRsdSettings} from '~/config/getSettingsServerSide'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import {HostsFilterOption} from '~/components/filter/RsdHostFilter'
@@ -73,7 +72,6 @@ type SoftwareOverviewProps = {
   page: number,
   rows: number,
   count: number,
-  layout: LayoutType,
   software: SoftwareOverviewItemProps[],
   highlights: SoftwareHighlight[],
   hasRemotes: boolean
@@ -86,7 +84,7 @@ export default function SoftwareOverviewPage({
   search, keywords,
   prog_lang, licenses,
   rsd_host, order, page,
-  rows, count, layout,
+  rows, count,
   keywordsList, languagesList,
   categories, categoriesList,
   licensesList, hostsList,
@@ -94,11 +92,8 @@ export default function SoftwareOverviewPage({
 }: SoftwareOverviewProps) {
   const smallScreen = useMediaQuery('(max-width:640px)')
   const {createUrl} = useSoftwareOverviewParams()
-  const {setPageLayout} = useUserSettings()
+  const {rsd_page_layout,setPageLayout} = useUserSettings()
   const [modal,setModal] = useState(false)
-  // if no layout - default is grid
-  const initView = layout ?? 'grid'
-  const [view, setView] = useState<LayoutType>(initView)
   const numPages = Math.ceil(count / rows)
   const filterCnt = getFilterCount()
 
@@ -112,7 +107,7 @@ export default function SoftwareOverviewPage({
   // console.log('page...', page)
   // console.log('rows...', rows)
   // console.log('count...', count)
-  // console.log('layout...', layout)
+  // console.log('rsd_page_layout...', rsd_page_layout)
   // console.log('keywordsList...', keywordsList)
   // console.log('languagesList...', languagesList)
   // console.log('licensesList...', licensesList)
@@ -133,14 +128,6 @@ export default function SoftwareOverviewPage({
     if (categories) count++
     if (rsd_host) count++
     return count
-  }
-
-  function setLayout(view: LayoutType) {
-    // update local view
-    setView(view)
-    // save to context and cookie
-    setPageLayout(view)
-    // setDocumentCookie(view,'rsd_page_layout')
   }
 
   return (
@@ -197,13 +184,13 @@ export default function SoftwareOverviewPage({
                 count={count}
                 search={search}
                 placeholder={keywords?.length ? 'Find within selection' : 'Find software'}
-                layout={view}
-                setView={setLayout}
+                layout={rsd_page_layout}
+                setView={setPageLayout}
                 setModal={setModal}
               />
               {/* Software content: masonry, cards or list */}
               <SoftwareOverviewContent
-                layout={view}
+                layout={rsd_page_layout}
                 software={software}
                 hasRemotes={hasRemotes}
               />
@@ -267,7 +254,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract params from page-query
   const {search, keywords, prog_lang, licenses, categories, rsd_host, order, rows, page} = ssrSoftwareParams(context.query)
   // extract user settings from cookie
-  const {rsd_page_layout, rsd_page_rows} = getUserSettings(context.req)
+  const {rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings
   const page_rows = rows ?? rsd_page_rows
   // calculate offset when page & rows present
@@ -358,7 +345,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     page: page ?? 0,
     order: softwareOrder,
     rows: page_rows,
-    layout: rsd_page_layout,
     count: software.count ?? 0,
     software: software.data,
     highlights,

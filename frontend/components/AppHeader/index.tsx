@@ -75,7 +75,11 @@ export default function AppHeader() {
           <div className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
             {/* FEEDBACK panel */}
             {host.feedback?.enabled
-              ? <FeedbackPanelButton feedback_email={host.feedback.url} issues_page_url={host.feedback.issues_page_url} />
+              ? <FeedbackPanelButton
+                feedback_email={host.feedback.url}
+                issues_page_url={host.feedback.issues_page_url}
+                host_label={host.feedback.host_label}
+              />
               : null
             }
             {/* ADD menu button */}

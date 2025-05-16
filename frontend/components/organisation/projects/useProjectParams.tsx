@@ -4,14 +4,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useRouter} from 'next/router'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import {getProjectsParams} from '~/utils/extractQueryParam'
-import {useUserSettings} from '../context/UserSettingsContext'
 
 export default function useProjectParams() {
   // initialise router
   const router = useRouter()
   // get user preferences
-  const {rsd_page_rows} = useUserSettings()
+  const {rsd_page_rows,rsd_page_layout,setPageLayout} = useUserSettings()
   // use encoded array params as json string to avoid
   // useEffect re-renders in api hooks
   const params = getProjectsParams(router.query)
@@ -19,6 +19,9 @@ export default function useProjectParams() {
   if (typeof params.rows === 'undefined' && rsd_page_rows) {
     params.rows = rsd_page_rows
   }
+
+  // if masonry we change to grid
+  const view = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
 
   function getFilterCount() {
     let count = 0
@@ -41,6 +44,8 @@ export default function useProjectParams() {
   // return these
   return {
     ...params,
-    filterCnt
+    filterCnt,
+    view,
+    setPageLayout
   }
 }

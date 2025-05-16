@@ -15,7 +15,9 @@ import Link from 'next/link'
 import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import {ProjectListItem} from '~/types/Project'
+import {getUserSettings} from '~/utils/userSettings'
 import {getProjectList} from '~/utils/getProjects'
 import {ssrProjectsParams} from '~/utils/extractQueryParam'
 import {projectListUrl} from '~/utils/postgrestUrl'
@@ -25,15 +27,12 @@ import AppFooter from '~/components/AppFooter'
 import MainContent from '~/components/layout/MainContent'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
-import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
 import useProjectOverviewParams from '~/components/projects/overview/useProjectOverviewParams'
 import PageBackground from '~/components/layout/PageBackground'
 import FiltersPanel from '~/components/filter/FiltersPanel'
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {OrganisationOption} from '~/components/filter/OrganisationsFilter'
 import {ResearchDomainOption} from '~/components/filter/ResearchDomainFilter'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 import {
   projectDomainsFilter,
   projectKeywordsFilter,
@@ -62,7 +61,6 @@ export type ProjectOverviewPageProps = {
   page: number,
   rows: number,
   count: number,
-  layout: LayoutType,
   projects: ProjectListItem[]
 }
 
@@ -75,15 +73,14 @@ export default function ProjectsOverviewPage({
   domains, domainsList,
   organisations, organisationsList,
   project_status, projectStatusList,
-  page, rows, count, layout,
-  projects
+  page, rows, count, projects
 }: ProjectOverviewPageProps) {
   const {createUrl} = useProjectOverviewParams()
   const smallScreen = useMediaQuery('(max-width:640px)')
   const [modal,setModal] = useState(false)
+  const {rsd_page_layout,setPageLayout} = useUserSettings()
   // if masonry we change to grid
-  const initView = layout === 'masonry' ? 'grid' : layout
-  const [view, setView] = useState<ProjectLayoutType>(initView)
+  const view = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
   const numPages = Math.ceil(count / rows)
   const filterCnt = getFilterCount()
 
@@ -96,7 +93,7 @@ export default function ProjectsOverviewPage({
   // console.log('page...', page)
   // console.log('rows...', rows)
   // console.log('count...', count)
-  // console.log('layout...', layout)
+  // console.log('view...', view)
   // console.log('keywordsList...', keywordsList)
   // console.log('domainsList...', domainsList)
   // console.log('organisationsList...', organisationsList)
@@ -104,13 +101,6 @@ export default function ProjectsOverviewPage({
   // console.log('projectStatusList...', projectStatusList)
   // console.log('projects...', projects)
   // console.groupEnd()
-
-  function setLayout(view: ProjectLayoutType) {
-    // update local view
-    setView(view)
-    // save to cookie
-    setDocumentCookie(view,'rsd_page_layout')
-  }
 
   function getFilterCount() {
     let count = 0
@@ -170,7 +160,7 @@ export default function ProjectsOverviewPage({
                 search={search}
                 placeholder={keywords?.length ? 'Find within selection' : 'Find project'}
                 layout={view}
-                setView={setLayout}
+                setView={setPageLayout}
                 setModal={setModal}
               />
               {/* Project content: masonry, cards or list */}
@@ -237,7 +227,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     organisations, project_status, order
   } = ssrProjectsParams(context.query)
   // extract user settings from cookie
-  const {rsd_page_layout, rsd_page_rows} = getUserSettings(context.req)
+  const {rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings
   const page_rows = rows ?? rsd_page_rows
   // calculate offset when page & rows present
@@ -312,7 +302,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       count: projects.count,
       page,
       rows: page_rows,
-      layout: rsd_page_layout,
       projects: projects.data,
     },
   }
