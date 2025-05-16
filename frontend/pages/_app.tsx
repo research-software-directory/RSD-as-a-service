@@ -87,8 +87,6 @@ function RsdApp(props: MuiAppProps) {
     pluginSettings
   } = props
 
-  //currently we support only default (light) and dark RSD theme for MUI
-  // const muiTheme = loadMuiTheme(settings.theme.mode as RsdThemes)
   const router = useRouter()
   // const [options, setSnackbar] = useState(snackbarDefaults)
   /**

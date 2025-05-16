@@ -3,7 +3,7 @@ SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 SPDX-FileCopyrightText: 2021 - 2023 dv4all
 SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 
@@ -14,7 +14,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rsd-frontend&metric=coverage)](https://sonarcloud.io/summary/overall?id=rsd-frontend)
 
-Based on the features in the legacy application and the current requirements we selected [Next.js](https://nextjs.org/docs) and MUI-5 (https://mui.com/getting-started/usage/) frameworks for:
+Based on the features in the legacy application and the current requirements we selected [Next.js](https://nextjs.org/docs) and MUI-7 (https://mui.com/getting-started/usage/) frameworks for:
 
 - Easy integration with generic SSO oAuth services like ORCID, SURFconext, Microsoft etc.
 - SEO support for custom meta tags and dynamic build sitemap.xml file
@@ -74,50 +74,6 @@ For oAuth implementation we need env variables. From the project root directory,
 POSTGREST_URL=http://localhost/api/v1
 ```
 
-### Intercepting HTTP requests
-
-It can be useful to intercept HTTP requests made by the Next.js server in order to identify potential bottlenecks and to see if the requests made are correct. In order to do so, add the following snippet to the end of `frontend/pages/_app.tsx`:
-
-```javascript
-function replaceFetch(originalFetch: any) {
-  const newFetch = async function (url: any, conf: any) {
-    const tik = Date.now()
-    const resp = await originalFetch(url, conf)
-    const tok = Date.now()
-
-    if (conf) {
-      // eslint-disable-next-line no-console
-      console.log(`${tok - tik} ms for ${conf.method ?? 'GET'} for URL: ${url} with body ${conf.body ?? 'no body'}`)
-    } else {
-      // eslint-disable-next-line no-console
-      console.log(`${tok - tik} ms for GET for URL: ${url}`)
-    }
-    return resp
-  }
-
-  global.fetch = newFetch
-}
-
-// @ts-expect-error will be removed later
-if (!global.originalFetch) {
-  const originalFetch = global.fetch
-  // @ts-expect-error will be removed later
-  global.originalFetch = originalFetch
-
-  replaceFetch(originalFetch)
-}
-
-// because Next.js overwrites global.fetch again...
-setInterval(() => {
-  // @ts-expect-error will be removed later
-  const originalFetch = global.originalFetch
-
-  replaceFetch(originalFetch)
-}, 10)
-```
-
-It will print each HTTP request and the time it took to complete.
-
 ## Folders
 
 - `__tests__`: unit test for **pages only**. Unit tests for the components are in the same directory as components.
@@ -127,10 +83,10 @@ It will print each HTTP request and the time it took to complete.
 - `pages`: next specific, pages and api endpoints. For more information [see official documentation](https://nextjs.org/docs/routing/introduction)
 - `public`: folder for public assets of the website. For example favicon.ico file and robots.txt are stored here. The root of the public folder is equivalent to the root on the webserver. Note that react file at `page/index.tsx` represents the template for the root webpage.
 - `styles`: folder for css files and MUI theme objects. Read specific [readme file about theming](./styles/README.md).
-- `types`: folder for typescript type objects. Note! specific, not-shared types are sometimes stored within component file
+- `types`: folder for typescript type objects. Note! specific, not-shared types are (preferably) stored within component file
 - `utils`: folder for utility functions, hooks, composables etc.
 
-## Material UI (v5)
+## Material UI (v7)
 
 The integration between Next.js and MUI-5 is based on [official example](https://github.com/mui-org/material-ui/tree/master/examples/nextjs).
 More explanation concerning the official example can be found in [this video](https://www.youtube.com/watch?v=IFaFFmPYyMI&t=597s)
@@ -218,6 +174,50 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+## Intercepting HTTP requests
+
+It can be useful to intercept HTTP requests made by the Next.js server in order to identify potential bottlenecks and to see if the requests made are correct. In order to do so, add the following snippet to the end of `frontend/pages/_app.tsx`:
+
+```javascript
+function replaceFetch(originalFetch: any) {
+  const newFetch = async function (url: any, conf: any) {
+    const tik = Date.now()
+    const resp = await originalFetch(url, conf)
+    const tok = Date.now()
+
+    if (conf) {
+      // eslint-disable-next-line no-console
+      console.log(`${tok - tik} ms for ${conf.method ?? 'GET'} for URL: ${url} with body ${conf.body ?? 'no body'}`)
+    } else {
+      // eslint-disable-next-line no-console
+      console.log(`${tok - tik} ms for GET for URL: ${url}`)
+    }
+    return resp
+  }
+
+  global.fetch = newFetch
+}
+
+// @ts-expect-error will be removed later
+if (!global.originalFetch) {
+  const originalFetch = global.fetch
+  // @ts-expect-error will be removed later
+  global.originalFetch = originalFetch
+
+  replaceFetch(originalFetch)
+}
+
+// because Next.js overwrites global.fetch again...
+setInterval(() => {
+  // @ts-expect-error will be removed later
+  const originalFetch = global.originalFetch
+
+  replaceFetch(originalFetch)
+}, 10)
+```
+
+It will print each HTTP request and the time it took to complete.
 
 ## Updates and upgrades
 

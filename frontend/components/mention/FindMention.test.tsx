@@ -29,7 +29,8 @@ const mockMentionItem = {
   // is_featured?: boolean
   mention_type: 'book' as MentionTypeKeys,
   source: 'crossref',
-  note: null
+  note: null,
+  journal: null
 }
 
 const props:FindMentionProps = {
@@ -193,7 +194,7 @@ it('shows Add option when onCreate defined', async () => {
   expect(mockCreate).toHaveBeenCalledWith(searchFor)
 })
 
-it('leaves input after selection when reset=false', async () => {
+it('leaves input value after selection when reset=false', async () => {
   // resolve with no options
   mockSearchFn.mockResolvedValueOnce([mockMentionItem,mockMentionItem])
   // SET RESET TO FALSE
@@ -214,7 +215,7 @@ it('leaves input after selection when reset=false', async () => {
   })
 
   // then wait for loader to be removed
-  // requied for rest of the test to pass
+  // required for rest of the test to pass
   await waitForElementToBeRemoved(() => screen.getByTestId('circular-loader'))
 
   // select only option in dropdown
@@ -225,7 +226,7 @@ it('leaves input after selection when reset=false', async () => {
   fireEvent.click(options[0])
 
   // expect input to be preset
-  expect(searchInput).toHaveValue(searchFor)
+  expect(searchInput).toHaveValue(mockMentionItem.title)
 })
 
 it('removes input after selection when reset=true', async () => {
@@ -259,4 +260,3 @@ it('removes input after selection when reset=true', async () => {
   // exper input to be reset
   expect(searchInput).toHaveValue('')
 })
-
