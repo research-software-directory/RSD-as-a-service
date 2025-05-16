@@ -128,9 +128,6 @@ export default function UserMenu() {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'menu-button',
-        }}
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
         // disable adding styles to body (overflow:hidden & padding-right)

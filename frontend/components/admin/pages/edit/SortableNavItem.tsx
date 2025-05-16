@@ -9,6 +9,7 @@
 import {useSortable} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
 import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import SortableListItemActions from '~/components/layout/SortableListItemActions'
@@ -28,12 +29,11 @@ export default function SortableNavItem({item, selected, index, onSelect}: Dragg
   } = useSortable({id: item.id ?? ''})
 
   return (
-    <ListItem
-      data-testid="sortable-nav-item"
+    <ListItemButton
+      selected={item.slug === selected}
       // draggable
       ref={setNodeRef}
       {...attributes}
-      selected={item.slug === selected}
       onClick={() => onSelect(item)}
       sx={{
         transform: CSS.Translate.toString(transform),
@@ -42,25 +42,27 @@ export default function SortableNavItem({item, selected, index, onSelect}: Dragg
         zIndex: isDragging ? 9:0,
         cursor: isDragging ? 'move' : 'default'
       }}
-      secondaryAction={
-        <SortableListItemActions
-          pos={index}
-          listeners={listeners}
-        />
-      }
     >
-      {/* <ListItemButton> */}
-      <ListItemIcon>
-        <span className='text-[2rem]'>{item?.position ?? index+1}</span>
-      </ListItemIcon>
-      <ListItemText
-        primary={
-          <span className={`${item.is_published ? '' : 'text-base-content-disabled'}`}>
-            {item.title}
-          </span>
+      <ListItem
+        data-testid="sortable-nav-item"
+        secondaryAction={
+          <SortableListItemActions
+            pos={index}
+            listeners={listeners}
+          />
         }
-      />
-      {/* </ListItemButton> */}
-    </ListItem>
+      >
+        <ListItemIcon>
+          <span className='text-[2rem]'>{item?.position ?? index+1}</span>
+        </ListItemIcon>
+        <ListItemText
+          primary={
+            <span className={`${item.is_published ? '' : 'text-base-content-disabled'}`}>
+              {item.title}
+            </span>
+          }
+        />
+      </ListItem>
+    </ListItemButton>
   )
 }
