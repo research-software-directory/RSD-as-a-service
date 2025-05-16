@@ -3,16 +3,18 @@
 // SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 /** @type {import('next').NextConfig} */
+import type {NextConfig} from 'next'
 
-const rewritesConfig = require('./next.rewrites')
-const securityHeaders = require('./next.headers')
+import rewritesConfig from './next.rewrites'
+import securityHeaders from './next.headers'
 
-module.exports = {
+const nextConfig: NextConfig = {
+// module.exports = {
   // create standalone output to use in docker image
   // and achieve minimal image size (see Dockerfile)
   output: 'standalone',
@@ -56,15 +58,13 @@ module.exports = {
       },
     ]
   },
-  experimental: {
-    // turbopack config
-    turbo: {
-      rules: {
-        // convert svg to react component
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.jsx',
-        },
+  // turbopack config https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack
+  turbopack: {
+    rules: {
+      // convert svg to react component
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.jsx',
       },
     },
   },
@@ -77,5 +77,6 @@ module.exports = {
     })
     return config
   },
-
 }
+
+export default nextConfig

@@ -17,12 +17,12 @@ import getBrowser from '~/utils/getBrowser'
 import useDisableScrollLock from '~/utils/useDisableScrollLock'
 import CaretIcon from '~/components/icons/caret.svg'
 
-export type FeedbackPanelButtonProps={
+export type FeedbackPanelButtonProps=Readonly<{
   feedback_email: string,
   issues_page_url: string,
   host_label?: string,
   closeFeedbackPanel?: () => void
-}
+}>
 
 export default function FeedbackPanelButton({
   feedback_email, issues_page_url,
@@ -53,6 +53,10 @@ export default function FeedbackPanelButton({
   function browserNameAndVersion(): string | undefined {
     const browser = getBrowser()
     return `${browser?.name} ${browser?.version}`
+  }
+
+  function mailSubject(){
+    return encodeURIComponent(`Feedback about ${host_label}`)
   }
 
   function mailBody(): string | undefined {
@@ -119,7 +123,7 @@ User Agent: ${navigator.userAgent}`
                 className="text-sm text-base-100 hover:text-base-100 bg-primary px-3 py-1 rounded-sm hover:opacity-90 active:opacity-95"
                 target="_blank"
                 rel="noreferrer"
-                href={`mailto:${feedback_email}?subject=${encodeURIComponent(`Feedback about ${host_label}`)}&body=${mailBody()}`}
+                href={`mailto:${feedback_email}?subject=${mailSubject()}&body=${mailBody()}`}
               >
                 <MailOutlineOutlined/> Send feedback
               </a>
