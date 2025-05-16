@@ -94,5 +94,5 @@ afterEach(() => {
   // call node garbage collection after each test is performed.
   // In node v18/v16 there seem to be a change in memory management that causes memory leaks
   // when running tests in Jest. We manually call garbage collection after each test to reduce memory use.
-  global.gc && global.gc()
+  if (global.gc) global.gc()
 })
