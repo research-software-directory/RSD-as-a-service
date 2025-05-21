@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -13,7 +14,7 @@ import {useTheme} from '@mui/material/styles'
 import CloseIcon from '@mui/icons-material/Close'
 import IconButton from '@mui/material/IconButton'
 
-import {Provider} from 'pages/api/fe/auth'
+import {Provider} from '~/auth/api/getLoginProviders'
 import useRsdSettings from '~/config/useRsdSettings'
 import LoginProviders from './LoginProviders'
 

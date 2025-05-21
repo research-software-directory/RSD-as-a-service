@@ -1,8 +1,8 @@
 <!--
 SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 SPDX-FileCopyrightText: 2022 dv4all
-SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 
@@ -61,13 +61,10 @@ The default index.css and settings.json are already in the frontend image. If yo
       - SURFCONEXT_CLIENT_ID
       - SURFCONEXT_REDIRECT
       - SURFCONEXT_WELL_KNOWN_URL
-      - SURFCONEXT_SCOPES
-      - SURFCONEXT_RESPONSE_MODE
       - HELMHOLTZID_CLIENT_ID
       - HELMHOLTZID_REDIRECT
       - HELMHOLTZID_WELL_KNOWN_URL
       - HELMHOLTZID_SCOPES
-      - HELMHOLTZID_RESPONSE_MODE
     expose:
       - 3000
     depends_on:

@@ -55,10 +55,6 @@ AZURE_CLIENT_ID=
 AZURE_REDIRECT=http://localhost/auth/login/azure
 # consumed by: authentication, frontend/utils/loginHelpers
 AZURE_WELL_KNOWN_URL=
-# consumed by: authentication, frontend/utils/loginHelpers
-AZURE_SCOPES=openid+email+profile
-# consumed by: authentication, frontend/utils/loginHelpers
-AZURE_LOGIN_PROMPT=select_account
 # consumed by: frontend
 # the name displayed to users when multiple providers are configured
 AZURE_DISPLAY_NAME="Microsoft Azure AD"

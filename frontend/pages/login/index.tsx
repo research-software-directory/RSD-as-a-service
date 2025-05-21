@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -6,12 +7,12 @@
 import {GetServerSidePropsContext} from 'next'
 
 import {getRsdTokenNode, useSession} from '~/auth'
+import {Provider,getLoginProviders} from '~/auth/api/getLoginProviders'
 import MainContent from '~/components/layout/MainContent'
 import PageBackground from '~/components/layout/PageBackground'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import LoginProviders from '~/components/login/LoginProviders'
-import {Provider, ssrProvidersInfo} from 'pages/api/fe/auth'
 
 export default function LoginPage({providers}:Readonly<{providers:Provider[]}>) {
   const {status} = useSession()
@@ -58,18 +59,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   // get list of available providers
-  const providers = await ssrProvidersInfo()
+  const providers = await getLoginProviders()
 
   // if no providers we show 404 page
   if (providers?.length === 0){
     return {
       notFound: true
     }
-  }else if (providers?.length === 1 && providers[0]?.redirectUrl){
+  }else if (providers?.length === 1 && providers[0]?.signInUrl){
     // when only 1 provider we redirect directly
     return {
       redirect: {
-        destination: providers[0]?.redirectUrl,
+        destination: providers[0]?.signInUrl,
         permanent: false
       },
     }
