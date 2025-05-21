@@ -44,7 +44,7 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		Init.checkConfigAndPrintStatus();
+		RsdProviders rsdProviders = new RsdProviders();
 		Javalin app = Javalin.create(c -> c.useVirtualThreads = false).start(7000);
 
 		app.afterMatched("/login/*", ctx -> {
@@ -53,9 +53,13 @@ public class Main {
 
 		app.get("/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
 
+		app.get("/providers", ctx -> {
+			ctx.json(rsdProviders.activeProvidersAsJson());
+		});
+
 		app.post("/login/local", ctx -> {
 			OpenidProvider localProvider = OpenidProvider.local;
-			switch (Config.accessMethodOfProvider(localProvider)) {
+			switch (rsdProviders.accessMethodOfProvider(localProvider)) {
 				case MISCONFIGURED -> {
 					handleMisconfiguredProvider(ctx, localProvider);
 				}
@@ -77,7 +81,7 @@ public class Main {
 
 		app.post("/login/surfconext", ctx -> {
 			OpenidProvider surfProvider = OpenidProvider.surfconext;
-			switch (Config.accessMethodOfProvider(surfProvider)) {
+			switch (rsdProviders.accessMethodOfProvider(surfProvider)) {
 				case MISCONFIGURED -> {
 					handleMisconfiguredProvider(ctx, surfProvider);
 				}
@@ -99,7 +103,7 @@ public class Main {
 
 		app.get("/login/helmholtzid", ctx -> {
 			OpenidProvider helmholtzProvider = OpenidProvider.helmholtz;
-			switch (Config.accessMethodOfProvider(helmholtzProvider)) {
+			switch (rsdProviders.accessMethodOfProvider(helmholtzProvider)) {
 				case MISCONFIGURED -> {
 					handleMisconfiguredProvider(ctx, helmholtzProvider);
 				}
@@ -126,7 +130,7 @@ public class Main {
 
 		app.get("/login/orcid", ctx -> {
 			OpenidProvider orcidProvider = OpenidProvider.orcid;
-			switch (Config.accessMethodOfProvider(orcidProvider)) {
+			switch (rsdProviders.accessMethodOfProvider(orcidProvider)) {
 				case MISCONFIGURED -> {
 					handleMisconfiguredProvider(ctx, orcidProvider);
 				}
@@ -166,7 +170,7 @@ public class Main {
 
 		app.get("/login/azure", ctx -> {
 			OpenidProvider azureProvider = OpenidProvider.azure;
-			switch (Config.accessMethodOfProvider(azureProvider)) {
+			switch (rsdProviders.accessMethodOfProvider(azureProvider)) {
 				case MISCONFIGURED -> {
 					handleMisconfiguredProvider(ctx, azureProvider);
 				}
@@ -188,7 +192,7 @@ public class Main {
 
 		app.get("login/linkedin", ctx -> {
 			OpenidProvider linkedinProvider = OpenidProvider.linkedin;
-			switch (Config.accessMethodOfProvider(linkedinProvider)) {
+			switch (rsdProviders.accessMethodOfProvider(linkedinProvider)) {
 				case MISCONFIGURED -> {
 					handleMisconfiguredProvider(ctx, linkedinProvider);
 				}

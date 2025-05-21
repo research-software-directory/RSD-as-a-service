@@ -27,13 +27,44 @@ public class Utils {
 	private Utils() {
 	}
 
+	@SafeVarargs
+	public static <T> T coalesce(T... objects) {
+		for (T object : objects) {
+			if (object != null) {
+				return object;
+			}
+		}
+		throw new NullPointerException("No non-null reference found");
+	}
+
+	public static URI getAuthUrlFromWellKnownUrl(URI wellKnownUrl) throws IOException, InterruptedException, RsdResponseException {
+		HttpRequest request = HttpRequest.newBuilder(wellKnownUrl).build();
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+			if (response.statusCode() != 200) {
+				throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Wrong status code querying well-known URL");
+			}
+			try {
+				return extractAuthUrlFromWellKnownData(response.body());
+			} catch (RuntimeException e) {
+				throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Could not extract auth URL from well-known URL response body");
+			}
+		}
+	}
+
 	public static URI getTokenUrlFromWellKnownUrl(URI wellKnownUrl) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder(wellKnownUrl).build();
 		try (HttpClient client = HttpClient.newHttpClient()) {
-			HttpResponse<String> response;
-			response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 			return extractTokenUrlFromWellKnownData(response.body());
 		}
+	}
+
+	public static URI extractAuthUrlFromWellKnownData(String jsonData) {
+		JsonObject dataAsObject = JsonParser.parseString(jsonData).getAsJsonObject();
+		String tokenUrl = dataAsObject.getAsJsonPrimitive("authorization_endpoint").getAsString();
+		return URI.create(tokenUrl);
 	}
 
 	public static URI extractTokenUrlFromWellKnownData(String jsonData) {
