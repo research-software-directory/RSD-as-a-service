@@ -10,6 +10,8 @@
 
 package nl.esciencecenter.rsd.authentication;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -77,15 +79,38 @@ public class Config {
 				continue;
 			}
 
+			// duplicate entries are considered to be misconfigured
 			result.compute(openidProvider, (_key, oldValue) -> oldValue == null ? accessMethod : OpenidProviderAccessMethod.MISCONFIGURED);
 		}
 
 		return result;
 	}
 
+	public static URI wellKnownUrl(OpenidProvider provider) throws URISyntaxException {
+		String rawUrl = switch (provider) {
+			case local -> null;
+			case surfconext -> surfconextWellknown();
+			case helmholtz -> helmholtzIdWellknown();
+			case orcid -> orcidWellknown();
+			case azure -> azureWellknown();
+			case linkedin -> linkedinWellknown();
+		};
+
+		if (rawUrl == null) {
+			return null;
+		}
+
+		return new URI(rawUrl);
+	}
+
 	public static OpenidProviderAccessMethod accessMethodOfProvider(OpenidProvider provider) {
 		Objects.requireNonNull(provider);
-		return ACCESS_METHOD_MAP.getOrDefault(provider, OpenidProviderAccessMethod.DISABLED);
+		OpenidProviderAccessMethod accessMethod = ACCESS_METHOD_MAP.getOrDefault(provider, OpenidProviderAccessMethod.DISABLED);
+
+		if (provider != OpenidProvider.local && wellKnownUrl(provider) == null) {
+			return OpenidProviderAccessMethod.MISCONFIGURED;
+		}
+		return accessMethod;
 	}
 
 	public static boolean isOrcidCouplingEnabled() {

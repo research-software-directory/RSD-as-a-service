@@ -27,6 +27,25 @@ public class Utils {
 	private Utils() {
 	}
 
+	@SafeVarargs
+	public static <T> T coalesce(T... objects) {
+		for (T object : objects) {
+			if (object != null) {
+				return object;
+			}
+		}
+		throw new NullPointerException("No non-null reference found");
+	}
+
+	public static URI getAuthUrlFromWellKnownUrl(URI wellKnownUrl) throws IOException, InterruptedException {
+		HttpRequest request = HttpRequest.newBuilder(wellKnownUrl).build();
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			HttpResponse<String> response;
+			response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+			return extractAuthUrlFromWellKnownData(response.body());
+		}
+	}
+
 	public static URI getTokenUrlFromWellKnownUrl(URI wellKnownUrl) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder(wellKnownUrl).build();
 		try (HttpClient client = HttpClient.newHttpClient()) {
@@ -34,6 +53,12 @@ public class Utils {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 			return extractTokenUrlFromWellKnownData(response.body());
 		}
+	}
+
+	public static URI extractAuthUrlFromWellKnownData(String jsonData) {
+		JsonObject dataAsObject = JsonParser.parseString(jsonData).getAsJsonObject();
+		String tokenUrl = dataAsObject.getAsJsonPrimitive("authorization_endpoint").getAsString();
+		return URI.create(tokenUrl);
 	}
 
 	public static URI extractTokenUrlFromWellKnownData(String jsonData) {
