@@ -201,11 +201,13 @@ services:
 
   codemeta:
     build: ./codemeta
-    image: rsd/codemeta:v1.2.1
+    image: rsd/codemeta:2.0.0
     expose:
       - "8000"
     environment:
+      - ENABLE_4TU_SCRAPER
       - POSTGREST_URL
+      - PGRST_JWT_SECRET
     depends_on:
       - backend
     networks:

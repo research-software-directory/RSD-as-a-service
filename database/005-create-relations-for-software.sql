@@ -14,6 +14,7 @@ CREATE TYPE platform_type AS ENUM (
 	'github',
 	'gitlab',
 	'bitbucket',
+	'4tu',
 	'other'
 );
 
@@ -50,6 +51,7 @@ CREATE TYPE package_manager_type AS ENUM (
 	'crates',
 	'debian',
 	'dockerhub',
+	'fourtu',
 	'ghcr',
 	'github',
 	'gitlab',
@@ -68,6 +70,7 @@ CREATE TABLE package_manager (
 	software UUID REFERENCES software (id) NOT NULL,
 	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://\S+$'),
 	package_manager package_manager_type NOT NULL DEFAULT 'other',
+	UNIQUE(software, url, package_manager),
 	download_count BIGINT,
 	download_count_last_error VARCHAR(500),
 	download_count_scraped_at TIMESTAMPTZ,

@@ -32,6 +32,7 @@ public class MainCommits {
 
 		scrapeGitHub();
 		scrapeGitLab();
+		scrape4tu();
 
 		long time = System.currentTimeMillis() - t1;
 
@@ -107,6 +108,39 @@ public class MainCommits {
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitHub commit scraper", "repository_url", commitData.software(), e);
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
+				}
+			});
+			futures[i] = future;
+			i++;
+		}
+		CompletableFuture.allOf(futures).join();
+	}
+
+	private static void scrape4tu() {
+		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.FOURTU);
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.commitData(Config.maxRequestsGithub());
+		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
+		ZonedDateTime scrapedAt = ZonedDateTime.now();
+		int i = 0;
+		for (BasicRepositoryData commitData : dataToScrape) {
+			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+				try {
+					String repoUrl = commitData.url();
+
+					FourTuGitScraper fourTuGitScraper = new FourTuGitScraper(repoUrl);
+					CommitsPerWeek scrapedCommits = fourTuGitScraper.contributions();
+					CommitData updatedData = new CommitData(commitData, scrapedCommits, scrapedAt);
+					softwareInfoRepository.saveCommitData(updatedData);
+				} catch (RsdRateLimitException e) {
+					// in case we hit the rate limit, we don't update the scraped_at time, so it gets scraped first next time
+					Utils.saveExceptionInDatabase("4TU commit scraper", "repository_url", commitData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", null, null);
+				} catch (RsdResponseException e) {
+					Utils.saveExceptionInDatabase("4TU commit scraper", "repository_url", commitData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
+				} catch (Exception e) {
+					Utils.saveExceptionInDatabase("4TU commit scraper", "repository_url", commitData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				}
 			});

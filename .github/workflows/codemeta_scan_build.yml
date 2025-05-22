@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-# SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -31,8 +31,11 @@ jobs:
         with:
           go-version: '1.22.5'
       - run: |
-          go build -v
-        working-directory: codemeta
+          go build -v -o ./app
+        working-directory: codemeta/src
+      - run: |
+          go build -v -o ./scraper-4tu codemeta/scrapers
+        working-directory: codemeta/src
       - name: SonarCloud Scan codemeta
         uses: SonarSource/sonarcloud-github-action@master
         env:

@@ -1,0 +1,1 @@
+15 4 * * * /usr/local/bin/scraper-4tu > /proc/1/fd/1 2>&1
