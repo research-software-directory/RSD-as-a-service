@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -42,8 +44,11 @@ export function getRedirectUrl(props: RedirectToProps) {
     '&client_id=' + props.client_id +
     '&scope=' + props.scope +
     '&response_type=code' +
-    '&response_mode=' + props.response_mode +
-    '&prompt=' + (props.prompt ? props.prompt : 'login+consent')
+    '&response_mode=' + props.response_mode
+
+  if (props?.prompt) {
+    redirectUrl += '&prompt=' + props.prompt
+  }
 
   if (props?.claims){
     redirectUrl += '&claims=' + encodeURIComponent(JSON.stringify(props.claims))
