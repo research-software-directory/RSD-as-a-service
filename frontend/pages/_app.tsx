@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -39,7 +39,7 @@ import {getSettingsServerSide} from '~/config/getSettingsServerSide'
 import {setContentSecurityPolicyHeader} from '~/utils/contentSecurityPolicy'
 import Announcement from '~/components/Announcement/Announcement'
 // user settings (from cookies)
-import {getUserSettings} from '~/utils/userSettings'
+import {getUserAvatar, getUserSettings} from '~/utils/userSettings'
 import {UserSettingsProps, UserSettingsProvider} from '~/config/UserSettingsContext'
 // plugin settings
 import getPlugins from '~/config/getPlugins'
@@ -87,8 +87,6 @@ function RsdApp(props: MuiAppProps) {
     pluginSettings
   } = props
 
-  //currently we support only default (light) and dark RSD theme for MUI
-  // const muiTheme = loadMuiTheme(settings.theme.mode as RsdThemes)
   const router = useRouter()
   // const [options, setSnackbar] = useState(snackbarDefaults)
   /**
@@ -226,11 +224,18 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
     }
     // get user settings from cookies
     userSettings = getUserSettings(req)
-    // get RSD plugins from config endpoint
-    pluginSettings = await getPlugins({
-      plugins:settings.host.plugins,
-      token:session?.token
-    })
+
+    // get RSD plugins from config endpoint and avatar_id
+    const [plugins, avatar_id] = await Promise.all([
+      getPlugins({
+        plugins:settings.host.plugins,
+        token:session?.token
+      }),
+      getUserAvatar(session?.user?.account,session?.token)
+    ])
+    // save plugin and avatar values
+    pluginSettings = plugins
+    userSettings.avatar_id = avatar_id
     // set content security header
     setContentSecurityPolicyHeader(res)
   }

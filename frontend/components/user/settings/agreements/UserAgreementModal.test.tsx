@@ -69,9 +69,8 @@ it('renders modal when notice_privacy_statement=false', async() => {
 })
 
 it('does not render modal when terms accepted', async() => {
-
-  // mock values
-  mockUserAgreements.mockReturnValueOnce({
+  // mock values (multiple request made)
+  mockUserAgreements.mockReturnValue({
     loading: false,
     agree_terms: true,
     notice_privacy_statement: true,

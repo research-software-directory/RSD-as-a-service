@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {ReactNode} from 'react'
-import styled from '@mui/system/styled'
+import {styled} from '@mui/material/styles'
 
 export const PageTitleSticky = styled('section')(({theme})=>({
   display: 'flex',
