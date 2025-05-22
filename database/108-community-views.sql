@@ -24,6 +24,7 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'You are not allowed to delete this community';
 	END IF;
 
+	DELETE FROM category_for_software WHERE category_id IN (SELECT category.id FROM category WHERE category.community = delete_community.id);
 	DELETE FROM category WHERE category.community = delete_community.id;
 	DELETE FROM invite_maintainer_for_community WHERE invite_maintainer_for_community.community = delete_community.id;
 	DELETE FROM keyword_for_community WHERE keyword_for_community.community = delete_community.id;
