@@ -209,16 +209,25 @@ services:
   rabbitmq:
     image: rabbitmq:4.0
     hostname: rabbitmq
-    ports:
-      - "5672:5672"
+    expose:
+      - "5672"
     networks:
       - net
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
 
   mail:
     build: ./mail
     image: rsd/mail:1.0.0
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     environment:
       - MAIL_SMTP_SERVER
       - MAIL_SMTP_PORT
@@ -234,6 +243,8 @@ services:
   publisher:
     build: ./publisher
     image: rsd/publisher:1.0.0
+    expose:
+      - "5000"
     depends_on:
       - rabbitmq
     environment:
@@ -301,3 +312,4 @@ networks:
 volumes:
   pgdb:
   lets-encrypt:
+  rabbitmq-data:

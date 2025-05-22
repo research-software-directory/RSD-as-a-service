@@ -3,4 +3,3 @@
 # SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 #
 # SPDX-License-Identifier: Apache-2.0
-# SPDX-License-Identifier: EUPL-1.2

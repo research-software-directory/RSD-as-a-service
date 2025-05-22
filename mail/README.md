@@ -12,7 +12,7 @@ This Python module provides a mail service that processes messages from `rabbitm
 ## Environment variables
 The following environment variables are necessary:
 
-- `MAIL_SMTP_SERVER`
+- `MAIL_SMTP_SERVER` (value without `https://`)
 - `MAIL_SMTP_PORT`
 - `MAIL_SMTP_SECURITY` (value = "SSL" or "STARTTLS")
 - `MAIL_SMTP_LOGIN`
