@@ -5,6 +5,7 @@
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,6 +23,10 @@ public class Config {
 
 	public static String jwtSigningSecret() {
 		return System.getenv("PGRST_JWT_SECRET");
+	}
+
+	public static String hostUrl() {
+		return System.getenv("HOST_URL");
 	}
 
 	private Config() {
@@ -94,6 +99,10 @@ public class Config {
 
 	public static boolean isLinkedinCouplingEnabled() {
 		return rsdAuthCoupleProviders().contains("LINKEDIN");
+	}
+
+	public static boolean  isApiAccessTokenEnabled() {
+		return "true".equals(System.getenv("RSD_API_ACCESS_TOKEN_ENABLED"));
 	}
 
 	public static String backendBaseUrl() {
