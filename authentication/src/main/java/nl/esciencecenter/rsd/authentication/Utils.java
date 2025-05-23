@@ -1,28 +1,35 @@
 // SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package nl.esciencecenter.rsd.authentication;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Map;
+import java.util.Optional;
 import java.util.StringJoiner;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class Utils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
+	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
 
 	private Utils() {
 	}
@@ -72,5 +79,82 @@ public class Utils {
 			}
 			return response.body();
 		}
+	}
+
+	public static HttpResponse<String> makeBasicRequest(String method, Optional<String> jsonBody, URI uri, String jwtToken) {
+		HttpRequest.Builder builder = HttpRequest.newBuilder()
+			.uri(uri)
+			.timeout(DEFAULT_TIMEOUT)
+			.header("Authorization", "Bearer " + jwtToken);
+
+		switch (method.toUpperCase()) {
+			case "GET" -> builder.GET();
+			case "DELETE" -> builder.DELETE();
+			case "POST" -> {
+				if (jsonBody.isPresent()) {
+					builder.POST(BodyPublishers.ofString(jsonBody.get()));
+				} else {
+					builder.POST(HttpRequest.BodyPublishers.noBody());
+				}
+			}
+			default -> throw new IllegalArgumentException("Unsupported HTTP method: " + method);
+		}
+
+		HttpRequest request = builder.build();
+
+		HttpResponse<String> response;
+
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		} catch (InterruptedException e) {
+			LOGGER.warn("Request to {} was interrupted", uri, e);
+			Thread.currentThread().interrupt();
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			LOGGER.error("An error occurred sending a request to {}", uri, e);
+			throw new RuntimeException(e);
+		}
+
+		if (response.statusCode() >= 300) {
+			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
+		}
+		return response;
+	}
+
+	/**
+	 * Retrieve data from PostgREST as an admin user and retrieve the response body.
+	 *
+	 * @param uri The URI
+	 * @return Returns the content of the HTTP response
+	 */
+	public static String getAsAdmin(String uri) {
+		String signingSecret = Config.jwtSigningSecret();
+		JwtCreator jwtCreator = new JwtCreator(signingSecret);
+		String jwtString = jwtCreator.createAdminJwt();
+
+		HttpRequest request = HttpRequest.newBuilder()
+			.GET()
+			.uri(URI.create(uri))
+			.timeout(DEFAULT_TIMEOUT)
+			.header("Authorization", "Bearer " + jwtString)
+			.build();
+
+		HttpResponse<String> response;
+
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		} catch (InterruptedException e) {
+			LOGGER.warn("Request to {} was interrupted", uri, e);
+			Thread.currentThread().interrupt();
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			LOGGER.error("An error occurred sending a request to {}", uri, e);
+			throw new RuntimeException(e);
+		}
+
+		if (response.statusCode() >= 300) {
+			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
+		}
+		return response.body();
 	}
 }

@@ -5,20 +5,17 @@
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package nl.esciencecenter.rsd.authentication;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import io.javalin.Javalin;
-import io.javalin.http.Context;
-import io.javalin.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Collections;
@@ -27,6 +24,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import io.javalin.Javalin;
+import io.javalin.http.Context;
+import io.javalin.http.HttpResponseException;
+import io.javalin.http.HttpStatus;
+
 public class Main {
 	private static final Duration AUTH_COOKIE_DURATION = Duration.ofHours(1);
 	private static final Duration FAILURE_COOKIE_DURATION = Duration.ofMinutes(1);
@@ -34,6 +44,7 @@ public class Main {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 	private static final String LOGIN_FAILED_PATH = "/login/failed";
+	private static final HttpClient httpClient = HttpClient.newHttpClient();
 
 	public static boolean idUserIsHelmholtzMember(OpenIdInfo helmholtzInfo) {
 		if (helmholtzInfo.organisation() == null) {
@@ -47,13 +58,13 @@ public class Main {
 		Init.checkConfigAndPrintStatus();
 		Javalin app = Javalin.create(c -> c.useVirtualThreads = false).start(7000);
 
-		app.afterMatched("/login/*", ctx -> {
+		app.afterMatched("/auth/login/*", ctx -> {
 			ctx.removeCookie(INVITE_COOKIE_NAME, "/auth");
 		});
 
-		app.get("/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
+		app.get("/auth/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
 
-		app.post("/login/local", ctx -> {
+		app.post("/auth/login/local", ctx -> {
 			OpenidProvider localProvider = OpenidProvider.local;
 			switch (Config.accessMethodOfProvider(localProvider)) {
 				case MISCONFIGURED -> {
@@ -75,7 +86,7 @@ public class Main {
 			}
 		});
 
-		app.post("/login/surfconext", ctx -> {
+		app.post("/auth/login/surfconext", ctx -> {
 			OpenidProvider surfProvider = OpenidProvider.surfconext;
 			switch (Config.accessMethodOfProvider(surfProvider)) {
 				case MISCONFIGURED -> {
@@ -97,7 +108,7 @@ public class Main {
 			}
 		});
 
-		app.get("/login/helmholtzid", ctx -> {
+		app.get("/auth/login/helmholtzid", ctx -> {
 			OpenidProvider helmholtzProvider = OpenidProvider.helmholtz;
 			switch (Config.accessMethodOfProvider(helmholtzProvider)) {
 				case MISCONFIGURED -> {
@@ -124,7 +135,7 @@ public class Main {
 			}
 		});
 
-		app.get("/login/orcid", ctx -> {
+		app.get("/auth/login/orcid", ctx -> {
 			OpenidProvider orcidProvider = OpenidProvider.orcid;
 			switch (Config.accessMethodOfProvider(orcidProvider)) {
 				case MISCONFIGURED -> {
@@ -147,7 +158,7 @@ public class Main {
 		});
 
 		if (Config.isOrcidCouplingEnabled()) {
-			app.get("/couple/orcid", ctx -> {
+			app.get("/auth/couple/orcid", ctx -> {
 				String code = ctx.queryParam("code");
 				String redirectUrl = Config.orcidRedirectCouple();
 				OpenIdInfo orcidInfo = new OrcidLogin(code, redirectUrl).openidInfo();
@@ -164,7 +175,7 @@ public class Main {
 			});
 		}
 
-		app.get("/login/azure", ctx -> {
+		app.get("/auth/login/azure", ctx -> {
 			OpenidProvider azureProvider = OpenidProvider.azure;
 			switch (Config.accessMethodOfProvider(azureProvider)) {
 				case MISCONFIGURED -> {
@@ -186,7 +197,7 @@ public class Main {
 			}
 		});
 
-		app.get("login/linkedin", ctx -> {
+		app.get("/auth/login/linkedin", ctx -> {
 			OpenidProvider linkedinProvider = OpenidProvider.linkedin;
 			switch (Config.accessMethodOfProvider(linkedinProvider)) {
 				case MISCONFIGURED -> {
@@ -209,7 +220,7 @@ public class Main {
 		});
 
 		if (Config.isLinkedinCouplingEnabled()) {
-			app.get("/couple/linkedin", ctx -> {
+			app.get("/auth/couple/linkedin", ctx -> {
 				String code = ctx.queryParam("code");
 				String redirectUrl = Config.linkedinRedirectCouple();
 				OpenIdInfo linkedinInfo = new LinkedinLogin(code, redirectUrl).openidInfo();
@@ -226,7 +237,91 @@ public class Main {
 			});
 		}
 
-		app.get("/refresh", ctx -> {
+		if (Config.isApiAccessTokenEnabled()) {
+			//endpoint to get all access tokes for a user (without secret)
+			app.get("/auth/accesstoken", ctx -> {
+				String accountId = extractAccountFromCookie(ctx);
+				String signingSecret = Config.jwtSigningSecret();
+				JwtCreator jwtCreator = new JwtCreator(signingSecret);
+				String jwtToken = jwtCreator.createAccessTokenJwt(accountId, null);
+				String tokenList = Argon2Creator.getAllTokensForUser(accountId, jwtToken);
+				ctx.json(tokenList).contentType("application/json");
+			});
+
+			//endpoint for generating new API access token
+			app.post("/auth/accesstoken", ctx -> {
+				String accountId = extractAccountFromCookie(ctx);
+
+				String requestBody = ctx.body();
+				JsonObject jsonObject = JsonParser.parseString(requestBody).getAsJsonObject();
+				String displayName = jsonObject.get("display_name").getAsString();
+				String expiresAt = jsonObject.get("expires_at").getAsString();
+				
+				String accessToken = Argon2Creator.generateNewAccessToken(accountId, displayName, expiresAt);
+				ctx.result("{\"access_token\":\"" + accessToken + "\"}").contentType("application/json");
+				ctx.status(201);
+			});
+
+			//endpoint for deleting API access token (revoking) by id
+			app.delete("/auth/accesstoken/{id}", ctx -> {
+				String tokenID = ctx.pathParam("id");
+				String accountId = extractAccountFromCookie(ctx);
+								
+				String signingSecret = Config.jwtSigningSecret();
+				JwtCreator jwtCreator = new JwtCreator(signingSecret);
+				String jwtToken = jwtCreator.createAccessTokenJwt(accountId, tokenID);
+				Integer deleteResponseCode = Argon2Creator.deleteTokenFromDatabase(tokenID, jwtToken);
+				ctx.status(deleteResponseCode);
+				
+			});
+
+			app.before("/api/v1/*", ctx -> {
+				String frontendTokenToVerify = ctx.cookie("rsd_token");
+				String authHeader = ctx.header("Authorization");
+				//if request from frontend, skip access token validation
+				if (frontendTokenToVerify != null) {
+					String signingSecret = Config.jwtSigningSecret();
+					JwtVerifier verifier = new JwtVerifier(signingSecret);
+					verifier.verify(frontendTokenToVerify);
+					String referer = ctx.header("Referer");
+					if (referer != null && referer.startsWith(Config.hostUrl())) {
+						ctx.attribute("X-API-Authorization-Header", "Bearer " + frontendTokenToVerify);
+					} else {
+						throw new HttpResponseException(401, "Untrusted referer");
+					}
+				} else if (authHeader != null && authHeader.startsWith("Bearer ")) {
+					String authToken = authHeader.substring(7);
+
+					String[] tokenParts = authToken.split("\\.");
+					String tokenID = tokenParts[0];
+					String tokenString = tokenParts[1];
+
+					Argon2Verifier verifier = new Argon2Verifier();
+					Optional<String> validatedUser = verifier.verify(tokenString, tokenID);
+					if (validatedUser.isPresent()) {
+						String userID = validatedUser.get();
+						String signingSecret = Config.jwtSigningSecret();
+						JwtCreator jwtCreator = new JwtCreator(signingSecret);
+						String token = jwtCreator.createAccessTokenJwt(userID, tokenID);
+						ctx.attribute("X-API-Authorization-Header", "Bearer " + token);
+					} else {
+						ctx.status(401).result("Invalid access token");
+						throw new HttpResponseException(401, "Invalid access token");
+					}
+
+				} else {
+					System.out.println(">>> Authorization header missing - forwarding request as anonymous");
+				}
+			});
+
+			app.get("/api/v1/*", Main::proxyToPostgrest);
+			app.post("/api/v1/*", Main::proxyToPostgrest);
+			app.put("/api/v1/*", Main::proxyToPostgrest);
+			app.patch("/api/v1/*", Main::proxyToPostgrest);
+			app.delete("/api/v1/*", Main::proxyToPostgrest);
+		}
+
+		app.get("/auth/refresh", ctx -> {
 			try {
 				String tokenToVerify = ctx.cookie("rsd_token");
 				String signingSecret = Config.jwtSigningSecret();
@@ -316,17 +411,17 @@ public class Main {
 		PostgrestAccount postgrestAccount = new PostgrestAccount(Config.backendBaseUrl());
 		Optional<AccountInfo> optionalAccountInfo = postgrestAccount.getAccountIfExists(openIdInfo, provider);
 		if (optionalAccountInfo.isPresent()) {
-			createAndSetToken(ctx, optionalAccountInfo.get());
+			createAndSetCookie(ctx, optionalAccountInfo.get());
 		} else {
 			UUID inviteId = getInviteIdFromRequest(ctx);
 			AccountInfo accountInfo = postgrestAccount.useInviteToCreateAccount(inviteId, openIdInfo, provider);
-			createAndSetToken(ctx, accountInfo);
+			createAndSetCookie(ctx, accountInfo);
 		}
 	}
 
 	static void handleAccountEveryoneAllowed(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx) throws IOException, InterruptedException {
 		AccountInfo accountInfo = new PostgrestAccount(Config.backendBaseUrl()).account(openIdInfo, provider);
-		createAndSetToken(ctx, accountInfo);
+		createAndSetCookie(ctx, accountInfo);
 	}
 
 	static void handleDisabledProvider(Context ctx, OpenidProvider provider) {
@@ -354,11 +449,15 @@ public class Main {
 		}
 	}
 
-	static void createAndSetToken(Context ctx, AccountInfo accountInfo) {
-		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-		String token = jwtCreator.createUserJwt(accountInfo);
+	static void createAndSetCookie(Context ctx, AccountInfo accountInfo) {
+		String token = createToken(accountInfo);
 		setJwtCookie(ctx, token);
 		setRedirectFromCookie(ctx);
+	}
+
+	static String createToken(AccountInfo accountInfo) {
+		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
+		return jwtCreator.createUserJwt(accountInfo);
 	}
 
 	static void setJwtCookie(Context ctx, String token) {
@@ -381,5 +480,48 @@ public class Main {
 
 	static String decode(String base64UrlEncoded) {
 		return new String(Base64.getUrlDecoder().decode(base64UrlEncoded));
+	}
+
+	static String extractAccountFromCookie(Context ctx) {
+		String tokenToVerify = ctx.cookie("rsd_token");
+		String signingSecret = Config.jwtSigningSecret();
+		JwtVerifier verifier = new JwtVerifier(signingSecret);
+		DecodedJWT decodedJWT = verifier.verify(tokenToVerify);
+		return decodedJWT.getClaim("account").asString();
+	}
+
+	private static void proxyToPostgrest(Context ctx) throws IOException, InterruptedException {
+		String method = ctx.method().toString();
+		String path = ctx.path().substring("/api/v1".length());
+		String fullUrl = Config.backendBaseUrl() + path + ((ctx.queryString() != null) ? "?" + ctx.queryString() : "");
+
+		HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+				.uri(URI.create(fullUrl));
+		
+		if (ctx.attribute("X-API-Authorization-Header") != null) {
+			requestBuilder.header("Authorization", ctx.attribute("X-API-Authorization-Header"));
+		}
+				
+		ctx.headerMap().forEach((k, v) -> {
+			if (!k.equalsIgnoreCase("host") && !k.equalsIgnoreCase("content-length") && !k.equalsIgnoreCase("authorization") && v != null) {
+				requestBuilder.header(k, v);
+			}
+		});
+
+		HttpRequest request = switch (method) {
+			case "GET", "DELETE" -> requestBuilder.method(method, HttpRequest.BodyPublishers.noBody()).build();
+			case "POST", "PUT", "PATCH" -> {
+				String body = ctx.body();
+				String contentType = ctx.contentType() != null ? ctx.contentType() : "application/json";
+				requestBuilder.header("Content-Type", contentType);
+				yield requestBuilder.method(method, HttpRequest.BodyPublishers.ofString(body)).build();
+			}
+			default -> throw new IllegalArgumentException("Unsupported HTTP method: " + method);
+		};
+
+		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+		ctx.status(response.statusCode());
+		ctx.result(response.body());
 	}
 }
