@@ -10,7 +10,7 @@ import {useSession} from '~/auth'
 import {getUserAccessTokens, createUserAccessToken, deleteUserAccessToken, NewAccessToken, AccessToken} from './apiAccessTokens'
 
 export function useAccessTokens() {
-  const {token, user} = useSession()
+  const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const [loading, setLoading] = useState(true)
   const [activeTokens, setActiveTokens] = useState<AccessToken[]>([])
@@ -19,41 +19,24 @@ export function useAccessTokens() {
     getTokens()
   }, [])
 
-  const getTokens = useCallback(() => {
+  const getTokens = useCallback(async () => {
     setLoading(true)
 
-    getUserAccessTokens({token})
-      .then(items => {
-        const accessTokens:AccessToken[] = items.map((item: {id: string, created_at: string, expires_at: string, display_name:string, account: string}) => {
-          return {
-            id: item['id'],
-            created_at: item['created_at'],
-            expires_at: item['expires_at'],
-            display_name: item['display_name']
-          }
-        })
-        setActiveTokens(accessTokens)
-      })
-      .catch(()=>setActiveTokens([]))
-      .finally(()=>setLoading(false))
+    const accessTokens:AccessToken[] = await getUserAccessTokens({token})
+    setActiveTokens(accessTokens)
+    setLoading(false)
 
   },[token])
 
-  const createToken = useCallback((accesstoken:NewAccessToken): Promise<string> => {
-    return createUserAccessToken({accesstoken, token})
-      .then((resp)=>{
-        if (resp.status===201){
-          getTokens()
-          return resp.message
-        }else{
-          showErrorMessage(`Failed to create access token. ${resp.message}`)
-          return ''
-        }
-      })
-      .catch(e=>{
-        showErrorMessage(`Failed to create access token. ${e.message}`)
-        return ''
-      })
+  const createToken = useCallback(async (accesstoken:NewAccessToken) => {
+    const resp = await createUserAccessToken({accesstoken, token})
+    if (resp.status===201){
+      getTokens()
+      return resp.message as string
+    }else{
+      showErrorMessage(`Failed to create access token. ${resp.message}`)
+      return undefined
+    }
   }, [token, getTokens, showErrorMessage])
 
   const deleteToken = useCallback(async({id}:{id:string}) => {

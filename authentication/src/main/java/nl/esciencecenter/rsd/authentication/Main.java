@@ -257,9 +257,16 @@ public class Main {
 				String displayName = jsonObject.get("display_name").getAsString();
 				String expiresAt = jsonObject.get("expires_at").getAsString();
 				
-				String accessToken = Argon2Creator.generateNewAccessToken(accountId, displayName, expiresAt);
-				ctx.result("{\"access_token\":\"" + accessToken + "\"}").contentType("application/json");
-				ctx.status(201);
+				try {
+					String accessToken = Argon2Creator.generateNewAccessToken(accountId, displayName, expiresAt);
+					ctx.result("{\"access_token\":\"" + accessToken + "\"}").contentType("application/json");
+					ctx.status(201);
+				} catch (IOException e) {
+					ctx.status(500).result("IO error occured: " + e.getMessage());
+				} catch (InterruptedException e) {
+					ctx.status(503).result("Request was interrupted: " + e.getMessage());
+				}
+				
 			});
 
 			//endpoint for deleting API access token (revoking) by id
@@ -275,7 +282,7 @@ public class Main {
 				
 			});
 
-			app.before("/api/v1/*", ctx -> {
+			app.before("/api/v2/*", ctx -> {
 				String frontendTokenToVerify = ctx.cookie("rsd_token");
 				String authHeader = ctx.header("Authorization");
 				//if request from frontend, skip access token validation
@@ -314,11 +321,11 @@ public class Main {
 				}
 			});
 
-			app.get("/api/v1/*", Main::proxyToPostgrest);
-			app.post("/api/v1/*", Main::proxyToPostgrest);
-			app.put("/api/v1/*", Main::proxyToPostgrest);
-			app.patch("/api/v1/*", Main::proxyToPostgrest);
-			app.delete("/api/v1/*", Main::proxyToPostgrest);
+			app.get("/api/v2/*", Main::proxyToPostgrest);
+			app.post("/api/v2/*", Main::proxyToPostgrest);
+			app.put("/api/v2/*", Main::proxyToPostgrest);
+			app.patch("/api/v2/*", Main::proxyToPostgrest);
+			app.delete("/api/v2/*", Main::proxyToPostgrest);
 		}
 
 		app.get("/auth/refresh", ctx -> {
@@ -492,7 +499,7 @@ public class Main {
 
 	private static void proxyToPostgrest(Context ctx) throws IOException, InterruptedException {
 		String method = ctx.method().toString();
-		String path = ctx.path().substring("/api/v1".length());
+		String path = ctx.path().substring("/api/v2".length());
 		String fullUrl = Config.backendBaseUrl() + path + ((ctx.queryString() != null) ? "?" + ctx.queryString() : "");
 
 		HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()

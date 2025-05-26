@@ -3,7 +3,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
 import Button from '@mui/material/Button'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import TextField from '@mui/material/TextField'
@@ -18,9 +20,8 @@ import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {ContentCopy} from '@mui/icons-material'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 
-
 type CreateRsdAccessTokenProps=Readonly<{
-  createAccessToken:(accesstoken:NewAccessToken)=>Promise<string>
+  createAccessToken:(accesstoken:NewAccessToken)=>Promise<string | undefined>
 }>
 
 const displayNameHelperText = 'Give your token a unique name'
@@ -37,28 +38,35 @@ export default function CreateAccessToken({createAccessToken}:CreateRsdAccessTok
   const [expires,setExpires] = useState<string>(
     getYearMonthDay(getDateFromNow(30)) ?? ''
   )
-  const [tokenString, setTokenString] = useState<string>('')
-  const {showInfoMessage} = useSnackbar()
+  const [tokenString, setTokenString] = useState<string | undefined>(undefined)
+  const {showInfoMessage, showErrorMessage} = useSnackbar()
 
 
   async function onCreateAccessToken() {
+    setTokenString(undefined)
     const accesstoken:NewAccessToken={
       display_name: displayName,
       expires_at: expires
     }
     const token_string = await createAccessToken(accesstoken)
     setTokenString(token_string)
+    setDisplayName('')
   }
 
   const handleClick = () => {
-    copyToClipboard(tokenString)
-    showInfoMessage('Copied to clipboard')
+    if (tokenString) {
+      copyToClipboard(tokenString)
+      showInfoMessage('Copied to clipboard')
+    } else {
+      showErrorMessage('Error when copying token to clipboard')
+    }
   }
 
   return (
     <>
       <EditSectionTitle
         title='Create new access token'
+        subtitle='To be able to access RSD entries based on your user access rights via an external application, you can create access tokens.'
       />
       <div className="flex gap-4 py-4">
         <TextField
@@ -104,27 +112,35 @@ export default function CreateAccessToken({createAccessToken}:CreateRsdAccessTok
       >
         Create Access Token
       </Button>
+      <Alert severity="warning" sx={{margin:'0.5rem 0 1rem 0'}}>
+        <AlertTitle sx={{fontWeight:500}}>Copy your generated token</AlertTitle>
+        <p>
+          Please note that the generated access token is only displayed to you once, and therefore needs to be copied. The maximum lifetime of a token is also limited to one year. After it expires, you need to generate a new token.
+        </p>
+      </Alert>
       {
-        (tokenString !== '') ? (
+        tokenString ? (
           <>
             <TextField
-              defaultValue={tokenString}
+              defaultValue={tokenString ?? ''}
               label="Token"
               variant="outlined"
               fullWidth
-              InputProps={{
-                readOnly: true,
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleClick}
-                      edge="end"
-                      aria-label='copy'
-                    >
-                      <ContentCopy />
-                    </IconButton>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  readOnly: true,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleClick}
+                        edge="end"
+                        aria-label='copy'
+                      >
+                        <ContentCopy />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }
               }}
             />
           </>

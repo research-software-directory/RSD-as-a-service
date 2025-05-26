@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import Alert from '@mui/material/Alert'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -10,7 +11,6 @@ import IconButton from '@mui/material/IconButton'
 import ListItemText from '@mui/material/ListItemText'
 
 import {AccessToken} from './apiAccessTokens'
-import useSnackbar from '~/components/snackbar/useSnackbar'
 import {daysDiff} from '~/utils/dateFn'
 import ContentLoader from '~/components/layout/ContentLoader'
 
@@ -20,11 +20,16 @@ type AccessTokenListProps=Readonly<{
   loading: boolean
 }>
 export default function AccessTokenList({tokens, onDelete, loading}:AccessTokenListProps) {
-  const {showErrorMessage, showInfoMessage} = useSnackbar()
-
-  if (tokens.length === 0) return null
 
   if (loading) return <ContentLoader />
+
+  if (tokens.length === 0) return (
+    <div className="pt-4">
+      <Alert severity="info">
+          No active tokens.
+      </Alert>
+    </div>
+  )
 
   return (
     <List>

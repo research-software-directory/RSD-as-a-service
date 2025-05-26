@@ -18,16 +18,16 @@ export type AccessToken = NewAccessToken & {
 
 export async function getUserAccessTokens({token}: { token: string }) {
   try {
-    const url = '/auth/accesstoken'
+    const url = getBaseUrl() + '/rpc/my_user_access_tokens'
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)
     })
     if (resp.status === 200) {
-      const data = await resp.json()
+      const data: AccessToken[] = await resp.json()
       return data
     }
-    logger(`getUserAccessTokens not 200: ${resp}`, 'error')
+    logger(`getUserAccessTokens not 200: ${resp.status} - ${resp.body}`, 'error')
     return []
   } catch (e: any) {
     logger(`getUserAccessTokens: ${e?.message}`, 'error')
@@ -45,7 +45,7 @@ export async function createUserAccessToken({accesstoken, token}: { accesstoken:
     })
     if (resp.status === 201) {
       const data = await resp.json()
-      const token_string = data['access_token']
+      const token_string: string = data['access_token']
       if (token_string) {
         return {
           status: 201,
@@ -70,11 +70,12 @@ export async function createUserAccessToken({accesstoken, token}: { accesstoken:
 
 export async function deleteUserAccessToken({id, token}: {id: string, token: string}) {
   try {
-    const url = `/auth/accesstoken/${id}`
+    const url = getBaseUrl() + '/rpc/delete_my_user_access_token'
 
     const resp = await fetch(url, {
-      method: 'DELETE',
-      headers: createJsonHeaders(token)
+      method: 'POST',
+      headers: createJsonHeaders(token),
+      body: JSON.stringify({id: id})
     })
 
     return extractReturnMessage(resp)
