@@ -21,7 +21,7 @@ public class Argon2Verifier {
 		AccessToken hashedToken = getHashForTokenID(tokenID);
 		Argon2PasswordEncoder encoder = Argon2Creator.argon2Encoder();
 		Boolean tokenIsValid = encoder.matches(token, hashedToken.secret());
-		if (tokenIsValid) {
+		if (Boolean.TRUE.equals(tokenIsValid)) {
 			return Optional.of(hashedToken.account());
 		}
 		return Optional.empty();
@@ -34,8 +34,7 @@ public class Argon2Verifier {
 		JsonArray jsonArray = JsonParser.parseString(tokenResponse).getAsJsonArray();
 		JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
 		Gson gson = new Gson();
-		AccessToken accessToken = gson.fromJson(jsonObject, AccessToken.class);
-		return accessToken;
+		return gson.fromJson(jsonObject, AccessToken.class);
 	}
 
 

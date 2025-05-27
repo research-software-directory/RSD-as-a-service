@@ -28,6 +28,7 @@ public class JwtCreator {
 	private final Algorithm signingAlgorithm;
 	private static final String RSD_ADMIN_ROLE = "rsd_admin";
 	private static final String RSD_USER_ROLE = "rsd_user";
+	private static final String RSD_AUTH_ROLE = "rsd_auth";
 
 	public JwtCreator(String signingSecret) {
 		Objects.requireNonNull(signingSecret);
@@ -36,7 +37,7 @@ public class JwtCreator {
 
 	String createUserJwt(AccountInfo accountInfo) {
 		return JWT.create()
-			.withClaim("iss", "rsd_auth")
+			.withClaim("iss", RSD_AUTH_ROLE)
 			.withClaim("role", accountInfo.isAdmin() ? RSD_ADMIN_ROLE : RSD_USER_ROLE)
 			.withClaim("account", accountInfo.account().toString())
 			.withClaim("name", accountInfo.name())
@@ -48,7 +49,7 @@ public class JwtCreator {
 
 	String createAdminJwt() {
 		return JWT.create()
-			.withClaim("iss", "rsd_auth")
+			.withClaim("iss", RSD_AUTH_ROLE)
 			.withClaim("role", RSD_ADMIN_ROLE)
 			.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
 			.sign(signingAlgorithm);
@@ -56,7 +57,7 @@ public class JwtCreator {
 
 	String createAccessTokenJwt(String accountID, String tokenID) {
 		return JWT.create()
-			.withClaim("iss", "rsd_auth")
+			.withClaim("iss", RSD_AUTH_ROLE)
 			.withClaim("role", RSD_USER_ROLE)
 			.withClaim("account", accountID)
 			.withClaim("type", "access_token_" + ((tokenID != null) ? tokenID : ""))

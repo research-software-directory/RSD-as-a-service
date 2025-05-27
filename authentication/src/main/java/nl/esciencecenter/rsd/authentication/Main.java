@@ -238,15 +238,6 @@ public class Main {
 		}
 
 		if (Config.isApiAccessTokenEnabled()) {
-			//endpoint to get all access tokes for a user (without secret)
-			app.get("/auth/accesstoken", ctx -> {
-				String accountId = extractAccountFromCookie(ctx);
-				String signingSecret = Config.jwtSigningSecret();
-				JwtCreator jwtCreator = new JwtCreator(signingSecret);
-				String jwtToken = jwtCreator.createAccessTokenJwt(accountId, null);
-				String tokenList = Argon2Creator.getAllTokensForUser(accountId, jwtToken);
-				ctx.json(tokenList).contentType("application/json");
-			});
 
 			//endpoint for generating new API access token
 			app.post("/auth/accesstoken", ctx -> {
@@ -264,19 +255,6 @@ public class Main {
 				} catch (RsdAccessTokenException e) {
 					ctx.status(400).result(e.getMessage());
 				}
-			});
-
-			//endpoint for deleting API access token (revoking) by id
-			app.delete("/auth/accesstoken/{id}", ctx -> {
-				String tokenID = ctx.pathParam("id");
-				String accountId = extractAccountFromCookie(ctx);
-								
-				String signingSecret = Config.jwtSigningSecret();
-				JwtCreator jwtCreator = new JwtCreator(signingSecret);
-				String jwtToken = jwtCreator.createAccessTokenJwt(accountId, tokenID);
-				Integer deleteResponseCode = Argon2Creator.deleteTokenFromDatabase(tokenID, jwtToken);
-				ctx.status(deleteResponseCode);
-				
 			});
 
 			app.before("/api/v2/*", ctx -> {
