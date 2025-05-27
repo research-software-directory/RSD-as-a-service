@@ -8,11 +8,14 @@
 # SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 # SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 # SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+# SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 #
 # SPDX-License-Identifier: Apache-2.0
 
 version: "3.0"
 
+# include:
+#   - ../rsd-license-consultation/docker-compose.yml
 services:
   database:
     build: ./database
@@ -90,6 +93,8 @@ services:
       - AUTH_AZURE_CLIENT_SECRET
       - AUTH_LINKEDIN_CLIENT_SECRET
       - PGRST_JWT_SECRET
+      - RSD_API_ACCESS_TOKEN_ENABLED
+      - HOST_URL
     depends_on:
       - database
       - backend
