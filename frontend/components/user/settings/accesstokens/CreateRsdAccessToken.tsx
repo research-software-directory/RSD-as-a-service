@@ -31,7 +31,7 @@ const expiresShortText = 'Month / Day / Year'
 
 const today = new Date()
 const minDate = formatDateToIsoStr(today)
-const maxDate = formatDateToIsoStr(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 365))
+const maxDate = formatDateToIsoStr(getDateFromNow(365))
 
 export default function CreateAccessToken({createAccessToken}:CreateRsdAccessTokenProps) {
   const [displayName, setDisplayName] = useState<string>('')
@@ -50,7 +50,9 @@ export default function CreateAccessToken({createAccessToken}:CreateRsdAccessTok
     }
     const token_string = await createAccessToken(accesstoken)
     setTokenString(token_string)
-    setDisplayName('')
+    if (token_string) {
+      setDisplayName('')
+    }
   }
 
   const handleClick = () => {
@@ -120,30 +122,28 @@ export default function CreateAccessToken({createAccessToken}:CreateRsdAccessTok
       </Alert>
       {
         tokenString ? (
-          <>
-            <TextField
-              defaultValue={tokenString ?? ''}
-              label="Token"
-              variant="outlined"
-              fullWidth
-              slotProps={{
-                input: {
-                  readOnly: true,
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={handleClick}
-                        edge="end"
-                        aria-label='copy'
-                      >
-                        <ContentCopy />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }
-              }}
-            />
-          </>
+          <TextField
+            defaultValue={tokenString ?? ''}
+            label="Token"
+            variant="outlined"
+            fullWidth
+            slotProps={{
+              input: {
+                readOnly: true,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={handleClick}
+                      edge="end"
+                      aria-label='copy'
+                    >
+                      <ContentCopy />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }
+            }}
+          />
         ) : null
       }
     </>

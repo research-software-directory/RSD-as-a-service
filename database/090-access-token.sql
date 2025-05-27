@@ -1,5 +1,7 @@
 -- SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +11,8 @@ CREATE TABLE user_access_token (
 	account UUID REFERENCES account (id) NOT NULL,
 	expires_at TIMESTAMPTZ NOT NULL,
 	display_name VARCHAR(100) NOT NULL,
-	created_at TIMESTAMPTZ NOT NULL
+	created_at TIMESTAMPTZ NOT NULL,
+	UNIQUE(account, display_name)
 );
 
 CREATE INDEX user_access_token_account_idx ON user_access_token(account);
@@ -20,7 +23,7 @@ $$
 BEGIN
 	NEW.id = gen_random_uuid();
 	NEW.created_at = LOCALTIMESTAMP;
-	IF NEW.expires_at - NEW.created_at > INTERVAL '1 year' THEN
+	IF NEW.expires_at - NEW.created_at > INTERVAL '365 days' THEN
 		RAISE EXCEPTION 'Access tokens should expire within one year';
 	END IF;
 	return NEW;

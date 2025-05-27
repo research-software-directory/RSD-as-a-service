@@ -57,7 +57,8 @@ export async function createUserAccessToken({accesstoken, token}: { accesstoken:
         message: 'Token is missing'
       }
     }
-    return extractReturnMessage(resp, 'access_token')
+    const text = await resp.text()
+    return {status: resp.status, message: text}
 
   } catch (e: any) {
     logger(`createUserAccessToken: ${e?.message}`, 'error')

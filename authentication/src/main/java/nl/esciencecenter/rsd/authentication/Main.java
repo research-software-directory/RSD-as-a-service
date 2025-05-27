@@ -261,12 +261,9 @@ public class Main {
 					String accessToken = Argon2Creator.generateNewAccessToken(accountId, displayName, expiresAt);
 					ctx.result("{\"access_token\":\"" + accessToken + "\"}").contentType("application/json");
 					ctx.status(201);
-				} catch (IOException e) {
-					ctx.status(500).result("IO error occured: " + e.getMessage());
-				} catch (InterruptedException e) {
-					ctx.status(503).result("Request was interrupted: " + e.getMessage());
+				} catch (RsdAccessTokenException e) {
+					ctx.status(400).result(e.getMessage());
 				}
-				
 			});
 
 			//endpoint for deleting API access token (revoking) by id
@@ -356,6 +353,12 @@ public class Main {
 			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
 		});
 
+		app.exception(RsdAccessTokenException.class, (ex, ctx) -> {
+			LOGGER.error("RsdAccessTokenException", ex);
+			ctx.status(400);
+			ctx.json("{\"message\": \"Error when creating access token\"}");
+		});
+
 		app.exception(RsdAccountInviteException.class, (ex, ctx) -> {
 			setLoginFailureCookie(ctx, ex.getMessage());
 			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
@@ -414,7 +417,7 @@ public class Main {
 		return new LinkedinLogin(code, redirectUrl).openidInfo();
 	}
 
-	static void handleAccountInviteOnly(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx) throws IOException, InterruptedException, RsdAccountInviteException {
+	static void handleAccountInviteOnly(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx) throws IOException, InterruptedException, RsdAccountInviteException, PostgresCustomException, PostgresForeignKeyConstraintException, PostgresUniqueConstraintException {
 		PostgrestAccount postgrestAccount = new PostgrestAccount(Config.backendBaseUrl());
 		Optional<AccountInfo> optionalAccountInfo = postgrestAccount.getAccountIfExists(openIdInfo, provider);
 		if (optionalAccountInfo.isPresent()) {
@@ -426,7 +429,7 @@ public class Main {
 		}
 	}
 
-	static void handleAccountEveryoneAllowed(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx) throws IOException, InterruptedException {
+	static void handleAccountEveryoneAllowed(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx) throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException, PostgresUniqueConstraintException {
 		AccountInfo accountInfo = new PostgrestAccount(Config.backendBaseUrl()).account(openIdInfo, provider);
 		createAndSetCookie(ctx, accountInfo);
 	}

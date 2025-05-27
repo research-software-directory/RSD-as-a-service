@@ -34,7 +34,7 @@ export function useAccessTokens() {
       getTokens()
       return resp.message as string
     }else{
-      showErrorMessage(`Failed to create access token. ${resp.message}`)
+      showErrorMessage(`${resp.status} - Failed to create access token. ${resp.message}`)
       return undefined
     }
   }, [token, getTokens, showErrorMessage])

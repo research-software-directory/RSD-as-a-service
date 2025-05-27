@@ -7,7 +7,6 @@ package nl.esciencecenter.rsd.authentication;
 
 import java.io.IOException;
 import java.net.URI;
-import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,7 +23,7 @@ public class Argon2Creator {
 	private static final Integer memory = 12288;
 	private static final Integer iterations = 3;
 
-	public static String generateNewAccessToken(String account, String displayName, String expiresAt) throws IOException, InterruptedException {
+	public static String generateNewAccessToken(String account, String displayName, String expiresAt) throws RsdAccessTokenException {
 		String opaqueToken = generateOpaqueToken();
 		String secret = generateArgon2Hash(opaqueToken);
 		String tokenID = saveTokenToDatabase(secret, account, displayName, expiresAt);
@@ -45,32 +44,34 @@ public class Argon2Creator {
         return UUID.randomUUID().toString();
     }
 
-	private static String saveTokenToDatabase(String secret, String account, String displayName, String expiresAt) throws IOException, InterruptedException {
-		OffsetDateTime createdAt = OffsetDateTime.now();
+	private static String saveTokenToDatabase(String secret, String account, String displayName, String expiresAt) throws RsdAccessTokenException {
 		JsonObject userAccessTokenData = new JsonObject();
 		userAccessTokenData.addProperty("secret", secret);
 		userAccessTokenData.addProperty("account", account);
 		userAccessTokenData.addProperty("expires_at", expiresAt);
 		userAccessTokenData.addProperty("display_name", displayName);
-		userAccessTokenData.addProperty("created_at", createdAt.toString());
 
 		String backendUri = Config.backendBaseUrl();
 		URI queryUri = URI.create(backendUri + "/user_access_token?select=id");
 		String signingSecret = Config.jwtSigningSecret();
 		JwtCreator jwtCreator = new JwtCreator(signingSecret);
 		String jwtToken = jwtCreator.createAdminJwt();
-		String tokenResponse = PostgrestAccount.postJsonAsAdmin(queryUri, userAccessTokenData.toString(), jwtToken);
-
-		UUID tokenID = UUID.fromString(
-			JsonParser.parseString(tokenResponse)
-				.getAsJsonArray()
-				.get(0)
-				.getAsJsonObject()
-				.get("id")
-				.getAsString()	
-		);
-
-		return tokenID.toString();
+		try {
+			String tokenResponse = PostgrestAccount.postJsonAsAdmin(queryUri, userAccessTokenData.toString(), jwtToken);
+			UUID tokenID = UUID.fromString(
+				JsonParser.parseString(tokenResponse)
+					.getAsJsonArray()
+					.get(0)
+					.getAsJsonObject()
+					.get("id")
+					.getAsString()	
+			);
+			return tokenID.toString();
+		} catch (PostgresUniqueConstraintException e) {
+			throw new RsdAccessTokenException("RsdAccessTokenException: Token name should be unique", e);
+		} catch (PostgresForeignKeyConstraintException | PostgresCustomException | IOException | InterruptedException e) {
+			throw new RsdAccessTokenException("RsdAccessTokenException: " + e.getMessage(), e);
+		}
 
 	}
 
