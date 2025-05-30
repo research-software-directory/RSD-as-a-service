@@ -102,7 +102,7 @@ export default function ContributorsList({contributors,section='software'}: { co
                 <div className='flex-1'>
                   <div className="text-xl font-medium">
                     {item?.is_public ?
-                      <a href={`/profile/${item.account}/${section}`} className="flex gap-2 items-center">
+                      <a href={`/persons/${item.account}/${section}`} className="flex gap-2 items-center">
                         {displayName} <LaunchIcon sx={{width:'1rem'}}/>
                       </a>
                       :

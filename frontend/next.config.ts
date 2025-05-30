@@ -50,10 +50,10 @@ const nextConfig: NextConfig = {
         destination: '/communities/:slug/software',
         permanent: true,
       },
-      // profile default page
+      // forward old links to new location
       {
-        source: '/profile/:orcid',
-        destination: '/profile/:orcid/software',
+        source: '/profile/:orcid*',
+        destination: '/persons/:orcid*',
         permanent: true,
       },
     ]

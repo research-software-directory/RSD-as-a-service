@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,8 +8,8 @@ import {useRouter} from 'next/router'
 import {ssrBasicParams} from '~/utils/extractQueryParam'
 import {QueryParams,buildFilterUrl} from '~/utils/postgrestUrl'
 import {useUserSettings} from '~/config/UserSettingsContext'
+import {RsdModule} from '~/config/rsdSettingsReducer'
 
-type RsdViews='organisations'|'communities'|'news'
 
 /**
  * Hook to extract basic query parameters rows, page and search from the url.
@@ -17,7 +17,7 @@ type RsdViews='organisations'|'communities'|'news'
  * @param view the route of the overview page (organisations | communities | news)
  * @returns handleQueryChange and resetFilters methods.
  */
-export default function useSearchParams(view:RsdViews){
+export default function useSearchParams(view:RsdModule){
   const router = useRouter()
   const {rsd_page_rows, setPageRows} = useUserSettings()
 

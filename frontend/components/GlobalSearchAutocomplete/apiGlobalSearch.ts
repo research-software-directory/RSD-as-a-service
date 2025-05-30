@@ -8,15 +8,16 @@
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
+import {RsdModule} from '~/config/rsdSettingsReducer'
 
-export type GlobalSearchResultsSource = 'software' | 'projects' | 'organisations' | 'communities'
+// export type GlobalSearchResultsSource = 'software' | 'projects' | 'organisations' | 'communities' | 'persons'
 
 export type GlobalSearchResults = {
   rsd_host: string | null
   domain: string | null
   slug: string,
   name: string,
-  source: GlobalSearchResultsSource,
+  source: RsdModule,
   is_published?: boolean,
   search_text?: string
 }

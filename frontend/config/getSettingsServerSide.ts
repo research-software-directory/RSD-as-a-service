@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,9 +11,12 @@ import {IncomingMessage} from 'http'
 
 import logger from '~/utils/logger'
 import {getPageLinks} from '~/components/admin/pages/useMarkdownPages'
-import {defaultRsdSettings, RsdSettingsState} from './rsdSettingsReducer'
+import {defaultRsdSettings, RsdModule, RsdSettingsState} from './rsdSettingsReducer'
 import defaultSettings from '~/config/defaultSettings.json'
 import {getAnnouncement} from '~/components/admin/announcements/apiAnnouncement'
+
+// cache module list
+let modules:RsdModule[]=[]
 
 /**
  * getThemeSettings from local json file
@@ -69,4 +72,27 @@ export async function getSettingsServerSide(req: IncomingMessage | undefined): P
   // console.log('rsdSettings...', rsdSettings)
   // console.groupEnd()
   return rsdSettings
+}
+
+/**
+ * Get RSD modules from settings.json server side
+ * @returns
+ */
+export async function getRsdModules(){
+  try{
+    if (modules?.length > 0 && process.env.NODE_ENV == 'production'){
+      // console.log('cached modules...', modules)
+      return modules
+    }
+    const settings = await getRsdSettings()
+
+    if (settings?.host?.modules){
+      modules = settings?.host?.modules
+      return modules
+    }
+    return modules
+  }catch(e:any){
+    logger(`getRsdModules failed: ${e?.message}`,'warn')
+    return []
+  }
 }

@@ -62,7 +62,7 @@ export default function ContactPersonCard({person,section='software'}: {person: 
         <div className="flex-1 flex flex-col items-start">
           <h4 className="text-primary text-2xl">
             {person?.is_public ?
-              <a href={`/profile/${person.account}/${section}`}>
+              <a href={`/persons/${person.account}/${section}`}>
                 {displayName} <LaunchIcon sx={{width:'1rem'}}/>
               </a>
               :

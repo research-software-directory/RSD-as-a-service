@@ -93,7 +93,7 @@ export default function ProfileInput() {
           />
 
           {is_public === true && account ?
-            <a href={`/profile/${account}/software`} className="flex gap-2 items-center" target='_blank'>
+            <a href={`/persons/${account}`} className="flex gap-2 items-center" target='_blank'>
               Enabled <LaunchIcon sx={{width:'1rem'}}/>
             </a>
             :<span>Disabled (<a href="/documentation/users/user-settings/#public-profile" target='_blank'>Why should I enable it? <LaunchIcon sx={{width:'1rem'}}/></a>)</span>

@@ -7,8 +7,10 @@
 import {useRouter} from 'next/router'
 import Tabs from '@mui/material/Tabs'
 
+import useRsdSettings from '~/config/useRsdSettings'
 import TabAsLink from '~/components/layout/TabAsLink'
 import {useProfileContext} from '~/components/profile/context/ProfileContext'
+import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import {ProfileTabKey, profileTabItems} from './ProfileTabItems'
 
 type ProfileTabsProps={
@@ -21,32 +23,49 @@ const tabItems = Object.keys(profileTabItems) as ProfileTabKey[]
 
 export default function ProfileTabs({tab_id, isMaintainer}:ProfileTabsProps) {
   const router = useRouter()
+  const {host} = useRsdSettings()
   const {software_cnt,project_cnt} = useProfileContext()
+
+  // if only one module active we do not show tabs
+  if (
+    host?.modules?.includes('software')===false ||
+    host?.modules?.includes('projects')===false
+  ){
+    return (
+      <div className="my-2"></div>
+    )
+  }
+
   return (
-    <Tabs
-      component="nav"
-      variant="scrollable"
-      allowScrollButtonsMobile
-      value={tab_id}
-      aria-label="profile tabs"
+    <BaseSurfaceRounded
+      className="my-4 p-2"
+      type="section"
     >
-      {tabItems.map(key => {
-        const item = profileTabItems[key]
-        if (item.isVisible({isMaintainer})===true){
-          return (
-            <TabAsLink
-              key={key}
-              href={`../${router.query['id']}/${key}`}
-              value={key}
-              icon={item.icon}
-              label={item.label({
-                software_cnt,
-                project_cnt
-              })}
-            />
-          )
-        }
-      })}
-    </Tabs>
+      <Tabs
+        component="nav"
+        variant="scrollable"
+        allowScrollButtonsMobile
+        value={tab_id}
+        aria-label="profile tabs"
+      >
+        {tabItems.map(key => {
+          const item = profileTabItems[key]
+          if (item.isVisible({isMaintainer})===true){
+            return (
+              <TabAsLink
+                key={key}
+                href={`../${router.query['id']}/${key}`}
+                value={key}
+                icon={item.icon}
+                label={item.label({
+                  software_cnt,
+                  project_cnt
+                })}
+              />
+            )
+          }
+        })}
+      </Tabs>
+    </BaseSurfaceRounded>
   )
 }
