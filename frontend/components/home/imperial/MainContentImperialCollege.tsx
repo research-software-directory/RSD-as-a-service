@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,7 +16,7 @@ import useImperialData from './useImperialData'
 import useLoginProviders from '~/auth/api/useLoginProviders'
 import ContentLoader from '~/components/layout/ContentLoader'
 import MainContent from '~/components/layout/MainContent'
-import {Provider} from 'pages/api/fe/auth'
+import {Provider} from '~/types/Auth'
 
 function set_location_cookie() {
   // set cookie so that user is bounced to the software submission page
@@ -27,7 +28,7 @@ function submit_software_href(auth_status: string, login_providers: Provider[]) 
   if (auth_status == 'authenticated') {
     return '/add/software'
   }
-  return (login_providers[0]?.redirectUrl ?? '')
+  return (login_providers[0]?.signInUrl ?? '')
 }
 
 export default function MainContentImperialCollege({counts}: HomeProps) {

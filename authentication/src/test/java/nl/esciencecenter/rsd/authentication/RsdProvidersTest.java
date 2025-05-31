@@ -12,21 +12,21 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Map;
 
-class ConfigTest {
+class RsdProvidersTest {
 
 	@Test
 	void whenGivenNullOrEmptyString_whenParsingAuthConfig_thenEmptyMapReturned() {
-		Map<OpenidProvider, OpenidProviderAccessMethod> emptyMap = Config.parseAuthProvidersEnvString(null);
+		Map<OpenidProvider, OpenidProviderAccessMethod> emptyMap = RsdProviders.parseAuthProvidersEnvString(null);
 		Assertions.assertTrue(emptyMap.isEmpty());
 
-		emptyMap = Config.parseAuthProvidersEnvString("");
+		emptyMap = RsdProviders.parseAuthProvidersEnvString("");
 		Assertions.assertTrue(emptyMap.isEmpty());
 	}
 
 	@Test
 	void whenGivenValidConfig_whenParsingAuthConfig_thenCorrectMapReturned() {
 		String authConfig = "SURFCONEXT:EVERYONE;HELMHOLTZ:INVITE_ONLY;ORCID:INVITE_ONLY;AZURE:EVERYONE";
-		Map<OpenidProvider, OpenidProviderAccessMethod> authMap = Config.parseAuthProvidersEnvString(authConfig);
+		Map<OpenidProvider, OpenidProviderAccessMethod> authMap = RsdProviders.parseAuthProvidersEnvString(authConfig);
 
 		Assertions.assertEquals(4, authMap.size());
 		Assertions.assertEquals(OpenidProviderAccessMethod.EVERYONE, authMap.get(OpenidProvider.surfconext));
@@ -38,7 +38,7 @@ class ConfigTest {
 	@Test
 	void whenGivenConfigWithDuplicates_whenParsingAuthConfig_thenDuplicatesAreMisconfigured() {
 		String authConfig = "SURFCONEXT:EVERYONE;ORCID:INVITE_ONLY;SURFCONEXT:EVERYONE";
-		Map<OpenidProvider, OpenidProviderAccessMethod> authMap = Config.parseAuthProvidersEnvString(authConfig);
+		Map<OpenidProvider, OpenidProviderAccessMethod> authMap = RsdProviders.parseAuthProvidersEnvString(authConfig);
 
 		Assertions.assertEquals(2, authMap.size());
 		Assertions.assertEquals(OpenidProviderAccessMethod.MISCONFIGURED, authMap.get(OpenidProvider.surfconext));
@@ -48,7 +48,7 @@ class ConfigTest {
 	@Test
 	void whenGivenConfigWithNonExistingKey_whenParsingAuthConfig_thenThoseAreSkipped() {
 		String authConfig = "SURFCONEXT:EVERYONE;ORCID:INVITE_ONLY;DOESNOTEXIST:EVERYONE";
-		Map<OpenidProvider, OpenidProviderAccessMethod> authMap = Config.parseAuthProvidersEnvString(authConfig);
+		Map<OpenidProvider, OpenidProviderAccessMethod> authMap = RsdProviders.parseAuthProvidersEnvString(authConfig);
 
 		Assertions.assertEquals(2, authMap.size());
 		Assertions.assertEquals(OpenidProviderAccessMethod.EVERYONE, authMap.get(OpenidProvider.surfconext));
@@ -58,7 +58,7 @@ class ConfigTest {
 	@Test
 	void whenGivenConfigWithNonExistingValue_whenParsingAuthConfig_thenThoseAreMisconfigured() {
 		String authConfig = "SURFCONEXT:EVERYONE;ORCID:INVITE_ONLY;AZURE:MISTAKE;LOCAL:";
-		Map<OpenidProvider, OpenidProviderAccessMethod> authMap = Config.parseAuthProvidersEnvString(authConfig);
+		Map<OpenidProvider, OpenidProviderAccessMethod> authMap = RsdProviders.parseAuthProvidersEnvString(authConfig);
 
 		Assertions.assertEquals(4, authMap.size());
 		Assertions.assertEquals(OpenidProviderAccessMethod.EVERYONE, authMap.get(OpenidProvider.surfconext));
@@ -67,7 +67,7 @@ class ConfigTest {
 		Assertions.assertEquals(OpenidProviderAccessMethod.MISCONFIGURED, authMap.get(OpenidProvider.local));
 
 		authConfig = "SURFCONEXT:EVERYONE:INVITE_ONLY;ORCID:INVITE_ONLY";
-		authMap = Config.parseAuthProvidersEnvString(authConfig);
+		authMap = RsdProviders.parseAuthProvidersEnvString(authConfig);
 
 		Assertions.assertEquals(2, authMap.size());
 		Assertions.assertEquals(OpenidProviderAccessMethod.MISCONFIGURED, authMap.get(OpenidProvider.surfconext));
@@ -77,7 +77,7 @@ class ConfigTest {
 	@Test
 	void whenGivenConfigWithMissingValue_whenParsingAuthConfig_thenThoseAreMisconfigured() {
 		String authConfig = "SURFCONEXT;ORCID:INVITE_ONLY;AZURE:EVERYONE";
-		Map<OpenidProvider, OpenidProviderAccessMethod> authMap = Config.parseAuthProvidersEnvString(authConfig);
+		Map<OpenidProvider, OpenidProviderAccessMethod> authMap = RsdProviders.parseAuthProvidersEnvString(authConfig);
 
 		Assertions.assertEquals(3, authMap.size());
 		Assertions.assertEquals(OpenidProviderAccessMethod.MISCONFIGURED, authMap.get(OpenidProvider.surfconext));
@@ -98,7 +98,7 @@ class ConfigTest {
 		"a=b;c=d:e=f",
 	})
 	void whenGivenMisconfiguredConfig_whenParsingAuthConfig_thenNoExceptionThrown(String authConfig) {
-		Map<OpenidProvider, OpenidProviderAccessMethod> authMap = Assertions.assertDoesNotThrow(() -> Config.parseAuthProvidersEnvString(authConfig));
+		Map<OpenidProvider, OpenidProviderAccessMethod> authMap = Assertions.assertDoesNotThrow(() -> RsdProviders.parseAuthProvidersEnvString(authConfig));
 		Assertions.assertTrue(authMap.isEmpty());
 	}
 }
