@@ -8,6 +8,7 @@
 # SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 # SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 # SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+# SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -224,6 +225,55 @@ services:
     networks:
       - net
 
+  rabbitmq:
+    image: rabbitmq:4.0
+    hostname: rabbitmq
+    expose:
+      - "5672"
+    networks:
+      - net
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  mail:
+    build: ./mail
+    image: rsd/mail:1.0.0
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - MAIL_SMTP_SERVER
+      - MAIL_SMTP_PORT
+      - MAIL_SMTP_SECURITY
+      - MAIL_SMTP_LOGIN
+      - MAIL_SMTP_PASSWORD
+      - MAIL_FROM_ADDRESS
+      - MAIL_REPLY_TO
+      - MAIL_QUEUE
+    networks:
+      - net
+    restart: on-failure
+
+  publisher:
+    build: ./publisher
+    image: rsd/publisher:1.0.0
+    expose:
+      - "5000"
+    depends_on:
+      - rabbitmq
+    environment:
+      - MAIL_QUEUE
+      - PUBLISHER_JWT_SECRET_KEY
+    networks:
+      - net
+    restart: on-failure
+
   documentation:
     build:
       context: ./documentation
@@ -283,3 +333,4 @@ networks:
 volumes:
   pgdb:
   lets-encrypt:
+  rabbitmq-data:
