@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -64,16 +64,17 @@ export default function AddMenu() {
         <AddIcon/>
         <CaretIcon />
       </IconButton>
-
       <Menu
         anchorEl={anchorEl}
         open={open}
         onClose={() => handleClose()}
-        MenuListProps={{'aria-labelledby': 'menu-button'}}
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
         // disable adding styles to body (overflow:hidden & padding-right)
         disableScrollLock={disable}
+        slotProps={{
+          list: {'aria-labelledby': 'menu-button'}
+        }}
       >
         <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/add/software')}>
           <ListItemIcon>

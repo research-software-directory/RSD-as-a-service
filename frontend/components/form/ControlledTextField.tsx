@@ -80,11 +80,17 @@ export default function ControlledTextField<T>({options, control, rules}:Control
             // controlled mui input requires "" instead of null
             // but the value in controller of react-hook-form is null (can be null)
             value={value ?? ''}
-            FormHelperTextProps={{
-              sx:{
-                display: 'flex',
-                justifyContent:'space-between'
-              }
+            slotProps={{
+              input:{
+                startAdornment: options?.startAdornment ? <InputAdornment position="start">{options?.startAdornment}</InputAdornment> : undefined,
+                endAdornment: options?.endAdornment ? <InputAdornment position="end">{options?.endAdornment}</InputAdornment> : undefined
+              },
+              formHelperText:{
+                sx:{
+                  display: 'flex',
+                  justifyContent:'space-between'
+                }
+              },
             }}
             helperText={
               <HelperTextWithCounter
@@ -100,10 +106,6 @@ export default function ControlledTextField<T>({options, control, rules}:Control
               } else {
                 onChange(target.value)
               }
-            }}
-            InputProps={{
-              startAdornment: options?.startAdornment ? <InputAdornment position="start">{options?.startAdornment}</InputAdornment> : undefined,
-              endAdornment: options?.endAdornment ? <InputAdornment position="end">{options?.endAdornment}</InputAdornment> : undefined
             }}
             {...options.muiProps}
           />

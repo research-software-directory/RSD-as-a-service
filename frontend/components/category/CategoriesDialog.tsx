@@ -82,7 +82,7 @@ export default function CategoriesDialog({
           placeholder='Find category'
           onSearch={setSearchFor}
           defaultValue={searchFor ?? ''}
-          InputProps={{
+          inputProps={{
             startAdornment:<InputAdornment position="start"><SearchIcon /></InputAdornment>
           }}
         />

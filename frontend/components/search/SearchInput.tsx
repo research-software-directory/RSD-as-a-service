@@ -20,7 +20,7 @@ type SearchInputProps = {
   onSearch: (search:string)=>void,
   delay?: number,
   defaultValue?: string,
-  InputProps?: Partial<FilledInputProps> | Partial<OutlinedInputProps> | Partial<InputProps>
+  inputProps?: Partial<FilledInputProps> | Partial<OutlinedInputProps> | Partial<InputProps>
   sx?: SxProps<Theme>
 }
 
@@ -29,7 +29,7 @@ export default function SearchInput({
   onSearch,
   delay = 700,
   defaultValue = '',
-  InputProps,
+  inputProps,
   sx
 }: SearchInputProps) {
   const [state, setState] = useState({
@@ -79,7 +79,9 @@ export default function SearchInput({
         },
         ...sx
       }}
-      InputProps={InputProps}
+      slotProps={{
+        input: inputProps
+      }}
     />
   )
 }

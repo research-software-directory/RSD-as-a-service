@@ -1,11 +1,11 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2024 dv4all
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -299,22 +299,24 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
             error={config?.error ? config.error : false}
             onKeyDown={(e) => {
               // console.log('onKeyDown.TextField.AsyncAutocompleteSC')
-              // dissable enter key when autocomplete menu options closed
+              // disable enter key when autocomplete menu options closed
               // it seem to crash component in some configuration (probably when freeSolo===false)
               if (e.key === 'Enter' && open === false) {
                 // stop propagation
                 e.stopPropagation()
               }
             }}
-            InputProps={{
-              ...params.InputProps,
-              'aria-label': config.label ?? 'Search',
-              endAdornment: (
-                <>
-                  {loading ? <CircularProgress data-testid="circular-loader" color="inherit" size={20} /> : null}
-                  {params.InputProps.endAdornment}
-                </>
-              ),
+            slotProps={{
+              input: {
+                ...params.InputProps,
+                'aria-label': config.label ?? 'Search',
+                endAdornment: (
+                  <>
+                    {loading ? <CircularProgress data-testid="circular-loader" color="inherit" size={20} /> : null}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }
             }}
           />
         )}
