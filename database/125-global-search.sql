@@ -40,7 +40,7 @@ $$
 $$;
 
 -- GLOBAL SEARCH
--- depends on: aggregated_software_search
+-- depends on: aggregated_software_search, public_user_profile
 CREATE FUNCTION global_search(query VARCHAR) RETURNS TABLE(
 	slug VARCHAR,
 	domain VARCHAR,
@@ -175,13 +175,13 @@ $$
 		'persons' AS "source",
 		public_user_profile.is_public AS is_published,
 		(CASE
-			WHEN public_user_profile.display_name ILIKE query OR public_user_profile.affiliation ILIKE query THEN 0
-			WHEN public_user_profile.display_name ILIKE CONCAT(query, '%') OR public_user_profile.affiliation ILIKE CONCAT(query, '%') THEN 2
+			WHEN public_user_profile.display_name ILIKE query THEN 0
+			WHEN public_user_profile.display_name ILIKE CONCAT(query, '%') THEN 2
 			ELSE 3
 		END) AS rank,
 		0 as index_found
 	FROM
 		public_user_profile()
 	WHERE
-		public_user_profile.display_name ILIKE CONCAT('%', query, '%') OR public_user_profile.affiliation ILIKE CONCAT('%', query, '%');
+		public_user_profile.display_name ILIKE CONCAT('%', query, '%');
 $$;
