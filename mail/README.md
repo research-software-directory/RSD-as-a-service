@@ -13,9 +13,9 @@ This Python module provides a mail service that processes messages from `rabbitm
 The following environment variables are necessary:
 
 - `MAIL_SMTP_SERVER` (value without `https://`)
-- `MAIL_SMTP_PORT`
+- `MAIL_SMTP_PORT` (string value of the port number e.g. "587")
 - `MAIL_SMTP_SECURITY` (value = "SSL" or "STARTTLS")
-- `MAIL_SMTP_LOGIN`
-- `MAIL_SMTP_PASSWORD`
-- `MAIL_FROM_ADDRESS`
-- `MAIL_REPLY_TO`
+- `MAIL_SMTP_LOGIN` (the email address used for login to the SMTP server, e.g. "user@domain.org")
+- `MAIL_SMTP_PASSWORD` (the password used for authentication to the SMTP server)
+- `MAIL_FROM_ADDRESS` (the email address that should send the emails from the mail service, e.g. "rsd@domain.org")
+- `MAIL_REPLY_TO` (optional, an email address that should be set for reply-to)
