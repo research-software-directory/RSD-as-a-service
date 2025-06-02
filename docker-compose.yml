@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2021 - 2023 dv4all
 # SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
-# SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+# SPDX-FileCopyrightText: 2022 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 # SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre for Environmental Research (UFZ)
 # SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
@@ -236,6 +236,7 @@ services:
       - MAIL_SMTP_PASSWORD
       - MAIL_FROM_ADDRESS
       - MAIL_REPLY_TO
+      - MAIL_QUEUE
     networks:
       - net
     restart: on-failure
@@ -248,11 +249,12 @@ services:
     depends_on:
       - rabbitmq
     environment:
+      - MAIL_QUEUE
       - PUBLISHER_JWT_SECRET_KEY
     networks:
       - net
     restart: on-failure
-    
+
   documentation:
     build:
       context: ./documentation
