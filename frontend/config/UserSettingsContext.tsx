@@ -56,7 +56,7 @@ export function UserSettingsProvider(props:any){
 export function useUserSettings(){
   const {user,setUser} = useContext(UserSettingsContext)
 
-  function setPageLayout(layout:LayoutType){
+  function setPageLayout(layout:LayoutType='grid'){
     // save to cookie
     setDocumentCookie(layout,'rsd_page_layout')
     // save to state
@@ -66,7 +66,7 @@ export function useUserSettings(){
     })
   }
 
-  function setPageRows(rows:number){
+  function setPageRows(rows:number=12){
     // save to cookie
     setDocumentCookie(rows.toString(),'rsd_page_rows')
     // save to state

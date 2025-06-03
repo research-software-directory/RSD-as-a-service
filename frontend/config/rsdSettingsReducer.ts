@@ -20,7 +20,7 @@ export type RsdSettingsState = {
   announcement?: string | null
 }
 
-export type RsdModule= 'software'| 'projects' | 'organisations' | 'communities' | 'news' | 'user'
+export type RsdModule= 'software'| 'projects' | 'organisations' | 'communities' | 'news' | 'user' | 'persons'
 
 export type RsdHost = {
   name: string,

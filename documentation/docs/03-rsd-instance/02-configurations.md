@@ -187,7 +187,7 @@ The `host` section of settings.json defines following settings. **Most of them s
 - `privacy_statement_url`: the link to your privacy statement page. Used on the user profile page to let user accept the privacy statement.
 - `software_highlights`: the definitions for the software highlights section on the top of the software overview page. You can specify title and the number of items loaded in the carousel. The default values are shown below.
 - `orcid_search`: should ORCID api be used when searching for contributors or team members? By default ORCID search api is enabled and the entries from RSD and ORCID are combined in the search result. If you want your users to be able to search only within the existing RSD entries set this value to false.
-- `modules`: defines RSD "modules" displayed in the main menu in the page header. Possible values are: software, projects, organisations and communities.
+- `modules`: defines RSD "modules" displayed in the main menu in the page header. Possible values are: software, projects, organisations, communities and persons.
 
 ```json
 ...
@@ -212,7 +212,7 @@ The `host` section of settings.json defines following settings. **Most of them s
       "description": null
     },
     "orcid_search": true,
-    "modules":["software","projects","organisations","communities"]
+    "modules":["software","projects","organisations","communities","persons"]
   }
 ...
 ```
