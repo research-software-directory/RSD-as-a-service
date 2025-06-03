@@ -225,55 +225,6 @@ services:
     networks:
       - net
 
-  rabbitmq:
-    image: rabbitmq:4.0
-    hostname: rabbitmq
-    expose:
-      - "5672"
-    networks:
-      - net
-    volumes:
-      - rabbitmq-data:/var/lib/rabbitmq
-    healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
-
-  mail:
-    build: ./mail
-    image: rsd/mail:1.0.0
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-    environment:
-      - MAIL_SMTP_SERVER
-      - MAIL_SMTP_PORT
-      - MAIL_SMTP_SECURITY
-      - MAIL_SMTP_LOGIN
-      - MAIL_SMTP_PASSWORD
-      - MAIL_FROM_ADDRESS
-      - MAIL_REPLY_TO
-      - MAIL_QUEUE
-    networks:
-      - net
-    restart: on-failure
-
-  publisher:
-    build: ./publisher
-    image: rsd/publisher:1.0.0
-    expose:
-      - "5000"
-    depends_on:
-      - rabbitmq
-    environment:
-      - MAIL_QUEUE
-      - PUBLISHER_JWT_SECRET_KEY
-    networks:
-      - net
-    restart: on-failure
-
   documentation:
     build:
       context: ./documentation
@@ -307,8 +258,68 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
 
   #----------------------------------------------
+  # DISABLED BY DEFAULT IN DEVELOPMENT
+  #----------------------------------------------
+
+  rabbitmq:
+    image: rabbitmq:4.0
+    hostname: rabbitmq
+    expose:
+      - "5672"
+    networks:
+      - net
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    deploy:
+      replicas: 0
+
+  mail:
+    build: ./mail
+    image: rsd/mail:1.0.0
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - MAIL_SMTP_SERVER
+      - MAIL_SMTP_PORT
+      - MAIL_SMTP_SECURITY
+      - MAIL_SMTP_LOGIN
+      - MAIL_SMTP_PASSWORD
+      - MAIL_FROM_ADDRESS
+      - MAIL_REPLY_TO
+      - MAIL_QUEUE
+    networks:
+      - net
+    deploy:
+      replicas: 0
+    restart: on-failure
+
+  publisher:
+    build: ./publisher
+    image: rsd/publisher:1.0.0
+    expose:
+      - "5000"
+    depends_on:
+      - rabbitmq
+    environment:
+      - MAIL_QUEUE
+      - PUBLISHER_JWT_SECRET_KEY
+    networks:
+      - net
+    deploy:
+      replicas: 0
+    restart: on-failure
+
+  #----------------------------------------------
   # DEVELOPMENT ONLY SERVICES
   #----------------------------------------------
+
   data-generation:
     build: ./data-generation
     image: rsd/generation:1.6.0
