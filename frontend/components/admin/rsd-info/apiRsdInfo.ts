@@ -31,7 +31,7 @@ export async function getRsdInfo({page, rows, token, searchFor, orderBy}: ApiPar
   try {
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
-      query+=`&or=(key.ilike.*${searchFor}*,value.ilike.*${searchFor}*)`
+      query+=`&or=(key.ilike."*${searchFor}*",value.ilike."*${searchFor}*")`
     }
     if (orderBy) {
       query+=`&order=${orderBy.column}.${orderBy.direction}`

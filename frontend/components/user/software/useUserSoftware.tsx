@@ -43,7 +43,7 @@ export async function getSoftwareForMaintainer({
     let url =`/api/v1/rpc/software_by_maintainer?maintainer_id=${account}&order=brand_name`
     // search
     if (searchFor) {
-      url+=`&or=(brand_name.ilike.*${encodeURIComponent(searchFor)}*, short_statement.ilike.*${encodeURIComponent(searchFor)}*)`
+      url+=`&or=(brand_name.ilike."*${searchFor}*", short_statement.ilike."*${searchFor}*")`
     }
     // pagination
     url += paginationUrlParams({rows, page})

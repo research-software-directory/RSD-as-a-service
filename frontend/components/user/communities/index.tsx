@@ -39,7 +39,7 @@ export default function UserCommunities() {
     <div className="flex-1">
       {/* SEARCH */}
       <SearchPanel
-        placeholder='Find software'
+        placeholder='Find community'
         layout={view}
         rows={rsd_page_rows}
         search={searchFor ?? null}

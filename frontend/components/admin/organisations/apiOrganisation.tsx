@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -38,7 +38,7 @@ async function getOrganisations({page, rows, token, searchFor, orderBy}: getOrga
     const selectList = 'id,parent,name,website,is_tenant,rsd_path,logo_id,ror_id,software_cnt,project_cnt'
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
-      query+=`&or=(name.ilike.*${searchFor}*,website.ilike.*${searchFor}*,ror_id.ilike.*${searchFor}*)`
+      query+=`&or=(name.ilike."*${searchFor}*",website.ilike."*${searchFor}*",ror_id.ilike."*${searchFor}*")`
     }
     if (orderBy) {
       query+=`&order=${orderBy}`
