@@ -34,7 +34,7 @@ export async function getPersonsList({page,rows,token,searchFor,orderBy}:GetPers
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
       // search in name and short description
-      query+=`&or=(display_name.ilike.*${searchFor}*,affiliation.ilike.*${searchFor}*)`
+      query+=`&or=(display_name.ilike."*${searchFor}*",affiliation.ilike."*${searchFor}*")`
     }
     if (orderBy) {
       query+=`&order=${orderBy}`
@@ -42,9 +42,7 @@ export async function getPersonsList({page,rows,token,searchFor,orderBy}:GetPers
       query+='&order=affiliation.asc,display_name.asc'
     }
     // complete url
-    const url = `${getBaseUrl()}/rpc/public_persons_overview?${query}`
-
-    // console.log(url)
+    const url = encodeURI(`${getBaseUrl()}/rpc/public_persons_overview?${query}`)
 
     // get community
     const resp = await fetch(url, {
