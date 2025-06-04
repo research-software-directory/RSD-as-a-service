@@ -19,13 +19,13 @@ import UserMenu from '~/components/layout/UserMenu'
 import LoginDialog from './LoginDialog'
 
 export default function LoginButton() {
-  const providers = useLoginProviders()
+  const {providers} = useLoginProviders()
   const {status} = useSession()
   const [open, setOpen] = useState(false)
 
   // console.group('LoginButton')
   // console.log('status...', status)
-  // console.log('menuItems...', menuItems)
+  // console.log('providers...', providers)
   // console.groupEnd()
 
   if (status === 'loading') {

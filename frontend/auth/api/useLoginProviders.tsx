@@ -6,29 +6,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useContext} from 'react'
 
-import {getLoginProviders, Provider} from './getLoginProviders'
+import {LoginProvidersContext} from '~/auth/loginProvidersContext'
 
-export default function useLoginProviders() {
-  const [providers, setProviders] = useState<Provider[]>([])
+export default function useLoginProviders(){
+  const {providers,setProviders} = useContext(LoginProvidersContext)
 
-  // console.group('useLoginProviders')
-  // console.log('providers...', providers)
-  // console.groupEnd()
-
-  useEffect(() => {
-    let abort = false
-
-    getLoginProviders()
-      .then(providers=>{
-        if (abort) return
-        setProviders(providers)
-      })
-      .catch(()=>setProviders([]))
-
-    return () => { abort = true }
-  }, [])
-
-  return providers
+  return {
+    providers,
+    setProviders
+  }
 }

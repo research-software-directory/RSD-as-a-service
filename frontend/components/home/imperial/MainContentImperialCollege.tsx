@@ -35,7 +35,7 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
   const {token} = useSession()
   const {loading, keywords} = useImperialData(token)
   const {session} = useAuth()
-  const providers = useLoginProviders()
+  const {providers} = useLoginProviders()
   const auth_status = session?.status || 'loading'
 
   return (
