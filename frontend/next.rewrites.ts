@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -16,12 +16,12 @@ import {Rewrite} from 'next/dist/lib/load-custom-routes'
 // console.log('process.env.NODE_ENV',process.env.NODE_ENV)
 // console.log('process.env.PWD', process.env.PWD)
 
-let rewritesConfig:Rewrite[] = [] // NOSONAR
+let rewritesConfig: Rewrite[] = [] // NOSONAR
 
 if (process.env.NODE_ENV === 'docker' as any) {
   // proxies for frontend-dev service
   // developing using node docker container
-  rewritesConfig=[
+  rewritesConfig = [
     {
       source: '/image/:path*',
       destination: 'http://nginx/image/:path*', // NOSONAR
@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'docker' as any) {
       destination: 'http://nginx/auth/login/local', // NOSONAR
     }
   ]
-} else if (process.env.NODE_ENV === 'development'){
+} else if (process.env.NODE_ENV === 'development') {
   rewritesConfig = [
     {
       source: '/image/:path*',
@@ -48,6 +48,10 @@ if (process.env.NODE_ENV === 'docker' as any) {
     {
       source: '/auth/login/local',
       destination: 'http://localhost/auth/login/local', // NOSONAR
+    },
+    {
+      source: '/auth/providers',
+      destination: 'http://localhost/auth/providers', // NOSONAR
     },
     {
       source: '/documentation/:path*',

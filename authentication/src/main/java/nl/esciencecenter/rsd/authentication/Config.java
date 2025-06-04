@@ -10,21 +10,20 @@
 
 package nl.esciencecenter.rsd.authentication;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 public class Config {
 
-	public static String jwtSigningSecret() {
-		return System.getenv("PGRST_JWT_SECRET");
+	private Config() {
 	}
 
-	private Config() {
+	public static String jwtSigningSecret() {
+		return System.getenv("PGRST_JWT_SECRET");
 	}
 
 	private static Collection<String> rsdAuthCoupleProviders() {
@@ -43,49 +42,21 @@ public class Config {
 		}
 	}
 
-	private static final Map<OpenidProvider, OpenidProviderAccessMethod> ACCESS_METHOD_MAP = parseAuthProvidersEnvString(System.getenv("RSD_AUTH_PROVIDERS"));
+	public static URI wellKnownUrl(OpenidProvider provider) throws URISyntaxException {
+		String rawUrl = switch (provider) {
+			case local -> null;
+			case surfconext -> surfconextWellknown();
+			case helmholtz -> helmholtzIdWellknown();
+			case orcid -> orcidWellknown();
+			case azure -> azureWellknown();
+			case linkedin -> linkedinWellknown();
+		};
 
-	static Map<OpenidProvider, OpenidProviderAccessMethod> parseAuthProvidersEnvString(String authConf) {
-		Map<OpenidProvider, OpenidProviderAccessMethod> result = new EnumMap<>(OpenidProvider.class);
-
-		if (authConf == null) {
-			return result;
-		}
-		String[] split = authConf.split(";");
-		for (String providerConf : split) {
-			String[] providerSplit = providerConf.split(":");
-			if (providerSplit.length == 0) {
-				continue;
-			}
-			OpenidProvider openidProvider;
-			try {
-				openidProvider = OpenidProvider.valueOf(providerSplit[0].toLowerCase());
-			} catch (IllegalArgumentException e) {
-				continue;
-			}
-
-			if (providerSplit.length != 2) {
-				result.put(openidProvider, OpenidProviderAccessMethod.MISCONFIGURED);
-				continue;
-			}
-
-			OpenidProviderAccessMethod accessMethod;
-			try {
-				accessMethod = OpenidProviderAccessMethod.valueOf(providerSplit[1]);
-			} catch (IllegalArgumentException e) {
-				result.put(openidProvider, OpenidProviderAccessMethod.MISCONFIGURED);
-				continue;
-			}
-
-			result.compute(openidProvider, (_key, oldValue) -> oldValue == null ? accessMethod : OpenidProviderAccessMethod.MISCONFIGURED);
+		if (rawUrl == null) {
+			return null;
 		}
 
-		return result;
-	}
-
-	public static OpenidProviderAccessMethod accessMethodOfProvider(OpenidProvider provider) {
-		Objects.requireNonNull(provider);
-		return ACCESS_METHOD_MAP.getOrDefault(provider, OpenidProviderAccessMethod.DISABLED);
+		return new URI(rawUrl);
 	}
 
 	public static boolean isOrcidCouplingEnabled() {

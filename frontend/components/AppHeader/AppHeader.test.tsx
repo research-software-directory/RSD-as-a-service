@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,12 +15,7 @@ import AppHeader from './index'
 
 // mocks login providers list
 const redirectUrl = 'https://test-login-redirect.com'
-jest.mock('~/auth/api/useLoginProviders', () => {
-  return ()=>[{
-    name: 'test provider',
-    redirectUrl
-  }]
-})
+jest.mock('~/auth/api/useLoginProviders')
 
 beforeEach(() => {
   jest.clearAllMocks()
