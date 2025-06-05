@@ -34,7 +34,7 @@ export async function getOrganisationsForMaintainer(
 
     // search
     if (searchFor) {
-      url += `&or=(name.ilike.*${encodeURIComponent(searchFor)}*,short_description.ilike.*${encodeURIComponent(searchFor)}*)`
+      url += `&or=(name.ilike."*${searchFor}*",short_description.ilike."*${searchFor}*")`
     }
 
     // pagination

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -44,7 +44,7 @@ export async function getCommunityList({page,rows,token,searchFor,orderBy}:GetCo
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
       // search in name and short description
-      query+=`&or=(name.ilike.*${searchFor}*,short_description.ilike.*${searchFor}*)`
+      query+=`&or=(name.ilike."*${searchFor}*",short_description.ilike."*${searchFor}*")`
     }
     if (orderBy) {
       query+=`&order=${orderBy}`

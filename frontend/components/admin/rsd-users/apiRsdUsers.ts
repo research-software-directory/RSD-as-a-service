@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -37,7 +37,7 @@ export async function getRsdAccounts({page,rows,token,searchFor,adminsOnly,inact
         query += `&id=eq.${searchFor}`
       } else {
         // else we search by name, email or organisation
-        query+=`&login_for_account_text_filter.or=(name.ilike.*${searchFor}*,email.ilike.*${searchFor}*,home_organisation.ilike.*${searchFor}*)`
+        query+=`&login_for_account_text_filter.or=(name.ilike."*${searchFor}*",email.ilike."*${searchFor}*",home_organisation.ilike."*${searchFor}*")`
       }
     }
     // complete url

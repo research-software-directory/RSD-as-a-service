@@ -37,7 +37,7 @@ export async function getRemoteRsd({page,rows,token,searchFor,orderBy}:GetRemote
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
       // search in name and short description
-      query+=`&or=(label.ilike.*${searchFor}*,domain.ilike.*${searchFor}*)`
+      query+=`&or=(label.ilike."*${searchFor}*",domain.ilike."*${searchFor}*")`
     }
     if (orderBy) {
       query+=`&order=${orderBy}`
