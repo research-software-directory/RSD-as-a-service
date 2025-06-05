@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -80,8 +80,9 @@ export default function AutosaveConceptDoi() {
           helperTextCnt: `${concept_doi?.length || 0}/${config.concept_doi.validation.maxLength.value}`,
           // add validate button as part of the input at the end
           muiProps:{
-            InputProps:{
-              endAdornment:
+            slotProps:{
+              input:{
+                endAdornment:
                 <InputAdornment position="end">
                   <ValidateConceptDoi
                     doi={concept_doi}
@@ -89,7 +90,8 @@ export default function AutosaveConceptDoi() {
                     disabled={disabledButton()}
                   />
                 </InputAdornment>
-            }
+              }
+            },
           }
         }}
         rules={config.concept_doi.validation}

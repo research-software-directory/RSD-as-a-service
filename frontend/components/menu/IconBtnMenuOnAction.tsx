@@ -96,11 +96,13 @@ export default function IconBtnMenuOnAction({
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'menu-button',
-        }}
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+        slotProps={{
+          list: {
+            'aria-labelledby': 'menu-button',
+          }
+        }}
       >
         {renderMenuOptions()}
       </Menu>

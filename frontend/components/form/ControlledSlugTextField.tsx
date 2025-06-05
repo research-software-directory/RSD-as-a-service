@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -64,19 +66,21 @@ export default function ControlledSlugTextField({
             label={options.label}
             variant='outlined'
             value={value}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  {options.baseUrl}
-                </InputAdornment>
-              ),
-              endAdornment: (
-                loading ?
-                  <div>
-                    <CircularProgress data-testid="slug-circular-progress" color="primary" size={32} />
-                  </div>
-                  : null
-              )
+            slotProps={{
+              input:{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    {options.baseUrl}
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  loading ?
+                    <div>
+                      <CircularProgress data-testid="slug-circular-progress" color="primary" size={32} />
+                    </div>
+                    : null
+                )
+              }
             }}
             error={error ? true: false}
             helperText={error?.message ?? options.helperTextMessage}

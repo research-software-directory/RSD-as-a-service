@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -99,9 +99,11 @@ export default function AutosaveProjectPeriod({date_start, date_end}:
             variant: 'standard',
             label: config.date_start.label,
             type: 'date',
-            InputLabelProps:{
-              shrink: true
-            }
+            slotProps:{
+              inputLabel:{
+                shrink: true
+              }
+            },
           }
         }}
       />
@@ -120,9 +122,11 @@ export default function AutosaveProjectPeriod({date_start, date_end}:
             variant: 'standard',
             label: config.date_end.label,
             type: 'date',
-            InputLabelProps:{
-              shrink: true
-            }
+            slotProps:{
+              inputLabel:{
+                shrink: true
+              }
+            },
           }
         }}
       />

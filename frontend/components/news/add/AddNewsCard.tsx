@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -219,8 +219,10 @@ export default function AddNewsCard() {
               variant: 'outlined',
               label: config.publication_date.label,
               type: 'date',
-              InputLabelProps:{
-                shrink: true
+              slotProps:{
+                inputLabel:{
+                  shrink: true
+                }
               },
               sx:{
                 maxWidth:'13rem'

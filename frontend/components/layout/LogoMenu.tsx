@@ -95,11 +95,13 @@ export default function LogoMenu({logo, onAddLogo, onRemoveLogo}: AdminMenuLogoP
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'menu-button',
-        }}
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+        slotProps={{
+          list: {
+            'aria-labelledby': 'menu-button',
+          }
+        }}
       >
         <MenuItem
           title="Change logo"

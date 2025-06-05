@@ -50,19 +50,21 @@ export default function SlugTextField({
       // default options
       autoComplete='off'
       variant='outlined'
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            {baseUrl}
-          </InputAdornment>
-        ),
-        endAdornment: (
-          loading ?
-            <div>
-              <CircularProgress data-testid="slug-circular-progress" color="primary" size={32} />
-            </div>
-            : null
-        )
+      slotProps={{
+        input:{
+          startAdornment: (
+            <InputAdornment position="start">
+              {baseUrl}
+            </InputAdornment>
+          ),
+          endAdornment: (
+            loading ?
+              <div>
+                <CircularProgress data-testid="slug-circular-progress" color="primary" size={32} />
+              </div>
+              : null
+          )
+        }
       }}
       {...options}
       {...register}
