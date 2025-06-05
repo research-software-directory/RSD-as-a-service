@@ -164,11 +164,11 @@ $$
 	FROM
 		community
 	WHERE
-		community.slug ILIKE CONCAT('%', query, '%') OR community."name" ILIKE CONCAT('%', query, '%');
-
+		community.slug ILIKE CONCAT('%', query, '%') OR community."name" ILIKE CONCAT('%', query, '%')
+	UNION ALL
 	-- PERSONS search
 	SELECT
-		public_user_profile.account as slug,
+		CAST (public_user_profile.account AS VARCHAR) as slug,
 		NULL AS domain,
 		NULL as rsd_host,
 		public_user_profile.display_name as "name",
