@@ -7,27 +7,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
-import {Provider} from '../getLoginProviders'
-
-
 export default function useLoginProviders() {
-  const [providers, setProviders] = useState<Provider[]>([])
 
-  useEffect(() => {
-    let abort = false
-
-    if (abort === false) {
-      setProviders([{
-        name: 'test provider',
-        signInUrl: 'https://test-login-redirect.com',
-        accessType: 'EVERYONE',
-        openidProvider: 'local'
-      }])
-    }
-
-    return () => { abort = true }
-  }, [])
-
-  return providers
+  return {
+    providers:[{
+      name: 'test provider',
+      signInUrl: 'https://test-login-redirect.com',
+      accessType: 'EVERYONE',
+      openidProvider: 'local'
+    }],
+    setProviders: jest.fn()
+  }
 }

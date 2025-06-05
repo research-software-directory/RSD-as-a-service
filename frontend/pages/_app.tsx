@@ -23,6 +23,8 @@ import '../styles/global.css'
 // authentication
 import {AuthProvider, Session, getSessionSeverSide} from '~/auth'
 import {saveLocationCookie} from '~/auth/locationCookie'
+import {getLoginProviders, Provider} from '~/auth/api/getLoginProviders'
+import {LoginProvidersProvider} from '~/auth/loginProvidersContext'
 // theme
 import {loadMuiTheme} from '~/styles/rsdMuiTheme'
 import createEmotionCache from '~/styles/createEmotionCache'
@@ -52,7 +54,8 @@ export interface MuiAppProps extends AppProps {
   settings: RsdSettingsState,
   matomo: Matomo,
   userSettings?: UserSettingsProps,
-  pluginSettings?: PluginConfig[]
+  pluginSettings?: PluginConfig[],
+  loginProviders: Provider[]
 }
 
 // define npgrogres setup, no spinner
@@ -84,7 +87,7 @@ function RsdApp(props: MuiAppProps) {
   const {
     Component, emotionCache = clientSideEmotionCache,
     pageProps, session, settings, matomo, userSettings,
-    pluginSettings
+    pluginSettings, loginProviders
   } = props
 
   const router = useRouter()
@@ -100,6 +103,7 @@ function RsdApp(props: MuiAppProps) {
   const [rsdSettings] = useState(settings)
   const [rsdUserSettings] = useState(userSettings)
   const [rsdPluginSettings] = useState(pluginSettings)
+  const [rsdLoginProviders] = useState(loginProviders)
   // request theme when options changed
   const {muiTheme, cssVariables} = useMemo(() => {
     return loadMuiTheme(rsdSettings.theme)
@@ -128,6 +132,8 @@ function RsdApp(props: MuiAppProps) {
   // console.log('rsdUserSettings...', rsdUserSettings)
   // console.log('pluginSettings...', pluginSettings)
   // console.log('rsdPluginSettings...', rsdPluginSettings)
+  // console.log('loginProviders...', loginProviders)
+  // console.log('rsdLoginProviders...', rsdLoginProviders)
   // console.groupEnd()
 
   return (
@@ -150,7 +156,10 @@ function RsdApp(props: MuiAppProps) {
               <MuiSnackbarProvider>
                 {/* User settings rows, page layout etc. */}
                 <UserSettingsProvider user={rsdUserSettings}>
-                  <Component {...pageProps} />
+                  {/* Login providers list */}
+                  <LoginProvidersProvider providers = {rsdLoginProviders}>
+                    <Component {...pageProps} />
+                  </LoginProvidersProvider>
                 </UserSettingsProvider>
               </MuiSnackbarProvider>
             </PluginSettingsProvider>
@@ -203,6 +212,8 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
   let userSettings:UserSettingsProps|null = null
   // List of all plugins that can be used by the user
   let pluginSettings: PluginConfig[] = []
+  // list of login providers
+  let loginProviders: Provider[] = []
   // Matomo cached settings passed via getInitialProps
   // Note! getInitialProps does not always run server side
   // so we keep the last obtained values in this object
@@ -226,16 +237,18 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
     userSettings = getUserSettings(req)
 
     // get RSD plugins from config endpoint and avatar_id
-    const [plugins, avatar_id] = await Promise.all([
+    const [plugins, avatar_id, providers] = await Promise.all([
       getPlugins({
         plugins:settings.host.plugins,
         token:session?.token
       }),
-      getUserAvatar(session?.user?.account,session?.token)
+      getUserAvatar(session?.user?.account,session?.token),
+      getLoginProviders()
     ])
     // save plugin and avatar values
     pluginSettings = plugins
     userSettings.avatar_id = avatar_id
+    loginProviders = providers
     // set content security header
     setContentSecurityPolicyHeader(res)
   }
@@ -253,7 +266,8 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
     settings,
     matomo,
     userSettings,
-    pluginSettings
+    pluginSettings,
+    loginProviders
   }
 }
 
