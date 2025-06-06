@@ -20,7 +20,7 @@
       "description": null
     },
     "orcid_search":true,
-    "modules":["software","projects","organisations","communities"]
+    "modules":["software","projects","organisations","communities","news"]
   },
   "links": [
     {
