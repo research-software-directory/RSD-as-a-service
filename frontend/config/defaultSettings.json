@@ -18,7 +18,8 @@
       "limit": 3,
       "description": null
     },
-    "modules":["software","projects","organisations"]
+    "orcid_search": true,
+    "modules":["software","projects","organisations","communities","persons","news"]
   },
   "links": [
     {

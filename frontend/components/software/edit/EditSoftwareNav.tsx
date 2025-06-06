@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2024 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -10,6 +10,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useRouter} from 'next/router'
+import Link from 'next/link'
 
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -20,26 +21,21 @@ import {editMenuItemButtonSx} from '~/config/menuItems'
 import useRsdSettings from '~/config/useRsdSettings'
 import {usePluginSlots} from '~/config/RsdPluginContext'
 import SvgFromString from '~/components/icons/SvgFromString'
-import {editSoftwarePage} from './editSoftwarePages'
-import Link from 'next/link'
+import {editSoftwareMenuItems} from './editSoftwareMenuItems'
 
 export default function EditSoftwareNav({slug,pageId}:{slug:string,pageId:string}) {
   const router = useRouter()
   const {host} = useRsdSettings()
   // get edit software plugins
   const pluginSlots = usePluginSlots('editSoftwareNav')
-  // default is true to follow useMenuItems approach
-  const showCommunities = host.modules ? host.modules.includes('communities') : true
 
   return (
     <nav>
       <List sx={{
         width:['100%','100%','15rem']
       }}>
-        {editSoftwarePage.map(item => {
-          if (item.id === 'communities' && showCommunities === false){
-            // skip communities if not enabled in the settings
-          } else {
+        {editSoftwareMenuItems.map(item => {
+          if (item.active({modules:host.modules})===true){
             return (
               <ListItemButton
                 data-testid="edit-software-nav-item"

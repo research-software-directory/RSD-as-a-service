@@ -40,11 +40,48 @@ export type MenuItemType = {
 // routes defined for nav/menu
 // used in components/AppHeader
 export const menuItems:MenuItemType[] = [
-  {path: '/software', match:'/software', label:'Software', module:'software'},
-  {path: '/projects', match: '/projects', label: 'Projects', module:'projects'},
-  {path: '/organisations', match: '/organisations', label: 'Organisations', module:'organisations'},
-  {path: '/communities', match: '/communities', label: 'Communities', module:'communities'},
-  {path: '/persons', match: '/persons', label: 'Persons', module:'persons'}
+  {
+    path: '/software',
+    match:'/software',
+    label:'Software',
+    module:'software',
+    active:({modules}:{modules:RsdModule[]})=>modules?.includes('software')
+  },
+  {
+    path: '/projects',
+    match: '/projects',
+    label: 'Projects',
+    module:'projects',
+    active:({modules}:{modules:RsdModule[]})=>modules.includes('projects')
+  },
+  {
+    path: '/organisations',
+    match: '/organisations',
+    label: 'Organisations',
+    module:'organisations',
+    active:({modules}:{modules:RsdModule[]})=>modules.includes('organisations')
+  },
+  {
+    path: '/communities',
+    match: '/communities',
+    label: 'Communities',
+    module:'communities',
+    active:({modules}:{modules:RsdModule[]})=>modules.includes('software') && modules.includes('communities')
+  },
+  {
+    path: '/persons',
+    match: '/persons',
+    label: 'Persons',
+    module:'persons',
+    active:({modules}:{modules:RsdModule[]})=>modules.includes('persons')
+  },
+  {
+    path: '/news',
+    match: '/news',
+    label: 'News',
+    module:'news',
+    active:({modules}:{modules:RsdModule[]})=>modules.includes('news')
+  }
 ]
 
 // ListItemButton styles for menus used on the edit pages
@@ -54,7 +91,6 @@ export const editMenuItemButtonSx={
     fontWeight:500
   }
 }
-
 
 /**
  * Breakpoint in px when to show mobile menu (burger)
@@ -72,7 +108,7 @@ export const userMenuItems: MenuItemType[] = [
     label:'My software',
     active: ({role,modules})=> {
       // if modules provided check for software module too
-      if (modules && modules.length>0){
+      if (Array.isArray(modules)===true){
         return ['rsd_admin', 'rsd_user'].includes(role)===true && modules.includes('software')
       }
       // else only for roles
@@ -86,7 +122,7 @@ export const userMenuItems: MenuItemType[] = [
     label:'My projects',
     active: ({role,modules})=> {
       // if modules provided check for projects module too
-      if (modules && modules.length>0){
+      if (Array.isArray(modules)===true){
         return ['rsd_admin', 'rsd_user'].includes(role)===true && modules.includes('projects')
       }
       // else only for roles
@@ -100,7 +136,7 @@ export const userMenuItems: MenuItemType[] = [
     label: 'My organisations',
     active: ({role,modules})=> {
       // if modules provided check for projects module too
-      if (modules && modules.length>0){
+      if (Array.isArray(modules)===true){
         return ['rsd_admin', 'rsd_user'].includes(role)===true && modules.includes('organisations')
       }
       // else only for roles
@@ -114,8 +150,8 @@ export const userMenuItems: MenuItemType[] = [
     label: 'My communities',
     active: ({role,modules})=> {
       // if modules provided check for projects module too
-      if (modules && modules.length>0){
-        return ['rsd_admin', 'rsd_user'].includes(role)===true && modules.includes('communities')
+      if (Array.isArray(modules)===true){
+        return ['rsd_admin', 'rsd_user'].includes(role)===true && modules.includes('communities') && modules.includes('software')
       }
       // else only for roles
       return ['rsd_admin', 'rsd_user'].includes(role)
@@ -157,12 +193,14 @@ export const userMenuItems: MenuItemType[] = [
     module: 'user',
     type: 'divider',
     label: 'divider3',
-    active: ({role})=>['rsd_admin'].includes(role),
+    // news devider
+    active: ({role, modules})=>['rsd_admin'].includes(role) && modules.includes('news'),
   }, {
     module: 'user',
     type: 'link',
     label: 'News',
-    active: ({role})=>['rsd_admin'].includes(role),
+    // news menu item
+    active: ({role,modules})=>['rsd_admin'].includes(role) && modules.includes('news'),
     path: '/news',
     icon: <CalendarViewMonthIcon />,
   }, {

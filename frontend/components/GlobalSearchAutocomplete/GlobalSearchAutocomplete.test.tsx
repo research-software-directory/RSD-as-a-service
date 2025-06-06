@@ -8,6 +8,7 @@
 
 import {render, screen, fireEvent} from '@testing-library/react'
 import {WrappedComponentWithProps} from '~/utils/jest/WrappedComponents'
+import {defaultRsdSettings} from '~/config/rsdSettingsReducer'
 
 import GlobalSearchAutocomplete from '.'
 
@@ -31,6 +32,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
+
 it('renders component with testid global-search', async() => {
   mockUseHasRemotes.mockReturnValue({hasRemotes:false})
   // render component with session
@@ -40,8 +42,10 @@ it('renders component with testid global-search', async() => {
   expect(globalSearch).toBeInTheDocument()
 })
 
-it('shows 3 navigation option on focus', async () => {
+it('shows navigation option on focus based on modules defined', async () => {
   mockUseHasRemotes.mockReturnValue({hasRemotes:false})
+  // filter out news as these are not in global search
+  const expectedMenuOptions = defaultRsdSettings.host.modules?.filter(item=>item!=='news')
   // render component with session
   render(WrappedComponentWithProps(GlobalSearchAutocomplete))
   // find input
@@ -51,7 +55,7 @@ it('shows 3 navigation option on focus', async () => {
 
   // should show 3 navigation options
   const listItems = screen.getAllByTestId('global-search-list-item')
-  expect(listItems.length).toEqual(3)
+  expect(listItems.length).toEqual(expectedMenuOptions?.length)
 })
 
 it('calls search api on input', async () => {

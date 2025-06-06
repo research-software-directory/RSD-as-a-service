@@ -28,6 +28,7 @@ import CommunitiesList from '~/components/communities/overview/CommunitiesList'
 import CommunitiesGrid from '~/components/communities/overview/CommunitiesGrid'
 import {CommunityListProps, getCommunityList} from '~/components/communities/apiCommunities'
 import {useSession} from '~/auth'
+import {getRsdModules} from '~/config/getSettingsServerSide'
 
 const pageTitle = `Communities | ${app.title}`
 const pageDesc = 'List of RSD communities.'
@@ -152,7 +153,14 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const {req} = context
     const {search, rows, page} = ssrBasicParams(context.query)
     const token = req?.cookies['rsd_token']
-
+    const modules = await getRsdModules()
+    // show 404 page if communities OR software module is not enabled
+    // NOTE! communities are currently only for software
+    if (modules?.includes('communities')===false || modules?.includes('software')===false){
+      return {
+        notFound: true,
+      }
+    }
     // extract user settings from cookie
     const {rsd_page_layout,rsd_page_rows} = getUserSettings(context.req)
     // use url param if present else user settings
