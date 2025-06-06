@@ -88,10 +88,14 @@ export default function CreateAccessToken({createAccessToken}:CreateRsdAccessTok
           className='w-1/2'
           label="Expiration date"
           value={expires}
-          InputLabelProps={{shrink: true}}
-          inputProps={{
-            min: minDate,
-            max: maxDate,
+          slotProps={{
+            htmlInput:{
+              min: minDate,
+              max: maxDate,
+            },
+            inputLabel:{
+              shrink: true
+            }
           }}
           helperText={
             <span className="line-clamp-1" title={expiresHelperText}>{expiresShortText}</span>
