@@ -40,7 +40,7 @@ public class RsdProviders {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RsdProviders.class);
 
-	private static final OpenidProviderAccessMethodOrder DEFAULT_ACCESS_METHOD_ORDER = new OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod.DISABLED, 0);
+	private static final OpenidProviderAccessMethodOrder DEFAULT_ACCESS_METHOD_ORDER = new OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod.DISABLED, Integer.MAX_VALUE);
 	private final ConcurrentMap<OpenidProvider, OpenidProviderAccessMethod> accessMethodOrderMap = new ConcurrentHashMap<>();
 	private String activeProvidersString = "[]";
 	private final ReadWriteLock jsonProvidersLock = new ReentrantReadWriteLock(false);
@@ -53,21 +53,24 @@ public class RsdProviders {
 		for (OpenidProvider openidProvider : OpenidProvider.values()) {
 			OpenidProviderAccessMethodOrder rawAccessMethodOrder = rawAccessMethodMap.getOrDefault(openidProvider, DEFAULT_ACCESS_METHOD_ORDER);
 			OpenidProviderAccessMethod rawAccessMethod = rawAccessMethodOrder.accessMethod();
+			if (!rawAccessMethod.isActive()) {
+				continue;
+			}
 
 			String displayName = obtainDisplayName(openidProvider);
 			String htmlDescription = obtainHtmlDescription(openidProvider);
-			URI wellKnownUrl = null;
+			URI wellKnownUrl;
 			try {
 				wellKnownUrl = Config.wellKnownUrl(openidProvider);
-				if (rawAccessMethod.isActive() && openidProvider != OpenidProvider.local && wellKnownUrl == null) {
+				if (openidProvider != OpenidProvider.local && wellKnownUrl == null) {
 					accessMethodOrderMap.put(openidProvider, OpenidProviderAccessMethod.MISCONFIGURED);
 					LOGGER.warn("Provider {} is misconfigured because no well-known URL was found", openidProvider);
+					continue;
 				}
 			} catch (URISyntaxException ignored) {
-				if (rawAccessMethod.isActive()) {
-					accessMethodOrderMap.put(openidProvider, OpenidProviderAccessMethod.MISCONFIGURED);
-					LOGGER.warn("Provider {} is misconfigured because it has an invalid well-known URL", openidProvider);
-				}
+				accessMethodOrderMap.put(openidProvider, OpenidProviderAccessMethod.MISCONFIGURED);
+				LOGGER.warn("Provider {} is misconfigured because it has an invalid well-known URL", openidProvider);
+				continue;
 			}
 
 			activeProvidersSorted.add(new RsdProviderData(openidProvider, rawAccessMethod, wellKnownUrl, displayName, htmlDescription, rawAccessMethodOrder.order()));
