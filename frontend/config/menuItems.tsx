@@ -157,12 +157,14 @@ export const userMenuItems: MenuItemType[] = [
     module: 'user',
     type: 'divider',
     label: 'divider3',
-    active: ({role})=>['rsd_admin'].includes(role),
+    // news devider
+    active: ({role, modules})=>['rsd_admin'].includes(role) && modules.includes('news'),
   }, {
     module: 'user',
     type: 'link',
     label: 'News',
-    active: ({role})=>['rsd_admin'].includes(role),
+    // news menu item
+    active: ({role,modules})=>['rsd_admin'].includes(role) && modules.includes('news'),
     path: '/news',
     icon: <CalendarViewMonthIcon />,
   }, {
