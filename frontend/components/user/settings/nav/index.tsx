@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -11,6 +12,7 @@ import ListItemText from '@mui/material/ListItemText'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 import {settingsMenu} from './UserSettingsNavItems'
+import Link from 'next/link'
 
 export default function UserSettingsNav() {
   const router = useRouter()
@@ -33,14 +35,8 @@ export default function UserSettingsNav() {
             data-testid="user-settings-nav-item"
             key={item.id}
             selected={selected}
-            onClick={() => {
-              router.push({
-                query: {
-                  ...router.query,
-                  settings:item.id
-                }
-              },{},{scroll:false})
-            }}
+            href={`${router.query.section}?settings=${item.id}`}
+            LinkComponent={Link}
             sx={editMenuItemButtonSx}
           >
             <ListItemIcon>
