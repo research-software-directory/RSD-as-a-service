@@ -247,7 +247,7 @@ public class Main {
 				JsonObject jsonObject = JsonParser.parseString(requestBody).getAsJsonObject();
 				String displayName = jsonObject.get("display_name").getAsString();
 				String expiresAt = jsonObject.get("expires_at").getAsString();
-				
+
 				try {
 					String accessToken = Argon2Creator.generateNewAccessToken(accountId, displayName, expiresAt);
 					ctx.result("{\"access_token\":\"" + accessToken + "\"}").contentType("application/json");
@@ -485,11 +485,11 @@ public class Main {
 
 		HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
 				.uri(URI.create(fullUrl));
-		
+
 		if (ctx.attribute("X-API-Authorization-Header") != null) {
 			requestBuilder.header("Authorization", ctx.attribute("X-API-Authorization-Header"));
 		}
-				
+
 		ctx.headerMap().forEach((k, v) -> {
 			if (!k.equalsIgnoreCase("host") && !k.equalsIgnoreCase("content-length") && !k.equalsIgnoreCase("authorization") && v != null) {
 				requestBuilder.header(k, v);

@@ -331,7 +331,7 @@ public class PostgrestAccount implements Account {
 
 				}
 			}
-			
+
 		}
 	}
 }

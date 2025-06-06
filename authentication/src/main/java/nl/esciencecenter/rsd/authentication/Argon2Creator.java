@@ -39,10 +39,10 @@ public class Argon2Creator {
 		return encoder.encode(opaqueToken);
 	}
 
-    // Method to generate a random opaque token using UUID
-    private static String generateOpaqueToken() {
-        return UUID.randomUUID().toString();
-    }
+	// Method to generate a random opaque token using UUID
+	private static String generateOpaqueToken() {
+		return UUID.randomUUID().toString();
+	}
 
 	private static String saveTokenToDatabase(String secret, String account, String displayName, String expiresAt) throws RsdAccessTokenException, InterruptedException {
 		JsonObject userAccessTokenData = new JsonObject();
@@ -64,14 +64,14 @@ public class Argon2Creator {
 					.get(0)
 					.getAsJsonObject()
 					.get("id")
-					.getAsString()	
+					.getAsString()
 			);
 			return tokenID.toString();
 		} catch (PostgresUniqueConstraintException e) {
 			throw new RsdAccessTokenException("RsdAccessTokenException: Token name should be unique", e);
 		} catch (PostgresForeignKeyConstraintException | PostgresCustomException | IOException e) {
 			throw new RsdAccessTokenException("RsdAccessTokenException: " + e.getMessage(), e);
-		} 
+		}
 
 	}
 
@@ -86,5 +86,5 @@ public class Argon2Creator {
 		URI queryUri = URI.create(backendUri + "/rpc/delete_my_user_access_token");
 		return Utils.makeBasicRequest("POST", Optional.of("{\"id\":\"" + accessTokenID + "\"}"), queryUri, jwtToken).statusCode();
 	}
-	
+
 }

@@ -199,21 +199,21 @@ SPDX-License-Identifier: Apache-2.0
 			<scope>test</scope>
 		</dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto -->
+		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-crypto</artifactId>
 			<version>6.4.5</version>
 		</dependency>
 
-        <!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
+		<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.2</version>
 		</dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on/1.77 -->
+		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on/1.77 -->
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15to18</artifactId>
