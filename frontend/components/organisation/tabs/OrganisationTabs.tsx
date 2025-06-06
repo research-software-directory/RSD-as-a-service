@@ -1,16 +1,16 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import {useRouter} from 'next/router'
 
 import {TabKey, organisationTabItems} from './OrganisationTabItems'
 import useOrganisationContext from '../context/useOrganisationContext'
 import useSelectedTab from './useSelectedTab'
+import TabAsLink from '~/components/layout/TabAsLink'
 
 // extract tab items (object keys)
 const tabItems = Object.keys(organisationTabItems) as TabKey[]
@@ -34,18 +34,19 @@ export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
       variant="scrollable"
       allowScrollButtonsMobile
       value={select_tab}
-      onChange={(_, value) => {
-        const query:any={
-          slug: router.query['slug'],
-          tab: value,
-        }
-        // push route change
-        router.push({query},undefined,{scroll:false})
-      }}
       aria-label="organisation tabs"
     >
       {tabItems.map(key => {
         const item = organisationTabItems[key]
+        const slugAsArray = router.query['slug']
+        let fullSlug: string
+        if (Array.isArray(slugAsArray)) {
+          fullSlug = slugAsArray.join('/')
+        } else if (slugAsArray === undefined) {
+          fullSlug = ''
+        } else {
+          fullSlug = slugAsArray
+        }
         if (item.isVisible({
           isMaintainer,
           software_cnt,
@@ -54,7 +55,7 @@ export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
           children_cnt,
           description
         })) {
-          return <Tab
+          return <TabAsLink
             icon={item.icon}
             key={key}
             label={item.label({
@@ -64,6 +65,8 @@ export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
               children_cnt
             })}
             value={key}
+            href={`/organisations/${fullSlug}?tab=${key}`}
+            scroll={false}
           />
         }})}
     </Tabs>

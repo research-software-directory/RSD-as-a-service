@@ -1,12 +1,13 @@
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import {useRouter} from 'next/router'
 import {TabKey, communityTabItems} from './CommunityTabItems'
+import TabAsLink from '~/components/layout/TabAsLink'
 
 // extract tab items (object keys)
 const tabItems = Object.keys(communityTabItems) as TabKey[]
@@ -32,24 +33,6 @@ export default function CommunityTabs({
       variant="scrollable"
       allowScrollButtonsMobile
       value={tab}
-      onChange={(_, value) => {
-        // create url
-        const url:any={
-          pathname:`/communities/[slug]/${value}`,
-          query:{
-            slug: router.query['slug']
-          }
-        }
-        // add default order for software and project tabs
-        if (value === 'software' ||
-          value === 'requests' ||
-          value === 'rejected'
-        ) {
-          url.query['order'] = 'mention_cnt'
-        }
-        // push route change
-        router.push(url,undefined,{scroll:false})
-      }}
       aria-label="community tabs"
     >
       {tabItems.map(key => {
@@ -57,8 +40,8 @@ export default function CommunityTabs({
         if (item.isVisible({
           isMaintainer,
           description
-        }) === true) {
-          return <Tab
+        })) {
+          return <TabAsLink
             icon={item.icon}
             key={key}
             label={item.label({
@@ -68,8 +51,10 @@ export default function CommunityTabs({
             })}
             value={key}
             sx={{
-              minWidth:'9rem'
+              minWidth: '9rem'
             }}
+            href={`/communities/${router.query['slug']}/${key}`}
+            scroll={false}
           />
         }})}
     </Tabs>
