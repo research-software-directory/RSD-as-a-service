@@ -1,6 +1,8 @@
 -- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+-- SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -336,8 +338,19 @@ CREATE TABLE software_for_community (
 	software UUID REFERENCES software (id),
 	community UUID REFERENCES community (id),
 	status request_status NOT NULL DEFAULT 'pending',
+	requested_at TIMESTAMPTZ NOT NULL,
 	PRIMARY KEY (software, community)
 );
+
+CREATE FUNCTION sanitise_insert_software_for_community() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.requested_at = LOCALTIMESTAMP;
+	RETURN NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_insert_software_for_community BEFORE INSERT ON software_for_community FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_software_for_community();
 
 CREATE FUNCTION sanitise_update_software_for_community() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
@@ -349,3 +362,14 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_software_for_community BEFORE UPDATE ON software_for_community FOR EACH ROW EXECUTE PROCEDURE sanitise_update_software_for_community();
+
+CREATE FUNCTION notify_on_community_request() RETURNS TRIGGER LANGUAGE plpgsql AS 
+$$
+BEGIN
+	RAISE NOTICE 'About to send community request NOTIFY';
+	PERFORM pg_notify('software_for_community_join_request', to_json(NEW)::text);
+	RETURN NEW;
+END
+$$;
+
+CREATE TRIGGER notify_community_request AFTER INSERT OR UPDATE ON software_for_community FOR EACH ROW WHEN (NEW.status = 'pending') EXECUTE PROCEDURE notify_on_community_request();

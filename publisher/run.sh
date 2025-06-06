@@ -5,4 +5,5 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-python -m gunicorn -b 0.0.0.0:5000 "app:create_app()" --log-level debug --access-logfile -
+python -m gunicorn -b 0.0.0.0:5000 "app:create_app()" --log-level debug --access-logfile - &
+PYTHONPATH=/ python -u /app/listeners/postgres_notifications_listener.py
