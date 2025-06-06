@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -36,7 +38,9 @@ export default function MuiSnackbar({options, setSnackbar}:PageSnackbarType){
       anchorOrigin={anchor}
       autoHideDuration={duration}
       onClose={handleClose}
-      TransitionComponent={slideTransition}
+      slots={{
+        transition: slideTransition
+      }}
     >
       <Alert severity={severity}
         elevation={6}

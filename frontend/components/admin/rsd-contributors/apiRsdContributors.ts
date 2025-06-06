@@ -20,7 +20,7 @@ export async function getContributors({page, rows, token, searchFor, orderBy}: A
   try {
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
-      query+=`&or=(given_names.ilike.*${searchFor}*,family_names.ilike.*${searchFor}*,email_address.ilike.*${searchFor}*,orcid.ilike.*${searchFor}*)`
+      query+=`&or=(given_names.ilike."*${searchFor}*",family_names.ilike."*${searchFor}*",email_address.ilike."*${searchFor}*",orcid.ilike."*${searchFor}*")`
     }
     if (orderBy) {
       query+=`&order=${orderBy.column}.${orderBy.direction}`

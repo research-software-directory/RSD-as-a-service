@@ -23,6 +23,7 @@ export type UserProfile = {
 }
 
 export type PublicUserProfile = UserProfile & {
+  display_name: string
   orcid: string | null
 }
 

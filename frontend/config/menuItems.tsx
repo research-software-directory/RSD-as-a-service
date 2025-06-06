@@ -43,7 +43,8 @@ export const menuItems:MenuItemType[] = [
   {path: '/software', match:'/software', label:'Software', module:'software'},
   {path: '/projects', match: '/projects', label: 'Projects', module:'projects'},
   {path: '/organisations', match: '/organisations', label: 'Organisations', module:'organisations'},
-  {path: '/communities', match: '/communities', label: 'Communities', module:'communities'}
+  {path: '/communities', match: '/communities', label: 'Communities', module:'communities'},
+  {path: '/persons', match: '/persons', label: 'Persons', module:'persons'}
 ]
 
 // ListItemButton styles for menus used on the edit pages

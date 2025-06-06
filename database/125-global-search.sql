@@ -39,9 +39,8 @@ $$
 	END;
 $$;
 
-
 -- GLOBAL SEARCH
--- depends on: aggregated_software_search
+-- depends on: aggregated_software_search, public_user_profile
 CREATE FUNCTION global_search(query VARCHAR) RETURNS TABLE(
 	slug VARCHAR,
 	domain VARCHAR,
@@ -165,5 +164,24 @@ $$
 	FROM
 		community
 	WHERE
-		community.slug ILIKE CONCAT('%', query, '%') OR community."name" ILIKE CONCAT('%', query, '%');
+		community.slug ILIKE CONCAT('%', query, '%') OR community."name" ILIKE CONCAT('%', query, '%')
+	UNION ALL
+	-- PERSONS search
+	SELECT
+		CAST (public_user_profile.account AS VARCHAR) as slug,
+		NULL AS domain,
+		NULL as rsd_host,
+		public_user_profile.display_name as "name",
+		'persons' AS "source",
+		public_user_profile.is_public AS is_published,
+		(CASE
+			WHEN public_user_profile.display_name ILIKE query THEN 0
+			WHEN public_user_profile.display_name ILIKE CONCAT(query, '%') THEN 2
+			ELSE 3
+		END) AS rank,
+		0 as index_found
+	FROM
+		public_user_profile()
+	WHERE
+		public_user_profile.display_name ILIKE CONCAT('%', query, '%');
 $$;

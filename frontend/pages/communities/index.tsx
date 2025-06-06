@@ -44,8 +44,7 @@ type CommunitiesOverviewProps={
 
 export default function CommunitiesOverview({count,page,rows,layout,search,communities}:CommunitiesOverviewProps) {
   const {user} = useSession()
-  const isAdmin = user?.role === 'rsd_admin'
-  if (!isAdmin) {
+  if (user?.role !== 'rsd_admin') {
     for (const community of communities) {
       community.pending_cnt = null
     }

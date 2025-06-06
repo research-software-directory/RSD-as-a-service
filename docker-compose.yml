@@ -128,7 +128,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend:4.0.0
+    image: rsd/frontend:3.3.0
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -142,13 +142,10 @@ services:
       - SURFCONEXT_CLIENT_ID
       - SURFCONEXT_REDIRECT
       - SURFCONEXT_WELL_KNOWN_URL
-      - SURFCONEXT_SCOPES
-      - SURFCONEXT_RESPONSE_MODE
       - HELMHOLTZID_CLIENT_ID
       - HELMHOLTZID_REDIRECT
       - HELMHOLTZID_WELL_KNOWN_URL
       - HELMHOLTZID_SCOPES
-      - HELMHOLTZID_RESPONSE_MODE
       - ORCID_CLIENT_ID
       - ORCID_REDIRECT
       - ORCID_REDIRECT_COUPLE
@@ -157,8 +154,6 @@ services:
       - AZURE_CLIENT_ID
       - AZURE_REDIRECT
       - AZURE_WELL_KNOWN_URL
-      - AZURE_SCOPES
-      - AZURE_LOGIN_PROMPT
       - AZURE_DISPLAY_NAME
       - AZURE_DESCRIPTION_HTML
       - LINKEDIN_CLIENT_ID
@@ -262,8 +257,68 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
 
   #----------------------------------------------
+  # DISABLED BY DEFAULT IN DEVELOPMENT
+  #----------------------------------------------
+
+  rabbitmq:
+    image: rabbitmq:4.0
+    hostname: rabbitmq
+    expose:
+      - "5672"
+    networks:
+      - net
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    deploy:
+      replicas: 0
+
+  mail:
+    build: ./mail
+    image: rsd/mail:1.0.0
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - MAIL_SMTP_SERVER
+      - MAIL_SMTP_PORT
+      - MAIL_SMTP_SECURITY
+      - MAIL_SMTP_LOGIN
+      - MAIL_SMTP_PASSWORD
+      - MAIL_FROM_ADDRESS
+      - MAIL_REPLY_TO
+      - MAIL_QUEUE
+    networks:
+      - net
+    deploy:
+      replicas: 0
+    restart: on-failure
+
+  publisher:
+    build: ./publisher
+    image: rsd/publisher:1.0.0
+    expose:
+      - "5000"
+    depends_on:
+      - rabbitmq
+    environment:
+      - MAIL_QUEUE
+      - PUBLISHER_JWT_SECRET_KEY
+    networks:
+      - net
+    deploy:
+      replicas: 0
+    restart: on-failure
+
+  #----------------------------------------------
   # DEVELOPMENT ONLY SERVICES
   #----------------------------------------------
+
   data-generation:
     build: ./data-generation
     image: rsd/generation:1.6.0
@@ -288,3 +343,4 @@ networks:
 volumes:
   pgdb:
   lets-encrypt:
+  rabbitmq-data:

@@ -12,7 +12,7 @@ import {isOrcid} from '~/utils/getORCID'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import BackgroundAndLayout from '~/components/layout/BackgroundAndLayout'
-import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
+
 import {getProfileProjects,getProfileSoftware} from '~/components/profile/apiProfile'
 import ProfileMetadata from '~/components/profile/metadata'
 import ProfileTabs from '~/components/profile/tabs'
@@ -20,8 +20,10 @@ import ProfileTabContent from '~/components/profile/tabs/ProfileTabContent'
 import {ProfileContextProvider} from '~/components/profile/context/ProfileContext'
 import {ProfileTabKey} from '~/components/profile/tabs/ProfileTabItems'
 import {getPublicUserProfile, PublicUserProfile} from '~/components/user/settings/profile/apiUserProfile'
+import {getRsdModules} from '~/config/getSettingsServerSide'
+import {RsdModule} from '~/config/rsdSettingsReducer'
 
-type SoftwareByOrcidProps=Readonly<{
+type PublicProfilePageProps=Readonly<{
   orcid: string
   tab: ProfileTabKey
   publicProfile: PublicUserProfile,
@@ -31,17 +33,16 @@ type SoftwareByOrcidProps=Readonly<{
   projects: ProjectListItem[]
 }>
 
-export default function PublicProfileByOrcidPage({
+export default function PublicProfilePage({
   tab,publicProfile, software_cnt,
   software, project_cnt, projects
-}:SoftwareByOrcidProps) {
+}:PublicProfilePageProps) {
 
   // console.group('PublicProfileByOrcidPage')
   // console.log('orcid...', orcid)
   // console.log('rsd_page_rows....', rsd_page_rows)
   // console.log('rsd_page_layout....', rsd_page_layout)
   // console.log('tab....', tab)
-  // console.log('profiles....', profiles)
   // console.log('publicProfile....', publicProfile)
   // console.log('software....', software)
   // console.log('software_cnt....', software_cnt)
@@ -67,12 +68,7 @@ export default function PublicProfileByOrcidPage({
           {/* PROFILE METADATA */}
           <ProfileMetadata profile={publicProfile}/>
           {/* TABS */}
-          <BaseSurfaceRounded
-            className="my-4 p-2"
-            type="section"
-          >
-            <ProfileTabs tab_id={tab} isMaintainer={false} />
-          </BaseSurfaceRounded>
+          <ProfileTabs tab_id={tab} isMaintainer={false} />
           {/* TAB CONTENT */}
           <section className="flex md:min-h-[60rem] mb-12">
             <ProfileTabContent tab_id={tab} />
@@ -105,7 +101,11 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     } else {
       account = params?.id.toString()
     }
-    const publicProfile = await getPublicUserProfile({orcid,account})
+    const [publicProfile, modules] = await Promise.all([
+      getPublicUserProfile({orcid,account}),
+      getRsdModules()
+    ])
+
     // 404 if profile is null (not found in public_user_profile)
     if (publicProfile === null){
       return {
@@ -120,8 +120,30 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     let page = parseInt(query['page'] as string ?? 0)
     // api works with 0 page index
     if (page>0) page = page-1
-    // tab & search
-    const tab = params?.tab ?? 'software'
+
+    // select tab
+    let tab = ''
+    if (params?.tab){
+      if (modules.includes(params.tab.toString() as RsdModule)===true){
+        tab = params?.tab.toString()
+      }
+    }else{
+      // default tab based no enabled modules
+      if (modules.includes('software')===true) {
+        tab='software'
+      } else if (modules.includes('projects')===true){
+        tab='projects'
+      }
+    }
+
+    // 404 if we cannot determine tab
+    if (tab===''){
+      return {
+        notFound: true,
+      }
+    }
+
+    // search
     const search = query?.search as string
 
     // get software, projects and public profile

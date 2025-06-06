@@ -42,7 +42,7 @@ export async function getProfileSoftware({orcid,account,rows=12,page=0,search,to
     // include search
     if (search){
       const encodedSearch = encodeURIComponent(search)
-      query+=`&or=(brand_name.ilike.*${encodedSearch}*,short_statement.ilike.*${encodedSearch}*,keywords_text.ilike.*${encodedSearch}*)`
+      query+=`&or=(brand_name.ilike."*${encodedSearch}*",short_statement.ilike."*${encodedSearch}*",keywords_text.ilike."*${encodedSearch}*")`
     }
     // complete url
     const url = `${getBaseUrl()}/rpc/software_by_public_profile?${query}`

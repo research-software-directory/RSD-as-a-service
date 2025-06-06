@@ -55,10 +55,6 @@ AZURE_CLIENT_ID=
 AZURE_REDIRECT=http://localhost/auth/login/azure
 # consumed by: authentication, frontend/utils/loginHelpers
 AZURE_WELL_KNOWN_URL=
-# consumed by: authentication, frontend/utils/loginHelpers
-AZURE_SCOPES=openid+email+profile
-# consumed by: authentication, frontend/utils/loginHelpers
-AZURE_LOGIN_PROMPT=select_account
 # consumed by: frontend
 # the name displayed to users when multiple providers are configured
 AZURE_DISPLAY_NAME="Microsoft Azure AD"
@@ -141,6 +137,33 @@ Helmholtz already runs an RSD instance at [https://helmholtz.software/](https://
 
 First, create an app on [https://developer.linkedin.com/](https://developer.linkedin.com/). Follow the steps [here](https://www.linkedin.com/help/linkedin/answer/a1665329) to get your app approved by the company you linked it to. Copy the related environment variables from `.env.example` to your `.env` and fill in the missing values (don't forget to set your custom domain for `LINKEDIN_REDIRECT`). Finally, add `LINKEDIN` to the values in the environment variable `RSD_AUTH_PROVIDERS`.
 
+## e-Mail service
+
+The RSD provides a mail service functionality.
+
+:::info
+While the mail service is already implemented, use cases where the service is used are still under development.
+
+The basic implementation of the mail service (publisher, queue and consumer) allows for custom use cases to be implemented (as further mentioned below).
+
+:::
+
+To set up the mail service functionality, the following environment variables are required:
+
+```shell
+MAIL_SMTP_SERVER= # value without https://, e.g. "smtp.server.org"
+MAIL_SMTP_PORT= # string value of the port number e.g. "587"
+MAIL_SMTP_SECURITY= # value = "SSL" or "STARTTLS"
+MAIL_SMTP_LOGIN= # the email address used for login to the SMTP server, e.g. "user@domain.org"
+MAIL_SMTP_PASSWORD= # the password used for authentication to the SMTP server
+MAIL_FROM_ADDRESS= # the email address that should send the emails from the mail service, e.g. "rsd@domain.org"
+MAIL_REPLY_TO= # optional, an email address that should be set for reply-to
+
+MAIL_QUEUE= # optional, name of the rabbitmq channel used for the mail service, default value: mailq
+
+PUBLISHER_JWT_SECRET_KEY=
+```
+
 ## Host definitions
 
 The `host` section of settings.json defines following settings. **Most of them should be customised**.
@@ -160,7 +183,7 @@ The `host` section of settings.json defines following settings. **Most of them s
 - `privacy_statement_url`: the link to your privacy statement page. Used on the user profile page to let user accept the privacy statement.
 - `software_highlights`: the definitions for the software highlights section on the top of the software overview page. You can specify title and the number of items loaded in the carousel. The default values are shown below.
 - `orcid_search`: should ORCID api be used when searching for contributors or team members? By default ORCID search api is enabled and the entries from RSD and ORCID are combined in the search result. If you want your users to be able to search only within the existing RSD entries set this value to false.
-- `modules`: defines RSD "modules" displayed in the main menu in the page header. Possible values are: software, projects, organisations and communities.
+- `modules`: defines RSD "modules" displayed in the main menu in the page header. Possible values are: software, projects, organisations, communities and persons.
 
 ```json
 ...
@@ -185,7 +208,7 @@ The `host` section of settings.json defines following settings. **Most of them s
       "description": null
     },
     "orcid_search": true,
-    "modules":["software","projects","organisations","communities"]
+    "modules":["software","projects","organisations","communities","persons"]
   }
 ...
 ```

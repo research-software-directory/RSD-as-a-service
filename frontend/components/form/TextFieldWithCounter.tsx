@@ -54,10 +54,20 @@ export default function TextFieldWithCounter({options, register}:
       fullWidth={options?.fullWidth ?? true }
       variant={options?.variant ?? 'standard'}
       defaultValue={options?.defaultValue ?? null}
-      FormHelperTextProps={{
-        sx:{
-          display: 'flex',
-          justifyContent:'space-between'
+      slotProps={{
+        input:{
+          startAdornment: options?.startAdornment ?
+            <InputAdornment position="start">{options?.startAdornment}</InputAdornment>
+            : undefined,
+          endAdornment: options?.endAdornment ?
+            <InputAdornment position="end">{options?.endAdornment}</InputAdornment>
+            : undefined
+        },
+        formHelperText:{
+          sx:{
+            display: 'flex',
+            justifyContent:'space-between'
+          }
         }
       }}
       helperText={
@@ -66,10 +76,6 @@ export default function TextFieldWithCounter({options, register}:
           count={options?.helperTextCnt ?? ''}
         />
       }
-      InputProps={{
-        startAdornment: options?.startAdornment ? <InputAdornment position="start">{options?.startAdornment}</InputAdornment> : undefined,
-        endAdornment: options?.endAdornment ? <InputAdornment position="end">{options?.endAdornment}</InputAdornment> : undefined
-      }}
       {...register}
     />
   )

@@ -122,15 +122,16 @@ export default function EditNewsItem({item}:{item:NewsItem}) {
                 useNull: true,
                 defaultValue: item.publication_date,
                 helperTextMessage: config.publication_date.help,
-                // helperTextCnt: `${item?.publication_date?.length || 0}/${config.slug.validation.maxLength.value}`,
                 muiProps:{
                   autoComplete: 'off',
                   variant: 'standard',
                   label: config.publication_date.label,
                   type: 'date',
-                  InputLabelProps:{
-                    shrink: true
-                  }
+                  slotProps:{
+                    inputLabel:{
+                      shrink: true
+                    }
+                  },
                 }
               }}
               rules={config.slug.validation}

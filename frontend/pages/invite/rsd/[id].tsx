@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -6,13 +7,13 @@
 import {useEffect} from 'react'
 import {GetServerSidePropsContext} from 'next'
 
+import {getLoginProviders, Provider} from '~/auth/api/getLoginProviders'
 import useRsdSettings from '~/config/useRsdSettings'
 import MainContent from '~/components/layout/MainContent'
 import PageBackground from '~/components/layout/PageBackground'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import LoginProviders from '~/components/login/LoginProviders'
-import {Provider, ssrProvidersInfo} from 'pages/api/fe/auth'
 
 type RsdInvitePageProps=Readonly<{
   id: string | null
@@ -79,13 +80,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   // get list of providers that support INVITE_ONLY
-  const providers = await ssrProvidersInfo('INVITE_ONLY')
+  const providers = await getLoginProviders()
+  const inviteOnlyProviders = providers.filter(p => p.accessType === 'INVITE_ONLY' || p.openidProvider === 'helmholtz')
 
   return {
     props: {
       id,
       token: token ?? null,
-      providers
+      providers: inviteOnlyProviders
     }
   }
 

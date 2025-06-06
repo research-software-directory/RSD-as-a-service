@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -9,7 +10,7 @@ import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Chip from '@mui/material/Chip'
 
-import {Provider} from 'pages/api/fe/auth'
+import {Provider} from '~/auth/api/getLoginProviders'
 import useRsdSettings from '~/config/useRsdSettings'
 
 type LoginProvidersProps=Readonly<{
@@ -55,11 +56,10 @@ export default function LoginProviders({providers,login_info_url}:LoginProviders
           let color = 'default'
           if (provider?.accessType==='EVERYONE') color='success'
           if (provider?.accessType==='INVITE_ONLY') color='warning'
-          if (provider?.accessType==='DISABLED') color='error'
           return (
             <Link
-              key={provider.redirectUrl}
-              href={provider.redirectUrl}
+              key={provider.signInUrl}
+              href={provider.signInUrl}
               passHref
             >
               <ListItem
