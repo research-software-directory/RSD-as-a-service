@@ -14,6 +14,7 @@ import Pagination from '@mui/material/Pagination'
 import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
+import {getRsdModules} from '~/config/getSettingsServerSide'
 import PageTitle from '~/components/layout/PageTitle'
 import Searchbox from '~/components/form/Searchbox'
 import {OrganisationList} from '~/types/Organisation'
@@ -153,11 +154,16 @@ export default function OrganisationsOverviewPage({
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  // extract params from page-query
-  // extract rsd_token
   const {req} = context
   const {search, rows, page} = ssrBasicParams(context.query)
   const token = req?.cookies['rsd_token']
+  const modules = await getRsdModules()
+  // show 404 page if module is not enabled
+  if (modules?.includes('organisations')===false){
+    return {
+      notFound: true,
+    }
+  }
   // extract user settings from cookie
   const {rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings

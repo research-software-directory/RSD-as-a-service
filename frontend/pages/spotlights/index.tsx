@@ -47,6 +47,7 @@ import SoftwareFiltersModal from '~/components/software/overview/filters/Softwar
 import {highlightOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {CategoryOption} from '~/components/filter/CategoriesFilter'
+import {getRsdModules} from '~/config/getSettingsServerSide'
 
 type SpotlightsOverviewProps = {
   search?: string | null
@@ -238,6 +239,13 @@ export default function SpotlightsOverviewPage({
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   let orderBy='slug.asc', offset=0
+  const modules = await getRsdModules()
+  // show 404 page if software module is not enabled
+  if (modules?.includes('software')===false){
+    return {
+      notFound: true,
+    }
+  }
   // extract params from page-query
   const {search, keywords, prog_lang, licenses, categories, order, rows, page} = ssrSoftwareParams(context.query)
   // extract user settings from cookie
