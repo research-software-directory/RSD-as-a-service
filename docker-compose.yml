@@ -14,8 +14,6 @@
 
 version: "3.0"
 
-# include:
-#   - ../rsd-license-consultation/docker-compose.yml
 services:
   database:
     build: ./database
