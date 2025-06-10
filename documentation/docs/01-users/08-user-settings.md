@@ -51,3 +51,9 @@ If you have ORCID you can link your ORCID account to RSD. There are two benefits
 :::
 
 ![animation](img/user-public-profile.gif)
+
+## API Access Tokens
+
+This section allows you to generate API Access Tokens to be used with external applications. The enabled access of the generated tokens to the RSD API corresponds to your user access rights. Maximum lifetime of a token is 365 days - a new token needs to be generated after expiration.
+
+When making requests to the RSD API using an API access token, requests need to be made to the `/api/v2` endpoint which mirrors the [REST API](/API/rest-api/) at `/api/v1`.  
