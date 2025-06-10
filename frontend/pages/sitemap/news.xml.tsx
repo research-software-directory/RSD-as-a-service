@@ -7,6 +7,7 @@
 
 import {GetServerSidePropsContext} from 'next'
 import {getDomain} from '~/utils/getDomain'
+import {getRsdModules} from '~/config/getSettingsServerSide'
 import {getNewsSitemap} from '~/components/seo/getNewsSitemap'
 
 export default function RobotsTxt() {
@@ -20,7 +21,17 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   const domain = getDomain(req)
 
   // generate the XML sitemap for software
-  const content = await getNewsSitemap(domain)
+  const [content, modules]= await Promise.all([
+    getNewsSitemap(domain),
+    getRsdModules()
+  ])
+
+  // return 404 if module is not defined
+  if (modules.includes('news')===false){
+    return {
+      notFound: true,
+    }
+  }
 
   res.setHeader('Content-Type', 'text/xml; charset=UTF-8')
 

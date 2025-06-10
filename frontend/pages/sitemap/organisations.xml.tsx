@@ -1,11 +1,15 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {GetServerSidePropsContext} from 'next'
-import {getOrganisationSitemap} from '~/components/seo/getOrganisationSitemap'
+
 import {getDomain} from '~/utils/getDomain'
+import {getRsdModules} from '~/config/getSettingsServerSide'
+import {getOrganisationSitemap} from '~/components/seo/getOrganisationSitemap'
 
 export default function RobotsTxt() {
   // getServerSideProps will create response
@@ -18,7 +22,17 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   const domain = getDomain(req)
 
   // generate the XML sitemap for software
-  const content = await getOrganisationSitemap(domain)
+  const [content, modules]= await Promise.all([
+    getOrganisationSitemap(domain),
+    getRsdModules()
+  ])
+
+  // return 404 if module is not defined
+  if (modules.includes('organisations')===false){
+    return {
+      notFound: true,
+    }
+  }
 
   res.setHeader('Content-Type', 'text/xml; charset=UTF-8')
 

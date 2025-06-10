@@ -6,8 +6,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {GetServerSidePropsContext} from 'next'
+
 import {getDomain} from '~/utils/getDomain'
 import {getPublicProfileSitemap} from '~/components/seo/getPersonsSitemap'
+import {getRsdModules} from '~/config/getSettingsServerSide'
 
 export default function RobotsTxt() {
   // getServerSideProps will create response
@@ -20,7 +22,17 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   const domain = getDomain(req)
 
   // generate the XML sitemap for software
-  const content = await getPublicProfileSitemap(domain)
+  const [content, modules]= await Promise.all([
+    getPublicProfileSitemap(domain),
+    getRsdModules()
+  ])
+
+  // return 404 if module is not defined
+  if (modules.includes('persons')===false){
+    return {
+      notFound: true,
+    }
+  }
 
   res.setHeader('Content-Type', 'text/xml; charset=UTF-8')
 
