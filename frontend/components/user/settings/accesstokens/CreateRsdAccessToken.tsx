@@ -13,7 +13,7 @@ import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 
 
-import {getDateFromNow, getYearMonthDay, formatDateToIsoStr} from '~/utils/dateFn'
+import {getDateFromNow, getYearMonthDay, formatDateToIsoStr, getDatePlaceholderForLocale} from '~/utils/dateFn'
 import copyToClipboard from '~/utils/copyToClipboard'
 import {NewAccessToken} from './apiAccessTokens'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
@@ -27,7 +27,7 @@ type CreateRsdAccessTokenProps=Readonly<{
 const displayNameHelperText = 'Give your token a unique name'
 const displayNameShortText = 'Unique token name'
 const expiresHelperText = 'Maximum token lifetime is 365 days'
-const expiresShortText = 'Month / Day / Year'
+const expiresShortText = getDatePlaceholderForLocale()
 
 const today = new Date()
 const minDate = formatDateToIsoStr(today)

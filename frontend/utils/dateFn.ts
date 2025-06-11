@@ -178,3 +178,25 @@ export function getYearMonthDay(date:Date) {
     return null
   }
 }
+
+export function getDatePlaceholderForLocale(locale = navigator.language) {
+  const exampleDate = new Date()
+  const parts = new Intl.DateTimeFormat(locale, {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).formatToParts(exampleDate)
+
+  return parts.map((part) => {
+    switch (part.type) {
+      case 'day':
+        return 'DD'
+      case 'month':
+        return 'MM'
+      case 'year':
+        return 'YYYY'
+      default:
+        return part.value
+    }
+  }).join('')
+}
