@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -48,7 +48,8 @@ public class MainBasicData {
 
 					Optional<GithubScraper> githubScraperOptional = GithubScraper.create(repoUrl);
 					if (githubScraperOptional.isEmpty()) {
-						Utils.saveErrorMessageInDatabase("Not a valid GitHub URL: " + repoUrl, "repository_url", "basic_data_last_error", basicData.software().toString(), "software", scrapedAt, "basic_data_scraped_at");
+						Utils.saveErrorMessageInDatabase("Not a valid GitHub URL: " + repoUrl, "repository_url", "basic_data_last_error", basicData.software()
+							.toString(), "software", scrapedAt, "basic_data_scraped_at");
 						return;
 					}
 
@@ -58,13 +59,16 @@ public class MainBasicData {
 					softwareInfoRepository.saveBasicData(updatedData);
 				} catch (RsdRateLimitException e) {
 					Utils.saveExceptionInDatabase("GitHub basic data scraper", "repository_url", basicData.software(), e);
-					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "basic_data_last_error", basicData.software().toString(), "software", null, null);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "basic_data_last_error", basicData.software()
+						.toString(), "software", null, null);
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitHub basic data scraper", "repository_url", basicData.software(), e);
-					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "basic_data_last_error", basicData.software().toString(), "software", scrapedAt, "basic_data_scraped_at");
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "basic_data_last_error", basicData.software()
+						.toString(), "software", scrapedAt, "basic_data_scraped_at");
 				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitHub basic data scraper", "repository_url", basicData.software(), e);
-					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "basic_data_last_error", basicData.software().toString(), "software", scrapedAt, "basic_data_scraped_at");
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "basic_data_last_error", basicData.software()
+						.toString(), "software", scrapedAt, "basic_data_scraped_at");
 				}
 			});
 			futures[i] = future;
@@ -75,7 +79,7 @@ public class MainBasicData {
 
 	private static void scrapeGitLab() {
 		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB);
-		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.statsData(Config.maxRequestsGithub());
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.statsData(Config.maxRequestsGitLab());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
@@ -93,13 +97,16 @@ public class MainBasicData {
 					softwareInfoRepository.saveBasicData(updatedData);
 				} catch (RsdRateLimitException e) {
 					Utils.saveExceptionInDatabase("GitLab basic data scraper", "repository_url", basicData.software(), e);
-					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "basic_data_last_error", basicData.software().toString(), "software", null, null);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "basic_data_last_error", basicData.software()
+						.toString(), "software", null, null);
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitLab basic data scraper", "repository_url", basicData.software(), e);
-					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "basic_data_last_error", basicData.software().toString(), "software", scrapedAt, "basic_data_scraped_at");
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "basic_data_last_error", basicData.software()
+						.toString(), "software", scrapedAt, "basic_data_scraped_at");
 				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitLab basic data scraper", "repository_url", basicData.software(), e);
-					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "basic_data_last_error", basicData.software().toString(), "software", scrapedAt, "basic_data_scraped_at");
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "basic_data_last_error", basicData.software()
+						.toString(), "software", scrapedAt, "basic_data_scraped_at");
 				}
 			});
 			futures[i] = future;

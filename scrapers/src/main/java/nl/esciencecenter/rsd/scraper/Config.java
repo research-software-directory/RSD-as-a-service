@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -147,6 +147,15 @@ public class Config {
 	 */
 	public static int maxRequestsGitLab() {
 		return getIntEnv("MAX_REQUESTS_GITLAB", 6);
+	}
+
+	/**
+	 * The maximum requests rate for the 4TU Git API.
+	 *
+	 * @return the maximum request rate (default 6).
+	 */
+	public static int maxRequests4tu() {
+		return getIntEnv("MAX_REQUESTS_4TU", 6);
 	}
 
 	/**
