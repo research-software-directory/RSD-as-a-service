@@ -117,7 +117,8 @@ CREATE FUNCTION public_user_profile() RETURNS TABLE (
 	avatar_id VARCHAR(40),
 	orcid VARCHAR,
 	account UUID,
-	is_public BOOLEAN
+	is_public BOOLEAN,
+	updated_at TIMESTAMPTZ
 ) LANGUAGE sql STABLE SECURITY DEFINER AS
 $$
 SELECT
@@ -130,7 +131,8 @@ SELECT
 	user_profile.avatar_id,
 	login_for_account.sub AS orcid,
 	user_profile.account,
-	user_profile.is_public
+	user_profile.is_public,
+	user_profile.updated_at
 FROM
 	user_profile
 LEFT JOIN

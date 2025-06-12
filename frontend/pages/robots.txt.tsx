@@ -1,9 +1,13 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {GetServerSidePropsContext} from 'next'
+import {getRsdModules} from '~/config/getSettingsServerSide'
+import {RsdModule} from '~/config/rsdSettingsReducer'
 import {getDomain} from '~/utils/getDomain'
 
 export default function RobotsTxt() {
@@ -11,20 +15,48 @@ export default function RobotsTxt() {
 }
 
 
-async function generateRobotsFile(domain:string) {
-
-  return `User-agent: *
+async function generateRobotsFile(domain:string, modules: RsdModule[]) {
+  // base body
+  let robots = `User-agent: *
 
 Disallow: /admin/
 Disallow: /auth/
 Disallow: /invite/
 Disallow: /login/
 Disallow: /user/
-
-Sitemap: ${domain}/sitemap/software.xml
-Sitemap: ${domain}/sitemap/projects.xml
-Sitemap: ${domain}/sitemap/organisations.xml
 `
+  // conditional bodu based on enabled modules
+  if (modules.includes('software')){
+    robots+= `
+Sitemap: ${domain}/sitemap/software.xml`
+  }
+
+  if (modules.includes('projects')){
+    robots+= `
+Sitemap: ${domain}/sitemap/projects.xml`
+  }
+
+  if (modules.includes('organisations')){
+    robots+= `
+Sitemap: ${domain}/sitemap/organisations.xml`
+  }
+
+  if (modules.includes('communities')){
+    robots+= `
+Sitemap: ${domain}/sitemap/communities.xml`
+  }
+
+  if (modules.includes('persons')){
+    robots+= `
+Sitemap: ${domain}/sitemap/persons.xml`
+  }
+
+  if (modules.includes('news')){
+    robots+= `
+Sitemap: ${domain}/sitemap/news.xml`
+  }
+
+  return robots
 }
 
 export async function getServerSideProps(context:GetServerSidePropsContext) {
@@ -37,8 +69,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   // console.log('getServerSideProps...req.headers...', req)
   // extract domain info from request headers
   const domain = getDomain(req)
+  const modules = await getRsdModules()
   // We generate the XML sitemap with the posts data
-  const content = await generateRobotsFile(domain)
+  const content = await generateRobotsFile(domain,modules)
 
   res.setHeader('Content-Type', 'text/plain; charset=UTF-8')
   res.setHeader('x-generator', 'custom-next-script')
