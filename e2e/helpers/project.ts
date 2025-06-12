@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -40,7 +41,7 @@ export async function createProject({title, desc, slug, page}: CreateSoftwarePro
     // fill in title
     page.locator('#Title').fill(title),
     // wait for response on slug validation
-    page.waitForResponse( RegExp(slug))
+    page.waitForResponse(RegExp(slug))
   ])
 
   // add subtitle
@@ -52,7 +53,7 @@ export async function createProject({title, desc, slug, page}: CreateSoftwarePro
 
   // click save button
   await Promise.all([
-    page.waitForURL(url,{
+    page.waitForURL(url, {
       waitUntil: 'networkidle'
     }),
     saveBtn.click()
@@ -237,7 +238,7 @@ export async function openProjectPage(page: Page, name?: string) {
 
 }
 
-export async function openEditProjectPage(page:Page, name:string) {
+export async function openEditProjectPage(page: Page, name: string) {
   // navigate first to software page
   await openProjectPage(page, name)
   // open edit software
@@ -250,7 +251,7 @@ export async function openEditProjectPage(page:Page, name:string) {
 
 export async function openEditTeamPage(page: Page) {
   // open edit team members section
-  await page.getByRole('button', {
+  await page.getByRole('link', {
     name: 'Team'
   }).click()
 }

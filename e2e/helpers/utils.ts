@@ -2,7 +2,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,7 +14,7 @@ import {expect, Locator, Page} from '@playwright/test'
  * @param factor
  * @returns number
  */
-export function generateId(factor=100000){
+export function generateId(factor = 100000) {
   const id = Math.round(Math.random() * factor)
   return id
 }
@@ -66,7 +67,7 @@ export async function openEditPage(page: Page, url: string, title: string) {
  * @returns
  */
 export async function uploadFile(page: Page, inputSelector: string,
-  file: string, imageSelector = '[role="img"]') {
+                                 file: string, imageSelector = '[role="img"]') {
   // breakpoint
   // await page.pause()
 
@@ -78,8 +79,8 @@ export async function uploadFile(page: Page, inputSelector: string,
   return true
 }
 
-export function createMarkdown(browser) {
-return `
+export function createMarkdown(browser: string) {
+  return `
 ## Test software ${browser}
 
 This is test software markdown test.
@@ -90,25 +91,27 @@ Second level header here!
 `
 }
 
-export async function openEditSection(page:Page,name:string) {
+export async function openEditSection(page: Page, name: string) {
   // open contributors section
   await Promise.all([
     // we need to wait for authentication response to settle
     page.waitForLoadState('networkidle'),
-    page.getByRole('button', {
+    page.getByRole('link', {
       name
-    }).click()
+    })
+      .filter({has: page.getByRole('paragraph')})
+      .click()
   ])
 }
 
-export async function selectTab(page:Page,name:string){
+export async function selectTab(page: Page, name: string) {
   // select tab
   await page.getByRole('tab', {
     name
   }).click()
 }
 
-export async function addRelatedSoftware(page: Page, waitForResponse:string) {
+export async function addRelatedSoftware(page: Page, waitForResponse: string) {
   const findSoftware = page
     .getByTestId('find-related-software')
     .locator('#async-autocomplete')
@@ -147,7 +150,7 @@ export async function addRelatedSoftware(page: Page, waitForResponse:string) {
   }
 }
 
-export async function addRelatedProject(page: Page, waitForResponse:string) {
+export async function addRelatedProject(page: Page, waitForResponse: string) {
   const findSoftware = page
     .getByTestId('find-related-project')
     .locator('#async-autocomplete')

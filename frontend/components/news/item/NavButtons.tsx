@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,6 +15,7 @@ import {deleteImage} from '~/utils/editImage'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import {NewsImageProps, deleteNewsItem, deleteNewsImages} from '../apiNews'
 import useSnackbar from '~/components/snackbar/useSnackbar'
+import Link from 'next/link'
 
 type NavButtonsProps={
   id:string
@@ -98,9 +100,8 @@ export function NavButtons({id,slug,title,image_for_news,isMaintainer}:NavButton
             textTransform:'capitalize',
             minWidth: '7rem'
           }}
-          onClick={() => {
-            router.push(url)
-          }}
+          href={url}
+          LinkComponent={Link}
         >
           {/* Edit page */}
           Edit

@@ -1,16 +1,16 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
-import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 
 import {useSession} from '~/auth'
 import useRsdSettings from '~/config/useRsdSettings'
 import {UserCounts, useUserContext} from '~/components/user/context/UserContext'
 import {UserPageId, userTabItems} from './UserTabItems'
+import TabAsLink from '~/components/layout/TabAsLink'
 
 // extract tab items (object keys)
 const tabItems = Object.keys(userTabItems) as UserPageId[]
@@ -32,7 +32,6 @@ export type UserTabsProps=Readonly<{
 }>
 
 export default function UserTabs({tab,counts}:UserTabsProps) {
-  const router = useRouter()
   const select_tab = useSelectedTab(tab)
   const {host} = useRsdSettings()
   const {user} = useSession()
@@ -50,13 +49,6 @@ export default function UserTabs({tab,counts}:UserTabsProps) {
       variant="scrollable"
       allowScrollButtonsMobile
       value={select_tab}
-      onChange={(_, value) => {
-        const query:any={
-          section: value,
-        }
-        // push route change
-        router.push({query},undefined,{scroll:false})
-      }}
       aria-label="User profile tabs"
     >
       {tabItems.map(key => {
@@ -65,11 +57,13 @@ export default function UserTabs({tab,counts}:UserTabsProps) {
           modules: host.modules,
           isMaintainer
         })) {
-          return <Tab
+          return <TabAsLink
             icon={item.icon}
             key={key}
             label={item.label(counts)}
             value={key}
+            href={key}
+            scroll={false}
           />
         }})}
     </Tabs>
