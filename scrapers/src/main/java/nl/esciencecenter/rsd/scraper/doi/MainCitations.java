@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -35,7 +35,7 @@ public class MainCitations {
 			String backendUrl = Config.backendBaseUrl();
 			PostgrestCitationRepository localCitationRepository = new PostgrestCitationRepository(backendUrl);
 
-			Collection<CitationData> referencePapersToScrape = localCitationRepository.leastRecentlyScrapedCitations(5);
+			Collection<CitationData> referencePapersToScrape = localCitationRepository.leastRecentlyScrapedCitations(Config.maxCitationSourcesToScrape());
 			OpenAlexConnector openAlexConnector = new OpenAlexConnector();
 			PostgrestMentionRepository localMentionRepository = new PostgrestMentionRepository(backendUrl);
 			String email = Config.crossrefContactEmail().orElse(null);
@@ -53,7 +53,8 @@ public class MainCitations {
 
 				long t2 = System.currentTimeMillis();
 
-				citingMentions.removeIf(mention -> mention.doi() != null && citationData.knownDois().contains(mention.doi()));
+				citingMentions.removeIf(mention -> mention.doi() != null && citationData.knownDois()
+					.contains(mention.doi()));
 				Collection<RsdMentionIds> savedIds = new ArrayList<>(citingMentions.size());
 				for (ExternalMentionRecord citingMention : citingMentions) {
 					try {

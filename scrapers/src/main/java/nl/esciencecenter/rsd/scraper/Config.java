@@ -177,7 +177,7 @@ public class Config {
 	 * @return the maximum number of citation sources to scrape (default 5).
 	 */
 	public static int maxCitationSourcesToScrape() {
-		return getIntEnv("MAX_REQUESTS_OPENALEX", 5);
+		return getIntEnv("MAX_REQUESTS_OPENALEX", 6);
 	}
 
 	/**
