@@ -49,7 +49,7 @@ export default function AccessTokenList({tokens, onDelete, loading}:AccessTokenL
           >
             <ListItemText
               primary={token.display_name}
-              secondary={`expires in ${daysDiff(new Date(token.expires_at), 'until')} days`}
+              secondary={`expires in ${daysDiff(new Date(token.expires_at), 'until')} days (#${token.id})`}
             />
           </ListItem>
         )

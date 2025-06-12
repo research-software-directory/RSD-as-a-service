@@ -11,9 +11,7 @@ CREATE TABLE user_access_token (
 	account UUID REFERENCES account (id) NOT NULL,
 	expires_at TIMESTAMPTZ NOT NULL,
 	display_name VARCHAR(100) NOT NULL,
-	created_at TIMESTAMPTZ NOT NULL,
-	UNIQUE(account, display_name)
-);
+	created_at TIMESTAMPTZ NOT NULL);
 
 CREATE INDEX user_access_token_account_idx ON user_access_token(account);
 
@@ -25,6 +23,9 @@ BEGIN
 	NEW.created_at = LOCALTIMESTAMP;
 	IF NEW.expires_at - NEW.created_at > INTERVAL '365 days' THEN
 		RAISE EXCEPTION 'Access tokens should expire within one year';
+	END IF;
+	IF NEW.expires_at::date < NEW.created_at::date THEN
+		RAISE EXCEPTION 'The selected expiration date cannot be in the past';
 	END IF;
 	return NEW;
 END

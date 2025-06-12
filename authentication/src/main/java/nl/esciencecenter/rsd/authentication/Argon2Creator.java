@@ -67,8 +67,6 @@ public class Argon2Creator {
 					.getAsString()
 			);
 			return tokenID.toString();
-		} catch (PostgresUniqueConstraintException e) {
-			throw new RsdAccessTokenException("RsdAccessTokenException: Token name should be unique", e);
 		} catch (PostgresForeignKeyConstraintException | PostgresCustomException | IOException e) {
 			throw new RsdAccessTokenException("RsdAccessTokenException: " + e.getMessage(), e);
 		}

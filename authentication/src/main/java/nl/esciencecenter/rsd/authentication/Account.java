@@ -11,5 +11,5 @@ import java.io.IOException;
 
 public interface Account {
 
-	AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException, PostgresUniqueConstraintException;
+	AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException;
 }

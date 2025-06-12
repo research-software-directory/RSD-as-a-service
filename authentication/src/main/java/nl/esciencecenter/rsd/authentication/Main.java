@@ -332,7 +332,7 @@ public class Main {
 
 		app.exception(RsdAuthenticationException.class, (ex, ctx) -> {
 			setLoginFailureCookie(ctx, ex.getMessage());
-			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
+			ctx.json("{\"message\": \"Invalid access token, please check the expiration date of your token.\"}");
 		});
 
 		app.exception(RsdAccessTokenException.class, (ex, ctx) -> {
@@ -399,7 +399,7 @@ public class Main {
 		return new LinkedinLogin(code, redirectUrl).openidInfo();
 	}
 
-	static void handleAccountInviteOnly(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx) throws IOException, InterruptedException, RsdAccountInviteException, PostgresCustomException, PostgresForeignKeyConstraintException, PostgresUniqueConstraintException {
+	static void handleAccountInviteOnly(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx) throws IOException, InterruptedException, RsdAccountInviteException, PostgresCustomException, PostgresForeignKeyConstraintException {
 		PostgrestAccount postgrestAccount = new PostgrestAccount(Config.backendBaseUrl());
 		Optional<AccountInfo> optionalAccountInfo = postgrestAccount.getAccountIfExists(openIdInfo, provider);
 		if (optionalAccountInfo.isPresent()) {
@@ -411,7 +411,7 @@ public class Main {
 		}
 	}
 
-	static void handleAccountEveryoneAllowed(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx) throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException, PostgresUniqueConstraintException {
+	static void handleAccountEveryoneAllowed(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx) throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException {
 		AccountInfo accountInfo = new PostgrestAccount(Config.backendBaseUrl()).account(openIdInfo, provider);
 		createAndSetCookie(ctx, accountInfo);
 	}

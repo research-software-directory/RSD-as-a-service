@@ -118,36 +118,37 @@ export default function CreateAccessToken({createAccessToken}:CreateRsdAccessTok
       >
         Create Access Token
       </Button>
-      <Alert severity="warning" sx={{margin:'0.5rem 0 1rem 0'}}>
-        <AlertTitle sx={{fontWeight:500}}>Copy your generated token</AlertTitle>
-        <p>
-          Please note that the generated access token is only displayed to you once, and therefore needs to be copied. The maximum lifetime of a token is also limited to one year. After it expires, you need to generate a new token.
-        </p>
-      </Alert>
       {
         tokenString ? (
-          <TextField
-            defaultValue={tokenString ?? ''}
-            label="Token"
-            variant="outlined"
-            fullWidth
-            slotProps={{
-              input: {
-                readOnly: true,
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleClick}
-                      edge="end"
-                      aria-label='copy'
-                    >
-                      <ContentCopy />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }
-            }}
-          />
+          <>
+            <Alert severity="warning" sx={{margin:'0.5rem 0 1rem 0'}}>
+              <AlertTitle sx={{fontWeight:500}}>Copy your generated token</AlertTitle>
+              <p>
+              Please note that the generated access token is only displayed to you once, and therefore needs to be copied. The maximum lifetime of a token is also limited to one year. After it expires, you need to generate a new token.
+              </p>
+            </Alert>
+            <TextField
+              defaultValue={tokenString ?? ''}
+              label="Token"
+              variant="outlined"
+              fullWidth
+              slotProps={{
+                input: {
+                  readOnly: true,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleClick}
+                        aria-label='copy'
+                      >
+                        <ContentCopy />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }
+              }}
+            />
+          </>
         ) : null
       }
     </>
