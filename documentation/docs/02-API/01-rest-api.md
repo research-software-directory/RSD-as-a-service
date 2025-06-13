@@ -15,3 +15,7 @@ You can use REST API for reading non-private data without authentication
 
 Swagger documentation is available on the `/swagger` endpoint.
 You can visit the [Swagger UI here](https://research-software-directory.org/swagger/).
+
+## API Usage via Access Tokens
+
+When wanting to use the REST API via an API access token (as described in [User settings](/users/user-settings#api-access-tokens)), requests need to be made to the endpoint `/api/v2`, which mirrors `/api/v1`.

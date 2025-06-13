@@ -93,6 +93,8 @@ services:
       - AUTH_AZURE_CLIENT_SECRET
       - AUTH_LINKEDIN_CLIENT_SECRET
       - PGRST_JWT_SECRET
+      - RSD_API_ACCESS_TOKEN_ENABLED
+      - HOST_URL
     depends_on:
       - database
       - backend
