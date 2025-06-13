@@ -17,7 +17,7 @@ import {getDateFromNow, getYearMonthDay, formatDateToIsoStr, getDatePlaceholderF
 import copyToClipboard from '~/utils/copyToClipboard'
 import {NewAccessToken} from './apiAccessTokens'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {ContentCopy} from '@mui/icons-material'
+import {ContentCopy, Visibility, VisibilityOff} from '@mui/icons-material'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 
 type CreateRsdAccessTokenProps=Readonly<{
@@ -40,6 +40,7 @@ export default function CreateAccessToken({createAccessToken}:CreateRsdAccessTok
   )
   const [tokenString, setTokenString] = useState<string | undefined>(undefined)
   const {showInfoMessage, showErrorMessage} = useSnackbar()
+  const [showToken, setShowToken] = useState(false)
 
 
   async function onCreateAccessToken() {
@@ -63,6 +64,8 @@ export default function CreateAccessToken({createAccessToken}:CreateRsdAccessTok
       showErrorMessage('Error when copying token to clipboard')
     }
   }
+
+  const handleClickShowToken = () => setShowToken((show) => !show)
 
   return (
     <>
@@ -128,6 +131,7 @@ export default function CreateAccessToken({createAccessToken}:CreateRsdAccessTok
               </p>
             </Alert>
             <TextField
+              type={showToken ? 'text' : 'password'}
               defaultValue={tokenString ?? ''}
               label="Token"
               variant="outlined"
@@ -137,6 +141,12 @@ export default function CreateAccessToken({createAccessToken}:CreateRsdAccessTok
                   readOnly: true,
                   endAdornment: (
                     <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleClickShowToken}
+                        aria-label={showToken ? 'hide the token' : 'display the token'}
+                      >
+                        {showToken ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
                       <IconButton
                         onClick={handleClick}
                         aria-label='copy'
