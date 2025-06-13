@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
@@ -18,10 +18,10 @@ import {AutocompleteOption} from './AutocompleteOptions'
 import {CategoryPath} from './Category'
 import {OrganisationStatus} from './Organisation'
 
-export type CodePlatform = 'github' | 'gitlab' | 'bitbucket' | 'other'
+export type CodePlatform = 'github' | 'gitlab' | 'bitbucket' | '4tu' | 'other'
 
 export type RepositoryUrl = {
-  software:string,
+  software: string,
   url: string,
   // enum based on db enum defined as
   // platform_type in 003-create-relations-for-software.sql
@@ -52,7 +52,7 @@ export type NewSoftwareItem = {
   concept_doi: string | null,
   description: string | null,
   description_url: string | null,
-  description_type: 'markdown'|'link',
+  description_type: 'markdown' | 'link',
   get_started_url: string | null,
   is_published: boolean,
   short_statement: string | null,
@@ -76,10 +76,10 @@ export type SoftwareItemFromDB = SoftwareTableItem & {
 }
 
 export type SoftwareOverviewItemProps = {
-  id:string
+  id: string
   rsd_host: string | null
   domain: string | null
-  slug:string
+  slug: string
   brand_name: string
   short_statement: string
   image_id: string | null
@@ -151,7 +151,7 @@ export type CategoryForSoftwareIds = Set<string>
 export type LicenseForSoftware = {
   software: string
   license: string
-  reference: string|null,
+  reference: string | null,
   open_source: boolean
   name: string
 }

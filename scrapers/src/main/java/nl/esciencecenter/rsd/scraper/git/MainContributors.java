@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -81,7 +81,7 @@ public class MainContributors {
 
 	private static void scrapeGitLab() {
 		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB);
-		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.contributorData(Config.maxRequestsGithub());
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.contributorData(Config.maxRequestsGitLab());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
@@ -120,7 +120,7 @@ public class MainContributors {
 
 	private static void scrape4tu() {
 		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.FOURTU);
-		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.contributorData(Config.maxRequestsGithub());
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.contributorData(Config.maxRequests4tu());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;

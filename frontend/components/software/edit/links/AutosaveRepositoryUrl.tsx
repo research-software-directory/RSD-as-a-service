@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
@@ -22,7 +22,7 @@ import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/Autosa
 import AutosaveRepositoryPlatform from './AutosaveRepositoryPlatform'
 import {config} from './config'
 
-async function suggestPlatform(repositoryUrl: string | null) {
+async function suggestPlatform(repositoryUrl: string | null): Promise<null | CodePlatform> {
   // console.log('repositoryUrl...',repositoryUrl)
   if (repositoryUrl === null) return null
 
@@ -34,6 +34,9 @@ async function suggestPlatform(repositoryUrl: string | null) {
   }
   if (repositoryUrl?.includes('bitbucket.')) {
     return 'bitbucket'
+  }
+  if (repositoryUrl?.includes('data.4tu.nl')) {
+    return '4tu'
   }
 
   try {
@@ -98,7 +101,7 @@ export default function AutosaveRepositoryUrl() {
       if (platform.id === null) {
         suggestPlatform(repository_url).then(
           (suggestion) => {
-            setSuggestedPlatform(suggestion)
+            setSuggestedPlatform(suggestion ?? undefined)
             setPlatform({
               id: suggestion,
               disabled: false,
@@ -109,7 +112,7 @@ export default function AutosaveRepositoryUrl() {
       } else {
         suggestPlatform(repository_url).then(
           (suggestion) => {
-            setSuggestedPlatform(suggestion)
+            setSuggestedPlatform(suggestion ?? undefined)
             setPlatform({
               id: platform.id,
               disabled: false,
