@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -62,14 +62,14 @@ export default function OrganisationCard({organisation}: { organisation: Organis
                 software_cnt={organisation.software_cnt}
                 project_cnt={organisation.project_cnt}
               />
-              {/* if is not tenant we render empty placeholder */}
-              {!organisation.is_tenant ?
-                <div className="w-[2rem]">&nbsp;</div>
-                :
-                <TenantBadge/>
-              }
             </div>
           </CardContentFrame>
+          {organisation.is_tenant ?
+            <div className="flex items-end text-base-600 absolute top-2 right-1">
+              <TenantBadge/>
+            </div>
+            :null
+          }
         </div>
       </Link>
     </div>

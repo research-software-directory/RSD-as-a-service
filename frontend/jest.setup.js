@@ -87,6 +87,13 @@ global.console = {
 // MOCK scrollTo used in markdown component (not present in jsdom)
 window.scrollTo = jest.fn()
 
+// global search
+jest.mock('~/components/GlobalSearchAutocomplete/apiGlobalSearch')
+jest.mock('~/components/GlobalSearchAutocomplete/useHasRemotes')
+
+// categories api
+jest.mock('~/components/category/apiCategories')
+
 // TOKEN
 // process.env.PGRST_JWT_SECRET='reallyreallyreallyreallyverysafe'
 

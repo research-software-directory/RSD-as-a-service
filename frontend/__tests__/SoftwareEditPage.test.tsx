@@ -11,13 +11,15 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
 import {WithFormContext} from '~/utils/jest/WithFormContext'
 
-import SoftwareEditPage from '../pages/software/[slug]/edit/[page]'
-import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
-import {editSoftwarePage} from '~/components/software/edit/editSoftwarePages'
-import editSoftwareData from '~/components/software/edit/information/__mocks__/useSoftwareTableData.json'
-import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
 import defaultSettings from '~/config/defaultSettings.json'
 import {RsdSettingsState} from '~/config/rsdSettingsReducer'
+import SoftwareEditPage from '../pages/software/[slug]/edit/[page]'
+import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
+// import {editSoftwarePage} from '~/components/software/edit/editSoftwarePages'
+import editSoftwareData from '~/components/software/edit/information/__mocks__/useSoftwareTableData.json'
+import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import {EditSoftwarePageId} from '~/components/software/edit/EditSoftwarePageContent'
+import {editSoftwareMenuItems} from '~/components/software/edit/editSoftwareMenuItems'
 
 // MOCKS
 // we mock default providers used in page header
@@ -51,6 +53,7 @@ jest.mock('~/utils/getSoftware')
 
 const mockProps = {
   // information page
+  page: 'information' as EditSoftwarePageId,
   pageIndex: 0,
   software: {
     id:'ca6dbe55-ef59-4f4b-b8bc-eb465e130b87',
@@ -120,12 +123,6 @@ describe('pages/software/[slug]/edit/[page].tsx', () => {
     // wait for loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
-    //validate all nav items shown
-    // const navItems = screen.getAllByTestId('edit-software-nav-item')
-    // expect(navItems.length).toEqual(editSoftwarePage.length)
-
-    // wait for info loader to be removed
-    // await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // validate info section is loaded
     const editInfoForm = await screen.findByTestId('software-information-form')
     expect(editInfoForm).toBeInTheDocument()
@@ -142,8 +139,7 @@ describe('pages/software/[slug]/edit/[page].tsx', () => {
     mockIsMaintainer.mockResolvedValueOnce(true)
     // module list without "communities"
     defaultSettings.host.modules = ['software','projects','organisations']
-    // nav options without communities
-    const editSoftwareNavItems = editSoftwarePage.filter(item=>item.id!=='communities')
+
     // render components
     render(
       <WithAppContext options={{
@@ -160,8 +156,41 @@ describe('pages/software/[slug]/edit/[page].tsx', () => {
     // wait for loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
-    //validate all nav items shown
-    const navItems = screen.getAllByTestId('edit-software-nav-item')
-    expect(navItems.length).toEqual(editSoftwareNavItems.length)
+    // find related-software label
+    const relSoftware = editSoftwareMenuItems.find(item=>item.id==='communities')
+    expect(relSoftware).toBeDefined()
+    if (relSoftware){
+      expect(screen.queryByText(relSoftware?.label)).not.toBeInTheDocument()
+    }
+  })
+
+  it('does not render related-projects menu option', async () => {
+    // return isMaintainer
+    mockIsMaintainer.mockResolvedValueOnce(true)
+    // module list without "communities"
+    defaultSettings.host.modules = ['software','organisations','communities']
+
+    // render components
+    render(
+      <WithAppContext options={{
+        session: mockSession,
+        settings: defaultSettings as RsdSettingsState
+      }}>
+        <WithFormContext>
+          <WithSoftwareContext state={softwareState}>
+            <SoftwareEditPage {...mockProps} />
+          </WithSoftwareContext>
+        </WithFormContext>
+      </WithAppContext>
+    )
+    // wait for loader to be removed
+    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+
+    // find related-software label
+    const relSoftware = editSoftwareMenuItems.find(item=>item.id==='related-projects')
+    expect(relSoftware).toBeDefined()
+    if (relSoftware){
+      expect(screen.queryByText(relSoftware?.label)).not.toBeInTheDocument()
+    }
   })
 })

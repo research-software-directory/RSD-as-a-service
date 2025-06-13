@@ -6,8 +6,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {ThemeProvider} from '@mui/material/styles'
-import {loadMuiTheme} from '../../styles/rsdMuiTheme'
-import {AuthProvider,defaultSession,Session} from '../../auth'
+import {loadMuiTheme} from '~/styles/rsdMuiTheme'
+import {AuthProvider,defaultSession,Session} from '~/auth'
+import {LoginProvidersProvider} from '~/auth/loginProvidersContext'
+import {Provider} from '~/auth/api/getLoginProviders'
 import {RsdSettingsState,defaultRsdSettings} from '~/config/rsdSettingsReducer'
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 import {UserSettingsProps, UserSettingsProvider} from '~/config/UserSettingsContext'
@@ -18,6 +20,7 @@ export type WrapProps = {
   session?: Session
   settings?: RsdSettingsState
   user?: UserSettingsProps
+  providers?: Provider[]
 }
 
 type WithAppContextProps = {
@@ -59,6 +62,8 @@ export function WithAppContext({children,options}:WithAppContextProps) {
   const {muiTheme} = loadMuiTheme(settings.theme)
   // user settings
   const user = options?.user ?? defaultUserSettings
+  // providers list
+  const providers = options?.providers ?? []
 
   // console.group('WithAppContext')
   // console.log('session...', session)
@@ -72,7 +77,10 @@ export function WithAppContext({children,options}:WithAppContextProps) {
         <RsdSettingsProvider settings={settings}>
           {/* User settings rows, page layout etc. */}
           <UserSettingsProvider user={user}>
-            {children}
+            {/* Login providers list */}
+            <LoginProvidersProvider providers = {providers}>
+              {children}
+            </LoginProvidersProvider>
           </UserSettingsProvider>
         </RsdSettingsProvider>
       </AuthProvider>

@@ -1,19 +1,20 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {app} from '~/config/app'
+import {getRsdModules} from '~/config/getSettingsServerSide'
+import useRsdSettings from '~/config/useRsdSettings'
 import {getHomepageCounts} from '~/components/home/getHomepageCounts'
 import HelmholtzHome from '~/components/home/helmholtz'
 import ImperialCollegeHome from '~/components/home/imperial'
 import RsdHome,{RsdHomeProps} from '~/components/home/rsd'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
-import useRsdSettings from '~/config/useRsdSettings'
 import {TopNewsProps, getTopNews} from '~/components/news/apiNews'
 
 export type HomeProps = {
@@ -73,16 +74,18 @@ export default function Home({counts,news}: HomeProps) {
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps() {
   // get counts for default rsd home page
-  const [counts,news] = await Promise.all([
+  const [counts,news,modules] = await Promise.all([
     getHomepageCounts(),
     // get top 3 (most recent) news items
-    getTopNews(3)
+    getTopNews(3),
+    getRsdModules()
   ])
   // provide props to home component
   return {
     props: {
       counts,
-      news
+      // remove top news if news module is not enabled
+      news: modules?.includes('news') ? news : [],
     },
   }
 }

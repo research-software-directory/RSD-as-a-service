@@ -16,6 +16,8 @@ import Link from 'next/link'
 import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
+import {getRsdSettings} from '~/config/getSettingsServerSide'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import {getBaseUrl} from '~/utils/fetchHelpers'
 import {softwareListUrl} from '~/utils/postgrestUrl'
 import {getSoftwareList} from '~/utils/getSoftware'
@@ -50,8 +52,6 @@ import {
 } from '~/components/software/overview/filters/softwareFiltersApi'
 import SoftwareFiltersModal from '~/components/software/overview/filters/SoftwareFiltersModal'
 import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
-import {getRsdSettings} from '~/config/getSettingsServerSide'
-import {useUserSettings} from '~/config/UserSettingsContext'
 import {HostsFilterOption} from '~/components/filter/RsdHostFilter'
 import {getRemoteRsd} from '~/components/admin/remote-rsd/apiRemoteRsd'
 import {CategoryOption} from '~/components/filter/CategoriesFilter'
@@ -251,6 +251,15 @@ export default function SoftwareOverviewPage({
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   let offset=0
+  // extract rsd settings
+  const settings = await getRsdSettings()
+  // do not show software overview if module is not enabled
+  if (settings.host?.modules?.includes('software')===false){
+    return {
+      notFound: true
+    }
+  }
+
   // extract params from page-query
   const {search, keywords, prog_lang, licenses, categories, rsd_host, order, rows, page} = ssrSoftwareParams(context.query)
   // extract user settings from cookie
@@ -289,9 +298,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     limit: page_rows,
     offset
   })
-
-  // extract rsd settings
-  const settings = await getRsdSettings()
 
   // console.log('software...url...', url)
   // console.log('rsd_host...', rsd_host)
