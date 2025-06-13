@@ -1,6 +1,8 @@
 -- SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+-- SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -611,3 +613,20 @@ WHERE
 	maintainer_for_community.maintainer = maintainer_id OR community.primary_maintainer = maintainer_id;
 ;
 $$;
+
+-- GET COMMUNITY MAINTAINER EMAILS FOR A SPECIFIC COMMUNITY
+-- for community join request mail notification
+CREATE VIEW get_maintainer_emails_for_community_id AS
+SELECT
+	community.id,
+	community.name,
+	community.slug,
+	user_profile.email_address
+FROM
+	community
+JOIN
+	maintainer_for_community on community.id = maintainer_for_community.community
+JOIN
+	user_profile on maintainer_for_community.maintainer = user_profile.account;
+
+GRANT SELECT ON get_maintainer_emails_for_community_id TO rsd_user, rsd_admin;
