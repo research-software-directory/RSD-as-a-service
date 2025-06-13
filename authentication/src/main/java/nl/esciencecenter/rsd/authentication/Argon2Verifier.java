@@ -17,7 +17,7 @@ import com.google.gson.JsonParser;
 
 public class Argon2Verifier {
 
-	Optional<String> verify(String token, String tokenID) {
+	Optional<String> verify(String token, String tokenID) throws RsdAccessTokenException {
 		AccessToken hashedToken = getHashForTokenID(tokenID);
 		Argon2PasswordEncoder encoder = Argon2Creator.argon2Encoder();
 		Boolean tokenIsValid = encoder.matches(token, hashedToken.secret());
@@ -27,14 +27,19 @@ public class Argon2Verifier {
 		return Optional.empty();
 	}
 
-	AccessToken getHashForTokenID(String tokenID) {
-		String backendUri = Config.backendBaseUrl();
-		String fullUrl = backendUri + "/user_access_token?id=eq." + tokenID;
-		String tokenResponse = Utils.getAsAdmin(fullUrl);
-		JsonArray jsonArray = JsonParser.parseString(tokenResponse).getAsJsonArray();
-		JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
-		Gson gson = new Gson();
-		return gson.fromJson(jsonObject, AccessToken.class);
+	AccessToken getHashForTokenID(String tokenID) throws RsdAccessTokenException {
+		try {
+			String backendUri = Config.backendBaseUrl();
+			String fullUrl = backendUri + "/user_access_token?id=eq." + tokenID;
+			String tokenResponse = Utils.getAsAdmin(fullUrl);
+			JsonArray jsonArray = JsonParser.parseString(tokenResponse).getAsJsonArray();
+			JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
+			Gson gson = new Gson();
+			return gson.fromJson(jsonObject, AccessToken.class);
+		} catch (Exception e) {
+			throw new RsdAccessTokenException.UnverifiedAccessTokenException("Cannot verify access token");
+		}
+
 	}
 
 

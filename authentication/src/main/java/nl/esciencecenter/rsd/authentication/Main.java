@@ -34,8 +34,8 @@ import com.google.gson.JsonParser;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import io.javalin.http.HttpResponseException;
 import io.javalin.http.HttpStatus;
+import nl.esciencecenter.rsd.authentication.RsdAccessTokenException.UnverifiedAccessTokenException;
 
 public class Main {
 	private static final Duration AUTH_COOKIE_DURATION = Duration.ofHours(1);
@@ -262,20 +262,9 @@ public class Main {
 			});
 
 			app.before("/api/v2/*", ctx -> {
-				String frontendTokenToVerify = ctx.cookie("rsd_token");
 				String authHeader = ctx.header("Authorization");
 				//if request from frontend, skip access token validation
-				if (frontendTokenToVerify != null) {
-					String signingSecret = Config.jwtSigningSecret();
-					JwtVerifier verifier = new JwtVerifier(signingSecret);
-					verifier.verify(frontendTokenToVerify);
-					String referer = ctx.header("Referer");
-					if (referer != null && referer.startsWith(Config.hostUrl())) {
-						ctx.attribute("X-API-Authorization-Header", "Bearer " + frontendTokenToVerify);
-					} else {
-						throw new HttpResponseException(401, "Untrusted referer");
-					}
-				} else if (authHeader != null && authHeader.startsWith("Bearer ")) {
+				if (authHeader != null && authHeader.startsWith("Bearer ")) {
 					String authToken = authHeader.substring(7);
 
 					String[] tokenParts = authToken.split("\\.");
@@ -292,7 +281,7 @@ public class Main {
 						ctx.attribute("X-API-Authorization-Header", "Bearer " + token);
 					} else {
 						ctx.status(401).result("Invalid access token");
-						throw new HttpResponseException(401, "Invalid access token");
+						throw new RsdAccessTokenException("Invalid access token");
 					}
 
 				} else {
@@ -332,13 +321,25 @@ public class Main {
 
 		app.exception(RsdAuthenticationException.class, (ex, ctx) -> {
 			setLoginFailureCookie(ctx, ex.getMessage());
-			ctx.json("{\"message\": \"Invalid access token, please check the expiration date of your token.\"}");
+			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
+		});
+
+		app.exception(UnverifiedAccessTokenException.class, (ex, ctx) -> {
+			LOGGER.error("UnverifiedAccessTokenException", ex);
+			ctx.status(400);
+			ctx.json("{\"message\": \"Cannot verify access token\"}");
 		});
 
 		app.exception(RsdAccessTokenException.class, (ex, ctx) -> {
 			LOGGER.error("RsdAccessTokenException", ex);
 			ctx.status(400);
 			ctx.json("{\"message\": \"Error when creating access token\"}");
+		});
+
+		app.exception(RsdInvalidHeaderException.class, (ex, ctx) -> {
+			LOGGER.error("RsdInvalidHeaderException", ex);
+			ctx.status(400);
+			ctx.json("{\"message\": \"Forbidden or invalid header\"}");
 		});
 
 		app.exception(RsdAccountInviteException.class, (ex, ctx) -> {
@@ -495,8 +496,13 @@ public class Main {
 		}
 
 		ctx.headerMap().forEach((k, v) -> {
-			if (!k.equalsIgnoreCase("host") && !k.equalsIgnoreCase("content-length") && !k.equalsIgnoreCase("authorization") && v != null) {
-				requestBuilder.header(k, v);
+			if (!Utils.isForbiddenHeader(k) && !k.equalsIgnoreCase("authorization") && v != null) {
+				try {
+					requestBuilder.header(k, v);
+				} catch (IllegalArgumentException e) {
+					throw new RsdInvalidHeaderException("Received invalid or forbidden header", e);
+				}
+
 			}
 		});
 
@@ -514,6 +520,6 @@ public class Main {
 		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
 		ctx.status(response.statusCode());
-		ctx.result(response.body());
+		ctx.json(response.body());
 	}
 }

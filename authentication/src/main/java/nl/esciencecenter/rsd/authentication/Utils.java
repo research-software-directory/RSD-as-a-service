@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.StringJoiner;
 
 import org.slf4j.Logger;
@@ -30,6 +31,10 @@ public class Utils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
 	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
+	private static final Set<String> FORBIDDEN_HEADERS = Set.of(
+		"host", "content-length", "transfer-encoding", "connection",
+		"upgrade", "te", "expect", ":method", ":path", ":scheme", ":authority"
+	);
 
 	private Utils() {
 	}
@@ -187,5 +192,10 @@ public class Utils {
 			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
 		}
 		return response.body();
+	}
+
+	public static boolean isForbiddenHeader(String headerName) {
+		if (headerName == null) return true;
+		return FORBIDDEN_HEADERS.contains(headerName.toLowerCase()) || headerName.startsWith(":");
 	}
 }

@@ -328,7 +328,7 @@ public class PostgrestAccount implements Account {
 				String errorCode = errorObject.get("code").getAsString();
 				switch (errorCode) {
 					case "23503" -> throw new PostgresForeignKeyConstraintException("Foreign key constraint error");
-					default -> throw new RuntimeException("Error fetching data from the endpoint: %s with status code %d and response: %s".formatted(uri.toString(), response.statusCode(), response.body()));
+					default -> throw new PostgresCustomException("Error fetching data from the endpoint: %s with status code %d and response: %s".formatted(uri.toString(), response.statusCode(), response.body()));
 
 				}
 			}

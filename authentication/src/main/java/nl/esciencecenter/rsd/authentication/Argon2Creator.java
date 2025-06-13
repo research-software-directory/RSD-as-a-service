@@ -7,7 +7,6 @@ package nl.esciencecenter.rsd.authentication;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
@@ -71,18 +70,6 @@ public class Argon2Creator {
 			throw new RsdAccessTokenException("RsdAccessTokenException: " + e.getMessage(), e);
 		}
 
-	}
-
-	public static String getAllTokensForUser(String jwtToken) {
-		String backendUri = Config.backendBaseUrl();
-		URI queryUri = URI.create(backendUri + "/rpc/my_user_access_tokens");
-		return Utils.makeBasicRequest("GET", Optional.empty(), queryUri, jwtToken).body();
-	}
-
-	public static Integer deleteTokenFromDatabase(String accessTokenID, String jwtToken) {
-		String backendUri = Config.backendBaseUrl();
-		URI queryUri = URI.create(backendUri + "/rpc/delete_my_user_access_token");
-		return Utils.makeBasicRequest("POST", Optional.of("{\"id\":\"" + accessTokenID + "\"}"), queryUri, jwtToken).statusCode();
 	}
 
 }

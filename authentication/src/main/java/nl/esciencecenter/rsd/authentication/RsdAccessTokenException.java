@@ -13,4 +13,10 @@ public class RsdAccessTokenException extends Exception {
 	public RsdAccessTokenException(String message, Throwable cause) {
 		super(message, cause);
 	}
+
+	public static class UnverifiedAccessTokenException extends RsdAccessTokenException {
+		public UnverifiedAccessTokenException(String message) {
+			super(message);
+		}
+	}
 }
