@@ -1,9 +1,9 @@
 # SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 - 2023 dv4all
 # SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-# SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-# SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 #
@@ -41,7 +41,7 @@ install: clean
 	# Sleep 10 seconds to be sure that docker compose up is running
 	sleep 10
 	docker compose up --scale data-generation=1 --detach
-	# All dependencies are installed. The data migration is runing in the background. You can now run `make dev' to start the application
+	# All dependencies are installed. The data generation module is running in the background. You can now run `make dev' to start the application
 
 clean:
 	docker compose down --volumes
