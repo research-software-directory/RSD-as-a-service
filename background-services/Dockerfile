@@ -1,5 +1,7 @@
 # SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -14,4 +16,4 @@ RUN mvn package --offline
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /usr/myjava
 COPY --from=builder /usr/mymaven/target/*-jar-with-dependencies.jar background-services.jar
-CMD java -cp background-services.jar nl.esciencecenter.rsd.MainDatabase
+CMD java -cp background-services.jar nl.esciencecenter.rsd.Main
