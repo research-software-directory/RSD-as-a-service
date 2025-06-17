@@ -86,6 +86,12 @@ export const packageManagerSettings = {
     hostname: ['pkg.go.dev'],
     services: ['dependents']
   },
+  julia: {
+    name: 'Julia',
+    icon: '/images/julia-logo.svg',
+    hostname: ['github.com/JuliaRegistries/General/', '.jl.git'],
+    services: []
+  },
   maven: {
     name: 'Maven',
     icon: '/images/apache-maven-logo.svg',
@@ -270,7 +276,7 @@ export async function patchPackageManagers({items, token}: { items: PackageManag
 }
 
 export async function patchPackageManagerItem({id, key, value, token}:
-                                                { id: string, key: string, value: any, token: string }) {
+                                              { id: string, key: string, value: any, token: string }) {
   try {
     const url = `/api/v1/package_manager?id=eq.${id}`
     const resp = await fetch(url, {
@@ -314,8 +320,13 @@ export async function deletePackageManager({id, token}: { id: string, token: str
   }
 }
 
-export async function getPackageManagerTypeFromUrl(url: string) {
+export async function getPackageManagerTypeFromUrl(url: string): Promise<PackageManagerTypes> {
   try {
+    // julia URLs contain 'github.com', we need to prevent them from showing up as GitHub
+    if (packageManagerSettings.julia.hostname.some(host => url.includes(host))) {
+      return 'julia'
+    }
+
     const urlObject = new URL(url)
     const keys = Object.keys(packageManagerSettings) as PackageManagerTypes[]
 

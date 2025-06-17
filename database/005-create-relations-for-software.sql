@@ -56,6 +56,7 @@ CREATE TYPE package_manager_type AS ENUM (
 	'github',
 	'gitlab',
 	'golang',
+	'julia',
 	'maven',
 	'npm',
 	'pixi',
