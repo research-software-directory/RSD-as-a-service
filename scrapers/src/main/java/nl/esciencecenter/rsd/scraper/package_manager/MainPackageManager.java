@@ -17,6 +17,8 @@ import nl.esciencecenter.rsd.scraper.package_manager.scrapers.CratesScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.DockerHubScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.FourTuScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.GoScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.InvalidPackageManagerUrlException;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.JuliaScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.MavenScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.NpmScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PackageManagerScraper;
@@ -88,7 +90,7 @@ public class MainPackageManager {
 		LOGGER.info("Done scraping package manager data ({} ms.)", time);
 	}
 
-	static PackageManagerScraper scraperForType(PackageManagerType type, String url) {
+	static PackageManagerScraper scraperForType(PackageManagerType type, String url) throws InvalidPackageManagerUrlException {
 		return switch (type) {
 			case anaconda -> new AnacondaScraper(url);
 			case cran -> new CranScraper(url);
@@ -96,6 +98,7 @@ public class MainPackageManager {
 			case dockerhub -> new DockerHubScraper(url);
 			case fourtu -> new FourTuScraper();
 			case golang -> new GoScraper(url);
+			case julia -> new JuliaScraper(url);
 			case maven, sonatype -> new MavenScraper(url);
 			case npm -> new NpmScraper(url);
 			case pypi -> new PypiScraper(url);
@@ -104,7 +107,7 @@ public class MainPackageManager {
 		};
 	}
 
-	static void scrapeDownloads(BasicPackageManagerData data, PostgrestConnector postgrestConnector, ZonedDateTime scrapedAt) {
+	static void scrapeDownloads(BasicPackageManagerData data, PostgrestConnector postgrestConnector, ZonedDateTime scrapedAt) throws InterruptedException {
 		String packageManagerUrl = data.url();
 		PackageManagerType type = data.type();
 
@@ -117,7 +120,7 @@ public class MainPackageManager {
 			Utils.saveExceptionInDatabase("Package manager downloads scraper", "package_manager", data.id(), e);
 			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "download_count_last_error", data.id()
 				.toString(), "id", null, null);
-		} catch (RsdResponseException e) {
+		} catch (RsdResponseException | InvalidPackageManagerUrlException e) {
 			Utils.saveExceptionInDatabase("Package manager downloads scraper", "package_manager", data.id(), e);
 			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "download_count_last_error", data.id()
 				.toString(), "id", scrapedAt, "download_count_scraped_at");
@@ -128,7 +131,7 @@ public class MainPackageManager {
 		}
 	}
 
-	static void scrapeReverseDependencies(BasicPackageManagerData data, PostgrestConnector postgrestConnector, ZonedDateTime scrapedAt) {
+	static void scrapeReverseDependencies(BasicPackageManagerData data, PostgrestConnector postgrestConnector, ZonedDateTime scrapedAt) throws InterruptedException {
 		String packageManagerUrl = data.url();
 		PackageManagerType type = data.type();
 
@@ -141,11 +144,11 @@ public class MainPackageManager {
 			Utils.saveExceptionInDatabase("Package manager reverse dependencies scraper", "package_manager", data.id(), e);
 			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "reverse_dependency_count_last_error", data.id()
 				.toString(), "id", null, null);
-		} catch (RsdResponseException e) {
+		} catch (RsdResponseException | InvalidPackageManagerUrlException e) {
 			Utils.saveExceptionInDatabase("Package manager reverse dependencies scraper", "package_manager", data.id(), e);
 			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "reverse_dependency_count_last_error", data.id()
 				.toString(), "id", scrapedAt, "reverse_dependency_count_scraped_at");
-		} catch (Exception e) {
+		} catch (IOException e) {
 			Utils.saveExceptionInDatabase("Package manager reverse dependencies scraper", "package_manager", data.id(), e);
 			Utils.saveErrorMessageInDatabase("Unknown error", "package_manager", "reverse_dependency_count_last_error", data.id()
 				.toString(), "id", scrapedAt, "reverse_dependency_count_scraped_at");

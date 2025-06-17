@@ -90,7 +90,7 @@ export const packageManagerSettings = {
     name: 'Julia',
     icon: '/images/julia-logo.svg',
     hostname: ['github.com/JuliaRegistries/General/', '.jl.git'],
-    services: []
+    services: ['downloads']
   },
   maven: {
     name: 'Maven',
