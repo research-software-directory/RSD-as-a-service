@@ -43,7 +43,7 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
       <div className="w-10/12 mx-auto p-5 md:p-10 grid lg:grid-cols-[1fr_1fr] gap-[2rem]">
         <div className="flex flex-col justify-left">
           <Image
-            src="/images/imperial-college-logo.svg"
+            src="/images/imperial-college-logo-body.svg"
             width="361"
             height="85"
             layout="fixed"
@@ -78,12 +78,8 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
 
       <div className="max-w-(--breakpoint-xl) mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
         <CounterBox
-          label="Open-Source Software"
-          value={counts.open_software_cnt.toString()}
-        />
-        <CounterBox
-          label="Closed-Source Software"
-          value={(counts.software_cnt - counts.open_software_cnt).toString()}
+          label="Software Submissions"
+          value={counts.software_cnt.toString()}
         />
         <CounterBox
           label="Software Mentions"

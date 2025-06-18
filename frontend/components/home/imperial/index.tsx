@@ -24,7 +24,7 @@ export default function ImperialCollegeHome({counts,news}: HomeProps) {
       />
       <CanonicalUrl />
 
-      <section className="flex-1 flex flex-col text-secondary-content  bg-[url('/images/campus_south_ken.jpg')] bg-contain bg-no-repeat bg-center bg-black bg-scroll">
+      <section className="flex-1 flex flex-col text-secondary-content bg-base-100">
         <AppHeader />
         <MainContentImperialCollege counts={counts} news={news}/>
         <AppFooter/>
