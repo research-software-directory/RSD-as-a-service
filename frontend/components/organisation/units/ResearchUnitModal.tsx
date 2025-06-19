@@ -4,7 +4,7 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -31,6 +31,7 @@ import {handleFileUpload} from '~/utils/handleFileUpload'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ImageInput from '~/components/form/ImageInput'
+import ImageDropZone from '~/components/form/ImageDropZone'
 
 
 type EditOrganisationModalProps = {
@@ -101,16 +102,18 @@ export default function ResearchUnitModal({
     onCancel()
   }
 
-  async function onFileUpload(e:ChangeEvent<HTMLInputElement>|undefined) {
-    if (typeof e !== 'undefined') {
-      const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
-      if (status === 200 && image_b64 && image_mime_type) {
-        replaceLogo(image_b64, image_mime_type)
-      } else if (status===413) {
-        showWarningMessage(message)
-      } else {
-        showErrorMessage(message)
-      }
+  async function onFileUpload(e: ChangeEvent<HTMLInputElement> | {target: {files: FileList | Blob[]}} | undefined): Promise<void> {
+    if (e === undefined) {
+      return
+    }
+
+    const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
+    if (status === 200 && image_b64 && image_mime_type) {
+      replaceLogo(image_b64, image_mime_type)
+    } else if (status===413) {
+      showWarningMessage(message)
+    } else {
+      showErrorMessage(message)
     }
   }
 
@@ -182,27 +185,29 @@ export default function ResearchUnitModal({
         }}>
           <section className="grid grid-cols-[1fr_3fr] gap-8">
             <div>
-              <label htmlFor="upload-avatar-image-modal"
-                style={{cursor:'pointer'}}
-                title="Click to upload an image"
-              >
-                <Avatar
-                  alt={formData.name ?? ''}
-                  src={formData.logo_b64 ?? getImageUrl(formData?.logo_id) ?? undefined}
-                  sx={{
-                    width: '8rem',
-                    height: '8rem',
-                    fontSize: '3rem',
-                    marginRight: '0rem',
-                    '& img': {
-                      height:'auto'
-                    }
-                  }}
-                  variant="square"
+              <ImageDropZone onImageDrop={onFileUpload}>
+                <label htmlFor="upload-avatar-image-modal"
+                  style={{cursor:'pointer'}}
+                  title="Click or drop to upload an image"
                 >
-                  {formData.name ? formData.name.slice(0,3) : ''}
-                </Avatar>
-              </label>
+                  <Avatar
+                    alt={formData.name ?? ''}
+                    src={formData.logo_b64 ?? getImageUrl(formData?.logo_id) ?? undefined}
+                    sx={{
+                      width: '8rem',
+                      height: '8rem',
+                      fontSize: '3rem',
+                      marginRight: '0rem',
+                      '& img': {
+                        height:'auto'
+                      }
+                    }}
+                    variant="square"
+                  >
+                    {formData.name ? formData.name.slice(0,3) : ''}
+                  </Avatar>
+                </label>
+              </ImageDropZone>
               <ImageInput
                 id="upload-avatar-image-modal"
                 onChange={onFileUpload}
