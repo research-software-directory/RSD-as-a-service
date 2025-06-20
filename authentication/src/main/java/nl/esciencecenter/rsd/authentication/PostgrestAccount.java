@@ -1,16 +1,12 @@
 // SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package nl.esciencecenter.rsd.authentication;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.net.URI;
@@ -25,6 +21,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 public class PostgrestAccount implements Account {
 
 	private static final String AUTHORIZATION_HEADER_KEY = "Authorization";
@@ -37,7 +38,7 @@ public class PostgrestAccount implements Account {
 		this.backendUri = backendUri;
 	}
 
-	public Optional<AccountInfo> getAccountIfExists(OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException {
+	public Optional<AccountInfo> getAccountIfExists(OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException {
 		Objects.requireNonNull(openIdInfo);
 		Objects.requireNonNull(provider);
 
@@ -89,7 +90,7 @@ public class PostgrestAccount implements Account {
 	}
 
 	@Override
-	public AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException {
+	public AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException {
 		Optional<AccountInfo> maybeExistingAccount = getAccountIfExists(openIdInfo, provider);
 
 		if (maybeExistingAccount.isPresent()) {
@@ -118,7 +119,7 @@ public class PostgrestAccount implements Account {
 		}
 	}
 
-	public AccountInfo useInviteToCreateAccount(UUID inviteId, OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException, RsdAccountInviteException {
+	public AccountInfo useInviteToCreateAccount(UUID inviteId, OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException, RsdAccountInviteException, PostgresCustomException, PostgresForeignKeyConstraintException {
 		Objects.requireNonNull(inviteId);
 		URI accountInviteUrl = URI.create(backendUri + "/account_invite?select=uses_left,expires_at&id=eq.%s".formatted(inviteId));
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
@@ -193,7 +194,7 @@ public class PostgrestAccount implements Account {
 		createLoginForAccount(accountId, openIdInfo, provider, backendUri, adminJwt);
 	}
 
-	private boolean createAdminIfDevAndNoAdminsExist(String backendUri, String token, UUID accountId) throws IOException, InterruptedException {
+	private boolean createAdminIfDevAndNoAdminsExist(String backendUri, String token, UUID accountId) throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException {
 		if (!Config.isDevEnv()) {
 			return false;
 		}
@@ -261,11 +262,9 @@ public class PostgrestAccount implements Account {
 		}
 	}
 
-	public static String postJsonAsAdmin(URI uri, String json, String token, String... headers) throws IOException, InterruptedException {
+	public static String postJsonAsAdmin(URI uri, String json, String token, String... headers) throws PostgresForeignKeyConstraintException, PostgresCustomException, IOException, InterruptedException {
 		HttpResponse<String> response = postJsonAsAdminWithResponse(uri, json, token, headers);
-		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from the endpoint: %s with status code %d and response: %s".formatted(uri.toString(), response.statusCode(), response.body()));
-		}
+		handlePostgresResponse(uri, response);
 		return response.body();
 	}
 
@@ -314,6 +313,26 @@ public class PostgrestAccount implements Account {
 		HttpRequest request = httpRequestBuilder.build();
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			return client.send(request, HttpResponse.BodyHandlers.discarding());
+		}
+	}
+
+	public static void handlePostgresResponse(URI uri, HttpResponse<String> response) throws PostgresForeignKeyConstraintException, PostgresCustomException {
+		if (response.statusCode() >= 300) {
+			String responseBody = response.body();
+			JsonObject errorObject = JsonParser.parseString(responseBody).getAsJsonObject();
+			if (errorObject.has("message") && errorObject.get("message").getAsString().contains("Access tokens should expire within one year")) {
+				throw new PostgresCustomException.PostgresAccessTokenExpirationException("Invalid Expiration Date: Access tokens should expire within one year");
+			} else if (errorObject.has("message") && errorObject.get("message").getAsString().contains("The selected expiration date cannot be in the past")) {
+				throw new PostgresCustomException.PostgresAccessTokenExpirationException("Invalid Expiration Date: Access token expiration date cannot be in the past");
+			} else {
+				String errorCode = errorObject.get("code").getAsString();
+				switch (errorCode) {
+					case "23503" -> throw new PostgresForeignKeyConstraintException("Foreign key constraint error");
+					default -> throw new PostgresCustomException("Error fetching data from the endpoint: %s with status code %d and response: %s".formatted(uri.toString(), response.statusCode(), response.body()));
+
+				}
+			}
+
 		}
 	}
 }

@@ -2,26 +2,39 @@
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from './logger'
 
-export function daysDiff(date:Date):number|undefined{
+export function daysDiff(date:Date, direction='since'):number|undefined{
   const today = new Date()
   if (date){
     // set time to noon (ignore that diff)
     today.setHours(12,0,0)
     date.setHours(12,0,0)
     // diff in ms
-    const diffInMs = today.valueOf() - date.valueOf()
     const dayInMs = 1000 * 60 * 60 * 24
-    if (diffInMs >= dayInMs) {
-      const daysDiff = Math.floor(diffInMs / dayInMs)
-      return daysDiff
-    } else {
-      return 0
+    if (direction === 'since') {
+      const diffInMs = today.valueOf() - date.valueOf()
+      if (diffInMs >= dayInMs) {
+        const daysDiff = Math.floor(diffInMs / dayInMs)
+        return daysDiff
+      } else {
+        return 0
+      }
+    } else if (direction === 'until') {
+      const diffInMs = date.valueOf() - today.valueOf()
+      if (diffInMs >= dayInMs) {
+        const daysDiff = Math.floor(diffInMs / dayInMs)
+        return daysDiff
+      } else {
+        return 0
+      }
     }
+
   }else{
     return undefined
   }
@@ -67,6 +80,13 @@ export function formatDateToStr(date: Date|undefined, locale = 'en-US',
   options = defaultDateFormattingOptions): string {
   if (date) {
     return date.toLocaleDateString(locale, options)
+  }
+  return ''
+}
+
+export function formatDateToIsoStr(date: Date|undefined) {
+  if (date) {
+    return date.toISOString().split('T')[0]
   }
   return ''
 }
@@ -157,4 +177,26 @@ export function getYearMonthDay(date:Date) {
   } catch {
     return null
   }
+}
+
+export function getDatePlaceholderForLocale(locale = navigator.language) {
+  const exampleDate = new Date()
+  const parts = new Intl.DateTimeFormat(locale, {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).formatToParts(exampleDate)
+
+  return parts.map((part) => {
+    switch (part.type) {
+      case 'day':
+        return 'DD'
+      case 'month':
+        return 'MM'
+      case 'year':
+        return 'YYYY'
+      default:
+        return part.value
+    }
+  }).join('')
 }
