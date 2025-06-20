@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,6 +17,7 @@ import {deleteImage, getImageUrl} from '~/utils/editImage'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {handleFileUpload} from '~/utils/handleFileUpload'
 import ImageInput from './ImageInput'
+import ImageDropZone from '~/components/form/ImageDropZone'
 
 export type FormInputsForImage={
   logo_id: string|null
@@ -35,17 +36,19 @@ export default function ControlledImageInput({name,logo_b64,logo_id,setValue}:Im
   const {token} = useSession()
   const {showWarningMessage,showErrorMessage} = useSnackbar()
 
-  async function onFileUpload(e:ChangeEvent<HTMLInputElement>|undefined) {
-    if (typeof e !== 'undefined') {
-      const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
-      if (status === 200 && image_b64 && image_mime_type) {
-        // save image
-        replaceLogo(image_b64,image_mime_type)
-      } else if (status===413) {
-        showWarningMessage(message)
-      } else {
-        showErrorMessage(message)
-      }
+  async function onFileUpload(e: ChangeEvent<HTMLInputElement> | {target: {files: FileList | Blob[]}} | undefined): Promise<void> {
+    if (e === undefined) {
+      return
+    }
+
+    const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
+    if (status === 200 && image_b64 && image_mime_type) {
+      // save image
+      replaceLogo(image_b64,image_mime_type)
+    } else if (status===413) {
+      showWarningMessage(message)
+    } else {
+      showErrorMessage(message)
     }
   }
 
@@ -80,27 +83,29 @@ export default function ControlledImageInput({name,logo_b64,logo_id,setValue}:Im
 
   return (
     <div>
-      <label htmlFor="upload-avatar-image"
-        style={{cursor:'pointer'}}
-        title="Click to upload an image"
-      >
-        <Avatar
-          alt={name ?? ''}
-          src={logo_b64 ?? getImageUrl(logo_id ?? null) ?? undefined}
-          sx={{
-            width: '8rem',
-            height: '8rem',
-            fontSize: '3rem',
-            marginRight: '0rem',
-            '& img': {
-              height:'auto'
-            }
-          }}
-          variant="square"
+      <ImageDropZone onImageDrop={onFileUpload}>
+        <label htmlFor="upload-avatar-image"
+          style={{cursor:'pointer'}}
+          title="Click or drop to upload an image"
         >
-          {name ? name.slice(0,3) : ''}
-        </Avatar>
-      </label>
+          <Avatar
+            alt={name ?? ''}
+            src={logo_b64 ?? getImageUrl(logo_id ?? null) ?? undefined}
+            sx={{
+              width: '8rem',
+              height: '8rem',
+              fontSize: '3rem',
+              marginRight: '0rem',
+              '& img': {
+                height:'auto'
+              }
+            }}
+            variant="square"
+          >
+            {name ? name.slice(0,3) : ''}
+          </Avatar>
+        </label>
+      </ImageDropZone>
       <ImageInput
         id="upload-avatar-image"
         onChange={onFileUpload}

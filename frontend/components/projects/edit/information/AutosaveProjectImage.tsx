@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
@@ -24,6 +24,7 @@ import {upsertImage,deleteImage} from '~/utils/editImage'
 import {ChangeEvent} from 'react'
 import {handleFileUpload} from '~/utils/handleFileUpload'
 import ImageInput from '~/components/form/ImageInput'
+import ImageDropZone from '~/components/form/ImageDropZone'
 
 export default function AutosaveProjectImage() {
   const {token} = useSession()
@@ -85,17 +86,19 @@ export default function AutosaveProjectImage() {
     }
   }
 
-  async function onFileUpload(e:ChangeEvent<HTMLInputElement>|undefined) {
-    if (typeof e !== 'undefined') {
-      const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
-      if (status === 200 && image_b64 && image_mime_type) {
-        // save image
-        saveImage(image_b64,image_mime_type)
-      } else if (status===413) {
-        showWarningMessage(message)
-      } else {
-        showErrorMessage(message)
-      }
+  async function onFileUpload(e: ChangeEvent<HTMLInputElement> | {target: {files: FileList | Blob[]}} | undefined): Promise<void> {
+    if (e === undefined) {
+      return
+    }
+
+    const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
+    if (status === 200 && image_b64 && image_mime_type) {
+      // save image
+      saveImage(image_b64,image_mime_type)
+    } else if (status===413) {
+      showWarningMessage(message)
+    } else {
+      showErrorMessage(message)
     }
   }
 
@@ -197,19 +200,21 @@ export default function AutosaveProjectImage() {
 
   return (
     <div>
-      <label htmlFor="upload-avatar-image"
-        style={{cursor:'pointer'}}
-        title="Click to upload an image"
-      >
-        <ImageAsBackground
-          src={imageUrl()}
-          alt={form_image_caption ?? 'image'}
-          bgSize={form_image_contain ? 'contain' : 'cover'}
-          bgPosition={form_image_contain ? 'center' : 'center center'}
-          className="w-full h-[23rem]"
-          noImgMsg="Click to upload image < 2MB"
-        />
-      </label>
+      <ImageDropZone onImageDrop={onFileUpload}>
+        <label htmlFor="upload-avatar-image"
+          style={{cursor: 'pointer'}}
+          title="Click or drop to upload an image"
+        >
+          <ImageAsBackground
+            src={imageUrl()}
+            alt={form_image_caption ?? 'image'}
+            bgSize={form_image_contain ? 'contain' : 'cover'}
+            bgPosition={form_image_contain ? 'center' : 'center center'}
+            className="w-full h-[23rem]"
+            noImgMsg="Click or drop to upload image < 2MB"
+          />
+        </label>
+      </ImageDropZone>
 
       <ImageInput
         id="upload-avatar-image"

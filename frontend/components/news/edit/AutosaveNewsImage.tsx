@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -24,6 +24,7 @@ import CopyToClipboard from '~/components/layout/CopyToClipboard'
 import {NewsImageProps,NewsItem,addNewsImage,deleteNewsImage} from '../apiNews'
 import {newsConfig as config} from './config'
 import ImageInput from '~/components/form/ImageInput'
+import ImageDropZone from '~/components/form/ImageDropZone'
 
 type UploadedImageProps={
   imgUrl: string|null,
@@ -44,7 +45,7 @@ function UploadedImage({imgUrl,onDelete}:UploadedImageProps){
   }
 
   return (
-    <div className="relative pb-4">
+    <div className="relative pb-4" onDragOver={e => e.preventDefault()} onDrop={e => e.preventDefault()}>
       <ImageWithPlaceholder
         placeholder="Uploaded image < 2MB"
         src={imgUrl}
@@ -116,16 +117,18 @@ export default function AutosaveNewsImage() {
     ])
   }
 
-  async function onFileUpload(e:ChangeEvent<HTMLInputElement>|undefined) {
-    if (typeof e !== 'undefined') {
-      const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
-      if (status === 200 && image_b64 && image_mime_type) {
-        saveImage(image_b64, image_mime_type)
-      } else if (status===413) {
-        showWarningMessage(message)
-      } else {
-        showErrorMessage(message)
-      }
+  async function onFileUpload(e: ChangeEvent<HTMLInputElement> | {target: {files: FileList | Blob[]}} | undefined): Promise<void> {
+    if (e === undefined) {
+      return
+    }
+
+    const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
+    if (status === 200 && image_b64 && image_mime_type) {
+      saveImage(image_b64, image_mime_type)
+    } else if (status===413) {
+      showWarningMessage(message)
+    } else {
+      showErrorMessage(message)
     }
   }
 
@@ -182,19 +185,21 @@ export default function AutosaveNewsImage() {
         })
       }
 
-      <label htmlFor='upload-article-image'
-        style={{cursor: 'pointer'}}
-        title="Click to upload an image"
-      >
-        <ImageWithPlaceholder
-          placeholder="Click to upload image < 2MB"
-          src={null}
-          alt={'image'}
-          bgSize={'scale-down'}
-          bgPosition={'left center'}
-          className="w-full h-[9rem]"
-        />
-      </label>
+      <ImageDropZone onImageDrop={onFileUpload}>
+        <label htmlFor='upload-article-image'
+          style={{cursor: 'pointer'}}
+          title="Click or drop to upload an image"
+        >
+          <ImageWithPlaceholder
+            placeholder="Click or drop to upload image < 2MB"
+            src={null}
+            alt={'image'}
+            bgSize={'scale-down'}
+            bgPosition={'left center'}
+            className="w-full h-[9rem]"
+          />
+        </label>
+      </ImageDropZone>
 
       <ImageInput
         id="upload-article-image"

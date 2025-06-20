@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -67,17 +68,19 @@ export default function AvatarOptionsPerson(props: AvatarOptionsProps) {
     }
   },[avatar_options,avatar_id,loading])
 
-  async function onFileUpload(e:ChangeEvent<HTMLInputElement>|undefined) {
-    if (typeof e !== 'undefined') {
-      const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
-      if (status === 200 && image_b64 && image_mime_type) {
-        // save it as selected
-        setValue('avatar_id', image_b64, {shouldDirty: true, shouldValidate:true})
-      } else if (status===413) {
-        showWarningMessage(message)
-      } else {
-        showErrorMessage(message)
-      }
+  async function onFileUpload(e: ChangeEvent<HTMLInputElement> | {target: {files: FileList | Blob[]}} | undefined): Promise<void> {
+    if (e === undefined) {
+      return
+    }
+
+    const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
+    if (status === 200 && image_b64 && image_mime_type) {
+      // save it as selected
+      setValue('avatar_id', image_b64, {shouldDirty: true, shouldValidate:true})
+    } else if (status===413) {
+      showWarningMessage(message)
+    } else {
+      showErrorMessage(message)
     }
   }
 

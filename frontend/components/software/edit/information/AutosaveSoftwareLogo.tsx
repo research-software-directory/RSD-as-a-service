@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -24,6 +24,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import ImageInput from '~/components/form/ImageInput'
 import {softwareInformation as config} from '../editSoftwareConfig'
 import {patchSoftwareTable} from './patchSoftwareTable'
+import ImageDropZone from '~/components/form/ImageDropZone'
 
 export default function AutosaveSoftwareLogo() {
   const {token} = useSession()
@@ -120,16 +121,18 @@ export default function AutosaveSoftwareLogo() {
     }
   }
 
-  async function onFileUpload(e:ChangeEvent<HTMLInputElement>|undefined) {
-    if (typeof e !== 'undefined') {
-      const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
-      if (status === 200 && image_b64 && image_mime_type) {
-        saveImage(image_b64, image_mime_type)
-      } else if (status===413) {
-        showWarningMessage(message)
-      } else {
-        showErrorMessage(message)
-      }
+  async function onFileUpload(e: ChangeEvent<HTMLInputElement> | {target: {files: FileList | Blob[]}} | undefined): Promise<void> {
+    if (e === undefined) {
+      return
+    }
+
+    const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
+    if (status === 200 && image_b64 && image_mime_type) {
+      saveImage(image_b64, image_mime_type)
+    } else if (status===413) {
+      showWarningMessage(message)
+    } else {
+      showErrorMessage(message)
     }
   }
 
@@ -156,19 +159,21 @@ export default function AutosaveSoftwareLogo() {
         subtitle={config.logo.help}
       />
 
-      <label htmlFor='upload-software-logo'
-        style={{cursor: 'pointer'}}
-        title="Click to upload a logo"
-      >
-        <ImageWithPlaceholder
-          placeholder="Click to upload a logo < 2MB"
-          src={imageUrl()}
-          alt={'logo'}
-          bgSize={'contain'}
-          bgPosition={'left center'}
-          className="w-full h-[9rem]"
-        />
-      </label>
+      <ImageDropZone onImageDrop={onFileUpload}>
+        <label htmlFor='upload-software-logo'
+          style={{cursor: 'pointer'}}
+          title="Click or drop to upload a logo"
+        >
+          <ImageWithPlaceholder
+            placeholder="Click or drop to upload a logo < 2MB"
+            src={imageUrl()}
+            alt={'logo'}
+            bgSize={'contain'}
+            bgPosition={'left center'}
+            className="w-full h-[9rem]"
+          />
+        </label>
+      </ImageDropZone>
 
       <ImageInput
         id="upload-software-logo"
