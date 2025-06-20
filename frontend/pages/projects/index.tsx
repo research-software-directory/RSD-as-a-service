@@ -16,6 +16,7 @@ import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
 import {useUserSettings} from '~/config/UserSettingsContext'
+import {getRsdModules} from '~/config/getSettingsServerSide'
 import {ProjectListItem} from '~/types/Project'
 import {getUserSettings} from '~/utils/userSettings'
 import {getProjectList} from '~/utils/getProjects'
@@ -45,7 +46,6 @@ import ProjectSearchSection from '~/components/projects/overview/search/ProjectS
 import ProjectOverviewContent from '~/components/projects/overview/ProjectOverviewContent'
 import ProjectFiltersModal from '~/components/projects/overview/filters/ProjectFiltersModal'
 import {StatusFilterOption} from '~/components/projects/overview/filters/ProjectStatusFilter'
-
 
 export type ProjectOverviewPageProps = {
   search?: string | null
@@ -221,6 +221,13 @@ export default function ProjectsOverviewPage({
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   let offset=0
+  const modules = await getRsdModules()
+  // show 404 page if module is not enabled
+  if (modules?.includes('projects')===false){
+    return {
+      notFound: true,
+    }
+  }
   // extract from page-query
   const {
     search, rows, page, keywords, domains,
@@ -234,7 +241,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (page_rows && page) {
     offset = page_rows * (page - 1)
   }
-
   const allowedOrderings = projectOrderOptions.map(o => o.key)
   // default order
   let projectOrder = order ?? 'impact_cnt'
