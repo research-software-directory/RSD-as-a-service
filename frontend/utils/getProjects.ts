@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -143,23 +144,26 @@ export async function getOrganisations({project, token, frontend = true}:
  * 2. Ensure used labels are same as ProjectStatusLabels used in the filter dropdown
  */
 export function getProjectStatus({date_start, date_end}:
-  {date_start: string, date_end: string}) {
+  {date_start: string | null, date_end: string | null}) {
   try {
-    const start_date = new Date(date_start)
-    const end_date = new Date(date_end)
+    const start_date = date_start ? new Date(date_start) : null
+    const end_date = date_end ? new Date(date_end) : null
     const today = new Date()
 
     let statusKey: ProjectStatusKey = 'unknown'
 
-    if (today < start_date) statusKey = 'upcoming'
-    if (today > end_date) statusKey = 'finished'
-    if (today > start_date && today < end_date) statusKey = 'in_progress'
-
-    if (statusKey!=='unknown') {
-      return ProjectStatusLabels[statusKey]
+    if (start_date !== null && end_date !== null && start_date > end_date) {
+      statusKey = 'unknown'
+    } else if (start_date !== null && today < start_date) {
+      statusKey = 'upcoming'
+    } else if (end_date !== null && today > end_date) {
+      statusKey = 'finished'
+    } else if (start_date !== null && end_date !== null && today >= start_date && today <= end_date) {
+      statusKey = 'in_progress'
     }
-    return ''
-  } catch (e:any) {
+
+    return ProjectStatusLabels[statusKey]
+  } catch (e: any) {
     logger(`getProjectStatus: ${e?.message}`, 'error')
     // error value return starting
     return ''
