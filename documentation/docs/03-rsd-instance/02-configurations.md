@@ -52,8 +52,6 @@ RSD_AUTH_PROVIDERS=AZURE:EVERYONE
 # consumed by: authentication, frontend/utils/loginHelpers
 AZURE_CLIENT_ID=
 # consumed by: authentication, frontend/utils/loginHelpers
-AZURE_REDIRECT=http://localhost/auth/login/azure
-# consumed by: authentication, frontend/utils/loginHelpers
 AZURE_WELL_KNOWN_URL=
 # consumed by: frontend
 # the name displayed to users when multiple providers are configured
@@ -80,10 +78,6 @@ For both integrations (login and coupling) these common variables need to be def
 ORCID_CLIENT_ID=
 # consumed by: authentication, frontend/utils/loginHelpers
 ORCID_WELL_KNOWN_URL=
-# consumed by: authentication, frontend/utils/loginHelpers
-ORCID_SCOPES=openid
-# consumed by: frontend/utils/loginHelpers
-ORCID_RESPONSE_MODE=query
 
 # consumed by services: authentication
 AUTH_ORCID_CLIENT_SECRET=
@@ -96,27 +90,9 @@ To enable login via ORCID, provide the following information in `.env`:
 ```bash
 # Ensure ORCID key is included in the list
 RSD_AUTH_PROVIDERS=ORCID:EVERYONE
-
-# consumed by: authentication, frontend/utils/loginHelpers
-ORCID_REDIRECT=http://www.localhost/auth/login/orcid
 ```
 
 #### ORCID coupling
-
-For ORCID account coupling to be enabled, the following variables need to be set in `.env`:
-
-```bash
-# consumed by: authentication, frontend/utils/loginHelpers
-ORCID_REDIRECT_COUPLE=http://www.localhost/auth/couple/orcid
-# Enable ORCID account coupling
-RSD_AUTH_COUPLE_PROVIDERS=ORCID
-```
-
-If `RSD_AUTH_COUPLE_PROVIDERS` is undefined, ORCID account coupling is disabled.
-
-:::danger
-If ORCID login is disabled and ORCID coupling is enabled, users are added to the ORCID login allowlist after coupling their accounts.
-:::
 
 - For more [info about public profile page see documentation](/users/user-settings/#public-profile).
 - If ORCID login is enabled: after a user links an ORCID to their RSD account they will be able to log in using ORCID credentials too.
@@ -135,7 +111,7 @@ Helmholtz already runs an RSD instance at [https://helmholtz.software/](https://
 
 ### Enable LinkedIn authentication
 
-First, create an app on [https://developer.linkedin.com/](https://developer.linkedin.com/). Follow the steps [here](https://www.linkedin.com/help/linkedin/answer/a1665329) to get your app approved by the company you linked it to. Copy the related environment variables from `.env.example` to your `.env` and fill in the missing values (don't forget to set your custom domain for `LINKEDIN_REDIRECT`). Finally, add `LINKEDIN` to the values in the environment variable `RSD_AUTH_PROVIDERS`.
+First, create an app on [https://developer.linkedin.com/](https://developer.linkedin.com/). Follow the steps [here](https://www.linkedin.com/help/linkedin/answer/a1665329) to get your app approved by the company you linked it to. Copy the related environment variables from `.env.example` to your `.env` and fill in the missing values. Finally, add `LINKEDIN` to the values in the environment variable `RSD_AUTH_PROVIDERS`.
 
 ## e-Mail service
 

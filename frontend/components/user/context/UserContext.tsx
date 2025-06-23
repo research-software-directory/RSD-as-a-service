@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -16,8 +17,6 @@ export type UserCounts = {
 }
 
 type UserContextProps={
-  orcidAuthLink: string|null
-  linkedInAuthLink: string|null
   counts: UserCounts
   profile: UserProfile
   logins: LoginForAccount[]
@@ -33,8 +32,6 @@ export function UserContextProvider(props:any){
   const [profile, setProfile] = useState<UserProfile>(props?.profile)
   const [counts] = useState<UserCounts>(props?.counts)
   const [logins, setLogins] = useState<LoginForAccount[]>(props?.logins)
-  const [orcidAuthLink] = useState<string|null>(props?.orcidAuthLink)
-  const [linkedInAuthLink] = useState<string|null>(props?.linkedInAuthLink)
 
   const updateUserProfile = useCallback(({key,value}:{key:keyof UserProfile,value:any})=>{
     setProfile((data)=>{
@@ -56,7 +53,7 @@ export function UserContextProvider(props:any){
 
   return <UserContext.Provider
     // ignore SONAR warning -> the values use useState hook already
-    value={{counts,orcidAuthLink,linkedInAuthLink,logins,profile,updateUserProfile,removeLogin}} // NOSONAR
+    value={{counts,logins,profile,updateUserProfile,removeLogin}} // NOSONAR
     {...props}
   />
 }

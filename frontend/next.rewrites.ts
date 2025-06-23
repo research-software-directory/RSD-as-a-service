@@ -2,9 +2,9 @@
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -47,17 +47,8 @@ if (process.env.NODE_ENV === 'docker' as any) {
       destination: 'http://localhost/api/v1/:path*', // NOSONAR
     },
     {
-      source: '/auth/login/local',
-      destination: 'http://localhost/auth/login/local', // NOSONAR
-    },
-    {
-      source: '/auth/accesstoken',
-      destination: 'http://localhost/auth/accesstoken', // NOSONAR
-    },
-    {
-      source: '/auth/providers',
-      destination: 'http://localhost/auth/providers', // NOSONAR
-
+      source: '/auth/:path*',
+      destination: 'http://localhost/auth/:path*', // NOSONAR
     },
     {
       source: '/documentation/:path*',
