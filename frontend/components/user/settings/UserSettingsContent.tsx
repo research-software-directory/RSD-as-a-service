@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,6 +11,7 @@ import {UserSettingsTab} from './nav/UserSettingsNavItems'
 import UserAboutPage from './about'
 import UserProfilePage from './profile'
 import UserAgreementsPage from './agreements'
+import UserAccessTokensPage from './accesstokens'
 
 export default function UserSettingsContent() {
   const router = useRouter()
@@ -21,6 +24,8 @@ export default function UserSettingsContent() {
       return <UserProfilePage />
     case 'agreements':
       return <UserAgreementsPage />
+    case 'accesstokens':
+      return <UserAccessTokensPage />
     default:
       return <UserProfilePage/>
   }
