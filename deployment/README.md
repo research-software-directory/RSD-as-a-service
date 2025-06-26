@@ -59,10 +59,8 @@ The default index.css and settings.json are already in the frontend image. If yo
       - MATOMO_URL
       - MATOMO_ID
       - SURFCONEXT_CLIENT_ID
-      - SURFCONEXT_REDIRECT
       - SURFCONEXT_WELL_KNOWN_URL
       - HELMHOLTZID_CLIENT_ID
-      - HELMHOLTZID_REDIRECT
       - HELMHOLTZID_WELL_KNOWN_URL
       - HELMHOLTZID_SCOPES
     expose:

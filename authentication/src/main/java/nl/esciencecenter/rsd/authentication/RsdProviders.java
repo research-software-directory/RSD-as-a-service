@@ -77,22 +77,27 @@ public class RsdProviders {
 		}
 
 		Map<OpenidProvider, URI> signInUrls = new EnumMap<>(OpenidProvider.class);
+		Map<OpenidProvider, URI> coupleUrls = new EnumMap<>(OpenidProvider.class);
 		ExecutorService threadPool = Executors.newFixedThreadPool(10);
 		for (RsdProviderData rsdProviderData : activeProvidersSorted) {
 			threadPool.submit(() -> {
 				OpenidProvider openidProvider = rsdProviderData.openidProvider();
 				try {
-					URI signInUrl = obtainSignInUrl(openidProvider, rsdProviderData.wellKnownUrl());
-					accessMethodOrderMap.put(openidProvider, rsdProviderData.accessType());
+					AuthUrls authUrls = obtainSignInUrl(openidProvider, rsdProviderData.wellKnownUrl());
+					URI signInUrl = authUrls.signInUrl();
+					URI coupleUrl = authUrls.coupleUrl();
 
 					Lock writeLock = jsonProvidersLock.writeLock();
 					writeLock.lock();
 					try {
+						accessMethodOrderMap.put(openidProvider, rsdProviderData.accessType());
 						signInUrls.put(openidProvider, signInUrl);
+						coupleUrls.put(openidProvider, coupleUrl);
+
 						this.activeProvidersString = activeProvidersSorted
 							.stream()
 							.filter(p -> signInUrls.containsKey(p.openidProvider()))
-							.map(p -> toJson(p, signInUrls.get(p.openidProvider())))
+							.map(p -> toJson(p, signInUrls.get(p.openidProvider()), coupleUrls.get(p.openidProvider())))
 							.collect(JsonArray::new, JsonArray::add, JsonArray::addAll)
 							.toString();
 					} finally {
@@ -105,6 +110,8 @@ public class RsdProviders {
 				} catch (InterruptedException e) {
 					LOGGER.warn("InterruptedException when getting sign in URL for provider {}", openidProvider, e);
 					Thread.currentThread().interrupt();
+				} catch (RuntimeException e) {
+					LOGGER.warn("RuntimeException when getting sign in URL for provider {}", openidProvider, e);
 				}
 			});
 		}
@@ -112,7 +119,7 @@ public class RsdProviders {
 		threadPool.shutdown();
 	}
 
-	private static JsonObject toJson(RsdProviderData data, URI signInUrl) {
+	private static JsonObject toJson(RsdProviderData data, URI signInUrl, URI coupleUrl) {
 		JsonObject jsonObject = new JsonObject();
 
 		jsonObject.addProperty("openidProvider", data.openidProvider().toString());
@@ -120,6 +127,7 @@ public class RsdProviders {
 		jsonObject.addProperty("name", data.displayName());
 		jsonObject.addProperty("html", data.htmlDescription());
 		jsonObject.addProperty("signInUrl", signInUrl.toString());
+		jsonObject.addProperty("coupleUrl", coupleUrl.toString());
 
 		return jsonObject;
 	}
@@ -259,24 +267,45 @@ public class RsdProviders {
 		};
 	}
 
-	private static URI obtainSignInUrl(OpenidProvider provider, URI wellKnownUrl) throws IOException, InterruptedException, RsdResponseException {
+	private record AuthUrls(URI signInUrl, URI coupleUrl) {
+	}
+
+	private static AuthUrls obtainSignInUrl(OpenidProvider provider, URI wellKnownUrl) throws IOException, InterruptedException, RsdResponseException {
 		return switch (provider) {
-			case local -> URI.create("/login/local");
+			case local -> new AuthUrls(URI.create("/login/local"), URI.create("/login/local/couple"));
 			case surfconext, helmholtz, orcid, azure, linkedin -> {
 				URI authUrl = Utils.getAuthUrlFromWellKnownUrl(wellKnownUrl);
-				yield addQueryParametersToAuthUrl(authUrl, provider);
+				yield new AuthUrls(addQueryParametersToAuthUrl(authUrl, provider, false), addQueryParametersToAuthUrl(authUrl, provider, true));
 			}
 		};
 	}
 
-	private static String obtainRedirectUrl(OpenidProvider provider) {
+	static String obtainRedirectUrl(OpenidProvider provider) {
 		return switch (provider) {
-			case local -> null;
-			case surfconext -> System.getenv("SURFCONEXT_REDIRECT");
-			case helmholtz -> System.getenv("HELMHOLTZID_REDIRECT");
-			case orcid -> System.getenv("ORCID_REDIRECT");
-			case azure -> System.getenv("AZURE_REDIRECT");
-			case linkedin -> System.getenv("LINKEDIN_REDIRECT");
+			case local -> throw new IllegalArgumentException();
+			case surfconext -> Config.hostUrl() + "/auth/login/surfconext";
+			case helmholtz -> Config.hostUrl() + "/auth/login/helmholtzid";
+			case orcid -> Config.hostUrl() + "/auth/login/orcid";
+			case azure -> Config.hostUrl() + "/auth/login/azure";
+			case linkedin -> Config.hostUrl() + "/auth/login/linkedin";
+		};
+	}
+
+	static String obtainCouplingRedirectUrl(OpenidProvider provider) {
+		return switch (provider) {
+			case local -> throw new IllegalArgumentException();
+			case surfconext -> Config.hostUrl() + "/auth/couple/surfconext";
+			case helmholtz -> Config.hostUrl() + "/auth/couple/helmholtzid";
+			case orcid -> {
+				String hostUrl = Config.hostUrl();
+				// ORCID needs a dot in its redirect URL, which is why we prepend "www."
+				if (hostUrl.equals("http://localhost")) {
+					yield "http://www.localhost/auth/couple/orcid";
+				}
+				yield hostUrl + "/auth/couple/orcid";
+			}
+			case azure -> Config.hostUrl() + "/auth/couple/azure";
+			case linkedin -> Config.hostUrl() + "/auth/couple/linkedin";
 		};
 	}
 
@@ -291,15 +320,15 @@ public class RsdProviders {
 		};
 	}
 
-	private static URI addQueryParametersToAuthUrl(URI authUrl, OpenidProvider openidProvider) {
+	private static URI addQueryParametersToAuthUrl(URI authUrl, OpenidProvider openidProvider, boolean isCoupleUrl) {
 		String queryParameters = switch (openidProvider) {
 			case local -> "";
 			case surfconext -> {
 				QueryParameterBuilder queryParameterBuilder = new QueryParameterBuilder()
-					.addQueryParameter("response_mode", "form_post")
+					.addQueryParameter("response_mode", "query")
 					.addQueryParameter("response_type", "code")
 					.addQueryParameter("scope", "openid")
-					.addQueryParameter("redirect_uri", obtainRedirectUrl(openidProvider))
+					.addQueryParameter("redirect_uri", isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider))
 					.addQueryParameter("client_id", obtainClientId(openidProvider))
 					.addQueryParameter("claims", "{\"id_token\":{\"schac_home_organization\":null,\"name\":null,\"email\":null}}");
 
@@ -313,7 +342,7 @@ public class RsdProviders {
 				.addQueryParameter("response_mode", "query")
 				.addQueryParameter("response_type", "code")
 				.addQueryParameter("scope", "openid profile email eduperson_principal_name")
-				.addQueryParameter("redirect_uri", obtainRedirectUrl(openidProvider))
+				.addQueryParameter("redirect_uri", isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider))
 				.addQueryParameter("client_id", obtainClientId(openidProvider))
 				.addQueryParameter("claims", "{\"id_token\":{\"schac_home_organization\":null,\"name\":null,\"email\":null}}")
 				.toString();
@@ -321,7 +350,7 @@ public class RsdProviders {
 				.addQueryParameter("response_mode", "query")
 				.addQueryParameter("response_type", "code")
 				.addQueryParameter("scope", "openid")
-				.addQueryParameter("redirect_uri", obtainRedirectUrl(openidProvider))
+				.addQueryParameter("redirect_uri", isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider))
 				.addQueryParameter("client_id", obtainClientId(openidProvider))
 				.toString();
 			case azure -> new QueryParameterBuilder()
@@ -329,14 +358,14 @@ public class RsdProviders {
 				.addQueryParameter("response_type", "code")
 				.addQueryParameter("scope", "openid")
 				.addQueryParameter("prompt", "select_account")
-				.addQueryParameter("redirect_uri", obtainRedirectUrl(openidProvider))
+				.addQueryParameter("redirect_uri", isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider))
 				.addQueryParameter("client_id", obtainClientId(openidProvider))
 				.toString();
 			case linkedin -> new QueryParameterBuilder()
 				.addQueryParameter("response_mode", "query")
 				.addQueryParameter("response_type", "code")
 				.addQueryParameter("scope", "openid profile email")
-				.addQueryParameter("redirect_uri", obtainRedirectUrl(openidProvider))
+				.addQueryParameter("redirect_uri", isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider))
 				.addQueryParameter("client_id", obtainClientId(openidProvider))
 				.toString();
 		};

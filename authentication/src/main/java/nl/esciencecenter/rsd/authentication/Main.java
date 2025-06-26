@@ -11,6 +11,17 @@
 
 package nl.esciencecenter.rsd.authentication;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import io.javalin.Javalin;
+import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
+import nl.esciencecenter.rsd.authentication.RsdAccessTokenException.UnverifiedAccessTokenException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -23,19 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import io.javalin.Javalin;
-import io.javalin.http.Context;
-import io.javalin.http.HttpStatus;
-import nl.esciencecenter.rsd.authentication.RsdAccessTokenException.UnverifiedAccessTokenException;
 
 public class Main {
 	private static final Duration AUTH_COOKIE_DURATION = Duration.ofHours(1);
@@ -69,47 +67,19 @@ public class Main {
 		});
 
 		app.post("/auth/login/local", ctx -> {
-			OpenidProvider localProvider = OpenidProvider.local;
-			switch (rsdProviders.accessMethodOfProvider(localProvider)) {
-				case MISCONFIGURED -> {
-					handleMisconfiguredProvider(ctx, localProvider);
-				}
-				case DISABLED -> {
-					handleDisabledProvider(ctx, localProvider);
-				}
-				case INVITE_ONLY -> {
-					OpenIdInfo localInfo = extractLocalInfo(ctx);
-
-					handleAccountInviteOnly(localInfo, localProvider, ctx);
-				}
-				case EVERYONE -> {
-					OpenIdInfo localInfo = extractLocalInfo(ctx);
-
-					handleAccountEveryoneAllowed(localInfo, localProvider, ctx);
-				}
-			}
+			handleLoginRequest(ctx, OpenidProvider.local, rsdProviders);
 		});
 
-		app.post("/auth/login/surfconext", ctx -> {
-			OpenidProvider surfProvider = OpenidProvider.surfconext;
-			switch (rsdProviders.accessMethodOfProvider(surfProvider)) {
-				case MISCONFIGURED -> {
-					handleMisconfiguredProvider(ctx, surfProvider);
-				}
-				case DISABLED -> {
-					handleDisabledProvider(ctx, surfProvider);
-				}
-				case INVITE_ONLY -> {
-					OpenIdInfo surfconextInfo = extractSurfInfo(ctx);
+		app.post("/auth/couple/local", ctx -> {
+			handleCoupleRequest(ctx, OpenidProvider.local, rsdProviders);
+		});
 
-					handleAccountInviteOnly(surfconextInfo, surfProvider, ctx);
-				}
-				case EVERYONE -> {
-					OpenIdInfo surfconextInfo = extractSurfInfo(ctx);
+		app.get("/auth/login/surfconext", ctx -> {
+			handleLoginRequest(ctx, OpenidProvider.surfconext, rsdProviders);
+		});
 
-					handleAccountEveryoneAllowed(surfconextInfo, surfProvider, ctx);
-				}
-			}
+		app.get("/auth/couple/surfconext", ctx -> {
+			handleCoupleRequest(ctx, OpenidProvider.surfconext, rsdProviders);
 		});
 
 		app.get("/auth/login/helmholtzid", ctx -> {
@@ -122,12 +92,12 @@ public class Main {
 					handleDisabledProvider(ctx, helmholtzProvider);
 				}
 				case INVITE_ONLY -> {
-					OpenIdInfo helmholtzInfo = extractHelmholtzInfo(ctx);
+					OpenIdInfo helmholtzInfo = obtainOpenIdInfo(ctx, helmholtzProvider, false);
 
 					handleAccountInviteOnly(helmholtzInfo, helmholtzProvider, ctx);
 				}
 				case EVERYONE -> {
-					OpenIdInfo helmholtzInfo = extractHelmholtzInfo(ctx);
+					OpenIdInfo helmholtzInfo = obtainOpenIdInfo(ctx, helmholtzProvider, false);
 
 					if (!idUserIsHelmholtzMember(helmholtzInfo) && !Config.helmholtzIdAllowExternalUsers()) {
 						// If no external members can login by default, access can be granted via invites
@@ -139,111 +109,37 @@ public class Main {
 			}
 		});
 
-		app.get("/auth/login/orcid", ctx -> {
-			OpenidProvider orcidProvider = OpenidProvider.orcid;
-			switch (rsdProviders.accessMethodOfProvider(orcidProvider)) {
-				case MISCONFIGURED -> {
-					handleMisconfiguredProvider(ctx, orcidProvider);
-				}
-				case DISABLED -> {
-					handleDisabledProvider(ctx, orcidProvider);
-				}
-				case INVITE_ONLY -> {
-					OpenIdInfo orcidInfo = extractOrcidInfo(ctx);
-
-					handleAccountInviteOnly(orcidInfo, orcidProvider, ctx);
-				}
-				case EVERYONE -> {
-					OpenIdInfo orcidInfo = extractOrcidInfo(ctx);
-
-					handleAccountEveryoneAllowed(orcidInfo, orcidProvider, ctx);
-				}
-			}
+		app.get("/auth/couple/helmholtzid", ctx -> {
+			handleCoupleRequest(ctx, OpenidProvider.helmholtz, rsdProviders);
 		});
 
-		if (Config.isOrcidCouplingEnabled()) {
-			app.get("/auth/couple/orcid", ctx -> {
-				String code = ctx.queryParam("code");
-				String redirectUrl = Config.orcidRedirectCouple();
-				OpenIdInfo orcidInfo = new OrcidLogin(code, redirectUrl).openidInfo();
+		app.get("/auth/login/orcid", ctx -> {
+			handleLoginRequest(ctx, OpenidProvider.orcid, rsdProviders);
+		});
 
-				String tokenToVerify = ctx.cookie("rsd_token");
-				String signingSecret = Config.jwtSigningSecret();
-				JwtVerifier verifier = new JwtVerifier(signingSecret);
-				DecodedJWT decodedJWT = verifier.verify(tokenToVerify);
-				UUID accountId = UUID.fromString(decodedJWT.getClaim("account").asString());
-
-				new PostgrestAccount(Config.backendBaseUrl()).coupleLogin(accountId, orcidInfo, OpenidProvider.orcid);
-
-				setRedirectFromCookie(ctx);
-			});
-		}
+		app.get("/auth/couple/orcid", ctx -> {
+			handleCoupleRequest(ctx, OpenidProvider.orcid, rsdProviders);
+		});
 
 		app.get("/auth/login/azure", ctx -> {
-			OpenidProvider azureProvider = OpenidProvider.azure;
-			switch (rsdProviders.accessMethodOfProvider(azureProvider)) {
-				case MISCONFIGURED -> {
-					handleMisconfiguredProvider(ctx, azureProvider);
-				}
-				case DISABLED -> {
-					handleDisabledProvider(ctx, azureProvider);
-				}
-				case INVITE_ONLY -> {
-					OpenIdInfo azureInfo = extractAzureInfo(ctx);
+			handleLoginRequest(ctx, OpenidProvider.azure, rsdProviders);
+		});
 
-					handleAccountInviteOnly(azureInfo, azureProvider, ctx);
-				}
-				case EVERYONE -> {
-					OpenIdInfo azureInfo = extractAzureInfo(ctx);
-
-					handleAccountEveryoneAllowed(azureInfo, azureProvider, ctx);
-				}
-			}
+		app.get("/auth/couple/azure", ctx -> {
+			handleCoupleRequest(ctx, OpenidProvider.azure, rsdProviders);
 		});
 
 		app.get("/auth/login/linkedin", ctx -> {
-			OpenidProvider linkedinProvider = OpenidProvider.linkedin;
-			switch (rsdProviders.accessMethodOfProvider(linkedinProvider)) {
-				case MISCONFIGURED -> {
-					handleMisconfiguredProvider(ctx, linkedinProvider);
-				}
-				case DISABLED -> {
-					handleDisabledProvider(ctx, linkedinProvider);
-				}
-				case INVITE_ONLY -> {
-					OpenIdInfo linkedinInfo = extractLinkedinInfo(ctx);
-
-					handleAccountInviteOnly(linkedinInfo, linkedinProvider, ctx);
-				}
-				case EVERYONE -> {
-					OpenIdInfo linkedinInfo = extractLinkedinInfo(ctx);
-
-					handleAccountEveryoneAllowed(linkedinInfo, linkedinProvider, ctx);
-				}
-			}
+			handleLoginRequest(ctx, OpenidProvider.linkedin, rsdProviders);
 		});
 
-		if (Config.isLinkedinCouplingEnabled()) {
-			app.get("/auth/couple/linkedin", ctx -> {
-				String code = ctx.queryParam("code");
-				String redirectUrl = Config.linkedinRedirectCouple();
-				OpenIdInfo linkedinInfo = new LinkedinLogin(code, redirectUrl).openidInfo();
-
-				String tokenToVerify = ctx.cookie("rsd_token");
-				String signingSecret = Config.jwtSigningSecret();
-				JwtVerifier verifier = new JwtVerifier(signingSecret);
-				DecodedJWT decodedJWT = verifier.verify(tokenToVerify);
-				UUID accountId = UUID.fromString(decodedJWT.getClaim("account").asString());
-
-				new PostgrestAccount(Config.backendBaseUrl()).coupleLogin(accountId, linkedinInfo, OpenidProvider.linkedin);
-
-				setRedirectFromCookie(ctx);
-			});
-		}
+		app.get("/auth/couple/linkedin", ctx -> {
+			handleCoupleRequest(ctx, OpenidProvider.linkedin, rsdProviders);
+		});
 
 		if (Config.isApiAccessTokenEnabled()) {
 
-			//endpoint for generating new API access token
+			// endpoint for generating new API access token
 			app.post("/auth/accesstoken", ctx -> {
 				String accountId = extractAccountFromCookie(ctx);
 
@@ -263,7 +159,7 @@ public class Main {
 
 			app.before("/api/v2/*", ctx -> {
 				String authHeader = ctx.header("Authorization");
-				//if request from frontend, skip access token validation
+				// if request from frontend, skip access token validation
 				if (authHeader != null && authHeader.startsWith("Bearer ")) {
 					String authToken = authHeader.substring(7);
 
@@ -360,44 +256,82 @@ public class Main {
 		});
 	}
 
-	static OpenIdInfo extractLocalInfo(Context ctx) {
-		String sub = ctx.formParam("sub");
-		if (sub == null || sub.isBlank()) throw new RuntimeException("Please provide a username");
-		String name = sub;
-		String email = sub + "@example.com";
-		String organisation = "Example organisation";
-		Map<String, List<String>> emptyData = Collections.emptyMap();
-		return new OpenIdInfo(sub, name, email, organisation, emptyData);
+	static void handleLoginRequest(Context ctx, OpenidProvider openidProvider, RsdProviders rsdProviders) throws RsdResponseException, IOException, InterruptedException, RsdAccountInviteException, PostgresForeignKeyConstraintException, PostgresCustomException {
+		switch (rsdProviders.accessMethodOfProvider(openidProvider)) {
+			case MISCONFIGURED -> {
+				handleMisconfiguredProvider(ctx, openidProvider);
+			}
+			case DISABLED -> {
+				handleDisabledProvider(ctx, openidProvider);
+			}
+			case INVITE_ONLY -> {
+				OpenIdInfo azureInfo = obtainOpenIdInfo(ctx, openidProvider, false);
+
+				handleAccountInviteOnly(azureInfo, openidProvider, ctx);
+			}
+			case EVERYONE -> {
+				OpenIdInfo azureInfo = obtainOpenIdInfo(ctx, openidProvider, false);
+
+				handleAccountEveryoneAllowed(azureInfo, openidProvider, ctx);
+			}
+		}
 	}
 
-	static OpenIdInfo extractSurfInfo(Context ctx) throws RsdResponseException, IOException, InterruptedException {
-		String code = ctx.formParam("code");
-		String redirectUrl = Config.surfconextRedirect();
-		return new SurfconextLogin(code, redirectUrl).openidInfo();
+	static void handleCoupleRequest(Context ctx, OpenidProvider openidProvider, RsdProviders rsdProviders) throws RsdResponseException, IOException, InterruptedException {
+		switch (rsdProviders.accessMethodOfProvider(openidProvider)) {
+			case MISCONFIGURED -> {
+				handleMisconfiguredProvider(ctx, openidProvider);
+			}
+			case DISABLED -> {
+				handleDisabledProvider(ctx, openidProvider);
+			}
+			case INVITE_ONLY, EVERYONE -> {
+				OpenIdInfo orcidInfo = obtainOpenIdInfo(ctx, openidProvider, true);
+
+				handleCoupleLogins(ctx, orcidInfo, openidProvider);
+			}
+		}
 	}
 
-	static OpenIdInfo extractHelmholtzInfo(Context ctx) throws IOException, InterruptedException {
-		String code = ctx.queryParam("code");
-		String redirectUrl = Config.helmholtzIdRedirect();
-		return new HelmholtzIdLogin(code, redirectUrl).openidInfo();
-	}
+	static OpenIdInfo obtainOpenIdInfo(Context ctx, OpenidProvider openidProvider, boolean isCoupling) throws RsdResponseException, IOException, InterruptedException {
+		String redirectUrl = null;
+		if (openidProvider != OpenidProvider.local) {
+			redirectUrl = isCoupling ? RsdProviders.obtainCouplingRedirectUrl(openidProvider) : RsdProviders.obtainRedirectUrl(openidProvider);
+		}
 
-	static OpenIdInfo extractOrcidInfo(Context ctx) throws RsdResponseException, IOException, InterruptedException {
-		String code = ctx.queryParam("code");
-		String redirectUrl = Config.orcidRedirect();
-		return new OrcidLogin(code, redirectUrl).openidInfo();
-	}
-
-	static OpenIdInfo extractAzureInfo(Context ctx) throws RsdResponseException, IOException, InterruptedException {
-		String code = ctx.queryParam("code");
-		String redirectUrl = Config.azureRedirect();
-		return new AzureLogin(code, redirectUrl).openidInfo();
-	}
-
-	static OpenIdInfo extractLinkedinInfo(Context ctx) throws RsdResponseException, IOException, InterruptedException {
-		String code = ctx.queryParam("code");
-		String redirectUrl = Config.linkedinRedirect();
-		return new LinkedinLogin(code, redirectUrl).openidInfo();
+		return switch (openidProvider) {
+			case local -> {
+				String sub = ctx.formParam("sub");
+				if (sub == null || sub.isBlank()) {
+					throw new RuntimeException("Please provide a username");
+				}
+				String name = sub;
+				String email = sub + "@example.com";
+				String organisation = "Example organisation";
+				Map<String, List<String>> emptyData = Collections.emptyMap();
+				yield new OpenIdInfo(sub, name, email, organisation, emptyData);
+			}
+			case surfconext -> {
+				String code = ctx.queryParam("code");
+				yield new SurfconextLogin(code, redirectUrl).openidInfo();
+			}
+			case helmholtz -> {
+				String code = ctx.queryParam("code");
+				yield new HelmholtzIdLogin(code, redirectUrl).openidInfo();
+			}
+			case orcid -> {
+				String code = ctx.queryParam("code");
+				yield new OrcidLogin(code, redirectUrl).openidInfo();
+			}
+			case azure -> {
+				String code = ctx.queryParam("code");
+				yield new AzureLogin(code, redirectUrl).openidInfo();
+			}
+			case linkedin -> {
+				String code = ctx.queryParam("code");
+				yield new LinkedinLogin(code, redirectUrl).openidInfo();
+			}
+		};
 	}
 
 	static void handleAccountInviteOnly(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx) throws IOException, InterruptedException, RsdAccountInviteException, PostgresCustomException, PostgresForeignKeyConstraintException {
@@ -427,6 +361,18 @@ public class Main {
 		String message = "The provider \"%s\", is misconfigured, please contact your RSD admins.".formatted(provider.toUserFriendlyString());
 		setLoginFailureCookie(ctx, message);
 		ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
+	}
+
+	static void handleCoupleLogins(Context ctx, OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException {
+		String tokenToVerify = ctx.cookie("rsd_token");
+		String signingSecret = Config.jwtSigningSecret();
+		JwtVerifier verifier = new JwtVerifier(signingSecret);
+		DecodedJWT decodedJWT = verifier.verify(tokenToVerify);
+		UUID accountId = UUID.fromString(decodedJWT.getClaim("account").asString());
+
+		new PostgrestAccount(Config.backendBaseUrl()).coupleLogin(accountId, openIdInfo, provider);
+
+		setRedirectFromCookie(ctx);
 	}
 
 	static UUID getInviteIdFromRequest(Context ctx) throws RsdAccountInviteException {
@@ -489,7 +435,7 @@ public class Main {
 		String fullUrl = Config.backendBaseUrl() + path + ((ctx.queryString() != null) ? "?" + ctx.queryString() : "");
 
 		HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-				.uri(URI.create(fullUrl));
+			.uri(URI.create(fullUrl));
 
 		if (ctx.attribute("X-API-Authorization-Header") != null) {
 			requestBuilder.header("Authorization", ctx.attribute("X-API-Authorization-Header"));
