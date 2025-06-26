@@ -132,8 +132,6 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const token = req?.cookies['rsd_token']
     const modules = await getRsdModules()
 
-    // console.log('modules...', modules)
-
     // show 404 page if module is not enabled
     if (modules.includes('persons')===false){
       return {

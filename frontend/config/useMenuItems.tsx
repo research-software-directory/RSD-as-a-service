@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,9 +12,9 @@ export default function useMenuItems(){
   // filter menu items for this RSD instance
   const items = menuItems.filter(item=> {
     // if modules are defined in settings.json and in menuItems
-    if (host?.modules && host?.modules?.length > 0 && item.module){
+    if (Array.isArray(host?.modules)===true && item.active){
       // include only options defined for this RSD host
-      return host.modules.includes(item.module)
+      return item.active({modules:host?.modules})
     }
     // else all menuItems are allowed by default
     return true

@@ -61,15 +61,15 @@ export const userTabItems:UserTabProps = {
     label: ({community_cnt})=>`My communities (${community_cnt ?? 0})`,
     icon: <Diversity3Icon />,
     isVisible: ({modules}) => {
-      return modules?.includes('communities')
+      return modules?.includes('communities') && modules?.includes('software')
     },
   },
   'project-quality':{
     id:'project-quality',
     label: () => 'Project metadata',
     icon: <TableViewIcon />,
-    // we do not show this option if not a maintainer
-    isVisible: ({isMaintainer}) => isMaintainer
+    // we do not show this option if not a maintainer and project
+    isVisible: ({isMaintainer,modules}) => isMaintainer && modules?.includes('projects')
   },
   settings:{
     id:'settings',

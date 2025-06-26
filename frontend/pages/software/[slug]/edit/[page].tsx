@@ -12,42 +12,32 @@ import {GetServerSidePropsContext} from 'next/types'
 import Head from 'next/head'
 
 import {app} from '~/config/app'
+import {getRsdModules} from '~/config/getSettingsServerSide'
 import ProtectedContent from '~/auth/ProtectedContent'
 import {getSoftwareToEdit} from '~/utils/editSoftware'
 import DefaultLayout from '~/components/layout/DefaultLayout'
-import ContentLoader from '~/components/layout/ContentLoader'
 import {EditSoftwareProvider, SoftwareInfo} from '~/components/software/edit/editSoftwareContext'
 import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
-import {editSoftwarePage} from '~/components/software/edit/editSoftwarePages'
 import EditSoftwareStickyHeader from '~/components/software/edit/EditSoftwareStickyHeader'
 import EditSoftwareNav from '~/components/software/edit/EditSoftwareNav'
+import EditSoftwarePageContent, {EditSoftwarePageId} from '~/components/software/edit/EditSoftwarePageContent'
+import {editSoftwareMenuItems} from '~/components/software/edit/editSoftwareMenuItems'
 
 const pageTitle = `Edit software | ${app.title}`
 
-type SoftwareEditPageProps = {
+type SoftwareEditPageProps = Readonly<{
+  page: EditSoftwarePageId
   pageIndex: number
   software: SoftwareInfo
-}
+}>
 
-export default function SoftwareEditPages({pageIndex,software}:SoftwareEditPageProps) {
-  const state = {
-    pageIndex,
-    software
-  }
-  const page = editSoftwarePage[pageIndex]
+export default function SoftwareEditPages({page,pageIndex,software}:SoftwareEditPageProps) {
 
   // console.group('SoftwareEditPages')
   // console.log('pageIndex...', pageIndex)
-  // console.log('state...', state)
+  // console.log('page...', page)
   // console.log('software...', software)
   // console.groupEnd()
-
-  function renderPageComponent() {
-    if (page) {
-      return page.render()
-    }
-    return <ContentLoader />
-  }
 
   return (
     <DefaultLayout>
@@ -59,12 +49,14 @@ export default function SoftwareEditPages({pageIndex,software}:SoftwareEditPageP
       </noscript>
       <ProtectedContent slug={software.slug}>
         <UserAgreementModal />
-        <EditSoftwareProvider state={state}>
+        <EditSoftwareProvider state={{
+          pageIndex,
+          software
+        }}>
           <EditSoftwareStickyHeader />
           <section className="md:flex gap-[3rem] mb-8">
-            <EditSoftwareNav slug={software.slug} pageId={page.id} />
-            {/* Here we load main component of each step */}
-            {renderPageComponent()}
+            <EditSoftwareNav slug={software.slug} pageId={page} />
+            <EditSoftwarePageContent pageId={page} />
           </section>
         </EditSoftwareProvider>
       </ProtectedContent>
@@ -84,18 +76,26 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   // get page id
   const page = params?.page?.toString() ?? ''
 
-  const editSoftware = await getSoftwareToEdit({slug, token})
-
-  // software not found in DB
-  if (typeof editSoftware === 'undefined') {
+  // show 404 page if module is not enabled
+  const modules = await getRsdModules()
+  if (modules.includes('software')===false){
     return {
       notFound: true,
     }
   }
 
-  const pageIndex = editSoftwarePage.findIndex(p => p.id === page)
+  // show 404 page if pageId is not defined
+  const pageIndex = editSoftwareMenuItems.findIndex(p => p.id === page)
   // Edit software page not found in defs
   if (pageIndex===-1) {
+    return {
+      notFound: true,
+    }
+  }
+
+  const editSoftware = await getSoftwareToEdit({slug, token})
+  // if software not found in DB
+  if (typeof editSoftware === 'undefined') {
     return {
       notFound: true,
     }
@@ -105,6 +105,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   // see params of SoftwareEditPages function
   return {
     props: {
+      page,
       pageIndex,
       software: {
         id: editSoftware.id,
