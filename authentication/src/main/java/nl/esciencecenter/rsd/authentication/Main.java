@@ -67,25 +67,7 @@ public class Main {
 		});
 
 		app.post("/auth/login/local", ctx -> {
-			OpenidProvider localProvider = OpenidProvider.local;
-			switch (rsdProviders.accessMethodOfProvider(localProvider)) {
-				case MISCONFIGURED -> {
-					handleMisconfiguredProvider(ctx, localProvider);
-				}
-				case DISABLED -> {
-					handleDisabledProvider(ctx, localProvider);
-				}
-				case INVITE_ONLY -> {
-					OpenIdInfo localInfo = obtainOpenIdInfo(ctx, localProvider, false);
-
-					handleAccountInviteOnly(localInfo, localProvider, ctx);
-				}
-				case EVERYONE -> {
-					OpenIdInfo localInfo = obtainOpenIdInfo(ctx, localProvider, false);
-
-					handleAccountEveryoneAllowed(localInfo, localProvider, ctx);
-				}
-			}
+			handleLoginRequest(ctx, OpenidProvider.local, rsdProviders);
 		});
 
 		app.post("/auth/couple/local", ctx -> {
@@ -93,25 +75,7 @@ public class Main {
 		});
 
 		app.get("/auth/login/surfconext", ctx -> {
-			OpenidProvider surfProvider = OpenidProvider.surfconext;
-			switch (rsdProviders.accessMethodOfProvider(surfProvider)) {
-				case MISCONFIGURED -> {
-					handleMisconfiguredProvider(ctx, surfProvider);
-				}
-				case DISABLED -> {
-					handleDisabledProvider(ctx, surfProvider);
-				}
-				case INVITE_ONLY -> {
-					OpenIdInfo surfconextInfo = obtainOpenIdInfo(ctx, surfProvider, false);
-
-					handleAccountInviteOnly(surfconextInfo, surfProvider, ctx);
-				}
-				case EVERYONE -> {
-					OpenIdInfo surfconextInfo = obtainOpenIdInfo(ctx, surfProvider, false);
-
-					handleAccountEveryoneAllowed(surfconextInfo, surfProvider, ctx);
-				}
-			}
+			handleLoginRequest(ctx, OpenidProvider.surfconext, rsdProviders);
 		});
 
 		app.get("/auth/couple/surfconext", ctx -> {
@@ -150,25 +114,7 @@ public class Main {
 		});
 
 		app.get("/auth/login/orcid", ctx -> {
-			OpenidProvider orcidProvider = OpenidProvider.orcid;
-			switch (rsdProviders.accessMethodOfProvider(orcidProvider)) {
-				case MISCONFIGURED -> {
-					handleMisconfiguredProvider(ctx, orcidProvider);
-				}
-				case DISABLED -> {
-					handleDisabledProvider(ctx, orcidProvider);
-				}
-				case INVITE_ONLY -> {
-					OpenIdInfo orcidInfo = obtainOpenIdInfo(ctx, orcidProvider, false);
-
-					handleAccountInviteOnly(orcidInfo, orcidProvider, ctx);
-				}
-				case EVERYONE -> {
-					OpenIdInfo orcidInfo = obtainOpenIdInfo(ctx, orcidProvider, false);
-
-					handleAccountEveryoneAllowed(orcidInfo, orcidProvider, ctx);
-				}
-			}
+			handleLoginRequest(ctx, OpenidProvider.orcid, rsdProviders);
 		});
 
 		app.get("/auth/couple/orcid", ctx -> {
@@ -176,25 +122,7 @@ public class Main {
 		});
 
 		app.get("/auth/login/azure", ctx -> {
-			OpenidProvider azureProvider = OpenidProvider.azure;
-			switch (rsdProviders.accessMethodOfProvider(azureProvider)) {
-				case MISCONFIGURED -> {
-					handleMisconfiguredProvider(ctx, azureProvider);
-				}
-				case DISABLED -> {
-					handleDisabledProvider(ctx, azureProvider);
-				}
-				case INVITE_ONLY -> {
-					OpenIdInfo azureInfo = obtainOpenIdInfo(ctx, azureProvider, false);
-
-					handleAccountInviteOnly(azureInfo, azureProvider, ctx);
-				}
-				case EVERYONE -> {
-					OpenIdInfo azureInfo = obtainOpenIdInfo(ctx, azureProvider, false);
-
-					handleAccountEveryoneAllowed(azureInfo, azureProvider, ctx);
-				}
-			}
+			handleLoginRequest(ctx, OpenidProvider.azure, rsdProviders);
 		});
 
 		app.get("/auth/couple/azure", ctx -> {
@@ -202,25 +130,7 @@ public class Main {
 		});
 
 		app.get("/auth/login/linkedin", ctx -> {
-			OpenidProvider linkedinProvider = OpenidProvider.linkedin;
-			switch (rsdProviders.accessMethodOfProvider(linkedinProvider)) {
-				case MISCONFIGURED -> {
-					handleMisconfiguredProvider(ctx, linkedinProvider);
-				}
-				case DISABLED -> {
-					handleDisabledProvider(ctx, linkedinProvider);
-				}
-				case INVITE_ONLY -> {
-					OpenIdInfo linkedinInfo = obtainOpenIdInfo(ctx, linkedinProvider, false);
-
-					handleAccountInviteOnly(linkedinInfo, linkedinProvider, ctx);
-				}
-				case EVERYONE -> {
-					OpenIdInfo linkedinInfo = obtainOpenIdInfo(ctx, linkedinProvider, false);
-
-					handleAccountEveryoneAllowed(linkedinInfo, linkedinProvider, ctx);
-				}
-			}
+			handleLoginRequest(ctx, OpenidProvider.linkedin, rsdProviders);
 		});
 
 		app.get("/auth/couple/linkedin", ctx -> {
@@ -344,6 +254,27 @@ public class Main {
 			setLoginFailureCookie(ctx, "Something unexpected went wrong, please try again or contact us.");
 			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
 		});
+	}
+
+	static void handleLoginRequest(Context ctx, OpenidProvider openidProvider, RsdProviders rsdProviders) throws RsdResponseException, IOException, InterruptedException, RsdAccountInviteException, PostgresForeignKeyConstraintException, PostgresCustomException {
+		switch (rsdProviders.accessMethodOfProvider(openidProvider)) {
+			case MISCONFIGURED -> {
+				handleMisconfiguredProvider(ctx, openidProvider);
+			}
+			case DISABLED -> {
+				handleDisabledProvider(ctx, openidProvider);
+			}
+			case INVITE_ONLY -> {
+				OpenIdInfo azureInfo = obtainOpenIdInfo(ctx, openidProvider, false);
+
+				handleAccountInviteOnly(azureInfo, openidProvider, ctx);
+			}
+			case EVERYONE -> {
+				OpenIdInfo azureInfo = obtainOpenIdInfo(ctx, openidProvider, false);
+
+				handleAccountEveryoneAllowed(azureInfo, openidProvider, ctx);
+			}
+		}
 	}
 
 	static void handleCoupleRequest(Context ctx, OpenidProvider openidProvider, RsdProviders rsdProviders) throws RsdResponseException, IOException, InterruptedException {
