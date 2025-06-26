@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -55,9 +56,9 @@ export async function getProjectList({url, token}: { url: string, token?: string
 }
 
 //used by view and edit pages
-export async function getProjectItem({slug,token}:
-  {slug: string, token: string}) {
-  try{
+export async function getProjectItem({slug, token}:
+                                     { slug: string, token: string }) {
+  try {
     // get project by slug
     const query = `project?slug=eq.${slug}`
     const url = `${getBaseUrl()}/${query}`
@@ -68,7 +69,7 @@ export async function getProjectItem({slug,token}:
         ...createJsonHeaders(token)
       }
     })
-    if (resp.status===200){
+    if (resp.status === 200) {
       const rawData: Project[] = await resp.json()
       if (rawData && rawData.length === 1) {
         // delete data.image_for_project
@@ -76,16 +77,21 @@ export async function getProjectItem({slug,token}:
       }
       return undefined
     }
-  }catch(e:any){
+  } catch (e: any) {
     // console.log("getProject...failed:", e)
-    logger(`getProjectItem: ${e?.message}`,'error')
+    logger(`getProjectItem: ${e?.message}`, 'error')
     // return []
     return undefined
   }
 }
 
 export async function getOrganisationsOfProject({project, token, frontend = true, roles}:
-  { project: string, token: string, frontend?: boolean, roles?: OrganisationRole[] }) {
+                                                {
+                                                  project: string,
+                                                  token: string,
+                                                  frontend?: boolean,
+                                                  roles?: OrganisationRole[]
+                                                }) {
   try {
     let query = `rpc/organisations_of_project?project_id=${project}&order=position,name.asc`
     if (roles) query += `&role=in.(${roles.toString()})`
@@ -114,7 +120,7 @@ export async function getOrganisationsOfProject({project, token, frontend = true
 }
 
 export async function getOrganisations({project, token, frontend = true}:
-  { project: string, token: string, frontend?: boolean}) {
+                                       { project: string, token: string, frontend?: boolean }) {
   const resp = await getOrganisationsOfProject({project, token, frontend})
   // filter only approved organisations
   // extract only used properties
@@ -143,23 +149,26 @@ export async function getOrganisations({project, token, frontend = true}:
  * 2. Ensure used labels are same as ProjectStatusLabels used in the filter dropdown
  */
 export function getProjectStatus({date_start, date_end}:
-  {date_start: string, date_end: string}) {
+                                 { date_start: string | null, date_end: string | null }) {
   try {
-    const start_date = new Date(date_start)
-    const end_date = new Date(date_end)
+    const start_date = date_start ? new Date(date_start) : null
+    const end_date = date_end ? new Date(date_end) : null
     const today = new Date()
 
     let statusKey: ProjectStatusKey = 'unknown'
 
-    if (today < start_date) statusKey = 'upcoming'
-    if (today > end_date) statusKey = 'finished'
-    if (today > start_date && today < end_date) statusKey = 'in_progress'
-
-    if (statusKey!=='unknown') {
-      return ProjectStatusLabels[statusKey]
+    if (start_date !== null && end_date !== null && start_date > end_date) {
+      statusKey = 'unknown'
+    } else if (start_date !== null && today < start_date) {
+      statusKey = 'upcoming'
+    } else if (end_date !== null && today > end_date) {
+      statusKey = 'finished'
+    } else if (start_date !== null && end_date !== null && today >= start_date && today <= end_date) {
+      statusKey = 'in_progress'
     }
-    return ''
-  } catch (e:any) {
+
+    return ProjectStatusLabels[statusKey]
+  } catch (e: any) {
     logger(`getProjectStatus: ${e?.message}`, 'error')
     // error value return starting
     return ''
@@ -167,7 +176,7 @@ export function getProjectStatus({date_start, date_end}:
 }
 
 export async function getResearchDomainsForProject({project, token, frontend = false}:
-  { project: string, token: string, frontend?: boolean }
+                                                   { project: string, token: string, frontend?: boolean }
 ) {
   try {
     const query = `rpc/research_domain_by_project?project=eq.${project}&order=key.asc`
@@ -192,7 +201,7 @@ export async function getResearchDomainsForProject({project, token, frontend = f
 }
 
 export async function getKeywordsForProject({project, token, frontend = false}:
-  { project: string, token: string, frontend?: boolean }
+                                            { project: string, token: string, frontend?: boolean }
 ) {
   try {
     const query = `rpc/keywords_by_project?project=eq.${project}&order=keyword.asc`
@@ -218,7 +227,7 @@ export async function getKeywordsForProject({project, token, frontend = false}:
 
 
 export async function getLinksForProject({project, token, frontend = false}:
-  { project: string, token: string, frontend?: boolean }) {
+                                         { project: string, token: string, frontend?: boolean }) {
   try {
     const query = `url_for_project?project=eq.${project}&order=position.asc`
     let url = `${process.env.POSTGREST_URL}/${query}`
@@ -242,7 +251,11 @@ export async function getLinksForProject({project, token, frontend = false}:
 }
 
 export async function getMentionsForProject({project, token, table}:
-  {project: string, token?: string, table: 'output_for_project'|'impact_for_project'}) {
+                                            {
+                                              project: string,
+                                              token?: string,
+                                              table: 'output_for_project' | 'impact_for_project'
+                                            }) {
   try {
     // build query url
     const query = `project?id=eq.${project}&select=id,slug,mention!${table}(${mentionColumns})&mention.order=mention_type.asc`
@@ -273,7 +286,7 @@ export async function getMentionsForProject({project, token, table}:
 }
 
 export async function getImpactByProject({project, token}:
-  {project: string, token?: string}) {
+                                         { project: string, token?: string }) {
   try {
     // the content is ordered by type ascending
     const query = `project=eq.${project}&order=mention_type.asc`
@@ -302,7 +315,7 @@ export async function getImpactByProject({project, token}:
 }
 
 export async function getTeamForProject({project, token}:
-  {project: string, token?: string}) {
+                                        { project: string, token?: string }) {
   try {
     // build url
     const query = `project_id=${project}&order=position.asc,given_names.asc`
@@ -329,7 +342,13 @@ export async function getTeamForProject({project, token}:
 }
 
 export async function getRelatedProjectsForProject({project, token, frontend, approved = true, order}:
-  { project: string, token?: string, frontend?: boolean, approved?: boolean, order?:string }) {
+                                                   {
+                                                     project: string,
+                                                     token?: string,
+                                                     frontend?: boolean,
+                                                     approved?: boolean,
+                                                     order?: string
+                                                   }) {
   try {
     // construct api url based on request source
     let query = `rpc/related_projects_for_project?project_id=${project}`
@@ -366,7 +385,12 @@ export async function getRelatedProjectsForProject({project, token, frontend, ap
 
 
 export async function getRelatedSoftwareForProject({project, token, frontend, approved = true}:
-  { project: string, token?: string, frontend?: boolean, approved?: boolean}) {
+                                                   {
+                                                     project: string,
+                                                     token?: string,
+                                                     frontend?: boolean,
+                                                     approved?: boolean
+                                                   }) {
   try {
     let query = `rpc/related_software_for_project?project_id=${project}&order=brand_name.asc`
     if (approved) {
@@ -421,7 +445,7 @@ export async function searchForRelatedProjectByTitle({project, searchFor, token}
   }
 }
 
-export async function getCategoriesForProject({project_id,token}:{project_id: string, token?: string}){
+export async function getCategoriesForProject({project_id, token}: { project_id: string, token?: string }) {
   try {
     const query = `project_id=${project_id}`
     const url = `${getBaseUrl()}/rpc/category_paths_by_project_expanded?${query}`
@@ -431,7 +455,7 @@ export async function getCategoriesForProject({project_id,token}:{project_id: st
       headers: createJsonHeaders(token)
     })
     if (resp.status === 200) {
-      const data:CategoryPath[] = await resp.json()
+      const data: CategoryPath[] = await resp.json()
       return data
     } else {
       logger(`getCategoriesForProject: ${resp.status} - ${resp.statusText} [${url}]`, 'error')
