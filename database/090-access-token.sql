@@ -5,9 +5,6 @@
 --
 -- SPDX-License-Identifier: Apache-2.0
 
--- create extension pg_cron to schedule token cleanup
-CREATE EXTENSION IF NOT EXISTS pg_cron;
-
 CREATE TABLE user_access_token (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	secret VARCHAR NOT NULL,
@@ -100,15 +97,6 @@ $$;
 
 CREATE FUNCTION cleanup_expired_token() RETURNS VOID AS $$
 BEGIN
-	DELETE FROM user_access_token WHERE expires_at::date <= CURRENT_DATE;
+	DELETE FROM user_access_token WHERE expires_at <= CURRENT_DATE;
 END;
 $$ LANGUAGE plpgsql;
-
-GRANT EXECUTE ON FUNCTION cleanup_expired_token() TO rsd_admin;
-
-DO $$
-BEGIN
-	IF NOT EXISTS (SELECT 1 FROM cron.job WHERE jobname = 'expired_token_cleanup') THEN
-		PERFORM cron.schedule('expired_token_cleanup', '0 0 * * *', 'DELETE FROM user_access_token WHERE expires_at::date <= CURRENT_DATE');
-	END IF;
-END $$;
