@@ -93,3 +93,10 @@ $$
 		AND
 		user_access_token.id = delete_my_user_access_token.id;
 $$;
+
+
+CREATE FUNCTION cleanup_expired_token() RETURNS VOID AS $$
+BEGIN
+	DELETE FROM user_access_token WHERE expires_at <= CURRENT_DATE;
+END;
+$$ LANGUAGE plpgsql;
