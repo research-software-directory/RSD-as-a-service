@@ -45,6 +45,7 @@ public class JuliaScraper implements PackageManagerScraper {
 
 	@Override
 	public Long downloads() throws IOException, RsdResponseException, InterruptedException {
+		// example: https://juliapkgstats.com/api/v1/total_downloads/Makie
 		URI url = URI.create("https://juliapkgstats.com/api/v1/total_downloads/" + packageName);
 
 		try (HttpClient client = HttpClient.newBuilder().connectTimeout(DEFAULT_TIMEOUT).build()) {
@@ -55,10 +56,13 @@ public class JuliaScraper implements PackageManagerScraper {
 				throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response getting Julia downloads for package: " + packageName);
 			}
 
-			return JsonParser.parseString(response.body())
+			String numberAsString = JsonParser.parseString(response.body())
 				.getAsJsonObject()
 				.getAsJsonPrimitive("total_requests")
-				.getAsLong();
+				.getAsString()
+				.replace(",", "");
+
+			return Long.parseLong(numberAsString);
 		}
 	}
 
