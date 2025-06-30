@@ -107,7 +107,7 @@ export const adminPages = {
     subtitle: '',
     icon: <Diversity3Icon />,
     path: '/admin/communities',
-    active: ({modules}:{modules:RsdModule[]}) => modules?.includes('communities'),
+    active: ({modules}:{modules:RsdModule[]}) => modules?.includes('communities') && modules?.includes('software'),
   },
   keywords:{
     title: 'Keywords',
