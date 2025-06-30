@@ -9,46 +9,38 @@
 import {useUserContext} from '~/components/user/context/UserContext'
 import LinkAccountBtn from './LinkAccountBtn'
 import {findProviderSubInLogin} from './apiLoginForAccount'
-import {useEffect, useState} from 'react'
-import {getLoginProviders, Provider} from '~/auth/api/getLoginProviders'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
+import Stack from '@mui/material/Stack'
+import useLoginProviders from '~/auth/api/useLoginProviders'
+
 
 export default function LinkAccounts() {
   const {logins} = useUserContext()
 
-  const [linkProviders, setLinkProviders] = useState<Provider[] | null>(null)
-
-  useEffect(() => {
-    getLoginProviders()
-      .then(providers => setLinkProviders(providers))
-  }, [])
+  const {providers} = useLoginProviders()
 
   // console.group('LinkAccounts')
   // console.log('logins...',logins)
   // console.groupEnd()
 
-  if (!linkProviders) {
+  if (!providers || providers.length <= 1) {
     return null
   }
 
   return (
     <div>
       <h3>Link your accounts</h3>
-      <List>
-
-        {linkProviders.map(provider => {
+      <Stack spacing={2}>
+        {providers.map(provider => {
           return (
-            <ListItem key = {provider.openidProvider}>
-              <LinkAccountBtn
-                disabled = {findProviderSubInLogin(logins, provider.openidProvider) !== null}
-                href = {provider.coupleUrl}
-                label = {`Link my ${provider.name} account`}
-              />
-            </ListItem>
+            <LinkAccountBtn
+              key = {provider.openidProvider}
+              disabled = {findProviderSubInLogin(logins, provider.openidProvider) !== null}
+              href = {provider.coupleUrl}
+              label = {`${provider.name}`}
+            />
           )
         })}
-      </List>
+      </Stack>
     </div>
   )
 }
