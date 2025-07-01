@@ -4,6 +4,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {ImageDataProps} from '~/components/layout/Logo'
+import logger from '~/utils/logger'
+import useSnackbar from '~/components/snackbar/useSnackbar'
 
 export type ImageDropZoneProps = {
   children: React.ReactNode,
@@ -11,10 +13,19 @@ export type ImageDropZoneProps = {
 }
 
 export default function LogoDropZone(props: Readonly<ImageDropZoneProps>) {
+  const {showErrorMessage} = useSnackbar()
+
   return (
     <div
-      onDragOver={e => e.preventDefault()}
-      onDrop={e => {
+      onDragOver={(e: any) => {
+        e.preventDefault()
+        e.currentTarget.style.border = '3px dashed grey'
+      }}
+      onDragLeave={(e: any) => {
+        e.currentTarget.style.border = 'inherit'
+      }}
+      onDrop={(e: any) => {
+        e.currentTarget.style.border = 'inherit'
         e.preventDefault()
         const reader = new FileReader()
 
@@ -32,6 +43,10 @@ export default function LogoDropZone(props: Readonly<ImageDropZoneProps>) {
                 props.onImageDrop({data: reader.result as string, mime_type: blob.type})
               }
               reader.readAsDataURL(blob)
+            })
+            .catch(e => {
+              logger(e, 'error')
+              showErrorMessage('Could not download image, try downloading and uploading it manually.')
             })
         }
       }}>
