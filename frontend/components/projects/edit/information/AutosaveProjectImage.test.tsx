@@ -3,6 +3,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -71,7 +72,7 @@ it('renders upload image inputs', () => {
   const imageInput = container.querySelector('#upload-avatar-image')
   expect(imageInput).toBeInTheDocument()
   // has click to upload message
-  const clickToUpload = screen.getByText('Click to upload image < 2MB')
+  const clickToUpload = screen.getByText('Click or drop to upload image < 2MB')
   expect(clickToUpload).toBeInTheDocument()
 })
 
