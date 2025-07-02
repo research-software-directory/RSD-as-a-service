@@ -28,13 +28,10 @@ function filterAndSortJson(jsonData: any[]): any[] {
  * @param param0
  * @returns
  */
-async function getKeywordList({url, token}: {url: string, token?: string}) {
+async function getKeywordList({url}: {url: string}) {
   try {
     const resp = await fetch(url, {
-      method: 'GET',
-      headers: {
-        ...createJsonHeaders(token),
-      },
+      method: 'GET'
     })
 
     if ([200, 206].includes(resp.status)) {
@@ -76,7 +73,7 @@ export default function useImperialData(token: string) {
       setLoading(true)
 
       const url = '/api/v1/rpc/keyword_count_for_software'
-      const {data} = await getKeywordList({url, token})
+      const {data} = await getKeywordList({url})
 
       if (abort) return
 
