@@ -8,13 +8,8 @@
 	"version": "1.0.0",
 	"main": "main.js",
 	"scripts": {
-		"start": "node main.js",
-		"format:check": "prettier --check .",
-		"format:fix": "prettier --write ."
+		"start": "node main.js"
 	},
 	"description": "This module generates and stores fake data for the RSD for testing purposes",
-	"type": "module",
-	"devDependencies": {
-		"prettier": "3.3.3"
-	}
+	"type": "module"
 }

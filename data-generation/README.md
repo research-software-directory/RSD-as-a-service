@@ -1,6 +1,6 @@
 <!--
-SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -19,7 +19,3 @@ To run this locally when you have a running RSD, first install the dependencies 
 -   `PGRST_JWT_SECRET`: This should be the same as set in your `.env` file.
 
 Alternatively, you can also run this with `docker compose` simultaneously with the RSD. It is disabled by default (see the `data-generation` entry at the `docker-compose.yml` file at the root of the project), so you should run `docker compose up --scale data-generation=1` to enable it.
-
-## Contributing
-
-We use [Prettier](https://prettier.io/) for source code formatting. See the file `.prettierrc` for the applied [configuration options](https://prettier.io/docs/en/options) and see the file `.prettierignore` for files that should be [ignored](https://prettier.io/docs/en/ignore) by Prettier. Please make sure your contributions are compliant with Prettier. You can run `npm run format:check` to see which files are not compliant and `npm run format:fix` to fix them. A GitHub workflow runs on every pull request to check if all files are formatted properly.
