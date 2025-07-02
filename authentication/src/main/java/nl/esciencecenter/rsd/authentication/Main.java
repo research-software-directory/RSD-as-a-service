@@ -157,32 +157,30 @@ public class Main {
 				}
 			});
 
-			app.before("/api/v2/*", ctx -> {
+			app.beforeMatched("/api/v2/*", ctx -> {
 				String authHeader = ctx.header("Authorization");
-				// if request from frontend, skip access token validation
 				if (authHeader != null && authHeader.startsWith("Bearer ")) {
 					String authToken = authHeader.substring(7);
 
 					String[] tokenParts = authToken.split("\\.");
 					String tokenID = tokenParts[0];
-					String tokenString = tokenParts[1];
+					String tokenSecret = tokenParts[1];
 
-					Argon2Verifier verifier = new Argon2Verifier();
-					Optional<String> validatedUser = verifier.verify(tokenString, tokenID);
-					if (validatedUser.isPresent()) {
-						String userID = validatedUser.get();
-						String signingSecret = Config.jwtSigningSecret();
-						JwtCreator jwtCreator = new JwtCreator(signingSecret);
-						String token = jwtCreator.createAccessTokenJwt(userID, tokenID);
-						ctx.attribute("X-API-Authorization-Header", "Bearer " + token);
-					} else {
-						ctx.status(401).result("Invalid access token");
-						throw new RsdAccessTokenException("Invalid access token");
+					AccessTokenVerifier verifier = new AccessTokenVerifier();
+					Optional<String> validatedUser = verifier.getAccountIdIfValid(tokenSecret, tokenID);
+					if (validatedUser.isEmpty()) {
+						ctx.status(HttpStatus.UNAUTHORIZED).json("{\"message\": \"Invalid access token\"}");
+						ctx.skipRemainingHandlers();
+						return;
 					}
 
-				} else {
-					System.out.println(">>> Authorization header missing - forwarding request as anonymous");
+					String userID = validatedUser.get();
+					String signingSecret = Config.jwtSigningSecret();
+					JwtCreator jwtCreator = new JwtCreator(signingSecret);
+					String token = jwtCreator.createAccessTokenJwt(userID, tokenID);
+					ctx.attribute("X-API-Authorization-Header", "Bearer " + token);
 				}
+				// else the request is from the frontend, skip access token validation
 			});
 
 			app.get("/api/v2/*", Main::proxyToPostgrest);
