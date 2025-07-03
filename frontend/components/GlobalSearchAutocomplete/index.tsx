@@ -34,6 +34,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
   const {session} = useAuth()
   const router = useRouter()
   const {host} = useRsdSettings()
+  const {showErrorMessage} = useSnackbar()
   const [isOpen, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [selected, setSelected] = useState(0)
@@ -44,7 +45,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
 
   const lastValue = useDebounce(inputValue, 150)
   const inputRef = useRef<HTMLInputElement>(null)
-  const {showErrorMessage} = useSnackbar()
+  const defaultValues: GlobalSearchResults[] = []
 
   // console.group('GlobalSearchAutocomplete')
   // console.log('inputValue...', inputValue)
@@ -70,24 +71,29 @@ export default function GlobalSearchAutocomplete(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastValue])
 
-  const defaultValues: GlobalSearchResults[] = []
+  useEffect(() => {
+    if (navigator === undefined || navigator.userAgent === undefined) {
+      return
+    } else if (/(Mac|iPhone|iPod|iPad)/i.test(navigator.userAgent)) {
+      setSearchCombo('⌘ K')
+    }
+  }, [])
 
-  if (host.modules?.includes('software')) {
-    defaultValues.push({name: 'Go to Software page', slug: '', source: 'software', domain: null, rsd_host: null})
-  }
-  if (host.modules?.includes('projects')) {
-    defaultValues.push({name: 'Go to Projects page', slug: '', source: 'projects', domain: null, rsd_host: null})
-  }
-  if (host.modules?.includes('organisations')) {
-    defaultValues.push({name: 'Go to Organisations page', slug: '', source: 'organisations', domain: null, rsd_host: null})
-  }
-  if (host.modules?.includes('communities')) {
-    defaultValues.push({name: 'Go to Communities page', slug: '', source: 'communities', domain: null, rsd_host: null})
-  }
-  if (host.modules?.includes('persons')) {
-    defaultValues.push({name: 'Go to Persons page', slug: '', source: 'persons', domain: null, rsd_host: null})
-  }
+  const handleCtrlK = useCallback((event: KeyboardEvent) => {
+    if (event.ctrlKey || event.metaKey) {
+      if (event.key?.toLowerCase() === 'k') {
+        event.preventDefault()
+        inputRef.current?.focus()
+      }
+    }
+  }, [inputRef])
 
+  useEffect(() => {
+    window.addEventListener('keydown', handleCtrlK)
+    return () => {
+      window.removeEventListener('keydown', handleCtrlK)
+    }
+  },[handleCtrlK])
 
   async function fetchData(search: string) {
     // Fetch api
@@ -179,29 +185,24 @@ export default function GlobalSearchAutocomplete(props: Props) {
     }
   }
 
-  useEffect(() => {
-    if (navigator === undefined || navigator.userAgent === undefined) {
-      return
-    } else if (/(Mac|iPhone|iPod|iPad)/i.test(navigator.userAgent)) {
-      setSearchCombo('⌘ K')
-    }
-  }, [])
+  // do not show searchbar if no modules defined
+  if (host?.modules?.length === 0) return null
 
-  const handleCtrlK = useCallback((event: KeyboardEvent) => {
-    if (event.ctrlKey || event.metaKey) {
-      if (event.key?.toLowerCase() === 'k') {
-        event.preventDefault()
-        inputRef.current?.focus()
-      }
-    }
-  }, [inputRef])
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleCtrlK)
-    return () => {
-      window.removeEventListener('keydown', handleCtrlK)
-    }
-  },[handleCtrlK])
+  if (host.modules?.includes('software')) {
+    defaultValues.push({name: 'Go to Software page', slug: '', source: 'software', domain: null, rsd_host: null})
+  }
+  if (host.modules?.includes('projects')) {
+    defaultValues.push({name: 'Go to Projects page', slug: '', source: 'projects', domain: null, rsd_host: null})
+  }
+  if (host.modules?.includes('organisations')) {
+    defaultValues.push({name: 'Go to Organisations page', slug: '', source: 'organisations', domain: null, rsd_host: null})
+  }
+  if (host.modules?.includes('communities')) {
+    defaultValues.push({name: 'Go to Communities page', slug: '', source: 'communities', domain: null, rsd_host: null})
+  }
+  if (host.modules?.includes('persons')) {
+    defaultValues.push({name: 'Go to Persons page', slug: '', source: 'persons', domain: null, rsd_host: null})
+  }
 
   return (
     <ClickAwayListener onClickAway={() => {

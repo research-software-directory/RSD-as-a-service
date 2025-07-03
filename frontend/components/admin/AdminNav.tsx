@@ -8,6 +8,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {JSX} from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 
@@ -33,6 +34,16 @@ import InfoIcon from '@mui/icons-material/Info'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
+import {RsdModule} from '~/config/rsdSettingsReducer'
+import useRsdSettings from '~/config/useRsdSettings'
+
+export type AdminMenuItemProps={
+  title: string
+  subtitle: string
+  icon: JSX.Element,
+  path: string
+  active: (props:any) => boolean
+}
 
 export const adminPages = {
   pages:{
@@ -40,107 +51,127 @@ export const adminPages = {
     subtitle: '',
     icon: <DescriptionIcon />,
     path: '/admin/public-pages',
+    active: () => true,
   },
   softwareHighlights:{
     title: 'Software highlights',
     subtitle: '',
     icon: <FluorescentIcon />,
     path: '/admin/software-highlights',
+    active: ({modules}:{modules:RsdModule[]}) => modules?.includes('software'),
   },
   rsd_invites:{
     title: 'RSD invites',
     subtitle: '',
     icon: <PersonAddIcon />,
     path: '/admin/rsd-invites',
+    active: () => true,
   },
   accounts:{
     title: 'RSD users',
     subtitle: '',
     icon: <GroupIcon />,
     path: '/admin/rsd-users',
+    active: () => true,
   },
   contributors:{
     title: 'RSD contributors',
     subtitle: '',
     icon: <AccountCircleIcon />,
     path: '/admin/rsd-contributors',
+    active: () => true,
   },
   software: {
     title: 'Software',
     subtitle: '',
     icon: <TerminalIcon />,
     path: '/admin/software',
+    active: ({modules}:{modules:RsdModule[]}) => modules?.includes('software'),
   },
   projects: {
     title: 'Projects',
     subtitle: '',
     icon: <ListAltIcon />,
     path: '/admin/projects',
+    active: ({modules}:{modules:RsdModule[]}) => modules?.includes('projects'),
   },
   organisations: {
     title: 'Organisations',
     subtitle: '',
     icon: <DomainAddIcon />,
     path: '/admin/organisations',
+    active: ({modules}:{modules:RsdModule[]}) => modules?.includes('organisations'),
   },
   communities: {
     title: 'Communities',
     subtitle: '',
     icon: <Diversity3Icon />,
     path: '/admin/communities',
+    active: ({modules}:{modules:RsdModule[]}) => modules?.includes('communities') && modules?.includes('software'),
   },
   keywords:{
     title: 'Keywords',
     subtitle: '',
     icon: <SpellcheckIcon />,
     path: '/admin/keywords',
+    active: () => true,
   },
   categories:{
     title: 'Categories',
     subtitle: '',
     icon: <CategoryIcon />,
     path: '/admin/categories',
+    active: () => true,
   },
   mentions: {
     title: 'Mentions',
     subtitle: '',
     icon: <ReceiptLongIcon />,
     path: '/admin/mentions',
+    active: () => true,
   },
   rsd_info:{
     title: 'RSD info',
     subtitle: '',
     icon: <InfoIcon />,
     path: '/admin/rsd-info',
+    active: () => true,
   },
   remote_rsd: {
     title: 'Remotes',
     subtitle: '',
     icon: <HubIcon />,
     path: '/admin/remote-rsd',
+    active: () => true,
   },
   logs:{
     title: 'Error logs',
     subtitle: '',
     icon: <BugReportIcon />,
     path: '/admin/logs',
+    active: () => true,
   },
   announcements: {
     title: 'Announcement',
     subtitle: '',
     icon: <CampaignIcon />,
     path: '/admin/announcements',
+    active: () => true,
   },
 }
 
 // extract page types from the object
-type pageTypes = keyof typeof adminPages
-// extract page properties from first admin item
-type pageProps = typeof adminPages.accounts
+export type AdminPageTypes = keyof typeof adminPages
 
 export default function AdminNav() {
   const router = useRouter()
   const items = Object.keys(adminPages)
+  const {host} = useRsdSettings()
+
+  // console.group("AdminNav")
+  // console.log("items...",items)
+  // console.log("host...",host)
+  // console.groupEnd()
 
   return (
     <nav>
@@ -148,26 +179,28 @@ export default function AdminNav() {
         width:['100%','100%','17rem']
       }}>
         {items.map((key, pos) => {
-          const item:pageProps = adminPages[key as pageTypes]
-          return (
-            <ListItemButton
-              data-testid="admin-nav-item"
-              key={`step-${pos}`}
-              selected={item.path === router.route}
-              href = {item.path}
-              component = {Link}
-              sx={{...editMenuItemButtonSx,
-                ':hover': {
-                  color: 'text.primary'
-                }
-              }}
-            >
-              <ListItemIcon>
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.title} secondary={item.subtitle} />
-            </ListItemButton>
-          )
+          const item:AdminMenuItemProps = adminPages[key as AdminPageTypes]
+          if (item.active({modules:host?.modules})===true){
+            return (
+              <ListItemButton
+                data-testid="admin-nav-item"
+                key={`step-${pos}`}
+                selected={item.path === router.route}
+                href = {item.path}
+                component = {Link}
+                sx={{...editMenuItemButtonSx,
+                  ':hover': {
+                    color: 'text.primary'
+                  }
+                }}
+              >
+                <ListItemIcon>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText primary={item.title} secondary={item.subtitle} />
+              </ListItemButton>
+            )
+          }
         })}
       </List>
     </nav>

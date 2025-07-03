@@ -9,6 +9,10 @@ import {categoryEntriesToRoots} from '~/components/category/apiCategories'
 import {TreeNode} from '~/types/TreeNode'
 import {shuffle} from '~/utils/jest/utils'
 
+// replace global mock (jest.setup.js) with actual module
+jest.mock('~/components/category/apiCategories',()=>jest.requireActual('~/components/category/apiCategories'))
+
+
 it('generates the category tree correctly', () => {
   const grandChild1: CategoryEntry = {id: 'grandChild1', parent: 'child1', short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}}
   const grandChild2: CategoryEntry = {id: 'grandChild2', parent: 'child1', short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}}

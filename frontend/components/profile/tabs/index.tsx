@@ -50,7 +50,7 @@ export default function ProfileTabs({tab_id, isMaintainer}:ProfileTabsProps) {
       >
         {tabItems.map(key => {
           const item = profileTabItems[key]
-          if (item.isVisible({isMaintainer})===true){
+          if (item.isVisible({isMaintainer,modules:host?.modules ?? []})===true){
             return (
               <TabAsLink
                 key={key}

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -30,7 +30,7 @@ const pagination = {
   labelRowsPerPage: 'Per page'
 }
 
-export default function MentionsOverviewPage(props: any) {
+export default function MentionsOverviewPage() {
   // use page rows from user settings
   const {rsd_page_rows} = useUserSettings()
   pagination.rows = rsd_page_rows ?? rowsPerPageOptions[0]
@@ -43,7 +43,7 @@ export default function MentionsOverviewPage(props: any) {
       <AdminPageWithNav title={adminPages['mentions'].title}>
         <SearchProvider>
           <PaginationProvider pagination={pagination}>
-            <MentionsOverview {...props} />
+            <MentionsOverview />
           </PaginationProvider>
         </SearchProvider>
       </AdminPageWithNav>

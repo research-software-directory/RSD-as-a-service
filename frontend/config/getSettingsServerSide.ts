@@ -54,9 +54,13 @@ export async function getSettingsServerSide(req: IncomingMessage | undefined): P
     getAnnouncement()
   ])
 
-  // Set default values that should not be overwritten if they don't exist in settings.host
+  // set default values that should not be overwritten if they don't exist in settings.host
   if (!settings.host.software_highlights) {
     settings.host.software_highlights = defaultSettings.host.software_highlights
+  }
+  // use default modules if custom not provided
+  if (!settings.host.modules){
+    settings.host.modules = defaultRsdSettings.host.modules
   }
 
   // compose all settings
@@ -86,13 +90,16 @@ export async function getRsdModules(){
     }
     const settings = await getRsdSettings()
 
-    if (settings?.host?.modules){
-      modules = settings?.host?.modules
+    if (Array.isArray(settings?.host?.modules)===true){
+      modules = settings.host.modules
       return modules
     }
-    return modules
+    // console.log('default modules...', defaultRsdSettings.host.modules)
+    // use default modules
+    return defaultRsdSettings.host.modules ?? []
   }catch(e:any){
     logger(`getRsdModules failed: ${e?.message}`,'warn')
-    return []
+    // use default modules on error
+    return defaultRsdSettings.host.modules ?? []
   }
 }
