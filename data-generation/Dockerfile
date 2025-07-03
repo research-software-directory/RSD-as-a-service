@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 #
@@ -12,4 +12,4 @@ COPY ./img /usr/app/img
 COPY ./images.js /usr/app
 COPY ./real-data.js /usr/app
 COPY ./main.js /usr/app
-CMD npx wait-on --timeout 10000 $POSTGREST_URL && node main.js
+CMD npx wait-on --timeout 15s $POSTGREST_URL && node main.js
