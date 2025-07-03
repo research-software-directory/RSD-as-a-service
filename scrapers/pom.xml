@@ -65,7 +65,7 @@ SPDX-License-Identifier: Apache-2.0
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.2.5</version>
+				<version>3.5.3</version>
 			</plugin>
 
 			<!-- https://docs.sonarcloud.io/enriching/test-coverage/java-test-coverage/ -->
@@ -164,7 +164,7 @@ SPDX-License-Identifier: Apache-2.0
 		<dependency>
 			<groupId>org.apache.maven.surefire</groupId>
 			<artifactId>surefire-junit-platform</artifactId>
-			<version>3.2.5</version>
+			<version>3.5.3</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
