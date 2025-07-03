@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,23 +9,35 @@ import {createJsonHeaders} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 
 /**
+ * Filters the information about the keywords such that only those used are inlcuded.
+ * 
+ * They are also sorted by number of software that use them and the top 10 picked. 
+ * 
+ * @param jsonData The total list of keyword data to filter and sort.
+ * @returns The filtered list, leaving only the top ten keywords sorted.
+ */
+function filterAndSortJson(jsonData: any[]): any[] {
+  return jsonData
+    .filter(entry => entry.cnt !== null) // Remove entries where cnt is null
+    .sort((a, b) => b.cnt - a.cnt) // Sort by cnt in descending order
+    .slice(0, 10); // Select only the top 10 results
+}
+
+/**
  * Example of actual request to api with error handling and logging
  * @param param0
  * @returns
  */
-async function getKeywordList({url, token}: {url: string, token?: string}) {
+async function getKeywordList({url}: {url: string}) {
   try {
     const resp = await fetch(url, {
-      method: 'GET',
-      headers: {
-        ...createJsonHeaders(token),
-      },
+      method: 'GET'
     })
 
     if ([200, 206].includes(resp.status)) {
       const json = await resp.json()
       return {
-        data: json
+        data: filterAndSortJson(json)
       }
     }
     // otherwise request failed
@@ -60,7 +73,7 @@ export default function useImperialData(token: string) {
       setLoading(true)
 
       const url = '/api/v1/rpc/keyword_count_for_software'
-      const {data} = await getKeywordList({url, token})
+      const {data} = await getKeywordList({url})
 
       if (abort) return
 

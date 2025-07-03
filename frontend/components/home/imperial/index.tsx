@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +25,7 @@ export default function ImperialCollegeHome({counts,news}: HomeProps) {
       />
       <CanonicalUrl />
 
-      <section className="flex-1 flex flex-col text-secondary-content  bg-[url('/images/campus_south_ken.jpg')] bg-contain bg-no-repeat bg-center bg-black bg-scroll">
+      <section className="flex-1 flex flex-col text-secondary-content bg-base-100">
         <AppHeader />
         <MainContentImperialCollege counts={counts} news={news}/>
         <AppFooter/>
