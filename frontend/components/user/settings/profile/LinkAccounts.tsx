@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 dv4all
 //
@@ -8,45 +9,38 @@
 import {useUserContext} from '~/components/user/context/UserContext'
 import LinkAccountBtn from './LinkAccountBtn'
 import {findProviderSubInLogin} from './apiLoginForAccount'
+import Stack from '@mui/material/Stack'
+import useLoginProviders from '~/auth/api/useLoginProviders'
+
 
 export default function LinkAccounts() {
-  const {logins,orcidAuthLink,linkedInAuthLink} = useUserContext()
-  const orcid = findProviderSubInLogin(logins,'orcid')
-  const linkedIn = findProviderSubInLogin(logins,'linkedin')
+  const {logins} = useUserContext()
+
+  const {providers} = useLoginProviders()
 
   // console.group('LinkAccounts')
-  // console.log('orcidAuthLink...', orcidAuthLink)
-  // console.log('linkedInAuthLink...', linkedInAuthLink)
-  // console.log('orcid...',orcid)
-  // console.log('linkedIn...',linkedIn)
   // console.log('logins...',logins)
   // console.groupEnd()
 
-  if (orcidAuthLink || linkedIn){
-    return (
-      <div>
-        <h3>Link your accounts</h3>
-        <div className="flex gap-8 py-8">
-          {orcidAuthLink ?
-            <LinkAccountBtn
-              disabled={orcid!==null}
-              href={orcidAuthLink}
-              label='Link my ORCID'
-            />
-            : null
-          }
-          {linkedInAuthLink ?
-            <LinkAccountBtn
-              disabled={linkedIn!==null}
-              href={linkedInAuthLink}
-              label='Link my LinkedIn'
-            />
-            : null
-          }
-        </div>
-      </div>
-    )
+  if (!providers || providers.length <= 1) {
+    return null
   }
-  // omit link section if no ORCID
-  return null
+
+  return (
+    <div>
+      <h3>Link your accounts</h3>
+      <Stack spacing={2}>
+        {providers.map(provider => {
+          return (
+            <LinkAccountBtn
+              key = {provider.openidProvider}
+              disabled = {findProviderSubInLogin(logins, provider.openidProvider) !== null}
+              href = {provider.coupleUrl}
+              label = {`${provider.name}`}
+            />
+          )
+        })}
+      </Stack>
+    </div>
+  )
 }

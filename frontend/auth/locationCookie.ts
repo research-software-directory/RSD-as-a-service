@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
@@ -18,6 +18,7 @@ export function saveLocationCookie() {
     case '/login':
     case '/logout':
     case '/login/local':
+    case '/login/local/couple':
     case '/login/failed':
       break
     case '/':

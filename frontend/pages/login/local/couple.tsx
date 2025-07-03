@@ -14,18 +14,18 @@ import DefaultLayout from '~/components/layout/DefaultLayout'
 import PageTitle from '~/components/layout/PageTitle'
 import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
 
-export default function LoginLocal() {
-  const pageTitle = `Login | ${app.title}`
+export default function CoupleLocal() {
+  const pageTitle = `Couple local account | ${app.title}`
 
   return (
     <DefaultLayout>
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <PageTitle title="Login">
+      <PageTitle title="Couple local account">
       </PageTitle>
       <ContentInTheMiddle>
-        <form action="/auth/login/local" method="post">
+        <form action="/auth/couple/local" method="post">
           <TextField required slotProps={{htmlInput: {pattern: '\\w+'}}} id="username-field" label="Username" variant="standard" name="sub"/>
           <Button variant="contained" type='submit'>Login</Button>
         </form>

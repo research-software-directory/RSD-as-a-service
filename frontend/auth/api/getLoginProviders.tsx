@@ -5,19 +5,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
-
-/**
- * Return a list of valid OpenID providers
- * based on provided env. RSD_AUTH_PROVIDERS string, semicolon separated values
- * Example! RSD_AUTH_PROVIDERS=surfconext:everyone;helmholtz:invites_only
- */
+import {ProviderName} from '~/auth/api/authEndpoint'
 
 export type AccessType = 'INVITE_ONLY' | 'EVERYONE'
 
 export type Provider = {
-  openidProvider: 'local' | 'surfconext' | 'helmholtz' | 'orcid' | 'azure' | 'linkedin',
+  openidProvider: ProviderName,
   name: string,
   signInUrl: string,
+  coupleUrl: string,
   accessType: AccessType,
   html?: string
 }
