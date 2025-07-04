@@ -4,7 +4,7 @@
 -- SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 - 2023 dv4all
 -- SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
--- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -175,6 +175,13 @@ CREATE POLICY rsd_user_all_rights ON image TO rsd_user
 CREATE POLICY admin_all_rights ON image TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
+
+CREATE POLICY user_can_insert ON image FOR INSERT TO rsd_user
+	WITH CHECK (TRUE);
+
+-- this means only dangling images can be deleted by anyone
+CREATE POLICY user_can_delete ON image FOR DELETE TO rsd_user
+	USING (TRUE);
 
 
 -- software
