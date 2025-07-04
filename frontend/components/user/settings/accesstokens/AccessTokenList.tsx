@@ -13,7 +13,6 @@ import IconButton from '@mui/material/IconButton'
 import ListItemText from '@mui/material/ListItemText'
 
 import {AccessToken} from './apiAccessTokens'
-import {daysDiff} from '~/utils/dateFn'
 import ContentLoader from '~/components/layout/ContentLoader'
 
 type AccessTokenListProps=Readonly<{
@@ -36,14 +35,13 @@ export default function AccessTokenList({tokens, onDelete, loading}:AccessTokenL
   return (
     <List>
       {tokens.map(token => {
-        // calculate days left
-        const daysLeft = daysDiff(new Date(token.expires_at), 'until') ?? 0
+        // compare dates
+        const expiresAt = new Date(token.expires_at)
+        const now = new Date()
         // construct expiration message
-        let daysMsg = `Expires in ${daysLeft} days.`
-        if (daysLeft === 1){
-          daysMsg = 'Expires in 1 day!'
-        } else if (daysLeft <= 0) {
-          daysMsg = 'EXPIRED!'
+        let daysMsg = `Expires on ${expiresAt.toLocaleString()}`
+        if (now > expiresAt){
+          daysMsg = `EXPIRED on ${expiresAt.toLocaleString()}`
         }
         return (
           <ListItem
@@ -62,7 +60,7 @@ export default function AccessTokenList({tokens, onDelete, loading}:AccessTokenL
               primary={token.display_name}
               secondary={
                 <>
-                  <span className={`tracking-widest ${daysLeft <=0 ? 'text-error font-medium' : 'text-success'}`}>{daysMsg}</span><br/>
+                  <span className={`tracking-widest ${now > expiresAt ? 'text-error font-medium' : 'text-success'}`}>{daysMsg}</span><br/>
                   <span>{token.id}</span>
                 </>
               }

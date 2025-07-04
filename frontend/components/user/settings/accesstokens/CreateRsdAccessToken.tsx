@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -11,14 +13,16 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
+import ContentCopy from '@mui/icons-material/ContentCopy'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
 
 
-import {getDateFromNow, getYearMonthDay, formatDateToIsoStr, getDatePlaceholderForLocale} from '~/utils/dateFn'
 import copyToClipboard from '~/utils/copyToClipboard'
-import {NewAccessToken} from './apiAccessTokens'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {ContentCopy, Visibility, VisibilityOff} from '@mui/icons-material'
+import {getDateFromNow, getYearMonthDay, formatDateToIsoStr, getDatePlaceholderForLocale} from '~/utils/dateFn'
 import useSnackbar from '~/components/snackbar/useSnackbar'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import {NewAccessToken} from './apiAccessTokens'
 
 type CreateRsdAccessTokenProps=Readonly<{
   createAccessToken:(accesstoken:NewAccessToken)=>Promise<string | undefined>
@@ -29,8 +33,7 @@ const displayNameShortText = 'Unique token name'
 const expiresHelperText = 'Maximum token lifetime is 365 days'
 const expiresShortText = getDatePlaceholderForLocale()
 
-const today = new Date()
-const minDate = formatDateToIsoStr(today)
+const minDate = formatDateToIsoStr(getDateFromNow(1))
 const maxDate = formatDateToIsoStr(getDateFromNow(365))
 
 export default function CreateAccessToken({createAccessToken}:CreateRsdAccessTokenProps) {
