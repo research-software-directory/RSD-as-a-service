@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -11,7 +13,6 @@ import IconButton from '@mui/material/IconButton'
 import ListItemText from '@mui/material/ListItemText'
 
 import {AccessToken} from './apiAccessTokens'
-import {daysDiff} from '~/utils/dateFn'
 import ContentLoader from '~/components/layout/ContentLoader'
 
 type AccessTokenListProps=Readonly<{
@@ -34,6 +35,14 @@ export default function AccessTokenList({tokens, onDelete, loading}:AccessTokenL
   return (
     <List>
       {tokens.map(token => {
+        // compare dates
+        const expiresAt = new Date(token.expires_at)
+        const now = new Date()
+        // construct expiration message
+        let daysMsg = `Expires on ${expiresAt.toLocaleString()}`
+        if (now > expiresAt){
+          daysMsg = `EXPIRED on ${expiresAt.toLocaleString()}`
+        }
         return (
           <ListItem
             key={token.id}
@@ -49,7 +58,12 @@ export default function AccessTokenList({tokens, onDelete, loading}:AccessTokenL
           >
             <ListItemText
               primary={token.display_name}
-              secondary={`expires in ${daysDiff(new Date(token.expires_at), 'until')} days (#${token.id})`}
+              secondary={
+                <>
+                  <span className={`tracking-widest ${now > expiresAt ? 'text-error font-medium' : 'text-success'}`}>{daysMsg}</span><br/>
+                  <span>{token.id}</span>
+                </>
+              }
             />
           </ListItem>
         )

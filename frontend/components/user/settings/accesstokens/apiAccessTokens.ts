@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -18,7 +20,7 @@ export type AccessToken = NewAccessToken & {
 
 export async function getUserAccessTokens({token}: { token: string }) {
   try {
-    const url = getBaseUrl() + '/rpc/my_user_access_tokens'
+    const url = getBaseUrl() + '/rpc/my_user_access_tokens?order=expires_at.asc'
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)

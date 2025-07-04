@@ -28,8 +28,13 @@ export default function LinkAccounts() {
 
   return (
     <div>
-      <h3>Link your accounts</h3>
-      <Stack spacing={2}>
+      <h3 className="mb-4">Link your accounts</h3>
+      <Stack
+        spacing={2}
+        sx={{
+          padding:'0.5rem 0rem'
+        }}
+      >
         {providers.map(provider => {
           return (
             <LinkAccountBtn

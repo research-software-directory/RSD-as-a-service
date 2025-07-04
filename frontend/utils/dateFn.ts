@@ -9,7 +9,7 @@
 
 import logger from './logger'
 
-export function daysDiff(date:Date, direction='since'):number|undefined{
+export function daysDiff(date:Date, direction:'since'|'until'='since'):number|undefined{
   const today = new Date()
   if (date){
     // set time to noon (ignore that diff)
@@ -34,7 +34,6 @@ export function daysDiff(date:Date, direction='since'):number|undefined{
         return 0
       }
     }
-
   }else{
     return undefined
   }
