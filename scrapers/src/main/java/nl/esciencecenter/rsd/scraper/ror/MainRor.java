@@ -7,16 +7,15 @@
 
 package nl.esciencecenter.rsd.scraper.ror;
 
+import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.util.Collection;
-import java.util.concurrent.CompletableFuture;
 
 public class MainRor {
 
@@ -33,7 +32,9 @@ public class MainRor {
 
 	private static void scrapeLocationData() {
 		RorPostgrestConnector organisationsInRSD = new RorPostgrestConnector();
-		Collection<OrganisationDatabaseData> organisationsToScrape = organisationsInRSD.organisationsWithoutLocation(SCRAPING_LIMIT);
+		Collection<OrganisationDatabaseData> organisationsToScrape = organisationsInRSD.organisationsWithoutLocation(
+			SCRAPING_LIMIT
+		);
 		CompletableFuture<?>[] futures = new CompletableFuture[organisationsToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
@@ -46,17 +47,38 @@ public class MainRor {
 				try {
 					RorScraper rorScraper = new RorScraper(organisation.rorId());
 					RorData data = rorScraper.scrapeData();
-					OrganisationDatabaseData updatedOrganisationDatabaseData = new OrganisationDatabaseData(organisation.id(), organisation.rorId(), scrapedAt, data);
+					OrganisationDatabaseData updatedOrganisationDatabaseData = new OrganisationDatabaseData(
+						organisation.id(),
+						organisation.rorId(),
+						scrapedAt,
+						data
+					);
 					organisationsInRSD.saveLocationData(updatedOrganisationDatabaseData);
 				} catch (RsdResponseException | IOException | InterruptedException e) {
 					Utils.saveExceptionInDatabase("ROR location scraper", tableName, organisation.id(), e);
-					Utils.saveErrorMessageInDatabase(e.getMessage(), tableName, columnName, organisation.id().toString(), primaryKeyName, scrapedAt, scrapedAtName);
+					Utils.saveErrorMessageInDatabase(
+						e.getMessage(),
+						tableName,
+						columnName,
+						organisation.id().toString(),
+						primaryKeyName,
+						scrapedAt,
+						scrapedAtName
+					);
 					if (e instanceof InterruptedException) {
 						Thread.currentThread().interrupt();
 					}
 				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("ROR location scraper", tableName, organisation.id(), e);
-					Utils.saveErrorMessageInDatabase("Unknown error", tableName, columnName, organisation.id().toString(), primaryKeyName, scrapedAt, scrapedAtName);
+					Utils.saveErrorMessageInDatabase(
+						"Unknown error",
+						tableName,
+						columnName,
+						organisation.id().toString(),
+						primaryKeyName,
+						scrapedAt,
+						scrapedAtName
+					);
 				}
 			});
 			futures[i] = future;
@@ -64,5 +86,4 @@ public class MainRor {
 		}
 		CompletableFuture.allOf(futures).join();
 	}
-
 }

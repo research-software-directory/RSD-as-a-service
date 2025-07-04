@@ -5,16 +5,15 @@
 
 package nl.esciencecenter.rsd.scraper.doi;
 
-import nl.esciencecenter.rsd.scraper.Config;
-import nl.esciencecenter.rsd.scraper.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.time.Instant;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import nl.esciencecenter.rsd.scraper.Config;
+import nl.esciencecenter.rsd.scraper.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
  * 1. Get the least recently scraped releases from software with a concept DOI. We also check for existing releases that already exist as a mention in the database, so we don't have to (TODO) recreate them later.
@@ -26,26 +25,31 @@ public class MainReleases {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainReleases.class);
 
 	public static void main(String[] args) {
-
 		LOGGER.info("Start scraping releases");
 
 		long t1 = System.currentTimeMillis();
 
 		PostgrestReleaseRepository releaseRepository = new PostgrestReleaseRepository(Config.backendBaseUrl());
 
-		Collection<ReleaseData> releasesToScrape = releaseRepository.leastRecentlyScrapedReleases(Config.maxRequestsDoi());
+		Collection<ReleaseData> releasesToScrape = releaseRepository.leastRecentlyScrapedReleases(
+			Config.maxRequestsDoi()
+		);
 
-		Collection<Doi> conceptDoisToScrape = releasesToScrape.stream()
-				.map(releaseData -> releaseData.conceptDoi)
-				.toList();
+		Collection<Doi> conceptDoisToScrape = releasesToScrape
+			.stream()
+			.map(releaseData -> releaseData.conceptDoi)
+			.toList();
 
-		Map<Doi, Collection<ExternalMentionRecord>> scrapedReleasesPerConceptDoi = new DataCiteReleaseRepository().getVersionedDois(conceptDoisToScrape);
+		Map<Doi, Collection<ExternalMentionRecord>> scrapedReleasesPerConceptDoi =
+			new DataCiteReleaseRepository().getVersionedDois(conceptDoisToScrape);
 
 		Instant now = Instant.now();
 		PostgrestMentionRepository localMentionRepository = new PostgrestMentionRepository(Config.backendBaseUrl());
-		Collection<ExternalMentionRecord> allMentions = scrapedReleasesPerConceptDoi.values().stream()
-				.flatMap(Collection::stream)
-				.toList();
+		Collection<ExternalMentionRecord> allMentions = scrapedReleasesPerConceptDoi
+			.values()
+			.stream()
+			.flatMap(Collection::stream)
+			.toList();
 		Map<Doi, UUID> doiToId = new HashMap<>();
 		for (ExternalMentionRecord mention : allMentions) {
 			try {

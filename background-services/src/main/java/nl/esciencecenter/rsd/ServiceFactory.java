@@ -9,11 +9,21 @@ import java.time.LocalTime;
 
 public class ServiceFactory {
 
-	public static Service createPeriodicService(String serviceName, int intervalSeconds, int initialDelay, Runnable runnable) {
+	public static Service createPeriodicService(
+		String serviceName,
+		int intervalSeconds,
+		int initialDelay,
+		Runnable runnable
+	) {
 		return new PeriodicService(intervalSeconds, initialDelay, runnable, serviceName);
 	}
 
-	public static Service createPeriodicService(String serviceName, int intervalSeconds, int initialDelay, String command) {
+	public static Service createPeriodicService(
+		String serviceName,
+		int intervalSeconds,
+		int initialDelay,
+		String command
+	) {
 		return new PeriodicService(intervalSeconds, initialDelay, command, serviceName);
 	}
 
@@ -24,5 +34,4 @@ public class ServiceFactory {
 	public static Service createScheduledService(String serviceName, LocalTime scheduledTime, String command) {
 		return new ScheduledService(scheduledTime, command, serviceName);
 	}
-
 }

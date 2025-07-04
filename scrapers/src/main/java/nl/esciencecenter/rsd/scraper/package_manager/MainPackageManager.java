@@ -7,6 +7,16 @@
 
 package nl.esciencecenter.rsd.scraper.package_manager;
 
+import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
@@ -26,17 +36,6 @@ import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PixiScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PypiScraper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class MainPackageManager {
 
@@ -90,7 +89,8 @@ public class MainPackageManager {
 		LOGGER.info("Done scraping package manager data ({} ms.)", time);
 	}
 
-	static PackageManagerScraper scraperForType(PackageManagerType type, String url) throws InvalidPackageManagerUrlException {
+	static PackageManagerScraper scraperForType(PackageManagerType type, String url)
+		throws InvalidPackageManagerUrlException {
 		return switch (type) {
 			case anaconda -> new AnacondaScraper(url);
 			case cran -> new CranScraper(url);
@@ -107,7 +107,11 @@ public class MainPackageManager {
 		};
 	}
 
-	static void scrapeDownloads(BasicPackageManagerData data, PostgrestConnector postgrestConnector, ZonedDateTime scrapedAt) throws InterruptedException {
+	static void scrapeDownloads(
+		BasicPackageManagerData data,
+		PostgrestConnector postgrestConnector,
+		ZonedDateTime scrapedAt
+	) throws InterruptedException {
 		String packageManagerUrl = data.url();
 		PackageManagerType type = data.type();
 
@@ -118,20 +122,45 @@ public class MainPackageManager {
 			postgrestConnector.saveDownloadCount(data.id(), downloads, scrapedAt);
 		} catch (RsdRateLimitException e) {
 			Utils.saveExceptionInDatabase("Package manager downloads scraper", "package_manager", data.id(), e);
-			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "download_count_last_error", data.id()
-				.toString(), "id", null, null);
+			Utils.saveErrorMessageInDatabase(
+				e.getMessage(),
+				"package_manager",
+				"download_count_last_error",
+				data.id().toString(),
+				"id",
+				null,
+				null
+			);
 		} catch (RsdResponseException | InvalidPackageManagerUrlException e) {
 			Utils.saveExceptionInDatabase("Package manager downloads scraper", "package_manager", data.id(), e);
-			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "download_count_last_error", data.id()
-				.toString(), "id", scrapedAt, "download_count_scraped_at");
+			Utils.saveErrorMessageInDatabase(
+				e.getMessage(),
+				"package_manager",
+				"download_count_last_error",
+				data.id().toString(),
+				"id",
+				scrapedAt,
+				"download_count_scraped_at"
+			);
 		} catch (IOException e) {
 			Utils.saveExceptionInDatabase("Package manager downloads scraper", "package_manager", data.id(), e);
-			Utils.saveErrorMessageInDatabase("Unknown error", "package_manager", "download_count_last_error", data.id()
-				.toString(), "id", scrapedAt, "download_count_scraped_at");
+			Utils.saveErrorMessageInDatabase(
+				"Unknown error",
+				"package_manager",
+				"download_count_last_error",
+				data.id().toString(),
+				"id",
+				scrapedAt,
+				"download_count_scraped_at"
+			);
 		}
 	}
 
-	static void scrapeReverseDependencies(BasicPackageManagerData data, PostgrestConnector postgrestConnector, ZonedDateTime scrapedAt) throws InterruptedException {
+	static void scrapeReverseDependencies(
+		BasicPackageManagerData data,
+		PostgrestConnector postgrestConnector,
+		ZonedDateTime scrapedAt
+	) throws InterruptedException {
 		String packageManagerUrl = data.url();
 		PackageManagerType type = data.type();
 
@@ -141,17 +170,53 @@ public class MainPackageManager {
 			revDeps = scraper.reverseDependencies();
 			postgrestConnector.saveReverseDependencyCount(data.id(), revDeps, scrapedAt);
 		} catch (RsdRateLimitException e) {
-			Utils.saveExceptionInDatabase("Package manager reverse dependencies scraper", "package_manager", data.id(), e);
-			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "reverse_dependency_count_last_error", data.id()
-				.toString(), "id", null, null);
+			Utils.saveExceptionInDatabase(
+				"Package manager reverse dependencies scraper",
+				"package_manager",
+				data.id(),
+				e
+			);
+			Utils.saveErrorMessageInDatabase(
+				e.getMessage(),
+				"package_manager",
+				"reverse_dependency_count_last_error",
+				data.id().toString(),
+				"id",
+				null,
+				null
+			);
 		} catch (RsdResponseException | InvalidPackageManagerUrlException e) {
-			Utils.saveExceptionInDatabase("Package manager reverse dependencies scraper", "package_manager", data.id(), e);
-			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "reverse_dependency_count_last_error", data.id()
-				.toString(), "id", scrapedAt, "reverse_dependency_count_scraped_at");
+			Utils.saveExceptionInDatabase(
+				"Package manager reverse dependencies scraper",
+				"package_manager",
+				data.id(),
+				e
+			);
+			Utils.saveErrorMessageInDatabase(
+				e.getMessage(),
+				"package_manager",
+				"reverse_dependency_count_last_error",
+				data.id().toString(),
+				"id",
+				scrapedAt,
+				"reverse_dependency_count_scraped_at"
+			);
 		} catch (IOException e) {
-			Utils.saveExceptionInDatabase("Package manager reverse dependencies scraper", "package_manager", data.id(), e);
-			Utils.saveErrorMessageInDatabase("Unknown error", "package_manager", "reverse_dependency_count_last_error", data.id()
-				.toString(), "id", scrapedAt, "reverse_dependency_count_scraped_at");
+			Utils.saveExceptionInDatabase(
+				"Package manager reverse dependencies scraper",
+				"package_manager",
+				data.id(),
+				e
+			);
+			Utils.saveErrorMessageInDatabase(
+				"Unknown error",
+				"package_manager",
+				"reverse_dependency_count_last_error",
+				data.id().toString(),
+				"id",
+				scrapedAt,
+				"reverse_dependency_count_scraped_at"
+			);
 		}
 	}
 }

@@ -6,8 +6,6 @@
 package nl.esciencecenter.rsd.scraper.package_manager.scrapers;
 
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.RsdResponseException;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -17,12 +15,15 @@ import java.time.Duration;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
 
 public class JuliaScraper implements PackageManagerScraper {
 
 	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
 	private final String packageName;
-	private static final Pattern generalRegistryPattern = Pattern.compile("^https://github\\.com/JuliaRegistries/General/tree/master/[A-Z]/(\\w+)$");
+	private static final Pattern generalRegistryPattern = Pattern.compile(
+		"^https://github\\.com/JuliaRegistries/General/tree/master/[A-Z]/(\\w+)$"
+	);
 	private static final Pattern ownRepoPattern = Pattern.compile("^https://github\\.com/[^/]+/(\\w+)\\.jl\\.git$");
 
 	public JuliaScraper(String url) throws InvalidPackageManagerUrlException {
@@ -53,7 +54,12 @@ public class JuliaScraper implements PackageManagerScraper {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
 			if (response.statusCode() != 200) {
-				throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response getting Julia downloads for package: " + packageName);
+				throw new RsdResponseException(
+					response.statusCode(),
+					response.uri(),
+					response.body(),
+					"Unexpected response getting Julia downloads for package: " + packageName
+				);
 			}
 
 			String numberAsString = JsonParser.parseString(response.body())

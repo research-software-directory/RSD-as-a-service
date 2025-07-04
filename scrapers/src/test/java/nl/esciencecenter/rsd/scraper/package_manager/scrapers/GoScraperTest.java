@@ -13,12 +13,14 @@ import org.junit.jupiter.params.provider.NullSource;
 class GoScraperTest {
 
 	@ParameterizedTest
-	@CsvSource({
-		"https://pkg.go.dev/github.com/gin-gonic/gin,github.com/gin-gonic/gin",
-		"https://pkg.go.dev/github.com/gin-gonic/gin/,github.com/gin-gonic/gin",
-		"https://pkg.go.dev/google.golang.org/grpc,google.golang.org/grpc",
-		"https://pkg.go.dev/google.golang.org/grpc/,google.golang.org/grpc",
-	})
+	@CsvSource(
+		{
+			"https://pkg.go.dev/github.com/gin-gonic/gin,github.com/gin-gonic/gin",
+			"https://pkg.go.dev/github.com/gin-gonic/gin/,github.com/gin-gonic/gin",
+			"https://pkg.go.dev/google.golang.org/grpc,google.golang.org/grpc",
+			"https://pkg.go.dev/google.golang.org/grpc/,google.golang.org/grpc",
+		}
+	)
 	void givenValidGoUrl_whenCallingConstructor_thenNoExceptionThrownAndPackageNameCorrect(
 		String url,
 		String expectedPackageName

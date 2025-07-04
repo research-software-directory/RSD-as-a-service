@@ -10,11 +10,4 @@ package nl.esciencecenter.rsd.authentication;
 import java.util.List;
 import java.util.Map;
 
-public record OpenIdInfo(
-	String sub,
-	String name,
-	String email,
-	String organisation,
-	Map<String, List<String>> data
-) {
-}
+public record OpenIdInfo(String sub, String name, String email, String organisation, Map<String, List<String>> data) {}

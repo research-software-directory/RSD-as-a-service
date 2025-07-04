@@ -14,8 +14,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
-import nl.esciencecenter.rsd.scraper.Utils;
-
 import java.net.URI;
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -23,19 +21,28 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 public class PostgrestMentionRepository {
 
 	private static final Gson GSON = new GsonBuilder()
-			.serializeNulls()
-			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-			.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
-			.registerTypeAdapter(ZonedDateTime.class, (JsonSerializer<ZonedDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
-			.registerTypeAdapter(Doi.class, (JsonSerializer<Doi>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
-			.create();
+		.serializeNulls()
+		.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+		.registerTypeAdapter(
+			Instant.class,
+			(JsonSerializer<Instant>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString())
+		)
+		.registerTypeAdapter(
+			ZonedDateTime.class,
+			(JsonSerializer<ZonedDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString())
+		)
+		.registerTypeAdapter(
+			Doi.class,
+			(JsonSerializer<Doi>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString())
+		)
+		.create();
 
 	private final String backendUrl;
-
 
 	public PostgrestMentionRepository(String backendUrl) {
 		this.backendUrl = Objects.requireNonNull(backendUrl);
@@ -46,7 +53,6 @@ public class PostgrestMentionRepository {
 
 		JsonArray rootArray = JsonParser.parseString(json).getAsJsonArray();
 		for (JsonElement jsonElement : rootArray) {
-
 			JsonObject arrayEntry = jsonElement.getAsJsonObject();
 			UUID id = UUID.fromString(arrayEntry.getAsJsonPrimitive("id").getAsString());
 			String doiString = Utils.stringOrNull(arrayEntry.get("doi"));
@@ -77,27 +83,43 @@ public class PostgrestMentionRepository {
 	}
 
 	public Collection<RsdMentionIds> leastRecentlyScrapedMentions(int limit) {
-		String data = Utils.getAsAdmin(backendUrl + "/mention?or=(doi.not.is.null,openalex_id.not.is.null)&order=scraped_at.asc.nullsfirst&select=id,doi,openalex_id&limit=" + limit);
+		String data = Utils.getAsAdmin(
+			backendUrl +
+			"/mention?or=(doi.not.is.null,openalex_id.not.is.null)&order=scraped_at.asc.nullsfirst&select=id,doi,openalex_id&limit=" +
+			limit
+		);
 		return parseMultipleRsdIds(data);
 	}
 
 	public void saveScrapedAt(RsdMentionIds ids, Instant scrapedAt) {
 		JsonObject root = new JsonObject();
 		root.addProperty("scraped_at", scrapedAt.toString());
-		Utils.patchAsAdmin(backendUrl + "/mention?select=id,doi,openalex_id&id=eq." + ids.id(), root.toString(), "Prefer", "return=representation");
+		Utils.patchAsAdmin(
+			backendUrl + "/mention?select=id,doi,openalex_id&id=eq." + ids.id(),
+			root.toString(),
+			"Prefer",
+			"return=representation"
+		);
 	}
 
 	public RsdMentionIds updateMention(RsdMentionRecord mention, boolean updateOpenAlexId) {
 		JsonObject root = createJsonFromMentionData(mention.content(), updateOpenAlexId);
 		root.addProperty("scraped_at", mention.scrapedAt().toString());
-		String response = Utils.patchAsAdmin(backendUrl + "/mention?select=id,doi,openalex_id&id=eq." + mention.id(), root.toString(), "Prefer", "return=representation");
+		String response = Utils.patchAsAdmin(
+			backendUrl + "/mention?select=id,doi,openalex_id&id=eq." + mention.id(),
+			root.toString(),
+			"Prefer",
+			"return=representation"
+		);
 		return parseSingleRsdIds(response);
 	}
 
 	public RsdMentionIds createMentionIfNotExistsOnDoiAndGetIds(ExternalMentionRecord mention, Instant scrapedAt) {
 		Doi doi = mention.doi();
 		Objects.requireNonNull(doi);
-		Collection<RsdMentionIds> mentionsWithDoi = parseMultipleRsdIds(Utils.getAsAdmin(backendUrl + "/mention?select=id,doi,openalex_id&doi=eq." + doi.toUrlEncodedString()));
+		Collection<RsdMentionIds> mentionsWithDoi = parseMultipleRsdIds(
+			Utils.getAsAdmin(backendUrl + "/mention?select=id,doi,openalex_id&doi=eq." + doi.toUrlEncodedString())
+		);
 		if (mentionsWithDoi.size() == 1) {
 			return mentionsWithDoi.iterator().next();
 		}
@@ -111,7 +133,10 @@ public class PostgrestMentionRepository {
 
 		String query = "/mention?select=id,doi,openalex_id";
 		if (mention.doi() != null) {
-			query += "&or=(openalex_id.eq.%s,doi.eq.%s)".formatted(openalexId.toUrlEncodedString(), doi.toUrlEncodedString());
+			query += "&or=(openalex_id.eq.%s,doi.eq.%s)".formatted(
+				openalexId.toUrlEncodedString(),
+				doi.toUrlEncodedString()
+			);
 		} else {
 			query += "&openalex_id=eq.%s".formatted(openalexId.toUrlEncodedString());
 		}
@@ -119,7 +144,12 @@ public class PostgrestMentionRepository {
 		Collection<RsdMentionIds> existingIds = parseMultipleRsdIds(existingMentionsResponse);
 
 		if (existingIds.size() > 1) {
-			throw new RuntimeException("Multiple entries with DOI %s or OpenAlex id %s exist, they should be merged".formatted(openalexId, mention.doi()));
+			throw new RuntimeException(
+				"Multiple entries with DOI %s or OpenAlex id %s exist, they should be merged".formatted(
+					openalexId,
+					mention.doi()
+				)
+			);
 		}
 		if (existingIds.size() == 1) {
 			UUID id = existingIds.iterator().next().id();
@@ -132,7 +162,12 @@ public class PostgrestMentionRepository {
 	private RsdMentionIds createNewMention(ExternalMentionRecord mention, Instant scrapedAt, boolean setOpenAlexId) {
 		JsonObject root = createJsonFromMentionData(mention, setOpenAlexId);
 		root.addProperty("scraped_at", scrapedAt.toString());
-		String response = Utils.postAsAdmin(backendUrl + "/mention?select=id,doi,openalex_id", root.toString(), "Prefer", "return=representation");
+		String response = Utils.postAsAdmin(
+			backendUrl + "/mention?select=id,doi,openalex_id",
+			root.toString(),
+			"Prefer",
+			"return=representation"
+		);
 		return parseSingleRsdIds(response);
 	}
 

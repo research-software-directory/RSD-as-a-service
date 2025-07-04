@@ -8,9 +8,4 @@ package nl.esciencecenter.rsd.scraper.doi;
 import java.time.Instant;
 import java.util.UUID;
 
-public record RsdMentionRecord(
-		UUID id,
-		ExternalMentionRecord content,
-		Instant scrapedAt
-) {
-}
+public record RsdMentionRecord(UUID id, ExternalMentionRecord content, Instant scrapedAt) {}

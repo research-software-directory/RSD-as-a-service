@@ -7,9 +7,4 @@ package nl.esciencecenter.rsd.scraper.doi;
 
 import java.util.UUID;
 
-public record RsdMentionIds(
-		UUID id,
-		Doi doi,
-		OpenalexId openalexId
-) {
-}
+public record RsdMentionIds(UUID id, Doi doi, OpenalexId openalexId) {}

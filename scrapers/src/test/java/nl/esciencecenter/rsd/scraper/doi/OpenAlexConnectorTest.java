@@ -7,12 +7,11 @@ package nl.esciencecenter.rsd.scraper.doi;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 class OpenAlexConnectorTest {
 
@@ -34,10 +33,14 @@ class OpenAlexConnectorTest {
 	void givenEmptyCollection_whenGettingData_thenEmptyCollectionReturned() {
 		OpenAlexConnector openAlexConnector = new OpenAlexConnector();
 
-		Collection<ExternalMentionRecord> doiMentions = Assertions.assertDoesNotThrow(() -> openAlexConnector.mentionDataByDois(Collections.emptyList(), null));
+		Collection<ExternalMentionRecord> doiMentions = Assertions.assertDoesNotThrow(() ->
+			openAlexConnector.mentionDataByDois(Collections.emptyList(), null)
+		);
 		Assertions.assertTrue(doiMentions.isEmpty());
 
-		Collection<ExternalMentionRecord> openalexMentions = Assertions.assertDoesNotThrow(() -> openAlexConnector.mentionDataByOpenalexIds(Collections.emptyList(), null));
+		Collection<ExternalMentionRecord> openalexMentions = Assertions.assertDoesNotThrow(() ->
+			openAlexConnector.mentionDataByOpenalexIds(Collections.emptyList(), null)
+		);
 		Assertions.assertTrue(openalexMentions.isEmpty());
 	}
 }

@@ -5,13 +5,11 @@
 
 package nl.esciencecenter.rsd.scraper.doi;
 
+import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-
 class MainMentionsTest {
-
 
 	@Test
 	void givenValidDoiSourceData_whenParsing_thenMapReturned() {

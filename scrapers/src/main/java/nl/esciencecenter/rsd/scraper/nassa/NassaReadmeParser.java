@@ -5,8 +5,6 @@
 
 package nl.esciencecenter.rsd.scraper.nassa;
 
-import nl.esciencecenter.rsd.scraper.RsdResponseException;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -14,6 +12,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
 
 public class NassaReadmeParser {
 
@@ -27,15 +26,25 @@ public class NassaReadmeParser {
 			return split[1];
 		}
 
-		throw new RsdNassaParseException("Couldn't split description into two parts around expected header, resulting array has size %d instead of 2".formatted(split.length));
+		throw new RsdNassaParseException(
+			"Couldn't split description into two parts around expected header, resulting array has size %d instead of 2".formatted(
+				split.length
+			)
+		);
 	}
 
-	public static String downloadAndReturnDescriptionFromReadme(URI readmeUri, HttpClient client) throws IOException, InterruptedException, RsdResponseException, RsdNassaParseException {
+	public static String downloadAndReturnDescriptionFromReadme(URI readmeUri, HttpClient client)
+		throws IOException, InterruptedException, RsdResponseException, RsdNassaParseException {
 		HttpRequest request = HttpRequest.newBuilder(readmeUri).build();
 
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		if (response.statusCode() >= 300) {
-			throw new RsdResponseException(response.statusCode(), readmeUri, response.body(), "Unexpected response getting NASSA README");
+			throw new RsdResponseException(
+				response.statusCode(),
+				readmeUri,
+				response.body(),
+				"Unexpected response getting NASSA README"
+			);
 		}
 
 		return getLongDescriptionFromReadme(response.body());

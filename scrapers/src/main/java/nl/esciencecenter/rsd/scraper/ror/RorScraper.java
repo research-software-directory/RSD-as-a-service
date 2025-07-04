@@ -9,14 +9,13 @@ package nl.esciencecenter.rsd.scraper.ror;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.RsdResponseException;
-import nl.esciencecenter.rsd.scraper.Utils;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 public class RorScraper {
 
@@ -40,85 +39,85 @@ public class RorScraper {
 		JsonElement jsonElement = JsonParser.parseString(json);
 		final String addressesKey = "addresses";
 
-		String country = Utils.safelyGetOrNull(jsonElement, j -> j
-			.getAsJsonObject()
-			.getAsJsonObject("country")
-			.getAsJsonPrimitive("country_name")
-			.getAsString());
-		String city = Utils.safelyGetOrNull(jsonElement, j -> j
-			.getAsJsonObject()
-			.getAsJsonArray(addressesKey)
-			.get(0)
-			.getAsJsonObject()
-			.getAsJsonPrimitive("city")
-			.getAsString());
-		String wikipediaUrl = Utils.safelyGetOrNull(jsonElement, j -> {
-			JsonElement wikiElement = j
+		String country = Utils.safelyGetOrNull(jsonElement, j ->
+			j.getAsJsonObject().getAsJsonObject("country").getAsJsonPrimitive("country_name").getAsString()
+		);
+		String city = Utils.safelyGetOrNull(jsonElement, j ->
+			j
 				.getAsJsonObject()
-				.get("wikipedia_url");
+				.getAsJsonArray(addressesKey)
+				.get(0)
+				.getAsJsonObject()
+				.getAsJsonPrimitive("city")
+				.getAsString()
+		);
+		String wikipediaUrl = Utils.safelyGetOrNull(jsonElement, j -> {
+			JsonElement wikiElement = j.getAsJsonObject().get("wikipedia_url");
 			return wikiElement.isJsonPrimitive() ? wikiElement.getAsString() : null;
 		});
 		if (wikipediaUrl != null && wikipediaUrl.isBlank()) {
 			wikipediaUrl = null;
 		}
-		List<String> rorTypes = Utils.safelyGetOrNull(jsonElement, j -> j
-			.getAsJsonObject()
-			.getAsJsonArray("types")
-			.asList()
-			.stream()
-			.map(JsonElement::getAsString)
-			.toList()
+		List<String> rorTypes = Utils.safelyGetOrNull(jsonElement, j ->
+			j.getAsJsonObject().getAsJsonArray("types").asList().stream().map(JsonElement::getAsString).toList()
 		);
 
 		List<String> rorNames = new ArrayList<>();
-		List<String> rorAliases = Utils.safelyGetOrNull(jsonElement, j -> j
-			.getAsJsonObject()
-			.getAsJsonArray("aliases")
-			.asList()
-			.stream()
-			.map(alias -> alias.getAsJsonPrimitive().getAsString())
-			.toList()
+		List<String> rorAliases = Utils.safelyGetOrNull(jsonElement, j ->
+			j
+				.getAsJsonObject()
+				.getAsJsonArray("aliases")
+				.asList()
+				.stream()
+				.map(alias -> alias.getAsJsonPrimitive().getAsString())
+				.toList()
 		);
 		if (rorAliases != null) {
 			rorNames.addAll(rorAliases);
 		}
-		List<String> rorAcronyms = Utils.safelyGetOrNull(jsonElement, j -> j
-			.getAsJsonObject()
-			.getAsJsonArray("acronyms")
-			.asList()
-			.stream()
-			.map(acronym -> acronym.getAsJsonPrimitive().getAsString())
-			.toList()
+		List<String> rorAcronyms = Utils.safelyGetOrNull(jsonElement, j ->
+			j
+				.getAsJsonObject()
+				.getAsJsonArray("acronyms")
+				.asList()
+				.stream()
+				.map(acronym -> acronym.getAsJsonPrimitive().getAsString())
+				.toList()
 		);
 		if (rorAcronyms != null) {
 			rorNames.addAll(rorAcronyms);
 		}
-		List<String> rorLabels = Utils.safelyGetOrNull(jsonElement, j -> j
-			.getAsJsonObject()
-			.getAsJsonArray("labels")
-			.asList()
-			.stream()
-			.map(label -> label.getAsJsonObject().getAsJsonPrimitive("label").getAsString())
-			.toList()
+		List<String> rorLabels = Utils.safelyGetOrNull(jsonElement, j ->
+			j
+				.getAsJsonObject()
+				.getAsJsonArray("labels")
+				.asList()
+				.stream()
+				.map(label -> label.getAsJsonObject().getAsJsonPrimitive("label").getAsString())
+				.toList()
 		);
 		if (rorLabels != null) {
 			rorNames.addAll(rorLabels);
 		}
 
-		Double lat = Utils.safelyGetOrNull(jsonElement, j -> j
-			.getAsJsonObject()
-			.getAsJsonArray(addressesKey)
-			.get(0)
-			.getAsJsonObject()
-			.getAsJsonPrimitive("lat")
-			.getAsDouble());
-		Double lon = Utils.safelyGetOrNull(jsonElement, j -> j
-			.getAsJsonObject()
-			.getAsJsonArray(addressesKey)
-			.get(0)
-			.getAsJsonObject()
-			.getAsJsonPrimitive("lng")
-			.getAsDouble());
+		Double lat = Utils.safelyGetOrNull(jsonElement, j ->
+			j
+				.getAsJsonObject()
+				.getAsJsonArray(addressesKey)
+				.get(0)
+				.getAsJsonObject()
+				.getAsJsonPrimitive("lat")
+				.getAsDouble()
+		);
+		Double lon = Utils.safelyGetOrNull(jsonElement, j ->
+			j
+				.getAsJsonObject()
+				.getAsJsonArray(addressesKey)
+				.get(0)
+				.getAsJsonObject()
+				.getAsJsonPrimitive("lng")
+				.getAsDouble()
+		);
 
 		return new RorData(
 			country,

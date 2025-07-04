@@ -14,12 +14,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 class MavenScraperTest {
 
 	@ParameterizedTest
-	@CsvSource({
-		"https://central.sonatype.com/artifact/org.openscience.cdk/cdk-bundle,org.openscience.cdk,cdk-bundle",
-		"https://central.sonatype.com/artifact/org.openscience.cdk/cdk-bundle/,org.openscience.cdk,cdk-bundle",
-		"https://mvnrepository.com/artifact/io.github.sanctuuary/APE,io.github.sanctuuary,APE",
-		"https://mvnrepository.com/artifact/io.github.sanctuuary/APE/,io.github.sanctuuary,APE",
-	})
+	@CsvSource(
+		{
+			"https://central.sonatype.com/artifact/org.openscience.cdk/cdk-bundle,org.openscience.cdk,cdk-bundle",
+			"https://central.sonatype.com/artifact/org.openscience.cdk/cdk-bundle/,org.openscience.cdk,cdk-bundle",
+			"https://mvnrepository.com/artifact/io.github.sanctuuary/APE,io.github.sanctuuary,APE",
+			"https://mvnrepository.com/artifact/io.github.sanctuuary/APE/,io.github.sanctuuary,APE",
+		}
+	)
 	void givenValidMavenOrSonatypeUrl_whenCallingConstructor_thenNoExceptionThrownAndPackageNameCorrect(
 		String url,
 		String expectedGroupId,
@@ -31,15 +33,17 @@ class MavenScraperTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {
-		"https://central.sonatype.com/artifact",
-		"https://mvnrepository.com/artifact/",
-		"https://central.sonatype.com/artifact/org.openscience.cdk",
-		"https://mvnrepository.com/artifact/io.github.sanctuuary/",
-		"https://www.example.com",
-		"https://www.example.com/artifact/org.openscience.cdk/cdk-bundle",
-		""
-	})
+	@ValueSource(
+		strings = {
+			"https://central.sonatype.com/artifact",
+			"https://mvnrepository.com/artifact/",
+			"https://central.sonatype.com/artifact/org.openscience.cdk",
+			"https://mvnrepository.com/artifact/io.github.sanctuuary/",
+			"https://www.example.com",
+			"https://www.example.com/artifact/org.openscience.cdk/cdk-bundle",
+			"",
+		}
+	)
 	void givenInvalidUrl_whenCallingConstructor_thenExceptionThrown(String url) {
 		Assertions.assertThrowsExactly(RuntimeException.class, () -> new MavenScraper(url));
 	}

@@ -9,18 +9,17 @@ import java.net.URI;
 import java.time.ZonedDateTime;
 
 public record ExternalMentionRecord(
-		Doi doi,
-		ZonedDateTime doiRegistrationDate,
-		OpenalexId openalexId,
-		URI url,
-		String title,
-		String authors,
-		String publisher,
-		Integer publicationYear,
-		String journal,
-		String page,
-		MentionType mentionType,
-		String source,
-		String version
-) {
-}
+	Doi doi,
+	ZonedDateTime doiRegistrationDate,
+	OpenalexId openalexId,
+	URI url,
+	String title,
+	String authors,
+	String publisher,
+	Integer publicationYear,
+	String journal,
+	String page,
+	MentionType mentionType,
+	String source,
+	String version
+) {}

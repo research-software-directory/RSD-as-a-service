@@ -11,10 +11,10 @@ import com.google.gson.JsonObject;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.http.Header;
-
 import java.util.Date;
 
 public class User {
+
 	String accountId;
 	String token;
 	Header authHeader;
@@ -27,14 +27,14 @@ public class User {
 		}
 
 		String accountId = RestAssured.given()
-				.header(adminAuthHeader)
-				.header(Commons.requestEntry)
-				.when()
-				.post("account")
-				.then()
-				.statusCode(201)
-				.extract()
-				.path("[0].id");
+			.header(adminAuthHeader)
+			.header(Commons.requestEntry)
+			.when()
+			.post("account")
+			.then()
+			.statusCode(201)
+			.extract()
+			.path("[0].id");
 
 		return new User(accountId, hasAgreedTerms);
 	}
@@ -49,18 +49,17 @@ public class User {
 		obj.addProperty("notice_privacy_statement", true);
 
 		RestAssured.given()
-				.header(authHeader)
-				.contentType(ContentType.JSON)
-				.body(obj.toString())
-				.when()
-				.patch("account?id=eq." + accountId)
-				.then()
-				.statusCode(204);
+			.header(authHeader)
+			.contentType(ContentType.JSON)
+			.body(obj.toString())
+			.when()
+			.patch("account?id=eq." + accountId)
+			.then()
+			.statusCode(204);
 		return this;
 	}
 
 	String createSoftware(String brand_name) {
-
 		JsonObject obj = new JsonObject();
 		obj.addProperty("slug", "slug-" + Commons.createUUID());
 		obj.addProperty("brand_name", brand_name);
@@ -68,16 +67,16 @@ public class User {
 		obj.addProperty("short_statement", "Test software for testing");
 
 		return RestAssured.given()
-				.header(authHeader)
-				.header(Commons.requestEntry)
-				.contentType(ContentType.JSON)
-				.body(obj.toString())
-				.when()
-				.post("software")
-				.then()
-				.statusCode(201)
-				.extract()
-				.path("[0].id");
+			.header(authHeader)
+			.header(Commons.requestEntry)
+			.contentType(ContentType.JSON)
+			.body(obj.toString())
+			.when()
+			.post("software")
+			.then()
+			.statusCode(201)
+			.extract()
+			.path("[0].id");
 	}
 
 	// To create User objects use create() instead.
@@ -96,10 +95,10 @@ public class User {
 		Algorithm signingAlgorithm = Algorithm.HMAC256(secret);
 
 		return JWT.create()
-				.withClaim("account", accountId)
-				.withClaim("iss", "rsd_test")
-				.withClaim("role", "rsd_user")
-				.withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // expires in one hour
-				.sign(signingAlgorithm);
+			.withClaim("account", accountId)
+			.withClaim("iss", "rsd_test")
+			.withClaim("role", "rsd_user")
+			.withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // expires in one hour
+			.sign(signingAlgorithm);
 	}
 }

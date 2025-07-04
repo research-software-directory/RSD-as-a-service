@@ -11,5 +11,4 @@ public record CommitData(
 	BasicRepositoryData basicData,
 	CommitsPerWeek commitHistory,
 	ZonedDateTime commitHistoryScrapedAt
-) {
-}
+) {}

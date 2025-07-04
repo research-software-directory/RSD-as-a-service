@@ -8,13 +8,6 @@ package nl.esciencecenter.rsd.scraper.nassa;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import nl.esciencecenter.rsd.scraper.doi.ExternalMentionRecord;
-import nl.esciencecenter.rsd.scraper.doi.PostgrestMentionRepository;
-import nl.esciencecenter.rsd.scraper.license.SpdxLicense;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
-
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +15,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import nl.esciencecenter.rsd.scraper.doi.ExternalMentionRecord;
+import nl.esciencecenter.rsd.scraper.doi.PostgrestMentionRepository;
+import nl.esciencecenter.rsd.scraper.license.SpdxLicense;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
 public class NassaSoftwareEntry {
 
@@ -162,7 +161,10 @@ public class NassaSoftwareEntry {
 		root.addProperty("slug", id.toLowerCase());
 		root.addProperty("brand_name", title);
 		root.addProperty("description", descriptionWithInputsAndOutputs());
-		root.addProperty("short_statement", shortDescription.length() > 300 ? shortDescription.substring(0, 297) + "..." : shortDescription);
+		root.addProperty(
+			"short_statement",
+			shortDescription.length() > 300 ? shortDescription.substring(0, 297) + "..." : shortDescription
+		);
 		root.addProperty("get_started_url", gitHtmlUrl + "/" + docsDir);
 		root.addProperty("repository_url", gitHtmlUrl);
 
@@ -242,7 +244,11 @@ public class NassaSoftwareEntry {
 		if (implementations != null) {
 			JsonArray languagesJson = new JsonArray();
 			for (Map<String, Object> implementation : implementations) {
-				if (implementation != null && implementation.get("language") != null && implementation.get("language") instanceof String lang) {
+				if (
+					implementation != null &&
+					implementation.get("language") != null &&
+					implementation.get("language") instanceof String lang
+				) {
 					languagesJson.add(lang);
 				}
 			}
@@ -257,19 +263,23 @@ public class NassaSoftwareEntry {
 
 		Collection<ExternalMentionRecord> regularMentions = new ArrayList<>();
 		if (references != null && references.get("moduleReferences") != null) {
-			references.get("moduleReferences").forEach(citekey -> {
-				if (mentions.get(citekey) != null) {
-					regularMentions.add(mentions.get(citekey));
-				}
-			});
+			references
+				.get("moduleReferences")
+				.forEach(citekey -> {
+					if (mentions.get(citekey) != null) {
+						regularMentions.add(mentions.get(citekey));
+					}
+				});
 		}
 
 		if (references != null && references.get("useExampleReferences") != null) {
-			references.get("useExampleReferences").forEach(citekey -> {
-				if (mentions.get(citekey) != null) {
-					regularMentions.add(mentions.get(citekey));
-				}
-			});
+			references
+				.get("useExampleReferences")
+				.forEach(citekey -> {
+					if (mentions.get(citekey) != null) {
+						regularMentions.add(mentions.get(citekey));
+					}
+				});
 		}
 		root.add("regular_mentions", PostgrestMentionRepository.toRsdJsonArray(regularMentions));
 
@@ -323,6 +333,7 @@ public class NassaSoftwareEntry {
 }
 
 class NassaContributor {
+
 	final String givenName;
 	final String familyName;
 	final String emailAddress;
@@ -357,13 +368,6 @@ class NassaContributor {
 		String emailAddress = (String) map.get("email");
 		String orcid = (String) map.get("orcid");
 
-		return new NassaContributor(
-			givenName,
-			familyName,
-			emailAddress,
-			roles,
-			orcid,
-			position
-		);
+		return new NassaContributor(givenName, familyName, emailAddress, roles, orcid, position);
 	}
 }

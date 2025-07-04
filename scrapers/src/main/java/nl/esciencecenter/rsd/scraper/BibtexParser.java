@@ -5,16 +5,15 @@
 
 package nl.esciencecenter.rsd.scraper;
 
-import nl.esciencecenter.rsd.scraper.doi.Doi;
-import nl.esciencecenter.rsd.scraper.doi.ExternalMentionRecord;
-import nl.esciencecenter.rsd.scraper.doi.MentionType;
-
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
 import java.net.URI;
 import java.util.Map;
 import java.util.TreeMap;
+import nl.esciencecenter.rsd.scraper.doi.Doi;
+import nl.esciencecenter.rsd.scraper.doi.ExternalMentionRecord;
+import nl.esciencecenter.rsd.scraper.doi.MentionType;
 
 // https://www.bibtex.org/Format/
 // https://www.bibtex.com/e/entry-types/
@@ -52,7 +51,7 @@ public class BibtexParser {
 		READING_MONTH,
 		READING_INTEGER,
 		READING_VALUE,
-		READING_COMMA
+		READING_COMMA,
 	}
 
 	public static Map<String, ExternalMentionRecord> parse(Reader reader) throws IOException, InvalidInputException {
@@ -96,13 +95,24 @@ public class BibtexParser {
 				case READING_ENTRY_TYPE -> {
 					if (Character.isWhitespace(c) || c == '{') {
 						if (stringBuilder.isEmpty()) {
-							throw new InvalidInputException("READING_ENTRY_TYPE Empty entry type at line %d, column %d".formatted(lineNumberReader.getLineNumber(), column));
+							throw new InvalidInputException(
+								"READING_ENTRY_TYPE Empty entry type at line %d, column %d".formatted(
+									lineNumberReader.getLineNumber(),
+									column
+								)
+							);
 						}
 						entryType = stringBuilder.toString();
 						stringBuilder.setLength(0);
 						state = c == '{' ? ParserState.BEFORE_READING_CITEKEY : ParserState.READING_ENTRY_OUTER_BRACE;
 					} else if (!isAsciiLetter(c)) {
-						throw new InvalidInputException("READING_ENTRY_TYPE Expected a letter but got %c at line %d, column %d".formatted(c, lineNumberReader.getLineNumber(), column));
+						throw new InvalidInputException(
+							"READING_ENTRY_TYPE Expected a letter but got %c at line %d, column %d".formatted(
+								c,
+								lineNumberReader.getLineNumber(),
+								column
+							)
+						);
 					} else {
 						stringBuilder.append(c);
 					}
@@ -111,12 +121,24 @@ public class BibtexParser {
 					if (c == '{') {
 						state = ParserState.BEFORE_READING_KEY;
 					} else if (!Character.isWhitespace(c)) {
-						throw new InvalidInputException("READING_ENTRY_OUTER_BRACE Expected { or whitespace but got %c at line %d, column %d".formatted(c, lineNumberReader.getLineNumber(), column));
+						throw new InvalidInputException(
+							"READING_ENTRY_OUTER_BRACE Expected { or whitespace but got %c at line %d, column %d".formatted(
+								c,
+								lineNumberReader.getLineNumber(),
+								column
+							)
+						);
 					}
 				}
 				case BEFORE_READING_CITEKEY -> {
 					if (!isValidCitekeyCharacter(c)) {
-						throw new InvalidInputException("BEFORE_READING_CITEKEY Expected an alphanumeric character or - or _ or : but got %c at line %d, column %d".formatted(c, lineNumberReader.getLineNumber(), column));
+						throw new InvalidInputException(
+							"BEFORE_READING_CITEKEY Expected an alphanumeric character or - or _ or : but got %c at line %d, column %d".formatted(
+								c,
+								lineNumberReader.getLineNumber(),
+								column
+							)
+						);
 					} else if (!Character.isWhitespace(c)) {
 						stringBuilder.setLength(0);
 						stringBuilder.append(c);
@@ -128,13 +150,24 @@ public class BibtexParser {
 						stringBuilder.append(c);
 					} else if (c == ',') {
 						if (stringBuilder.isEmpty()) {
-							throw new InvalidInputException("READING_CITEKEY Empty citekey at line %d, column %d".formatted(lineNumberReader.getLineNumber(), column));
+							throw new InvalidInputException(
+								"READING_CITEKEY Empty citekey at line %d, column %d".formatted(
+									lineNumberReader.getLineNumber(),
+									column
+								)
+							);
 						}
 						citekey = stringBuilder.toString();
 						stringBuilder.setLength(0);
 						state = ParserState.BEFORE_READING_KEY;
 					} else {
-						throw new InvalidInputException("READING_CITEKEY Expected an alphanumeric character or - or _ or : but got %c at line %d, column %d".formatted(c, lineNumberReader.getLineNumber(), column));
+						throw new InvalidInputException(
+							"READING_CITEKEY Expected an alphanumeric character or - or _ or : but got %c at line %d, column %d".formatted(
+								c,
+								lineNumberReader.getLineNumber(),
+								column
+							)
+						);
 					}
 				}
 				case BEFORE_READING_KEY -> {
@@ -146,7 +179,13 @@ public class BibtexParser {
 						stringBuilder.append(c);
 						state = ParserState.READING_KEY;
 					} else if (!Character.isWhitespace(c)) {
-						throw new InvalidInputException("BEFORE_READING_KEY Expected a letter but got %c at line %d, column %d".formatted(c, lineNumberReader.getLineNumber(), column));
+						throw new InvalidInputException(
+							"BEFORE_READING_KEY Expected a letter but got %c at line %d, column %d".formatted(
+								c,
+								lineNumberReader.getLineNumber(),
+								column
+							)
+						);
 					}
 				}
 				case READING_KEY -> {
@@ -155,20 +194,37 @@ public class BibtexParser {
 						stringBuilder.append(c);
 					} else if (Character.isWhitespace(c) || c == '=') {
 						if (stringBuilder.isEmpty()) {
-							throw new InvalidInputException("READING_KEY Empty key at line %d, column %d".formatted(lineNumberReader.getLineNumber(), column));
+							throw new InvalidInputException(
+								"READING_KEY Empty key at line %d, column %d".formatted(
+									lineNumberReader.getLineNumber(),
+									column
+								)
+							);
 						}
 						key = stringBuilder.toString();
 						stringBuilder.setLength(0);
 						state = c == '=' ? ParserState.READING_VALUE_DELIMITER : ParserState.READING_EQUALS_SIGN;
 					} else {
-						throw new InvalidInputException("READING_KEY Expected a letter or whitespace or = but got %c at line %d, column %d".formatted(c, lineNumberReader.getLineNumber(), column));
+						throw new InvalidInputException(
+							"READING_KEY Expected a letter or whitespace or = but got %c at line %d, column %d".formatted(
+								c,
+								lineNumberReader.getLineNumber(),
+								column
+							)
+						);
 					}
 				}
 				case READING_EQUALS_SIGN -> {
 					if (c == '=') {
 						state = ParserState.READING_VALUE_DELIMITER;
 					} else if (Character.isWhitespace(c)) {
-						throw new InvalidInputException("READING_EQUALS_SIGN Expected whitespace or = but got %c at line %d, column %d".formatted(c, lineNumberReader.getLineNumber(), column));
+						throw new InvalidInputException(
+							"READING_EQUALS_SIGN Expected whitespace or = but got %c at line %d, column %d".formatted(
+								c,
+								lineNumberReader.getLineNumber(),
+								column
+							)
+						);
 					}
 				}
 				case READING_VALUE_DELIMITER -> {
@@ -187,7 +243,13 @@ public class BibtexParser {
 						stringBuilder.append(c);
 						state = ParserState.READING_INTEGER;
 					} else if (!Character.isWhitespace(c)) {
-						throw new InvalidInputException("READING_VALUE_DELIMITER Expected whitespace or { or \" but got %c at line %d, column %d".formatted(c, lineNumberReader.getLineNumber(), column));
+						throw new InvalidInputException(
+							"READING_VALUE_DELIMITER Expected whitespace or { or \" but got %c at line %d, column %d".formatted(
+								c,
+								lineNumberReader.getLineNumber(),
+								column
+							)
+						);
 					}
 				}
 				case READING_MONTH -> {
@@ -195,18 +257,33 @@ public class BibtexParser {
 						if (stringBuilder.length() < 3) {
 							stringBuilder.append(c);
 						} else {
-							throw new InvalidInputException("READING_MONTH Month literal too long at line %d, column %d".formatted(lineNumberReader.getLineNumber(), column));
+							throw new InvalidInputException(
+								"READING_MONTH Month literal too long at line %d, column %d".formatted(
+									lineNumberReader.getLineNumber(),
+									column
+								)
+							);
 						}
 					} else if (Character.isWhitespace(c) || c == ',') {
 						if (stringBuilder.length() != 3) {
-							throw new InvalidInputException("READING_MONTH Month literal too short at line %d, column %d".formatted(lineNumberReader.getLineNumber(), column));
+							throw new InvalidInputException(
+								"READING_MONTH Month literal too short at line %d, column %d".formatted(
+									lineNumberReader.getLineNumber(),
+									column
+								)
+							);
 						} else {
 							keyValues.put(key, stringBuilder.toString());
 							stringBuilder.setLength(0);
 							state = c == ',' ? ParserState.BEFORE_READING_KEY : ParserState.READING_COMMA;
 						}
 					} else {
-						throw new InvalidInputException("READING_MONTH Illegal month literal at line %d, column %d".formatted(lineNumberReader.getLineNumber(), column));
+						throw new InvalidInputException(
+							"READING_MONTH Illegal month literal at line %d, column %d".formatted(
+								lineNumberReader.getLineNumber(),
+								column
+							)
+						);
 					}
 				}
 				case READING_INTEGER -> {
@@ -217,7 +294,12 @@ public class BibtexParser {
 						stringBuilder.setLength(0);
 						state = c == ',' ? ParserState.BEFORE_READING_KEY : ParserState.READING_COMMA;
 					} else {
-						throw new InvalidInputException("READING_INTEGER Illegal integer literal at line %d, column %d".formatted(lineNumberReader.getLineNumber(), column));
+						throw new InvalidInputException(
+							"READING_INTEGER Illegal integer literal at line %d, column %d".formatted(
+								lineNumberReader.getLineNumber(),
+								column
+							)
+						);
 					}
 				}
 				case READING_VALUE -> {
@@ -226,7 +308,12 @@ public class BibtexParser {
 					} else if (c == '}') {
 						--openBraceCount;
 						if (openBraceCount < 0 && valueDelimiter != '{') {
-							throw new InvalidInputException("READING_VALUE Unmatched closing brace at line %d, column %d".formatted(lineNumberReader.getLineNumber(), column));
+							throw new InvalidInputException(
+								"READING_VALUE Unmatched closing brace at line %d, column %d".formatted(
+									lineNumberReader.getLineNumber(),
+									column
+								)
+							);
 						} else if (openBraceCount < 0) {
 							keyValues.put(key, stringBuilder.toString());
 							stringBuilder.setLength(0);
@@ -248,14 +335,23 @@ public class BibtexParser {
 						state = ParserState.BETWEEN_ENTRIES;
 						handleEntry(keyValues, entryType, citekey, result);
 					} else if (!Character.isWhitespace(c)) {
-						throw new InvalidInputException("READING_COMMA Expected whitespace or , or } but got %c at line %d, column %d".formatted(c, lineNumberReader.getLineNumber(), column));
+						throw new InvalidInputException(
+							"READING_COMMA Expected whitespace or , or } but got %c at line %d, column %d".formatted(
+								c,
+								lineNumberReader.getLineNumber(),
+								column
+							)
+						);
 					}
 				}
 			}
 		}
 	}
 
-	static Map<String, ExternalMentionRecord> handleEndOfInput(Map<String, ExternalMentionRecord> result, ParserState state) throws InvalidInputException {
+	static Map<String, ExternalMentionRecord> handleEndOfInput(
+		Map<String, ExternalMentionRecord> result,
+		ParserState state
+	) throws InvalidInputException {
 		if (state == ParserState.BETWEEN_ENTRIES) {
 			return result;
 		} else {
@@ -264,17 +360,14 @@ public class BibtexParser {
 	}
 
 	static boolean isValidCitekeyCharacter(char c) {
-		return (c >= 'a' && c <= 'z')
-			||
-			(c >= 'A' && c <= 'Z')
-			||
-			(c >= '0' && c <= '9')
-			||
-			c == '-'
-			||
-			c == '_'
-			||
-			c == ':';
+		return (
+			(c >= 'a' && c <= 'z') ||
+			(c >= 'A' && c <= 'Z') ||
+			(c >= '0' && c <= '9') ||
+			c == '-' ||
+			c == '_' ||
+			c == ':'
+		);
 	}
 
 	static boolean isAsciiLetter(char c) {
@@ -332,4 +425,3 @@ public class BibtexParser {
 		keyValues.clear();
 	}
 }
-

@@ -16,8 +16,7 @@ import java.net.URISyntaxException;
 
 public class Config {
 
-	private Config() {
-	}
+	private Config() {}
 
 	public static String hostUrl() {
 		return System.getenv("HOST_URL");
@@ -60,7 +59,6 @@ public class Config {
 		return System.getenv("POSTGREST_URL");
 	}
 
-
 	// SURFconext
 	public static String surfconextClientId() {
 		return System.getenv("SURFCONEXT_CLIENT_ID");
@@ -73,7 +71,6 @@ public class Config {
 	public static String surfconextClientSecret() {
 		return System.getenv("AUTH_SURFCONEXT_CLIENT_SECRET");
 	}
-
 
 	//	Helmholtz ID
 	public static String helmholtzIdClientId() {
@@ -93,9 +90,7 @@ public class Config {
 	}
 
 	public static boolean helmholtzIdAllowExternalUsers() {
-		return Boolean.parseBoolean(
-			System.getenv("HELMHOLTZID_ALLOW_EXTERNAL_USERS")
-		);
+		return Boolean.parseBoolean(System.getenv("HELMHOLTZID_ALLOW_EXTERNAL_USERS"));
 	}
 
 	// ORCID
@@ -110,7 +105,6 @@ public class Config {
 	public static String orcidClientSecret() {
 		return System.getenv("AUTH_ORCID_CLIENT_SECRET");
 	}
-
 
 	// Azure Active Directory
 	public static String azureClientId() {
@@ -128,7 +122,6 @@ public class Config {
 	public static String azureOrganisation() {
 		return System.getenv("AZURE_ORGANISATION");
 	}
-
 
 	// LinkedIn
 	public static String linkedinClientId() {

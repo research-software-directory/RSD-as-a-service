@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
  * PeriodicServices are executed at a fixed rate based on an interval
  */
 public class PeriodicService extends AbstractService {
+
 	private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 	private final int intervalSeconds;
 	private final int initialDelay;
@@ -34,7 +35,13 @@ public class PeriodicService extends AbstractService {
 
 	@Override
 	public void run() {
-		LOGGER.info("Scheduling periodic service %s with %s - %s".formatted(this.getServiceName(), initialDelay, intervalSeconds));
+		LOGGER.info(
+			"Scheduling periodic service %s with %s - %s".formatted(
+				this.getServiceName(),
+				initialDelay,
+				intervalSeconds
+			)
+		);
 		scheduler.scheduleAtFixedRate(this::performTask, initialDelay, intervalSeconds, TimeUnit.SECONDS);
 	}
 

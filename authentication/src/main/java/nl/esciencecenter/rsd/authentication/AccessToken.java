@@ -17,6 +17,4 @@ public record AccessToken(
 	ZonedDateTime createdAt,
 	ZonedDateTime expiresAt,
 	String displayName
-) {
-
-}
+) {}

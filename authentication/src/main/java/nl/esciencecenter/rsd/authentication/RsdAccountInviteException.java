@@ -6,6 +6,7 @@
 package nl.esciencecenter.rsd.authentication;
 
 public class RsdAccountInviteException extends Exception {
+
 	public RsdAccountInviteException(String message) {
 		super(message);
 	}

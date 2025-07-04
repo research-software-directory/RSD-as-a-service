@@ -11,10 +11,4 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public record AccountInfo(
-		UUID account,
-		String name,
-		boolean isAdmin,
-		Map<String, List<String>> data
-) {
-}
+public record AccountInfo(UUID account, String name, boolean isAdmin, Map<String, List<String>> data) {}

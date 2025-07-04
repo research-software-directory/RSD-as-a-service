@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-
 class GitlabScraperIT {
+
 	private final String baseApiUrl = "https://git.gfz-potsdam.de/api";
 	private final String repo = "swc-bb/swc-templates/swc-l/python";
 	private final GitlabScraper scraper = new GitlabScraper(baseApiUrl, repo);

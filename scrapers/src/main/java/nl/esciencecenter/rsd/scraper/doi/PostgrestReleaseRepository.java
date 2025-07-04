@@ -12,9 +12,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import nl.esciencecenter.rsd.scraper.Config;
-import nl.esciencecenter.rsd.scraper.Utils;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import nl.esciencecenter.rsd.scraper.Config;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 public class PostgrestReleaseRepository {
 
@@ -32,11 +31,19 @@ public class PostgrestReleaseRepository {
 	}
 
 	public Collection<ReleaseData> leastRecentlyScrapedReleases(int limit) {
-		String data = Utils.getAsAdmin(backendUrl + "/rpc/software_join_release?concept_doi=not.is.null&order=releases_scraped_at.asc.nullsfirst&limit=" + limit);
+		String data = Utils.getAsAdmin(
+			backendUrl +
+			"/rpc/software_join_release?concept_doi=not.is.null&order=releases_scraped_at.asc.nullsfirst&limit=" +
+			limit
+		);
 		return parseJson(data);
 	}
 
-	public void saveReleaseContent(Collection<ReleaseData> releaseData, Map<Doi, Collection<ExternalMentionRecord>> conceptDoiToDois, Map<Doi, UUID> versionDoiToMentionId) {
+	public void saveReleaseContent(
+		Collection<ReleaseData> releaseData,
+		Map<Doi, Collection<ExternalMentionRecord>> conceptDoiToDois,
+		Map<Doi, UUID> versionDoiToMentionId
+	) {
 		// First update the releases_scraped_at column.
 		JsonArray releasesBody = new JsonArray();
 		Instant now = Instant.now();
@@ -46,14 +53,20 @@ public class PostgrestReleaseRepository {
 			data.addProperty("releases_scraped_at", now.toString());
 			releasesBody.add(data);
 		}
-		Utils.postAsAdmin(Config.backendBaseUrl() + "/release", releasesBody.toString(), "Prefer", "resolution=merge-duplicates");
-
+		Utils.postAsAdmin(
+			Config.backendBaseUrl() + "/release",
+			releasesBody.toString(),
+			"Prefer",
+			"resolution=merge-duplicates"
+		);
 
 		// Then update the release_version table.
 		// For each scraped or existing version as a mention, we need to know its id of the mention table and the ids (plural, because multiple software entries can have the same concept DOI) of the software to which it belongs.
 		Map<Doi, Collection<UUID>> conceptDoiToSoftwareIds = new HashMap<>();
 		for (ReleaseData release : releaseData) {
-			Collection<UUID> softwareIds = conceptDoiToSoftwareIds.computeIfAbsent(release.conceptDoi, k -> new ArrayList<>());
+			Collection<UUID> softwareIds = conceptDoiToSoftwareIds.computeIfAbsent(release.conceptDoi, k ->
+				new ArrayList<>()
+			);
 			softwareIds.add(release.softwareId);
 		}
 
@@ -83,17 +96,22 @@ public class PostgrestReleaseRepository {
 			}
 		}
 
-		Utils.postAsAdmin(Config.backendBaseUrl() + "/release_version", coupling.toString(), "Prefer", "resolution=merge-duplicates");
+		Utils.postAsAdmin(
+			Config.backendBaseUrl() + "/release_version",
+			coupling.toString(),
+			"Prefer",
+			"resolution=merge-duplicates"
+		);
 	}
 
 	Collection<ReleaseData> parseJson(String data) {
-		JsonDeserializer<Doi> doiDeserializer = (json, type, context) -> Doi.fromString(json.getAsJsonPrimitive().getAsString());
+		JsonDeserializer<Doi> doiDeserializer = (json, type, context) ->
+			Doi.fromString(json.getAsJsonPrimitive().getAsString());
 		Gson gson = new GsonBuilder()
-				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-				.registerTypeAdapter(Doi.class, doiDeserializer)
-				.create();
-		TypeToken<Collection<ReleaseData>> typeToken = new TypeToken<>() {
-		};
+			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+			.registerTypeAdapter(Doi.class, doiDeserializer)
+			.create();
+		TypeToken<Collection<ReleaseData>> typeToken = new TypeToken<>() {};
 		return gson.fromJson(data, typeToken.getType());
 	}
 }

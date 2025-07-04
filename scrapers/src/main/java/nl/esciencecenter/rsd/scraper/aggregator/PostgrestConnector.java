@@ -9,11 +9,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.RsdResponseException;
-import nl.esciencecenter.rsd.scraper.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
@@ -24,16 +19,20 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+import nl.esciencecenter.rsd.scraper.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PostgrestConnector {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PostgrestConnector.class);
 
-	private PostgrestConnector() {
-	}
+	private PostgrestConnector() {}
 
 	public static Collection<RemoteRsdData> allActiveDomains(URI baseUrl) {
-		String filter = "select=id,domain,scrape_interval_minutes,scraped_at,remote_software(remote_software_id)&active=is.true";
+		String filter =
+			"select=id,domain,scrape_interval_minutes,scraped_at,remote_software(remote_software_id)&active=is.true";
 		String url = baseUrl.toString() + "/remote_rsd?" + filter;
 
 		String response = Utils.getAsAdmin(url);
@@ -50,37 +49,40 @@ public class PostgrestConnector {
 				JsonObject jsonObject = element.getAsJsonObject();
 				UUID id = UUID.fromString(jsonObject.getAsJsonPrimitive("id").getAsString());
 				URI domain = URI.create(jsonObject.getAsJsonPrimitive("domain").getAsString());
-				Duration refreshInterval = Duration.ofMinutes(jsonObject.getAsJsonPrimitive("scrape_interval_minutes")
-					.getAsLong());
+				Duration refreshInterval = Duration.ofMinutes(
+					jsonObject.getAsJsonPrimitive("scrape_interval_minutes").getAsLong()
+				);
 				JsonElement refreshedAtElement = jsonObject.get("scraped_at");
-				ZonedDateTime refreshedAt = refreshedAtElement.isJsonNull() ? null : ZonedDateTime.parse(refreshedAtElement.getAsString());
+				ZonedDateTime refreshedAt = refreshedAtElement.isJsonNull()
+					? null
+					: ZonedDateTime.parse(refreshedAtElement.getAsString());
 
 				Collection<UUID> softwareIds = new HashSet<>();
 				JsonArray idsArray = jsonObject.getAsJsonArray("remote_software");
 				for (JsonElement jsonElement : idsArray) {
-					UUID softwareId = UUID.fromString(jsonElement.getAsJsonObject()
-						.getAsJsonPrimitive("remote_software_id")
-						.getAsString());
+					UUID softwareId = UUID.fromString(
+						jsonElement.getAsJsonObject().getAsJsonPrimitive("remote_software_id").getAsString()
+					);
 					softwareIds.add(softwareId);
 				}
 
-				result.add(new RemoteRsdData(
-					id,
-					domain,
-					refreshInterval,
-					refreshedAt,
-					softwareIds
-				));
+				result.add(new RemoteRsdData(id, domain, refreshInterval, refreshedAt, softwareIds));
 			} catch (RuntimeException e) {
 				LOGGER.error("Exception when parsing item", e);
-				Utils.saveExceptionInDatabase(MainAggregator.AGGREGATOR_SERVICE_NAME, MainAggregator.REMOTE_SOFTWARE_TABLE_NAME, null, e);
+				Utils.saveExceptionInDatabase(
+					MainAggregator.AGGREGATOR_SERVICE_NAME,
+					MainAggregator.REMOTE_SOFTWARE_TABLE_NAME,
+					null,
+					e
+				);
 			}
 		}
 
 		return result;
 	}
 
-	public static void deleteSoftware(URI baseUrl, UUID remoteRsdId, UUID remoteSoftwareId) throws RsdResponseException, IOException, InterruptedException {
+	public static void deleteSoftware(URI baseUrl, UUID remoteRsdId, UUID remoteSoftwareId)
+		throws RsdResponseException, IOException, InterruptedException {
 		String filter = "remote_rsd_id=eq." + remoteRsdId + "&remote_software_id=eq." + remoteSoftwareId;
 		String url = baseUrl.toString() + "/remote_software?" + filter;
 
@@ -93,7 +95,12 @@ public class PostgrestConnector {
 		Utils.postAsAdmin(url, softwareArray.toString(), "Prefer", "resolution=merge-duplicates");
 	}
 
-	public static void updateRefreshedTimeAndErrorMessage(URI baseUrl, UUID id, ZonedDateTime refreshedAt, String errorMessage) {
+	public static void updateRefreshedTimeAndErrorMessage(
+		URI baseUrl,
+		UUID id,
+		ZonedDateTime refreshedAt,
+		String errorMessage
+	) {
 		String filter = "id=eq." + id;
 		String url = baseUrl.toString() + "/remote_rsd?" + filter;
 

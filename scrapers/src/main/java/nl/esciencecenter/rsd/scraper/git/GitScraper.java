@@ -6,11 +6,9 @@
 package nl.esciencecenter.rsd.scraper.git;
 
 import java.io.IOException;
-
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 
 public interface GitScraper {
-
 	BasicGitData basicData() throws IOException, InterruptedException, RsdResponseException;
 
 	String languages() throws IOException, InterruptedException, RsdResponseException;

@@ -13,25 +13,27 @@ import org.junit.jupiter.params.provider.ValueSource;
 class OpenalexIdTest {
 
 	@ParameterizedTest
-	@ValueSource(strings = {
-			"https://openalex.org/W3160330321",
-			"https://openalex.org/w3160330321",
-			"https://openalex.org/W152867311",
-	})
+	@ValueSource(
+		strings = {
+			"https://openalex.org/W3160330321", "https://openalex.org/w3160330321", "https://openalex.org/W152867311",
+		}
+	)
 	void givenValidOpenalexId_whenInstanceCreated_thenNoExceptionThrown(String validId) {
 		OpenalexId openalexId = Assertions.assertDoesNotThrow(() -> OpenalexId.fromString(validId));
 		Assertions.assertNotNull(openalexId);
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {
+	@ValueSource(
+		strings = {
 			"http://openalex.org/W3160330321",
 			"https://openalex.org/3160330321",
 			"https://openalex.org/W3160330321/",
 			"https://openalex.org/works/W3160330321",
 			"W3160330321",
 			"",
-	})
+		}
+	)
 	void givenInValidOpenalexId_whenCreatingInstance_thenExceptionThrown(String invalidId) {
 		Assertions.assertThrows(RuntimeException.class, () -> OpenalexId.fromString(invalidId));
 	}

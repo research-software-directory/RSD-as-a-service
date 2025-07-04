@@ -18,10 +18,6 @@ import com.google.gson.JsonParser;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
-import nl.esciencecenter.rsd.authentication.RsdAccessTokenException.UnverifiedAccessTokenException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -34,8 +30,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import nl.esciencecenter.rsd.authentication.RsdAccessTokenException.UnverifiedAccessTokenException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Main {
+
 	private static final Duration AUTH_COOKIE_DURATION = Duration.ofHours(1);
 	private static final Duration FAILURE_COOKIE_DURATION = Duration.ofMinutes(1);
 	private static final String INVITE_COOKIE_NAME = "rsd_invite_id";
@@ -138,7 +138,6 @@ public class Main {
 		});
 
 		if (Config.isApiAccessTokenEnabled()) {
-
 			// endpoint for generating new API access token
 			app.post("/auth/accesstoken", ctx -> {
 				String accountId = extractAccountFromCookie(ctx);
@@ -254,7 +253,8 @@ public class Main {
 		});
 	}
 
-	static void handleLoginRequest(Context ctx, OpenidProvider openidProvider, RsdProviders rsdProviders) throws RsdResponseException, IOException, InterruptedException, RsdAccountInviteException, PostgresForeignKeyConstraintException, PostgresCustomException {
+	static void handleLoginRequest(Context ctx, OpenidProvider openidProvider, RsdProviders rsdProviders)
+		throws RsdResponseException, IOException, InterruptedException, RsdAccountInviteException, PostgresForeignKeyConstraintException, PostgresCustomException {
 		switch (rsdProviders.accessMethodOfProvider(openidProvider)) {
 			case MISCONFIGURED -> {
 				handleMisconfiguredProvider(ctx, openidProvider);
@@ -275,7 +275,8 @@ public class Main {
 		}
 	}
 
-	static void handleCoupleRequest(Context ctx, OpenidProvider openidProvider, RsdProviders rsdProviders) throws RsdResponseException, IOException, InterruptedException {
+	static void handleCoupleRequest(Context ctx, OpenidProvider openidProvider, RsdProviders rsdProviders)
+		throws RsdResponseException, IOException, InterruptedException {
 		switch (rsdProviders.accessMethodOfProvider(openidProvider)) {
 			case MISCONFIGURED -> {
 				handleMisconfiguredProvider(ctx, openidProvider);
@@ -291,10 +292,13 @@ public class Main {
 		}
 	}
 
-	static OpenIdInfo obtainOpenIdInfo(Context ctx, OpenidProvider openidProvider, boolean isCoupling) throws RsdResponseException, IOException, InterruptedException {
+	static OpenIdInfo obtainOpenIdInfo(Context ctx, OpenidProvider openidProvider, boolean isCoupling)
+		throws RsdResponseException, IOException, InterruptedException {
 		String redirectUrl = null;
 		if (openidProvider != OpenidProvider.local) {
-			redirectUrl = isCoupling ? RsdProviders.obtainCouplingRedirectUrl(openidProvider) : RsdProviders.obtainRedirectUrl(openidProvider);
+			redirectUrl = isCoupling
+				? RsdProviders.obtainCouplingRedirectUrl(openidProvider)
+				: RsdProviders.obtainRedirectUrl(openidProvider);
 		}
 
 		return switch (openidProvider) {
@@ -332,7 +336,8 @@ public class Main {
 		};
 	}
 
-	static void handleAccountInviteOnly(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx) throws IOException, InterruptedException, RsdAccountInviteException, PostgresCustomException, PostgresForeignKeyConstraintException {
+	static void handleAccountInviteOnly(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx)
+		throws IOException, InterruptedException, RsdAccountInviteException, PostgresCustomException, PostgresForeignKeyConstraintException {
 		PostgrestAccount postgrestAccount = new PostgrestAccount(Config.backendBaseUrl());
 		Optional<AccountInfo> optionalAccountInfo = postgrestAccount.getAccountIfExists(openIdInfo, provider);
 		if (optionalAccountInfo.isPresent()) {
@@ -344,24 +349,30 @@ public class Main {
 		}
 	}
 
-	static void handleAccountEveryoneAllowed(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx) throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException {
+	static void handleAccountEveryoneAllowed(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx)
+		throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException {
 		AccountInfo accountInfo = new PostgrestAccount(Config.backendBaseUrl()).account(openIdInfo, provider);
 		createAndSetCookie(ctx, accountInfo);
 	}
 
 	static void handleDisabledProvider(Context ctx, OpenidProvider provider) {
-		String message = "The provider \"%s\", is disabled, please try a different provider.".formatted(provider.toUserFriendlyString());
+		String message = "The provider \"%s\", is disabled, please try a different provider.".formatted(
+			provider.toUserFriendlyString()
+		);
 		setLoginFailureCookie(ctx, message);
 		ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
 	}
 
 	static void handleMisconfiguredProvider(Context ctx, OpenidProvider provider) {
-		String message = "The provider \"%s\", is misconfigured, please contact your RSD admins.".formatted(provider.toUserFriendlyString());
+		String message = "The provider \"%s\", is misconfigured, please contact your RSD admins.".formatted(
+			provider.toUserFriendlyString()
+		);
 		setLoginFailureCookie(ctx, message);
 		ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
 	}
 
-	static void handleCoupleLogins(Context ctx, OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException {
+	static void handleCoupleLogins(Context ctx, OpenIdInfo openIdInfo, OpenidProvider provider)
+		throws IOException, InterruptedException {
 		String tokenToVerify = ctx.cookie("rsd_token");
 		String signingSecret = Config.jwtSigningSecret();
 		JwtVerifier verifier = new JwtVerifier(signingSecret);
@@ -398,11 +409,23 @@ public class Main {
 	}
 
 	static void setJwtCookie(Context ctx, String token) {
-		ctx.header("Set-Cookie", "rsd_token=" + token + "; Secure; HttpOnly; Path=/; SameSite=Lax; Max-Age=" + AUTH_COOKIE_DURATION.toSeconds());
+		ctx.header(
+			"Set-Cookie",
+			"rsd_token=" +
+			token +
+			"; Secure; HttpOnly; Path=/; SameSite=Lax; Max-Age=" +
+			AUTH_COOKIE_DURATION.toSeconds()
+		);
 	}
 
 	static void setLoginFailureCookie(Context ctx, String message) {
-		ctx.header("Set-Cookie", "rsd_login_failure_message=" + message + "; Secure; Path=/login/failed; SameSite=Lax; Max-Age=" + FAILURE_COOKIE_DURATION.toSeconds());
+		ctx.header(
+			"Set-Cookie",
+			"rsd_login_failure_message=" +
+			message +
+			"; Secure; Path=/login/failed; SameSite=Lax; Max-Age=" +
+			FAILURE_COOKIE_DURATION.toSeconds()
+		);
 	}
 
 	static void setRedirectFromCookie(Context ctx) {
@@ -432,23 +455,23 @@ public class Main {
 		String path = ctx.path().substring("/api/v2".length());
 		String fullUrl = Config.backendBaseUrl() + path + ((ctx.queryString() != null) ? "?" + ctx.queryString() : "");
 
-		HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-			.uri(URI.create(fullUrl));
+		HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(URI.create(fullUrl));
 
 		if (ctx.attribute("X-API-Authorization-Header") != null) {
 			requestBuilder.header("Authorization", ctx.attribute("X-API-Authorization-Header"));
 		}
 
-		ctx.headerMap().forEach((k, v) -> {
-			if (!Utils.isForbiddenHeader(k) && !k.equalsIgnoreCase("authorization") && v != null) {
-				try {
-					requestBuilder.header(k, v);
-				} catch (IllegalArgumentException e) {
-					throw new RsdInvalidHeaderException("Received invalid or forbidden header", e);
+		ctx
+			.headerMap()
+			.forEach((k, v) -> {
+				if (!Utils.isForbiddenHeader(k) && !k.equalsIgnoreCase("authorization") && v != null) {
+					try {
+						requestBuilder.header(k, v);
+					} catch (IllegalArgumentException e) {
+						throw new RsdInvalidHeaderException("Received invalid or forbidden header", e);
+					}
 				}
-
-			}
-		});
+			});
 
 		HttpRequest request = switch (method) {
 			case "GET", "DELETE" -> requestBuilder.method(method, HttpRequest.BodyPublishers.noBody()).build();

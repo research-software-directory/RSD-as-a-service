@@ -11,13 +11,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.reflect.TypeToken;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.time.Period;
 import java.util.Map;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 class CommitsPerWeekTest {
 
@@ -34,7 +33,6 @@ class CommitsPerWeekTest {
 		Assertions.assertTrue(underlyingMap.containsKey(sundayMidnight1));
 		Assertions.assertEquals(10, underlyingMap.get(sundayMidnight1));
 
-
 		commitsPerWeek.addCommits(sundayMidnight1, 20);
 
 		underlyingMap = commitsPerWeek.getData();
@@ -42,8 +40,8 @@ class CommitsPerWeekTest {
 		Assertions.assertTrue(underlyingMap.containsKey(sundayMidnight1));
 		Assertions.assertEquals(30, underlyingMap.get(sundayMidnight1));
 
-
-		Instant smallTimeAfterSundayMidnight1 = sundayMidnight1.plus(Duration.ofDays(3))
+		Instant smallTimeAfterSundayMidnight1 = sundayMidnight1
+			.plus(Duration.ofDays(3))
 			.plus(Duration.ofSeconds(12345));
 		commitsPerWeek.addCommits(smallTimeAfterSundayMidnight1, 10);
 
@@ -51,7 +49,6 @@ class CommitsPerWeekTest {
 		Assertions.assertEquals(1, underlyingMap.size());
 		Assertions.assertTrue(underlyingMap.containsKey(sundayMidnight1));
 		Assertions.assertEquals(40, underlyingMap.get(sundayMidnight1));
-
 
 		Instant sundayMidnight2 = sundayMidnight1.plus(Period.ofWeeks(5));
 		commitsPerWeek.addCommits(sundayMidnight2, 5);
@@ -62,7 +59,6 @@ class CommitsPerWeekTest {
 		Assertions.assertEquals(5, underlyingMap.get(sundayMidnight2));
 		Assertions.assertEquals(40, underlyingMap.get(sundayMidnight1));
 
-
 		commitsPerWeek.addMissingZeros();
 		underlyingMap = commitsPerWeek.getData();
 		Assertions.assertEquals(6, underlyingMap.size());
@@ -72,16 +68,18 @@ class CommitsPerWeekTest {
 		Assertions.assertEquals(0, underlyingMap.get(sundayMidnight1.plus(Period.ofWeeks(4))));
 		Assertions.assertEquals(40, underlyingMap.get(sundayMidnight1));
 		Assertions.assertEquals(5, underlyingMap.get(sundayMidnight2));
-
 	}
 
 	@Test
 	void givenInstance_whenValidOperations_thenCorrectJsonProduced() {
 		Gson gson = new GsonBuilder()
-			.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, typeOfT, context) -> Instant.ofEpochSecond(Long.parseLong(json.getAsString())))
+			.registerTypeAdapter(
+				Instant.class,
+				(JsonDeserializer<Instant>) (json, typeOfT, context) ->
+					Instant.ofEpochSecond(Long.parseLong(json.getAsString()))
+			)
 			.create();
-		TypeToken<Map<Instant, Long>> mapTypeToken = new TypeToken<>() {
-		};
+		TypeToken<Map<Instant, Long>> mapTypeToken = new TypeToken<>() {};
 		CommitsPerWeek commitsPerWeek = new CommitsPerWeek();
 
 		Map<Instant, Long> shouldBeEmptyMap = gson.fromJson(commitsPerWeek.toJson(), mapTypeToken.getType());
@@ -91,13 +89,13 @@ class CommitsPerWeekTest {
 		commitsPerWeek.addCommits(sundayMidnight1, 10);
 		commitsPerWeek.addCommits(sundayMidnight1, 20);
 
-		Instant smallTimeAfterSundayMidnight1 = sundayMidnight1.plus(Duration.ofDays(3))
+		Instant smallTimeAfterSundayMidnight1 = sundayMidnight1
+			.plus(Duration.ofDays(3))
 			.plus(Duration.ofSeconds(12345));
 		commitsPerWeek.addCommits(smallTimeAfterSundayMidnight1, 10);
 
 		Instant sundayMidnight2 = sundayMidnight1.plus(Period.ofWeeks(5));
 		commitsPerWeek.addCommits(sundayMidnight2, 5);
-
 
 		Map<Instant, Long> dataFromJson = gson.fromJson(commitsPerWeek.toJson(), mapTypeToken.getType());
 		Assertions.assertEquals(2, dataFromJson.size());
@@ -105,8 +103,7 @@ class CommitsPerWeekTest {
 		Assertions.assertEquals(5, dataFromJson.get(sundayMidnight2));
 
 		commitsPerWeek.addMissingZeros();
-		dataFromJson = gson.fromJson(commitsPerWeek.toJson(), new TypeToken<Map<Instant, Long>>() {
-		}.getType());
+		dataFromJson = gson.fromJson(commitsPerWeek.toJson(), new TypeToken<Map<Instant, Long>>() {}.getType());
 		Assertions.assertEquals(6, dataFromJson.size());
 		Assertions.assertEquals(0, dataFromJson.get(sundayMidnight1.plus(Period.ofWeeks(1))));
 		Assertions.assertEquals(0, dataFromJson.get(sundayMidnight1.plus(Period.ofWeeks(2))));

@@ -6,6 +6,7 @@
 package nl.esciencecenter.rsd.authentication;
 
 public class PostgresForeignKeyConstraintException extends Exception {
+
 	public PostgresForeignKeyConstraintException(String message) {
 		super(message);
 	}

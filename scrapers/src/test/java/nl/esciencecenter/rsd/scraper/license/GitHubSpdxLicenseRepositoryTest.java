@@ -5,10 +5,9 @@
 
 package nl.esciencecenter.rsd.scraper.license;
 
+import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Map;
 
 class GitHubSpdxLicenseRepositoryTest {
 
@@ -63,7 +62,9 @@ class GitHubSpdxLicenseRepositoryTest {
 			}""";
 		// editorconfig-checker-enable
 
-		Map<String, SpdxLicense> licenseMap = Assertions.assertDoesNotThrow(() -> GitHubSpdxLicenseRepository.parseLicensesJson(json));
+		Map<String, SpdxLicense> licenseMap = Assertions.assertDoesNotThrow(() ->
+			GitHubSpdxLicenseRepository.parseLicensesJson(json)
+		);
 		Assertions.assertEquals(3, licenseMap.size());
 		Assertions.assertTrue(licenseMap.containsKey("0BSD"));
 		Assertions.assertTrue(licenseMap.containsKey("MIT"));

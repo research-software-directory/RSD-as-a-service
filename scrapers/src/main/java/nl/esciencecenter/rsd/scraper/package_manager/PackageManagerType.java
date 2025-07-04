@@ -20,5 +20,5 @@ public enum PackageManagerType {
 	pixi,
 	pypi,
 	sonatype,
-	other
+	other,
 }

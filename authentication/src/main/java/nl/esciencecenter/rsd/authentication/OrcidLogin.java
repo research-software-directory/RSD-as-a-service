@@ -10,7 +10,6 @@ package nl.esciencecenter.rsd.authentication;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.gson.JsonParser;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
@@ -60,7 +59,8 @@ public class OrcidLogin implements Login {
 		return form;
 	}
 
-	private String getTokensFromOrcidconext(Map<String, String> form) throws IOException, InterruptedException, RsdResponseException {
+	private String getTokensFromOrcidconext(Map<String, String> form)
+		throws IOException, InterruptedException, RsdResponseException {
 		URI tokenEndpoint = Utils.getTokenUrlFromWellKnownUrl(URI.create(Config.orcidWellknown()));
 		return Utils.postForm(tokenEndpoint, form);
 	}

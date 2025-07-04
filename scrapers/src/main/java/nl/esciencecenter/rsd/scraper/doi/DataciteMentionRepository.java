@@ -9,10 +9,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -25,6 +21,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import nl.esciencecenter.rsd.scraper.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DataciteMentionRepository {
 
@@ -113,9 +112,7 @@ public class DataciteMentionRepository {
 
 	// "10.5281/zenodo.1408128","10.1186/s12859-018-2165-7"
 	static String joinDoisForGraphqlQuery(Collection<Doi> dois) {
-		return dois.stream()
-			.map(Doi::toString)
-			.collect(Collectors.joining("\",\"", "\"", "\""));
+		return dois.stream().map(Doi::toString).collect(Collectors.joining("\",\"", "\"", "\""));
 	}
 
 	static Collection<ExternalMentionRecord> jsonStringToUniqueMentions(String json) {
@@ -165,7 +162,9 @@ public class DataciteMentionRepository {
 		}
 
 		MentionType mentionType;
-		String dataciteResourceTypeGeneral = Utils.stringOrNull(work.getAsJsonObject("types").get("resourceTypeGeneral"));
+		String dataciteResourceTypeGeneral = Utils.stringOrNull(
+			work.getAsJsonObject("types").get("resourceTypeGeneral")
+		);
 		if (dataciteResourceTypeGeneral != null && dataciteResourceTypeGeneral.equals("Text")) {
 			String dataciteResourceType = Utils.stringOrNull(work.getAsJsonObject("types").get("resourceType"));
 			if (dataciteResourceType != null) dataciteResourceType = dataciteResourceType.strip();
@@ -178,9 +177,17 @@ public class DataciteMentionRepository {
 		if (version == null) {
 			JsonArray relatedIdentifiers = work.getAsJsonArray("relatedIdentifiers");
 			for (JsonElement relatedIdentifier : relatedIdentifiers) {
-				String relatedIdentifierString = Utils.stringOrNull(relatedIdentifier.getAsJsonObject().get("relatedIdentifier"));
-				String relatedIdentifierType = Utils.stringOrNull(relatedIdentifier.getAsJsonObject().get("relatedIdentifierType"));
-				if (relatedIdentifierString != null && relatedIdentifierType != null && relatedIdentifierType.equals("URL")) {
+				String relatedIdentifierString = Utils.stringOrNull(
+					relatedIdentifier.getAsJsonObject().get("relatedIdentifier")
+				);
+				String relatedIdentifierType = Utils.stringOrNull(
+					relatedIdentifier.getAsJsonObject().get("relatedIdentifierType")
+				);
+				if (
+					relatedIdentifierString != null &&
+					relatedIdentifierType != null &&
+					relatedIdentifierType.equals("URL")
+				) {
 					Matcher tagMatcher = URL_TREE_TAG_PATTERN.matcher(relatedIdentifierString);
 					if (tagMatcher.find()) {
 						version = tagMatcher.group(1);
@@ -223,7 +230,12 @@ public class DataciteMentionRepository {
 
 		JsonObject body = new JsonObject();
 		body.addProperty("query", QUERY_UNFORMATTED.formatted(joinDoisForGraphqlQuery(dois)));
-		String responseJson = Utils.post("https://api.datacite.org/graphql", body.toString(), "Content-Type", "application/json");
+		String responseJson = Utils.post(
+			"https://api.datacite.org/graphql",
+			body.toString(),
+			"Content-Type",
+			"application/json"
+		);
 		return jsonStringToUniqueMentions(responseJson);
 	}
 }

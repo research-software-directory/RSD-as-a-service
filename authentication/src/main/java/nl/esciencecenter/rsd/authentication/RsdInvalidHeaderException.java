@@ -6,6 +6,7 @@
 package nl.esciencecenter.rsd.authentication;
 
 public class RsdInvalidHeaderException extends IllegalArgumentException {
+
 	public RsdInvalidHeaderException(String message) {
 		super(message);
 	}

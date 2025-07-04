@@ -7,13 +7,12 @@ package nl.esciencecenter.rsd.scraper.package_manager.scrapers;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.RsdResponseException;
-import nl.esciencecenter.rsd.scraper.Utils;
-
 import java.io.IOException;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 public class GoScraper implements PackageManagerScraper {
 
@@ -41,7 +40,9 @@ public class GoScraper implements PackageManagerScraper {
 	// Example URL: https://libraries.io/api/go/google.golang.org%2Fgrpc
 	@Override
 	public Integer reverseDependencies() throws IOException, InterruptedException, RsdResponseException {
-		String data = PackageManagerScraper.doLibrariesIoRequest("https://libraries.io/api/go/" + Utils.urlEncode(packageName));
+		String data = PackageManagerScraper.doLibrariesIoRequest(
+			"https://libraries.io/api/go/" + Utils.urlEncode(packageName)
+		);
 		JsonElement tree = JsonParser.parseString(data);
 		return tree.getAsJsonObject().getAsJsonPrimitive("dependents_count").getAsInt();
 	}

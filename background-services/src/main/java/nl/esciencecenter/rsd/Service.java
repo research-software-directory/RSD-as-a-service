@@ -11,5 +11,3 @@ public interface Service {
 	void run();
 	void terminate();
 }
-
-

@@ -10,16 +10,15 @@
 
 package nl.esciencecenter.rsd.authentication;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.google.gson.Gson;
 
 public class JwtCreator {
 
@@ -45,7 +44,6 @@ public class JwtCreator {
 			.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
 			.sign(signingAlgorithm);
 	}
-
 
 	String createAdminJwt() {
 		return JWT.create()
