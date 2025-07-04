@@ -1,8 +1,8 @@
 {
 	"dependencies": {
-		"@faker-js/faker": "8.4.1",
+		"@faker-js/faker": "9.8.0",
 		"jsonwebtoken": "9.0.2",
-		"wait-on": "7.2.0"
+		"wait-on": "8.0.3"
 	},
 	"name": "data-generator",
 	"version": "1.0.0",
