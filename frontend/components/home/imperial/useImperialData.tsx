@@ -1,18 +1,17 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-import {createJsonHeaders} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 
 /**
- * Filters the information about the keywords such that only those used are inlcuded.
- * 
- * They are also sorted by number of software that use them and the top 10 picked. 
- * 
+ * Filters the information about the keywords such that only those used are included.
+ *
+ * They are also sorted by number of software that use them and the top 10 picked.
+ *
  * @param jsonData The total list of keyword data to filter and sort.
  * @returns The filtered list, leaving only the top ten keywords sorted.
  */
@@ -20,7 +19,7 @@ function filterAndSortJson(jsonData: any[]): any[] {
   return jsonData
     .filter(entry => entry.cnt !== null) // Remove entries where cnt is null
     .sort((a, b) => b.cnt - a.cnt) // Sort by cnt in descending order
-    .slice(0, 10); // Select only the top 10 results
+    .slice(0, 10) // Select only the top 10 results
 }
 
 /**

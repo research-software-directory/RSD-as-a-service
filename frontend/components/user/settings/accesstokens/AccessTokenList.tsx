@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -34,6 +36,15 @@ export default function AccessTokenList({tokens, onDelete, loading}:AccessTokenL
   return (
     <List>
       {tokens.map(token => {
+        // calculate days left
+        const daysLeft = daysDiff(new Date(token.expires_at), 'until') ?? 0
+        // construct expiration message
+        let daysMsg = `Expires in ${daysLeft} days.`
+        if (daysLeft === 1){
+          daysMsg = 'Expires in 1 day!'
+        } else if (daysLeft <= 0) {
+          daysMsg = 'EXPIRED!'
+        }
         return (
           <ListItem
             key={token.id}
@@ -49,7 +60,12 @@ export default function AccessTokenList({tokens, onDelete, loading}:AccessTokenL
           >
             <ListItemText
               primary={token.display_name}
-              secondary={`expires in ${daysDiff(new Date(token.expires_at), 'until')} days (#${token.id})`}
+              secondary={
+                <>
+                  <span className={`tracking-widest ${daysLeft <=0 ? 'text-error font-medium' : 'text-success'}`}>{daysMsg}</span><br/>
+                  <span>{token.id}</span>
+                </>
+              }
             />
           </ListItem>
         )
