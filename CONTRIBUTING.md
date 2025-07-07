@@ -1,6 +1,6 @@
 <!--
-SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 SPDX-FileCopyrightText: 2022 Jason Maassen (Netherlands eScience Center) <j.maassen@esciencecenter.nl>
@@ -61,14 +61,14 @@ To request a feature you can submit an issue on GitHub. Please keep in mind that
 1. if your issue search did not yield any relevant results, make a new issue, making sure to provide enough information to the rest of the community to understand the feature you are requesting. We may get back to you with further questions.
 1. apply the "feature" label; apply other labels when relevant.
 
-## You want to make some kind of change to the code base youself
+## You want to make some kind of change to the code base yourself
 
 Contributions to the code base are very welcome. Keep in mind, however, that this also requires a good interaction with the community to ensure that your contribution is adopted.
 
 1. (**important**) announce your plan to the rest of the community _before you start working_. This announcement should be in the form of a (new) issue;
 1. (**important**) wait until some kind of concensus is reached about your idea being a good idea;
 1. (**important**) we are applying the [REUSE specification](https://reuse.software/) in order to keep track of copyright and licenses in this repository. See the [section below](#license-and-copyright-information-according-to-the-reuse-specification) for an example. We run a REUSE linter job upon every pull request to make sure all files have at least license information attached. To automate the task of adding REUSE compliant headers you can optionally use our [pre-commit hook template](#automatically-updating-headers-using-a-pre-commit-hook).
-1. if needed, fork the repository to your own Github profile and create your own feature branch off of the latest master commit. While working on your feature branch, make sure to stay up to date with the master branch by pulling in changes, possibly from the 'upstream' repository (follow the instructions [here](https://help.github.com/articles/configuring-a-remote-for-a-fork/) and [here](https://help.github.com/articles/syncing-a-fork/));
+1. if needed, fork the repository to your own GitHub profile and create your own feature branch off of the latest master commit. While working on your feature branch, make sure to stay up to date with the master branch by pulling in changes, possibly from the 'upstream' repository (follow the instructions [here](https://help.github.com/articles/configuring-a-remote-for-a-fork/) and [here](https://help.github.com/articles/syncing-a-fork/));
 1. make sure the existing unit tests still work;
 1. make sure that the existing integration tests still work;
 1. add your own unit tests and integration tests (if necessary);
@@ -77,6 +77,10 @@ Contributions to the code base are very welcome. Keep in mind, however, that thi
 1. create a pull request, e.g. following the instructions [here](https://help.github.com/articles/creating-a-pull-request/).
 
 In case you feel like you've made a valuable contribution, but you don't know how to write or run tests for it, or how to generate the documentation: don't let this discourage you from making the pull request; we can help you! Just go ahead and submit the pull request, but keep in mind that you might be asked to append additional commits to your pull request (have a look at some of our old pull requests to see how this works.
+
+### Formatting
+
+We use [Prettier](https://prettier.io/) for source code formatting for a few of the modules. See the file `.prettierrc` for the applied [configuration options](https://prettier.io/docs/en/options) and see the file `.prettierignore` for files that are [included for formatting](https://prettier.io/docs/en/ignore). Please make sure your contributions in these modules are compliant with Prettier. You can run `npm run format:check` to see which files are not compliant and `npm run format:fix` to fix them. A GitHub workflow runs on every pull request to check if all files are formatted properly. For contributions to modules that don't use Prettier (yet), please follow the existing formatting conventions.
 
 ## You want to contribute in some other way
 
