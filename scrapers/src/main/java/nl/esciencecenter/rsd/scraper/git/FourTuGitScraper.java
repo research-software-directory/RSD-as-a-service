@@ -6,14 +6,14 @@
 package nl.esciencecenter.rsd.scraper.git;
 
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.RsdResponseException;
-import nl.esciencecenter.rsd.scraper.Utils;
-
 import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.util.Objects;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 public class FourTuGitScraper implements GitScraper {
+
 	private final String repoUrl;
 
 	public FourTuGitScraper(String repoUrl) {
@@ -31,11 +31,19 @@ public class FourTuGitScraper implements GitScraper {
 		String url = repoUrl + "/languages";
 		HttpResponse<String> response = Utils.getAsHttpResponse(url);
 		return switch (response.statusCode()) {
-			case 404 ->
-					throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
+			case 404 -> throw new RsdResponseException(
+				404,
+				response.uri(),
+				response.body(),
+				"Not found, is the repository URL correct?"
+			);
 			case 200 -> response.body();
-			default ->
-					throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response when downloading 4TU programming languages");
+			default -> throw new RsdResponseException(
+				response.statusCode(),
+				response.uri(),
+				response.body(),
+				"Unexpected response when downloading 4TU programming languages"
+			);
 		};
 	}
 
@@ -45,11 +53,19 @@ public class FourTuGitScraper implements GitScraper {
 		String url = repoUrl + "/contributors";
 		HttpResponse<String> response = Utils.getAsHttpResponse(url);
 		return switch (response.statusCode()) {
-			case 404 ->
-					throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
+			case 404 -> throw new RsdResponseException(
+				404,
+				response.uri(),
+				response.body(),
+				"Not found, is the repository URL correct?"
+			);
 			case 200 -> GithubScraper.parseCommits(response.body());
-			default ->
-					throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response when downloading 4TU commit history");
+			default -> throw new RsdResponseException(
+				response.statusCode(),
+				response.uri(),
+				response.body(),
+				"Unexpected response when downloading 4TU commit history"
+			);
 		};
 	}
 
@@ -59,11 +75,19 @@ public class FourTuGitScraper implements GitScraper {
 		String url = repoUrl + "/contributors";
 		HttpResponse<String> response = Utils.getAsHttpResponse(url);
 		return switch (response.statusCode()) {
-			case 404 ->
-					throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
+			case 404 -> throw new RsdResponseException(
+				404,
+				response.uri(),
+				response.body(),
+				"Not found, is the repository URL correct?"
+			);
 			case 200 -> JsonParser.parseString(response.body()).getAsJsonArray().size();
-			default ->
-					throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response when downloading 4TU commit history");
+			default -> throw new RsdResponseException(
+				response.statusCode(),
+				response.uri(),
+				response.body(),
+				"Unexpected response when downloading 4TU commit history"
+			);
 		};
 	}
 }

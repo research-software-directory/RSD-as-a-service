@@ -13,7 +13,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 class DoiTest {
 
 	@ParameterizedTest
-	@ValueSource(strings = {
+	@ValueSource(
+		strings = {
 			"10.2533/chimia.2024.525",
 			"10.1017/9781108881425",
 			"10.3390/photonics11070630",
@@ -21,14 +22,16 @@ class DoiTest {
 			"10.1007/978-3-030-83508-8_2",
 			"10.22541/essoar.171500959.99365288/v1",
 			"10.1016/j.eswa.2023.120561",
-	})
+		}
+	)
 	void givenValidDoi_whenInstanceCreated_thenNoExceptionThrown(String validDoi) {
 		Doi doi = Assertions.assertDoesNotThrow(() -> Doi.fromString(validDoi));
 		Assertions.assertNotNull(doi);
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {
+	@ValueSource(
+		strings = {
 			"10.2533",
 			"10.2533/",
 			"https://doi.org/10.2533/chimia.2024.525",
@@ -36,7 +39,8 @@ class DoiTest {
 			"10.3390/photonics11070630 ",
 			"11.1016/j.eswa.2023.120561",
 			"",
-	})
+		}
+	)
 	void givenInValidDoi_whenCreatingInstance_thenExceptionThrown(String invalidDoi) {
 		Assertions.assertThrows(RuntimeException.class, () -> Doi.fromString(invalidDoi));
 	}

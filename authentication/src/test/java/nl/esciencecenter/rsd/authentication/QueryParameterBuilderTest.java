@@ -20,14 +20,20 @@ class QueryParameterBuilderTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource({
-		"key,value,?key=value",
-		"123,456,?123=456",
-		"scope,openid profile email,?scope=openid+profile+email",
-		"url,https://www.example.com,?url=https%3A%2F%2Fwww.example.com",
-		"a?b&c,d&e?f=g,?a%3Fb%26c=d%26e%3Ff%3Dg",
-	})
-	void givenKeyValuePairs_whenBuildingAndCallingToString_thenCorrectOutputProduced(String key, String value, String expected) {
+	@CsvSource(
+		{
+			"key,value,?key=value",
+			"123,456,?123=456",
+			"scope,openid profile email,?scope=openid+profile+email",
+			"url,https://www.example.com,?url=https%3A%2F%2Fwww.example.com",
+			"a?b&c,d&e?f=g,?a%3Fb%26c=d%26e%3Ff%3Dg",
+		}
+	)
+	void givenKeyValuePairs_whenBuildingAndCallingToString_thenCorrectOutputProduced(
+		String key,
+		String value,
+		String expected
+	) {
 		QueryParameterBuilder queryParameterBuilder = new QueryParameterBuilder();
 
 		queryParameterBuilder.addQueryParameter(key, value);
@@ -39,10 +45,14 @@ class QueryParameterBuilderTest {
 	void givenMultipleKeyValuePairs_whenBuildingAndCallingToString_thenCorrectOutputProduced() {
 		QueryParameterBuilder queryParameterBuilder = new QueryParameterBuilder();
 
-		queryParameterBuilder.addQueryParameter("key", "value")
+		queryParameterBuilder
+			.addQueryParameter("key", "value")
 			.addQueryParameter("123", "456")
 			.addQueryParameter("url", "https://www.example.com");
 
-		Assertions.assertEquals("?key=value&123=456&url=https%3A%2F%2Fwww.example.com", queryParameterBuilder.toString());
+		Assertions.assertEquals(
+			"?key=value&123=456&url=https%3A%2F%2Fwww.example.com",
+			queryParameterBuilder.toString()
+		);
 	}
 }

@@ -1,18 +1,18 @@
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package nl.esciencecenter.rsd.authentication;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.net.URI;
 import java.util.UUID;
-
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class Argon2Creator {
 
@@ -22,7 +22,8 @@ public class Argon2Creator {
 	private static final Integer MEMORY = 12288;
 	private static final Integer ITERATIONS = 3;
 
-	public static String generateNewAccessToken(String account, String displayName, String expiresAt) throws RsdAccessTokenException, InterruptedException {
+	public static String generateNewAccessToken(String account, String displayName, String expiresAt)
+		throws RsdAccessTokenException, InterruptedException {
 		String opaqueToken = generateOpaqueToken();
 		String secret = generateArgon2Hash(opaqueToken);
 		String tokenID = saveTokenToDatabase(secret, account, displayName, expiresAt);
@@ -43,7 +44,8 @@ public class Argon2Creator {
 		return UUID.randomUUID().toString();
 	}
 
-	private static String saveTokenToDatabase(String secret, String account, String displayName, String expiresAt) throws RsdAccessTokenException, InterruptedException {
+	private static String saveTokenToDatabase(String secret, String account, String displayName, String expiresAt)
+		throws RsdAccessTokenException, InterruptedException {
 		JsonObject userAccessTokenData = new JsonObject();
 		userAccessTokenData.addProperty("secret", secret);
 		userAccessTokenData.addProperty("account", account);
@@ -58,18 +60,11 @@ public class Argon2Creator {
 		try {
 			String tokenResponse = PostgrestAccount.postJsonAsAdmin(queryUri, userAccessTokenData.toString(), jwtToken);
 			UUID tokenID = UUID.fromString(
-				JsonParser.parseString(tokenResponse)
-					.getAsJsonArray()
-					.get(0)
-					.getAsJsonObject()
-					.get("id")
-					.getAsString()
+				JsonParser.parseString(tokenResponse).getAsJsonArray().get(0).getAsJsonObject().get("id").getAsString()
 			);
 			return tokenID.toString();
 		} catch (PostgresForeignKeyConstraintException | PostgresCustomException | IOException e) {
 			throw new RsdAccessTokenException("RsdAccessTokenException: " + e.getMessage(), e);
 		}
-
 	}
-
 }

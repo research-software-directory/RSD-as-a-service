@@ -9,14 +9,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.Utils;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.UUID;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 /**
  * This class provides access to the citation related tables via the Postgrest API.
@@ -38,12 +37,22 @@ public class PostgrestCitationRepository {
 	 */
 	public Collection<CitationData> leastRecentlyScrapedCitations(int limit) {
 		String oneHourAgoFilter = Utils.atLeastOneHourAgoFilter("citations_scraped_at");
-		String uri = backendUrl + "/rpc/reference_papers_to_scrape?order=citations_scraped_at.asc.nullsfirst&limit=" + limit + "&" + oneHourAgoFilter;
+		String uri =
+			backendUrl +
+			"/rpc/reference_papers_to_scrape?order=citations_scraped_at.asc.nullsfirst&limit=" +
+			limit +
+			"&" +
+			oneHourAgoFilter;
 		String data = Utils.getAsAdmin(uri);
 		return parseJson(data);
 	}
 
-	public void saveCitations(String backendUrl, UUID idCitedMention, Collection<UUID> citingMentions, Instant scrapedAt) {
+	public void saveCitations(
+		String backendUrl,
+		UUID idCitedMention,
+		Collection<UUID> citingMentions,
+		Instant scrapedAt
+	) {
 		String jsonPatch = "{\"citations_scraped_at\": \"%s\"}".formatted(scrapedAt.toString());
 		Utils.patchAsAdmin(backendUrl + "/mention?id=eq." + idCitedMention.toString(), jsonPatch);
 
@@ -53,7 +62,6 @@ public class PostgrestCitationRepository {
 		HashSet<String> seen = new HashSet<>();
 
 		for (UUID citingMention : citingMentions) {
-
 			if (citingMention != null) {
 				String citationID = citingMention.toString();
 
@@ -73,7 +81,6 @@ public class PostgrestCitationRepository {
 	}
 
 	private Collection<CitationData> parseJson(String data) {
-
 		JsonArray array = JsonParser.parseString(data).getAsJsonArray();
 		Collection<CitationData> result = new ArrayList<>();
 

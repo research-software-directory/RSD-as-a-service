@@ -5,10 +5,9 @@
 
 package nl.esciencecenter.rsd.scraper.doi;
 
-import nl.esciencecenter.rsd.scraper.Utils;
-
 import java.util.Locale;
 import java.util.regex.Pattern;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 public class Doi {
 

@@ -5,9 +5,4 @@
 
 package nl.esciencecenter.rsd.scraper.license;
 
-public record SpdxLicense(
-		String licenseId,
-		String reference,
-		String name
-) {
-}
+public record SpdxLicense(String licenseId, String reference, String name) {}

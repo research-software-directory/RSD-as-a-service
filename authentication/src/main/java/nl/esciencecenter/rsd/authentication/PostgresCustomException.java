@@ -6,15 +6,15 @@
 package nl.esciencecenter.rsd.authentication;
 
 public class PostgresCustomException extends Exception {
+
 	public PostgresCustomException(String message) {
 		super(message);
 	}
 
 	public static class PostgresAccessTokenExpirationException extends PostgresCustomException {
+
 		public PostgresAccessTokenExpirationException(String message) {
 			super(message);
 		}
 	}
 }
-
-

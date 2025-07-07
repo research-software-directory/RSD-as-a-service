@@ -8,23 +8,19 @@
 
 package nl.esciencecenter.rsd.authentication;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 class MainTest {
+
 	Map<String, List<String>> emptyData = Collections.emptyMap();
-	OpenIdInfo userinfo = new OpenIdInfo(
-		"12345", "User Name", "user@example.com", "Example User", emptyData
-	);
-	OpenIdInfo userinfoNullOrganisation = new OpenIdInfo(
-		"12345", "User Name", "user@example.com", null, emptyData
-	);
+	OpenIdInfo userinfo = new OpenIdInfo("12345", "User Name", "user@example.com", "Example User", emptyData);
+	OpenIdInfo userinfoNullOrganisation = new OpenIdInfo("12345", "User Name", "user@example.com", null, emptyData);
 	static MockedStatic<Config> utilities;
 
 	@BeforeAll

@@ -5,13 +5,12 @@
 
 package nl.esciencecenter.rsd.scraper;
 
-import nl.esciencecenter.rsd.scraper.doi.ExternalMentionRecord;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Map;
+import nl.esciencecenter.rsd.scraper.doi.ExternalMentionRecord;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 class BibtexParserTest {
 
@@ -53,8 +52,10 @@ class BibtexParserTest {
 
 		Assertions.assertEquals(3, result.size());
 		Assertions.assertEquals("Brughmans, Tom", result.get("Brughmans2018").authors());
-		Assertions.assertEquals("Network structures and assembling code in Netlogo, Tutorial", result.get("Brughmans2018")
-			.title());
+		Assertions.assertEquals(
+			"Network structures and assembling code in Netlogo, Tutorial",
+			result.get("Brughmans2018").title()
+		);
 		Assertions.assertEquals(2018, result.get("Brughmans2018").publicationYear());
 	}
 
@@ -79,8 +80,10 @@ class BibtexParserTest {
 
 		Assertions.assertEquals(1, result.size());
 		Assertions.assertEquals("Romanowska, Iza", result.get("romanowska_agent-based_2021").authors());
-		Assertions.assertEquals("Agent-Based Modeling for Archaeology", result.get("romanowska_agent-based_2021")
-			.title());
+		Assertions.assertEquals(
+			"Agent-Based Modeling for Archaeology",
+			result.get("romanowska_agent-based_2021").title()
+		);
 		Assertions.assertEquals("10.37911/9781947864382", result.get("romanowska_agent-based_2021").doi().toString());
 		Assertions.assertEquals(2021, result.get("romanowska_agent-based_2021").publicationYear());
 	}

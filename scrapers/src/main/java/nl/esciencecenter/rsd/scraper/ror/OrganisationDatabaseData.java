@@ -10,10 +10,4 @@ package nl.esciencecenter.rsd.scraper.ror;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-public record OrganisationDatabaseData(
-	UUID id,
-	RorId rorId,
-	ZonedDateTime rorScrapedAt,
-	RorData data
-) {
-}
+public record OrganisationDatabaseData(UUID id, RorId rorId, ZonedDateTime rorScrapedAt, RorData data) {}

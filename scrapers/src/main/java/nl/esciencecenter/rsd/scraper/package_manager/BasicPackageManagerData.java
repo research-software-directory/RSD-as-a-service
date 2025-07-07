@@ -7,9 +7,4 @@ package nl.esciencecenter.rsd.scraper.package_manager;
 
 import java.util.UUID;
 
-public record BasicPackageManagerData(
-		UUID id,
-		String url,
-		PackageManagerType type
-) {
-}
+public record BasicPackageManagerData(UUID id, String url, PackageManagerType type) {}

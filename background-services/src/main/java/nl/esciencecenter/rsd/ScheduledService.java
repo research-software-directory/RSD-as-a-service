@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
  * ScheduledServices are executed clock time-based
  */
 public class ScheduledService extends AbstractService {
+
 	private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 	private final LocalTime scheduleTime;
 	private final Runnable task;
@@ -64,5 +65,4 @@ public class ScheduledService extends AbstractService {
 		}
 		return Duration.between(now, nextRun).getSeconds();
 	}
-
 }

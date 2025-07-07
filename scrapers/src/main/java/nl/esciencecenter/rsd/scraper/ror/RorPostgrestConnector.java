@@ -12,16 +12,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.Config;
-import nl.esciencecenter.rsd.scraper.Utils;
-
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import nl.esciencecenter.rsd.scraper.Config;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 public class RorPostgrestConnector {
+
 	private final String backendUrl;
 
 	public RorPostgrestConnector() {
@@ -29,7 +29,8 @@ public class RorPostgrestConnector {
 	}
 
 	public Collection<OrganisationDatabaseData> organisationsWithoutLocation(int limit) {
-		String filter = "organisation?ror_id=not.is.null&order=ror_scraped_at.asc.nullsfirst&select=id,ror_id&limit=" + limit;
+		String filter =
+			"organisation?ror_id=not.is.null&order=ror_scraped_at.asc.nullsfirst&select=id,ror_id&limit=" + limit;
 		String data = Utils.getAsAdmin(backendUrl + "/" + filter);
 		return parseBasicJsonData(data);
 	}
@@ -73,8 +74,10 @@ public class RorPostgrestConnector {
 		jsonObject.addProperty("lat", organisationData.data().lat());
 		jsonObject.addProperty("lon", organisationData.data().lon());
 
-		jsonObject.addProperty("ror_scraped_at", organisationData.rorScrapedAt()
-			.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		jsonObject.addProperty(
+			"ror_scraped_at",
+			organisationData.rorScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+		);
 		jsonObject.add("ror_last_error", JsonNull.INSTANCE);
 
 		Utils.patchAsAdmin(backendUrl + "/organisation?id=eq." + organisationData.id(), jsonObject.toString());

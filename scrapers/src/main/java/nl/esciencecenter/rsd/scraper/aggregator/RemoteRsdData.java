@@ -17,5 +17,4 @@ public record RemoteRsdData(
 	Duration refreshInterval,
 	ZonedDateTime refreshedAt,
 	Collection<UUID> softwareIds
-) {
-}
+) {}

@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
@@ -27,8 +27,6 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.openid.connect.sdk.UserInfoRequest;
 import com.nimbusds.openid.connect.sdk.UserInfoResponse;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
-import net.minidev.json.JSONArray;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -42,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import net.minidev.json.JSONArray;
 
 public class HelmholtzIdLogin implements Login {
 
@@ -51,7 +50,24 @@ public class HelmholtzIdLogin implements Login {
 
 	// See https://hifis.net/doc/helmholtz-aai/list-of-vos/#vos-representing-helmholtz-centres
 	private static final Collection<String> knownHgfOrganisations = Set.of(
-			"AWI", "CISPA", "DESY", "DKFZ", "DLR", "DZNE", "FZJ", "GEOMAR", "GFZ", "GSI", "hereon", "HMGU", "HZB", "HZDR", "HZI", "KIT", "MDC", "UFZ"
+		"AWI",
+		"CISPA",
+		"DESY",
+		"DKFZ",
+		"DLR",
+		"DZNE",
+		"FZJ",
+		"GEOMAR",
+		"GFZ",
+		"GSI",
+		"hereon",
+		"HMGU",
+		"HZB",
+		"HZDR",
+		"HZI",
+		"KIT",
+		"MDC",
+		"UFZ"
 	);
 
 	public HelmholtzIdLogin(String code, String redirectUrl) {
@@ -138,11 +154,9 @@ public class HelmholtzIdLogin implements Login {
 		String userinfoUrl;
 
 		/* get the userinfo endpoint URL first */
-		HttpRequest request = HttpRequest.newBuilder(
-						URI.create(Config.helmholtzIdWellknown())
-				)
-				.header("accept", "application/json")
-				.build();
+		HttpRequest request = HttpRequest.newBuilder(URI.create(Config.helmholtzIdWellknown()))
+			.header("accept", "application/json")
+			.build();
 
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
@@ -165,9 +179,7 @@ public class HelmholtzIdLogin implements Login {
 				scopes.add(scope);
 			}
 
-			TokenRequest tokenRequest = new TokenRequest(
-					tokenEndpoint, clientAuth, codeGrant, scopes
-			);
+			TokenRequest tokenRequest = new TokenRequest(tokenEndpoint, clientAuth, codeGrant, scopes);
 			TokenResponse response = TokenResponse.parse(tokenRequest.toHTTPRequest().send());
 
 			if (!response.indicatesSuccess()) {
@@ -179,9 +191,7 @@ public class HelmholtzIdLogin implements Login {
 
 			URI userInfoEndpoint = new URI(userinfoUrl);
 			BearerAccessToken token = successResponse.getTokens().getBearerAccessToken();
-			HTTPResponse httpResponse = new UserInfoRequest(userInfoEndpoint, token)
-					.toHTTPRequest()
-					.send();
+			HTTPResponse httpResponse = new UserInfoRequest(userInfoEndpoint, token).toHTTPRequest().send();
 
 			UserInfoResponse userInfoResponse = UserInfoResponse.parse(httpResponse);
 
@@ -210,7 +220,7 @@ public class HelmholtzIdLogin implements Login {
 		String organisation = getOrganisationFromEntitlements(entitlements);
 
 		List<String> eduPersonEntitlements = new ArrayList<>();
-		for (int i=0; i<entitlements.size(); i++) {
+		for (int i = 0; i < entitlements.size(); i++) {
 			eduPersonEntitlements.add(entitlements.get(i).toString());
 		}
 
@@ -218,11 +228,11 @@ public class HelmholtzIdLogin implements Login {
 		data.put("eduPersonEntitlements", eduPersonEntitlements);
 
 		return new OpenIdInfo(
-				userInfo.getSubject().toString(),
-				userInfo.getName(),
-				userInfo.getEmailAddress(),
-				organisation,
-				data
+			userInfo.getSubject().toString(),
+			userInfo.getName(),
+			userInfo.getEmailAddress(),
+			organisation,
+			data
 		);
 	}
 }

@@ -13,9 +13,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -32,6 +29,8 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 import java.util.function.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Utils {
 
@@ -40,8 +39,7 @@ public class Utils {
 	// Default timeout used for http connections.
 	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
 
-	private Utils() {
-	}
+	private Utils() {}
 
 	/**
 	 * Base64encode a string.
@@ -73,11 +71,17 @@ public class Utils {
 	 * @throws InterruptedException
 	 * @throws RsdResponseException
 	 */
-	public static String get(String uri, String... headers) throws IOException, InterruptedException, RsdResponseException {
+	public static String get(String uri, String... headers)
+		throws IOException, InterruptedException, RsdResponseException {
 		HttpResponse<String> response = getAsHttpResponse(uri, headers);
 
 		if (response.statusCode() >= 300) {
-			throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
+			throw new RsdResponseException(
+				response.statusCode(),
+				response.uri(),
+				response.body(),
+				"Unexpected response"
+			);
 		}
 
 		return response.body();
@@ -92,7 +96,8 @@ public class Utils {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static HttpResponse<String> getAsHttpResponse(String uri, String... headers) throws IOException, InterruptedException {
+	public static HttpResponse<String> getAsHttpResponse(String uri, String... headers)
+		throws IOException, InterruptedException {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
 			.GET()
 			.timeout(DEFAULT_TIMEOUT)
@@ -136,7 +141,9 @@ public class Utils {
 		}
 
 		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
+			throw new RuntimeException(
+				"Error fetching data from endpoint " + uri + " with response: " + response.body()
+			);
 		}
 		return response.body();
 	}
@@ -171,7 +178,9 @@ public class Utils {
 		}
 
 		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
+			throw new RuntimeException(
+				"Error fetching data from endpoint " + uri + " with response: " + response.body()
+			);
 		}
 		return response.body();
 	}
@@ -208,7 +217,9 @@ public class Utils {
 		}
 
 		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
+			throw new RuntimeException(
+				"Error fetching data from endpoint " + uri + " with response: " + response.body()
+			);
 		}
 		return response.body();
 	}
@@ -237,7 +248,12 @@ public class Utils {
 		postAsAdmin(Config.backendBaseUrl() + "/backend_log", logData.toString());
 	}
 
-	public static void saveExceptionInDatabase(String serviceName, String tableName, UUID referenceId, RsdResponseException e) {
+	public static void saveExceptionInDatabase(
+		String serviceName,
+		String tableName,
+		UUID referenceId,
+		RsdResponseException e
+	) {
 		JsonObject logData = basicData(serviceName, tableName, referenceId, e);
 
 		JsonObject other = new JsonObject();
@@ -250,7 +266,12 @@ public class Utils {
 		postAsAdmin(Config.backendBaseUrl() + "/backend_log", logData.toString());
 	}
 
-	public static void saveExceptionInDatabase(String serviceName, String tableName, UUID referenceId, RsdRateLimitException e) {
+	public static void saveExceptionInDatabase(
+		String serviceName,
+		String tableName,
+		UUID referenceId,
+		RsdRateLimitException e
+	) {
 		JsonObject logData = basicData(serviceName, tableName, referenceId, e);
 
 		JsonObject other = new JsonObject();
@@ -263,7 +284,15 @@ public class Utils {
 		postAsAdmin(Config.backendBaseUrl() + "/backend_log", logData.toString());
 	}
 
-	public static void saveErrorMessageInDatabase(String message, String tableName, String columnName, String primaryKey, String primaryKeyName, ZonedDateTime scrapedAt, String scrapedAtName) {
+	public static void saveErrorMessageInDatabase(
+		String message,
+		String tableName,
+		String columnName,
+		String primaryKey,
+		String primaryKeyName,
+		ZonedDateTime scrapedAt,
+		String scrapedAtName
+	) {
 		JsonObject body = new JsonObject();
 		if (columnName != null) {
 			body.addProperty(columnName, message);
@@ -304,12 +333,15 @@ public class Utils {
 			throw new RuntimeException(e);
 		}
 		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
+			throw new RuntimeException(
+				"Error fetching data from endpoint " + uri + " with response: " + response.body()
+			);
 		}
 		return response.body();
 	}
 
-	public static String deleteAsAdmin(String uri, String... extraHeaders) throws IOException, InterruptedException, RsdResponseException {
+	public static String deleteAsAdmin(String uri, String... extraHeaders)
+		throws IOException, InterruptedException, RsdResponseException {
 		String jwtString = adminJwt();
 		HttpRequest.Builder builder = HttpRequest.newBuilder()
 			.method("DELETE", HttpRequest.BodyPublishers.noBody())
@@ -325,7 +357,12 @@ public class Utils {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		}
 		if (response.statusCode() >= 300) {
-			throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Error deleting data as admin");
+			throw new RsdResponseException(
+				response.statusCode(),
+				response.uri(),
+				response.body(),
+				"Error deleting data as admin"
+			);
 		}
 		return response.body();
 	}
@@ -363,9 +400,9 @@ public class Utils {
 	 * @return the filter.
 	 */
 	public static String atLeastOneHourAgoFilter(String scrapedAtColumnName) {
-		String oneHourAgoEncoded = urlEncode(ZonedDateTime.now()
-			.minusHours(1)
-			.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		String oneHourAgoEncoded = urlEncode(
+			ZonedDateTime.now().minusHours(1).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+		);
 		return "or=(%s.is.null,%s.lte.%s)".formatted(scrapedAtColumnName, scrapedAtColumnName, oneHourAgoEncoded);
 	}
 }

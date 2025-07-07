@@ -11,8 +11,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.Utils;
-
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -21,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.UUID;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 public class PostgrestConnector {
 
@@ -50,17 +49,33 @@ public class PostgrestConnector {
 		String packageManagerFilter = PostgrestConnector.joinPackageManagersAsFilter(downloadEnabledPackageManagers);
 
 		String filter = "download_count_scraping_disabled_reason=is.null&" + packageManagerFilter;
-		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=id,url,package_manager&order=download_count_scraped_at.asc.nullsfirst&limit=" + limit
-			+ "&" + Utils.atLeastOneHourAgoFilter("download_count_scraped_at")
+		String data = Utils.getAsAdmin(
+			backendUrl +
+			"?" +
+			filter +
+			"&select=id,url,package_manager&order=download_count_scraped_at.asc.nullsfirst&limit=" +
+			limit +
+			"&" +
+			Utils.atLeastOneHourAgoFilter("download_count_scraped_at")
 		);
 		return parseBasicJsonData(data);
 	}
 
 	public Collection<BasicPackageManagerData> oldestReverseDependencyCounts(int limit) {
-		String packageManagerFilter = PostgrestConnector.joinPackageManagersAsFilter(reverseDependencyEnabledPackageManagers);
+		String packageManagerFilter = PostgrestConnector.joinPackageManagersAsFilter(
+			reverseDependencyEnabledPackageManagers
+		);
 
 		String filter = "reverse_dependency_count_scraping_disabled_reason=is.null&" + packageManagerFilter;
-		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=id,url,package_manager&order=reverse_dependency_count_scraped_at.asc.nullsfirst&limit=" + limit + "&" + Utils.atLeastOneHourAgoFilter("reverse_dependency_count_scraped_at"));
+		String data = Utils.getAsAdmin(
+			backendUrl +
+			"?" +
+			filter +
+			"&select=id,url,package_manager&order=reverse_dependency_count_scraped_at.asc.nullsfirst&limit=" +
+			limit +
+			"&" +
+			Utils.atLeastOneHourAgoFilter("reverse_dependency_count_scraped_at")
+		);
 		return parseBasicJsonData(data);
 	}
 
@@ -75,12 +90,20 @@ public class PostgrestConnector {
 	}
 
 	public void saveDownloadCount(UUID id, Long count, ZonedDateTime scrapedAt) {
-		String json = "{\"download_count\": %s, \"download_count_scraped_at\": \"%s\", \"download_count_last_error\": null}".formatted(count, scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		String json =
+			"{\"download_count\": %s, \"download_count_scraped_at\": \"%s\", \"download_count_last_error\": null}".formatted(
+				count,
+				scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+			);
 		Utils.patchAsAdmin(backendUrl + "?id=eq." + id, json);
 	}
 
 	public void saveReverseDependencyCount(UUID id, Integer count, ZonedDateTime scrapedAt) {
-		String json = "{\"reverse_dependency_count\": %s, \"reverse_dependency_count_scraped_at\": \"%s\", \"reverse_dependency_count_last_error\": null}".formatted(count, scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		String json =
+			"{\"reverse_dependency_count\": %s, \"reverse_dependency_count_scraped_at\": \"%s\", \"reverse_dependency_count_last_error\": null}".formatted(
+				count,
+				scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+			);
 		Utils.patchAsAdmin(backendUrl + "?id=eq." + id, json);
 	}
 
@@ -92,8 +115,9 @@ public class PostgrestConnector {
 			String idString = jsonObject.getAsJsonPrimitive("id").getAsString();
 			UUID id = UUID.fromString(idString);
 			String url = jsonObject.getAsJsonPrimitive("url").getAsString();
-			PackageManagerType type = PackageManagerType.valueOf(jsonObject.getAsJsonPrimitive("package_manager")
-				.getAsString());
+			PackageManagerType type = PackageManagerType.valueOf(
+				jsonObject.getAsJsonPrimitive("package_manager").getAsString()
+			);
 
 			result.add(new BasicPackageManagerData(id, url, type));
 		}

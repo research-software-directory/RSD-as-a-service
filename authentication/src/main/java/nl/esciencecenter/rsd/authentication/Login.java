@@ -8,6 +8,5 @@ package nl.esciencecenter.rsd.authentication;
 import java.io.IOException;
 
 public interface Login {
-
 	OpenIdInfo openidInfo() throws IOException, InterruptedException, RsdResponseException;
 }

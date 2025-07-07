@@ -15,5 +15,4 @@ public record RorData(
 	List<String> rorNames,
 	Double lat,
 	Double lon
-) {
-}
+) {}

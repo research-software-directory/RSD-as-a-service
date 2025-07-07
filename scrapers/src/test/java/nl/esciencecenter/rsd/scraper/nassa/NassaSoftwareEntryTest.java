@@ -5,10 +5,9 @@
 
 package nl.esciencecenter.rsd.scraper.nassa;
 
+import java.io.StringReader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.io.StringReader;
 
 class NassaSoftwareEntryTest {
 
@@ -54,7 +53,11 @@ class NassaSoftwareEntryTest {
 			""";
 		// editorconfig-checker-enable
 
-		NassaSoftwareEntry entry = NassaSoftwareEntry.fromYaml(new StringReader(validYaml), "https://github.com/Archaeology-ABM/NASSA-modules/tree/main/2022-Verhagen-001", null);
+		NassaSoftwareEntry entry = NassaSoftwareEntry.fromYaml(
+			new StringReader(validYaml),
+			"https://github.com/Archaeology-ABM/NASSA-modules/tree/main/2022-Verhagen-001",
+			null
+		);
 
 		Assertions.assertNotNull(entry);
 		Assertions.assertEquals("Determine fertility rates for use in a demographic simulation.", entry.title);

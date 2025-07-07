@@ -7,13 +7,11 @@ package nl.esciencecenter.rsd.scraper.package_manager.scrapers;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-
-import nl.esciencecenter.rsd.scraper.RsdResponseException;
-
 import java.io.IOException;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
 
 public class AnacondaScraper implements PackageManagerScraper {
 

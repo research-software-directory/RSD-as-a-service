@@ -5,15 +5,13 @@
 
 package nl.esciencecenter.rsd.scraper.package_manager.scrapers;
 
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
@@ -36,23 +34,33 @@ public class PixiScraper implements PackageManagerScraper {
 
 	@Override
 	public Long downloads() throws RsdResponseException {
-		String graphqlQuery = String.format("""
-				{
-					package(channelName: "%s", name: "%s") {
-						downloadCounts {
-							version
-							count
-						}
+		String graphqlQuery = String.format(
+			"""
+			{
+				package(channelName: "%s", name: "%s") {
+					downloadCounts {
+						version
+						count
 					}
 				}
-				""",
-				channelName,
-				packageName);
+			}
+			""",
+			channelName,
+			packageName
+		);
 		JsonObject body = new JsonObject();
 		body.addProperty("query", graphqlQuery);
-		String response = Utils.post("https://prefix.dev/api/graphql", body.toString(), "Content-Type", "application/json");
+		String response = Utils.post(
+			"https://prefix.dev/api/graphql",
+			body.toString(),
+			"Content-Type",
+			"application/json"
+		);
 		JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
-		JsonArray countItems = jsonObject.getAsJsonObject("data").getAsJsonObject("package").getAsJsonArray("downloadCounts");
+		JsonArray countItems = jsonObject
+			.getAsJsonObject("data")
+			.getAsJsonObject("package")
+			.getAsJsonArray("downloadCounts");
 
 		long downloadsSum = 0;
 		for (JsonElement item : countItems) {
@@ -67,5 +75,4 @@ public class PixiScraper implements PackageManagerScraper {
 	public Integer reverseDependencies() {
 		throw new UnsupportedOperationException();
 	}
-
 }

@@ -5,11 +5,10 @@
 
 package nl.esciencecenter.rsd.scraper.git;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.Collection;
 import java.util.UUID;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 class PostgrestConnectorTest {
 
@@ -50,12 +49,14 @@ class PostgrestConnectorTest {
 				}
 			]""";
 
-		Assertions.assertThrowsExactly(IllegalArgumentException.class, () -> PostgrestConnector.parseBasicJsonData(invalidUuidJson));
+		Assertions.assertThrowsExactly(IllegalArgumentException.class, () ->
+			PostgrestConnector.parseBasicJsonData(invalidUuidJson)
+		);
 	}
 
 	@Test
 	void givenInvalidJson_whenParsingJsonData_thenExceptionThrown() {
-//		missing comma after software UUID
+		//		missing comma after software UUID
 		String invalidJson = """
 			[
 				{
@@ -76,7 +77,9 @@ class PostgrestConnectorTest {
 				}
 			]""";
 
-		Assertions.assertThrows(RuntimeException.class, () -> PostgrestConnector.parseBasicJsonData(missingSoftwareJson));
+		Assertions.assertThrows(RuntimeException.class, () ->
+			PostgrestConnector.parseBasicJsonData(missingSoftwareJson)
+		);
 
 		String missingUrlJson = """
 			[

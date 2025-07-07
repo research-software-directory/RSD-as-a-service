@@ -8,8 +8,7 @@ package nl.esciencecenter.rsd.scraper.git;
 import java.time.ZonedDateTime;
 
 public record ContributorDatabaseData(
-		BasicRepositoryData basicData,
-		Integer contributorCount,
-		ZonedDateTime dataScrapedAt
-) {
-}
+	BasicRepositoryData basicData,
+	Integer contributorCount,
+	ZonedDateTime dataScrapedAt
+) {}

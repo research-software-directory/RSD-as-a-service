@@ -7,32 +7,32 @@
 
 package nl.esciencecenter.rsd.authentication;
 
-import java.time.ZonedDateTime;
-import java.util.Optional;
-
 import com.google.gson.FieldNamingPolicy;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
-
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
+import java.time.ZonedDateTime;
+import java.util.Optional;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 public class AccessTokenVerifier {
 
 	private static final Gson gson = new GsonBuilder()
 		.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-		.registerTypeAdapter(ZonedDateTime.class, (JsonDeserializer<ZonedDateTime>) (src, typeOfSrc, context) -> ZonedDateTime.parse(src.getAsString()))
+		.registerTypeAdapter(
+			ZonedDateTime.class,
+			(JsonDeserializer<ZonedDateTime>) (src, typeOfSrc, context) -> ZonedDateTime.parse(src.getAsString())
+		)
 		.create();
 
 	Optional<String> getAccountIdIfValid(String secret, String tokenID) throws RsdAccessTokenException {
 		AccessToken accessToken = getHashForTokenID(tokenID);
 		Argon2PasswordEncoder encoder = Argon2Creator.argon2Encoder();
-		boolean tokenIsValid = encoder.matches(secret, accessToken.secret()) && ZonedDateTime.now()
-			.isBefore(accessToken.expiresAt());
+		boolean tokenIsValid =
+			encoder.matches(secret, accessToken.secret()) && ZonedDateTime.now().isBefore(accessToken.expiresAt());
 
 		return tokenIsValid ? Optional.of(accessToken.account().toString()) : Optional.empty();
 	}

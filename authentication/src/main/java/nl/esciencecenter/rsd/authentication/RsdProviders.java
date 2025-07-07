@@ -7,9 +7,6 @@ package nl.esciencecenter.rsd.authentication;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,6 +22,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class exposes all active OpenID providers that users can sign in with.
@@ -40,18 +39,26 @@ public class RsdProviders {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RsdProviders.class);
 
-	private static final OpenidProviderAccessMethodOrder DEFAULT_ACCESS_METHOD_ORDER = new OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod.DISABLED, Integer.MAX_VALUE);
-	private final ConcurrentMap<OpenidProvider, OpenidProviderAccessMethod> accessMethodOrderMap = new ConcurrentHashMap<>();
+	private static final OpenidProviderAccessMethodOrder DEFAULT_ACCESS_METHOD_ORDER =
+		new OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod.DISABLED, Integer.MAX_VALUE);
+	private final ConcurrentMap<OpenidProvider, OpenidProviderAccessMethod> accessMethodOrderMap =
+		new ConcurrentHashMap<>();
 	private String activeProvidersString = "[]";
 	private final ReadWriteLock jsonProvidersLock = new ReentrantReadWriteLock(false);
 
 	public RsdProviders() {
-		Map<OpenidProvider, OpenidProviderAccessMethodOrder> rawAccessMethodMap = RsdProviders.parseAuthProvidersEnvString(System.getenv("RSD_AUTH_PROVIDERS"));
+		Map<OpenidProvider, OpenidProviderAccessMethodOrder> rawAccessMethodMap =
+			RsdProviders.parseAuthProvidersEnvString(System.getenv("RSD_AUTH_PROVIDERS"));
 		logRawAccessMap(rawAccessMethodMap);
-		SequencedCollection<RsdProviderData> activeProvidersSorted = new TreeSet<>(Comparator.comparingInt(RsdProviderData::order));
+		SequencedCollection<RsdProviderData> activeProvidersSorted = new TreeSet<>(
+			Comparator.comparingInt(RsdProviderData::order)
+		);
 
 		for (OpenidProvider openidProvider : OpenidProvider.values()) {
-			OpenidProviderAccessMethodOrder rawAccessMethodOrder = rawAccessMethodMap.getOrDefault(openidProvider, DEFAULT_ACCESS_METHOD_ORDER);
+			OpenidProviderAccessMethodOrder rawAccessMethodOrder = rawAccessMethodMap.getOrDefault(
+				openidProvider,
+				DEFAULT_ACCESS_METHOD_ORDER
+			);
 			OpenidProviderAccessMethod rawAccessMethod = rawAccessMethodOrder.accessMethod();
 			if (!rawAccessMethod.isActive()) {
 				continue;
@@ -73,7 +80,16 @@ public class RsdProviders {
 				continue;
 			}
 
-			activeProvidersSorted.add(new RsdProviderData(openidProvider, rawAccessMethod, wellKnownUrl, displayName, htmlDescription, rawAccessMethodOrder.order()));
+			activeProvidersSorted.add(
+				new RsdProviderData(
+					openidProvider,
+					rawAccessMethod,
+					wellKnownUrl,
+					displayName,
+					htmlDescription,
+					rawAccessMethodOrder.order()
+				)
+			);
 		}
 
 		Map<OpenidProvider, URI> signInUrls = new EnumMap<>(OpenidProvider.class);
@@ -134,15 +150,20 @@ public class RsdProviders {
 
 	private static void logRawAccessMap(Map<OpenidProvider, OpenidProviderAccessMethodOrder> rawAccessMethodMap) {
 		for (OpenidProvider openidProvider : OpenidProvider.values()) {
-			OpenidProviderAccessMethod accessMethod = rawAccessMethodMap.getOrDefault(openidProvider, DEFAULT_ACCESS_METHOD_ORDER)
+			OpenidProviderAccessMethod accessMethod = rawAccessMethodMap
+				.getOrDefault(openidProvider, DEFAULT_ACCESS_METHOD_ORDER)
 				.accessMethod();
 
 			switch (accessMethod) {
-				case MISCONFIGURED ->
-					LOGGER.warn("Provider {} is misconfigured", openidProvider.toUserFriendlyString());
+				case MISCONFIGURED -> LOGGER.warn(
+					"Provider {} is misconfigured",
+					openidProvider.toUserFriendlyString()
+				);
 				case DISABLED -> LOGGER.info("Provider {} is disabled", openidProvider.toUserFriendlyString());
-				case INVITE_ONLY ->
-					LOGGER.info("Provider {} is enabled with invites only", openidProvider.toUserFriendlyString());
+				case INVITE_ONLY -> LOGGER.info(
+					"Provider {} is enabled with invites only",
+					openidProvider.toUserFriendlyString()
+				);
 				case EVERYONE -> {
 					if (openidProvider == OpenidProvider.local) {
 						LOGGER.warn("********************");
@@ -156,8 +177,7 @@ public class RsdProviders {
 		}
 	}
 
-	record OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod accessMethod, int order) {
-	}
+	record OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod accessMethod, int order) {}
 
 	/**
 	 * @param authConf A string containing a config for {@link OpenidProvider OpenID} providers, as described in <code>.env.example</code>
@@ -188,7 +208,10 @@ public class RsdProviders {
 			}
 
 			if (providerSplit.length != 2) {
-				result.put(openidProvider, new OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod.MISCONFIGURED, i));
+				result.put(
+					openidProvider,
+					new OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod.MISCONFIGURED, i)
+				);
 				continue;
 			}
 
@@ -196,14 +219,20 @@ public class RsdProviders {
 			try {
 				accessMethod = OpenidProviderAccessMethod.valueOf(providerSplit[1]);
 			} catch (IllegalArgumentException e) {
-				result.put(openidProvider, new OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod.MISCONFIGURED, i));
+				result.put(
+					openidProvider,
+					new OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod.MISCONFIGURED, i)
+				);
 				continue;
 			}
 
 			final int iCopy = i;
 			// duplicate entries are considered to be misconfigured
-			result.compute(openidProvider, (_key, oldValue) -> oldValue == null ? new OpenidProviderAccessMethodOrder(accessMethod, iCopy) :
-				new OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod.MISCONFIGURED, iCopy));
+			result.compute(openidProvider, (_key, oldValue) ->
+				oldValue == null
+					? new OpenidProviderAccessMethodOrder(accessMethod, iCopy)
+					: new OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod.MISCONFIGURED, iCopy)
+			);
 		}
 
 		return result;
@@ -254,28 +283,30 @@ public class RsdProviders {
 
 	private static String obtainHtmlDescription(OpenidProvider provider) {
 		return switch (provider) {
-			case local ->
-				"Sign in with local account is <strong>for testing purposes only</strong>. This option should not be enabled in the production version.";
-			case surfconext ->
-				"Sign in with SURFconext is for <strong>Dutch Institutions</strong> who enabled the RSD service in the SURFconext IdP dashboard.";
-			case helmholtz ->
-				"Sign in with Helmholtz ID is enabled for all members of the <strong>Helmholtz Research Foundation</strong>.";
+			case local -> "Sign in with local account is <strong>for testing purposes only</strong>. This option should not be enabled in the production version.";
+			case surfconext -> "Sign in with SURFconext is for <strong>Dutch Institutions</strong> who enabled the RSD service in the SURFconext IdP dashboard.";
+			case helmholtz -> "Sign in with Helmholtz ID is enabled for all members of the <strong>Helmholtz Research Foundation</strong>.";
 			case orcid -> "Sign in with your ORCID account.";
-			case azure ->
-				Utils.coalesce(System.getenv("AZURE_DESCRIPTION_HTML"), "Login with your institutional credentials.");
+			case azure -> Utils.coalesce(
+				System.getenv("AZURE_DESCRIPTION_HTML"),
+				"Login with your institutional credentials."
+			);
 			case linkedin -> "Sign in with your LinkedIn account.";
 		};
 	}
 
-	private record AuthUrls(URI signInUrl, URI coupleUrl) {
-	}
+	private record AuthUrls(URI signInUrl, URI coupleUrl) {}
 
-	private static AuthUrls obtainSignInUrl(OpenidProvider provider, URI wellKnownUrl) throws IOException, InterruptedException, RsdResponseException {
+	private static AuthUrls obtainSignInUrl(OpenidProvider provider, URI wellKnownUrl)
+		throws IOException, InterruptedException, RsdResponseException {
 		return switch (provider) {
 			case local -> new AuthUrls(URI.create("/login/local"), URI.create("/login/local/couple"));
 			case surfconext, helmholtz, orcid, azure, linkedin -> {
 				URI authUrl = Utils.getAuthUrlFromWellKnownUrl(wellKnownUrl);
-				yield new AuthUrls(addQueryParametersToAuthUrl(authUrl, provider, false), addQueryParametersToAuthUrl(authUrl, provider, true));
+				yield new AuthUrls(
+					addQueryParametersToAuthUrl(authUrl, provider, false),
+					addQueryParametersToAuthUrl(authUrl, provider, true)
+				);
 			}
 		};
 	}
@@ -328,9 +359,15 @@ public class RsdProviders {
 					.addQueryParameter("response_mode", "query")
 					.addQueryParameter("response_type", "code")
 					.addQueryParameter("scope", "openid")
-					.addQueryParameter("redirect_uri", isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider))
+					.addQueryParameter(
+						"redirect_uri",
+						isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider)
+					)
 					.addQueryParameter("client_id", obtainClientId(openidProvider))
-					.addQueryParameter("claims", "{\"id_token\":{\"schac_home_organization\":null,\"name\":null,\"email\":null}}");
+					.addQueryParameter(
+						"claims",
+						"{\"id_token\":{\"schac_home_organization\":null,\"name\":null,\"email\":null}}"
+					);
 
 				if (Config.isDevEnv()) {
 					queryParameterBuilder.addQueryParameter("prompt", "login");
@@ -342,15 +379,24 @@ public class RsdProviders {
 				.addQueryParameter("response_mode", "query")
 				.addQueryParameter("response_type", "code")
 				.addQueryParameter("scope", "openid profile email eduperson_principal_name")
-				.addQueryParameter("redirect_uri", isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider))
+				.addQueryParameter(
+					"redirect_uri",
+					isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider)
+				)
 				.addQueryParameter("client_id", obtainClientId(openidProvider))
-				.addQueryParameter("claims", "{\"id_token\":{\"schac_home_organization\":null,\"name\":null,\"email\":null}}")
+				.addQueryParameter(
+					"claims",
+					"{\"id_token\":{\"schac_home_organization\":null,\"name\":null,\"email\":null}}"
+				)
 				.toString();
 			case orcid -> new QueryParameterBuilder()
 				.addQueryParameter("response_mode", "query")
 				.addQueryParameter("response_type", "code")
 				.addQueryParameter("scope", "openid")
-				.addQueryParameter("redirect_uri", isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider))
+				.addQueryParameter(
+					"redirect_uri",
+					isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider)
+				)
 				.addQueryParameter("client_id", obtainClientId(openidProvider))
 				.toString();
 			case azure -> new QueryParameterBuilder()
@@ -358,14 +404,20 @@ public class RsdProviders {
 				.addQueryParameter("response_type", "code")
 				.addQueryParameter("scope", "openid")
 				.addQueryParameter("prompt", "select_account")
-				.addQueryParameter("redirect_uri", isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider))
+				.addQueryParameter(
+					"redirect_uri",
+					isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider)
+				)
 				.addQueryParameter("client_id", obtainClientId(openidProvider))
 				.toString();
 			case linkedin -> new QueryParameterBuilder()
 				.addQueryParameter("response_mode", "query")
 				.addQueryParameter("response_type", "code")
 				.addQueryParameter("scope", "openid profile email")
-				.addQueryParameter("redirect_uri", isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider))
+				.addQueryParameter(
+					"redirect_uri",
+					isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider)
+				)
 				.addQueryParameter("client_id", obtainClientId(openidProvider))
 				.toString();
 		};

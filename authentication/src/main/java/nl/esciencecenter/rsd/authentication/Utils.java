@@ -7,6 +7,8 @@
 
 package nl.esciencecenter.rsd.authentication;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -20,24 +22,28 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class Utils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
 	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
 	private static final Set<String> FORBIDDEN_HEADERS = Set.of(
-		"host", "content-length", "transfer-encoding", "connection",
-		"upgrade", "te", "expect", ":method", ":path", ":scheme", ":authority"
+		"host",
+		"content-length",
+		"transfer-encoding",
+		"connection",
+		"upgrade",
+		"te",
+		"expect",
+		":method",
+		":path",
+		":scheme",
+		":authority"
 	);
 
-	private Utils() {
-	}
+	private Utils() {}
 
 	@SafeVarargs
 	public static <T> T coalesce(T... objects) {
@@ -49,18 +55,32 @@ public class Utils {
 		throw new NullPointerException("No non-null reference found");
 	}
 
-	public static URI getAuthUrlFromWellKnownUrl(URI wellKnownUrl) throws IOException, InterruptedException, RsdResponseException {
+	public static URI getAuthUrlFromWellKnownUrl(URI wellKnownUrl)
+		throws IOException, InterruptedException, RsdResponseException {
 		HttpRequest request = HttpRequest.newBuilder(wellKnownUrl).build();
 		try (HttpClient client = HttpClient.newHttpClient()) {
-			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+			HttpResponse<String> response = client.send(
+				request,
+				HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)
+			);
 
 			if (response.statusCode() != 200) {
-				throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Wrong status code querying well-known URL");
+				throw new RsdResponseException(
+					response.statusCode(),
+					response.uri(),
+					response.body(),
+					"Wrong status code querying well-known URL"
+				);
 			}
 			try {
 				return extractAuthUrlFromWellKnownData(response.body());
 			} catch (RuntimeException e) {
-				throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Could not extract auth URL from well-known URL response body");
+				throw new RsdResponseException(
+					response.statusCode(),
+					response.uri(),
+					response.body(),
+					"Could not extract auth URL from well-known URL response body"
+				);
 			}
 		}
 	}
@@ -68,7 +88,10 @@ public class Utils {
 	public static URI getTokenUrlFromWellKnownUrl(URI wellKnownUrl) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder(wellKnownUrl).build();
 		try (HttpClient client = HttpClient.newHttpClient()) {
-			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+			HttpResponse<String> response = client.send(
+				request,
+				HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)
+			);
 			return extractTokenUrlFromWellKnownData(response.body());
 		}
 	}
@@ -105,19 +128,30 @@ public class Utils {
 			.build();
 	}
 
-	public static String postForm(URI uri, Map<String, String> form) throws IOException, InterruptedException, RsdResponseException {
+	public static String postForm(URI uri, Map<String, String> form)
+		throws IOException, InterruptedException, RsdResponseException {
 		HttpRequest request = formToHttpRequest(uri, form);
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			if (response.statusCode() >= 300) {
 				LOGGER.error("Error posting form: {}, {}", response.statusCode(), response.body());
-				throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Error posting form");
+				throw new RsdResponseException(
+					response.statusCode(),
+					response.uri(),
+					response.body(),
+					"Error posting form"
+				);
 			}
 			return response.body();
 		}
 	}
 
-	public static HttpResponse<String> makeBasicRequest(String method, Optional<String> jsonBody, URI uri, String jwtToken) {
+	public static HttpResponse<String> makeBasicRequest(
+		String method,
+		Optional<String> jsonBody,
+		URI uri,
+		String jwtToken
+	) {
 		HttpRequest.Builder builder = HttpRequest.newBuilder()
 			.uri(uri)
 			.timeout(DEFAULT_TIMEOUT)
@@ -152,7 +186,9 @@ public class Utils {
 		}
 
 		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
+			throw new RuntimeException(
+				"Error fetching data from endpoint " + uri + " with response: " + response.body()
+			);
 		}
 		return response;
 	}
@@ -189,7 +225,9 @@ public class Utils {
 		}
 
 		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
+			throw new RuntimeException(
+				"Error fetching data from endpoint " + uri + " with response: " + response.body()
+			);
 		}
 		return response.body();
 	}
