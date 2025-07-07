@@ -117,15 +117,15 @@ SELECT
 		reference_paper_for_software.mention
 	) AS reference_paper
 FROM
-	reference_paper_for_software
+	public.reference_paper_for_software
 INNER JOIN
-	citation_for_mention ON citation_for_mention.mention = reference_paper_for_software.mention
+	public.citation_for_mention ON citation_for_mention.mention = reference_paper_for_software.mention
 INNER JOIN
-	mention ON mention.id = citation_for_mention.citation
+	public.mention ON mention.id = citation_for_mention.citation
 --EXCLUDE reference papers items from citations
 WHERE
 	mention.id NOT IN (
-		SELECT mention FROM reference_paper_for_software
+		SELECT mention FROM public.reference_paper_for_software
 	)
 GROUP BY
 	reference_paper_for_software.software,
@@ -168,9 +168,9 @@ WITH mentions_and_citations AS (
 		mention.mention_type,
 		mention.source
 	FROM
-		mention
+		public.mention
 	INNER JOIN
-		mention_for_software ON mention_for_software.mention = mention.id
+		public.mention_for_software ON mention_for_software.mention = mention.id
 	-- does not deduplicate identical entries, but we will do so below with DISTINCT
 	-- from scraped citations
 	UNION ALL
@@ -190,7 +190,7 @@ WITH mentions_and_citations AS (
 		mention_type,
 		source
 	FROM
-		citation_by_software()
+		public.citation_by_software()
 )
 SELECT DISTINCT ON (mentions_and_citations.software, mentions_and_citations.id) * FROM mentions_and_citations;
 $$;
@@ -201,7 +201,7 @@ $$
 	SELECT
 		mentions_by_software.software, COUNT(mentions_by_software.id) AS mention_cnt
 	FROM
-		mentions_by_software()
+		public.mentions_by_software()
 	GROUP BY
 		mentions_by_software.software;
 $$;
