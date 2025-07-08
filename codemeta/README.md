@@ -17,7 +17,7 @@ If your instance of the RSD is hosted on https://example.com/, you can access th
 
 ## Developing
 
-This module is written in Go, version 1.22.5. You can find the installation instruction [here](https://go.dev/doc/install). If this page lists a newer version than the one we use, you can find all versions [here](https://go.dev/dl/). We currently don't have any external dependencies, except [Pico CSS](https://picocss.com/), which is dynamically linked in the HTML.
+This module is written in Go, see the `Dockerfile` for the version we use. You can find the installation instruction [here](https://go.dev/doc/install). If this page lists a newer version than the one we use, you can find all versions [here](https://go.dev/dl/). We currently don't have any external dependencies, except [Pico CSS](https://picocss.com/), which is dynamically linked in the HTML.
 
 When developing and running it locally, you need a locally running RSD instance, and you should set the `POSTGREST_URL` environment variable to a value at which the PostgREST backend can be reached. This will probably be `http://localhost/api/v1`. You can also point it to a dev or production server instead.
 
