@@ -8,16 +8,6 @@ package nl.esciencecenter.rsd.scraper.nassa;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.BibtexParser;
-import nl.esciencecenter.rsd.scraper.Config;
-import nl.esciencecenter.rsd.scraper.RsdResponseException;
-import nl.esciencecenter.rsd.scraper.Utils;
-import nl.esciencecenter.rsd.scraper.doi.ExternalMentionRecord;
-import nl.esciencecenter.rsd.scraper.license.GitHubSpdxLicenseRepository;
-import nl.esciencecenter.rsd.scraper.license.SpdxLicense;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.StringReader;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -32,6 +22,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import nl.esciencecenter.rsd.scraper.BibtexParser;
+import nl.esciencecenter.rsd.scraper.Config;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+import nl.esciencecenter.rsd.scraper.Utils;
+import nl.esciencecenter.rsd.scraper.doi.ExternalMentionRecord;
+import nl.esciencecenter.rsd.scraper.license.GitHubSpdxLicenseRepository;
+import nl.esciencecenter.rsd.scraper.license.SpdxLicense;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MainNassa {
 
@@ -48,10 +47,7 @@ public class MainNassa {
 		}
 
 		URI rootContentUri = URI.create("https://api.github.com/repos/Archaeology-ABM/NASSA-modules/contents/");
-		HttpRequest httpRequest = HttpRequest
-			.newBuilder(rootContentUri)
-			.GET()
-			.build();
+		HttpRequest httpRequest = HttpRequest.newBuilder(rootContentUri).GET().build();
 
 		HttpResponse<String> httpResponse;
 		try {
@@ -61,9 +57,15 @@ public class MainNassa {
 			return;
 		}
 		if (httpResponse.statusCode() != 200) {
-			String message = "Got a non-200 response from the GitHub API querying then contents of the NASSA repository";
+			String message =
+				"Got a non-200 response from the GitHub API querying then contents of the NASSA repository";
 			LOGGER.error(message);
-			RsdResponseException exceptionToSave = new RsdResponseException(httpResponse.statusCode(), rootContentUri, httpResponse.body(), message);
+			RsdResponseException exceptionToSave = new RsdResponseException(
+				httpResponse.statusCode(),
+				rootContentUri,
+				httpResponse.body(),
+				message
+			);
 			Utils.saveExceptionInDatabase(NASSA_SERVICE_NAME, null, null, exceptionToSave);
 			return;
 		}
@@ -74,7 +76,7 @@ public class MainNassa {
 			String fileOrDirName = jsonElement.getAsJsonObject().getAsJsonPrimitive("name").getAsString();
 			String htmlUrl = jsonElement.getAsJsonObject().getAsJsonPrimitive("html_url").getAsString();
 			if (!DENY_LIST_MODULES.contains(fileOrDirName) && NASSA_MODULE_PATTERN.asPredicate().test(fileOrDirName)) {
-				modules.add(new String[]{fileOrDirName, htmlUrl});
+				modules.add(new String[] { fileOrDirName, htmlUrl });
 			}
 		}
 
@@ -83,18 +85,26 @@ public class MainNassa {
 		for (String[] moduleInfo : modules) {
 			try {
 				// e.g. https://raw.githubusercontent.com/Archaeology-ABM/NASSA-modules/main/1870-Schliemann-001/NASSA.yml
-				URI ymlUri = URI.create("https://raw.githubusercontent.com/Archaeology-ABM/NASSA-modules/main/%s/NASSA.yml".formatted(moduleInfo[0]));
-				httpRequest = HttpRequest
-					.newBuilder(ymlUri)
-					.GET()
-					.build();
+				URI ymlUri = URI.create(
+					"https://raw.githubusercontent.com/Archaeology-ABM/NASSA-modules/main/%s/NASSA.yml".formatted(
+						moduleInfo[0]
+					)
+				);
+				httpRequest = HttpRequest.newBuilder(ymlUri).GET().build();
 
-				httpResponse = HTTP_CLIENT.send(httpRequest, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+				httpResponse = HTTP_CLIENT.send(
+					httpRequest,
+					HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)
+				);
 				StringReader ymlStringReader = new StringReader(httpResponse.body());
 
 				String longDescription = null;
 				try {
-					URI readmeUri = URI.create("https://raw.githubusercontent.com/Archaeology-ABM/NASSA-modules/main/%s/README.md".formatted(moduleInfo[0]));
+					URI readmeUri = URI.create(
+						"https://raw.githubusercontent.com/Archaeology-ABM/NASSA-modules/main/%s/README.md".formatted(
+							moduleInfo[0]
+						)
+					);
 					longDescription = NassaReadmeParser.downloadAndReturnDescriptionFromReadme(readmeUri, HTTP_CLIENT);
 				} catch (Exception e) {
 					Utils.saveExceptionInDatabase(NASSA_SERVICE_NAME, null, null, e);
@@ -104,18 +114,23 @@ public class MainNassa {
 				}
 
 				// e.g. https://raw.githubusercontent.com/Archaeology-ABM/NASSA-modules/main/1870-Schliemann-001/references.bib
-				URI bibUri = URI.create("https://raw.githubusercontent.com/Archaeology-ABM/NASSA-modules/main/%s/references.bib".formatted(moduleInfo[0]));
-				httpRequest = HttpRequest
-					.newBuilder(bibUri)
-					.GET()
-					.build();
-				httpResponse = HTTP_CLIENT.send(httpRequest, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+				URI bibUri = URI.create(
+					"https://raw.githubusercontent.com/Archaeology-ABM/NASSA-modules/main/%s/references.bib".formatted(
+						moduleInfo[0]
+					)
+				);
+				httpRequest = HttpRequest.newBuilder(bibUri).GET().build();
+				httpResponse = HTTP_CLIENT.send(
+					httpRequest,
+					HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)
+				);
 				StringReader bibStringReader = new StringReader(httpResponse.body());
 				Map<String, ExternalMentionRecord> mentions;
 				try {
 					mentions = BibtexParser.parse(bibStringReader);
 				} catch (Exception e) {
-					String message = "Exception parsing the Bibtex file of the following module: " + Arrays.toString(moduleInfo);
+					String message =
+						"Exception parsing the Bibtex file of the following module: " + Arrays.toString(moduleInfo);
 					Exception exceptionToSave = new Exception(message, e);
 					Utils.saveExceptionInDatabase(NASSA_SERVICE_NAME, null, null, exceptionToSave);
 					mentions = Map.of();
@@ -123,7 +138,11 @@ public class MainNassa {
 				mentionsOfModules.add(mentions);
 
 				LOGGER.info("parsing module: {} at URL {}", moduleInfo[0], ymlUri);
-				NassaSoftwareEntry softwareEntry = NassaSoftwareEntry.fromYaml(ymlStringReader, moduleInfo[1], longDescription);
+				NassaSoftwareEntry softwareEntry = NassaSoftwareEntry.fromYaml(
+					ymlStringReader,
+					moduleInfo[1],
+					longDescription
+				);
 				modulesToSave.add(softwareEntry);
 				LOGGER.info("done parsing module: {}", moduleInfo[0]);
 			} catch (InterruptedException e) {
@@ -154,7 +173,10 @@ public class MainNassa {
 			Map<String, ExternalMentionRecord> mentions = mentionsOfModules.get(i);
 			LOGGER.info("saving module to database: {}", nassaSoftwareEntry.id);
 			try {
-				Utils.postAsAdmin(Config.backendBaseUrl() + "/rpc/nassa_import", nassaSoftwareEntry.toRsdJson(mentions, licenseMap));
+				Utils.postAsAdmin(
+					Config.backendBaseUrl() + "/rpc/nassa_import",
+					nassaSoftwareEntry.toRsdJson(mentions, licenseMap)
+				);
 			} catch (Exception e) {
 				String message = "Exception handling the following module: " + nassaSoftwareEntry.id;
 				Exception exceptionToSave = new Exception(message, e);

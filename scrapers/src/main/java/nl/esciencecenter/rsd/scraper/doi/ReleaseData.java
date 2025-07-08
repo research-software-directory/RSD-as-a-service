@@ -17,11 +17,19 @@ public class ReleaseData {
 
 	@Override
 	public String toString() {
-		return "ReleaseData{" +
-				"softwareId=" + softwareId +
-				", slug='" + slug + '\'' +
-				", conceptDoi='" + conceptDoi + '\'' +
-				", versionedDois=" + versionedDois +
-				'}';
+		return (
+			"ReleaseData{" +
+			"softwareId=" +
+			softwareId +
+			", slug='" +
+			slug +
+			'\'' +
+			", conceptDoi='" +
+			conceptDoi +
+			'\'' +
+			", versionedDois=" +
+			versionedDois +
+			'}'
+		);
 	}
 }

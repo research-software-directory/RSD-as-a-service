@@ -7,19 +7,23 @@ package nl.esciencecenter.rsd.scraper.package_manager.scrapers;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-
-import nl.esciencecenter.rsd.scraper.RsdResponseException;
-
 import java.io.IOException;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
 
 public class CranScraper implements PackageManagerScraper {
 
 	final String packageName;
-	private static final Pattern urlPattern1 = Pattern.compile("https://cran\\.r-project\\.org/web/packages/([^/\\s]+)/?(index\\.html/?)?", Pattern.CASE_INSENSITIVE);
-	private static final Pattern urlPattern2 = Pattern.compile("https://cran\\.r-project\\.org/package=([^/\\s]+)/?", Pattern.CASE_INSENSITIVE);
+	private static final Pattern urlPattern1 = Pattern.compile(
+		"https://cran\\.r-project\\.org/web/packages/([^/\\s]+)/?(index\\.html/?)?",
+		Pattern.CASE_INSENSITIVE
+	);
+	private static final Pattern urlPattern2 = Pattern.compile(
+		"https://cran\\.r-project\\.org/package=([^/\\s]+)/?",
+		Pattern.CASE_INSENSITIVE
+	);
 
 	public CranScraper(String url) {
 		Objects.requireNonNull(url);

@@ -8,5 +8,9 @@ package nl.esciencecenter.rsd.scraper.git;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-public record BasicRepositoryDataWithHistory(UUID software, String url, ZonedDateTime commitHistoryScrapedAt, CommitsPerWeek commitsPerWeek) {
-}
+public record BasicRepositoryDataWithHistory(
+	UUID software,
+	String url,
+	ZonedDateTime commitHistoryScrapedAt,
+	CommitsPerWeek commitsPerWeek
+) {}

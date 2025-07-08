@@ -1,8 +1,8 @@
 {
+	"plugins": ["prettier-plugin-java"],
 	"printWidth": 120,
 	"useTabs": true,
 	"tabWidth": 4,
-	"semi": true,
 	"singleQuote": true,
 	"bracketSpacing": false,
 	"arrowParens": "avoid"

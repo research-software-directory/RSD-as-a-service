@@ -8,8 +8,7 @@ package nl.esciencecenter.rsd.scraper.git;
 import java.time.ZonedDateTime;
 
 public record BasicGitDatabaseData(
-		BasicRepositoryData basicData,
-		BasicGitData statsData,
-		ZonedDateTime dataScrapedAt
-) {
-}
+	BasicRepositoryData basicData,
+	BasicGitData statsData,
+	ZonedDateTime dataScrapedAt
+) {}

@@ -7,5 +7,4 @@ package nl.esciencecenter.rsd.scraper.git;
 
 import java.util.UUID;
 
-public record BasicRepositoryData(UUID software, String url) {
-}
+public record BasicRepositoryData(UUID software, String url) {}

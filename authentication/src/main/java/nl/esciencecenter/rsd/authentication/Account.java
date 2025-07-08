@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
@@ -10,6 +10,6 @@ package nl.esciencecenter.rsd.authentication;
 import java.io.IOException;
 
 public interface Account {
-
-	AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException;
+	AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider)
+		throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException;
 }

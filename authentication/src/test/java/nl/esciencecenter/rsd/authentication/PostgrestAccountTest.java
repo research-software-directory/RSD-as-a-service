@@ -5,11 +5,10 @@
 
 package nl.esciencecenter.rsd.authentication;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.time.ZonedDateTime;
 import java.util.UUID;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 class PostgrestAccountTest {
 
@@ -48,7 +47,10 @@ class PostgrestAccountTest {
 	@Test
 	void givenArrayOfSizeTwoWithCorrectUuid_whenCheckingIfAdmin_thenFalseReturned() {
 		UUID adminUuid = UUID.randomUUID();
-		String wrongIdResponse = "[{\"account_id\": \"%s\"}, {\"account_id\": \"%s\"}]".formatted(adminUuid, UUID.randomUUID());
+		String wrongIdResponse = "[{\"account_id\": \"%s\"}, {\"account_id\": \"%s\"}]".formatted(
+			adminUuid,
+			UUID.randomUUID()
+		);
 
 		Assertions.assertFalse(PostgrestAccount.parseIsAdminResponse(adminUuid, wrongIdResponse));
 	}
@@ -61,7 +63,9 @@ class PostgrestAccountTest {
 	void givenEmptyInviteResponse_whenParsed_thenExceptionThrown() {
 		String json = "[]";
 
-		Assertions.assertThrowsExactly(RsdAccountInviteException.class, () -> PostgrestAccount.checkInviteResponseGetUsesLeft(UUID.randomUUID(), json));
+		Assertions.assertThrowsExactly(RsdAccountInviteException.class, () ->
+			PostgrestAccount.checkInviteResponseGetUsesLeft(UUID.randomUUID(), json)
+		);
 	}
 
 	@Test
@@ -69,7 +73,9 @@ class PostgrestAccountTest {
 		int expectedUsesLeft = 1;
 		String json = formatInviteResponse(expectedUsesLeft, ZonedDateTime.now().plusMinutes(1));
 
-		int actualUsesLeft = Assertions.assertDoesNotThrow(() -> PostgrestAccount.checkInviteResponseGetUsesLeft(UUID.randomUUID(), json));
+		int actualUsesLeft = Assertions.assertDoesNotThrow(() ->
+			PostgrestAccount.checkInviteResponseGetUsesLeft(UUID.randomUUID(), json)
+		);
 		Assertions.assertEquals(expectedUsesLeft, actualUsesLeft);
 	}
 
@@ -77,7 +83,9 @@ class PostgrestAccountTest {
 	void givenValidInviteResponseWithInfiniteUses_whenParsed_thenNullReturned() {
 		String json = formatInviteResponse(null, ZonedDateTime.now().plusMinutes(1));
 
-		Integer actualUsesLeft = Assertions.assertDoesNotThrow(() -> PostgrestAccount.checkInviteResponseGetUsesLeft(UUID.randomUUID(), json));
+		Integer actualUsesLeft = Assertions.assertDoesNotThrow(() ->
+			PostgrestAccount.checkInviteResponseGetUsesLeft(UUID.randomUUID(), json)
+		);
 		Assertions.assertNull(actualUsesLeft);
 	}
 
@@ -85,20 +93,26 @@ class PostgrestAccountTest {
 	void givenInviteResponseWithZeroUses_whenParsed_thenExceptionThrown() {
 		String json = formatInviteResponse(0, ZonedDateTime.now().plusMinutes(1));
 
-		Assertions.assertThrowsExactly(RsdAccountInviteException.class, () -> PostgrestAccount.checkInviteResponseGetUsesLeft(UUID.randomUUID(), json));
+		Assertions.assertThrowsExactly(RsdAccountInviteException.class, () ->
+			PostgrestAccount.checkInviteResponseGetUsesLeft(UUID.randomUUID(), json)
+		);
 	}
 
 	@Test
 	void givenInviteResponseWithNegativeUses_whenParsed_thenExceptionThrown() {
 		String json = formatInviteResponse(-1, ZonedDateTime.now().plusMinutes(1));
 
-		Assertions.assertThrowsExactly(RsdAccountInviteException.class, () -> PostgrestAccount.checkInviteResponseGetUsesLeft(UUID.randomUUID(), json));
+		Assertions.assertThrowsExactly(RsdAccountInviteException.class, () ->
+			PostgrestAccount.checkInviteResponseGetUsesLeft(UUID.randomUUID(), json)
+		);
 	}
 
 	@Test
 	void givenInviteResponseExpired_whenParsed_thenExceptionThrown() {
 		String json = formatInviteResponse(1, ZonedDateTime.now().minusMinutes(1));
 
-		Assertions.assertThrowsExactly(RsdAccountInviteException.class, () -> PostgrestAccount.checkInviteResponseGetUsesLeft(UUID.randomUUID(), json));
+		Assertions.assertThrowsExactly(RsdAccountInviteException.class, () ->
+			PostgrestAccount.checkInviteResponseGetUsesLeft(UUID.randomUUID(), json)
+		);
 	}
 }

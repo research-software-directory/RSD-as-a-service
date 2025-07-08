@@ -6,6 +6,7 @@
 package nl.esciencecenter.rsd.authentication;
 
 public class RsdAccessTokenException extends Exception {
+
 	public RsdAccessTokenException(String message) {
 		super(message);
 	}
@@ -15,6 +16,7 @@ public class RsdAccessTokenException extends Exception {
 	}
 
 	public static class UnverifiedAccessTokenException extends RsdAccessTokenException {
+
 		public UnverifiedAccessTokenException(String message) {
 			super(message);
 		}

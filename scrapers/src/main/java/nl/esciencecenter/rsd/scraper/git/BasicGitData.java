@@ -11,5 +11,4 @@ public record BasicGitData(
 	Long starCount,
 	Integer forkCount,
 	Integer openIssueCount
-) {
-}
+) {}

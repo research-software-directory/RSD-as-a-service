@@ -9,11 +9,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PostgresRunnable implements Runnable {
+
 	private final String command;
 	protected final Logger LOGGER = LoggerFactory.getLogger(getClass().getName());
 
@@ -30,8 +30,8 @@ public class PostgresRunnable implements Runnable {
 		String dbUsername = System.getenv("POSTGRES_USER");
 		String dbPassword = System.getenv("POSTGRES_PASSWORD");
 		try (
-				Connection connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-				Statement statement = connection.createStatement()
+			Connection connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+			Statement statement = connection.createStatement();
 		) {
 			statement.execute(command);
 		} catch (SQLException e) {

@@ -5,16 +5,17 @@
 
 package nl.esciencecenter.rsd.scraper.doi;
 
-import nl.esciencecenter.rsd.scraper.Utils;
-
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 // https://docs.openalex.org/how-to-use-the-api/get-single-entities#the-openalex-id
 public class OpenalexId {
 
-	private static final Pattern OPENALEX_PATTERN = Pattern.compile("^https://openalex\\.org/([WwAaSsIiCcPpFf]\\d{3,13})$");
+	private static final Pattern OPENALEX_PATTERN = Pattern.compile(
+		"^https://openalex\\.org/([WwAaSsIiCcPpFf]\\d{3,13})$"
+	);
 	private static final String OPENALEX_ID_BASE = "https://openalex.org/";
 
 	private final String openalexKey;

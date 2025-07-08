@@ -9,15 +9,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import nl.esciencecenter.rsd.scraper.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DataCiteReleaseRepository {
 
@@ -39,6 +38,7 @@ public class DataCiteReleaseRepository {
 		  }
 		}
 		""";
+
 	// editorconfig-checker-enable
 
 	public Map<Doi, Collection<ExternalMentionRecord>> getVersionedDois(Collection<Doi> conceptDois) {
@@ -49,7 +49,12 @@ public class DataCiteReleaseRepository {
 		String query = QUERY_UNFORMATTED.formatted(DataciteMentionRepository.joinDoisForGraphqlQuery(conceptDois));
 		JsonObject body = new JsonObject();
 		body.addProperty("query", query);
-		String responseJson = Utils.post("https://api.datacite.org/graphql", body.toString(), "Content-Type", "application/json");
+		String responseJson = Utils.post(
+			"https://api.datacite.org/graphql",
+			body.toString(),
+			"Content-Type",
+			"application/json"
+		);
 		return parseJson(responseJson);
 	}
 
@@ -77,13 +82,19 @@ public class DataCiteReleaseRepository {
 					String relationType = relatedIdentifierObject.getAsJsonPrimitive("relationType").getAsString();
 					if (relationType == null || !relationType.equals("HasVersion")) continue;
 
-					String relatedIdentifierType = relatedIdentifierObject.getAsJsonPrimitive("relatedIdentifierType").getAsString();
+					String relatedIdentifierType = relatedIdentifierObject
+						.getAsJsonPrimitive("relatedIdentifierType")
+						.getAsString();
 					if (relatedIdentifierType == null || !relatedIdentifierType.equals("DOI")) continue;
 
-					String relatedIdentifierDoi = relatedIdentifierObject.getAsJsonPrimitive("relatedIdentifier").getAsString();
+					String relatedIdentifierDoi = relatedIdentifierObject
+						.getAsJsonPrimitive("relatedIdentifier")
+						.getAsString();
 					versionDois.add(Doi.fromString(relatedIdentifierDoi));
 				}
-				Collection<ExternalMentionRecord> versionedMentions = dataciteMentionRepository.mentionData(versionDois);
+				Collection<ExternalMentionRecord> versionedMentions = dataciteMentionRepository.mentionData(
+					versionDois
+				);
 
 				releasesPerConceptDoi.put(conceptDoi, versionedMentions);
 			} catch (RuntimeException e) {

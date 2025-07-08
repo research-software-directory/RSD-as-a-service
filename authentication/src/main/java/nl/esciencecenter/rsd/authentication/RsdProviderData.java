@@ -14,5 +14,4 @@ public record RsdProviderData(
 	String displayName,
 	String htmlDescription,
 	int order
-) {
-}
+) {}

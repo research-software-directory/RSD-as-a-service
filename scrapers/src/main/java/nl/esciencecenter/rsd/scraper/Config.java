@@ -9,10 +9,9 @@
 
 package nl.esciencecenter.rsd.scraper;
 
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Optional;
 
 /**
  * Helper class to retrieve various environment variables.
@@ -23,8 +22,7 @@ public class Config {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
 
-	private Config() {
-	}
+	private Config() {}
 
 	/**
 	 * Retrieves the value of the environment variable with the given name. Variable is not allowed to unset, and an Error
@@ -34,7 +32,6 @@ public class Config {
 	 * @return the value of the variable.
 	 */
 	private static String getMandatoryEnv(String name) {
-
 		if (name == null || name.isBlank()) {
 			LOGGER.error("Attempting to retrieve mandatory environment variable without a name!");
 			throw new Error("Attempting to retrieve mandatory environment variable without a name!");
@@ -64,7 +61,6 @@ public class Config {
 	 * @return the value of the variable if set, or empty Optional otherwise.
 	 */
 	private static Optional<String> getOptionalEnv(String name) {
-
 		if (name == null || name.isBlank()) {
 			LOGGER.warn("Attempting to retrieve environment variable without a name!");
 			return Optional.empty();
@@ -88,7 +84,6 @@ public class Config {
 	 * @return the value from the environment of the default value if no value could be obtained
 	 */
 	private static int getIntEnv(String name, int defaultValue) {
-
 		if (name == null || name.isBlank()) {
 			LOGGER.warn("Attempting to retrieve environment variable without a name!");
 			return defaultValue;

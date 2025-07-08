@@ -5,11 +5,11 @@
 
 package nl.esciencecenter.rsd.scraper.package_manager.scrapers;
 
+import java.io.IOException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 
-import java.io.IOException;
-
 public class FourTuScraper implements PackageManagerScraper {
+
 	@Override
 	public Long downloads() throws IOException, RsdResponseException {
 		throw new UnsupportedOperationException();

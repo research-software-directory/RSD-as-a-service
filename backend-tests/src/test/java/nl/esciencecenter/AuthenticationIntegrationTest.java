@@ -16,15 +16,14 @@ import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import java.util.List;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.List;
-
-@ExtendWith({SetupAllTests.class})
+@ExtendWith({ SetupAllTests.class })
 public class AuthenticationIntegrationTest {
 
 	@Test
@@ -36,11 +35,14 @@ public class AuthenticationIntegrationTest {
 	void givenUserWithoutAgreeingOnTerms_whenCreatingSoftware_thenNotAllowed() {
 		User user = User.create(false);
 
-		String expectedMessage = "You need to agree to our Terms of Service and the Privacy Statement before proceeding. Please open your user profile settings to agree.";
+		String expectedMessage =
+			"You need to agree to our Terms of Service and the Privacy Statement before proceeding. Please open your user profile settings to agree.";
 		RestAssured.given()
 			.header(user.authHeader)
 			.contentType(ContentType.JSON)
-			.body("{\"slug\": \"test-slug-user\", \"brand_name\": \"Test software user\", \"is_published\": true, \"short_statement\": \"Test software for testing\"}")
+			.body(
+				"{\"slug\": \"test-slug-user\", \"brand_name\": \"Test software user\", \"is_published\": true, \"short_statement\": \"Test software for testing\"}"
+			)
 			.when()
 			.post("software")
 			.then()
@@ -65,8 +67,11 @@ public class AuthenticationIntegrationTest {
 		RestAssured.given()
 			.header(user.authHeader)
 			.contentType(ContentType.JSON)
-			.body("{\"slug\": \"%s\", \"brand_name\": \"Test software user\", \"is_published\": true, \"short_statement\": \"Test software for testing\"}"
-				.formatted(slug))
+			.body(
+				"{\"slug\": \"%s\", \"brand_name\": \"Test software user\", \"is_published\": true, \"short_statement\": \"Test software for testing\"}".formatted(
+					slug
+				)
+			)
 			.when()
 			.post("software")
 			.then()
@@ -94,8 +99,11 @@ public class AuthenticationIntegrationTest {
 		RestAssured.given()
 			.header(SetupAllTests.adminAuthHeader)
 			.contentType(ContentType.JSON)
-			.body("{\"slug\": \"%s\", \"brand_name\": \"Test software user\", \"is_published\": true, \"short_statement\": \"Test software for testing\"}"
-				.formatted(slug))
+			.body(
+				"{\"slug\": \"%s\", \"brand_name\": \"Test software user\", \"is_published\": true, \"short_statement\": \"Test software for testing\"}".formatted(
+					slug
+				)
+			)
 			.when()
 			.post("software")
 			.then()
@@ -130,17 +138,9 @@ public class AuthenticationIntegrationTest {
 
 	@Test
 	void givenUnauthenticatedUser_whenViewingTables_thenSuccess() {
-		RestAssured
-			.when()
-			.get("software")
-			.then()
-			.statusCode(200);
+		RestAssured.when().get("software").then().statusCode(200);
 
-		RestAssured
-			.when()
-			.get("project")
-			.then()
-			.statusCode(200);
+		RestAssured.when().get("project").then().statusCode(200);
 	}
 
 	@Test
@@ -149,8 +149,11 @@ public class AuthenticationIntegrationTest {
 		RestAssured.given()
 			.header(SetupAllTests.adminAuthHeader)
 			.contentType(ContentType.JSON)
-			.body("{\"slug\": \"%s\", \"brand_name\": \"Test software user\", \"is_published\": false, \"short_statement\": \"Test software for testing\"}"
-				.formatted(slug))
+			.body(
+				"{\"slug\": \"%s\", \"brand_name\": \"Test software user\", \"is_published\": false, \"short_statement\": \"Test software for testing\"}".formatted(
+					slug
+				)
+			)
 			.when()
 			.post("software")
 			.then()
@@ -193,24 +196,17 @@ public class AuthenticationIntegrationTest {
 
 	@Test
 	void givenUnauthenticatedUser_createCategory() {
-		requestCreateDummyCategory(null)
-			.then()
-			.statusCode(401);
-
+		requestCreateDummyCategory(null).then().statusCode(401);
 	}
 
 	@Test
 	void givenAuthenticatedUser_createCategory() {
-		requestCreateDummyCategory(User.create().authHeader)
-			.then()
-			.statusCode(403);
+		requestCreateDummyCategory(User.create().authHeader).then().statusCode(403);
 	}
 
 	@Test
 	void givenAdmin_createCategory() {
-		requestCreateDummyCategory(SetupAllTests.adminAuthHeader)
-			.then()
-			.statusCode(201);
+		requestCreateDummyCategory(SetupAllTests.adminAuthHeader).then().statusCode(201);
 	}
 
 	@Test
@@ -219,9 +215,7 @@ public class AuthenticationIntegrationTest {
 
 		User user = User.create();
 		String softwareId = user.createSoftware("Software 1");
-		requestAddCategoryForSoftware(user, softwareId, categoryId)
-			.then()
-			.statusCode(201);
+		requestAddCategoryForSoftware(user, softwareId, categoryId).then().statusCode(201);
 	}
 
 	@Test
@@ -232,9 +226,7 @@ public class AuthenticationIntegrationTest {
 		String softwareId = user1.createSoftware("Software 1");
 
 		User user2 = User.create();
-		requestAddCategoryForSoftware(user2, softwareId, categoryId)
-			.then()
-			.statusCode(403);
+		requestAddCategoryForSoftware(user2, softwareId, categoryId).then().statusCode(403);
 	}
 
 	@Test
@@ -247,8 +239,7 @@ public class AuthenticationIntegrationTest {
 		addCategoryForSoftware(user, softwareId, catIds[0]);
 		addCategoryForSoftware(user, softwareId, catIds[1]);
 
-		String response = RestAssured
-			.get("/rpc/category_paths_by_software_expanded?software_id=" + softwareId)
+		String response = RestAssured.get("/rpc/category_paths_by_software_expanded?software_id=" + softwareId)
 			.then()
 			.contentType(ContentType.JSON)
 			.extract()
@@ -299,11 +290,10 @@ public class AuthenticationIntegrationTest {
 		String catId2 = createUniqueCategory("top level 2", "top level 2 long", null);
 		String catId2_1 = createUniqueCategory("sub category 2.1", "sub category 2.1 long", catId2);
 		String catId2_2 = createUniqueCategory("sub category 2.2", "sub category 2.2 long", catId2);
-		return new String[]{catId1_1, catId1_2, catId2_1, catId2_2};
+		return new String[] { catId1_1, catId1_2, catId2_1, catId2_2 };
 	}
 
 	String createCategory(String name, String short_name, String parentId, boolean makeUnique) {
-
 		if (makeUnique) {
 			String unique = " (" + Commons.createUUID() + ")";
 			name += unique;
@@ -334,13 +324,10 @@ public class AuthenticationIntegrationTest {
 	}
 
 	void addCategoryForSoftware(User user, String softwareId, String categoryId) {
-		requestAddCategoryForSoftware(user, softwareId, categoryId)
-			.then()
-			.statusCode(201);
+		requestAddCategoryForSoftware(user, softwareId, categoryId).then().statusCode(201);
 	}
 
 	Response requestAddCategoryForSoftware(User user, String softwareId, String categoryId) {
-
 		JsonObject obj = new JsonObject();
 		obj.addProperty("software_id", softwareId);
 		obj.addProperty("category_id", categoryId);
@@ -354,7 +341,6 @@ public class AuthenticationIntegrationTest {
 	}
 
 	Response requestCreateDummyCategory(Header authHeader) {
-
 		String unique = Commons.createUUID();
 
 		JsonObject obj = new JsonObject();
@@ -365,10 +351,6 @@ public class AuthenticationIntegrationTest {
 		if (authHeader != null) {
 			request.header(authHeader);
 		}
-		return request
-			.contentType(ContentType.JSON)
-			.body(obj.toString())
-			.when()
-			.post("category");
+		return request.contentType(ContentType.JSON).body(obj.toString()).when().post("category");
 	}
 }

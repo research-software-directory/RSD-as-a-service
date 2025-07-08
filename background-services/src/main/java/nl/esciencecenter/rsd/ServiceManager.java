@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceManager {
+
 	private List<Service> services = new ArrayList<>();
 
 	public void registerService(Service service) {

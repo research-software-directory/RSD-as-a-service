@@ -7,12 +7,11 @@ package nl.esciencecenter.rsd.scraper.aggregator;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.RsdResponseException;
-import nl.esciencecenter.rsd.scraper.Utils;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.StringJoiner;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 public class RemoteRsdConnector {
 
@@ -38,10 +37,10 @@ public class RemoteRsdConnector {
 		SELECT_LIST = selectListBuilder.toString();
 	}
 
-	private RemoteRsdConnector() {
-	}
+	private RemoteRsdConnector() {}
 
-	public static JsonArray getAllSoftware(URI remoteDomain) throws RsdResponseException, IOException, InterruptedException {
+	public static JsonArray getAllSoftware(URI remoteDomain)
+		throws RsdResponseException, IOException, InterruptedException {
 		String path = "/api/v1/rpc/software_overview?select=" + SELECT_LIST;
 		String url = remoteDomain.toString() + path;
 

@@ -7,11 +7,10 @@
 
 package nl.esciencecenter.rsd.scraper.git;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 class GithubScraperTest {
 
@@ -23,11 +22,16 @@ class GithubScraperTest {
 
 	@Test
 	void givenListWithLastPageHeader_whenParsing_thenCorrectPageReturned() {
-		List<String> singleLinkList = List.of("<https://api.github.com/repositories/413814951/contributors?per_page=1&page=2>; rel=\"next\", <https://api.github.com/repositories/413814951/contributors?per_page=1&page=9>; rel=\"last\"");
+		List<String> singleLinkList = List.of(
+			"<https://api.github.com/repositories/413814951/contributors?per_page=1&page=2>; rel=\"next\", <https://api.github.com/repositories/413814951/contributors?per_page=1&page=9>; rel=\"last\""
+		);
 
 		String[] lastPageData = GithubScraper.lastPageFromLinkHeader(singleLinkList);
 		Assertions.assertEquals(2, lastPageData.length);
-		Assertions.assertEquals("https://api.github.com/repositories/413814951/contributors?per_page=1&page=9", lastPageData[0]);
+		Assertions.assertEquals(
+			"https://api.github.com/repositories/413814951/contributors?per_page=1&page=9",
+			lastPageData[0]
+		);
 		Assertions.assertEquals("9", lastPageData[1]);
 	}
 

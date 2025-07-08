@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class AbstractService implements Service {
+
 	protected final Logger LOGGER = LoggerFactory.getLogger(getClass().getName());
 	private final String serviceName;
 

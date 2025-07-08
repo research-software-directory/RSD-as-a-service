@@ -13,10 +13,7 @@ import org.junit.jupiter.params.provider.NullSource;
 class CratesScraperTest {
 
 	@ParameterizedTest
-	@CsvSource({
-		"https://crates.io/crates/tokio,tokio",
-		"https://crates.io/crates/tokio/,tokio",
-	})
+	@CsvSource({ "https://crates.io/crates/tokio,tokio", "https://crates.io/crates/tokio/,tokio" })
 	void givenValidCratesUrl_whenCallingConstructor_thenNoExceptionThrownAndPackageNamesCorrect(
 		String url,
 		String expectedPackageName

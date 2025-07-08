@@ -24,5 +24,5 @@ public enum MentionType {
 	videoRecording,
 	webpage,
 	workshop,
-	other
+	other,
 }

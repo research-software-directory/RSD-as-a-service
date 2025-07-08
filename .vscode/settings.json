@@ -8,9 +8,14 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "[javascript][javascriptreact][typescript][typescriptreact]": {
+  "[javascriptreact][typescript][typescriptreact]": {
     "editor.tabSize": 2,
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.formatOnSave": true,
+  },
+  "[javascript]": {
+    // "editor.tabSize": 2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
   },
   // Tailwind plugin integration
@@ -26,6 +31,9 @@
     "editor.suggest.snippetsPreventQuickSuggestions": false,
     "editor.useTabStops": true,
     "editor.insertSpaces": false,
+    // enable prettier format on save in VScode
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
   },
   "cSpell.words": [
     "dompurify"
