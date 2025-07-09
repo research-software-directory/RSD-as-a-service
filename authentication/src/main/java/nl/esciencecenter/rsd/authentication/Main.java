@@ -187,6 +187,8 @@ public class Main {
 			app.put("/api/v2/*", Main::proxyToPostgrest);
 			app.patch("/api/v2/*", Main::proxyToPostgrest);
 			app.delete("/api/v2/*", Main::proxyToPostgrest);
+			app.head("/api/v2/*", Main::proxyToPostgrest);
+			app.options("/api/v2/*", Main::proxyToPostgrest);
 		}
 
 		app.get("/auth/refresh", ctx -> {
@@ -474,7 +476,9 @@ public class Main {
 			});
 
 		HttpRequest request = switch (method) {
-			case "GET", "DELETE" -> requestBuilder.method(method, HttpRequest.BodyPublishers.noBody()).build();
+			case "GET", "DELETE", "HEAD", "OPTIONS" -> requestBuilder
+				.method(method, HttpRequest.BodyPublishers.noBody())
+				.build();
 			case "POST", "PUT", "PATCH" -> {
 				String body = ctx.body();
 				String contentType = ctx.contentType() != null ? ctx.contentType() : "application/json";
