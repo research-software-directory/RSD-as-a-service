@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package nl.esciencecenter.rsd.authentication;
+package nl.esciencecenter.rsd.authentication.accesstoken;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;

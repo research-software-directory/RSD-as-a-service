@@ -45,7 +45,7 @@ public class JwtCreator {
 			.sign(signingAlgorithm);
 	}
 
-	String createAdminJwt() {
+	public String createAdminJwt() {
 		return JWT.create()
 			.withClaim("iss", RSD_AUTH_ROLE)
 			.withClaim("role", RSD_ADMIN_ROLE)
@@ -53,7 +53,7 @@ public class JwtCreator {
 			.sign(signingAlgorithm);
 	}
 
-	String createAccessTokenJwt(String accountID, String tokenID) {
+	public String createAccessTokenJwt(String accountID, String tokenID) {
 		return JWT.create()
 			.withClaim("iss", RSD_AUTH_ROLE)
 			.withClaim("role", RSD_USER_ROLE)

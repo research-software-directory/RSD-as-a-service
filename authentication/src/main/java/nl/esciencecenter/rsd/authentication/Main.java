@@ -13,16 +13,10 @@ package nl.esciencecenter.rsd.authentication;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Collections;
@@ -30,7 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import nl.esciencecenter.rsd.authentication.RsdAccessTokenException.UnverifiedAccessTokenException;
+import nl.esciencecenter.rsd.authentication.accesstoken.CreateAccessTokenHandler;
+import nl.esciencecenter.rsd.authentication.accesstoken.ProxyWithAccessTokenBeforeHandler;
+import nl.esciencecenter.rsd.authentication.accesstoken.ProxyWithAccessTokenHandler;
+import nl.esciencecenter.rsd.authentication.accesstoken.RsdAccessTokenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +39,6 @@ public class Main {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 	private static final String LOGIN_FAILED_PATH = "/login/failed";
-	private static final HttpClient httpClient = HttpClient.newHttpClient();
 
 	public static boolean idUserIsHelmholtzMember(OpenIdInfo helmholtzInfo) {
 		if (helmholtzInfo.organisation() == null) {
@@ -139,56 +135,17 @@ public class Main {
 
 		if (Config.isApiAccessTokenEnabled()) {
 			// endpoint for generating new API access token
-			app.post("/auth/accesstoken", ctx -> {
-				String accountId = extractAccountFromCookie(ctx);
+			app.post("/auth/accesstoken", new CreateAccessTokenHandler());
 
-				String requestBody = ctx.body();
-				JsonObject jsonObject = JsonParser.parseString(requestBody).getAsJsonObject();
-				String displayName = jsonObject.get("display_name").getAsString();
-				String expiresAt = jsonObject.get("expires_at").getAsString();
+			app.beforeMatched("/api/v2/*", new ProxyWithAccessTokenBeforeHandler());
 
-				try {
-					String accessToken = Argon2Creator.generateNewAccessToken(accountId, displayName, expiresAt);
-					ctx.result("{\"access_token\":\"" + accessToken + "\"}").contentType("application/json");
-					ctx.status(201);
-				} catch (RsdAccessTokenException e) {
-					ctx.status(400).result(e.getMessage());
-				}
-			});
-
-			app.beforeMatched("/api/v2/*", ctx -> {
-				String authHeader = ctx.header("Authorization");
-				if (authHeader != null && authHeader.startsWith("Bearer ")) {
-					String authToken = authHeader.substring(7);
-
-					String[] tokenParts = authToken.split("\\.");
-					String tokenID = tokenParts[0];
-					String tokenSecret = tokenParts[1];
-
-					AccessTokenVerifier verifier = new AccessTokenVerifier();
-					Optional<String> validatedUser = verifier.getAccountIdIfValid(tokenSecret, tokenID);
-					if (validatedUser.isEmpty()) {
-						ctx.status(HttpStatus.UNAUTHORIZED).json("{\"message\": \"Invalid access token\"}");
-						ctx.skipRemainingHandlers();
-						return;
-					}
-
-					String userID = validatedUser.get();
-					String signingSecret = Config.jwtSigningSecret();
-					JwtCreator jwtCreator = new JwtCreator(signingSecret);
-					String token = jwtCreator.createAccessTokenJwt(userID, tokenID);
-					ctx.attribute("X-API-Authorization-Header", "Bearer " + token);
-				}
-				// else the request is from the frontend, skip access token validation
-			});
-
-			app.get("/api/v2/*", Main::proxyToPostgrest);
-			app.post("/api/v2/*", Main::proxyToPostgrest);
-			app.put("/api/v2/*", Main::proxyToPostgrest);
-			app.patch("/api/v2/*", Main::proxyToPostgrest);
-			app.delete("/api/v2/*", Main::proxyToPostgrest);
-			app.head("/api/v2/*", Main::proxyToPostgrest);
-			app.options("/api/v2/*", Main::proxyToPostgrest);
+			app.get("/api/v2/*", new ProxyWithAccessTokenHandler());
+			app.post("/api/v2/*", new ProxyWithAccessTokenHandler());
+			app.put("/api/v2/*", new ProxyWithAccessTokenHandler());
+			app.patch("/api/v2/*", new ProxyWithAccessTokenHandler());
+			app.delete("/api/v2/*", new ProxyWithAccessTokenHandler());
+			app.head("/api/v2/*", new ProxyWithAccessTokenHandler());
+			app.options("/api/v2/*", new ProxyWithAccessTokenHandler());
 		}
 
 		app.get("/auth/refresh", ctx -> {
@@ -217,12 +174,6 @@ public class Main {
 		app.exception(RsdAuthenticationException.class, (ex, ctx) -> {
 			setLoginFailureCookie(ctx, ex.getMessage());
 			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
-		});
-
-		app.exception(UnverifiedAccessTokenException.class, (ex, ctx) -> {
-			LOGGER.error("UnverifiedAccessTokenException", ex);
-			ctx.status(400);
-			ctx.json("{\"message\": \"Cannot verify access token\"}");
 		});
 
 		app.exception(RsdAccessTokenException.class, (ex, ctx) -> {
@@ -444,53 +395,11 @@ public class Main {
 		return new String(Base64.getUrlDecoder().decode(base64UrlEncoded));
 	}
 
-	static String extractAccountFromCookie(Context ctx) {
+	public static String extractAccountFromCookie(Context ctx) {
 		String tokenToVerify = ctx.cookie("rsd_token");
 		String signingSecret = Config.jwtSigningSecret();
 		JwtVerifier verifier = new JwtVerifier(signingSecret);
 		DecodedJWT decodedJWT = verifier.verify(tokenToVerify);
 		return decodedJWT.getClaim("account").asString();
-	}
-
-	private static void proxyToPostgrest(Context ctx) throws IOException, InterruptedException {
-		String method = ctx.method().toString();
-		String path = ctx.path().substring("/api/v2".length());
-		String fullUrl = Config.backendBaseUrl() + path + ((ctx.queryString() != null) ? "?" + ctx.queryString() : "");
-
-		HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(URI.create(fullUrl));
-
-		if (ctx.attribute("X-API-Authorization-Header") != null) {
-			requestBuilder.header("Authorization", ctx.attribute("X-API-Authorization-Header"));
-		}
-
-		ctx
-			.headerMap()
-			.forEach((k, v) -> {
-				if (!Utils.isForbiddenHeader(k) && !k.equalsIgnoreCase("authorization") && v != null) {
-					try {
-						requestBuilder.header(k, v);
-					} catch (IllegalArgumentException e) {
-						throw new RsdInvalidHeaderException("Received invalid or forbidden header", e);
-					}
-				}
-			});
-
-		HttpRequest request = switch (method) {
-			case "GET", "DELETE", "HEAD", "OPTIONS" -> requestBuilder
-				.method(method, HttpRequest.BodyPublishers.noBody())
-				.build();
-			case "POST", "PUT", "PATCH" -> {
-				String body = ctx.body();
-				String contentType = ctx.contentType() != null ? ctx.contentType() : "application/json";
-				requestBuilder.header("Content-Type", contentType);
-				yield requestBuilder.method(method, HttpRequest.BodyPublishers.ofString(body)).build();
-			}
-			default -> throw new IllegalArgumentException("Unsupported HTTP method: " + method);
-		};
-
-		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-		ctx.status(response.statusCode());
-		ctx.json(response.body());
 	}
 }

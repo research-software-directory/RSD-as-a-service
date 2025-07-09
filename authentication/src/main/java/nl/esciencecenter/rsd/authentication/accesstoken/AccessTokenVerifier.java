@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package nl.esciencecenter.rsd.authentication;
+package nl.esciencecenter.rsd.authentication.accesstoken;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -15,7 +15,9 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.time.ZonedDateTime;
-import java.util.Optional;
+import java.util.UUID;
+import nl.esciencecenter.rsd.authentication.Config;
+import nl.esciencecenter.rsd.authentication.Utils;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 public class AccessTokenVerifier {
@@ -28,25 +30,32 @@ public class AccessTokenVerifier {
 		)
 		.create();
 
-	Optional<String> getAccountIdIfValid(String secret, String tokenID) throws RsdAccessTokenException {
+	public UUID getAccountIdFromToken(String secret, UUID tokenID) throws RsdAccessTokenException {
 		AccessToken accessToken = getHashForTokenID(tokenID);
 		Argon2PasswordEncoder encoder = Argon2Creator.argon2Encoder();
-		boolean tokenIsValid =
-			encoder.matches(secret, accessToken.secret()) && ZonedDateTime.now().isBefore(accessToken.expiresAt());
 
-		return tokenIsValid ? Optional.of(accessToken.account().toString()) : Optional.empty();
+		if (!encoder.matches(secret, accessToken.secret())) {
+			throw new RsdAccessTokenException("Access token is invalid");
+		}
+
+		if (ZonedDateTime.now().isAfter(accessToken.expiresAt())) {
+			throw new RsdAccessTokenException("Access token is expired");
+		}
+
+		return accessToken.account();
 	}
 
-	AccessToken getHashForTokenID(String tokenID) throws RsdAccessTokenException {
-		try {
-			String backendUri = Config.backendBaseUrl();
-			String fullUrl = backendUri + "/user_access_token?id=eq." + tokenID;
-			String tokenResponse = Utils.getAsAdmin(fullUrl);
-			JsonArray jsonArray = JsonParser.parseString(tokenResponse).getAsJsonArray();
-			JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
-			return gson.fromJson(jsonObject, AccessToken.class);
-		} catch (Exception e) {
-			throw new RsdAccessTokenException.UnverifiedAccessTokenException("Cannot verify access token");
+	private AccessToken getHashForTokenID(UUID tokenID) throws RsdAccessTokenException {
+		String backendUri = Config.backendBaseUrl();
+		String fullUrl = backendUri + "/user_access_token?id=eq." + tokenID;
+		String tokenResponse = Utils.getAsAdmin(fullUrl);
+		JsonArray jsonArray = JsonParser.parseString(tokenResponse).getAsJsonArray();
+
+		if (jsonArray.isEmpty()) {
+			throw new RsdAccessTokenException("Access token not found");
 		}
+
+		JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
+		return gson.fromJson(jsonObject, AccessToken.class);
 	}
 }

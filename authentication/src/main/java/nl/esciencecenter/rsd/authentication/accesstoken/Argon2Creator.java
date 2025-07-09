@@ -5,13 +5,18 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package nl.esciencecenter.rsd.authentication;
+package nl.esciencecenter.rsd.authentication.accesstoken;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.net.URI;
 import java.util.UUID;
+import nl.esciencecenter.rsd.authentication.Config;
+import nl.esciencecenter.rsd.authentication.JwtCreator;
+import nl.esciencecenter.rsd.authentication.PostgresCustomException;
+import nl.esciencecenter.rsd.authentication.PostgresForeignKeyConstraintException;
+import nl.esciencecenter.rsd.authentication.PostgrestAccount;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 public class Argon2Creator {
@@ -21,6 +26,8 @@ public class Argon2Creator {
 	private static final Integer PARALLELISM = 1;
 	private static final Integer MEMORY = 12288;
 	private static final Integer ITERATIONS = 3;
+
+	private Argon2Creator() {}
 
 	public static String generateNewAccessToken(String account, String displayName, String expiresAt)
 		throws RsdAccessTokenException, InterruptedException {
