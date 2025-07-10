@@ -40,14 +40,6 @@ public class Main {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 	private static final String LOGIN_FAILED_PATH = "/login/failed";
 
-	public static boolean idUserIsHelmholtzMember(OpenIdInfo helmholtzInfo) {
-		if (helmholtzInfo.organisation() == null) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
 	public static void main(String[] args) {
 		RsdProviders rsdProviders = new RsdProviders();
 		Javalin app = Javalin.create(c -> c.useVirtualThreads = false).start(7000);
@@ -95,7 +87,8 @@ public class Main {
 				case EVERYONE -> {
 					OpenIdInfo helmholtzInfo = obtainOpenIdInfo(ctx, helmholtzProvider, false);
 
-					if (!idUserIsHelmholtzMember(helmholtzInfo) && !Config.helmholtzIdAllowExternalUsers()) {
+					boolean idUserIsHelmholtzMember = helmholtzInfo.organisation() != null;
+					if (!idUserIsHelmholtzMember && !Config.helmholtzIdAllowExternalUsers()) {
 						// If no external members can login by default, access can be granted via invites
 						handleAccountInviteOnly(helmholtzInfo, helmholtzProvider, ctx);
 					} else {
@@ -139,6 +132,7 @@ public class Main {
 
 			app.beforeMatched("/api/v2/*", new ProxyWithAccessTokenBeforeHandler());
 
+			// If an HTTP method get added or removed here, also adapt the switch statement in the ProxyWithAccessTokenHandler
 			app.get("/api/v2/*", new ProxyWithAccessTokenHandler());
 			app.post("/api/v2/*", new ProxyWithAccessTokenHandler());
 			app.put("/api/v2/*", new ProxyWithAccessTokenHandler());
@@ -182,12 +176,6 @@ public class Main {
 			ctx.json("{\"message\": \"Error when creating access token\"}");
 		});
 
-		app.exception(RsdInvalidHeaderException.class, (ex, ctx) -> {
-			LOGGER.error("RsdInvalidHeaderException", ex);
-			ctx.status(400);
-			ctx.json("{\"message\": \"Forbidden or invalid header\"}");
-		});
-
 		app.exception(RsdAccountInviteException.class, (ex, ctx) -> {
 			setLoginFailureCookie(ctx, ex.getMessage());
 			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
@@ -207,7 +195,7 @@ public class Main {
 	}
 
 	static void handleLoginRequest(Context ctx, OpenidProvider openidProvider, RsdProviders rsdProviders)
-		throws RsdResponseException, IOException, InterruptedException, RsdAccountInviteException, PostgresForeignKeyConstraintException, PostgresCustomException {
+		throws RsdResponseException, IOException, InterruptedException, RsdAccountInviteException, IncorrectDataException {
 		switch (rsdProviders.accessMethodOfProvider(openidProvider)) {
 			case MISCONFIGURED -> {
 				handleMisconfiguredProvider(ctx, openidProvider);
@@ -216,20 +204,20 @@ public class Main {
 				handleDisabledProvider(ctx, openidProvider);
 			}
 			case INVITE_ONLY -> {
-				OpenIdInfo azureInfo = obtainOpenIdInfo(ctx, openidProvider, false);
+				OpenIdInfo openIdInfo = obtainOpenIdInfo(ctx, openidProvider, false);
 
-				handleAccountInviteOnly(azureInfo, openidProvider, ctx);
+				handleAccountInviteOnly(openIdInfo, openidProvider, ctx);
 			}
 			case EVERYONE -> {
-				OpenIdInfo azureInfo = obtainOpenIdInfo(ctx, openidProvider, false);
+				OpenIdInfo openIdInfo = obtainOpenIdInfo(ctx, openidProvider, false);
 
-				handleAccountEveryoneAllowed(azureInfo, openidProvider, ctx);
+				handleAccountEveryoneAllowed(openIdInfo, openidProvider, ctx);
 			}
 		}
 	}
 
 	static void handleCoupleRequest(Context ctx, OpenidProvider openidProvider, RsdProviders rsdProviders)
-		throws RsdResponseException, IOException, InterruptedException {
+		throws RsdResponseException, IOException, InterruptedException, IncorrectDataException {
 		switch (rsdProviders.accessMethodOfProvider(openidProvider)) {
 			case MISCONFIGURED -> {
 				handleMisconfiguredProvider(ctx, openidProvider);
@@ -238,15 +226,15 @@ public class Main {
 				handleDisabledProvider(ctx, openidProvider);
 			}
 			case INVITE_ONLY, EVERYONE -> {
-				OpenIdInfo orcidInfo = obtainOpenIdInfo(ctx, openidProvider, true);
+				OpenIdInfo openIdInfo = obtainOpenIdInfo(ctx, openidProvider, true);
 
-				handleCoupleLogins(ctx, orcidInfo, openidProvider);
+				handleCoupleLogins(ctx, openIdInfo, openidProvider);
 			}
 		}
 	}
 
 	static OpenIdInfo obtainOpenIdInfo(Context ctx, OpenidProvider openidProvider, boolean isCoupling)
-		throws RsdResponseException, IOException, InterruptedException {
+		throws RsdResponseException, IOException, InterruptedException, IncorrectDataException {
 		String redirectUrl = null;
 		if (openidProvider != OpenidProvider.local) {
 			redirectUrl = isCoupling
@@ -258,7 +246,7 @@ public class Main {
 			case local -> {
 				String sub = ctx.formParam("sub");
 				if (sub == null || sub.isBlank()) {
-					throw new RuntimeException("Please provide a username");
+					throw new IncorrectDataException("Please provide a username");
 				}
 				String name = sub;
 				String email = sub + "@example.com";
@@ -290,7 +278,7 @@ public class Main {
 	}
 
 	static void handleAccountInviteOnly(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx)
-		throws IOException, InterruptedException, RsdAccountInviteException, PostgresCustomException, PostgresForeignKeyConstraintException {
+		throws IOException, InterruptedException, RsdAccountInviteException, RsdResponseException {
 		PostgrestAccount postgrestAccount = new PostgrestAccount(Config.backendBaseUrl());
 		Optional<AccountInfo> optionalAccountInfo = postgrestAccount.getAccountIfExists(openIdInfo, provider);
 		if (optionalAccountInfo.isPresent()) {
@@ -303,7 +291,7 @@ public class Main {
 	}
 
 	static void handleAccountEveryoneAllowed(OpenIdInfo openIdInfo, OpenidProvider provider, Context ctx)
-		throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException {
+		throws IOException, InterruptedException, RsdResponseException {
 		AccountInfo accountInfo = new PostgrestAccount(Config.backendBaseUrl()).account(openIdInfo, provider);
 		createAndSetCookie(ctx, accountInfo);
 	}
@@ -325,7 +313,7 @@ public class Main {
 	}
 
 	static void handleCoupleLogins(Context ctx, OpenIdInfo openIdInfo, OpenidProvider provider)
-		throws IOException, InterruptedException {
+		throws IOException, InterruptedException, RsdResponseException {
 		String tokenToVerify = ctx.cookie("rsd_token");
 		String signingSecret = Config.jwtSigningSecret();
 		JwtVerifier verifier = new JwtVerifier(signingSecret);

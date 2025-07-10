@@ -15,13 +15,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;
 import nl.esciencecenter.rsd.authentication.Config;
-import nl.esciencecenter.rsd.authentication.RsdInvalidHeaderException;
 import nl.esciencecenter.rsd.authentication.Utils;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProxyWithAccessTokenHandler implements Handler {
 
 	private static final HttpClient httpClient = HttpClient.newHttpClient();
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProxyWithAccessTokenHandler.class);
 
 	/**
 	 * Proxies the request to PostgREST
@@ -44,7 +46,7 @@ public class ProxyWithAccessTokenHandler implements Handler {
 					try {
 						requestBuilder.header(k, v);
 					} catch (IllegalArgumentException e) {
-						throw new RsdInvalidHeaderException("Received invalid or forbidden header", e);
+						LOGGER.warn("Invalid or forbidden header: {}", k);
 					}
 				}
 			});
@@ -61,7 +63,7 @@ public class ProxyWithAccessTokenHandler implements Handler {
 				yield requestBuilder.method(method.toString(), HttpRequest.BodyPublishers.ofString(body)).build();
 			}
 			// should never happen, as this handler would not have been matched in the first place
-			default -> throw new IllegalArgumentException("Unsupported HTTP method: " + method);
+			default -> throw new AssertionError("Unsupported HTTP method: " + method);
 		};
 
 		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());

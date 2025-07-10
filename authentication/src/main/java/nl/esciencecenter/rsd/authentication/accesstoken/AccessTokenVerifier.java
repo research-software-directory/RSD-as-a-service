@@ -14,9 +14,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import nl.esciencecenter.rsd.authentication.Config;
+import nl.esciencecenter.rsd.authentication.RsdResponseException;
 import nl.esciencecenter.rsd.authentication.Utils;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
@@ -30,7 +32,8 @@ public class AccessTokenVerifier {
 		)
 		.create();
 
-	public UUID getAccountIdFromToken(String secret, UUID tokenID) throws RsdAccessTokenException {
+	public UUID getAccountIdFromToken(String secret, UUID tokenID)
+		throws RsdAccessTokenException, RsdResponseException, IOException, InterruptedException {
 		AccessToken accessToken = getHashForTokenID(tokenID);
 		Argon2PasswordEncoder encoder = Argon2Creator.argon2Encoder();
 
@@ -45,7 +48,8 @@ public class AccessTokenVerifier {
 		return accessToken.account();
 	}
 
-	private AccessToken getHashForTokenID(UUID tokenID) throws RsdAccessTokenException {
+	private AccessToken getHashForTokenID(UUID tokenID)
+		throws RsdAccessTokenException, RsdResponseException, IOException, InterruptedException {
 		String backendUri = Config.backendBaseUrl();
 		String fullUrl = backendUri + "/user_access_token?id=eq." + tokenID;
 		String tokenResponse = Utils.getAsAdmin(fullUrl);

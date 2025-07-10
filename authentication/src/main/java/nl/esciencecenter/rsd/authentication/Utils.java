@@ -14,12 +14,10 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import org.slf4j.Logger;
@@ -146,60 +144,13 @@ public class Utils {
 		}
 	}
 
-	public static HttpResponse<String> makeBasicRequest(
-		String method,
-		Optional<String> jsonBody,
-		URI uri,
-		String jwtToken
-	) {
-		HttpRequest.Builder builder = HttpRequest.newBuilder()
-			.uri(uri)
-			.timeout(DEFAULT_TIMEOUT)
-			.header("Authorization", "Bearer " + jwtToken);
-
-		switch (method.toUpperCase()) {
-			case "GET" -> builder.GET();
-			case "DELETE" -> builder.DELETE();
-			case "POST" -> {
-				if (jsonBody.isPresent()) {
-					builder.POST(BodyPublishers.ofString(jsonBody.get()));
-				} else {
-					builder.POST(HttpRequest.BodyPublishers.noBody());
-				}
-			}
-			default -> throw new IllegalArgumentException("Unsupported HTTP method: " + method);
-		}
-
-		HttpRequest request = builder.build();
-
-		HttpResponse<String> response;
-
-		try (HttpClient client = HttpClient.newHttpClient()) {
-			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (InterruptedException e) {
-			LOGGER.warn("Request to {} was interrupted", uri, e);
-			Thread.currentThread().interrupt();
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			LOGGER.error("An error occurred sending a request to {}", uri, e);
-			throw new RuntimeException(e);
-		}
-
-		if (response.statusCode() >= 300) {
-			throw new RuntimeException(
-				"Error fetching data from endpoint " + uri + " with response: " + response.body()
-			);
-		}
-		return response;
-	}
-
 	/**
 	 * Retrieve data from PostgREST as an admin user and retrieve the response body.
 	 *
 	 * @param uri The URI
-	 * @return Returns the content of the HTTP response
+	 * @return the content of the HTTP response
 	 */
-	public static String getAsAdmin(String uri) {
+	public static String getAsAdmin(String uri) throws IOException, InterruptedException, RsdResponseException {
 		String signingSecret = Config.jwtSigningSecret();
 		JwtCreator jwtCreator = new JwtCreator(signingSecret);
 		String jwtString = jwtCreator.createAdminJwt();
@@ -215,21 +166,18 @@ public class Utils {
 
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (InterruptedException e) {
-			LOGGER.warn("Request to {} was interrupted", uri, e);
-			Thread.currentThread().interrupt();
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			LOGGER.error("An error occurred sending a request to {}", uri, e);
-			throw new RuntimeException(e);
-		}
 
-		if (response.statusCode() >= 300) {
-			throw new RuntimeException(
-				"Error fetching data from endpoint " + uri + " with response: " + response.body()
-			);
+			if (response.statusCode() >= 300) {
+				throw new RsdResponseException(
+					response.statusCode(),
+					response.uri(),
+					response.body(),
+					"Error with GET as admin"
+				);
+			}
+
+			return response.body();
 		}
-		return response.body();
 	}
 
 	public static boolean isForbiddenHeader(String headerName) {
