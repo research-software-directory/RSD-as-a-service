@@ -94,45 +94,50 @@ public class RsdProviders {
 
 		Map<OpenidProvider, URI> signInUrls = new EnumMap<>(OpenidProvider.class);
 		Map<OpenidProvider, URI> coupleUrls = new EnumMap<>(OpenidProvider.class);
+
 		ExecutorService threadPool = Executors.newFixedThreadPool(10);
-		for (RsdProviderData rsdProviderData : activeProvidersSorted) {
-			threadPool.submit(() -> {
-				OpenidProvider openidProvider = rsdProviderData.openidProvider();
-				try {
-					AuthUrls authUrls = obtainSignInUrl(openidProvider, rsdProviderData.wellKnownUrl());
-					URI signInUrl = authUrls.signInUrl();
-					URI coupleUrl = authUrls.coupleUrl();
-
-					Lock writeLock = jsonProvidersLock.writeLock();
-					writeLock.lock();
+		try {
+			for (RsdProviderData rsdProviderData : activeProvidersSorted) {
+				threadPool.submit(() -> {
+					OpenidProvider openidProvider = rsdProviderData.openidProvider();
 					try {
-						accessMethodOrderMap.put(openidProvider, rsdProviderData.accessType());
-						signInUrls.put(openidProvider, signInUrl);
-						coupleUrls.put(openidProvider, coupleUrl);
+						AuthUrls authUrls = obtainSignInUrl(openidProvider, rsdProviderData.wellKnownUrl());
+						URI signInUrl = authUrls.signInUrl();
+						URI coupleUrl = authUrls.coupleUrl();
 
-						this.activeProvidersString = activeProvidersSorted
-							.stream()
-							.filter(p -> signInUrls.containsKey(p.openidProvider()))
-							.map(p -> toJson(p, signInUrls.get(p.openidProvider()), coupleUrls.get(p.openidProvider())))
-							.collect(JsonArray::new, JsonArray::add, JsonArray::addAll)
-							.toString();
-					} finally {
-						writeLock.unlock();
+						Lock writeLock = jsonProvidersLock.writeLock();
+						writeLock.lock();
+						try {
+							accessMethodOrderMap.put(openidProvider, rsdProviderData.accessType());
+							signInUrls.put(openidProvider, signInUrl);
+							coupleUrls.put(openidProvider, coupleUrl);
+
+							this.activeProvidersString = activeProvidersSorted
+								.stream()
+								.filter(p -> signInUrls.containsKey(p.openidProvider()))
+								.map(p ->
+									toJson(p, signInUrls.get(p.openidProvider()), coupleUrls.get(p.openidProvider()))
+								)
+								.collect(JsonArray::new, JsonArray::add, JsonArray::addAll)
+								.toString();
+						} finally {
+							writeLock.unlock();
+						}
+					} catch (IOException e) {
+						LOGGER.warn("IOException when getting sign in URL for provider {}", openidProvider, e);
+					} catch (RsdResponseException e) {
+						LOGGER.warn("RsdResponseException when getting sign in URL for provider {}", openidProvider, e);
+					} catch (InterruptedException e) {
+						LOGGER.warn("InterruptedException when getting sign in URL for provider {}", openidProvider, e);
+						Thread.currentThread().interrupt();
+					} catch (RuntimeException e) {
+						LOGGER.warn("RuntimeException when getting sign in URL for provider {}", openidProvider, e);
 					}
-				} catch (IOException e) {
-					LOGGER.warn("IOException when getting sign in URL for provider {}", openidProvider, e);
-				} catch (RsdResponseException e) {
-					LOGGER.warn("RsdResponseException when getting sign in URL for provider {}", openidProvider, e);
-				} catch (InterruptedException e) {
-					LOGGER.warn("InterruptedException when getting sign in URL for provider {}", openidProvider, e);
-					Thread.currentThread().interrupt();
-				} catch (RuntimeException e) {
-					LOGGER.warn("RuntimeException when getting sign in URL for provider {}", openidProvider, e);
-				}
-			});
+				});
+			}
+		} finally {
+			threadPool.shutdown();
 		}
-
-		threadPool.shutdown();
 	}
 
 	private static JsonObject toJson(RsdProviderData data, URI signInUrl, URI coupleUrl) {

@@ -63,7 +63,7 @@ public class JwtCreator {
 			.sign(signingAlgorithm);
 	}
 
-	String refreshToken(String token) throws IOException, InterruptedException {
+	String refreshToken(String token) throws IOException, InterruptedException, RsdResponseException {
 		DecodedJWT oldJwt = JWT.decode(token);
 		UUID accountId = UUID.fromString(oldJwt.getClaim("account").asString());
 		boolean isAdmin = new PostgrestAccount(Config.backendBaseUrl()).isAdmin(accountId);

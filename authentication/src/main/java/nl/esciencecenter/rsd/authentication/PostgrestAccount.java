@@ -38,7 +38,7 @@ public class PostgrestAccount implements Account {
 	}
 
 	public Optional<AccountInfo> getAccountIfExists(OpenIdInfo openIdInfo, OpenidProvider provider)
-		throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException {
+		throws IOException, InterruptedException, RsdResponseException {
 		Objects.requireNonNull(openIdInfo);
 		Objects.requireNonNull(provider);
 
@@ -61,7 +61,12 @@ public class PostgrestAccount implements Account {
 		JsonArray accountsWithSub = JsonParser.parseString(responseLogin).getAsJsonArray();
 		// Because of the UNIQUE(provider, sub) constraint on the login_for_account table, this should never happen
 		if (accountsWithSub.size() > 1) {
-			throw new RuntimeException("More than one login for subject " + subject + " exists");
+			throw new AssertionError(
+				"More than one login for subject %s and provider %s exist".formatted(
+					subject,
+					provider.toUserFriendlyString()
+				)
+			);
 		}
 		// The credentials are already tied to an account, so we update the login credentials with a possibly new name, email, etc.,
 		// and we return the existing account.
@@ -98,7 +103,7 @@ public class PostgrestAccount implements Account {
 
 	@Override
 	public AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider)
-		throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException {
+		throws IOException, InterruptedException, RsdResponseException {
 		Optional<AccountInfo> maybeExistingAccount = getAccountIfExists(openIdInfo, provider);
 
 		if (maybeExistingAccount.isPresent()) {
@@ -128,7 +133,7 @@ public class PostgrestAccount implements Account {
 	}
 
 	public AccountInfo useInviteToCreateAccount(UUID inviteId, OpenIdInfo openIdInfo, OpenidProvider provider)
-		throws IOException, InterruptedException, RsdAccountInviteException, PostgresCustomException, PostgresForeignKeyConstraintException {
+		throws IOException, InterruptedException, RsdAccountInviteException, RsdResponseException {
 		Objects.requireNonNull(inviteId);
 		URI accountInviteUrl = URI.create(
 			backendUri + "/account_invite?select=uses_left,expires_at&id=eq.%s".formatted(inviteId)
@@ -174,7 +179,7 @@ public class PostgrestAccount implements Account {
 		return usesLeft.isJsonPrimitive() ? usesLeft.getAsInt() : null;
 	}
 
-	public boolean isAdmin(UUID accountId) throws IOException, InterruptedException {
+	public boolean isAdmin(UUID accountId) throws IOException, InterruptedException, RsdResponseException {
 		Objects.requireNonNull(accountId);
 		URI accountUrl = URI.create(backendUri + "/admin_account?account_id=eq.%s".formatted(accountId));
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
@@ -203,14 +208,14 @@ public class PostgrestAccount implements Account {
 	}
 
 	public void coupleLogin(UUID accountId, OpenIdInfo openIdInfo, OpenidProvider provider)
-		throws IOException, InterruptedException {
+		throws IOException, InterruptedException, RsdResponseException {
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
 		String adminJwt = jwtCreator.createAdminJwt();
 		createLoginForAccount(accountId, openIdInfo, provider, backendUri, adminJwt);
 	}
 
 	private boolean createAdminIfDevAndNoAdminsExist(String backendUri, String token, UUID accountId)
-		throws IOException, InterruptedException, PostgresCustomException, PostgresForeignKeyConstraintException {
+		throws IOException, InterruptedException, RsdResponseException {
 		if (!Config.isDevEnv()) {
 			return false;
 		}
@@ -235,7 +240,7 @@ public class PostgrestAccount implements Account {
 		OpenidProvider provider,
 		String backendUri,
 		String adminJwt
-	) throws IOException, InterruptedException {
+	) throws IOException, InterruptedException, RsdResponseException {
 		JsonObject loginForAccountData = new JsonObject();
 		loginForAccountData.addProperty("account", accountId.toString());
 		loginForAccountData.addProperty("sub", openIdInfo.sub());
@@ -257,18 +262,17 @@ public class PostgrestAccount implements Account {
 		if (response.statusCode() == 409) {
 			throw new RsdAuthenticationException("This login is already coupled to an account.");
 		} else if (response.statusCode() >= 300) {
-			throw new RuntimeException(
-				"Error fetching data from the endpoint: %s with status code %d and response: %s".formatted(
-					createLoginUri.toString(),
-					response.statusCode(),
-					response.body()
-				)
+			throw new RsdResponseException(
+				response.statusCode(),
+				response.uri(),
+				response.body(),
+				"Could not create login for account"
 			);
 		}
 	}
 
 	private void updateLoginForAccount(UUID id, OpenIdInfo openIdInfo, String authToken)
-		throws IOException, InterruptedException {
+		throws IOException, InterruptedException, RsdResponseException {
 		JsonObject loginForAccountData = new JsonObject();
 		loginForAccountData.addProperty("name", openIdInfo.name());
 		loginForAccountData.addProperty("email", openIdInfo.email());
@@ -284,7 +288,7 @@ public class PostgrestAccount implements Account {
 		patchJsonAsAdmin(patchLoginForAccountUri, resultingJson, authToken);
 	}
 
-	static String getAsAdmin(URI uri, String token) throws IOException, InterruptedException {
+	static String getAsAdmin(URI uri, String token) throws IOException, InterruptedException, RsdResponseException {
 		HttpRequest request = HttpRequest.newBuilder()
 			.GET()
 			.uri(uri)
@@ -293,8 +297,11 @@ public class PostgrestAccount implements Account {
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			if (response.statusCode() >= 300) {
-				throw new RuntimeException(
-					"Error fetching data from the endpoint: " + uri.toString() + " with response: " + response.body()
+				throw new RsdResponseException(
+					response.statusCode(),
+					response.uri(),
+					response.body(),
+					"Error with GET as admin"
 				);
 			}
 			return response.body();
@@ -302,9 +309,9 @@ public class PostgrestAccount implements Account {
 	}
 
 	public static String postJsonAsAdmin(URI uri, String json, String token, String... headers)
-		throws PostgresForeignKeyConstraintException, PostgresCustomException, IOException, InterruptedException {
+		throws IOException, InterruptedException, RsdResponseException {
 		HttpResponse<String> response = postJsonAsAdminWithResponse(uri, json, token, headers);
-		handlePostgresResponse(uri, response);
+		checkPostgresResponse(response);
 		return response.body();
 	}
 
@@ -329,7 +336,8 @@ public class PostgrestAccount implements Account {
 		}
 	}
 
-	private String patchJsonAsAdmin(URI uri, String json, String authToken) throws IOException, InterruptedException {
+	private void patchJsonAsAdmin(URI uri, String json, String authToken)
+		throws IOException, InterruptedException, RsdResponseException {
 		HttpRequest request = HttpRequest.newBuilder()
 			.method("PATCH", HttpRequest.BodyPublishers.ofString(json))
 			.uri(uri)
@@ -337,15 +345,17 @@ public class PostgrestAccount implements Account {
 			.header(PREFER_HEADER_KEY, "return=representation")
 			.header(AUTHORIZATION_HEADER_KEY, BEARER_HEADER_VALUE_PREFIX + " " + authToken)
 			.build();
-		HttpResponse<String> response;
+
 		try (HttpClient client = HttpClient.newHttpClient()) {
-			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			if (response.statusCode() >= 300) {
-				throw new RuntimeException(
-					"Error fetching data from the endpoint: " + uri.toString() + " with response: " + response.body()
+				throw new RsdResponseException(
+					response.statusCode(),
+					response.uri(),
+					response.body(),
+					"Error patching with JSON as admin"
 				);
 			}
-			return response.body();
 		}
 	}
 
@@ -364,38 +374,14 @@ public class PostgrestAccount implements Account {
 		}
 	}
 
-	public static void handlePostgresResponse(URI uri, HttpResponse<String> response)
-		throws PostgresForeignKeyConstraintException, PostgresCustomException {
+	public static void checkPostgresResponse(HttpResponse<String> response) throws RsdResponseException {
 		if (response.statusCode() >= 300) {
-			String responseBody = response.body();
-			JsonObject errorObject = JsonParser.parseString(responseBody).getAsJsonObject();
-			if (
-				errorObject.has("message") &&
-				errorObject.get("message").getAsString().contains("Access tokens should expire within one year")
-			) {
-				throw new PostgresCustomException.PostgresAccessTokenExpirationException(
-					"Invalid Expiration Date: Access tokens should expire within one year"
-				);
-			} else if (
-				errorObject.has("message") &&
-				errorObject.get("message").getAsString().contains("The selected expiration date cannot be in the past")
-			) {
-				throw new PostgresCustomException.PostgresAccessTokenExpirationException(
-					"Invalid Expiration Date: Access token expiration date cannot be in the past"
-				);
-			} else {
-				String errorCode = errorObject.get("code").getAsString();
-				switch (errorCode) {
-					case "23503" -> throw new PostgresForeignKeyConstraintException("Foreign key constraint error");
-					default -> throw new PostgresCustomException(
-						"Error fetching data from the endpoint: %s with status code %d and response: %s".formatted(
-							uri.toString(),
-							response.statusCode(),
-							response.body()
-						)
-					);
-				}
-			}
+			throw new RsdResponseException(
+				response.statusCode(),
+				response.uri(),
+				response.body(),
+				"Error with PostgREST request"
+			);
 		}
 	}
 }
