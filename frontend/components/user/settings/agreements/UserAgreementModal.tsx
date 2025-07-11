@@ -22,7 +22,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import InfoIcon from '@mui/icons-material/Info'
 
 import {useForm} from 'react-hook-form'
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useRsdSettings from '~/config/useRsdSettings'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ControlledSwitch from '~/components/form/ControlledSwitch'

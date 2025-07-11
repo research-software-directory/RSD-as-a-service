@@ -30,6 +30,7 @@ const customJestConfig = {
   ],
   // coverage only from specific folders
   collectCoverageFrom: [
+    './app/**/*.{js,jsx,ts,tsx}',
     './auth/**/*.{js,jsx,ts,tsx}',
     './components/**/*.{js,jsx,ts,tsx}',
     './config/**/*.{js,jsx,ts,tsx}',

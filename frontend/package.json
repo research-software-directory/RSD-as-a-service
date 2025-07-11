@@ -1,6 +1,6 @@
 {
   "name": "rsd-frontend",
-  "version": "3.4.0",
+  "version": "4.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
@@ -33,6 +33,7 @@
     "@emotion/styled": "11.14.1",
     "@mui/icons-material": "7.2.0",
     "@mui/material": "7.2.0",
+    "@mui/material-nextjs": "7.2.0",
     "@tailwindcss/typography": "0.5.16",
     "aos": "2.3.4",
     "cookie": "1.0.2",
@@ -43,12 +44,12 @@
     "nprogress": "0.2.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-hook-form": "7.59.0",
+    "react-hook-form": "7.60.0",
     "react-markdown": "10.1.0",
     "rehype-external-links": "3.0.0",
     "remark-breaks": "4.0.0",
     "remark-gfm": "4.0.1",
-    "sharp": "0.34.2"
+    "sharp": "0.34.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.1",
@@ -61,7 +62,7 @@
     "@types/d3": "7.4.3",
     "@types/jest": "29.5.14",
     "@types/jsonwebtoken": "9.0.10",
-    "@types/node": "24.0.10",
+    "@types/node": "24.0.13",
     "@types/nprogress": "0.2.3",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",

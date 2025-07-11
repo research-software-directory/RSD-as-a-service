@@ -18,7 +18,7 @@ import Edit from '@mui/icons-material/Edit'
 import Icon from '@mui/material/Icon'
 import Delete from '@mui/icons-material/Delete'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {TreeNode} from '~/types/TreeNode'
 import {CategoryEntry} from '~/types/Category'
 import {createJsonHeaders} from '~/utils/fetchHelpers'

@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {NextRouter, useRouter} from 'next/router'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import logger from '~/utils/logger'
 import StatusBanner from '~/components/cards/StatusBanner'
 import IconBtnMenuOnAction, {IconBtnMenuOption} from '~/components/menu/IconBtnMenuOnAction'
