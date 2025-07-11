@@ -5,8 +5,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {useState} from 'react'
-import {useRouter} from 'next/router'
+import {useRouter} from 'next/navigation'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import AddIcon from '@mui/icons-material/Add'

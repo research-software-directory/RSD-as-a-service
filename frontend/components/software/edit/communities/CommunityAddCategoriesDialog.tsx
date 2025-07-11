@@ -14,7 +14,7 @@ import Button from '@mui/material/Button'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import SaveIcon from '@mui/icons-material/Save'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {TreeNode} from '~/types/TreeNode'
 import {CategoryEntry} from '~/types/Category'
 import {CategoryForSoftwareIds} from '~/types/SoftwareTypes'

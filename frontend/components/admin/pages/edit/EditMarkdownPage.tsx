@@ -11,7 +11,7 @@ import {useFormContext} from 'react-hook-form'
 import Button from '@mui/material/Button'
 import DeleteIcon from '@mui/icons-material/Delete'
 
-import {useAuth} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import MarkdownInputWithPreview from '~/components/form/MarkdownInputWithPreview'
@@ -40,7 +40,7 @@ export type EditMarkdownPageProps = {
 }
 
 export default function EditMarkdownPage({slug,onDelete,onSubmit}:EditMarkdownPageProps) {
-  const {session: {token}} = useAuth()
+  const {token} = useSession()
   const [loading, setLoading] = useState(true)
   const [loadedSlug, setLoadedSlug]=useState<string>()
   const {
