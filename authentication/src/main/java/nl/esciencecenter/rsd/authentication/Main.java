@@ -44,41 +44,25 @@ public class Main {
 		RsdProviders rsdProviders = new RsdProviders();
 		Javalin app = Javalin.create(c -> c.useVirtualThreads = false).start(7000);
 
-		app.afterMatched("/auth/login/*", ctx -> {
-			ctx.removeCookie(INVITE_COOKIE_NAME, "/auth");
-		});
+		app.afterMatched("/auth/login/*", ctx -> ctx.removeCookie(INVITE_COOKIE_NAME, "/auth"));
 
 		app.get("/auth/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
 
-		app.get("/auth/providers", ctx -> {
-			ctx.json(rsdProviders.activeProvidersAsJson());
-		});
+		app.get("/auth/providers", ctx -> ctx.json(rsdProviders.activeProvidersAsJson()));
 
-		app.post("/auth/login/local", ctx -> {
-			handleLoginRequest(ctx, OpenidProvider.local, rsdProviders);
-		});
+		app.post("/auth/login/local", ctx -> handleLoginRequest(ctx, OpenidProvider.local, rsdProviders));
 
-		app.post("/auth/couple/local", ctx -> {
-			handleCoupleRequest(ctx, OpenidProvider.local, rsdProviders);
-		});
+		app.post("/auth/couple/local", ctx -> handleCoupleRequest(ctx, OpenidProvider.local, rsdProviders));
 
-		app.get("/auth/login/surfconext", ctx -> {
-			handleLoginRequest(ctx, OpenidProvider.surfconext, rsdProviders);
-		});
+		app.get("/auth/login/surfconext", ctx -> handleLoginRequest(ctx, OpenidProvider.surfconext, rsdProviders));
 
-		app.get("/auth/couple/surfconext", ctx -> {
-			handleCoupleRequest(ctx, OpenidProvider.surfconext, rsdProviders);
-		});
+		app.get("/auth/couple/surfconext", ctx -> handleCoupleRequest(ctx, OpenidProvider.surfconext, rsdProviders));
 
 		app.get("/auth/login/helmholtzid", ctx -> {
 			OpenidProvider helmholtzProvider = OpenidProvider.helmholtz;
 			switch (rsdProviders.accessMethodOfProvider(helmholtzProvider)) {
-				case MISCONFIGURED -> {
-					handleMisconfiguredProvider(ctx, helmholtzProvider);
-				}
-				case DISABLED -> {
-					handleDisabledProvider(ctx, helmholtzProvider);
-				}
+				case MISCONFIGURED -> handleMisconfiguredProvider(ctx, helmholtzProvider);
+				case DISABLED -> handleDisabledProvider(ctx, helmholtzProvider);
 				case INVITE_ONLY -> {
 					OpenIdInfo helmholtzInfo = obtainOpenIdInfo(ctx, helmholtzProvider, false);
 
@@ -98,33 +82,19 @@ public class Main {
 			}
 		});
 
-		app.get("/auth/couple/helmholtzid", ctx -> {
-			handleCoupleRequest(ctx, OpenidProvider.helmholtz, rsdProviders);
-		});
+		app.get("/auth/couple/helmholtzid", ctx -> handleCoupleRequest(ctx, OpenidProvider.helmholtz, rsdProviders));
 
-		app.get("/auth/login/orcid", ctx -> {
-			handleLoginRequest(ctx, OpenidProvider.orcid, rsdProviders);
-		});
+		app.get("/auth/login/orcid", ctx -> handleLoginRequest(ctx, OpenidProvider.orcid, rsdProviders));
 
-		app.get("/auth/couple/orcid", ctx -> {
-			handleCoupleRequest(ctx, OpenidProvider.orcid, rsdProviders);
-		});
+		app.get("/auth/couple/orcid", ctx -> handleCoupleRequest(ctx, OpenidProvider.orcid, rsdProviders));
 
-		app.get("/auth/login/azure", ctx -> {
-			handleLoginRequest(ctx, OpenidProvider.azure, rsdProviders);
-		});
+		app.get("/auth/login/azure", ctx -> handleLoginRequest(ctx, OpenidProvider.azure, rsdProviders));
 
-		app.get("/auth/couple/azure", ctx -> {
-			handleCoupleRequest(ctx, OpenidProvider.azure, rsdProviders);
-		});
+		app.get("/auth/couple/azure", ctx -> handleCoupleRequest(ctx, OpenidProvider.azure, rsdProviders));
 
-		app.get("/auth/login/linkedin", ctx -> {
-			handleLoginRequest(ctx, OpenidProvider.linkedin, rsdProviders);
-		});
+		app.get("/auth/login/linkedin", ctx -> handleLoginRequest(ctx, OpenidProvider.linkedin, rsdProviders));
 
-		app.get("/auth/couple/linkedin", ctx -> {
-			handleCoupleRequest(ctx, OpenidProvider.linkedin, rsdProviders);
-		});
+		app.get("/auth/couple/linkedin", ctx -> handleCoupleRequest(ctx, OpenidProvider.linkedin, rsdProviders));
 
 		if (Config.isApiAccessTokenEnabled()) {
 			// endpoint for generating new API access token
@@ -197,12 +167,8 @@ public class Main {
 	static void handleLoginRequest(Context ctx, OpenidProvider openidProvider, RsdProviders rsdProviders)
 		throws RsdResponseException, IOException, InterruptedException, RsdAccountInviteException, IncorrectDataException {
 		switch (rsdProviders.accessMethodOfProvider(openidProvider)) {
-			case MISCONFIGURED -> {
-				handleMisconfiguredProvider(ctx, openidProvider);
-			}
-			case DISABLED -> {
-				handleDisabledProvider(ctx, openidProvider);
-			}
+			case MISCONFIGURED -> handleMisconfiguredProvider(ctx, openidProvider);
+			case DISABLED -> handleDisabledProvider(ctx, openidProvider);
 			case INVITE_ONLY -> {
 				OpenIdInfo openIdInfo = obtainOpenIdInfo(ctx, openidProvider, false);
 
@@ -219,12 +185,8 @@ public class Main {
 	static void handleCoupleRequest(Context ctx, OpenidProvider openidProvider, RsdProviders rsdProviders)
 		throws RsdResponseException, IOException, InterruptedException, IncorrectDataException {
 		switch (rsdProviders.accessMethodOfProvider(openidProvider)) {
-			case MISCONFIGURED -> {
-				handleMisconfiguredProvider(ctx, openidProvider);
-			}
-			case DISABLED -> {
-				handleDisabledProvider(ctx, openidProvider);
-			}
+			case MISCONFIGURED -> handleMisconfiguredProvider(ctx, openidProvider);
+			case DISABLED -> handleDisabledProvider(ctx, openidProvider);
 			case INVITE_ONLY, EVERYONE -> {
 				OpenIdInfo openIdInfo = obtainOpenIdInfo(ctx, openidProvider, true);
 
