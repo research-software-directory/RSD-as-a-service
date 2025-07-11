@@ -1,16 +1,15 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Image from 'next/legacy/image'
 import Link from 'next/link'
 
-import {HomeProps} from 'pages'
-import {useSession} from '~/auth'
-import {useAuth} from '~/auth'
+import {HomeProps} from 'app/page'
+import {useSession} from '~/auth/AuthProvider'
 import {Provider} from '~/auth/api/getLoginProviders'
 import useLoginProviders from '~/auth/api/useLoginProviders'
 import useImperialData from './useImperialData'
@@ -33,11 +32,10 @@ function submit_software_href(auth_status: string, login_providers: Provider[]) 
 }
 
 export default function MainContentImperialCollege({counts}: HomeProps) {
-  const {token} = useSession()
+  const {token,status} = useSession()
   const {loading, keywords} = useImperialData(token)
-  const {session} = useAuth()
   const {providers} = useLoginProviders()
-  const auth_status = session?.status || 'loading'
+  const auth_status = status || 'loading'
 
   return (
     <MainContent>

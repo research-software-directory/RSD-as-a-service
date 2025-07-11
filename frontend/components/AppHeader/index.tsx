@@ -6,31 +6,34 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {useState, useEffect} from 'react'
 import Link from 'next/link'
 
 // local dependencies (project components)
-import {useAuth} from '~/auth'
-import useRsdSettings from '~/config/useRsdSettings'
-import AddMenu from './AddMenu'
-import LoginButton from '~/components/login/LoginButton'
-import JavascriptSupportWarning from './JavascriptSupportWarning'
+
 import LogoApp from '~/assets/LogoApp.svg'
 import LogoAppSmall from '~/assets/LogoAppSmall.svg'
+import {useSession} from '~/auth/AuthProvider'
+import useRsdSettings from '~/config/useRsdSettings'
+import LoginButton from '~/components/login/LoginButton'
 import GlobalSearchAutocomplete from '~/components/GlobalSearchAutocomplete'
 import FeedbackPanelButton from '~/components/feedback/FeedbackPanelButton'
+import AddMenu from './AddMenu'
+import JavascriptSupportWarning from './JavascriptSupportWarning'
 import ResponsiveMenu from './ResponsiveMenu'
 import DesktopMenu from './DesktopMenu'
 
 export default function AppHeader() {
-  const {session} = useAuth()
+  const {status} = useSession()
   const [activePath, setActivePath] = useState('/')
-  const status = session?.status || 'loading'
   const {host} = useRsdSettings()
 
   // console.group('AppHeader')
   // console.log('activePath...',activePath)
   // console.log('status...',status)
+  // console.log('host...',host)
   // console.groupEnd()
 
   useEffect(() => {

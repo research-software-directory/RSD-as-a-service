@@ -5,7 +5,7 @@
 
 import {useState} from 'react'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import EditableTable, {OrderByProps} from '~/components/table/EditableTable'
 import ContentLoader from '~/components/layout/ContentLoader'
 import {RsdInfo} from './apiRsdInfo'
