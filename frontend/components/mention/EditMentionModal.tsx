@@ -18,12 +18,12 @@ import Alert from '@mui/material/Alert'
 
 import {useForm} from 'react-hook-form'
 
-import ControlledTextField from '../form/ControlledTextField'
-import {mentionModal as config, mentionType} from './config'
-import {MentionItemProps, MentionTypeKeys} from '../../types/Mention'
+import {useSession} from '~/auth/AuthProvider'
+import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
+import ControlledTextField from '~/components/form/ControlledTextField'
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ControlledSelect from '~/components/form/ControlledSelect'
-import SubmitButtonWithListener from '../form/SubmitButtonWithListener'
-import {useSession} from '~/auth'
+import {mentionModal as config, mentionType} from './config'
 
 export type EditMentionModalProps = {
   open: boolean,

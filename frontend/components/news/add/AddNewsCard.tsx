@@ -10,7 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Button from '@mui/material/Button'
 import {useForm} from 'react-hook-form'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {useDebounce} from '~/utils/useDebounce'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'

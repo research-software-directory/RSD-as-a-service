@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useFormContext} from 'react-hook-form'
 import {useRouter} from 'next/router'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
 import {ControlledTextFieldOptions} from '~/components/form/ControlledTextField'
 import useSnackbar from '~/components/snackbar/useSnackbar'

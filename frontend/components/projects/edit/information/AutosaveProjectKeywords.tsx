@@ -1,15 +1,15 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState} from 'react'
 import Chip from '@mui/material/Chip'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {KeywordForProject} from '~/types/Project'
 import FindKeyword, {Keyword} from '~/components/keyword/FindKeyword'
 import {projectInformation as config} from './config'

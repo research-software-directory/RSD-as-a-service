@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {FormProvider, useForm} from 'react-hook-form'
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import AutosaveControlledMarkdown from '~/components/form/AutosaveControlledMarkdown'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
