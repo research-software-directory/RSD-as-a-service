@@ -13,7 +13,7 @@
 import {useState} from 'react'
 import Link from 'next/link'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useLoginProviders from '~/auth/api/useLoginProviders'
 import UserMenu from '~/components/layout/UserMenu'
 import LoginDialog from './LoginDialog'

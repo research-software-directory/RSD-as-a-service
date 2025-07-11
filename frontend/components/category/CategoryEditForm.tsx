@@ -10,7 +10,7 @@ import Switch from '@mui/material/Switch'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import {Controller, useForm} from 'react-hook-form'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {CategoryEntry} from '~/types/Category'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import useSnackbar from '~/components/snackbar/useSnackbar'

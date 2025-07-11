@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,19 +24,11 @@
  * For other libs injecting css into app further investigation is needed.
  */
 
+'use server'
 import crypto from 'crypto'
 import {IncomingMessage, ServerResponse} from 'http'
+import {devScript, monitoringScripts, sharedPolicy} from './getCspHeader'
 
-// default policies
-const sharedPolicy = `
-  default-src 'self';
-  style-src 'self' 'unsafe-inline';
-  connect-src 'self' https://*;
-  font-src 'self' https://fonts.gstatic.com;
-  img-src 'self' data: https://*;
-  base-uri 'none';
-  object-src 'none';
-`
 // default script def - use unsafe-inline for backward compatibility
 // https://developer.chrome.com/docs/lighthouse/best-practices/csp-xss/?utm_source=lighthouse&utm_medium=devtools#ensure-csp-is-backwards-compatible
 // const sharedScript = 'script-src \'self\' '
@@ -44,21 +36,6 @@ const sharedPolicy = `
 function defaultNonce() {
   if (crypto) return crypto.randomUUID()
   return '5ef14870-46fd-11ed-b878-0242ac120002'
-}
-
-function monitoringScripts() {
-  if (process.env.MATOMO_URL) {
-    return ` ${process.env.MATOMO_URL}`
-  }
-  return ''
-}
-
-function devScript() {
-  if (process.env.NODE_ENV !== 'production') {
-    // enable script eval in development
-    return ' \'unsafe-eval\''
-  }
-  return ''
 }
 
 export function nonceContentSecurity() {
@@ -74,7 +51,12 @@ export function nonceContentSecurity() {
   }
 }
 
-// RUNS only on server side as it needs server response object to append response header
+/**
+ * Page specific
+ * RUNS only on server side as it needs server response object to append response header
+ * @param res
+ * @returns
+ */
 export function setContentSecurityPolicyHeader(res?: ServerResponse<IncomingMessage>) {
   // if server response object is not present returns default nonce value
   if (!res) return defaultNonce()
@@ -90,3 +72,4 @@ export function setContentSecurityPolicyHeader(res?: ServerResponse<IncomingMess
   // return nonce
   return nonce
 }
+

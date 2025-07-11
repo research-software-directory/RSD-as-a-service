@@ -27,7 +27,7 @@ import ViewToggleGroup,{ProjectLayoutType} from '~/components/projects/overview/
 import CommunitiesList from '~/components/communities/overview/CommunitiesList'
 import CommunitiesGrid from '~/components/communities/overview/CommunitiesGrid'
 import {CommunityListProps, getCommunityList} from '~/components/communities/apiCommunities'
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {getRsdModules} from '~/config/getSettingsServerSide'
 
 const pageTitle = `Communities | ${app.title}`

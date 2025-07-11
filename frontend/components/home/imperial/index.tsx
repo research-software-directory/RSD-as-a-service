@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -9,8 +9,8 @@ import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
-import {HomeProps} from 'pages/index'
 
+import {HomeProps} from 'app/page'
 import MainContentImperialCollege from './MainContentImperialCollege'
 
 const pageTitle = `Home | ${app.title}`
