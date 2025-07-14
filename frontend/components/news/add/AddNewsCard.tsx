@@ -3,8 +3,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {useEffect, useState} from 'react'
-import {useRouter} from 'next/router'
+import {useRouter} from 'next/navigation'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import Button from '@mui/material/Button'

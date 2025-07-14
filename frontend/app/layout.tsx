@@ -101,7 +101,7 @@ export default async function RootLayout({
         {/* inject matomo script */}
         <MatomoScript matomo={matomo} nonce={nonce} />
       </head>
-      <body className="dark bg-base-200">
+      <body className="dark bg-base-200 flex flex-col min-h-[100vh]">
         {/* material-ui cache provider */}
         <AppRouterCacheProvider>
           {/* material-ui theme provider */}
