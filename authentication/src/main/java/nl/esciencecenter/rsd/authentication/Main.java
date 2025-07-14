@@ -100,16 +100,17 @@ public class Main {
 			// endpoint for generating new API access token
 			app.post("/auth/accesstoken", new CreateAccessTokenHandler());
 
-			app.beforeMatched("/api/v2/*", new ProxyWithAccessTokenBeforeHandler());
+			final String accessTokenApiPath = "/api/v2/*";
+			app.beforeMatched(accessTokenApiPath, new ProxyWithAccessTokenBeforeHandler());
 
 			// If an HTTP method get added or removed here, also adapt the switch statement in the ProxyWithAccessTokenHandler
-			app.get("/api/v2/*", new ProxyWithAccessTokenHandler());
-			app.post("/api/v2/*", new ProxyWithAccessTokenHandler());
-			app.put("/api/v2/*", new ProxyWithAccessTokenHandler());
-			app.patch("/api/v2/*", new ProxyWithAccessTokenHandler());
-			app.delete("/api/v2/*", new ProxyWithAccessTokenHandler());
-			app.head("/api/v2/*", new ProxyWithAccessTokenHandler());
-			app.options("/api/v2/*", new ProxyWithAccessTokenHandler());
+			app.get(accessTokenApiPath, new ProxyWithAccessTokenHandler());
+			app.post(accessTokenApiPath, new ProxyWithAccessTokenHandler());
+			app.put(accessTokenApiPath, new ProxyWithAccessTokenHandler());
+			app.patch(accessTokenApiPath, new ProxyWithAccessTokenHandler());
+			app.delete(accessTokenApiPath, new ProxyWithAccessTokenHandler());
+			app.head(accessTokenApiPath, new ProxyWithAccessTokenHandler());
+			app.options(accessTokenApiPath, new ProxyWithAccessTokenHandler());
 		}
 
 		app.get("/auth/refresh", ctx -> {

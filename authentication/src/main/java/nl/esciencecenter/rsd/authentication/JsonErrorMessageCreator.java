@@ -11,6 +11,8 @@ import java.util.Collection;
 
 public class JsonErrorMessageCreator {
 
+	private JsonErrorMessageCreator() {}
+
 	public static String createErrorJson(String message, Collection<String> details) {
 		JsonObject errorObject = new JsonObject();
 

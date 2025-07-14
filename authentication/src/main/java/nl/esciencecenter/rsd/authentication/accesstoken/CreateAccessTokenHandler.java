@@ -12,7 +12,6 @@ import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import nl.esciencecenter.rsd.authentication.JsonErrorMessageCreator;
