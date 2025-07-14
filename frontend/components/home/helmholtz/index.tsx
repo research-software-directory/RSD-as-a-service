@@ -5,6 +5,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import Link from 'next/link'
 import IconButton from '@mui/material/IconButton'
 import {ChevronLeft, ChevronRight} from '@mui/icons-material'
