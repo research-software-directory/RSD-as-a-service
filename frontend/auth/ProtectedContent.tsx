@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState,useEffect} from 'react'
 
 import {useAuth} from './AuthProvider'
