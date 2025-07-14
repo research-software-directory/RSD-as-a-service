@@ -7,33 +7,6 @@
 
 import {expect, Page} from '@playwright/test'
 
-// ONLY after login
-export async function acceptUserAgreementInSettings(page: Page) {
-  // open user menu
-  await page.getByTestId('user-menu-button').click()
-  // click My settings menu option
-  const mySettings = page.getByRole('menuitem', {name: 'My settings'})
-
-  // open user/settings page
-  await Promise.all([
-    page.waitForURL('**/user/settings'),
-    mySettings.click()
-  ])
-
-  // await page.pause()
-  // find reference to form
-  const uaForm = page.locator('#profile-settings-form')
-  // find checkboxes
-  const checkboxes = await uaForm.getByTestId('controlled-switch-label').all()
-  expect(checkboxes.length).toBeGreaterThan(0)
-  // const checkboxes = await page.getByTestId('controlled-switch-label').all()
-  // expect(checkboxes.length).toBeGreaterThan(0)
-  // check/accept all options
-  for (const checkbox of checkboxes) {
-    await checkbox.check()
-  }
-}
-
 export async function acceptUserAgreement(page: Page) {
   // wait for user agreement api call
   const uaModal = page.getByTestId('user-agreement-modal')
