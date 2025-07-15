@@ -21,7 +21,8 @@ import nprogress from 'nprogress'
 import '../styles/global.css'
 
 // authentication
-import {AuthProvider, Session, getSessionSeverSide} from '~/auth'
+import {Session, getSessionSeverSide, REFRESH_MARGIN} from '~/auth'
+import {AuthProvider} from '~/auth/AuthProvider'
 import {saveLocationCookie} from '~/auth/locationCookie'
 import {getLoginProviders, Provider} from '~/auth/api/getLoginProviders'
 import {LoginProvidersProvider} from '~/auth/loginProvidersContext'
@@ -147,7 +148,7 @@ function RsdApp(props: MuiAppProps) {
         {/* dynamically pass css variables when theme changes */}
         <Global styles={cssVariables} />
         {/* Authentication */}
-        <AuthProvider session={rsdSession}>
+        <AuthProvider session={rsdSession} refreshMarginInMs={REFRESH_MARGIN}>
           {/* RSD settings/config */}
           <RsdSettingsProvider settings={rsdSettings}>
             {/* Plugin slots context */}
@@ -166,7 +167,7 @@ function RsdApp(props: MuiAppProps) {
           </RsdSettingsProvider>
         </AuthProvider>
         {/* Matomo cookie consent dialog */}
-        <CookieConsentMatomo matomo={matomo} route={router.pathname} />
+        <CookieConsentMatomo matomo={matomo} />
         {/* RSD admin announcements/ system notifications */}
         <Announcement announcement={rsdSettings?.announcement ?? null} />
       </ThemeProvider>

@@ -10,7 +10,7 @@ import {useState} from 'react'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import EditableTable, {OrderByProps} from '~/components/table/EditableTable'
 import useContributors, {RsdContributor} from './useContributors'
 import ContentLoader from '~/components/layout/ContentLoader'
