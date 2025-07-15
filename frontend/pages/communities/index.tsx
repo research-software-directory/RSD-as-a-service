@@ -11,7 +11,10 @@ import Pagination from '@mui/material/Pagination'
 import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
-import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
+import {useSession} from '~/auth'
+import {getRsdModules} from '~/config/getSettingsServerSide'
+import {useUserSettings} from '~/config/UserSettingsContext'
+import {getUserSettings} from '~/utils/userSettings'
 import {ssrBasicParams} from '~/utils/extractQueryParam'
 import PageMeta from '~/components/seo/PageMeta'
 import PageBackground from '~/components/layout/PageBackground'
@@ -23,12 +26,9 @@ import useSearchParams from '~/components/search/useSearchParams'
 import SelectRows from '~/components/software/overview/search/SelectRows'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import ViewToggleGroup,{ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
-
 import CommunitiesList from '~/components/communities/overview/CommunitiesList'
 import CommunitiesGrid from '~/components/communities/overview/CommunitiesGrid'
 import {CommunityListProps, getCommunityList} from '~/components/communities/apiCommunities'
-import {useSession} from '~/auth'
-import {getRsdModules} from '~/config/getSettingsServerSide'
 
 const pageTitle = `Communities | ${app.title}`
 const pageDesc = 'List of RSD communities.'
@@ -42,7 +42,6 @@ type CommunitiesOverviewProps={
   communities: CommunityListProps[]
 }
 
-
 export default function CommunitiesOverview({count,page,rows,layout,search,communities}:CommunitiesOverviewProps) {
   const {user} = useSession()
   if (user?.role !== 'rsd_admin') {
@@ -54,6 +53,7 @@ export default function CommunitiesOverview({count,page,rows,layout,search,commu
   const initView = layout === 'masonry' ? 'grid' : layout
   const [view, setView] = useState<ProjectLayoutType>(initView)
   const numPages = Math.ceil(count / rows)
+  const {setPageLayout} = useUserSettings()
 
   // console.group('CommunitiesOverview')
   // console.log('count...', count)
@@ -68,8 +68,8 @@ export default function CommunitiesOverview({count,page,rows,layout,search,commu
   function setLayout(view: ProjectLayoutType) {
     // update local view
     setView(view)
-    // save to cookie
-    setDocumentCookie(view,'rsd_page_layout')
+    // save change to user context and cookie
+    setPageLayout(view)
   }
 
   return (
