@@ -1,23 +1,25 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {render, screen} from '@testing-library/react'
 
-import OrganisationsOverviewPage, {getServerSideProps} from '../pages/organisations/index'
-import {mockResolvedValue} from '../utils/jest/mockFetch'
-
+import OrganisationsOverviewPage, {getServerSideProps} from 'pages/organisations/index'
+import {mockResolvedValue} from '~/utils/jest/mockFetch'
 import {WithAppContext} from '~/utils/jest/WithAppContext'
 import organisationsOverview from './__mocks__/organisationsOverview.json'
+import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
+import {OrganisationList} from '~/types/Organisation'
 
 const mockProps = {
   count: 408,
   page: 1,
   rows: 12,
-  organisations: organisationsOverview as any
+  organisations: organisationsOverview as OrganisationList[],
+  layout: 'grid' as LayoutType
 }
 
 describe('pages/organisations/index.tsx', () => {
@@ -38,6 +40,7 @@ describe('pages/organisations/index.tsx', () => {
       props:{
         // count is extracted from response header
         count:200,
+        layout: 'grid',
         // default query param values
         page:1,
         rows:12,
