@@ -21,7 +21,7 @@ export default function SoftwareOverviewGrid({children,fullWidth=false}: {
   return (
     <section
       data-testid="software-overview-grid"
-      className={`mt-4 grid gap-8 md:grid-cols-${md} lg:grid-cols-${lg} xl:grid-cols-${xl} auto-rows-[28rem]`}
+      className={`flex-1 mt-4 grid gap-8 md:grid-cols-${md} lg:grid-cols-${lg} xl:grid-cols-${xl} auto-rows-[28rem]`}
     >
       {children}
     </section>

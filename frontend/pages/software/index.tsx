@@ -11,9 +11,6 @@
 import {useState} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import Pagination from '@mui/material/Pagination'
-import Link from 'next/link'
-import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
 import {getRsdSettings} from '~/config/getSettingsServerSide'
@@ -26,6 +23,7 @@ import {getUserSettings} from '~/utils/userSettings'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import MainContent from '~/components/layout/MainContent'
 import PageBackground from '~/components/layout/PageBackground'
+import PaginationLink from '~/components/layout/PaginationLink'
 import FiltersPanel from '~/components/filter/FiltersPanel'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
@@ -55,6 +53,7 @@ import {softwareOrderOptions} from '~/components/software/overview/filters/Order
 import {HostsFilterOption} from '~/components/filter/RsdHostFilter'
 import {getRemoteRsd} from '~/components/admin/remote-rsd/apiRemoteRsd'
 import {CategoryOption} from '~/components/filter/CategoriesFilter'
+
 
 type SoftwareOverviewProps = {
   search?: string | null
@@ -177,7 +176,7 @@ export default function SoftwareOverviewPage({
               </FiltersPanel>
             }
             {/* Search & main content section */}
-            <div className="flex-1">
+            <div className="flex-1 flex flex-col">
               <SoftwareSearchSection
                 page={page}
                 rows={rows}
@@ -195,28 +194,12 @@ export default function SoftwareOverviewPage({
                 hasRemotes={hasRemotes}
               />
               {/* Pagination */}
-              <div className="flex justify-center mt-8">
-                {numPages > 1 &&
-                  <Pagination
-                    count={numPages}
-                    page={page}
-                    renderItem={item => {
-                      if (item.page !== null) {
-                        const url = createUrl('page', item.page.toString())
-                        return (
-                          <Link href={url}>
-                            <PaginationItem {...item}/>
-                          </Link>
-                        )
-                      } else {
-                        return (
-                          <PaginationItem {...item}/>
-                        )
-                      }
-                    }}
-                  />
-                }
-              </div>
+              <PaginationLink
+                count={numPages}
+                page={page}
+                createUrl={createUrl}
+                className="mt-8"
+              />
             </div>
           </div>
         </MainContent>

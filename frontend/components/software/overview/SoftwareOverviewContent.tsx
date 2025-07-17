@@ -61,23 +61,24 @@ export default function SoftwareOverviewContent({layout, software, hasRemotes}: 
           // remove rsd_host if remotes are not present
           item.rsd_host = getRsdHost({hasRemotes,rsd_host:item.rsd_host})
           return (
-            <Link
-              data-testid="software-list-item"
+            <OverviewListItem
               key={listKey}
-              href={pageUrl}
-              className='flex-1 flex hover:text-inherit group'
-              title={item.brand_name}
-              target={item.domain ? '_blank' : '_self'}
-            >
-              <OverviewListItem className="pr-4">
+              className="pr-4">
+              <Link
+                data-testid="software-list-item"
+                href={pageUrl}
+                className='flex-1 flex hover:text-inherit group'
+                title={item.brand_name}
+                target={item.domain ? '_blank' : '_self'}
+              >
                 <SoftwareListItemContent
                   statusBanner={
                     <RsdHostBanner rsd_host={item?.rsd_host} domain={item?.domain}/>
                   }
                   {...item}
                 />
-              </OverviewListItem>
-            </Link>
+              </Link>
+            </OverviewListItem>
           )
         })}
       </SoftwareOverviewList>

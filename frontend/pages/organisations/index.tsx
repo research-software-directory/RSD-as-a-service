@@ -6,11 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
-import Link from 'next/link'
-import Pagination from '@mui/material/Pagination'
-import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
 import {getRsdModules} from '~/config/getSettingsServerSide'
@@ -18,18 +14,18 @@ import {useUserSettings} from '~/config/UserSettingsContext'
 import {OrganisationForOverview} from '~/types/Organisation'
 import {ssrBasicParams} from '~/utils/extractQueryParam'
 import {getUserSettings} from '~/utils/userSettings'
-import PageMeta from '~/components/seo/PageMeta'
 import AppFooter from '~/components/AppFooter'
 import AppHeader from '~/components/AppHeader'
-import useSearchParams from '~/components/search/useSearchParams'
-import OrganisationGrid from '~/components/organisation/overview/OrganisationGrid'
-import PageBackground from '~/components/layout/PageBackground'
+import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
+import PageBackground from '~/components/layout/PageBackground'
 import MainContent from '~/components/layout/MainContent'
+import PaginationLink from '~/components/layout/PaginationLink'
+import useSearchParams from '~/components/search/useSearchParams'
 import SearchInput from '~/components/search/SearchInput'
-import ViewToggleGroup, {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import OrganisationGrid from '~/components/organisation/overview/OrganisationGrid'
+import ViewToggleGroup from '~/components/projects/overview/search/ViewToggleGroup'
 import SelectRows from '~/components/software/overview/search/SelectRows'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {getOrganisationsList} from '~/components/organisation/apiOrganisations'
 import OrganisationListView from '~/components/organisation/overview/OrganisationList'
 
@@ -37,7 +33,6 @@ type OrganisationsOverviewPageProps = {
   count: number,
   page: number,
   rows: number,
-  layout: LayoutType,
   organisations: OrganisationForOverview[],
   search?: string,
 }
@@ -46,13 +41,13 @@ const pageTitle = `Organisations | ${app.title}`
 const pageDesc = 'List of organizations involved in the development of research software.'
 
 export default function OrganisationsOverviewPage({
-  organisations = [], count, page, rows, search, layout
+  organisations = [], count, page, rows, search
 }: OrganisationsOverviewPageProps) {
   const {handleQueryChange,createUrl} = useSearchParams('organisations')
-  const initView = layout === 'masonry' ? 'grid' : layout
-  const [view, setView] = useState<ProjectLayoutType>(initView)
   const numPages = Math.ceil(count / rows)
-  const {setPageLayout} = useUserSettings()
+  const {rsd_page_layout,setPageLayout} = useUserSettings()
+  // if masonry we change to grid
+  const view = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
 
   // console.group('OrganisationsOverviewPage')
   // console.log('search...', search)
@@ -61,13 +56,6 @@ export default function OrganisationsOverviewPage({
   // console.log('view...', view)
   // console.log('organisations...', organisations)
   // console.groupEnd()
-
-  function setLayout(view: ProjectLayoutType) {
-    // update local view
-    setView(view)
-    // save change to user context and cookie
-    setPageLayout(view)
-  }
 
   return (
     <>
@@ -96,7 +84,7 @@ export default function OrganisationsOverviewPage({
               />
               <ViewToggleGroup
                 layout={view}
-                onSetView={setLayout}
+                onSetView={setPageLayout}
                 sx={{
                   marginLeft:'0.5rem'
                 }}
@@ -114,27 +102,12 @@ export default function OrganisationsOverviewPage({
             <OrganisationGrid organisations={organisations}/>
           }
           {/* Pagination */}
-          {numPages > 1 &&
-            <div className="flex flex-wrap justify-center mb-10">
-              <Pagination
-                count={numPages}
-                page={page}
-                renderItem={item => {
-                  if (item.page !== null) {
-                    return (
-                      <Link href={createUrl('page', item.page.toString())}>
-                        <PaginationItem {...item}/>
-                      </Link>
-                    )
-                  } else {
-                    return (
-                      <PaginationItem {...item}/>
-                    )
-                  }
-                }}
-              />
-            </div>
-          }
+          <PaginationLink
+            count={numPages}
+            page={page}
+            createUrl={createUrl}
+            className="mb-10"
+          />
         </MainContent>
 
         {/* App footer */}
@@ -159,7 +132,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   }
   // extract user settings from cookie
-  const {rsd_page_rows,rsd_page_layout} = getUserSettings(context.req)
+  const {rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings
   const page_rows = rows ?? rsd_page_rows
 
@@ -183,8 +156,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       count,
       page,
       rows: page_rows,
-      organisations: data,
-      layout: rsd_page_layout
+      organisations: data
     }
   }
 }

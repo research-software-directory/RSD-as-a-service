@@ -3,28 +3,27 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
-import Pagination from '@mui/material/Pagination'
-import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
 import {getRsdModules} from '~/config/getSettingsServerSide'
 import {ssrBasicParams} from '~/utils/extractQueryParam'
-import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
+import {getUserSettings} from '~/utils/userSettings'
 import PageMeta from '~/components/seo/PageMeta'
-import PageBackground from '~/components/layout/PageBackground'
 import AppHeader from '~/components/AppHeader'
-import MainContent from '~/components/layout/MainContent'
 import AppFooter from '~/components/AppFooter'
+import PageBackground from '~/components/layout/PageBackground'
+import MainContent from '~/components/layout/MainContent'
+import PaginationLink from '~/components/layout/PaginationLink'
 import SearchInput from '~/components/search/SearchInput'
 import useSearchParams from '~/components/search/useSearchParams'
 import SelectRows from '~/components/software/overview/search/SelectRows'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
-import ViewToggleGroup,{ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import ViewToggleGroup from '~/components/projects/overview/search/ViewToggleGroup'
 import NewsGrid from '~/components/news/overview/NewsGrid'
 import {NewsListItem, getNewsList} from '~/components/news/apiNews'
 import NewsList from '~/components/news/overview/list'
+import {useUserSettings} from '~/config/UserSettingsContext'
 
 const pageTitle = `News | ${app.title}`
 const pageDesc = 'List of RSD news.'
@@ -38,10 +37,11 @@ type NewsOverviewProps={
   news: NewsListItem[]
 }
 
-export default function NewsOverview({count,page,rows,layout,search,news}:NewsOverviewProps) {
+export default function NewsOverview({count,page,rows,search,news}:NewsOverviewProps) {
   const {handleQueryChange,createUrl} = useSearchParams('news')
-  const initView = layout === 'masonry' ? 'grid' : layout
-  const [view, setView] = useState<ProjectLayoutType>(initView)
+  const {rsd_page_layout,setPageLayout} = useUserSettings()
+  // if masonry we change to grid
+  const view = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
   const numPages = Math.ceil(count / rows)
 
   // console.group('NewsOverview')
@@ -53,13 +53,6 @@ export default function NewsOverview({count,page,rows,layout,search,news}:NewsOv
   // console.log('search...', search)
   // console.log('news...', news)
   // console.groupEnd()
-
-  function setLayout(view: ProjectLayoutType) {
-    // update local view
-    setView(view)
-    // save to cookie
-    setDocumentCookie(view,'rsd_page_layout')
-  }
 
   return (
     <>
@@ -86,7 +79,7 @@ export default function NewsOverview({count,page,rows,layout,search,news}:NewsOv
               />
               <ViewToggleGroup
                 layout={view}
-                onSetView={setLayout}
+                onSetView={setPageLayout}
                 sx={{
                   marginLeft:'0.5rem'
                 }}
@@ -106,27 +99,12 @@ export default function NewsOverview({count,page,rows,layout,search,news}:NewsOv
           }
 
           {/* Pagination */}
-          {numPages > 1 &&
-            <div className="flex flex-wrap justify-center mb-10">
-              <Pagination
-                count={numPages}
-                page={page}
-                renderItem={item => {
-                  if (item.page !== null) {
-                    return (
-                      <a href={createUrl('page', item.page.toString())}>
-                        <PaginationItem {...item}/>
-                      </a>
-                    )
-                  } else {
-                    return (
-                      <PaginationItem {...item}/>
-                    )
-                  }
-                }}
-              />
-            </div>
-          }
+          <PaginationLink
+            count={numPages}
+            page={page}
+            createUrl={createUrl}
+            className="mb-10"
+          />
         </MainContent>
 
         {/* App footer */}

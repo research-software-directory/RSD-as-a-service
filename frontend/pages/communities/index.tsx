@@ -4,11 +4,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
-import Link from 'next/link'
-import Pagination from '@mui/material/Pagination'
-import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
 import {useSession} from '~/auth'
@@ -16,16 +12,16 @@ import {getRsdModules} from '~/config/getSettingsServerSide'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import {getUserSettings} from '~/utils/userSettings'
 import {ssrBasicParams} from '~/utils/extractQueryParam'
+import AppHeader from '~/components/AppHeader'
+import AppFooter from '~/components/AppFooter'
 import PageMeta from '~/components/seo/PageMeta'
 import PageBackground from '~/components/layout/PageBackground'
-import AppHeader from '~/components/AppHeader'
 import MainContent from '~/components/layout/MainContent'
-import AppFooter from '~/components/AppFooter'
+import PaginationLink from '~/components/layout/PaginationLink'
 import SearchInput from '~/components/search/SearchInput'
 import useSearchParams from '~/components/search/useSearchParams'
 import SelectRows from '~/components/software/overview/search/SelectRows'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
-import ViewToggleGroup,{ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import ViewToggleGroup from '~/components/projects/overview/search/ViewToggleGroup'
 import CommunitiesList from '~/components/communities/overview/CommunitiesList'
 import CommunitiesGrid from '~/components/communities/overview/CommunitiesGrid'
 import {CommunityListProps, getCommunityList} from '~/components/communities/apiCommunities'
@@ -37,12 +33,11 @@ type CommunitiesOverviewProps={
   count: number,
   page: number,
   rows: number,
-  layout: LayoutType,
   search?: string,
   communities: CommunityListProps[]
 }
 
-export default function CommunitiesOverview({count,page,rows,layout,search,communities}:CommunitiesOverviewProps) {
+export default function CommunitiesOverview({count,page,rows,search,communities}:CommunitiesOverviewProps) {
   const {user} = useSession()
   if (user?.role !== 'rsd_admin') {
     for (const community of communities) {
@@ -50,27 +45,21 @@ export default function CommunitiesOverview({count,page,rows,layout,search,commu
     }
   }
   const {handleQueryChange,createUrl} = useSearchParams('communities')
-  const initView = layout === 'masonry' ? 'grid' : layout
-  const [view, setView] = useState<ProjectLayoutType>(initView)
+  // const [view, setView] = useState<ProjectLayoutType>(initView)
   const numPages = Math.ceil(count / rows)
-  const {setPageLayout} = useUserSettings()
+  const {rsd_page_layout,setPageLayout} = useUserSettings()
+  // if masonry we change to grid
+  const view = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
 
   // console.group('CommunitiesOverview')
   // console.log('count...', count)
   // console.log('page...', page)
   // console.log('rows...', rows)
-  // console.log('layout...', layout)
+  // console.log('rsd_page_layout...', rsd_page_layout)
   // console.log('view...', view)
   // console.log('search...', search)
   // console.log('communities...', communities)
   // console.groupEnd()
-
-  function setLayout(view: ProjectLayoutType) {
-    // update local view
-    setView(view)
-    // save change to user context and cookie
-    setPageLayout(view)
-  }
 
   return (
     <>
@@ -97,7 +86,7 @@ export default function CommunitiesOverview({count,page,rows,layout,search,commu
               />
               <ViewToggleGroup
                 layout={view}
-                onSetView={setLayout}
+                onSetView={setPageLayout}
                 sx={{
                   marginLeft:'0.5rem'
                 }}
@@ -117,27 +106,12 @@ export default function CommunitiesOverview({count,page,rows,layout,search,commu
           }
 
           {/* Pagination */}
-          {numPages > 1 &&
-            <div className="flex flex-wrap justify-center mb-10">
-              <Pagination
-                count={numPages}
-                page={page}
-                renderItem={item => {
-                  if (item.page !== null) {
-                    return (
-                      <Link href={createUrl('page', item.page.toString())}>
-                        <PaginationItem {...item}/>
-                      </Link>
-                    )
-                  } else {
-                    return (
-                      <PaginationItem {...item}/>
-                    )
-                  }
-                }}
-              />
-            </div>
-          }
+          <PaginationLink
+            count={numPages}
+            page={page}
+            createUrl={createUrl}
+            className="mb-10"
+          />
         </MainContent>
 
         {/* App footer */}
@@ -162,7 +136,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       }
     }
     // extract user settings from cookie
-    const {rsd_page_layout,rsd_page_rows} = getUserSettings(context.req)
+    const {rsd_page_rows} = getUserSettings(context.req)
     // use url param if present else user settings
     const page_rows = rows ?? rsd_page_rows
 
@@ -183,7 +157,6 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         count,
         page,
         rows: page_rows,
-        layout: rsd_page_layout,
         communities,
       },
     }
