@@ -5,13 +5,18 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package nl.esciencecenter.rsd.authentication;
+package nl.esciencecenter.rsd.authentication.accesstoken;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.UUID;
+import nl.esciencecenter.rsd.authentication.Config;
+import nl.esciencecenter.rsd.authentication.JwtCreator;
+import nl.esciencecenter.rsd.authentication.PostgrestAccount;
+import nl.esciencecenter.rsd.authentication.RsdResponseException;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 public class Argon2Creator {
@@ -22,8 +27,10 @@ public class Argon2Creator {
 	private static final Integer MEMORY = 12288;
 	private static final Integer ITERATIONS = 3;
 
-	public static String generateNewAccessToken(String account, String displayName, String expiresAt)
-		throws RsdAccessTokenException, InterruptedException {
+	private Argon2Creator() {}
+
+	public static String generateNewAccessToken(String account, String displayName, LocalDate expiresAt)
+		throws RsdResponseException, IOException, InterruptedException {
 		String opaqueToken = generateOpaqueToken();
 		String secret = generateArgon2Hash(opaqueToken);
 		String tokenID = saveTokenToDatabase(secret, account, displayName, expiresAt);
@@ -44,12 +51,12 @@ public class Argon2Creator {
 		return UUID.randomUUID().toString();
 	}
 
-	private static String saveTokenToDatabase(String secret, String account, String displayName, String expiresAt)
-		throws RsdAccessTokenException, InterruptedException {
+	private static String saveTokenToDatabase(String secret, String account, String displayName, LocalDate expiresAt)
+		throws InterruptedException, RsdResponseException, IOException {
 		JsonObject userAccessTokenData = new JsonObject();
 		userAccessTokenData.addProperty("secret", secret);
 		userAccessTokenData.addProperty("account", account);
-		userAccessTokenData.addProperty("expires_at", expiresAt);
+		userAccessTokenData.addProperty("expires_at", expiresAt.toString());
 		userAccessTokenData.addProperty("display_name", displayName);
 
 		String backendUri = Config.backendBaseUrl();
@@ -57,14 +64,10 @@ public class Argon2Creator {
 		String signingSecret = Config.jwtSigningSecret();
 		JwtCreator jwtCreator = new JwtCreator(signingSecret);
 		String jwtToken = jwtCreator.createAdminJwt();
-		try {
-			String tokenResponse = PostgrestAccount.postJsonAsAdmin(queryUri, userAccessTokenData.toString(), jwtToken);
-			UUID tokenID = UUID.fromString(
-				JsonParser.parseString(tokenResponse).getAsJsonArray().get(0).getAsJsonObject().get("id").getAsString()
-			);
-			return tokenID.toString();
-		} catch (PostgresForeignKeyConstraintException | PostgresCustomException | IOException e) {
-			throw new RsdAccessTokenException("RsdAccessTokenException: " + e.getMessage(), e);
-		}
+		String tokenResponse = PostgrestAccount.postJsonAsAdmin(queryUri, userAccessTokenData.toString(), jwtToken);
+		UUID tokenID = UUID.fromString(
+			JsonParser.parseString(tokenResponse).getAsJsonArray().get(0).getAsJsonObject().get("id").getAsString()
+		);
+		return tokenID.toString();
 	}
 }
