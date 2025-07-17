@@ -12,7 +12,7 @@ export default function ProjectOverviewGrid({children}: { children: JSX.Element 
   return (
     <section
       data-testid="project-overview-grid"
-      className="mt-4 grid gap-8 lg:grid-cols-2 xl:grid-cols-3 auto-rows-[30rem]"
+      className="flex-1 mt-4 grid gap-8 lg:grid-cols-2 xl:grid-cols-3 auto-rows-[30rem]"
     >
       {children}
     </section>

@@ -11,7 +11,6 @@ import OrganisationsOverviewPage, {getServerSideProps} from 'pages/organisations
 import {mockResolvedValue} from '~/utils/jest/mockFetch'
 import {WithAppContext} from '~/utils/jest/WithAppContext'
 import organisationsOverview from './__mocks__/organisationsOverview.json'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {OrganisationList} from '~/types/Organisation'
 
 const mockProps = {
@@ -19,7 +18,6 @@ const mockProps = {
   page: 1,
   rows: 12,
   organisations: organisationsOverview as OrganisationList[],
-  layout: 'grid' as LayoutType
 }
 
 describe('pages/organisations/index.tsx', () => {
@@ -40,7 +38,6 @@ describe('pages/organisations/index.tsx', () => {
       props:{
         // count is extracted from response header
         count:200,
-        layout: 'grid',
         // default query param values
         page:1,
         rows:12,

@@ -8,11 +8,7 @@
 
 import {useState} from 'react'
 import {GetServerSidePropsContext} from 'next'
-
-import Pagination from '@mui/material/Pagination'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import Link from 'next/link'
-import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
 import {useUserSettings} from '~/config/UserSettingsContext'
@@ -26,10 +22,11 @@ import {getBaseUrl} from '~/utils/fetchHelpers'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import MainContent from '~/components/layout/MainContent'
+import PageBackground from '~/components/layout/PageBackground'
+import PaginationLink from '~/components/layout/PaginationLink'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import useProjectOverviewParams from '~/components/projects/overview/useProjectOverviewParams'
-import PageBackground from '~/components/layout/PageBackground'
 import FiltersPanel from '~/components/filter/FiltersPanel'
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {OrganisationOption} from '~/components/filter/OrganisationsFilter'
@@ -152,7 +149,7 @@ export default function ProjectsOverviewPage({
               </FiltersPanel>
             }
             {/* Search & main content section */}
-            <div className="flex-1">
+            <div className="flex-1 flex flex-col">
               <ProjectSearchSection
                 page={page}
                 rows={rows}
@@ -169,27 +166,12 @@ export default function ProjectsOverviewPage({
                 projects={projects}
               />
               {/* Pagination */}
-              {numPages > 1 &&
-                <div className="flex flex-wrap justify-center mt-8">
-                  <Pagination
-                    count={numPages}
-                    page={page}
-                    renderItem={item => {
-                      if (item.page !== null) {
-                        return (
-                          <Link href={createUrl('page', item.page.toString())}>
-                            <PaginationItem {...item}/>
-                          </Link>
-                        )
-                      } else {
-                        return (
-                          <PaginationItem {...item}/>
-                        )
-                      }
-                    }}
-                  />
-                </div>
-              }
+              <PaginationLink
+                count={numPages}
+                page={page}
+                createUrl={createUrl}
+                className="mt-8"
+              />
             </div>
           </div>
         </MainContent>

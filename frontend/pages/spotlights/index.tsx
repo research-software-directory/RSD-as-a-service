@@ -11,28 +11,29 @@
 import {useState} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import Pagination from '@mui/material/Pagination'
-import Link from 'next/link'
-import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
 import {getBaseUrl} from '~/utils/fetchHelpers'
 import {highlightsListUrl} from '~/utils/postgrestUrl'
 import {ssrSoftwareParams} from '~/utils/extractQueryParam'
 import {getSoftwareList} from '~/utils/getSoftware'
-import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
+import {getUserSettings} from '~/utils/userSettings'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import useRsdSettings from '~/config/useRsdSettings'
+import {getRsdModules} from '~/config/getSettingsServerSide'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import MainContent from '~/components/layout/MainContent'
 import PageBackground from '~/components/layout/PageBackground'
-import FiltersPanel from '~/components/filter/FiltersPanel'
+import PaginationLink from '~/components/layout/PaginationLink'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
+import FiltersPanel from '~/components/filter/FiltersPanel'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
+import {CategoryOption} from '~/components/filter/CategoriesFilter'
 import SoftwareSearchSection from '~/components/software/overview/search/SoftwareSearchSection'
 import useSoftwareOverviewParams from '~/components/software/overview/useSoftwareOverviewParams'
 import SoftwareOverviewContent from '~/components/software/overview/SoftwareOverviewContent'
@@ -45,9 +46,6 @@ import {
 } from '~/components/software/overview/filters/softwareFiltersApi'
 import SoftwareFiltersModal from '~/components/software/overview/filters/SoftwareFiltersModal'
 import {highlightOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
-import {CategoryOption} from '~/components/filter/CategoriesFilter'
-import {getRsdModules} from '~/config/getSettingsServerSide'
 
 type SpotlightsOverviewProps = {
   search?: string | null
@@ -63,7 +61,6 @@ type SpotlightsOverviewProps = {
   page: number,
   rows: number,
   count: number,
-  layout: LayoutType,
   highlights: SoftwareOverviewItemProps[]
 }
 
@@ -74,8 +71,7 @@ export default function SpotlightsOverviewPage({
   search, keywords,
   prog_lang, licenses,
   order, page, rows,
-  count, layout,
-  keywordsList, languagesList,
+  count, keywordsList, languagesList,
   categories, categoriesList,
   licensesList, highlights
 }: SpotlightsOverviewProps) {
@@ -83,9 +79,7 @@ export default function SpotlightsOverviewPage({
   const {createUrl} = useSoftwareOverviewParams()
   const [modal,setModal] = useState(false)
   const {host} = useRsdSettings()
-  // if no layout - default is masonry
-  const initView = layout ?? 'masonry'
-  const [view, setView] = useState<LayoutType>(initView)
+  const {rsd_page_layout,setPageLayout} = useUserSettings()
   const numPages = Math.ceil(count / rows)
   const filterCnt = getFilterCount()
 
@@ -115,13 +109,6 @@ export default function SpotlightsOverviewPage({
     if (categories) count++
     if (search) count++
     return count
-  }
-
-  function setLayout(view: LayoutType) {
-    // update local view
-    setView(view)
-    // save to cookie
-    setDocumentCookie(view,'rsd_page_layout')
   }
 
   return (
@@ -177,37 +164,22 @@ export default function SpotlightsOverviewPage({
                 count={count}
                 search={search}
                 placeholder={keywords?.length ? 'Find within selection' : `Find ${host.software_highlights?.title}`}
-                layout={view}
-                setView={setLayout}
+                layout={rsd_page_layout}
+                setView={setPageLayout}
                 setModal={setModal}
               />
               {/* Software content: masonry, cards or list */}
               <SoftwareOverviewContent
-                layout={view}
+                layout={rsd_page_layout}
                 software={highlights}
               />
               {/* Pagination */}
-              <div className="flex justify-center mt-8">
-                {numPages > 1 &&
-                  <Pagination
-                    count={numPages}
-                    page={page}
-                    renderItem={item => {
-                      if (item.page !== null) {
-                        return (
-                          <Link href={createUrl('page', item.page.toString())}>
-                            <PaginationItem {...item}/>
-                          </Link>
-                        )
-                      } else {
-                        return (
-                          <PaginationItem {...item}/>
-                        )
-                      }
-                    }}
-                  />
-                }
-              </div>
+              <PaginationLink
+                count={numPages}
+                page={page}
+                createUrl={createUrl}
+                className="mt-8"
+              />
             </div>
           </div>
         </MainContent>
@@ -249,7 +221,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract params from page-query
   const {search, keywords, prog_lang, licenses, categories, order, rows, page} = ssrSoftwareParams(context.query)
   // extract user settings from cookie
-  const {rsd_page_layout, rsd_page_rows} = getUserSettings(context.req)
+  const {rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings
   const page_rows = rows ?? rsd_page_rows
   // calculate offset when page & rows present
@@ -314,7 +286,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       page,
       order,
       rows: page_rows,
-      layout: rsd_page_layout,
       count: highlights.count,
       highlights: highlights.data,
     },
