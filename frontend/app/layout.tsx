@@ -14,6 +14,7 @@ import {getLoginProviders} from '~/auth/api/getLoginProviders'
 import {LoginProvidersProvider} from '~/auth/loginProvidersContext'
 import RsdPathnameCookie from '~/auth/RsdPathnameCookie'
 import RsdThemeProvider from '~/styles/RsdThemeProvider'
+import AosNoScript from '~/styles/AosNoScript'
 import {getAppSettingsServerSide} from '~/config/getSettingsServerSide'
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 import getPlugins from '~/config/getPlugins'
@@ -42,17 +43,17 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
 
-  // extract nonce from request header
-  // the nonce and CSP are added by middleware.ts
-  const nonce = (await headers()).get('x-nonce')
-
-  // load settings.json, session from cookie and matomo settings
-  const [matomo,settings,session,providers] = await Promise.all([
+  // load matomo, settings.json, session from cookie, providers and header
+  const [matomo,settings,session,providers,header] = await Promise.all([
     getMatomoSettings(),
     getAppSettingsServerSide(),
     getAppSessionSeverSide(),
-    getLoginProviders()
+    getLoginProviders(),
+    headers()
   ])
+  // extract nonce from request header
+  // the nonce and CSP are added by middleware.ts
+  const nonce = header.get('x-nonce') as string
   // get RSD plugins from config endpoint and avatar_id
   const [plugins,userSettings] = await Promise.all([
     getPlugins({
@@ -79,31 +80,21 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* share nonce with _app for client side scripts */}
+        <meta name="csp-nonce" content={nonce} />
         {/* PWA manifest.json for favicons */}
         <link rel="manifest" href="/manifest.json" />
         {/* mounted index.css with font definitions */}
         {/*eslint-disable-next-line @next/next/no-css-tags*/}
         <link href="/styles/index.css" rel="stylesheet" />
-        {/*
-          add support for graceful fallback for aos animations when js is disabled
-          NOTE! we use nonce to cover security audit
-        */}
-        <noscript dangerouslySetInnerHTML={{__html: `
-          <style
-            nonce="${nonce}"
-            type="text/css">
-            [data-aos] {
-            opacity: 1 !important;
-            transform: translate(0) scale(1) !important;
-          }
-          </style>
-        `}} />
+        {/* inject AOS noscript style */}
+        <AosNoScript nonce={nonce}/>
         {/* inject matomo script */}
         <MatomoScript matomo={matomo} nonce={nonce} />
       </head>
       <body className="dark bg-base-200 flex flex-col min-h-[100vh]">
         {/* material-ui cache provider */}
-        <AppRouterCacheProvider>
+        <AppRouterCacheProvider options={{nonce}}>
           {/* material-ui theme provider */}
           <RsdThemeProvider rsdTheme={settings.theme}>
             {/* Authentication */}

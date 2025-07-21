@@ -3,25 +3,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-/**
- * Security headers based on the feedback from AMC
- * using https://securityheaders.com/
- * and the next.js documentation
- * https://nextjs.org/docs/advanced-features/security-headers
- *
- * Content-Security-Policy need to be build dynamically
- * This meta info is added in _document.tsx and _app.tsx
- *
- * Important!
- * We use 'nonce' for the script tags running in _document.tsx
- * We add nonce to scripts for matomo
- * We use 'unsafe-inline' for style-src to enable css script injections but this can be improved
- * For using nonce with MUI see https://mui.com/material-ui/guides/content-security-policy/
- * Next: https://stackoverflow.com/questions/65551212/using-csp-in-nextjs-nginx-and-material-uissr
- * For other libs injecting css into app further investigation is needed.
- */
-
-
 // default policies
 export const sharedPolicy = `
   default-src 'self';
@@ -33,9 +14,6 @@ export const sharedPolicy = `
 `
 
 export function createNonce(){
-  // taken from documentation https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
-  if (nonce) return nonce
   return '5ef14870-46fd-11ed-b878-0242ac120002'
 }
 
@@ -62,17 +40,17 @@ export function stylePolicy(){
 }
 
 export function scriptPolicy(nonce:string){
-  // all scripts have nonce, except in dev where we need more "freedom"
+  // let scriptSrc = `script-src 'self' 'strict-dynamic'${monitoringScripts()} ${devScript()} 'unsafe-inline'`
+  // script policy allows unsafe inline?
   const scriptSrc = `script-src 'self' 'nonce-${nonce}' ${devScript()};`
   return scriptSrc
 }
 
 /**
- * Build Content Security Policy string from shared, style and script policies.
- * Style policy does not use nonce because we cannot add nonce to all injected style tags.
- * Script policy uses nonce and 'unsafe-eval' in development mode.
- * @param nonce string
- * @returns string
+ * App specific function
+ * cannot be contentSecurityPolicy file because of import crypto
+ * @param nonce
+ * @returns
  */
 export function getCspPolicy(nonce:string) {
   // combine shared policies with script policy
@@ -81,21 +59,15 @@ export function getCspPolicy(nonce:string) {
   return policy
 }
 
-/**
- * Extract nonce from the request header 'x-nonce' or from meta tag.
- * In case nonce is not found a new one is created.
- * @param headers
- * @returns string
- */
 export function getNonce(headers?: Record<string, string | string[] | undefined>) {
   let nonce:string
-  // console.group('getNonce')
+
   // get existing nonce from header x-nonce (middleware.ts)
   if (headers) {
     nonce = headers['x-nonce'] as string
     return nonce
   }
-  // get existing nonce from meta tag (_document.tsx)
+  // get existing nonce from meta tag (_document.tsx/layout.tsx)
   if (typeof document !== 'undefined') {
     const nonceMeta = document.querySelector('meta[name="csp-nonce"]')
     if (typeof nonceMeta?.getAttribute('content')==='string') {
@@ -105,8 +77,6 @@ export function getNonce(headers?: Record<string, string | string[] | undefined>
   }
   // create new nonce
   nonce = createNonce()
-  // console.log('createNonce...', nonce)
-  // console.groupEnd()
   return nonce
 }
 
