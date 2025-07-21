@@ -57,6 +57,9 @@ export function useUserSettings(){
   const {user,setUser} = useContext(UserSettingsContext)
 
   function setPageLayout(layout:LayoutType='grid'){
+    // ignore null value - click on "same" button
+    if (layout===null) return
+    // console.log('layout...',layout)
     // save to cookie
     setDocumentCookie(layout,'rsd_page_layout')
     // save to state
