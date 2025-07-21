@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -35,12 +37,11 @@ public class PeriodicService extends AbstractService {
 
 	@Override
 	public void run() {
-		LOGGER.info(
-			"Scheduling periodic service %s with %s - %s".formatted(
-				this.getServiceName(),
-				initialDelay,
-				intervalSeconds
-			)
+		logger.info(
+			"Scheduling periodic service {} with {} - {}",
+			this.getServiceName(),
+			initialDelay,
+			intervalSeconds
 		);
 		scheduler.scheduleAtFixedRate(this::performTask, initialDelay, intervalSeconds, TimeUnit.SECONDS);
 	}
@@ -51,7 +52,7 @@ public class PeriodicService extends AbstractService {
 	}
 
 	private void performTask() {
-		LOGGER.info("%s: Performing periodic task".formatted(this.getServiceName()));
+		logger.info("{}: Performing periodic task", this.getServiceName());
 		task.run();
 	}
 }
