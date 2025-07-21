@@ -7,6 +7,7 @@
 
 package nl.esciencecenter.rsd;
 
+import java.time.Duration;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -17,20 +18,20 @@ import java.util.concurrent.TimeUnit;
 public class PeriodicService extends AbstractService {
 
 	private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-	private final int intervalSeconds;
-	private final int initialDelay;
+	private final Duration interval;
+	private final Duration initialDelay;
 	private final Runnable task;
 
-	public PeriodicService(int intervalSeconds, int initialDelay, Runnable task, String serviceName) {
+	public PeriodicService(Duration interval, Duration initialDelay, Runnable task, String serviceName) {
 		super(serviceName);
-		this.intervalSeconds = intervalSeconds;
+		this.interval = interval;
 		this.initialDelay = initialDelay;
 		this.task = task;
 	}
 
-	public PeriodicService(int intervalSeconds, int initialDelay, String command, String serviceName) {
+	public PeriodicService(Duration interval, Duration initialDelay, String command, String serviceName) {
 		super(serviceName);
-		this.intervalSeconds = intervalSeconds;
+		this.interval = interval;
 		this.initialDelay = initialDelay;
 		this.task = new PostgresRunnable(command);
 	}
@@ -38,12 +39,17 @@ public class PeriodicService extends AbstractService {
 	@Override
 	public void run() {
 		logger.info(
-			"Scheduling periodic service {} with {} - {}",
+			"Scheduling periodic service {} with {}s delay, {}s interval",
 			this.getServiceName(),
-			initialDelay,
-			intervalSeconds
+			initialDelay.toSeconds(),
+			interval.toSeconds()
 		);
-		scheduler.scheduleAtFixedRate(this::performTask, initialDelay, intervalSeconds, TimeUnit.SECONDS);
+		scheduler.scheduleAtFixedRate(
+			this::performTask,
+			initialDelay.toSeconds(),
+			interval.toSeconds(),
+			TimeUnit.SECONDS
+		);
 	}
 
 	@Override

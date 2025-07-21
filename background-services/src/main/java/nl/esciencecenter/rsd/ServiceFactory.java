@@ -7,6 +7,7 @@
 
 package nl.esciencecenter.rsd;
 
+import java.time.Duration;
 import java.time.LocalTime;
 
 public class ServiceFactory {
@@ -15,20 +16,20 @@ public class ServiceFactory {
 
 	public static Service createPeriodicService(
 		String serviceName,
-		int intervalSeconds,
-		int initialDelay,
+		Duration interval,
+		Duration initialDelay,
 		Runnable runnable
 	) {
-		return new PeriodicService(intervalSeconds, initialDelay, runnable, serviceName);
+		return new PeriodicService(interval, initialDelay, runnable, serviceName);
 	}
 
 	public static Service createPeriodicService(
 		String serviceName,
-		int intervalSeconds,
-		int initialDelay,
+		Duration interval,
+		Duration initialDelay,
 		String command
 	) {
-		return new PeriodicService(intervalSeconds, initialDelay, command, serviceName);
+		return new PeriodicService(interval, initialDelay, command, serviceName);
 	}
 
 	public static Service createScheduledService(String serviceName, LocalTime scheduledTime, Runnable runnable) {

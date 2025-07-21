@@ -7,6 +7,7 @@
 
 package nl.esciencecenter.rsd;
 
+import java.time.Duration;
 import java.time.LocalTime;
 
 public class Main {
@@ -17,8 +18,8 @@ public class Main {
 		String viewNameCountSoftwareMentions = "count_software_mentions_cached";
 		Service updateCountSoftwareMentionsCached = ServiceFactory.createPeriodicService(
 			"Count Software Mentions Cached Service",
-			300,
-			30,
+			Duration.ofSeconds(300),
+			Duration.ofSeconds(30),
 			"REFRESH MATERIALIZED VIEW CONCURRENTLY %s;".formatted(viewNameCountSoftwareMentions)
 		);
 
