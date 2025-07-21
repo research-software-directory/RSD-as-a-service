@@ -5,40 +5,30 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {setContentSecurityPolicyHeader} from './contentSecurityPolicy'
-
-const mockSetHeader = jest.fn()
-
-const res = {
-  setHeader: mockSetHeader
-}
+import {getCspPolicy} from './contentSecurityPolicy'
 
 beforeEach(() => {
   jest.clearAllMocks()
 })
 
-it('sets content security policy header for development', () => {
-  const nonce = setContentSecurityPolicyHeader(res as any)
-  const policyName = 'Content-Security-Policy-Report-Only'
-  const policyText = `default-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; base-uri 'none'; object-src 'none'; script-src 'nonce-${nonce}' 'strict-dynamic' 'unsafe-eval' 'unsafe-inline' https:`
+it('content security policy header for development', () => {
+  process.env.NODE_ENV = 'development'
 
-  expect(mockSetHeader).toHaveBeenCalledTimes(1)
-  // const calledWith = mockSetHeader
-  expect(mockSetHeader).toHaveBeenCalledWith(policyName,policyText)
+  const nonce = 'abc'
+  const policy = getCspPolicy(nonce)
+
+  const policyText = `default-src 'self'; connect-src 'self' https://*; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; base-uri 'self'; object-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self' 'nonce-${nonce}' 'unsafe-eval';`
+  expect(policy).toEqual(policyText)
+
 })
 
-it('sets content security policy header for production', () => {
+it('content security policy header for production', () => {
   process.env.NODE_ENV = 'production'
-  process.env.MATOMO_URL = 'https://mamtomo.com/test-url'
-  const nonce = setContentSecurityPolicyHeader(res as any)
-  const policyName = 'Content-Security-Policy'
-  const policyText = `default-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; base-uri 'none'; object-src 'none'; script-src 'nonce-${nonce}' 'strict-dynamic' https://mamtomo.com/test-url 'unsafe-inline' https:`
 
+  const nonce = 'abc'
+  const policy = getCspPolicy(nonce)
 
-  // "default-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; base-uri 'none'; object-src 'none'; script-src 'self' 'unsafe-inline' https://mamtomo.com/test-url 'nonce-b771ce36-a563-4e69-b969-0a758ac0762e'"
+  const policyText = `default-src 'self'; connect-src 'self' https://*; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; base-uri 'self'; object-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self' 'nonce-${nonce}' ;`
+  expect(policy).toEqual(policyText)
 
-
-  expect(mockSetHeader).toHaveBeenCalledTimes(1)
-  // const calledWith = mockSetHeader
-  expect(mockSetHeader).toHaveBeenCalledWith(policyName, policyText)
 })

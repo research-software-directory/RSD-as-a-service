@@ -13,7 +13,7 @@ import Router, {useRouter} from 'next/router'
 import App, {AppContext, AppProps} from 'next/app'
 import Head from 'next/head'
 import {ThemeProvider} from '@mui/material/styles'
-import {CacheProvider, EmotionCache, Global} from '@emotion/react'
+import {CacheProvider, Global} from '@emotion/react'
 // loading bar at the top of the screen
 import nprogress from 'nprogress'
 
@@ -26,47 +26,47 @@ import {AuthProvider} from '~/auth/AuthProvider'
 import {saveLocationCookie} from '~/auth/locationCookie'
 import {getLoginProviders, Provider} from '~/auth/api/getLoginProviders'
 import {LoginProvidersProvider} from '~/auth/loginProvidersContext'
+// user settings (from cookies)
+import {getUserAvatar, getUserSettings} from '~/utils/userSettings'
+import {UserSettingsProps, UserSettingsProvider} from '~/config/UserSettingsContext'
+// rsd settings
+import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
+import {RsdSettingsState} from '~/config/rsdSettingsReducer'
+import {getSettingsServerSide} from '~/config/getSettingsServerSide'
+// plugin settings
+import getPlugins from '~/config/getPlugins'
+import PluginSettingsProvider, {PluginConfig} from '~/config/RsdPluginContext'
 // theme
 import {loadMuiTheme} from '~/styles/rsdMuiTheme'
 import createEmotionCache from '~/styles/createEmotionCache'
+import {getNonce} from '~/utils/contentSecurityPolicy'
 // snackbar notifications
 import MuiSnackbarProvider from '~/components/snackbar/MuiSnackbarProvider'
 // Matomo cookie consent notification
 import CookieConsentMatomo from '~/components/cookies/CookieConsentMatomo'
-// rsd settings
-import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
-import {RsdSettingsState} from '~/config/rsdSettingsReducer'
 import {getMatomoConsent,Matomo} from '~/components/cookies/nodeCookies'
 import {initMatomoCustomUrl} from '~/components/cookies/setMatomoPage'
-import {getSettingsServerSide} from '~/config/getSettingsServerSide'
-import {setContentSecurityPolicyHeader} from '~/utils/contentSecurityPolicy'
 import Announcement from '~/components/Announcement/Announcement'
-// user settings (from cookies)
-import {getUserAvatar, getUserSettings} from '~/utils/userSettings'
-import {UserSettingsProps, UserSettingsProvider} from '~/config/UserSettingsContext'
-// plugin settings
-import getPlugins from '~/config/getPlugins'
-import PluginSettingsProvider, {PluginConfig} from '~/config/RsdPluginContext'
 
 // extend Next app props interface with emotion cache
 export interface MuiAppProps extends AppProps {
-  emotionCache: EmotionCache
+  // emotionCache: EmotionCache
   session: Session,
   settings: RsdSettingsState,
   matomo: Matomo,
   userSettings?: UserSettingsProps,
   pluginSettings?: PluginConfig[],
-  loginProviders: Provider[]
+  loginProviders: Provider[],
+  nonce: string
 }
 
 // define npgrogres setup, no spinner
 // just a tiny bar at the top of the screen
 nprogress.configure({showSpinner: false})
 
-// Client-side cache, shared for the whole session of the user in the browser.
-const clientSideEmotionCache = createEmotionCache()
 // used to register SPA route changes
 const setCustomUrl = initMatomoCustomUrl()
+
 // ProgressBar at the top
 // listen to route change and drive nprogress status
 // it's taken out of RsdApp to be initialized only once
@@ -86,13 +86,12 @@ Router.events.on('routeChangeError', ()=>{
 
 function RsdApp(props: MuiAppProps) {
   const {
-    Component, emotionCache = clientSideEmotionCache,
+    Component,
     pageProps, session, settings, matomo, userSettings,
     pluginSettings, loginProviders
   } = props
 
   const router = useRouter()
-  // const [options, setSnackbar] = useState(snackbarDefaults)
   /**
    * NOTE! useState keeps settings and session values in memory after initial load (server side)
    * getInitialProps runs ONLY on client side when page does not use getServerSideProps.
@@ -105,10 +104,19 @@ function RsdApp(props: MuiAppProps) {
   const [rsdUserSettings] = useState(userSettings)
   const [rsdPluginSettings] = useState(pluginSettings)
   const [rsdLoginProviders] = useState(loginProviders)
+
   // request theme when options changed
   const {muiTheme, cssVariables} = useMemo(() => {
     return loadMuiTheme(rsdSettings.theme)
   }, [rsdSettings.theme])
+
+  const emotionCache = useMemo(() => {
+    // use props.nonce or get it from headers using getNonce()
+    // note! this code runs both server and client side and props.nonce can be undefined
+    // we use getNonce() to extract nonce from meta header on client side
+    const nonce = props.nonce || getNonce()
+    return createEmotionCache(nonce)
+  }, [props.nonce])
 
   // Matomo customUrl method
   // to register SPA route changes
@@ -135,6 +143,8 @@ function RsdApp(props: MuiAppProps) {
   // console.log('rsdPluginSettings...', rsdPluginSettings)
   // console.log('loginProviders...', loginProviders)
   // console.log('rsdLoginProviders...', rsdLoginProviders)
+  // console.log('nonce...', props.nonce)
+  // console.log('emotionCache...', emotionCache)
   // console.groupEnd()
 
   return (
@@ -250,14 +260,17 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
     pluginSettings = plugins
     userSettings.avatar_id = avatar_id
     loginProviders = providers
-    // set content security header
-    setContentSecurityPolicyHeader(res)
   }
+
+  // get nonce from request header
+  // note! after introducing middleware.ts the nonce is in x-nonce header
+  const nonce = getNonce(appContext.ctx?.req?.headers)
 
   // console.group('RsdApp.getInitialProps')
   // console.log('session...', session)
   // console.log('settings...', settings)
   // console.log('matomo...', matomo)
+  // console.log('nonce...', nonce)
   // console.groupEnd()
 
   // return app props and session info from cookie
@@ -268,7 +281,8 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
     matomo,
     userSettings,
     pluginSettings,
-    loginProviders
+    loginProviders,
+    nonce
   }
 }
 

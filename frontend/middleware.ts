@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {NextRequest, NextResponse} from 'next/server'
-import {getCspHeader} from './utils/getCspHeader'
+import {createNonce, getCspPolicy} from './utils/contentSecurityPolicy'
 
 /**
  * Middleware used to set CSP headers to each request/response
@@ -14,12 +14,12 @@ import {getCspHeader} from './utils/getCspHeader'
  */
 export function middleware(request: NextRequest) {
   // taken from documentation https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
+  const nonce = createNonce()
   // create csp header string
-  const cspHeader = getCspHeader(nonce)
+  const cspHeader = getCspPolicy(nonce)
 
   // set nonce to request header
-  // we extract nonce value in the root layout.tsx
+  // we extract nonce value in the root layout.tsx, _document.tsx, _app.tsx
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set('x-nonce', nonce)
 

@@ -31,7 +31,7 @@ export default function MatomoScript({matomo, nonce}:MatomoScriptProps) {
             _paq.push(['setTrackerUrl', u+'piwik.php']);
             _paq.push(['setSiteId', '${matomo.id}']);
             var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+            g.async=true; g.nonce="${nonce}";g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
           })();
         `}
       </Script>
