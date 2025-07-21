@@ -28,6 +28,12 @@ export default function CreateRsdInvite({createInvite}:CreateRsdInviteProps) {
     getYearMonthDay(getDateFromNow(7)) ?? ''
   )
 
+  const [comment, setComment] = useState<string>('')
+  const trimmedComment: string = comment.trim().replaceAll(/\s+/g, ' ')
+  const trimmedCommentLength: number = trimmedComment.length
+  const maxCommentLength = 50
+  const isCommentValid: boolean = trimmedCommentLength <= maxCommentLength
+
   // console.group('CreateRsdInvite')
   // console.log('users...',users)
   // console.log('expires...',expires)
@@ -36,10 +42,12 @@ export default function CreateRsdInvite({createInvite}:CreateRsdInviteProps) {
   function onCreateInvite(){
     const invite:NewAccountInvite={
       uses_left: users,
-      expires_at: expires
+      expires_at: expires,
+      comment: trimmedComment.length ? trimmedComment : null
     }
     createInvite(invite)
   }
+
 
   return (
     <>
@@ -62,6 +70,9 @@ export default function CreateRsdInvite({createInvite}:CreateRsdInviteProps) {
               setUsers(parseInt(target.value))
             }
           }}
+          sx={{
+            flex: 1
+          }}
         />
         <TextField
           type="date"
@@ -71,10 +82,28 @@ export default function CreateRsdInvite({createInvite}:CreateRsdInviteProps) {
           onChange={({target})=>{
             setExpires(target.value)
           }}
+          sx={{
+            flex: 1
+          }}
         />
       </div>
+      <TextField
+        type="text"
+        label="Comment"
+        value={comment}
+        error={!isCommentValid}
+        helperText={
+          <span className="line-clamp-1" title={`Max comment length is ${maxCommentLength}`}>{`${trimmedCommentLength} / ${maxCommentLength}`}</span>
+        }
+        onChange={({target})=>{
+          setComment(target.value)
+        }}
+        sx={{
+          width: '100%'
+        }}
+      />
       <Button
-        disabled={expires===''}
+        disabled={expires==='' || !isCommentValid}
         variant='contained'
         sx={{
           margin: '1rem 0rem',

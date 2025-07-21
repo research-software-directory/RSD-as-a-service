@@ -17,7 +17,7 @@ import ListItemText from '@mui/material/ListItemText'
 import copyToClipboard from '~/utils/copyToClipboard'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import Stack from '@mui/material/Stack'
+import {Fragment} from 'react'
 
 export type InvitationType = 'software' | 'project' | 'organisation' | 'community' | 'rsd'
 
@@ -26,7 +26,8 @@ export type Invitation = {
     created_at: string,
     expires_at: string,
     type: InvitationType,
-    uses_left?: number | null
+    uses_left?: number | null,
+    comment?: string | null
 }
 
 type InvitationListProps=Readonly<{
@@ -77,6 +78,22 @@ function getInviteText(invite: Invitation): {expiredText: string, usesLeftText: 
     usesLeftText,
     linkIsValid
   }
+}
+
+function ExtraSecondaryLines({invitation, extraLineGenerators}: Readonly<{invitation: Invitation, extraLineGenerators: ((invitation: Invitation) => string)[]}>) {
+  if (extraLineGenerators.length === 0) {
+    return null
+  }
+
+  const lines: string[] = []
+  for (const extraLineGenerator of extraLineGenerators) {
+    const generatedLineTrimmed: string = extraLineGenerator(invitation).trim()
+    if (generatedLineTrimmed.length > 0) {
+      lines.push(generatedLineTrimmed)
+    }
+  }
+
+  return lines.map(line => <Fragment key={line}><br/>{line}</Fragment>)
 }
 
 export default function InvitationList({
@@ -149,15 +166,13 @@ export default function InvitationList({
               <ListItemText
                 primary={`Created on ${new Date(inv.created_at).toLocaleString()} [${expiredText}]`}
                 secondary={
-                  <Stack className="font-medium leading-[2rem]" spacing={-1}>
-                    <>
-                      {usesLeftText ?
-                        <span >{usesLeftText}</span>
-                        :
-                        <span>{currentLink}</span>}
-                      {extraLineGenerators.length ? extraLineGenerators.map(extraLineGenerator => <span key={extraLineGenerator.toString()}> {extraLineGenerator(inv)} </span>) : null}
-                    </>
-                  </Stack>
+                  <>
+                    {usesLeftText ?
+                      <span className="font-medium leading-[2rem]">{usesLeftText}</span>
+                      :
+                      <span>{currentLink}</span>}
+                    <ExtraSecondaryLines invitation={inv} extraLineGenerators={extraLineGenerators}/>
+                  </>
                 }
               />
             </ListItem>

@@ -6,10 +6,12 @@
 
 import Alert from '@mui/material/Alert'
 
-import InvitationList from '~/components/maintainers/InvitationList'
+import InvitationList, {Invitation} from '~/components/maintainers/InvitationList'
 import ContentLoader from '~/components/layout/ContentLoader'
 import CreateRsdInvite from './CreateRsdInvite'
 import {useRsdInvite} from './useRsdInvite'
+
+const extraLineGenerators: ((inv: Invitation) => string)[] = [inv => inv.id, inv => inv.comment ?? '']
 
 export default function RsdInvites() {
   const {loading,activeInvites,createInvite,deleteInvite} = useRsdInvite()
@@ -44,7 +46,7 @@ export default function RsdInvites() {
               invitations={activeInvites}
               onDelete={deleteInvite}
               showTitle={false}
-              extraLineGenerators={[inv => inv.id]}
+              extraLineGenerators={extraLineGenerators}
             />
         }
       </div>
