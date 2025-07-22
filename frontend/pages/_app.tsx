@@ -9,13 +9,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState, useMemo} from 'react'
-import Router, {useRouter} from 'next/router'
+import {useRouter} from 'next/router'
 import App, {AppContext, AppProps} from 'next/app'
 import Head from 'next/head'
 import {ThemeProvider} from '@mui/material/styles'
 import {CacheProvider, Global} from '@emotion/react'
-// loading bar at the top of the screen
-import nprogress from 'nprogress'
 
 // global CSS and tailwind
 import '../styles/global.css'
@@ -40,6 +38,8 @@ import PluginSettingsProvider, {PluginConfig} from '~/config/RsdPluginContext'
 import {loadMuiTheme} from '~/styles/rsdMuiTheme'
 import createEmotionCache from '~/styles/createEmotionCache'
 import {getNonce} from '~/utils/contentSecurityPolicy'
+// bprogress bar (provider) - replacing nprogress
+import ProgressProviderPage from '~/components/bprogress/ProgressProviderPage'
 // snackbar notifications
 import MuiSnackbarProvider from '~/components/snackbar/MuiSnackbarProvider'
 // Matomo cookie consent notification
@@ -59,30 +59,8 @@ export interface MuiAppProps extends AppProps {
   loginProviders: Provider[],
   nonce: string
 }
-
-// define npgrogres setup, no spinner
-// just a tiny bar at the top of the screen
-nprogress.configure({showSpinner: false})
-
 // used to register SPA route changes
 const setCustomUrl = initMatomoCustomUrl()
-
-// ProgressBar at the top
-// listen to route change and drive nprogress status
-// it's taken out of RsdApp to be initialized only once
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-Router.events.on('routeChangeStart', (props) => {
-  // console.log('routeChangeStart...props...', props)
-  nprogress.start()
-})
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-Router.events.on('routeChangeComplete', (path) => {
-  // console.log('routeChangeComplete...path...', path)
-  nprogress.done()
-})
-Router.events.on('routeChangeError', ()=>{
-  nprogress.done()
-})
 
 function RsdApp(props: MuiAppProps) {
   const {
@@ -165,13 +143,16 @@ function RsdApp(props: MuiAppProps) {
             <PluginSettingsProvider settings={rsdPluginSettings}>
               {/* MUI snackbar service */}
               <MuiSnackbarProvider>
-                {/* User settings rows, page layout etc. */}
-                <UserSettingsProvider user={rsdUserSettings}>
-                  {/* Login providers list */}
-                  <LoginProvidersProvider providers = {rsdLoginProviders}>
-                    <Component {...pageProps} />
-                  </LoginProvidersProvider>
-                </UserSettingsProvider>
+                {/* bprogress service */}
+                <ProgressProviderPage>
+                  {/* User settings rows, page layout etc. */}
+                  <UserSettingsProvider user={rsdUserSettings}>
+                    {/* Login providers list */}
+                    <LoginProvidersProvider providers = {rsdLoginProviders}>
+                      <Component {...pageProps} />
+                    </LoginProvidersProvider>
+                  </UserSettingsProvider>
+                </ProgressProviderPage>
               </MuiSnackbarProvider>
             </PluginSettingsProvider>
           </RsdSettingsProvider>
