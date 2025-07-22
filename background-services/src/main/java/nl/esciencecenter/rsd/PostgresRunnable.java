@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -15,7 +17,7 @@ import org.slf4j.LoggerFactory;
 public class PostgresRunnable implements Runnable {
 
 	private final String command;
-	protected final Logger LOGGER = LoggerFactory.getLogger(getClass().getName());
+	protected final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
 	public PostgresRunnable(String command) {
 		this.command = command;
@@ -35,7 +37,7 @@ public class PostgresRunnable implements Runnable {
 		) {
 			statement.execute(command);
 		} catch (SQLException e) {
-			LOGGER.error("SQLException", e);
+			logger.error("SQLException", e);
 		}
 	}
 }

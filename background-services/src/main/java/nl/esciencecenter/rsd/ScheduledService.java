@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -35,7 +37,7 @@ public class ScheduledService extends AbstractService {
 
 	@Override
 	public void run() {
-		LOGGER.info("Scheduling periodic service %s for %s".formatted(this.getServiceName(), scheduleTime));
+		logger.info("Scheduling periodic service {} for {}", this.getServiceName(), scheduleTime);
 		scheduleNextRun();
 	}
 
@@ -45,7 +47,7 @@ public class ScheduledService extends AbstractService {
 	}
 
 	private void performTask() {
-		LOGGER.info("%s: Performing scheduled task".formatted(this.getServiceName()));
+		logger.info("{}: Performing scheduled task", this.getServiceName());
 		task.run();
 
 		scheduleNextRun();
@@ -53,7 +55,7 @@ public class ScheduledService extends AbstractService {
 
 	private void scheduleNextRun() {
 		long delay = calculateDelayUntilNextSchedule();
-		LOGGER.info("Delay till execution for %s: %d".formatted(this.getServiceName(), delay));
+		logger.info("Delay till execution for {}: {}", this.getServiceName(), delay);
 		scheduler.schedule(this::performTask, delay, TimeUnit.SECONDS);
 	}
 
