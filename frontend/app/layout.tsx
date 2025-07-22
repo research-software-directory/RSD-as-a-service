@@ -26,6 +26,7 @@ import MuiSnackbarProvider from '~/components/snackbar/MuiSnackbarProvider'
 import {appUserSettings} from '~/components/cookies/appUserSettings'
 import CookieConsentMatomo from '~/components/cookies/CookieConsentMatomo'
 import Announcement from '~/components/Announcement/Announcement'
+import ProgressProviderApp from '~/components/bprogress/ProgressProviderApp'
 
 import '~/styles/global.css'
 
@@ -105,13 +106,16 @@ export default async function RootLayout({
                 <PluginSettingsProvider settings={plugins}>
                   {/* MUI snackbar service */}
                   <MuiSnackbarProvider>
-                    {/* User settings rows, page layout etc. */}
-                    <UserSettingsProvider user={userSettings}>
-                      {/* Login providers list */}
-                      <LoginProvidersProvider providers = {providers}>
-                        {children}
-                      </LoginProvidersProvider>
-                    </UserSettingsProvider>
+                    {/* bprogress service */}
+                    <ProgressProviderApp>
+                      {/* User settings rows, page layout etc. */}
+                      <UserSettingsProvider user={userSettings}>
+                        {/* Login providers list */}
+                        <LoginProvidersProvider providers = {providers}>
+                          {children}
+                        </LoginProvidersProvider>
+                      </UserSettingsProvider>
+                    </ProgressProviderApp>
                   </MuiSnackbarProvider>
                 </PluginSettingsProvider>
               </RsdSettingsProvider>
