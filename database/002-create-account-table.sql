@@ -107,6 +107,7 @@ CREATE TABLE admin_account (
 CREATE TABLE account_invite (
 	id UUID PRIMARY KEY,
 	uses_left INTEGER, --NULL means bulk (i.e. infinite use) invite
+	comment VARCHAR(50),
 	expires_at TIMESTAMPTZ NOT NULL,
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL

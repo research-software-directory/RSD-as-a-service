@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
@@ -17,6 +17,7 @@ import ListItemText from '@mui/material/ListItemText'
 import copyToClipboard from '~/utils/copyToClipboard'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import {Fragment} from 'react'
 
 export type InvitationType = 'software' | 'project' | 'organisation' | 'community' | 'rsd'
 
@@ -25,63 +26,78 @@ export type Invitation = {
     created_at: string,
     expires_at: string,
     type: InvitationType,
-    uses_left?: number | null
+    uses_left?: number | null,
+    comment?: string | null
 }
 
 type InvitationListProps=Readonly<{
-  subject:string
-  body:string
+  subject: string
+  body: string
   invitations: Invitation[],
   onDelete: (invitation:Invitation)=>Promise<void>
-  showTitle?: boolean
+  showTitle?: boolean,
+  extraLineGenerators?: ((invitation: Invitation) => string)[]
 }>
 
-function getInviteText(invite:Invitation){
-  const expiresAt = new Date(invite.expires_at)
-  const daysValid = Math.ceil((expiresAt.valueOf() - new Date().valueOf()) / (1000 * 60 * 60 * 24))
-  let usesText: string|null = null
-  let linkIsValid:boolean = true
-
-  if (invite?.uses_left===null){
-    usesText = 'Unlimited number of registrations left'
-  }else if (invite?.uses_left===0){
-    usesText = 'Registration limit reached'
-    linkIsValid = false
+function getInviteText(invite: Invitation): {expiredText: string, usesLeftText: string | null, linkIsValid: boolean} {
+  if (invite.uses_left !== undefined && invite.uses_left !== null && invite.uses_left <= 0) {
     return {
       expiredText: 'EXPIRED!',
-      usesText,
-      linkIsValid
+      usesLeftText: 'Registration limit reached',
+      linkIsValid: false
     }
-  }else if (invite?.uses_left===1){
-    usesText = '1 registration left'
-  }else if (invite?.uses_left && invite?.uses_left > 1){
-    usesText = `${invite?.uses_left} registrations left`
   }
 
+  let usesLeftText: string | null = null
+  if (invite.uses_left !== undefined) {
+    if (invite.uses_left === null) {
+      usesLeftText = 'Unlimited number of registrations left'
+    } else if (invite.uses_left === 1) {
+      usesLeftText = '1 registration left'
+    } else {
+      usesLeftText = `${invite.uses_left} registrations left`
+    }
+  }
+
+  const expiresAt = new Date(invite.expires_at)
+  const daysValid = Math.ceil((expiresAt.valueOf() - new Date().valueOf()) / (1000 * 60 * 60 * 24))
+
+  const linkIsValid: boolean = daysValid > 0
+
+  let expiredText: string
   if (daysValid <= 0) {
-    linkIsValid = false
-    return {
-      expiredText: 'EXPIRED!',
-      usesText,
-      linkIsValid
-    }
+    expiredText = 'EXPIRED!'
   } else if (daysValid === 1) {
-    return {
-      expiredText: 'expires in less than a day',
-      usesText,
-      linkIsValid
-    }
+    expiredText = 'expires in less than a day'
   } else {
-    return {
-      expiredText: `expires in ${daysValid} days`,
-      usesText,
-      linkIsValid
-    }
+    expiredText = `expires in ${daysValid} days`
+  }
+
+  return {
+    expiredText,
+    usesLeftText,
+    linkIsValid
   }
 }
 
+function ExtraSecondaryLines({invitation, extraLineGenerators}: Readonly<{invitation: Invitation, extraLineGenerators: ((invitation: Invitation) => string)[]}>) {
+  if (extraLineGenerators.length === 0) {
+    return null
+  }
+
+  const lines: string[] = []
+  for (const extraLineGenerator of extraLineGenerators) {
+    const generatedLineTrimmed: string = extraLineGenerator(invitation).trim()
+    if (generatedLineTrimmed.length > 0) {
+      lines.push(generatedLineTrimmed)
+    }
+  }
+
+  return lines.map(line => <Fragment key={line}><br/>{line}</Fragment>)
+}
+
 export default function InvitationList({
-  subject,body,invitations,onDelete,showTitle=true
+  subject,body,invitations,onDelete,showTitle=true,extraLineGenerators=[]
 }:InvitationListProps) {
   const {showErrorMessage, showInfoMessage} = useSnackbar()
 
@@ -111,7 +127,7 @@ export default function InvitationList({
       <List>
         {invitations.map(inv => {
           const currentLink = `${location.origin}/invite/${inv.type}/${inv.id}`
-          const {expiredText, usesText, linkIsValid} = getInviteText(inv)
+          const {expiredText, usesLeftText, linkIsValid} = getInviteText(inv)
 
           return (
             <ListItem
@@ -150,10 +166,13 @@ export default function InvitationList({
               <ListItemText
                 primary={`Created on ${new Date(inv.created_at).toLocaleString()} [${expiredText}]`}
                 secondary={
-                  usesText ?
-                    <span className="font-medium leading-[2rem]">{usesText}</span>
-                    :
-                    <span>{currentLink}</span>
+                  <>
+                    {usesLeftText ?
+                      <span className="font-medium leading-[2rem]">{usesLeftText}</span>
+                      :
+                      <span>{currentLink}</span>}
+                    <ExtraSecondaryLines invitation={inv} extraLineGenerators={extraLineGenerators}/>
+                  </>
                 }
               />
             </ListItem>

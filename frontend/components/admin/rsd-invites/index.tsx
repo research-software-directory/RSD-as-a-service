@@ -1,14 +1,17 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Alert from '@mui/material/Alert'
 
-import InvitationList from '~/components/maintainers/InvitationList'
+import InvitationList, {Invitation} from '~/components/maintainers/InvitationList'
 import ContentLoader from '~/components/layout/ContentLoader'
 import CreateRsdInvite from './CreateRsdInvite'
 import {useRsdInvite} from './useRsdInvite'
+
+const extraLineGenerators: ((inv: Invitation) => string)[] = [inv => inv.id, inv => inv.comment ?? '']
 
 export default function RsdInvites() {
   const {loading,activeInvites,createInvite,deleteInvite} = useRsdInvite()
@@ -43,6 +46,7 @@ export default function RsdInvites() {
               invitations={activeInvites}
               onDelete={deleteInvite}
               showTitle={false}
+              extraLineGenerators={extraLineGenerators}
             />
         }
       </div>

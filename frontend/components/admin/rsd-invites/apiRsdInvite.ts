@@ -10,6 +10,7 @@ import logger from '~/utils/logger'
 export type NewAccountInvite = {
   // null means unlimited number of users
   uses_left: number | null
+  comment: string | null
   // data formatted YYYY-MM-DD
   expires_at: string
 }
@@ -97,31 +98,5 @@ export async function deleteRsdInvite({id, token}: { id: string, token: string }
       status: 500,
       message: e?.message
     }
-  }
-}
-
-export async function getRsdInvite(id: string) {
-  try {
-    const query = `id=eq.${id}`
-    const url = `${getBaseUrl()}/account_invite?${query}`
-
-    const resp = await fetch(url, {
-      method: 'GET',
-      headers: createJsonHeaders()
-    })
-
-    if (resp.status === 200) {
-      const json: AccountInvite[] = await resp.json()
-      if (json.length === 1) {
-        return json[0]
-      }
-      return null
-    }
-    // ERRORS
-    logger(`getRsdInvite: ${resp.status}:${resp.statusText}`, 'warn')
-    return null
-  } catch (e: any) {
-    logger(`getRsdInvite: ${e?.message}`, 'error')
-    return null
   }
 }

@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -27,7 +28,8 @@ export function useRsdInvite(){
             created_at: item.created_at,
             expires_at: item.expires_at,
             type: 'rsd' as InvitationType,
-            uses_left: item.uses_left
+            uses_left: item.uses_left,
+            comment: item.comment
           }
         })
         setActiveInvites(invitations)
