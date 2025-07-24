@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -49,25 +50,3 @@ export default function AdminRsdUsersPage() {
     </DefaultLayout>
   )
 }
-
-// see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
-// export async function getServerSideProps(context:GetServerSidePropsContext) {
-//   try{
-//     const {req} = context
-//     const token = req?.cookies['rsd_token']
-
-//     // get links to all pages server side
-//     // const links = await getPageLinks({is_published: false, token})
-
-//     return {
-//       // passed to the page component as props
-//       props: {
-//         accounts:[]
-//       },
-//     }
-//   }catch(e){
-//     return {
-//       notFound: true,
-//     }
-//   }
-// }

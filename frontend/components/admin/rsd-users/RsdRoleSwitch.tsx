@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +15,7 @@ import {addRsdAdmin, removeRsdAdmin} from './apiRsdUsers'
 
 type RsdRoleSwitchProps={
   id:string,
-  admin_account: string[] | null
+  admin_account: {account_id: string} | null
   disabled: boolean
 }
 
