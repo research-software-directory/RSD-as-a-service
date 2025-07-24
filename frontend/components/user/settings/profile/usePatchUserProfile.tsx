@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useFormContext} from 'react-hook-form'
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {useUserContext} from '~/components/user/context/UserContext'
 import {patchUserProfile, UserProfile} from './apiUserProfile'

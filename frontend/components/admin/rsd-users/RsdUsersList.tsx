@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -12,7 +12,7 @@ import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import List from '@mui/material/List'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import ContentLoader from '~/components/layout/ContentLoader'
 import RsdAccountItem from './RsdAccountItem'

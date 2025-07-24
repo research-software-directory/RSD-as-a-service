@@ -8,7 +8,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useCallback, useEffect, useState} from 'react'
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import {CodePlatform} from '~/types/SoftwareTypes'

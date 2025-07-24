@@ -4,8 +4,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,15 +19,15 @@ import DialogActions from '@mui/material/DialogActions'
 
 import {useForm} from 'react-hook-form'
 
-import {useAuth} from '~/auth'
-import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
-import SlugTextField from '~/components/form/SlugTextField'
+import {useSession} from '~/auth/AuthProvider'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {useDebounce} from '~/utils/useDebounce'
-import {addConfig as config} from './addConfig'
+import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import SlugTextField from '~/components/form/SlugTextField'
 import {MarkdownPage, validPageSlug} from '../useMarkdownPages'
 import {addMarkdownPage} from '../saveMarkdownPage'
+import {addConfig as config} from './addConfig'
 
 const initialState = {
   loading: false,
@@ -50,7 +50,7 @@ let lastValidatedSlug = ''
 const formId='add-page-form'
 
 export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalProps) {
-  const {session} = useAuth()
+  const {token} = useSession()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [baseUrl, setBaseUrl] = useState('')
   const [slugValue, setSlugValue] = useState('')
@@ -99,7 +99,7 @@ export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalP
     let abort = false
     async function validateSlug() {
       setValidating(true)
-      const isUsed = await validPageSlug({slug, token: session?.token})
+      const isUsed = await validPageSlug({slug, token})
       if (abort) return
       if (isUsed === true) {
         const message = `${slug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
@@ -117,7 +117,7 @@ export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalP
       validateSlug()
     }
     return ()=>{abort=true}
-  },[slug,session?.token,setError])
+  },[slug,token,setError])
 
   function handleClose() {
     // rest form values
@@ -131,7 +131,6 @@ export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalP
   }
 
   function onSubmit(data: AddPageForm) {
-    const {token} = session
     // set flags
     if (token && data) {
       setState({

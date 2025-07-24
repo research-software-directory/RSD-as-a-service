@@ -8,7 +8,7 @@
 
 import {useState} from 'react'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {
   colForUpdate,
   EditOrganisation,

@@ -6,7 +6,8 @@
 
 import {GetServerSidePropsContext} from 'next'
 
-import {getRsdTokenNode, useSession} from '~/auth'
+import {getRsdTokenNode} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {Provider,getLoginProviders} from '~/auth/api/getLoginProviders'
 import MainContent from '~/components/layout/MainContent'
 import PageBackground from '~/components/layout/PageBackground'

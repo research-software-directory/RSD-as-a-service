@@ -8,6 +8,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import useRsdSettings from '~/config/useRsdSettings'
 import MarkdownPages from './MarkdownPages'
 import CustomLinks from './CustomLinks'

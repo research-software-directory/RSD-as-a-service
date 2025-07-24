@@ -11,7 +11,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Badge from '@mui/material/Badge'
 import IconButton from '@mui/material/IconButton'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {getImageUrl} from '~/utils/editImage'
 import {getDisplayInitials} from '~/utils/getDisplayName'
 import useSnackbar from '~/components/snackbar/useSnackbar'

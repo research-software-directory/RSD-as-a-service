@@ -11,7 +11,7 @@
 import {useFormContext} from 'react-hook-form'
 import {EditSoftwareItem} from '~/types/SoftwareTypes'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import EditSection from '~/components/layout/EditSection'
 import {softwareInformation as config} from '../editSoftwareConfig'
 import AutosaveSoftwareTextField from './AutosaveSoftwareTextField'

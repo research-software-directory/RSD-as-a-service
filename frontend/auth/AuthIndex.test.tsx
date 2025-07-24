@@ -1,12 +1,13 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {render, screen, waitFor} from '@testing-library/react'
-import {AuthProvider, useAuth, REFRESH_MARGIN, getSessionSeverSide, Session} from './index'
+import {REFRESH_MARGIN, getSessionSeverSide, Session} from './index'
+import {AuthProvider, useAuth} from './AuthProvider'
 
 const session:Session = {
   user: null,
@@ -15,14 +16,13 @@ const session:Session = {
 }
 
 const mockRefreshSession = jest.fn(()=>Promise.resolve(session))
-jest.mock('./refreshSession', () => {
-  return {
-    refreshSession: jest.fn(()=> mockRefreshSession())
-  }
-})
+jest.mock('./refreshSession', () => ({
+  __esModule: true,
+  default: jest.fn(()=> mockRefreshSession()),
+  refreshSession: jest.fn(()=> mockRefreshSession())
+}))
 
 function ChildComponent() {
-  // const {useAuth} = auth
   const {session} = useAuth()
   return (
     <div>

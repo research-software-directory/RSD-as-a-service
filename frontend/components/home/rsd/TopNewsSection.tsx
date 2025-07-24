@@ -6,10 +6,10 @@
 import Link from 'next/link'
 import {TopNewsProps} from '~/components/news/apiNews'
 import GradientBorderButton from './GradientBorderButton'
-import {config} from './config'
+import {home_config} from './home_config'
 import HomepageDivider from './HomepageDivider'
 
-const {button} = config
+const {button} = home_config
 
 function TopNewsItem({item}:{item:TopNewsProps}){
   return (
