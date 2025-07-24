@@ -6,14 +6,24 @@
 'use server'
 
 import {cookies} from 'next/headers'
+
+import logger from '~/utils/logger'
 import {Matomo} from './nodeCookies'
 
 export type MatomoSettings = Matomo & {
   url: string | null
 }
 
-const id = process.env.MATOMO_ID ?? null
-const url = process.env.MATOMO_URL ?? null
+function getMatomoInfo(){
+  // we need to use || instead of ?? because "" is also value for ??
+  const id = process.env.MATOMO_ID || null
+  // we need to use || instead of ?? because "" is also value for ??
+  const url = process.env.MATOMO_URL || null
+  return {
+    id,
+    url
+  }
+}
 
 export async function getMatomoSettings():Promise<MatomoSettings>{
   try {
@@ -23,6 +33,8 @@ export async function getMatomoSettings():Promise<MatomoSettings>{
     const mtm_consent = cookie.get('mtm_consent')
     // returns object {name: "", value: ""}
     const mtm_consent_removed = cookie.get('mtm_consent_removed')
+    // extract id and url from .env
+    const {id,url} = getMatomoInfo()
 
     if (mtm_consent) {
       return {
@@ -42,10 +54,11 @@ export async function getMatomoSettings():Promise<MatomoSettings>{
       url,
       consent: null
     }
-  } catch {
+  } catch(e:any) {
+    logger(`getMatomoSettings failed ${e?.message ?? e}`,'warn')
     return {
-      id,
-      url,
+      id: null,
+      url: null,
       consent: null
     }
   }
