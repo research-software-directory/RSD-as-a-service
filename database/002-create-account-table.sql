@@ -104,6 +104,50 @@ CREATE TABLE admin_account (
 );
 
 
+ALTER TABLE admin_account ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY admin_all_rights ON admin_account TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+CREATE TABLE locked_account (
+	account_id UUID REFERENCES account (id) PRIMARY KEY,
+	admin_facing_reason VARCHAR(100),
+	user_facing_reason VARCHAR(100),
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
+);
+
+CREATE FUNCTION sanitise_insert_locked_account() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.created_at = LOCALTIMESTAMP;
+	NEW.updated_at = NEW.created_at;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_insert_locked_account BEFORE INSERT ON locked_account FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_locked_account();
+
+CREATE FUNCTION sanitise_update_locked_account() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.created_at = OLD.created_at;
+	NEW.updated_at = LOCALTIMESTAMP;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_update_locked_account BEFORE UPDATE ON locked_account FOR EACH ROW EXECUTE PROCEDURE sanitise_update_locked_account();
+
+ALTER TABLE locked_account ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY admin_all_rights ON locked_account TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
 CREATE TABLE account_invite (
 	id UUID PRIMARY KEY,
 	uses_left INTEGER, --NULL means bulk (i.e. infinite use) invite
