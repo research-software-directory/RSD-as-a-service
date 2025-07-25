@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 // SPDX-FileCopyrightText: 2025 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -82,7 +84,7 @@ export default function ProfileInput() {
             helperTextMessage: 'Type in your contact email',
             helperTextCnt: `${email_address?.length ?? 0}/${modalConfig.email_address.validation(false).maxLength.value}`,
           }}
-          rules={modalConfig.email_address.validation}
+          rules={modalConfig.email_address.validation(false)}
         />
         <div className="flex items-center justify-between gap-4">
 
