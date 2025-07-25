@@ -9,7 +9,7 @@ import os
 from typing import List
 
 import pika
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ValidationError
 
 from mailservice.logging import get_logger
 from mailservice.mail import send_mail
@@ -26,22 +26,44 @@ class MailData(BaseModel):
     html_content: str | None
     plain_content: str | None
 
+def validate_and_get_mail_data(input_data):
+    max_attempts = 3
+    attempt = 0
+    while attempt < max_attempts:
+        try: 
+            mail_data = MailData.model_validate(input_data)
+            logger.info(f"Mail data validated for {mail_data}")
+            return mail_data
+        except ValidationError as e:
+            logger.error(f"Mail Validation Error: {e}")
+            emails = input_data["recipients"]
+            errors = e.errors()
+            error_inputs = [error['input'] for error in errors]
+            valid_emails = [email for email in emails if email not in error_inputs]
+            input_data["recipients"] = valid_emails
+            attempt += 1
+            logger.info(f"Attempt {attempt}: Invalid emails removed, retrying validation...")
+    raise ValueError("Maximum validation attempts reached. Some emails are still invalid.")
+
 
 def handle_mail(channel, method, _properties, body: bytes):
-    mail_data = MailData.model_validate(json.loads(body.decode()))
-    logger.info("Got mail: %s", mail_data)
+    json_data = json.loads(body.decode())
+    mail_data = validate_and_get_mail_data(json_data)
     try:
-        send_mail(
-            subject=mail_data.subject,
-            recipients=mail_data.recipients,
-            html_content=mail_data.html_content,
-            plain_content=mail_data.plain_content,
-        )
-        channel.basic_ack(method.delivery_tag)
-        logger.info("Mail successfully forwarded to SMTP server.")
-    except Exception:
+        if mail_data.recipients:
+            send_mail(
+                subject=mail_data.subject,
+                recipients=mail_data.recipients,
+                html_content=mail_data.html_content,
+                plain_content=mail_data.plain_content,
+            )
+            channel.basic_ack(method.delivery_tag)
+            logger.info("Mail successfully forwarded to SMTP server.")
+        else:
+            logger.error(f"No valid recipients for mail: {json_data["subject"]} - not sending")
+    except Exception as e:
         channel.basic_nack(method.delivery_tag)
-        logger.error("Failed to forward mail to SMTP server.")
+        logger.error(f"Failed to forward mail ({json_data["subject"]}) to SMTP server: {e}")
 
 
 def start_service():
