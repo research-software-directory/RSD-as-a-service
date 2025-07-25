@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,6 +14,7 @@ export type Community={
   description: string|null,
   primary_maintainer: string|null,
   logo_id: string|null
+  website: string|null
 }
 
 export async function validCommunitySlug({slug, token}: { slug: string, token: string }) {

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,10 +26,11 @@ export default function CommunityGeneralSettings() {
   // extract used methods
   const {watch, register} = methods
 
-  const [name,short_description]=watch(['name','short_description'])
+  const [name,short_description,website]=watch(['name','short_description','website'])
 
-  // console.group('OrganisationGeneralSettings')
+  // console.group('CommunityGeneralSettings')
   // console.log('short_description...', short_description)
+  // console.log('community....', community)
   // console.log('website....', website)
   // console.log('isMaintainer....', isMaintainer)
   // console.groupEnd()
@@ -75,6 +76,18 @@ export default function CommunityGeneralSettings() {
               helperTextCnt: `${short_description?.length ?? 0}/${config.short_description.validation.maxLength.value}`,
             }}
             rules={config.short_description.validation}
+          />
+          <div className="py-4"></div>
+          <AutosaveCommunityTextField
+            options={{
+              name: 'website',
+              label: config.website.label,
+              useNull: true,
+              defaultValue: website,
+              helperTextMessage: config.website.help,
+              helperTextCnt: `${website?.length ?? 0}/${config.website.validation.maxLength.value}`,
+            }}
+            rules={config.website.validation}
           />
 
           <AutosaveCommunityKeywords />

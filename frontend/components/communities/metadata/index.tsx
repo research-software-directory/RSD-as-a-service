@@ -3,10 +3,29 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import LanguageIcon from '@mui/icons-material/Language'
+
+import {getHostnameFromUrl} from '~/utils/getHostname'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
+import KeywordList from '~/components/cards/KeywordList'
+import Links from '~/components/organisation/metadata/Links'
 import {useCommunityContext} from '../context'
 import CommunityLogo from './CommunityLogo'
-import KeywordList from '~/components/cards/KeywordList'
+
+
+function Website({url}:{url:string|null}){
+  if (!url) return null
+  // extract hostname and use as title
+  const title = getHostnameFromUrl(url) ?? url
+
+  return (
+    <Links links={[{
+      title,
+      url,
+      icon: <LanguageIcon />
+    }]} />
+  )
+}
 
 export default function CommunityMetadata() {
   const {community,isMaintainer} = useCommunityContext()
@@ -20,7 +39,7 @@ export default function CommunityMetadata() {
   // console.groupEnd()
 
   return (
-    <section className="grid  md:grid-cols-[1fr_2fr] xl:grid-cols-[1fr_4fr] gap-4">
+    <section className="grid md:grid-cols-[1fr_2fr] xl:grid-cols-[1fr_4fr] gap-4">
       <BaseSurfaceRounded className="flex justify-center p-8 overflow-hidden relative">
         <CommunityLogo
           id={community?.id ?? ''}
@@ -30,11 +49,14 @@ export default function CommunityMetadata() {
         />
       </BaseSurfaceRounded>
       <BaseSurfaceRounded className="flex flex-col justify-start gap-2 p-4">
-        <h1
-          title={community?.name}
-          className="text-xl font-medium line-clamp-1">
-          {community?.name}
-        </h1>
+        <div className="flex-1 flex gap-8">
+          <h1
+            title={community?.name}
+            className="flex-1 text-xl font-medium line-clamp-1">
+            {community?.name}
+          </h1>
+          <Website url={community.website} />
+        </div>
         <p className="flex-1 text-base-700 line-clamp-3 break-words py-4">
           {community?.short_description}
         </p>
