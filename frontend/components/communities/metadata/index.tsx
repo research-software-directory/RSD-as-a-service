@@ -13,7 +13,7 @@ import {useCommunityContext} from '../context'
 import CommunityLogo from './CommunityLogo'
 
 
-function Website({url}:{url:string|null}){
+function Website({url}:Readonly<{url:string|null}>){
   if (!url) return null
   // extract hostname and use as title
   const title = getHostnameFromUrl(url) ?? url
