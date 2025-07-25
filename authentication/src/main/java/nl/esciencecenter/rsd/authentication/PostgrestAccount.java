@@ -50,7 +50,7 @@ public class PostgrestAccount implements Account {
 		// If yes, it also, by joining through the account table, looks up if the account is an admin.
 		URI queryUri = URI.create(
 			backendUri +
-			"/login_for_account?select=id,account_id:account,name,account(admin_account(account_id))&sub=eq." +
+			"/login_for_account?select=id,account_id:account,name,account(admin_account(account_id),locked_account(account_id,user_facing_reason))&sub=eq." +
 			subjectUrlEncoded +
 			"&provider=eq." +
 			providerUrlEncoded
@@ -91,11 +91,32 @@ public class PostgrestAccount implements Account {
 					.getAsString()
 					.equals(account.toString());
 
-			if (createAdminIfDevAndNoAdminsExist(backendUri, token, account)) {
+			boolean isLocked = accountInfo.getAsJsonObject("account").get("locked_account").isJsonObject();
+			String userReasonLocked = null;
+			if (isLocked) {
+				JsonElement userReasonElement = accountInfo
+					.getAsJsonObject("account")
+					.getAsJsonObject("locked_account")
+					.get("user_facing_reason");
+				if (userReasonElement.isJsonPrimitive()) {
+					userReasonLocked = userReasonElement.getAsString();
+				}
+			}
+
+			if (!isLocked && createAdminIfDevAndNoAdminsExist(backendUri, token, account)) {
 				isAdmin = true;
 			}
 
-			return Optional.of(new AccountInfo(account, name, isAdmin, openIdInfo.data()));
+			return Optional.of(
+				new AccountInfo(
+					account,
+					name,
+					isAdmin,
+					openIdInfo.data(),
+					isLocked,
+					Optional.ofNullable(userReasonLocked)
+				)
+			);
 		}
 
 		return Optional.empty();
@@ -128,7 +149,8 @@ public class PostgrestAccount implements Account {
 
 			boolean isAdmin = createAdminIfDevAndNoAdminsExist(backendUri, token, accountId);
 
-			return new AccountInfo(accountId, openIdInfo.name(), isAdmin, openIdInfo.data());
+			// a new account cannot be locked
+			return new AccountInfo(accountId, openIdInfo.name(), isAdmin, openIdInfo.data(), false, Optional.empty());
 		}
 	}
 
