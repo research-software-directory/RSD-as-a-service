@@ -12,7 +12,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-version: "3.0"
+version: "2.1"
 
 services:
   database:
@@ -32,6 +32,12 @@ services:
       # to remove use: docker compose down --volumes
       # to inspect use: docker volume ls
       - pgdb:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD", "pg_isready", "--username=${POSTGRES_USER}", "--dbname=${POSTGRES_DB}"]
+      interval: 1s
+      retries: 15
+      timeout: 5s
+      start_period: 5s
     networks:
       - net
 
@@ -284,10 +290,21 @@ services:
     expose:
       - "5000"
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+      database:
+        condition: service_healthy
     environment:
       - MAIL_QUEUE
       - PUBLISHER_JWT_SECRET_KEY
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB_HOST
+      - POSTGRES_DB_HOST_PORT
+      - POSTGREST_URL
+      - HOST_URL
+      - PGRST_JWT_SECRET
     networks:
       - net
     deploy:
