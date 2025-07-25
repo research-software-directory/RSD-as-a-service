@@ -1,6 +1,6 @@
--- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -12,6 +12,7 @@ CREATE TABLE community (
 	description VARCHAR(10000),
 	primary_maintainer UUID REFERENCES account (id),
 	logo_id VARCHAR(40) REFERENCES image(id),
+	website VARCHAR(200) UNIQUE,
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
 );

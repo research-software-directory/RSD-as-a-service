@@ -20,7 +20,7 @@ export default function CommunityListItem({community}:{community:CommunityListPr
       <Link
         data-testid="community-list-item"
         key={community.id}
-        href={`/communities/${community.slug}`}
+        href={`/communities/${community.slug}/software`}
         className='flex-1 flex items-center hover:text-inherit bg-base-100 rounded-xs'
       >
         <ListImageWithGradientPlaceholder

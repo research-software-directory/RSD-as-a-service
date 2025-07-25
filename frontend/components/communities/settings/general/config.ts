@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,6 +19,18 @@ const config = {
     validation: {
       minLength: {value: 6, message: 'Minimum length is 6'},
       maxLength: {value: 300, message: 'Maximum length is 300'},
+    }
+  },
+  website: {
+    label: 'Website',
+    help: 'Web address including http(s)',
+    validation: {
+      minLength: {value: 6, message: 'Minimum length is 6'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
+      pattern: {
+        value: /^https?:\/\/\S+$/,
+        message: 'Url should start with http(s):// and cannot contain white spaces'
+      }
     }
   },
   slug: {
