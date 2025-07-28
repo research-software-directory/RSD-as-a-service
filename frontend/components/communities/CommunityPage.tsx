@@ -5,7 +5,6 @@
 
 import {JSX} from 'react'
 import BackgroundAndLayout from '~/components/layout/BackgroundAndLayout'
-import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import PageBreadcrumbs from '../layout/PageBreadcrumbs'
 import {TabKey} from './tabs/CommunityTabItems'
 import CommunityMetadata from './metadata'
@@ -43,21 +42,17 @@ export default function CommunityPage({
         <CommunityMetadata/>
 
         {/* TABS */}
-        <BaseSurfaceRounded
-          className="my-4 p-2"
-          type="section"
-        >
-          <CommunityTabs
-            tab={selectTab}
-            software_cnt={community.software_cnt ?? 0}
-            pending_cnt={community.pending_cnt ?? 0}
-            rejected_cnt={community.rejected_cnt ?? 0}
-            description={community.description ?? null}
-            isMaintainer={isMaintainer}
-          />
-        </BaseSurfaceRounded>
+        <CommunityTabs
+          tab={selectTab}
+          software_cnt={community.software_cnt ?? 0}
+          pending_cnt={community.pending_cnt ?? 0}
+          rejected_cnt={community.rejected_cnt ?? 0}
+          description={community.description ?? null}
+          isMaintainer={isMaintainer}
+        />
+
         {/* TAB CONTENT */}
-        <section className="flex md:min-h-[55rem]">
+        <section className="mt-4 flex md:min-h-[45rem]">
           {children}
         </section>
       </CommunityProvider>

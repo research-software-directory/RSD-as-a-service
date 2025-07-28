@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -30,9 +30,8 @@ export default function AutosaveCommunityTextField({options,rules}:AutosaveCommu
     // console.group('AutosaveCommunityTextField')
     // console.log('name...', name)
     // console.log('value...', value)
-    // console.log('id...', id)
     // console.groupEnd()
-    // patch project table
+    // patch community table
     const resp = await patchCommunityTable({
       id: community?.id ?? '',
       data: {
