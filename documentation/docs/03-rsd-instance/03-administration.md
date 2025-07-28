@@ -70,6 +70,8 @@ We recommend to use short-lived, single-use invites whenever possible, as these 
 
 This section shows all RSD users who logged in to RSD at least once. You can search for users, assign the administrator role (`rsd_admin`) or delete user accounts.
 
+It is also possible to lock (and unlock) accounts by clicking on the lock symbol. You can provide a reason that the user can see and a reason that only admins can see. Locked accounts cannot use the API with their access tokens and will get an error message when they try to sign in.
+
 :::danger
 
 - Removing account will remove all its maintainer roles.
