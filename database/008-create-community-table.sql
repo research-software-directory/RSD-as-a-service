@@ -366,6 +366,7 @@ $$
 BEGIN
 	NEW.software = OLD.software;
 	NEW.community = OLD.community;
+	NEW.requested_at = OLD.requested_at;
 	return NEW;
 END
 $$;

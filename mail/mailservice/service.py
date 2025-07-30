@@ -32,7 +32,7 @@ def validate_and_get_mail_data(input_data):
     while attempt < max_attempts:
         try: 
             mail_data = MailData.model_validate(input_data)
-            logger.info(f"Mail data validated for {mail_data}")
+            logger.info(f"Mail data validated for recipients={mail_data.recipients} (subject: {mail_data.subject})")
             return mail_data
         except ValidationError as e:
             logger.error(f"Mail Validation Error: {e}")
