@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -61,7 +63,7 @@ export function useAdminCommunities(){
         } else {
           data.logo_id = null
           showErrorMessage(`Failed to upload image. ${upload.message}`)
-          return false
+          return [false, null]
         }
       }
       // remove temp props
@@ -76,15 +78,15 @@ export function useAdminCommunities(){
       if (resp.status === 200) {
         // return created item
         loadCommunities()
-        return true
+        return [true, resp.message['slug']]
       } else {
         // show error
         showErrorMessage(`Failed to add community. Error: ${resp.message}`)
-        return false
+        return [false, null]
       }
     }catch(e:any){
       showErrorMessage(`Failed to add community. Error: ${e.message}`)
-      return false
+      return [false, null]
     }
   // we do not include showErrorMessage in order to avoid loop
   // eslint-disable-next-line react-hooks/exhaustive-deps
