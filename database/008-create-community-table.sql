@@ -1,6 +1,9 @@
 -- SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+-- SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -188,9 +191,14 @@ CREATE FUNCTION maintainers_of_community(community_id UUID) RETURNS TABLE (
 	is_primary BOOLEAN
 ) LANGUAGE plpgsql STABLE SECURITY DEFINER AS
 $$
-DECLARE account_authenticated UUID;
+DECLARE account_authenticated BOOLEAN;
 BEGIN
-	account_authenticated = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	account_authenticated = (
+		CASE
+			WHEN CURRENT_USER = 'rsd_admin' THEN TRUE
+			ELSE (current_setting('request.jwt.claims', FALSE)::json->>'account') IS NOT NULL
+		END
+	);
 	IF account_authenticated IS NULL THEN
 		RAISE EXCEPTION USING MESSAGE = 'Please login first';
 	END IF;
@@ -232,13 +240,15 @@ BEGIN
 	SELECT
 		maintainer_ids.maintainer AS maintainer,
 		ARRAY_AGG(login_for_account."name") AS name,
-		ARRAY_AGG(login_for_account.email) AS email,
+		ARRAY_AGG(user_profile.email_address) AS email,
 		ARRAY_AGG(login_for_account.home_organisation) AS affiliation,
 		BOOL_OR(maintainer_ids.is_primary) AS is_primary
 	FROM
 		maintainer_ids
 	INNER JOIN
 		login_for_account ON login_for_account.account = maintainer_ids.maintainer
+	INNER JOIN
+		user_profile ON user_profile.account = maintainer_ids.maintainer
 	GROUP BY
 		maintainer_ids.maintainer
 	-- primary as first record
@@ -337,16 +347,39 @@ CREATE TABLE software_for_community (
 	software UUID REFERENCES software (id),
 	community UUID REFERENCES community (id),
 	status request_status NOT NULL DEFAULT 'pending',
+	requested_at TIMESTAMPTZ NOT NULL,
 	PRIMARY KEY (software, community)
 );
+
+CREATE FUNCTION sanitise_insert_software_for_community() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.requested_at = LOCALTIMESTAMP;
+	RETURN NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_insert_software_for_community BEFORE INSERT ON software_for_community FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_software_for_community();
 
 CREATE FUNCTION sanitise_update_software_for_community() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.software = OLD.software;
 	NEW.community = OLD.community;
+	NEW.requested_at = OLD.requested_at;
 	return NEW;
 END
 $$;
 
 CREATE TRIGGER sanitise_update_software_for_community BEFORE UPDATE ON software_for_community FOR EACH ROW EXECUTE PROCEDURE sanitise_update_software_for_community();
+
+CREATE FUNCTION notify_on_community_request() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	RAISE NOTICE 'About to send community request NOTIFY';
+	PERFORM pg_notify('software_for_community_join_request', to_json(NEW)::text);
+	RETURN NEW;
+END
+$$;
+
+CREATE TRIGGER notify_community_request AFTER INSERT OR UPDATE ON software_for_community FOR EACH ROW WHEN (NEW.status = 'pending') EXECUTE PROCEDURE notify_on_community_request();
