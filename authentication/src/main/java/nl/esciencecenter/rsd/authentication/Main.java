@@ -5,6 +5,7 @@
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -299,7 +300,7 @@ public class Main {
 		if (accountInfo.isLocked()) {
 			setLoginFailureCookieAndRedirect(
 				ctx,
-				"Your account is locked: " + accountInfo.lockReason().orElse("no reason given")
+				"Your account is locked. " + accountInfo.lockReason().orElse("no reason given")
 			);
 			return;
 		}

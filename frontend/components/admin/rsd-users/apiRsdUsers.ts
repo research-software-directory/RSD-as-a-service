@@ -11,6 +11,7 @@ import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetch
 import logger from '~/utils/logger'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
 import {RsdAccountInfo} from './useRsdAccounts'
+import {LockAccountProps} from './LockUserModal'
 
 type getLoginApiParams = {
   token: string,
@@ -140,6 +141,55 @@ export async function removeRsdAdmin({id,token}:{ id: string, token: string }){
       method: 'DELETE',
       headers: createJsonHeaders(token)
     })
+    return await extractReturnMessage(resp)
+  } catch (e:any) {
+    logger(`removeRsdAdmin: ${e.message}`,'error')
+    return {
+      status: 500,
+      message: e.message
+    }
+  }
+}
+
+export async function lockRsdAcount({
+  account,token
+}:{
+  account:LockAccountProps, token: string
+}){
+  try {
+    if (!account.id) return {
+      status: 400,
+      message: 'User account_id not provided'
+    }
+
+    const tableName = 'locked_account'
+    const query = `${tableName}?account_id=eq.${account.id}`
+    const url = `${getBaseUrl()}/${query}`
+
+    let resp
+
+    if (account.lock_account===true){
+      resp = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          ...createJsonHeaders(token),
+          'Prefer': 'resolution=merge-duplicates'
+        },
+        body: JSON.stringify({
+          account_id: account.id,
+          // use null instead of empty string
+          admin_facing_reason: account.admin_facing_reason?.trim() || null,
+          user_facing_reason: account.user_facing_reason?.trim() || null,
+        }),
+      })
+    } else {
+      resp = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          ...createJsonHeaders(token)
+        }
+      })
+    }
     return await extractReturnMessage(resp)
   } catch (e:any) {
     logger(`removeRsdAdmin: ${e.message}`,'error')
