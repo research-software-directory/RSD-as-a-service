@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,11 +19,16 @@ const digitsOnlyPattern = new RegExp('^\\d+$')
 
 export default function RsdUsersPage() {
   const [adminsOnly, setAdminsOnly] = useState<boolean>(false)
+  const [lockedOnly, setLockedOnly] = useState<boolean>(false)
   const [inactiveDays, setInactiveDays] = useState<number>(0)
   const [inactiveDaysError, setInactiveDaysError] = useState<boolean>(false)
 
   function handleAdminsOnlyChange(event : React.ChangeEvent<HTMLInputElement>) {
     setAdminsOnly(event.target.checked)
+  }
+
+  function handleLockedOnlyChange(event : React.ChangeEvent<HTMLInputElement>) {
+    setLockedOnly(event.target.checked)
   }
 
   function handleInactiveDaysChange(event : React.ChangeEvent<HTMLInputElement>) {
@@ -57,9 +62,17 @@ export default function RsdUsersPage() {
             />
           }
         />
+        <FormControlLabel
+          label="Locked"
+          control={
+            <Switch
+              onChange={handleLockedOnlyChange}
+            />
+          }
+        />
         <Pagination/>
       </div>
-      <RsdUsersList adminsOnly={adminsOnly} inactiveDays={inactiveDays}/>
+      <RsdUsersList adminsOnly={adminsOnly} lockedOnly={lockedOnly} inactiveDays={inactiveDays}/>
     </section>
   )
 }

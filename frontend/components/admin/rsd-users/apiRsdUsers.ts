@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,13 +18,16 @@ type getLoginApiParams = {
   rows: number
   searchFor?:string
   adminsOnly: boolean,
+  lockedOnly: boolean
   inactiveDays: number
 }
 
-export async function getRsdAccounts({page,rows,token,searchFor,adminsOnly,inactiveDays}:getLoginApiParams) {
+export async function getRsdAccounts({page,rows,token,searchFor,adminsOnly,lockedOnly,inactiveDays}:getLoginApiParams) {
   try {
     // pagination
-    let query = `select=id,login_for_account(id,provider,name,email,home_organisation,last_login_date),login_for_account_text_filter:login_for_account!inner(),login_for_account_inactivity_filter:login_for_account!inner(),admin_account!${adminsOnly ? 'inner' : 'left'}(account_id)${paginationUrlParams({rows, page})}`
+    let query = 'select=id,login_for_account(id,provider,name,email,home_organisation,last_login_date),login_for_account_text_filter:login_for_account!inner(),login_for_account_inactivity_filter:login_for_account!inner()'
+    query += `,admin_account!${adminsOnly ? 'inner' : 'left'}(account_id),locked_account!${lockedOnly ? 'inner' : 'left'}(*)${paginationUrlParams({rows, page})}`
+
     if (inactiveDays > 0) {
       const then = new Date()
       then.setDate(then.getDate() - inactiveDays)

@@ -1,8 +1,8 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,9 +23,11 @@ export type DeleteAccountModal = {
   account?: RsdAccountInfo
 }
 
-export default function RsdUsersList({adminsOnly, inactiveDays}: {adminsOnly: boolean, inactiveDays: number}) {
+export default function RsdUsersList({adminsOnly, lockedOnly, inactiveDays}: {adminsOnly: boolean, lockedOnly: boolean, inactiveDays: number}) {
   const {token} = useSession()
-  const {loading, accounts, deleteAccount} = useRsdAccounts(token, adminsOnly, inactiveDays)
+  // meaningless toggle to be able to force getting fresh data
+  const [toggle, setToggle] = useState<boolean>(false)
+  const {loading, accounts, deleteAccount} = useRsdAccounts(token, adminsOnly, lockedOnly, inactiveDays, toggle)
   const [modal, setModal] = useState<DeleteAccountModal>({
     open: false
   })
@@ -69,6 +71,7 @@ export default function RsdUsersList({adminsOnly, inactiveDays}: {adminsOnly: bo
                 key={item.id}
                 account={item}
                 onDelete={()=>onDeleteAccount(item)}
+                onMutation={() => {setToggle(!toggle)}}
               />
             )
           })

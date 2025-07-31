@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,14 +21,21 @@ export type RsdAccount = {
 export type RsdAccountInfo = {
   id: string,
   login_for_account: RsdAccount[],
-  admin_account: string[] | null
+  admin_account: {account_id: string} | null,
+  locked_account: RsdAccountLockedInfo | null
 }
 
-export default function useRsdAccounts(token: string, adminsOnly: boolean, inactiveDays: number) {
+export type RsdAccountLockedInfo = {
+  admin_facing_reason: string | null,
+  user_facing_reason: string | null,
+  created_at: string,
+}
+
+export default function useRsdAccounts(token: string, adminsOnly: boolean, lockedOnly: boolean, inactiveDays: number, toggle: boolean) {
   const {showErrorMessage}=useSnackbar()
   const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find user by account id, name, email or affiliation')
   const [accounts, setAccounts] = useState<RsdAccountInfo[]>([])
-  // show loading only on inital load
+  // show loading only on initial load
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -39,6 +46,7 @@ export default function useRsdAccounts(token: string, adminsOnly: boolean, inact
         page,
         rows,
         adminsOnly,
+        lockedOnly,
         inactiveDays
       })
       setAccounts(accounts)
@@ -50,7 +58,7 @@ export default function useRsdAccounts(token: string, adminsOnly: boolean, inact
     }
   // we do not include setCount in order to avoid loop
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token,searchFor,page,rows,adminsOnly,inactiveDays])
+  }, [token,searchFor,page,rows,adminsOnly,lockedOnly,inactiveDays,toggle])
 
 
   async function deleteAccount(id: string) {

@@ -137,8 +137,7 @@ public class Main {
 		});
 
 		app.exception(RsdAuthenticationException.class, (ex, ctx) -> {
-			setLoginFailureCookie(ctx, ex.getMessage());
-			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
+			setLoginFailureCookieAndRedirect(ctx, ex.getMessage());
 		});
 
 		app.exception(RsdAccessTokenException.class, (ex, ctx) -> {
@@ -148,20 +147,17 @@ public class Main {
 		});
 
 		app.exception(RsdAccountInviteException.class, (ex, ctx) -> {
-			setLoginFailureCookie(ctx, ex.getMessage());
-			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
+			setLoginFailureCookieAndRedirect(ctx, ex.getMessage());
 		});
 
 		app.exception(RuntimeException.class, (ex, ctx) -> {
 			LOGGER.error("RuntimeException", ex);
-			setLoginFailureCookie(ctx, "Something unexpected went wrong, please try again or contact us.");
-			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
+			setLoginFailureCookieAndRedirect(ctx, "Something unexpected went wrong, please try again or contact us.");
 		});
 
 		app.exception(Exception.class, (ex, ctx) -> {
 			LOGGER.error("Exception", ex);
-			setLoginFailureCookie(ctx, "Something unexpected went wrong, please try again or contact us.");
-			ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
+			setLoginFailureCookieAndRedirect(ctx, "Something unexpected went wrong, please try again or contact us.");
 		});
 	}
 
@@ -263,16 +259,14 @@ public class Main {
 		String message = "The provider \"%s\", is disabled, please try a different provider.".formatted(
 			provider.toUserFriendlyString()
 		);
-		setLoginFailureCookie(ctx, message);
-		ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
+		setLoginFailureCookieAndRedirect(ctx, message);
 	}
 
 	static void handleMisconfiguredProvider(Context ctx, OpenidProvider provider) {
 		String message = "The provider \"%s\", is misconfigured, please contact your RSD admins.".formatted(
 			provider.toUserFriendlyString()
 		);
-		setLoginFailureCookie(ctx, message);
-		ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
+		setLoginFailureCookieAndRedirect(ctx, message);
 	}
 
 	static void handleCoupleLogins(Context ctx, OpenIdInfo openIdInfo, OpenidProvider provider)
@@ -302,6 +296,14 @@ public class Main {
 	}
 
 	static void createAndSetCookie(Context ctx, AccountInfo accountInfo) {
+		if (accountInfo.isLocked()) {
+			setLoginFailureCookieAndRedirect(
+				ctx,
+				"Your account is locked: " + accountInfo.lockReason().orElse("no reason given")
+			);
+			return;
+		}
+
 		String token = createToken(accountInfo);
 		setJwtCookie(ctx, token);
 		setRedirectFromCookie(ctx);
@@ -322,7 +324,7 @@ public class Main {
 		);
 	}
 
-	static void setLoginFailureCookie(Context ctx, String message) {
+	static void setLoginFailureCookieAndRedirect(Context ctx, String message) {
 		ctx.header(
 			"Set-Cookie",
 			"rsd_login_failure_message=" +
@@ -330,6 +332,8 @@ public class Main {
 			"; Secure; Path=/login/failed; SameSite=Lax; Max-Age=" +
 			FAILURE_COOKIE_DURATION.toSeconds()
 		);
+
+		ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);
 	}
 
 	static void setRedirectFromCookie(Context ctx) {
