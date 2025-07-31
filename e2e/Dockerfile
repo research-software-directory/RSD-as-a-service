@@ -7,7 +7,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # ensure same version is used in package.json for local testing
-FROM mcr.microsoft.com/playwright:v1.49.1-jammy
+FROM mcr.microsoft.com/playwright:v1.54.1-jammy
 
 # create working dir
 WORKDIR /app

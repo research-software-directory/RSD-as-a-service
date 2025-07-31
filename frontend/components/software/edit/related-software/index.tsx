@@ -7,7 +7,7 @@
 
 import {useEffect, useState} from 'react'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {sortOnStrProp} from '~/utils/sortFn'
 import {addRelatedSoftware, deleteRelatedSoftware, getRelatedSoftwareForSoftware} from '~/utils/editRelatedSoftware'
 import {RelatedSoftwareOfSoftware, SearchSoftware} from '~/types/SoftwareTypes'
