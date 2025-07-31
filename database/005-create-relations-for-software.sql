@@ -238,6 +238,45 @@ CREATE TRIGGER sanitise_update_testimonial BEFORE UPDATE ON testimonial FOR EACH
 
 
 
+CREATE TABLE swhid_for_software (
+	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+	software UUID REFERENCES software (id) NOT NULL,
+	-- https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html#syntax
+	swhid VARCHAR(1000) CHECK (swhid ~ '^swh:1:(snp|rel|rev|dir|cnt):[0-9a-f]{40}(;(origin=[^\s;]+|visit=swh:1:(snp|rel|rev|dir|cnt):[0-9a-f]{40}|anchor=swh:1:(snp|rel|rev|dir|cnt):[0-9a-f]{40}|path=[^\s;]+|lines=\d+(-\d+)?))*$'),
+	position INTEGER NOT NULL,
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
+);
+
+CREATE INDEX swhid_for_software_software_idx ON swhid_for_software(software);
+
+
+CREATE FUNCTION sanitise_insert_swhid_for_software() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.id = gen_random_uuid();
+	NEW.created_at = LOCALTIMESTAMP;
+	NEW.updated_at = NEW.created_at;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_insert_swhid_for_software BEFORE INSERT ON swhid_for_software FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_swhid_for_software();
+
+
+CREATE FUNCTION sanitise_update_swhid_for_software() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.id = OLD.id;
+	NEW.created_at = OLD.created_at;
+	NEW.updated_at = LOCALTIMESTAMP;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_update_swhid_for_software BEFORE UPDATE ON swhid_for_software FOR EACH ROW EXECUTE PROCEDURE sanitise_update_swhid_for_software();
+
+
 CREATE TABLE software_highlight (
 	software UUID REFERENCES software (id) PRIMARY KEY,
 	date_start DATE,
