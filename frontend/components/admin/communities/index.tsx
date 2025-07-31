@@ -1,9 +1,12 @@
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState,useContext} from 'react'
+import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
 
@@ -18,13 +21,14 @@ export default function AdminCommunities() {
   const [modal, setModal] = useState(false)
   const {pagination:{page}} = useContext(PaginationContext)
   const {loading, communities, addCommunity, deleteCommunity} = useAdminCommunities()
+  const router = useRouter()
 
   async function onAddCommunity(data:EditCommunityProps){
     // add community
-    const ok = await addCommunity(data)
-    // if all ok close the modal
+    const [ok, slug] = await addCommunity(data)
+    // if all ok redirect to community page
     // on error snackbar will be shown and we leave modal open for possible corrections
-    if (ok===true) setModal(false)
+    if (ok===true) router.push(`/communities/${slug}/settings`)
   }
 
   return (
