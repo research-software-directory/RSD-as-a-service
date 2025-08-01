@@ -3,9 +3,10 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 PERFACCT GmbH
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -55,13 +56,14 @@ export default function EditSoftwareNav({slug,pageId}:{slug:string,pageId:string
         })}
         {
           pluginSlots.map((pluginSlot) => {
+            const url = pluginSlot.href ? pluginSlot.href.replace('{slug}', slug) : '#'
             return (
               <ListItemButton
                 data-testid="edit-software-nav-item"
                 key={pluginSlot.title}
                 selected={false}
                 onClick={() => {
-                  router.push(pluginSlot.href || '#')
+                  router.push(url)
                 }}
                 sx={editMenuItemButtonSx}
               >
