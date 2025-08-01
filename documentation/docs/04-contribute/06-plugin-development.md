@@ -18,6 +18,12 @@ and at the bottom of the software edit navbar:
 
 ![Plugin slot in the software edit navigation sidebar](img/softwareNavPlugin.png)
 
+Plugin slots may define placeholders that are allowed in the `href` content. The placeholders will be replaced by Next.js. Their use is optional. The available placeholders per plugin slot are listed in the following table:
+
+| Plugin slot     | Placeholder | Description                                  |
+|-----------------|-------------|----------------------------------------------|
+| editSoftwareNav | `{slug}`    | Replaced by the slug of the edited software. |
+
 ## How plugins work
 
 1) Next.js performs GET requests to all registered plugins, to the endpoints `<baseUrl>/plugin/<plugin>/api/v1/config`. The `baseUrl` is determined by the plugin name in `settings.json`. If a user is signed it, the token is sent in the header for authentication. The token contains a `data` attribute which can be used to determine which links should be displayed for each user. Users logged in via HelmholtzID have their [`eduPersonEntitlements`](https://hifis.net/doc/helmholtz-aai/attributes/#group-membership-information) delivered within the `data` attribute.
