@@ -59,7 +59,7 @@ export default function EditSoftwareNav({slug,pageId}:{slug:string,pageId:string
             const url = pluginSlot.href ? pluginSlot.href.replace('{slug}', slug) : '#'
             return (
               <ListItemButton
-                data-testid="edit-software-nav-item"
+                data-testid="edit-software-plugin-item"
                 key={pluginSlot.title}
                 selected={false}
                 onClick={() => {
