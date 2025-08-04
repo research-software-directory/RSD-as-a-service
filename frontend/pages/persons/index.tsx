@@ -9,7 +9,7 @@ import Pagination from '@mui/material/Pagination'
 import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
-import {getRsdModules} from '~/config/getSettingsServerSide'
+import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import {getUserSettings} from '~/utils/userSettings'
 import {ssrBasicParams} from '~/utils/extractQueryParam'
@@ -130,7 +130,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const {req} = context
     const {search, rows, page} = ssrBasicParams(context.query)
     const token = req?.cookies['rsd_token']
-    const modules = await getRsdModules()
+    const modules = await getActiveModuleNames()
 
     // show 404 page if module is not enabled
     if (modules.includes('persons')===false){

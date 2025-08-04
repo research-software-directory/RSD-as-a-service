@@ -11,12 +11,12 @@ import {IncomingMessage} from 'http'
 
 import logger from '~/utils/logger'
 import {getPageLinks} from '~/components/admin/pages/useMarkdownPages'
-import {defaultRsdSettings, RsdModule, RsdSettingsState} from './rsdSettingsReducer'
+import {activeModulesKeys, defaultRsdSettings, RsdModules, RsdSettingsState} from './rsdSettingsReducer'
 import defaultSettings from '~/config/defaultSettings.json'
 import {getAnnouncement} from '~/components/admin/announcements/apiAnnouncement'
 
-// cache module list
-let modules:RsdModule[]=[]
+// cache active module list
+let rsdModules:RsdModules
 
 /**
  * getThemeSettings from local json file
@@ -35,12 +35,12 @@ export async function getRsdSettings() {
     } else {
       logger(`Failed to load theme settings. ${resp.status} ${resp.statusText}`, 'warn')
       // return default settings
-      return defaultSettings as RsdSettingsState
+      return defaultSettings as unknown as RsdSettingsState
     }
   } catch (e: any) {
     logger(`Failed to load theme settings. ${e.message}`, 'error')
     // return default settings
-    return defaultSettings as RsdSettingsState
+    return defaultSettings as unknown as RsdSettingsState
   }
 }
 
@@ -58,21 +58,26 @@ export async function getSettingsServerSide(req: IncomingMessage | undefined): P
   if (!settings.host.software_highlights) {
     settings.host.software_highlights = defaultSettings.host.software_highlights
   }
+  // console.log('settings...', settings)
   // use default modules if custom not provided
-  if (!settings.host.modules){
-    settings.host.modules = defaultRsdSettings.host.modules
+  if (!settings.modules){
+    settings.modules = {
+      ...defaultRsdSettings.modules
+    }
   }
 
   // compose all settings
   const rsdSettings:RsdSettingsState = {
     ...defaultRsdSettings,
     host: settings.host,
+    modules: settings.modules,
     links: settings.links,
     theme: settings.theme,
     pages,
     announcement: announcement?.enabled ? announcement?.text : undefined
   }
   // console.group('getSettingsServerSide')
+  // console.log('settings...', settings)
   // console.log('rsdSettings...', rsdSettings)
   // console.groupEnd()
   return rsdSettings
@@ -84,22 +89,41 @@ export async function getSettingsServerSide(req: IncomingMessage | undefined): P
  */
 export async function getRsdModules(){
   try{
-    if (modules?.length > 0 && process.env.NODE_ENV == 'production'){
-      // console.log('cached modules...', modules)
-      return modules
+    if (rsdModules && process.env.NODE_ENV == 'production'){
+      // console.log('cached modules...', rsdModules)
+      return rsdModules
     }
     const settings = await getRsdSettings()
 
-    if (Array.isArray(settings?.host?.modules)===true){
-      modules = settings.host.modules
-      return modules
+    if (settings?.modules){
+      // cache modules
+      rsdModules = {
+        ...settings.modules
+      }
+      return rsdModules
     }
-    // console.log('default modules...', defaultRsdSettings.host.modules)
+    // console.log('default modules...', defaultRsdSettings.modules)
     // use default modules
-    return defaultRsdSettings.host.modules ?? []
+    return defaultRsdSettings.modules
   }catch(e:any){
     logger(`getRsdModules failed: ${e?.message}`,'warn')
     // use default modules on error
-    return defaultRsdSettings.host.modules ?? []
+    return defaultRsdSettings.modules
+  }
+}
+
+/**
+ * Get RSD modules from settings.json server side
+ * @returns
+ */
+export async function getActiveModuleNames(){
+  try{
+    const rsdModules = await getRsdModules()
+    const activeModules = activeModulesKeys(rsdModules)
+    return activeModules
+  }catch(e:any){
+    logger(`getRsdModuleNames failed: ${e?.message}`,'warn')
+    // use default modules on error
+    return activeModulesKeys(defaultRsdSettings.modules)
   }
 }

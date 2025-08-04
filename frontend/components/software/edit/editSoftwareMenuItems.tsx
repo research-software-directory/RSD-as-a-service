@@ -17,7 +17,7 @@ import JoinInnerIcon from '@mui/icons-material/JoinInner'
 import DonutLargeIcon from '@mui/icons-material/DonutLarge'
 import ArticleIcon from '@mui/icons-material/Article'
 import Diversity3Icon from '@mui/icons-material/Diversity3'
-import {RsdModule} from '~/config/rsdSettingsReducer'
+import {RsdModuleName} from '~/config/rsdSettingsReducer'
 
 
 export type EditSoftwareMenuItemsProps = {
@@ -50,7 +50,7 @@ export const editSoftwareMenuItems:EditSoftwareMenuItemsProps[] = [{
   id: 'organisations',
   label: 'Organisations',
   icon: <BusinessIcon />,
-  active: ({modules}:{modules:RsdModule[]}) => modules?.includes('organisations'),
+  active: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('organisations'),
   status: ''
 },{
   id: 'mentions',
@@ -74,7 +74,7 @@ export const editSoftwareMenuItems:EditSoftwareMenuItemsProps[] = [{
   id: 'communities',
   label: 'Communities',
   icon: <Diversity3Icon />,
-  active: ({modules}:{modules:RsdModule[]}) => modules?.includes('communities'),
+  active: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('communities'),
   status: ''
 },{
   id: 'related-software',
@@ -86,7 +86,7 @@ export const editSoftwareMenuItems:EditSoftwareMenuItemsProps[] = [{
   id: 'related-projects',
   label: 'Related projects',
   icon: <DonutLargeIcon />,
-  active: ({modules}:{modules:RsdModule[]}) => modules?.includes('projects'),
+  active: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('projects'),
   status: ''
 },{
   id: 'maintainers',

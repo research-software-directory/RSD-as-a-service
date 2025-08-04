@@ -40,19 +40,19 @@ function ProjectsCounter({project_cnt}:Readonly<{project_cnt: number | null}>){
 
 
 export default function OrganisationCardMetrics({software_cnt,project_cnt}:OrganisationMetricsProps) {
-  const {host} = useRsdSettings()
+  const {activeModules} = useRsdSettings()
   return (
     <>
       {/* Software counter if module enabled */}
       {
-        host?.modules?.includes('software') ?
+        activeModules?.includes('software') ?
           <SoftwareCounter software_cnt={software_cnt} />
           : null
       }
 
       {/* Projects counter if modules is enabled */}
       {
-        host?.modules?.includes('projects') ?
+        activeModules?.includes('projects') ?
           <ProjectsCounter project_cnt={project_cnt} />
           : null
       }

@@ -7,7 +7,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {app} from '~/config/app'
-import {getRsdModules} from '~/config/getSettingsServerSide'
+import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import useRsdSettings from '~/config/useRsdSettings'
 import {getHomepageCounts} from '~/components/home/getHomepageCounts'
 import HelmholtzHome from '~/components/home/helmholtz'
@@ -78,7 +78,7 @@ export async function getServerSideProps() {
     getHomepageCounts(),
     // get top 3 (most recent) news items
     getTopNews(3),
-    getRsdModules()
+    getActiveModuleNames()
   ])
   // provide props to home component
   return {

@@ -137,14 +137,18 @@ describe('pages/software/[slug]/edit/[page].tsx', () => {
   it('does not render communities menu option', async () => {
     // return isMaintainer
     mockIsMaintainer.mockResolvedValueOnce(true)
+
     // module list without "communities"
-    defaultSettings.host.modules = ['software','projects','organisations']
+    const settings = {
+      ...defaultSettings
+    }
+    settings.modules.communities.active=false
 
     // render components
     render(
       <WithAppContext options={{
         session: mockSession,
-        settings: defaultSettings as RsdSettingsState
+        settings: settings as RsdSettingsState
       }}>
         <WithFormContext>
           <WithSoftwareContext state={softwareState}>
@@ -167,14 +171,17 @@ describe('pages/software/[slug]/edit/[page].tsx', () => {
   it('does not render related-projects menu option', async () => {
     // return isMaintainer
     mockIsMaintainer.mockResolvedValueOnce(true)
-    // module list without "communities"
-    defaultSettings.host.modules = ['software','organisations','communities']
+    // module list without "projects"
+    const settings = {
+      ...defaultSettings
+    }
+    settings.modules.projects.active = false
 
     // render components
     render(
       <WithAppContext options={{
         session: mockSession,
-        settings: defaultSettings as RsdSettingsState
+        settings: settings as RsdSettingsState
       }}>
         <WithFormContext>
           <WithSoftwareContext state={softwareState}>

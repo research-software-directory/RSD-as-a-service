@@ -46,10 +46,10 @@ export const addItemMenu:AddItemMenuItem[]=[{
 
 function useAddItemMenu(){
   const {user} = useSession()
-  const {host} = useRsdSettings()
+  const {activeModules} = useRsdSettings()
 
   const menuItems = addItemMenu.filter(item=>{
-    return item.active({role: user?.role, modules: host.modules}) ?? false
+    return item.active({role: user?.role, modules:activeModules}) ?? false
   })
 
   // console.group('useAddItemMenu')

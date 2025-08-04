@@ -27,7 +27,6 @@ it('should render AddMenu',()=>{
 })
 
 it('all menu options for rsd-admin',async()=>{
-  mockSettings.host.modules = ['software','projects','news']
   // admin should have more items
   if (mockSession.user) mockSession.user.role='rsd_admin'
 
@@ -44,13 +43,12 @@ it('all menu options for rsd-admin',async()=>{
   fireEvent.click(menuButton as HTMLElement)
   // select all menu options
   const menuOptions = screen.queryAllByTestId('add-menu-option')
-  // assert only 1 item
-  expect(menuOptions.length).toEqual(mockSettings.host.modules.length)
+  // assert 3 menu options [software,projects,news]
+  expect(menuOptions.length).toEqual(3)
   // screen.debug()
 })
 
 it('no news option for rsd-user',async()=>{
-  mockSettings.host.modules = ['software','projects','news']
   // admin should have more items
   if (mockSession.user) mockSession.user.role='rsd_user'
 
@@ -67,7 +65,7 @@ it('no news option for rsd-user',async()=>{
   fireEvent.click(menuButton as HTMLElement)
   // select all menu options
   const menuOptions = screen.queryAllByTestId('add-menu-option')
-  // assert only 1 item
-  expect(menuOptions.length).toEqual(mockSettings.host.modules.length-1)
+  // assert 2 menu options [software,projects]
+  expect(menuOptions.length).toEqual(2)
   // screen.debug()
 })

@@ -34,7 +34,7 @@ import InfoIcon from '@mui/icons-material/Info'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
-import {RsdModule} from '~/config/rsdSettingsReducer'
+import {RsdModuleName} from '~/config/rsdSettingsReducer'
 import useRsdSettings from '~/config/useRsdSettings'
 
 export type AdminMenuItemProps={
@@ -58,7 +58,7 @@ export const adminPages = {
     subtitle: '',
     icon: <FluorescentIcon />,
     path: '/admin/software-highlights',
-    active: ({modules}:{modules:RsdModule[]}) => modules?.includes('software'),
+    active: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('software'),
   },
   rsd_invites:{
     title: 'RSD invites',
@@ -86,28 +86,28 @@ export const adminPages = {
     subtitle: '',
     icon: <TerminalIcon />,
     path: '/admin/software',
-    active: ({modules}:{modules:RsdModule[]}) => modules?.includes('software'),
+    active: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('software'),
   },
   projects: {
     title: 'Projects',
     subtitle: '',
     icon: <ListAltIcon />,
     path: '/admin/projects',
-    active: ({modules}:{modules:RsdModule[]}) => modules?.includes('projects'),
+    active: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('projects'),
   },
   organisations: {
     title: 'Organisations',
     subtitle: '',
     icon: <DomainAddIcon />,
     path: '/admin/organisations',
-    active: ({modules}:{modules:RsdModule[]}) => modules?.includes('organisations'),
+    active: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('organisations'),
   },
   communities: {
     title: 'Communities',
     subtitle: '',
     icon: <Diversity3Icon />,
     path: '/admin/communities',
-    active: ({modules}:{modules:RsdModule[]}) => modules?.includes('communities') && modules?.includes('software'),
+    active: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('communities') && modules?.includes('software'),
   },
   keywords:{
     title: 'Keywords',
@@ -166,7 +166,7 @@ export type AdminPageTypes = keyof typeof adminPages
 export default function AdminNav() {
   const router = useRouter()
   const items = Object.keys(adminPages)
-  const {host} = useRsdSettings()
+  const {activeModules} = useRsdSettings()
 
   // console.group("AdminNav")
   // console.log("items...",items)
@@ -180,7 +180,7 @@ export default function AdminNav() {
       }}>
         {items.map((key, pos) => {
           const item:AdminMenuItemProps = adminPages[key as AdminPageTypes]
-          if (item.active({modules:host?.modules})===true){
+          if (item.active({modules:activeModules})===true){
             return (
               <ListItemButton
                 data-testid="admin-nav-item"

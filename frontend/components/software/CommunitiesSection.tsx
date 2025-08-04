@@ -21,11 +21,11 @@ type CommunitiesSectionProps=Readonly<{
 
 
 export default function CommunitiesSection({communities = []}: CommunitiesSectionProps) {
-  const {host} = useRsdSettings()
+  const {activeModules} = useRsdSettings()
   // do not render section if no data
   if (communities?.length === 0) return null
   // do not render section if module is not enabled
-  if (host?.modules?.includes('communities')===false) return null
+  if (activeModules.includes('communities')===false) return null
 
   return (
     <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr_4fr]">

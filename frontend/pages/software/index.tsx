@@ -53,6 +53,7 @@ import {softwareOrderOptions} from '~/components/software/overview/filters/Order
 import {HostsFilterOption} from '~/components/filter/RsdHostFilter'
 import {getRemoteRsd} from '~/components/admin/remote-rsd/apiRemoteRsd'
 import {CategoryOption} from '~/components/filter/CategoriesFilter'
+import {activeModulesKeys} from '~/config/rsdSettingsReducer'
 
 
 type SoftwareOverviewProps = {
@@ -236,8 +237,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   let offset=0
   // extract rsd settings
   const settings = await getRsdSettings()
+  const activeModules = activeModulesKeys(settings.modules)
   // do not show software overview if module is not enabled
-  if (settings.host?.modules?.includes('software')===false){
+  if (activeModules.includes('software')===false){
     return {
       notFound: true
     }

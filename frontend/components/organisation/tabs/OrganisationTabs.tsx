@@ -18,7 +18,7 @@ const tabItems = Object.keys(organisationTabItems) as TabKey[]
 
 export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
   const router = useRouter()
-  const {host} = useRsdSettings()
+  const {activeModules} = useRsdSettings()
   const select_tab = useSelectedTab(tab_id)
   const {
     description, software_cnt,
@@ -29,7 +29,7 @@ export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
   // console.group('OrganisationTabs')
   // console.log('tab...', tab_id)
   // console.log('select_tab...', select_tab)
-  // console.log('modules...', host?.modules)
+  // console.log('activeModules...', activeModules)
   // console.groupEnd()
 
   return (
@@ -57,7 +57,7 @@ export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
           project_cnt,
           children_cnt,
           description,
-          modules: host?.modules ?? []
+          modules: activeModules
         })) {
           return <TabAsLink
             icon={item.icon}

@@ -13,7 +13,7 @@ import TerminalIcon from '@mui/icons-material/Terminal'
 import JoinInnerIcon from '@mui/icons-material/JoinInner'
 import AddCommentIcon from '@mui/icons-material/AddComment'
 import ThreePIcon from '@mui/icons-material/ThreeP'
-import {RsdModule} from '~/config/rsdSettingsReducer'
+import {RsdModuleName} from '~/config/rsdSettingsReducer'
 
 export type EditProjectMenuItemProps = {
   id: string,
@@ -42,7 +42,7 @@ export const editProjectMenuItems: EditProjectMenuItemProps[] = [
     id: 'organisations',
     label: 'Organisations',
     icon: <BusinessIcon />,
-    active: ({modules}:{modules:RsdModule[]}) => modules?.includes('organisations'),
+    active: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('organisations'),
     status: ''
   },
   {
@@ -70,7 +70,7 @@ export const editProjectMenuItems: EditProjectMenuItemProps[] = [
     id: 'related-software',
     label: 'Related software',
     icon: <TerminalIcon />,
-    active: ({modules}:{modules:RsdModule[]}) => modules?.includes('software'),
+    active: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('software'),
     status: ''
   },
   {

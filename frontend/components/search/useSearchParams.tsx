@@ -8,7 +8,7 @@ import {useRouter} from 'next/router'
 import {ssrBasicParams} from '~/utils/extractQueryParam'
 import {QueryParams,buildFilterUrl} from '~/utils/postgrestUrl'
 import {useUserSettings} from '~/config/UserSettingsContext'
-import {RsdModule} from '~/config/rsdSettingsReducer'
+import {RsdModuleName} from '~/config/rsdSettingsReducer'
 
 
 /**
@@ -17,7 +17,7 @@ import {RsdModule} from '~/config/rsdSettingsReducer'
  * @param view the route of the overview page (organisations | communities | news)
  * @returns handleQueryChange and resetFilters methods.
  */
-export default function useSearchParams(view:RsdModule){
+export default function useSearchParams(view:RsdModuleName){
   const router = useRouter()
   const {rsd_page_rows, setPageRows} = useUserSettings()
 

@@ -45,7 +45,7 @@ it('renders component with testid global-search', async() => {
 it('shows navigation option on focus based on modules defined', async () => {
   mockUseHasRemotes.mockReturnValue({hasRemotes:false})
   // filter out news as these are not in global search
-  const expectedMenuOptions = defaultRsdSettings.host.modules?.filter(item=>item!=='news')
+  const expectedMenuOptions = Object.keys(defaultRsdSettings.modules).filter(key=>key!=='news')
   // render component with session
   render(WrappedComponentWithProps(GlobalSearchAutocomplete))
   // find input

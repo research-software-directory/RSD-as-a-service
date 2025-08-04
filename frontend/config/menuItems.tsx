@@ -19,7 +19,9 @@ import Logout from '@mui/icons-material/Logout'
 import CalendarViewMonthIcon from '@mui/icons-material/CalendarViewMonth'
 import Diversity3Icon from '@mui/icons-material/Diversity3'
 
-import {RsdModule} from './rsdSettingsReducer'
+import {RsdModuleName} from './rsdSettingsReducer'
+
+export type MenuModules = RsdModuleName | 'user'
 
 export type MenuItemType = {
   type?: 'link' | 'function' |'divider' | 'pluginSlot'
@@ -35,54 +37,61 @@ export type MenuItemType = {
   // than path
   fn?: (props:any)=>void,
   // enables filtering of menuItems for the instance (defined in settings.json)
-  module?: RsdModule
+  module?: MenuModules
 }
+
+export type MenuItemProps = {
+  // optional key values
+  // [Key in RsdModule as string]:MenuItemType
+  [K in RsdModuleName]:MenuItemType
+}
+
 // routes defined for nav/menu
 // used in components/AppHeader
-export const menuItems:MenuItemType[] = [
-  {
-    path: '/software',
+export const menuItems:MenuItemProps = {
+  software:{
+    path:'/software',
     match:'/software',
     label:'Software',
     module:'software',
-    active:({modules}:{modules:RsdModule[]})=>modules?.includes('software')
+    active:({modules}:{modules:RsdModuleName[]})=>modules.includes('software')
   },
-  {
+  projects:{
     path: '/projects',
     match: '/projects',
     label: 'Projects',
     module:'projects',
-    active:({modules}:{modules:RsdModule[]})=>modules.includes('projects')
+    active:({modules}:{modules:RsdModuleName[]})=>modules.includes('projects')
   },
-  {
+  organisations: {
     path: '/organisations',
     match: '/organisations',
     label: 'Organisations',
     module:'organisations',
-    active:({modules}:{modules:RsdModule[]})=>modules.includes('organisations')
+    active:({modules}:{modules:RsdModuleName[]})=>modules.includes('organisations')
   },
-  {
+  communities:{
     path: '/communities',
     match: '/communities',
     label: 'Communities',
     module:'communities',
-    active:({modules}:{modules:RsdModule[]})=>modules.includes('software') && modules.includes('communities')
+    active:({modules}:{modules:RsdModuleName[]})=>modules.includes('software') && modules.includes('communities')
   },
-  {
+  persons:{
     path: '/persons',
     match: '/persons',
     label: 'Persons',
     module:'persons',
-    active:({modules}:{modules:RsdModule[]})=>modules.includes('persons')
+    active:({modules}:{modules:RsdModuleName[]})=>modules.includes('persons')
   },
-  {
+  news:{
     path: '/news',
     match: '/news',
     label: 'News',
     module:'news',
-    active:({modules}:{modules:RsdModule[]})=>modules.includes('news')
+    active:({modules}:{modules:RsdModuleName[]})=>modules.includes('news')
   }
-]
+}
 
 // ListItemButton styles for menus used on the edit pages
 export const editMenuItemButtonSx={

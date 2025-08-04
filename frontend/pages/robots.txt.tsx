@@ -6,8 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {GetServerSidePropsContext} from 'next'
-import {getRsdModules} from '~/config/getSettingsServerSide'
-import {RsdModule} from '~/config/rsdSettingsReducer'
+import {getActiveModuleNames} from '~/config/getSettingsServerSide'
+import {RsdModuleName} from '~/config/rsdSettingsReducer'
 import {getDomain} from '~/utils/getDomain'
 
 export default function RobotsTxt() {
@@ -15,7 +15,7 @@ export default function RobotsTxt() {
 }
 
 
-async function generateRobotsFile(domain:string, modules: RsdModule[]) {
+async function generateRobotsFile(domain:string, modules: RsdModuleName[]) {
   // base body
   let robots = `User-agent: *
 
@@ -69,9 +69,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   // console.log('getServerSideProps...req.headers...', req)
   // extract domain info from request headers
   const domain = getDomain(req)
-  const modules = await getRsdModules()
+  const activeModules = await getActiveModuleNames()
   // We generate the XML sitemap with the posts data
-  const content = await generateRobotsFile(domain,modules)
+  const content = await generateRobotsFile(domain,activeModules)
 
   res.setHeader('Content-Type', 'text/plain; charset=UTF-8')
   res.setHeader('x-generator', 'custom-next-script')

@@ -9,7 +9,7 @@ import {GetServerSidePropsContext} from 'next'
 
 import {getDomain} from '~/utils/getDomain'
 import {getPublicProfileSitemap} from '~/components/seo/getPersonsSitemap'
-import {getRsdModules} from '~/config/getSettingsServerSide'
+import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 
 export default function RobotsTxt() {
   // getServerSideProps will create response
@@ -24,7 +24,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   // generate the XML sitemap for software
   const [content, modules]= await Promise.all([
     getPublicProfileSitemap(domain),
-    getRsdModules()
+    getActiveModuleNames()
   ])
 
   // return 404 if module is not defined

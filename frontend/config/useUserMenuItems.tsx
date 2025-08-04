@@ -13,14 +13,14 @@ import {usePluginSlots} from './RsdPluginContext'
 
 export default function useUserMenuItems(){
   const {user} = useSession()
-  const {host} = useRsdSettings()
+  const {activeModules} = useRsdSettings()
   // get user menu plugins
   const pluginSlots = usePluginSlots('userMenu')
   // construct menu items
   const items: MenuItemType[] = []
 
   userMenuItems.forEach( (item) => {
-    if (item.active?.({role: user?.role, modules: host.modules})){
+    if (item.active?.({role: user?.role, modules:activeModules})){
       items.push(item)
     } else if (item.type == 'pluginSlot') {
       // add plugins to user menu
