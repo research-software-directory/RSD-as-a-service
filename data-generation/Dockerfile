@@ -12,4 +12,4 @@ COPY ./img /usr/app/img
 COPY ./images.js /usr/app
 COPY ./real-data.js /usr/app
 COPY ./main.js /usr/app
-CMD npx wait-on --timeout 15s $POSTGREST_URL && node main.js
+CMD node main.js

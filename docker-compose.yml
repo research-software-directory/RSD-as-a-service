@@ -48,12 +48,21 @@ services:
       - 3500
     environment:
       # it needs to be here to use values from .env file
+      - PGRST_ADMIN_SERVER_PORT
       - PGRST_DB_PRE_REQUEST=public.pre_request_hook
       - PGRST_DB_URI=postgres://rsd_authenticator:${POSTGRES_AUTHENTICATOR_PASSWORD}@${POSTGRES_DB_HOST}:${POSTGRES_DB_HOST_PORT}/${POSTGRES_DB}
       - PGRST_DB_ANON_ROLE
       - PGRST_DB_SCHEMA
       - PGRST_SERVER_PORT
       - PGRST_JWT_SECRET
+# PostgREST image only has the binary, no other tools like curl or bash, hopefully https://github.com/PostgREST/postgrest/issues/4239 will be added soon
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "--http://backend:${PGRST_ADMIN_SERVER_PORT:?PGRST_ADMIN_SERVER_PORT must be set in your .env?}", "|| exit 1" ]
+      interval: 2s
+      retries: 2
+      timeout: 5s
+      start_period: 30s
+      start_interval: 2s
     depends_on:
       - database
     networks:
@@ -324,7 +333,8 @@ services:
       - PGRST_JWT_SECRET
       - POSTGREST_URL
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - net
     deploy:
