@@ -15,7 +15,7 @@ import Avatar from '@mui/material/Avatar'
 import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
 
-import {useAuth} from '~/auth/index'
+import {useSession} from '~/auth/AuthProvider'
 import {MenuItemType} from '~/config/menuItems'
 import useUserMenuItems from '~/config/useUserMenuItems'
 import {useUserSettings} from '~/config/UserSettingsContext'
@@ -25,7 +25,7 @@ import useDisableScrollLock from '~/utils/useDisableScrollLock'
 import CaretIcon from '~/components/icons/caret.svg'
 
 export default function UserMenu() {
-  const {session} = useAuth()
+  const {user} = useSession()
   const {avatar_id} = useUserSettings()
   const disable = useDisableScrollLock()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -112,7 +112,7 @@ export default function UserMenu() {
         }}
       >
         <Avatar
-          alt={session?.user?.name ?? ''}
+          alt={user?.name ?? ''}
           src={avatarUrl ?? ''}
           sx={{
             width: '3rem',
@@ -120,7 +120,7 @@ export default function UserMenu() {
             fontSize: '1rem'
           }}
         >
-          {getDisplayInitials(splitName(session?.user?.name ?? ''))}
+          {getDisplayInitials(splitName(user?.name ?? ''))}
         </Avatar>
         <CaretIcon className="text-secondary-content ml-2"/>
       </IconButton>

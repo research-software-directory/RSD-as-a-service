@@ -6,7 +6,7 @@
 import {useFormContext} from 'react-hook-form'
 import {useRouter} from 'next/router'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
 import {ControlledTextFieldOptions} from '~/components/form/ControlledTextField'
 import useSnackbar from '~/components/snackbar/useSnackbar'

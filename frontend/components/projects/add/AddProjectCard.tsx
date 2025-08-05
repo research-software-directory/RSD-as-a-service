@@ -3,20 +3,22 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {useEffect, useState} from 'react'
-import {useRouter} from 'next/router'
+import {useRouter} from 'next/navigation'
 import Button from '@mui/material/Button'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 
 import {useForm} from 'react-hook-form'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {NewProject} from '~/types/Project'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {useDebounce} from '~/utils/useDebounce'
@@ -24,7 +26,6 @@ import {addProject, validProjectItem} from '~/utils/editProject'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import SlugTextField from '~/components/form/SlugTextField'
-import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
 import {addConfig as config} from './addProjectConfig'
 
 const initialState = {
@@ -200,69 +201,67 @@ export default function AddProjectCard() {
   }
 
   return (
-    <ContentInTheMiddle>
-      <form
-        id={formId}
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full md:w-[42rem]"
-      >
-        <section className="min-h-[6rem]">
-          <h1 className="text-primary text-2xl mb-4">{config.title}</h1>
-          {renderDialogText()}
-        </section>
-        <section className="py-8">
-          <TextFieldWithCounter
-            options={{
-              autofocus:true,
-              error: errors.project_title?.message !== undefined,
-              label: config.project_title.label,
-              helperTextMessage: errors?.project_title?.message ?? config.project_title.help,
-              helperTextCnt: `${project_title?.length ?? 0}/${config?.project_title?.validation?.maxLength?.value ?? 0}`,
-              variant:'outlined'
-            }}
-            register={register('project_title', {
-              ...config.project_title.validation
-            })}
-          />
-          <div className="py-4"></div>
-          <TextFieldWithCounter
-            options={{
-              multiline:true,
-              rows:3,
-              error: errors?.project_subtitle?.message !== undefined,
-              label: config.project_subtitle.label,
-              helperTextMessage: errors?.project_subtitle?.message ?? config.project_subtitle.help,
-              helperTextCnt: `${project_subtitle?.length ?? 0}/${config.project_subtitle?.validation?.maxLength?.value ?? 0}`,
-              variant:'outlined'
-            }}
-            register={register('project_subtitle', config.project_subtitle.validation)}
-          />
-          <div className="py-4"></div>
-          <SlugTextField
-            baseUrl={baseUrl}
-            loading={validating}
-            options={{
-              label: config.slug.label,
-              error: errors.slug?.message !== undefined,
-              helperText: errors?.slug?.message ?? config.slug.help
-            }}
-            register={register('slug', config.slug.validation)}
-          />
-        </section>
-        <section className='flex justify-end'>
-          <Button
-            onClick={handleCancel}
-            color="secondary"
-            sx={{marginRight:'2rem'}}
-          >
+    <form
+      id={formId}
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full md:w-[42rem] mx-auto"
+    >
+      <section className="min-h-[6rem]">
+        <h1 className="text-primary text-2xl mb-4">{config.title}</h1>
+        {renderDialogText()}
+      </section>
+      <section className="py-8">
+        <TextFieldWithCounter
+          options={{
+            autofocus:true,
+            error: errors.project_title?.message !== undefined,
+            label: config.project_title.label,
+            helperTextMessage: errors?.project_title?.message ?? config.project_title.help,
+            helperTextCnt: `${project_title?.length ?? 0}/${config?.project_title?.validation?.maxLength?.value ?? 0}`,
+            variant:'outlined'
+          }}
+          register={register('project_title', {
+            ...config.project_title.validation
+          })}
+        />
+        <div className="py-4"></div>
+        <TextFieldWithCounter
+          options={{
+            multiline:true,
+            rows:3,
+            error: errors?.project_subtitle?.message !== undefined,
+            label: config.project_subtitle.label,
+            helperTextMessage: errors?.project_subtitle?.message ?? config.project_subtitle.help,
+            helperTextCnt: `${project_subtitle?.length ?? 0}/${config.project_subtitle?.validation?.maxLength?.value ?? 0}`,
+            variant:'outlined'
+          }}
+          register={register('project_subtitle', config.project_subtitle.validation)}
+        />
+        <div className="py-4"></div>
+        <SlugTextField
+          baseUrl={baseUrl}
+          loading={validating}
+          options={{
+            label: config.slug.label,
+            error: errors.slug?.message !== undefined,
+            helperText: errors?.slug?.message ?? config.slug.help
+          }}
+          register={register('slug', config.slug.validation)}
+        />
+      </section>
+      <section className='flex justify-end'>
+        <Button
+          onClick={handleCancel}
+          color="secondary"
+          sx={{marginRight:'2rem'}}
+        >
             Cancel
-          </Button>
-          <SubmitButtonWithListener
-            disabled={isSaveDisabled()}
-            formId={formId}
-          />
-        </section>
-      </form>
-    </ContentInTheMiddle>
+        </Button>
+        <SubmitButtonWithListener
+          disabled={isSaveDisabled()}
+          formId={formId}
+        />
+      </section>
+    </form>
   )
 }

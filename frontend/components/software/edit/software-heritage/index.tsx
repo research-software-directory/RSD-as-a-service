@@ -10,7 +10,7 @@ import {useState} from 'react'
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'

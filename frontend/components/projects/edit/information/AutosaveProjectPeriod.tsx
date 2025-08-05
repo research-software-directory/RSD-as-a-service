@@ -8,7 +8,7 @@
 import {useCallback, useEffect} from 'react'
 import {useFormContext} from 'react-hook-form'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {EditProject} from '~/types/Project'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {projectInformation as config} from './config'

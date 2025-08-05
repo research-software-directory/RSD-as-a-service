@@ -5,7 +5,7 @@
 
 import {useEffect, useState} from 'react'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import logger from '~/utils/logger'
 import {decodeJsonParam} from '~/utils/extractQueryParam'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'

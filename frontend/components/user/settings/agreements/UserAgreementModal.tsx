@@ -9,8 +9,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useEffect, useState} from 'react'
-import {useRouter} from 'next/router'
+import {useRouter} from 'next/navigation'
 import Link from 'next/link'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -22,7 +23,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import InfoIcon from '@mui/icons-material/Info'
 
 import {useForm} from 'react-hook-form'
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useRsdSettings from '~/config/useRsdSettings'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ControlledSwitch from '~/components/form/ControlledSwitch'

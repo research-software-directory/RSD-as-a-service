@@ -1,20 +1,20 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {render, screen} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
-import {useAuth,Session} from './index'
+import {Session} from './index'
 
 import RsdAdminContent from './RsdAdminContent'
+import {useAuth} from './AuthProvider'
 
 const adminText = 'RSD ADMIN component'
 
 function ProtectedComponent() {
-  // const {useAuth} = auth
   const {session} = useAuth()
   return (
     <RsdAdminContent>
