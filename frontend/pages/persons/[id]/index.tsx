@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {GetServerSidePropsContext} from 'next/types'
-import {getRsdModules} from '~/config/getSettingsServerSide'
+import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 
 export default function Profile() {
   return (
@@ -20,7 +20,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const id = params?.id as string
 
     // determine active modules
-    const modules = await getRsdModules()
+    const modules = await getActiveModuleNames()
     // default tab is software
     let tab = ''
     if (modules?.includes('software')){

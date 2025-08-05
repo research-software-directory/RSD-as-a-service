@@ -8,7 +8,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import ProtectedContent from '~/auth/ProtectedContent'
-import {getRsdModules} from '~/config/getSettingsServerSide'
+import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import PageContainer from '~/components/layout/PageContainer'
@@ -38,7 +38,7 @@ export default function AddProject() {
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps() {
   // check module is active
-  const modules = await getRsdModules()
+  const modules = await getActiveModuleNames()
 
   // do not show software overview if module is not enabled
   if (modules?.includes('projects')===false){

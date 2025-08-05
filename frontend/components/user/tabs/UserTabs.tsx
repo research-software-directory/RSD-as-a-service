@@ -33,7 +33,7 @@ export type UserTabsProps=Readonly<{
 
 export default function UserTabs({tab,counts}:UserTabsProps) {
   const select_tab = useSelectedTab(tab)
-  const {host} = useRsdSettings()
+  const {activeModules} = useRsdSettings()
   const {user} = useSession()
   const {profile} = useUserContext()
   // rsd_admin and your own profile
@@ -54,7 +54,7 @@ export default function UserTabs({tab,counts}:UserTabsProps) {
       {tabItems.map(key => {
         const item = userTabItems[key]
         if (item.isVisible({
-          modules: host.modules,
+          modules: activeModules,
           isMaintainer
         })) {
           return <TabAsLink

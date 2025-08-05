@@ -16,7 +16,7 @@ type PersonMetricsProps = {
 }
 
 export default function PersonMetrics({software_cnt,project_cnt}:PersonMetricsProps) {
-  const {host} = useRsdSettings()
+  const {activeModules} = useRsdSettings()
 
   function softwareMessage(){
     if (software_cnt && software_cnt === 1) {
@@ -35,7 +35,7 @@ export default function PersonMetrics({software_cnt,project_cnt}:PersonMetricsPr
   return (
     <>
       {
-        host.modules?.includes('software') ?
+        activeModules?.includes('software') ?
           <Tooltip title={softwareMessage()} placement="top">
             <div className="flex gap-2 items-center text-base-content-secondary">
               <TerminalIcon sx={{width:20}} />
@@ -45,7 +45,7 @@ export default function PersonMetrics({software_cnt,project_cnt}:PersonMetricsPr
           :null
       }
       {
-        host.modules?.includes('projects') ?
+        activeModules?.includes('projects') ?
           <Tooltip title={projectMessage()} placement="top">
             <div className="flex gap-2 items-center text-base-content-secondary">
               <ListAltIcon sx={{width:20}} />

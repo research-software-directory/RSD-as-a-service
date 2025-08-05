@@ -25,7 +25,7 @@ import {editSoftwareMenuItems} from './editSoftwareMenuItems'
 
 export default function EditSoftwareNav({slug,pageId}:{slug:string,pageId:string}) {
   const router = useRouter()
-  const {host} = useRsdSettings()
+  const {activeModules} = useRsdSettings()
   // get edit software plugins
   const pluginSlots = usePluginSlots('editSoftwareNav')
 
@@ -35,7 +35,7 @@ export default function EditSoftwareNav({slug,pageId}:{slug:string,pageId:string
         width:['100%','100%','15rem']
       }}>
         {editSoftwareMenuItems.map(item => {
-          if (item.active({modules:host.modules})===true){
+          if (item.active({modules:activeModules})===true){
             return (
               <ListItemButton
                 data-testid="edit-software-nav-item"

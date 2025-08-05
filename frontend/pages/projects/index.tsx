@@ -12,7 +12,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {app} from '~/config/app'
 import {useUserSettings} from '~/config/UserSettingsContext'
-import {getRsdModules} from '~/config/getSettingsServerSide'
+import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import {ProjectListItem} from '~/types/Project'
 import {getUserSettings} from '~/utils/userSettings'
 import {getProjectList} from '~/utils/getProjects'
@@ -203,7 +203,7 @@ export default function ProjectsOverviewPage({
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   let offset=0
-  const modules = await getRsdModules()
+  const modules = await getActiveModuleNames()
   // show 404 page if module is not enabled
   if (modules?.includes('projects')===false){
     return {

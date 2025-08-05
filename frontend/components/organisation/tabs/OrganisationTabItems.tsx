@@ -15,12 +15,12 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import StyleOutlinedIcon from '@mui/icons-material/StyleOutlined'
 
 import {OrganisationForOverview} from '~/types/Organisation'
-import {RsdModule} from '~/config/rsdSettingsReducer'
+import {RsdModuleName} from '~/config/rsdSettingsReducer'
 
 
 type IsVisibleProps = Partial<OrganisationForOverview> & {
   isMaintainer: boolean
-  modules: RsdModule[]
+  modules: RsdModuleName[]
 }
 
 export type OrganisationTabItemProps = {
@@ -45,19 +45,19 @@ export const organisationTabItems:OrganisationTabProps = {
     id:'software',
     label:({software_cnt})=>`Software (${software_cnt ?? 0})`,
     icon: <TerminalIcon />,
-    isVisible: ({modules}) => modules?.includes('software')
+    isVisible: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('software')
   },
   projects:{
     id:'projects',
     label: ({project_cnt})=>`Projects (${project_cnt ?? 0})`,
     icon: <ListAltIcon />,
-    isVisible: ({modules}) => modules?.includes('projects')
+    isVisible: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('projects')
   },
   releases: {
     id:'releases',
     label:({release_cnt})=>`Releases (${release_cnt ?? 0})`,
     icon: <StyleOutlinedIcon />,
-    isVisible: ({modules}) => modules?.includes('software')
+    isVisible: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('software')
   },
   units:{
     id:'units',

@@ -8,7 +8,7 @@
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
-import {RsdModule} from '~/config/rsdSettingsReducer'
+import {RsdModuleName} from '~/config/rsdSettingsReducer'
 
 // export type GlobalSearchResultsSource = 'software' | 'projects' | 'organisations' | 'communities' | 'persons'
 
@@ -17,7 +17,7 @@ export type GlobalSearchResults = {
   domain: string | null
   slug: string,
   name: string,
-  source: RsdModule,
+  source: RsdModuleName,
   is_published?: boolean,
   search_text?: string
 }

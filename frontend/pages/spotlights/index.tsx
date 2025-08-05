@@ -20,7 +20,7 @@ import {getSoftwareList} from '~/utils/getSoftware'
 import {getUserSettings} from '~/utils/userSettings'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import useRsdSettings from '~/config/useRsdSettings'
-import {getRsdModules} from '~/config/getSettingsServerSide'
+import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import MainContent from '~/components/layout/MainContent'
 import PageBackground from '~/components/layout/PageBackground'
@@ -211,7 +211,7 @@ export default function SpotlightsOverviewPage({
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   let orderBy='slug.asc', offset=0
-  const modules = await getRsdModules()
+  const modules = await getActiveModuleNames()
   // show 404 page if software module is not enabled
   if (modules?.includes('software')===false){
     return {

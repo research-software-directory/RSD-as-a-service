@@ -4,15 +4,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {GetServerSidePropsContext} from 'next'
+
 import {app} from '~/config/app'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {ProjectListItem} from '~/types/Project'
 import {getUserSettings} from '~/utils/userSettings'
 import {isOrcid} from '~/utils/getORCID'
+import {getActiveModuleNames} from '~/config/getSettingsServerSide'
+import {RsdModuleName} from '~/config/rsdSettingsReducer'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import BackgroundAndLayout from '~/components/layout/BackgroundAndLayout'
-
 import {getProfileProjects,getProfileSoftware} from '~/components/profile/apiProfile'
 import ProfileMetadata from '~/components/profile/metadata'
 import ProfileTabs from '~/components/profile/tabs'
@@ -20,8 +22,6 @@ import ProfileTabContent from '~/components/profile/tabs/ProfileTabContent'
 import {ProfileContextProvider} from '~/components/profile/context/ProfileContext'
 import {ProfileTabKey} from '~/components/profile/tabs/ProfileTabItems'
 import {getPublicUserProfile, PublicUserProfile} from '~/components/user/settings/profile/apiUserProfile'
-import {getRsdModules} from '~/config/getSettingsServerSide'
-import {RsdModule} from '~/config/rsdSettingsReducer'
 
 type PublicProfilePageProps=Readonly<{
   orcid: string
@@ -101,9 +101,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     } else {
       account = params?.id.toString()
     }
-    const [publicProfile, modules] = await Promise.all([
+    const [publicProfile, activeModules] = await Promise.all([
       getPublicUserProfile({orcid,account}),
-      getRsdModules()
+      getActiveModuleNames()
     ])
 
     // 404 if profile is null (not found in public_user_profile)
@@ -124,14 +124,14 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     // select tab
     let tab = ''
     if (params?.tab){
-      if (modules.includes(params.tab.toString() as RsdModule)===true){
+      if (activeModules.includes(params.tab.toString() as RsdModuleName)===true){
         tab = params?.tab.toString()
       }
     }else{
       // default tab based no enabled modules
-      if (modules.includes('software')===true) {
+      if (activeModules.includes('software')===true) {
         tab='software'
-      } else if (modules.includes('projects')===true){
+      } else if (activeModules.includes('projects')===true){
         tab='projects'
       }
     }

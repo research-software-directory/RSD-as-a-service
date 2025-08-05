@@ -19,7 +19,7 @@ import {EditProjectPageId} from './EditProjectPageContent'
 import {editProjectMenuItems} from './editProjectMenuItems'
 
 export default function EditProjectNav({slug,pageId}:Readonly<{slug:string,pageId:EditProjectPageId}>) {
-  const {host} = useRsdSettings()
+  const {activeModules} = useRsdSettings()
   return (
     <nav>
       <List sx={{
@@ -27,7 +27,7 @@ export default function EditProjectNav({slug,pageId}:Readonly<{slug:string,pageI
       }}>
         {editProjectMenuItems.map((item, pos) => {
           // show only "active" mention options
-          if (item.active({modules: host.modules})===true){
+          if (item.active({modules: activeModules})===true){
             return (
               <ListItemButton
                 data-testid="edit-project-nav-item"

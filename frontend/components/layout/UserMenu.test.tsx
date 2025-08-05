@@ -38,5 +38,6 @@ it('show userMenu options based on modules defined',async()=>{
   // select all menu options
   const menuOptions = screen.queryAllByTestId('user-menu-option')
   // based on default user session the menu should have 5 items
-  expect(menuOptions.length).toEqual(defaultRsdSettings?.host?.modules?.length)
+  const expectOptions = Object.keys(defaultRsdSettings?.modules)
+  expect(menuOptions.length).toEqual(expectOptions.length)
 })

@@ -11,6 +11,7 @@ import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import NewspaperIcon from '@mui/icons-material/Newspaper'
 import useRsdSettings from '~/config/useRsdSettings'
+import {RsdModuleName} from '~/config/rsdSettingsReducer'
 
 type AddItemMenuItem={
   type: 'link' | 'divider'
@@ -26,13 +27,13 @@ const addItemMenu:AddItemMenuItem[]=[{
   label: 'New Software',
   icon: <TerminalIcon/>,
   path: '/add/software',
-  active: ({modules})=>modules.includes('software')
+  active: ({modules}:{modules:RsdModuleName[]})=>modules.includes('software')
 },{
   type: 'link',
   label: 'New Project',
   icon: <ListAltIcon/>,
   path: '/add/project',
-  active: ({modules})=>modules.includes('projects')
+  active: ({modules}:{modules:RsdModuleName[]})=>modules.includes('projects')
 },{
   type: 'link',
   label: 'Add News',
@@ -46,10 +47,10 @@ const addItemMenu:AddItemMenuItem[]=[{
 
 function useAddItemMenu(){
   const {user} = useSession()
-  const {host} = useRsdSettings()
+  const {activeModules} = useRsdSettings()
 
   const menuItems = addItemMenu.filter(item=>{
-    return item.active({role: user?.role, modules: host.modules}) ?? false
+    return item.active({role: user?.role, modules:activeModules}) ?? false
   })
 
   // console.group('useAddItemMenu')

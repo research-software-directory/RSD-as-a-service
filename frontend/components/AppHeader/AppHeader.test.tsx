@@ -45,7 +45,8 @@ it('renders AppHeader with links to defined modules and logo link', () => {
   // has searchbox
   const links = screen.getAllByRole('link')
   // menu items defined in modules + logo link + feedback link
-  expect(links).toHaveLength(defaultSettings.host.modules.length + 2)
+  const moduleLinks = Object.keys(defaultSettings.modules)
+  expect(links).toHaveLength(moduleLinks.length + 2)
   // screen.debug()
 })
 

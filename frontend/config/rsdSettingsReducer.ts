@@ -12,15 +12,26 @@ import logger from '~/utils/logger'
 import {RsdTheme} from '~/styles/rsdMuiTheme'
 import defaultSettings from '~/config/defaultSettings.json'
 
+// export type RsdModule= 'software'| 'projects' | 'organisations' | 'communities' | 'news' | 'user' | 'persons'
+export type RsdModuleName= 'software'| 'projects' | 'organisations' | 'communities' | 'news' | 'persons'
+export type RsdModule={
+  active: boolean,
+  name: RsdModuleName,
+  // if omitted/undefined or null menu item will not be shown
+  menuItem?: string | null
+}
+export type RsdModules={
+  [K in RsdModuleName]:RsdModule
+}
+
 export type RsdSettingsState = {
   host: RsdHost,
+  modules: RsdModules,
   theme: RsdTheme,
   links?: CustomLink[]
   pages?: RsdLink[]
   announcement?: string | null
 }
-
-export type RsdModule= 'software'| 'projects' | 'organisations' | 'communities' | 'news' | 'user' | 'persons'
 
 export type RsdHost = {
   name: string,
@@ -42,7 +53,6 @@ export type RsdHost = {
     limit: number,
     description?: string | null
   },
-  modules?: RsdModule[],
   plugins?: string[],
   orcid_search?: boolean
 }
@@ -74,7 +84,7 @@ export type RsdSettingsAction = {
 
 export type RsdSettingsDispatch = (action: RsdSettingsAction)=>void
 
-export const defaultRsdSettings = defaultSettings as RsdSettingsState
+export const defaultRsdSettings = defaultSettings as unknown as RsdSettingsState
 
 export function rsdSettingsReducer(state: RsdSettingsState, action: RsdSettingsAction) {
   // console.group('rsdSettingsReducer')
@@ -100,5 +110,18 @@ export function rsdSettingsReducer(state: RsdSettingsState, action: RsdSettingsA
     default:
       logger(`rsdSettingsReducer UNKNOWN ACTION TYPE ${action.type}`, 'warn')
       return state
+  }
+}
+
+export function activeModulesKeys(modules:RsdModules){
+  try{
+    // filter out active modules (keys)
+    const keys = Object.keys(modules) as RsdModuleName []
+    const activeModules = keys
+      .filter(key=>modules[key].active)
+    return activeModules
+  }catch(e:any){
+    logger(`activeModulesKeys error: ${e.message}`, 'warn')
+    return []
   }
 }

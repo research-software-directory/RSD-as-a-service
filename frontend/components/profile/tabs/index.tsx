@@ -23,13 +23,13 @@ const tabItems = Object.keys(profileTabItems) as ProfileTabKey[]
 
 export default function ProfileTabs({tab_id, isMaintainer}:ProfileTabsProps) {
   const router = useRouter()
-  const {host} = useRsdSettings()
+  const {activeModules} = useRsdSettings()
   const {software_cnt,project_cnt} = useProfileContext()
 
   // if only one module active we do not show tabs
   if (
-    host?.modules?.includes('software')===false ||
-    host?.modules?.includes('projects')===false
+    activeModules.includes('software')===false ||
+    activeModules.includes('projects')===false
   ){
     return (
       <div className="my-2"></div>
@@ -50,7 +50,7 @@ export default function ProfileTabs({tab_id, isMaintainer}:ProfileTabsProps) {
       >
         {tabItems.map(key => {
           const item = profileTabItems[key]
-          if (item.isVisible({isMaintainer,modules:host?.modules ?? []})===true){
+          if (item.isVisible({isMaintainer,modules:activeModules})===true){
             return (
               <TabAsLink
                 key={key}

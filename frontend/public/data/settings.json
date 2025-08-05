@@ -19,8 +19,39 @@
       "limit": 5,
       "description": null
     },
-    "orcid_search":true,
-    "modules":["software","projects","organisations","communities","news"]
+    "orcid_search":true
+  },
+  "modules":{
+    "software":{
+      "active":true,
+      "name":"software",
+      "menuItem":"Software"
+    },
+    "projects":{
+      "active":true,
+      "name":"projects",
+      "menuItem":"Projects"
+    },
+    "organisations":{
+      "active":true,
+      "name":"organisations",
+      "menuItem":"Organisations"
+    },
+    "communities": {
+      "active":true,
+      "name":"communities",
+      "menuItem":"Communities"
+    },
+    "persons": {
+      "active":false,
+      "name":"persons",
+      "menuItem":"Persons"
+    },
+    "news": {
+      "active":true,
+      "name":"news",
+      "menuItem":"News"
+    }
   },
   "links": [
     {

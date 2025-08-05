@@ -146,7 +146,7 @@ describe('pages/projects/[slug]/edit/index.tsx', () => {
   it('does not show related-software when no software module in settings', async () => {
     mockProps.page='information'
     // remove software module from settings
-    mockSettings.host.modules = ['projects','organisations','news']
+    mockSettings.modules.software.active=false
     // return isMaintainer
     mockIsMaintainer.mockResolvedValue(true)
 

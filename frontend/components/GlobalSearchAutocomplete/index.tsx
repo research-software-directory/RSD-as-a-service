@@ -33,7 +33,7 @@ type Props = {
 export default function GlobalSearchAutocomplete(props: Props) {
   const {session} = useAuth()
   const router = useRouter()
-  const {host} = useRsdSettings()
+  const {activeModules} = useRsdSettings()
   const {showErrorMessage} = useSnackbar()
   const [isOpen, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
@@ -99,7 +99,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
     // Fetch api
     let data: GlobalSearchResults[]
     try {
-      data = await getGlobalSearch(search, session.token, host.modules) || []
+      data = await getGlobalSearch(search, session.token, activeModules) || []
     } catch (e: any) {
       logger(e?.message, 'error')
       showErrorMessage('Something went wrong getting the search results')
@@ -186,21 +186,25 @@ export default function GlobalSearchAutocomplete(props: Props) {
   }
 
   // do not show searchbar if no modules defined
-  if (host?.modules?.length === 0) return null
+  if (activeModules?.length === 0) return null
 
-  if (host.modules?.includes('software')) {
+  if (activeModules?.includes('software')) {
     defaultValues.push({name: 'Go to Software page', slug: '', source: 'software', domain: null, rsd_host: null})
   }
-  if (host.modules?.includes('projects')) {
+  if (activeModules?.includes('projects')) {
     defaultValues.push({name: 'Go to Projects page', slug: '', source: 'projects', domain: null, rsd_host: null})
   }
-  if (host.modules?.includes('organisations')) {
+  if (activeModules?.includes('organisations')) {
     defaultValues.push({name: 'Go to Organisations page', slug: '', source: 'organisations', domain: null, rsd_host: null})
   }
-  if (host.modules?.includes('communities')) {
+  if (activeModules?.includes('communities')) {
     defaultValues.push({name: 'Go to Communities page', slug: '', source: 'communities', domain: null, rsd_host: null})
   }
-  if (host.modules?.includes('persons')) {
+  // TODO! Add news to global search?
+  // if (activeModules?.includes('news')) {
+  //   defaultValues.push({name: 'Go to News page', slug: '', source: 'news', domain: null, rsd_host: null})
+  // }
+  if (activeModules?.includes('persons')) {
     defaultValues.push({name: 'Go to Persons page', slug: '', source: 'persons', domain: null, rsd_host: null})
   }
 

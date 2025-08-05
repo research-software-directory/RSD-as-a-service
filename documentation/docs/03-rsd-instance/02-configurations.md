@@ -159,7 +159,6 @@ The `host` section of settings.json defines following settings. **Most of them s
 - `privacy_statement_url`: the link to your privacy statement page. Used on the user profile page to let user accept the privacy statement.
 - `software_highlights`: the definitions for the software highlights section on the top of the software overview page. You can specify title and the number of items loaded in the carousel. The default values are shown below.
 - `orcid_search`: should ORCID api be used when searching for contributors or team members? By default ORCID search api is enabled and the entries from RSD and ORCID are combined in the search result. If you want your users to be able to search only within the existing RSD entries set this value to false.
-- `modules`: defines RSD "modules" displayed in the main menu in the page header. Possible values are: software, projects, organisations, communities and persons.
 
 ```json
 ...
@@ -183,18 +182,67 @@ The `host` section of settings.json defines following settings. **Most of them s
       "limit": 5,
       "description": null
     },
-    "orcid_search": true,
-    "modules":["software","projects","organisations","communities","persons"]
+    "orcid_search": true
   }
 ...
 ```
 
-:::tip host modules
+## RSD modules
 
-- Note that the communities module is included in the default settings definitions.
-- Note that disabled module pages still can be accessed when "proper" url is used.
-- You can enable it by adding "communities" into the modules array and the menu option will appear.
-  :::
+RSD consist of following modules: software, projects, organisations, communities, persons and news. Each of the modules can be enabled and the main menu item label can be adapted. By default following modules are enabled: software, projects, organisations, communities and news (persons module is disabled/inactive by default). The keys of the modules property correspond to module names: software, projects, organisations, communities, persons and news.
+
+- To disable an module set `active` flag to false (see module persons in the example below).
+- To change menu item entry label edit `menuItem` (see module project in the example below).
+- To hide main menu item while module is enabled set `menuItem` to `null` (see news module in the example below).
+
+:::info
+The state/values of the module properties is cached in production in order to reduce the number of requests.
+After you changed properties in the modules you should restart RSD (docker compose down && docker compose up).
+:::
+
+```json
+...
+"modules":{
+  "software":{
+    "active":true,
+    "name":"software",
+    "menuItem":"Software"
+  },
+  "projects":{
+    "active":true,
+    "name":"projects",
+    "menuItem":"Custom Projects Menu Item"
+  },
+  "organisations":{
+    "active":true,
+    "name":"organisations",
+    "menuItem":"Organisations"
+  },
+  "communities": {
+    "active":true,
+    "name":"communities",
+    "menuItem":"Communities"
+  },
+  "persons": {
+    "active":false,
+    "name":"persons",
+    "menuItem":"Persons"
+  },
+  "news": {
+    "active":true,
+    "name":"news",
+    "menuItem":null
+  }
+},
+...
+```
+
+:::warning modules
+
+- The communities module is included in the default settings definitions. If you disable software module the communities menu option will be omitted because communities module is dependent on software module.
+- The pages of inactive/disabled module cannot be accessed, 404 page will be shown.
+- Note that module
+:::
 
 ## UI theming
 
@@ -251,7 +299,7 @@ RSD uses default settings.json if alternative is not mounted into `/app/public/d
       "url": "rsd@esciencecenter.nl",
       "issues_page_url": "https://github.com/research-software-directory/RSD-as-a-service/issues"
     },
-    "login_info_url": "https://research-software-directory.github.io/documentation/getting-access.html",
+    "login_info_url":"https://research-software-directory.github.io/documentation/getting-access.html",
     "terms_of_service_url": "/page/terms-of-service/",
     "privacy_statement_url": "/page/privacy-statement/",
     "software_highlights": {
@@ -259,8 +307,39 @@ RSD uses default settings.json if alternative is not mounted into `/app/public/d
       "limit": 5,
       "description": null
     },
-    "orcid_search": true,
-    "modules": ["software", "projects", "organisations"]
+    "orcid_search":true
+  },
+  "modules":{
+    "software":{
+      "active":false,
+      "name":"software",
+      "menuItem":"Software"
+    },
+    "projects":{
+      "active":true,
+      "name":"projects",
+      "menuItem":"Projects"
+    },
+    "organisations":{
+      "active":true,
+      "name":"organisations",
+      "menuItem":"Organisations"
+    },
+    "communities": {
+      "active":true,
+      "name":"communities",
+      "menuItem":"Communities"
+    },
+    "persons": {
+      "active":false,
+      "name":"persons",
+      "menuItem":"Persons"
+    },
+    "news": {
+      "active":true,
+      "name":"news",
+      "menuItem":"News"
+    }
   },
   "links": [
     {

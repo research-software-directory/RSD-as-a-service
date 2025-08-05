@@ -8,10 +8,11 @@ import ListAltIcon from '@mui/icons-material/ListAlt'
 import BusinessIcon from '@mui/icons-material/Business'
 import Diversity3Icon from '@mui/icons-material/Diversity3'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import CalendarViewMonthIcon from '@mui/icons-material/CalendarViewMonth'
 
-import {RsdModule} from '~/config/rsdSettingsReducer'
+import {RsdModuleName} from '~/config/rsdSettingsReducer'
 
-export default function SearchItemIcon({source}:Readonly<{source:RsdModule}>) {
+export default function SearchItemIcon({source}:Readonly<{source:RsdModuleName}>) {
   switch (source){
     case 'software':
       return <TerminalIcon/>
@@ -21,6 +22,8 @@ export default function SearchItemIcon({source}:Readonly<{source:RsdModule}>) {
       return <BusinessIcon/>
     case 'communities':
       return <Diversity3Icon/>
+    case 'news':
+      return <CalendarViewMonthIcon />
     case 'persons':
       return <AccountCircleIcon/>
     default:

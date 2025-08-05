@@ -12,7 +12,7 @@ import {GetServerSidePropsContext} from 'next/types'
 import Head from 'next/head'
 
 import {app} from '~/config/app'
-import {getRsdModules} from '~/config/getSettingsServerSide'
+import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import ProtectedContent from '~/auth/ProtectedContent'
 import {getSoftwareToEdit} from '~/utils/editSoftware'
 import DefaultLayout from '~/components/layout/DefaultLayout'
@@ -77,7 +77,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   const page = params?.page?.toString() ?? ''
 
   // show 404 page if module is not enabled
-  const modules = await getRsdModules()
+  const modules = await getActiveModuleNames()
   if (modules.includes('software')===false){
     return {
       notFound: true,
