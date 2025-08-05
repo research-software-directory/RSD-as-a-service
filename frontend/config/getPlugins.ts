@@ -1,7 +1,7 @@
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -60,13 +60,26 @@ async function getPlugin({pluginName, token}:{pluginName: string, token?: string
 export default async function getPlugins(
   {plugins,token}: {plugins?: string[], token?: string}
 ) {
-  if (!plugins) {
+  try{
+    if (!plugins) {
+      return []
+    }
+    // create all requests
+    const promises = plugins?.map(pluginName=>getPlugin({pluginName,token}))
+    // execute all requests
+    const pluginSlots = await Promise.all(promises)
+    // flatten arrays into one array
+    const pluginList = pluginSlots.flat()
+
+    // console.group('getPlugins')
+    // console.log('plugins...', plugins)
+    // console.log('pluginSlots...', pluginSlots)
+    // console.log('pluginList...', pluginList)
+    // console.groupEnd()
+
+    return pluginList
+  }catch(e:any){
+    logger(`Failed to load plugins. ${e?.message}`,'warn')
     return []
   }
-  // create all requests
-  const promises = plugins?.map(pluginName=>getPlugin({pluginName,token}))
-  // execute all requests
-  const pluginSlots = await Promise.all(promises)
-  // flatten definitions
-  return pluginSlots.flat()
 }
