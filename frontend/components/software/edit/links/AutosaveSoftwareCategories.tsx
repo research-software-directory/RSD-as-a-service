@@ -7,7 +7,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {Fragment, useMemo, useState} from 'react'
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
 import {addCategoryToSoftware, deleteCategoryToSoftware} from '~/utils/getSoftware'

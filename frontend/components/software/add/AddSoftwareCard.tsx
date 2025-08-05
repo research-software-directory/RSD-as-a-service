@@ -3,25 +3,26 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {useEffect, useState} from 'react'
-import {useRouter} from 'next/router'
+import {useRouter} from 'next/navigation'
 import Button from '@mui/material/Button'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 
 import {useForm} from 'react-hook-form'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {NewSoftwareItem} from '~/types/SoftwareTypes'
 import {useDebounce} from '~/utils/useDebounce'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {addSoftware,validSoftwareItem} from '~/utils/editSoftware'
-import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import SlugTextField from '~/components/form/SlugTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
@@ -209,68 +210,66 @@ export default function AddSoftwareCard() {
   }
 
   return (
-    <ContentInTheMiddle>
-      <form
-        id={formId}
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full md:w-[42rem]">
-        <section className="min-h-[6rem]">
-          <h1 className="text-primary text-2xl mb-4">{config.title}</h1>
-          {renderDialogText()}
-        </section>
-        <section className="py-8">
-          <TextFieldWithCounter
-            options={{
-              autofocus:true,
-              error: errors.brand_name?.message !== undefined,
-              label: config.brand_name.label,
-              helperTextMessage: errors?.brand_name?.message ?? config.brand_name.help,
-              helperTextCnt: `${brand_name?.length || 0}/${config.brand_name.validation.maxLength.value}`,
-              variant:'outlined'
-            }}
-            register={register('brand_name', {
-              ...config.brand_name.validation
-            })}
-          />
-          <div className="py-4"></div>
-          <TextFieldWithCounter
-            options={{
-              multiline: true,
-              rows:5,
-              error: errors?.short_statement?.message !== undefined,
-              label: config.short_statement.label,
-              helperTextMessage: errors?.short_statement?.message ?? config.short_statement.help,
-              helperTextCnt: `${short_statement?.length || 0}/${config.short_statement.validation.maxLength.value}`,
-              variant:'outlined'
-            }}
-            register={register('short_statement', config.short_statement.validation)}
-          />
-          <div className="py-4"></div>
-          <SlugTextField
-            baseUrl={baseUrl}
-            loading={validating}
-            options={{
-              label: config.slug.label,
-              error: errors.slug?.message !== undefined,
-              helperText: errors?.slug?.message ?? config.slug.help
-            }}
-            register={register('slug',config.slug.validation)}
-          />
-        </section>
-        <section className='flex justify-end'>
-          <Button
-            onClick={handleCancel}
-            color="secondary"
-            sx={{marginRight:'2rem'}}
-          >
+    <form
+      id={formId}
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full md:w-[42rem] mx-auto">
+      <section className="min-h-[6rem]">
+        <h1 className="text-primary text-2xl mb-4">{config.title}</h1>
+        {renderDialogText()}
+      </section>
+      <section className="py-8">
+        <TextFieldWithCounter
+          options={{
+            autofocus:true,
+            error: errors.brand_name?.message !== undefined,
+            label: config.brand_name.label,
+            helperTextMessage: errors?.brand_name?.message ?? config.brand_name.help,
+            helperTextCnt: `${brand_name?.length || 0}/${config.brand_name.validation.maxLength.value}`,
+            variant:'outlined'
+          }}
+          register={register('brand_name', {
+            ...config.brand_name.validation
+          })}
+        />
+        <div className="py-4"></div>
+        <TextFieldWithCounter
+          options={{
+            multiline: true,
+            rows:5,
+            error: errors?.short_statement?.message !== undefined,
+            label: config.short_statement.label,
+            helperTextMessage: errors?.short_statement?.message ?? config.short_statement.help,
+            helperTextCnt: `${short_statement?.length || 0}/${config.short_statement.validation.maxLength.value}`,
+            variant:'outlined'
+          }}
+          register={register('short_statement', config.short_statement.validation)}
+        />
+        <div className="py-4"></div>
+        <SlugTextField
+          baseUrl={baseUrl}
+          loading={validating}
+          options={{
+            label: config.slug.label,
+            error: errors.slug?.message !== undefined,
+            helperText: errors?.slug?.message ?? config.slug.help
+          }}
+          register={register('slug',config.slug.validation)}
+        />
+      </section>
+      <section className='flex justify-end'>
+        <Button
+          onClick={handleCancel}
+          color="secondary"
+          sx={{marginRight:'2rem'}}
+        >
             Cancel
-          </Button>
-          <SubmitButtonWithListener
-            formId={formId}
-            disabled={isSaveDisabled()}
-          />
-        </section>
-      </form>
-    </ContentInTheMiddle>
+        </Button>
+        <SubmitButtonWithListener
+          formId={formId}
+          disabled={isSaveDisabled()}
+        />
+      </section>
+    </form>
   )
 }
