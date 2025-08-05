@@ -5,28 +5,19 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import AppHeader from '~/components/AppHeader'
-import AppFooter from '~/components/AppFooter'
+'use client'
+
 import Link from 'next/link'
-
-import LogoHelmholtz from '~/assets/logos/LogoHelmholtz.svg'
-import {OrganisationForOverview} from '~/types/Organisation'
-
-/*! purgecss start ignore */
-// import 'aos/dist/aos.css'
-
 import IconButton from '@mui/material/IconButton'
 import {ChevronLeft, ChevronRight} from '@mui/icons-material'
-import {useAuth} from '~/auth'
-import {getImageUrl} from '~/utils/editImage'
-import useOrganisations from './useOrganisations'
-/*! purgecss end ignore */
 
-// type HomeProps = {
-//   software: number,
-//   projects: number,
-//   organisations: number
-// }
+import {useSession} from '~/auth/AuthProvider'
+import LogoHelmholtz from '~/assets/logos/LogoHelmholtz.svg'
+import {getImageUrl} from '~/utils/editImage'
+import {OrganisationForOverview} from '~/types/Organisation'
+import AppHeader from '~/components/AppHeader'
+import AppFooter from '~/components/AppFooter'
+import useOrganisations from './useOrganisations'
 
 type SpotlightDescription = {
   name: string,
@@ -272,8 +263,8 @@ function moveLeft() {
 }
 
 export default function HelmholtzHome() {
-  const {session}=useAuth()
-  const {organisations} = useOrganisations(session.token)
+  const {token}=useSession()
+  const {organisations} = useOrganisations(token)
 
   // const handleClickOpen = () => {
   //   const loginButton = document.querySelector('.rsd-login-button')

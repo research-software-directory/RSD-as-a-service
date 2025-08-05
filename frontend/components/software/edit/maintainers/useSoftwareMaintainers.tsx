@@ -1,14 +1,14 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState,useEffect} from 'react'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {MaintainerProps, rawMaintainersToMaintainers} from '~/components/maintainers/apiMaintainers'
 import {deleteMaintainerFromSoftware, getMaintainersOfSoftware} from './apiSoftwareMaintainers'

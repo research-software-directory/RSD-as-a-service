@@ -16,39 +16,28 @@ import {fillAutosaveInput, generateId, uploadFile} from './utils'
 export async function createProject({title, desc, slug, page}: CreateSoftwareProps) {
   // get add menu item
   const addMenu = page.getByTestId('add-menu-button')
-  const newProject = page.getByRole('menuitem', {
-    name: 'New Project'
-  })
-  const saveBtn = page.getByRole('button', {
-    name: 'Save'
-  })
-
   // click on add button
   await addMenu.click()
+
   // click new project
-  await Promise.all([
-    page.waitForURL('**/add/project', {
-      waitUntil: 'networkidle'
-    }),
-    newProject.click()
-  ])
+  await page.getByRole('menuitem', {
+    name: 'New Project'
+  }).click()
 
   // accept user agreement if modal present
-  await acceptUserAgreement(page)
+  // ALREADY DONE in globalSetup
+  // await acceptUserAgreement(page)
 
-  // fill in the form
-  await Promise.all([
-    // fill in title
-    page.locator('#Title').fill(title),
-    // wait for response on slug validation
-    page.waitForResponse(RegExp(slug))
-  ])
+  // add title
+  await page.getByRole('textbox', { name: 'Title', exact: true }).fill(title);
+  // wait for call to complete
+  await page.waitForResponse(RegExp(slug))
 
   // add subtitle
-  await page.getByLabel('Subtitle').fill(desc)
+  await page.getByRole('textbox', { name: 'Subtitle' }).fill(desc);
 
   // get slug
-  const inputSlug = await page.getByLabel('The url of this project will be').inputValue()
+  const inputSlug = await page.getByRole('textbox', { name: 'The url of this project will be' }).inputValue();
   const url = RegExp(`${inputSlug}/edit/information`)
 
   // click save button
@@ -56,7 +45,7 @@ export async function createProject({title, desc, slug, page}: CreateSoftwarePro
     page.waitForURL(url, {
       waitUntil: 'networkidle'
     }),
-    saveBtn.click()
+    page.getByRole('button', { name: 'Save' }).click()
   ])
   // return slug
   return inputSlug

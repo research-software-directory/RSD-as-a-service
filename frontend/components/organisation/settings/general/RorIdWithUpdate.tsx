@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,7 @@ import {useFormContext} from 'react-hook-form'
 import CircularProgress from '@mui/material/CircularProgress'
 import FindReplaceIcon from '@mui/icons-material/FindReplace'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {SearchOrganisation} from '~/types/Organisation'
 import {findInROR} from '~/utils/getROR'
 import useSnackbar from '~/components/snackbar/useSnackbar'

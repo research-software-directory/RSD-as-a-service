@@ -5,7 +5,7 @@
 
 import {useCallback, useEffect, useState} from 'react'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {deleteMaintainerLink, getUnusedInvitations} from '~/components/maintainers/apiMaintainers'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {Invitation} from '~/components/maintainers/InvitationList'

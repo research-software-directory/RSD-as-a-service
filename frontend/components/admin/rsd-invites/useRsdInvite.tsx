@@ -6,7 +6,7 @@
 
 import {useCallback, useEffect, useState} from 'react'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {Invitation, InvitationType} from '~/components/maintainers/InvitationList'
 import {createRsdInvite, deleteRsdInvite, getRsdInvites, NewAccountInvite} from './apiRsdInvite'

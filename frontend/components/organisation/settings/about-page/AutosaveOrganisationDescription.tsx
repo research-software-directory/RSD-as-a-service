@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useController, useFormContext} from 'react-hook-form'
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import MarkdownInputWithPreview from '~/components/form/MarkdownInputWithPreview'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {patchOrganisationTable} from '../updateOrganisationSettings'

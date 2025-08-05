@@ -12,7 +12,7 @@ import {HTMLAttributes, useEffect, useState} from 'react'
 import Chip from '@mui/material/Chip'
 import {useFormContext} from 'react-hook-form'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useSpdxLicenses from '~/utils/useSpdxLicenses'
 import {sortBySearchFor} from '~/utils/sortFn'
 import {addLicensesForSoftware, deleteLicense} from '~/utils/editSoftware'

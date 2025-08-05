@@ -12,7 +12,7 @@
 import {useEffect, useState, JSX} from 'react'
 import {useController, useFormContext} from 'react-hook-form'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import logger from '~/utils/logger'
 import {addToRepositoryTable, deleteFromRepositoryTable} from '~/utils/editSoftware'
 import {getBaseUrl} from '~/utils/fetchHelpers'

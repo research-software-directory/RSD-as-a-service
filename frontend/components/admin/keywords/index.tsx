@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -8,7 +8,7 @@
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import Pagination from '~/components/pagination/Pagination'
 import Searchbox from '~/components/search/Searchbox'
 import {useKeywords} from './apiKeywords'

@@ -13,7 +13,7 @@ import {useEffect, useState} from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import Button from '@mui/material/Button'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useSnackbar from '../../snackbar/useSnackbar'
 import {
   colForCreate,

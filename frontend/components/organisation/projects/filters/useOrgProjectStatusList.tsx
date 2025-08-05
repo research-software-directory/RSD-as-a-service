@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import logger from '~/utils/logger'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {decodeJsonParam} from '~/utils/extractQueryParam'

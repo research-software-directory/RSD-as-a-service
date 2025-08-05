@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,8 +12,8 @@ import * as React from 'react'
 import Script from 'next/script'
 import Document, {Html, Head, Main, NextScript, DocumentInitialProps} from 'next/document'
 import createEmotionServer from '@emotion/server/create-instance'
-import createEmotionCache from '../styles/createEmotionCache'
-import {setContentSecurityPolicyHeader} from '~/utils/contentSecurityPolicy'
+import {getNonce} from '~/utils/contentSecurityPolicy'
+import createEmotionCache from '~/styles/createEmotionCache'
 
 // extend type with nonce received from getInitialProps
 type RsdDocumentInitialProps = DocumentInitialProps & {
@@ -33,20 +34,22 @@ export default class MyDocument extends Document<RsdDocumentInitialProps>{
     // console.log('hash...', hash)
     // console.groupEnd()
     return (
-      <Html lang="en">
-        <Head nonce={nonce}>
+      <Html lang="en" data-scroll-behavior="smooth">
+        <Head>
+          {/* share nonce with _app for client side scripts */}
+          <meta name="csp-nonce" content={nonce} />
           {/* Theme color for the browser, if it supports it, is REMOVED 2022-04-10 by Dusan */}
           {/* <meta name="theme-color" content={rsdMuiTheme.palette.primary.main} /> */}
           {/* PWA manifest.json for favicons */}
           <link rel="manifest" href="/manifest.json" />
           {/* mounted index.css with font definitions */}
           {/*eslint-disable-next-line @next/next/no-css-tags*/}
-          <link href="/styles/index.css" rel="stylesheet" />
+          <link href="/styles/index.css" rel="stylesheet" nonce={nonce} />
           {/*
-            add support for gracefull fallback for aos animations when js is disabled
+            add support for graceful fallback for aos animations when js is disabled
             NOTE! we use nonce to cover security audit
           */}
-          <noscript dangerouslySetInnerHTML={{__html: `
+          <noscript nonce={nonce} dangerouslySetInnerHTML={{__html: `
             <style
               nonce="${nonce}"
               type="text/css">
@@ -79,7 +82,7 @@ export default class MyDocument extends Document<RsdDocumentInitialProps>{
                   _paq.push(['setTrackerUrl', u+'piwik.php']);
                   _paq.push(['setSiteId', '${this.matomoId}']);
                   var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-                  g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+                  g.async=true;g.nonce="${nonce}";g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
                 })();
               `}
             </Script>
@@ -119,9 +122,9 @@ export default class MyDocument extends Document<RsdDocumentInitialProps>{
 MyDocument.getInitialProps = async (ctx) => {
   const originalRenderPage = ctx.renderPage
 
-  // set security policy and get nonce to use
-  const nonce:string = setContentSecurityPolicyHeader(ctx.res)
-
+  // get nonce to use from headers or a new one
+  // note! after introducing middleware.ts the nonce and CSP header are already in the header
+  const nonce = getNonce(ctx?.req?.headers)
   // You can consider sharing the same emotion cache between all the SSR requests to speed up performance.
   // However, be aware that it can have global side effects.
   const cache = createEmotionCache(nonce)
@@ -134,12 +137,17 @@ MyDocument.getInitialProps = async (ctx) => {
 
   const initialProps = await Document.getInitialProps(ctx)
 
+  // console.group('document.getInitialProps')
+  // console.log('nonce...',nonce)
+  // console.groupEnd()
+
   // This is important. It prevents emotion to render invalid HTML.
   // See https://github.com/mui-org/material-ui/issues/26561#issuecomment-855286153
   const emotionStyles = extractCriticalToChunks(initialProps.html)
   const emotionStyleTags = emotionStyles.styles.map((style:any) => (
     <style
       data-emotion={`${style.key} ${style.ids.join(' ')}`}
+      data-nonce-src="document.getInitialProps"
       key={style.key}
       // pass nonce for security headers
       nonce={nonce}

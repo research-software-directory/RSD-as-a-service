@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,48 +14,39 @@ import {acceptUserAgreement} from './userAgreement'
 import {fillAutosaveInput, generateId, uploadFile} from './utils'
 
 export async function createSoftware({title, desc, slug, page}: CreateSoftwareProps) {
-  // accept user agreement first
-  // await acceptUserAgreementInSettings(page)
-
   // get add menu item
   const addMenu = page.getByTestId('add-menu-button')
-  const newSoftware = page.getByRole('menuitem', {
-    name: 'New Software'
-  })
-  const saveBtn = page.getByRole('button', {
-    name: 'Save'
-  })
   // click on add button
   await addMenu.click()
-  // open add software page
-  await Promise.all([
-    page.waitForURL('**/add/software',{
-      waitUntil: 'networkidle'
-    }),
-    newSoftware.click()
-  ])
 
+  // click new software
+  await page.getByRole('menuitem', {
+    name: 'New Software'
+  }).click()
+  
   // accept user agreement if modal present
-  await acceptUserAgreement(page)
+  // ALREADY DONE in globalSetup
+  // await acceptUserAgreement(page)
 
   // add name
-  await Promise.all([
-    // fill in software name
-    page.getByLabel('Name').fill(title),
-    // wait for response on slug validation
-    page.waitForResponse(RegExp(slug))
-  ])
+  await page.getByRole('textbox', { name: 'Name', exact: true }).fill(title);
+  // wait for response on slug validation
+  await page.waitForResponse(RegExp(slug))
+
   // add description
-  await page.getByLabel('Short description').fill(desc)
+  await page.getByRole('textbox', { name: 'Short description' }).fill(desc);
+  // await page.getByLabel('Short description').fill(desc)
+
   // get slug
-  const inputSlug = await page.getByLabel('The url of this software will be').inputValue()
+  const inputSlug = await page.getByRole('textbox', {name:'The url of this software will be'}).inputValue()
   const url = RegExp(`${inputSlug}/edit/information`)
+
   // click save button
   await Promise.all([
     page.waitForURL(url,{
       waitUntil: 'networkidle'
     }),
-    saveBtn.click()
+    page.getByRole('button', {name: 'Save'}).click()
   ])
   // return slug
   return inputSlug

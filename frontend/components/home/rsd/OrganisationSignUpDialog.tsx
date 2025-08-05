@@ -9,7 +9,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {useForm} from 'react-hook-form'
 
-import {config,organisationSignUp} from './config'
+import {home_config,organisationSignUp} from './home_config'
 import useRsdSettings from '~/config/useRsdSettings'
 import MailOutlineOutlined from '@mui/icons-material/MailOutlineOutlined'
 
@@ -151,7 +151,7 @@ export default function OrganisationSignUpDialog({
               className="text-sm text-base-100 hover:text-base-100 bg-primary px-4 py-1 rounded-sm hover:opacity-90 active:opacity-95"
               target="_blank"
               rel="noreferrer"
-              href={`mailto:${host.email}?subject=${encodeURIComponent(config.button.register.label)}&body=${mailBody()}`}
+              href={`mailto:${host.email}?subject=${encodeURIComponent(home_config.button.register.label)}&body=${mailBody()}`}
             >
               <MailOutlineOutlined/> Create email *
             </a>

@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import Pagination from '~/components/pagination/Pagination'
 import Searchbox from '~/components/search/Searchbox'
 import OrganisationsAdminList from './OrganisationsAdminList'

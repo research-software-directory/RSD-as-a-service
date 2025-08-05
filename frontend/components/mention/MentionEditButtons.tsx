@@ -1,9 +1,9 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useEditMentionReducer from './useEditMentionReducer'
 
 import IconButton from '@mui/material/IconButton'

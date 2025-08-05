@@ -21,7 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 
 import {useForm} from 'react-hook-form'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useSnackbar from '../../snackbar/useSnackbar'
 import ControlledTextField from '../../form/ControlledTextField'
 import {EditOrganisation} from '~/types/Organisation'

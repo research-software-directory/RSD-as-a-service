@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -51,9 +51,10 @@ const eslintConfig = [
       'eol-last': ['warn', 'always'],
       'quotes': ['warn', 'single'],
       'semi': ['warn', 'never'],
-      'indent': ['warn', 2, {
-        SwitchCase: 1,
-      }],
+      // rule is migrated to eslint/stylistic https://eslint.style/guide/getting-started
+      // 'indent': ['warn', 2, {
+      //   SwitchCase: 1,
+      // }],
       'no-trailing-spaces': 'warn',
       'no-multi-spaces': 'warn',
       'no-multiple-empty-lines': 'warn',

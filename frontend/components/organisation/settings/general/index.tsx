@@ -5,7 +5,7 @@
 
 import {FormProvider, useForm} from 'react-hook-form'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {OrganisationForOverview} from '~/types/Organisation'
 import useOrganisationContext from '../../context/useOrganisationContext'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
