@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,7 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 
 import {UseFormSetValue} from 'react-hook-form'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {deleteImage, getImageUrl} from '~/utils/editImage'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {handleFileUpload} from '~/utils/handleFileUpload'

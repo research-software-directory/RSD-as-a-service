@@ -1,11 +1,13 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {chromium, FullConfig} from '@playwright/test'
 import {loginLocal,user} from './login'
-import {acceptUserAgreementInSettings} from './userAgreement'
+import {acceptUserAgreement} from './userAgreement'
 
 /**
  * We remove secure flag from all cookies because
@@ -55,10 +57,6 @@ async function globalSetup(config: FullConfig) {
     username: user.name
   })
 
-  // accept user agreement to avoid UA modal in
-  // create/edit tests
-  // await acceptUserAgreementInSettings(page)
-
   const state = await page.context().storageState()
   const fixedCookies = fixCookiesProps(state.cookies)
   // console.log('fixedCookies...', fixedCookies)
@@ -68,6 +66,12 @@ async function globalSetup(config: FullConfig) {
   await page.context().storageState({
     path: storageState as string
   })
+
+  // after login user is send to settings
+  // for "normal" users the modal will appear automatically to
+  // accept user agreement (if modal present)
+  await acceptUserAgreement(page)
+
   // close browser
   await browser.close()
 }
