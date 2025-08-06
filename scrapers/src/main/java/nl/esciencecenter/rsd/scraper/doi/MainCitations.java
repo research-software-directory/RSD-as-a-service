@@ -36,6 +36,12 @@ public class MainCitations {
 			Collection<CitationData> referencePapersToScrape = localCitationRepository.leastRecentlyScrapedCitations(
 				Config.maxCitationSourcesToScrape()
 			);
+
+			localCitationRepository.updateScrapedAtTime(
+				referencePapersToScrape.stream().map(CitationData::id).toList(),
+				Instant.now()
+			);
+
 			OpenAlexConnector openAlexConnector = new OpenAlexConnector();
 			PostgrestMentionRepository localMentionRepository = new PostgrestMentionRepository(backendUrl);
 			String email = Config.crossrefContactEmail().orElse(null);
@@ -81,7 +87,7 @@ public class MainCitations {
 
 				long t3 = System.currentTimeMillis();
 
-				localCitationRepository.saveCitations(backendUrl, citationData.id(), citingMentionIds, now);
+				localCitationRepository.saveCitations(backendUrl, citationData.id(), citingMentionIds);
 
 				long t4 = System.currentTimeMillis();
 

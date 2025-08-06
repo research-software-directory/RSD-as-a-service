@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,9 +12,11 @@ import com.google.gson.JsonParser;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import nl.esciencecenter.rsd.scraper.Utils;
 
 /**
@@ -32,10 +34,17 @@ public class PostgrestCitationRepository {
 	/**
 	 * Retrieve the least recently scraped reference papers from the database.
 	 *
-	 * @param limit the maximum number of references to return
+	 * @param limit the maximum number of references to return, should be non-negative
 	 * @return A collection of citation data representing these reference papers.
 	 */
 	public Collection<CitationData> leastRecentlyScrapedCitations(int limit) {
+		if (limit < 0) {
+			throw new IllegalArgumentException("limit should be non-negative but was %d".formatted(limit));
+		}
+		if (limit == 0) {
+			return Collections.emptyList();
+		}
+
 		String oneHourAgoFilter = Utils.atLeastOneHourAgoFilter("citations_scraped_at");
 		String uri =
 			backendUrl +
@@ -47,15 +56,22 @@ public class PostgrestCitationRepository {
 		return parseJson(data);
 	}
 
-	public void saveCitations(
-		String backendUrl,
-		UUID idCitedMention,
-		Collection<UUID> citingMentions,
-		Instant scrapedAt
-	) {
-		String jsonPatch = "{\"citations_scraped_at\": \"%s\"}".formatted(scrapedAt.toString());
-		Utils.patchAsAdmin(backendUrl + "/mention?id=eq." + idCitedMention.toString(), jsonPatch);
+	public void updateScrapedAtTime(Collection<UUID> uuidsOfMentions, Instant scrapedAt) {
+		if (uuidsOfMentions.isEmpty()) {
+			return;
+		}
+		Objects.requireNonNull(scrapedAt);
 
+		String orFilter = uuidsOfMentions
+			.stream()
+			.map("id.eq.%s"::formatted)
+			.collect(Collectors.joining(",", "or=(", ")"));
+
+		String jsonPatch = "{\"citations_scraped_at\": \"%s\"}".formatted(scrapedAt.toString());
+		Utils.patchAsAdmin(backendUrl + "/mention?" + orFilter, jsonPatch);
+	}
+
+	public void saveCitations(String backendUrl, UUID idCitedMention, Collection<UUID> citingMentions) {
 		JsonArray jsonArray = new JsonArray();
 
 		// We sometimes encounter duplicate citations which may lead to the operation to fail.
