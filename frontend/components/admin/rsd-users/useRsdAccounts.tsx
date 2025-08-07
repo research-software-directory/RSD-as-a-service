@@ -34,7 +34,7 @@ export type RsdAccountLockedInfo = {
 
 export default function useRsdAccounts(token: string, adminsOnly: boolean, lockedOnly: boolean, inactiveDays: number) {
   const {showErrorMessage}=useSnackbar()
-  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find user by account id, name, email or affiliation')
+  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find by account ID, name, email, ORCID or affiliation')
   const [accounts, setAccounts] = useState<RsdAccountInfo[]>([])
   // show loading only on initial load
   const [loading, setLoading] = useState(true)
