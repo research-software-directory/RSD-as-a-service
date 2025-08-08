@@ -12,6 +12,7 @@ import logger from '~/utils/logger'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
 import {RsdAccountInfo} from './useRsdAccounts'
 import {LockAccountProps} from './LockUserModal'
+import {orcidRegex} from '~/utils/getORCID'
 
 type getLoginApiParams = {
   token: string,
@@ -36,13 +37,16 @@ export async function getRsdAccounts({page,rows,token,searchFor,adminsOnly,locke
     }
     // search
     if (searchFor) {
-      if (searchFor.match(/^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i) !== null) {
-        // if searchFor is uuid we search by account id
+      if (/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(searchFor)) {
+        // if searchFor is a UUID we search by account ID
         query += `&id=eq.${searchFor}`
-      } else {
-        // else we search by name, email or organisation
-        query+=`&login_for_account_text_filter.or=(name.ilike."*${searchFor}*",email.ilike."*${searchFor}*",home_organisation.ilike."*${searchFor}*")`
-      }
+      } else if (orcidRegex.test(searchFor)) {
+        // else if searchFor is an ORCID we search on login_for_account sub
+		  query += `&login_for_account_text_filter.sub=eq.${searchFor}&login_for_account_text_filter.provider=eq.orcid`
+	  } else {
+		  // else we search by name, email or organisation
+		  query += `&login_for_account_text_filter.or=(name.ilike."*${searchFor}*",email.ilike."*${searchFor}*",home_organisation.ilike."*${searchFor}*")`
+	  }
     }
     // complete url
     const url = `${getBaseUrl()}/account?${query}`
@@ -168,7 +172,7 @@ export async function lockRsdAcount({
 
     let resp
 
-    if (account.lock_account===true){
+    if (account.lock_account){
       resp = await fetch(url, {
         method: 'PUT',
         headers: {
