@@ -29,6 +29,9 @@ const SoftwareTestimonials = dynamic(() => import('./testimonials'),{
 const PackageManagers = dynamic(() => import('./package-managers'),{
   loading: ()=><ContentLoader />
 })
+const SoftwareHeritage = dynamic(() => import('./software-heritage'),{
+  loading: ()=><ContentLoader />
+})
 const RelatedSoftware = dynamic(() => import('./related-software'),{
   loading: ()=><ContentLoader />
 })
@@ -46,7 +49,7 @@ const SoftwareServices = dynamic(() => import('./services'),{
 })
 
 export type EditSoftwarePageId = 'information' | 'links' | 'contributors' | 'organisations'| 'mentions' |
-  'testimonials' | 'package-managers'|'communities'|'related-projects' | 'related-software' | 'maintainers'|
+  'testimonials' | 'package-managers'|'software-heritage'|'communities'|'related-projects' | 'related-software' | 'maintainers'|
   'services'
 
 export default function EditSoftwarePageContent({pageId}:Readonly<{pageId:EditSoftwarePageId}>) {
@@ -65,6 +68,8 @@ export default function EditSoftwarePageContent({pageId}:Readonly<{pageId:EditSo
       return <SoftwareTestimonials />
     case 'package-managers':
       return <PackageManagers />
+    case 'software-heritage':
+      return <SoftwareHeritage />
     case 'communities':
       return <SoftwareCommunities />
     case 'related-projects':

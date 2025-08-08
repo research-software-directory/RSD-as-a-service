@@ -72,6 +72,7 @@ import {CommunitiesOfSoftware} from '~/components/software/edit/communities/apiS
 import CategoriesSection from '~/components/software/CategoriesSection'
 import {getTestimonialsForSoftware} from '~/components/software/edit/testimonials/apiSoftwareTestimonial'
 import {useSoftwareCategoriesFilter} from '~/components/category/useCategoriesFilter'
+import {getSoftwareHeritageItems, SoftwareHeritageItem} from '~/components/software/edit/software-heritage/apiSoftwareHeritage'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -89,6 +90,7 @@ interface SoftwareIndexData extends ScriptProps{
   relatedProjects: RelatedProject[]
   organisations: ParticipatingOrganisationProps[],
   packages: PackageManager[],
+  swhids: SoftwareHeritageItem[],
   communities: CommunitiesOfSoftware[],
   isMaintainer: boolean,
   orgMaintainer: string[],
@@ -102,7 +104,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
     software, releases, keywords, licenseInfo, repositoryInfo,
     mentions, testimonials, contributors, relatedSoftware,
     relatedProjects, isMaintainer, slug, organisations, referencePapers,
-    packages, communities, categories, orgMaintainer, comMaintainer
+    packages, swhids, communities, categories, orgMaintainer, comMaintainer
   } = props
   // split categories in two groups and filter by category status
   const [highlightedCategories, filteredCategories] = useSoftwareCategoriesFilter({
@@ -127,6 +129,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   // console.log('categories...', categories)
   // console.log('orgMaintainer...', orgMaintainer)
   // console.log('comMaintainer...', comMaintainer)
+  // console.log('swhids...', swhids)
   // console.groupEnd()
 
   return (
@@ -185,6 +188,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         platform={repositoryInfo?.code_platform}
         image_id={software.image_id}
         packages={packages}
+        swhids={swhids}
       />
       {/* Participating organisations */}
       <OrganisationsSection
@@ -273,6 +277,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       organisations,
       referencePapers,
       packages,
+      swhids,
       communities,
       orgMaintainer,
       comMaintainer
@@ -305,6 +310,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       getReferencePapersForSoftware({software:software.id,token}),
       // package managers
       getPackageManagers({software:software.id,token}),
+      // get software heritage ids
+      getSoftwareHeritageItems({software:software.id,token}),
       // communities of software
       getCommunitiesOfSoftware({software:software.id,token}),
       // get list of organisations user maintains
@@ -332,6 +339,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         organisations,
         slug,
         packages,
+        swhids,
         communities,
         orgMaintainer,
         comMaintainer
