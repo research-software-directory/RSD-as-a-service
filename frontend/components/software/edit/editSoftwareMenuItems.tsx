@@ -17,6 +17,8 @@ import JoinInnerIcon from '@mui/icons-material/JoinInner'
 import DonutLargeIcon from '@mui/icons-material/DonutLarge'
 import ArticleIcon from '@mui/icons-material/Article'
 import Diversity3Icon from '@mui/icons-material/Diversity3'
+import SoftwareHeritageIcon from './software-heritage/SoftwareHeritageIcon'
+// import AcUnitIcon from '@mui/icons-material/AcUnit'
 import {RsdModuleName} from '~/config/rsdSettingsReducer'
 
 
@@ -68,6 +70,12 @@ export const editSoftwareMenuItems:EditSoftwareMenuItemsProps[] = [{
   id: 'package-managers',
   label: 'Package managers',
   icon: <HomeRepairServiceIcon />,
+  active: () => true,
+  status: ''
+},{
+  id: 'software-heritage',
+  label: 'Software Heritage',
+  icon: <SoftwareHeritageIcon />,
   active: () => true,
   status: ''
 },{

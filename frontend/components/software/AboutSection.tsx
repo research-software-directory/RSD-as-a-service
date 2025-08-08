@@ -17,6 +17,7 @@ import {
 import PageContainer from '~/components/layout/PageContainer'
 import CategoriesSidebar from '~/components/software/CategoriesSidebar'
 import {PackageManager} from './edit/package-managers/apiPackageManager'
+import {SoftwareHeritageItem} from './edit/software-heritage/apiSoftwareHeritage'
 import AboutStatement from './AboutStatement'
 import SoftwareKeywords from './SoftwareKeywords'
 import AboutLanguages from './AboutLanguages'
@@ -24,6 +25,7 @@ import AboutLicense from './AboutLicense'
 import AboutSourceCode from './AboutSourceCode'
 import SoftwareLogo from './SoftwareLogo'
 import AboutPackageManagers from './AboutPackageManagers'
+import AboutSoftwareHeritage from './AboutSoftwareHeritage'
 
 type AboutSectionType = {
   brand_name: string
@@ -37,13 +39,14 @@ type AboutSectionType = {
   languages: ProgramingLanguages
   image_id: string | null
   packages: PackageManager[]
+  swhids: SoftwareHeritageItem[]
 }
 
 export default function AboutSection(props:AboutSectionType) {
   const {
     brand_name = '', description = '', keywords, categories, licenses,
     repository, languages, platform, description_type = 'markdown',
-    image_id, packages
+    image_id, packages, swhids
   } = props
 
   if (brand_name==='') return null
@@ -77,6 +80,8 @@ export default function AboutSection(props:AboutSectionType) {
           platform={platform}
         />
         <AboutPackageManagers packages={packages} />
+
+        <AboutSoftwareHeritage swhids={swhids} />
 
         <CategoriesSidebar categories={categories} />
       </div>
