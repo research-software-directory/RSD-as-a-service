@@ -38,4 +38,5 @@
   "cSpell.words": [
     "dompurify"
   ],
+  "makefile.configureOnOpen": false,
 }
