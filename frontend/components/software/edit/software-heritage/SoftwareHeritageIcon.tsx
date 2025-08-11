@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: CC-BY
 
 // Based on customized svg ~/assets/logos/IconSWH.svg
-
+// The SVG content is licensed CC-BY.
 export default function SoftwareHeritageIcon({className='w-[1.5rem] h-[1.5rem]'}:{className?:string}) {
   return (
     <svg
