@@ -3,6 +3,7 @@
 // SPDX-FileCopyrightText: Software Heritage https://www.softwareheritage.org/communication-kit/
 //
 // SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: CC-BY
 
 // Based on customized svg ~/assets/logos/IconSWH.svg
 
