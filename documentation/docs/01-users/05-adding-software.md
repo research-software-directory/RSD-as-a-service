@@ -210,6 +210,12 @@ If your package manager is not listed above, you can still add it, but we will c
 
 ![video](img/software-package-managers.gif)
 
+## Software Heritage
+
+Software Heritage preserves software in source code form. If your software is archived on Software Heritage you can use this section to add the badge by providing SoftWare Hash Identifiers (SWHID's). Use Permalink tab on Software Heritage page to extract required info.
+
+![video](img/software-heritage.gif)
+
 ## Communities
 
 :::tip
@@ -228,7 +234,6 @@ You can still edit the categories of a community that assigned to your software 
 If you leave a community, any associated categories of that community will automatically be deleted from your software page.
 
 ![video](img/software-add-community.gif)
-
 
 ## Related software
 
