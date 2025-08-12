@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +25,7 @@ export function encodeQueryValue(value: EncodeQueryValue) {
   try {
     if (typeof value === 'string' || typeof value === 'number') {
       return encodeURIComponent(value)
-    } else if (Array.isArray(value) === true && (value as any)?.length > 0) {
+    } else if (Array.isArray(value) && (value as any[]).length > 0) {
       // arrays are stringified
       return encodeURIComponent(JSON.stringify(value))
     }
@@ -33,7 +34,7 @@ export function encodeQueryValue(value: EncodeQueryValue) {
   }
 }
 
-export function encodeQueryParam({param, value}: EncodeQueryParamProps) {
+function encodeQueryParam({param, value}: EncodeQueryParamProps) {
   try {
     // encode value
     const encoded = encodeQueryValue(value)
@@ -47,20 +48,30 @@ export function encodeQueryParam({param, value}: EncodeQueryParamProps) {
   }
 }
 
-// encode filters into url query parameters
+/**
+ *
+ * @param query the existing query
+ * @param param the query parameter key to be appended
+ * @param value the query parameter value to be appended
+ *
+ * @returns The query to which the param and value are appended in the form '&param=value', of which the value is URL encoded.
+ * If the query was empty, the leading '&' is omitted.
+ */
 export function encodeUrlQuery({query, param, value}: BuildUrlQueryProps) {
-  // if there is no value we return "" for query=no query
+  // if there is no value we return the query
   if (typeof value === 'undefined' || value === '' || value === null) return query
+
   // encode value
   const encoded = encodeQueryParam({param, value})
   // if nothing is encoded return query
   if (encoded === '' || encoded === null) return query
+
   // handle string value
   if (query) {
-    query += `&${encoded}`
-  } else {
-    query += encoded
+    query += '&'
   }
+
+  query += encoded
   // return build query
   return query
 }
