@@ -99,7 +99,7 @@ export function decodeQueryParam({query,param,castToType='string',defaultValue}:
       // debugger
       const rawVal = query[param]
       // if value is not "actionable" we return default value
-      if (typeof rawVal == 'undefined' || rawVal === '' || rawVal === null) return defaultValue
+      if (rawVal === undefined || rawVal === '' || rawVal === null) return defaultValue
       // if cast to type is not defined we return raw value
       if (typeof castToType === 'undefined') return rawVal
       // convert to specific type
@@ -111,11 +111,7 @@ export function decodeQueryParam({query,param,castToType='string',defaultValue}:
           logger(`decodeQueryParam: query param ${param} NOT a string. Returning defaultValue`, 'warn')
           return defaultValue
         case 'string':
-          if (typeof rawVal === 'string'){
-            return decodeURIComponent(rawVal)
-          }else{
-            return decodeURIComponent(rawVal?.toString())
-          }
+          return rawVal.toString()
         case 'json-encoded':
           if (typeof rawVal === 'string') {
             const json = decodeJsonParam(rawVal,defaultValue)

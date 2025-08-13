@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,8 +29,8 @@ type RsdSourceFilterProps = Readonly<{
 export default function RsdHostFilter({rsd_host,hostsList,handleQueryChange,title='RSD Host'}: RsdSourceFilterProps) {
 
   // console.group('RsdSourceFilter')
-  // console.log('source...',source)
-  // console.log('sourceList...',sourceList)
+  // console.log('rsd_host...',rsd_host)
+  // console.log('hostsList...',hostsList)
   // console.groupEnd()
 
   return (
