@@ -37,7 +37,7 @@ jobs:
           go build -v -o ./scraper-4tu codemeta/scrapers
         working-directory: codemeta/src
       - name: SonarCloud Scan codemeta
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
