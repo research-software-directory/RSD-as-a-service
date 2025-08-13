@@ -6,15 +6,21 @@
 import psycopg
 import select
 import json
-import time
 import os
-import requests
 import app.utils as utils
-from app.templates.common import render_template
 from app.auth import JwtProvider
+from channels.software_for_community_join_request import SoftwareCommunityJoinRequestHandler
+from channels.access_token_deleted import AccessTokenDeletedHandler
+from channels.access_token_expiring import AccessTokenExpiringHandler
 
 BASE_URL=os.getenv("POSTGREST_URL")
 JWT_PROVIDER = JwtProvider()
+
+CHANNEL_HANDLERS = [
+    SoftwareCommunityJoinRequestHandler(),
+    AccessTokenDeletedHandler(),
+    AccessTokenExpiringHandler()
+]
 
 def connect_to_postgres():
     for i in range(5):
@@ -30,85 +36,37 @@ def connect_to_postgres():
         except psycopg.OperationalError as e:
             print(f"Connecting attempt {i+1} Publisher to Postgres database failed: {e}")
 
-def listen_to_channel(cursor, channel_name):
-    cursor.execute(f"LISTEN {channel_name};")
+def listen_to_channels(conn, channel_handlers):
+    cursor = conn.cursor()
+    for handler in channel_handlers:
+        cursor.execute(f"LISTEN {handler.name};")
 
-def process_notifications(connection):
+    print("Listening to channels...")
     while True:
         try: 
-            if select.select([connection], [], [], 5) == ([], [], []):
+            if select.select([conn], [], [], 5) == ([], [], []):
                 continue
-
-            for notify in connection.notifies():
-                payload = json.loads(notify.payload)
-                if notify.channel == "software_for_community_join_request":
-                    software_name, software_slug = get_software_name(payload["software"])
-                    recipients = get_maintainer_emails_for_community(payload["community"])
-                    community_name, community_slug = get_community_info(payload["community"])
-                    if community_name:
-                        send_community_join_request_mail(recipients, software_name, community_name, utils.create_software_page_url(software_slug), utils.create_community_requests_url(community_slug))
-        
+            for notify in conn.notifies():
+                process_notifications(channel_handlers, notify.channel, json.loads(notify.payload))
         except (Exception, psycopg.DatabaseError) as error:
             utils.log_to_backend(
                 service_name="Postgres Notification Listener",
                 table_name="",
-                message=f"Exception while listening to Postgres (software_for_community_join_request): {error}",
+                message=f"Exception while listening to Postgres: {error}",
             )
             print(error)
             break
 
 
-def get_maintainer_emails_for_community(community_id):
-    response = requests.post(
-        f"{BASE_URL}/rpc/maintainers_of_community",
-        headers={
-            "Authorization": f"Bearer {JWT_PROVIDER.get_admin_jwt()}",
-            "Content-Type": "application/json",
-        },
-        json={
-            'community_id': community_id
-        }
-    )
-    return [maintainer['email'][0] for maintainer in response.json()]
+def process_notifications(handlers, channel_name, payload):
+    for handler in handlers:
+        if handler.name == channel_name:
+            preprocessed = handler.preprocess(payload)
+            handler.process(preprocessed)
+            break
 
-def get_community_info(community_id):
-    response = requests.get(
-        f"{BASE_URL}/community?id=eq.{community_id}&select=name, slug",
-        headers={
-            "Authorization": f"Bearer {JWT_PROVIDER.get_admin_jwt()}",
-            "Content-Type": "application/json",
-        }
-    )
-    return response.json()[0]["name"], response.json()[0]["slug"]
-
-def get_software_name(software_id):
-    response = requests.get(
-        f"{BASE_URL}/software?id=eq.{software_id}&select=brand_name, slug",
-        headers={
-            "Authorization": f"Bearer {JWT_PROVIDER.get_admin_jwt()}",
-            "Content-Type": "application/json",
-        }
-    )
-    return response.json()[0]["brand_name"], response.json()[0]["slug"]
-
-def send_community_join_request_mail(recipients, software_name, community_name, software_page_url, community_settings_url):
-    subject = f"RSD: Community join request for {community_name}"
-    html_content = render_template("community_join_request.html", {"SOFTWARE_NAME": software_name, "COMMUNITY_NAME": community_name, "SOFTWARE_PAGE_URL": software_page_url, "COMMUNITY_REQUESTS_URL": community_settings_url, "RSD_URL": os.getenv("HOST_URL")})
-    body = dict(
-        subject=subject,
-        recipients=recipients,
-        html_content=html_content,
-        plain_content=None
-    )
-    utils.publish_to_queue(os.environ.get("MAIL_QUEUE", "mailq"), body)
 
 if __name__ == "__main__":
     connection = connect_to_postgres()
     connection.autocommit = True
-
-    cursor = connection.cursor()
-
-    # listen for community join requests
-    listen_to_channel(cursor, "software_for_community_join_request")
-    process_notifications(connection)
-
+    listen_to_channels(connection, CHANNEL_HANDLERS)
