@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,11 +14,11 @@ export async function addFundingOrganisation(page: Page, organisation: string) {
   const fundingInput = page.getByRole('combobox', {name: 'Find funding organisation'})
 
   // we mock ror api response
-  await listenForRoRCalls(page, organisation)
+  await listenForRorCalls(page, organisation)
 
   // await page.pause()
   await Promise.all([
-    page.waitForResponse(/api.ror.org\/organizations/),
+    page.waitForResponse(/api\.ror\.org\/v1\/organizations/),
     page.waitForLoadState('networkidle'),
     fundingInput.fill(organisation)
   ])
@@ -76,11 +77,11 @@ export async function addOrganisation(page, organisation: Organisation, apiUrl) 
   }
 
   // we mock ror api response
-  await listenForRoRCalls(page, organisation.name)
+  await listenForRorCalls(page, organisation.name)
 
   // if not exists we search
   await Promise.all([
-    page.waitForResponse(/api.ror.org\/organizations/),
+    page.waitForResponse(/api\.ror\.org\/v1\/organizations/),
     page.waitForLoadState('networkidle'),
     findOrganisation.fill(organisation.name)
   ])
@@ -142,10 +143,10 @@ export async function addOrganisation(page, organisation: Organisation, apiUrl) 
 }
 
 
-async function listenForRoRCalls(page, input: string) {
+async function listenForRorCalls(page, input: string) {
   // monitor api calls
   // console.log('input...', input)
-  await page.route(`https://api.ror.org/organizations?query=${encodeURIComponent(input)}`, async route => {
+  await page.route(`https://api.ror.org/v1/organizations?query=${encodeURIComponent(input)}`, async route => {
     // const url = route.request().url()
     // console.log('api.ror.org...url...', url)
     const filename = `mocks/data/ror_${generateFileName(input)}.json`
@@ -157,7 +158,7 @@ async function listenForRoRCalls(page, input: string) {
 export async function generateJsonFromApiCalls(page, input: string) {
   // monitor api calls
   // console.log('input...', input)
-  await page.route(`https://api.ror.org/organizations?query=${encodeURIComponent(input)}`, async route => {
+  await page.route(`https://api.ror.org/v1/organizations?query=${encodeURIComponent(input)}`, async route => {
     // const url = route.request().url()
     // console.log('doi.org...url...', url)
     const resp = await route.fetch()
@@ -193,7 +194,7 @@ export async function saveOrganisation(page, input: string) {
 
   // if not exists we search
   await Promise.all([
-    page.waitForResponse(/api.ror.org\/organizations/),
+    page.waitForResponse(/api\.ror\.org\/v1\/organizations/),
     page.waitForLoadState('networkidle'),
     findOrganisation.fill(input)
   ])

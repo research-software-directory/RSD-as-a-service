@@ -21,6 +21,7 @@ public class RorId {
 
 	private static final String ROR_BASE_URL = "https://ror.org/";
 	// https://ror.org/blog/2024-04-15-announcing-ror-v2/
+	// https://ror.readme.io/changelog/2025-07-01-sunset-of-version-1
 	private static final String ROR_BASE_API_V1_URL = "https://api.ror.org/v1/organizations/";
 	private static final Pattern ROR_URL_PATTERN = Pattern.compile(
 		"^https://ror\\.org/(0[a-hj-km-np-tv-z|\\d]{6}\\d{2})$"
