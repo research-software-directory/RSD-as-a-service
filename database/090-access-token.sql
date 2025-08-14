@@ -96,7 +96,46 @@ $$;
 
 
 CREATE FUNCTION cleanup_expired_token() RETURNS VOID AS $$
+DECLARE
+	deleted_row RECORD;
+	rows_deleted INTEGER := 0;
+	soon_expiring RECORD;
+	soon_expiring_count INTEGER := 0;
 BEGIN
-	DELETE FROM user_access_token WHERE expires_at <= CURRENT_DATE;
+	FOR deleted_row IN
+		DELETE FROM user_access_token
+		WHERE expires_at <= CURRENT_TIMESTAMP
+		RETURNING *
+	LOOP
+		-- Send notification for each deleted row
+		PERFORM pg_notify(
+			'access_token_deleted_now',
+			json_build_object(
+				'id', deleted_row.id,
+				'account', deleted_row.account,
+				'display_name', deleted_row.display_name
+			)::text
+		);
+		rows_deleted := rows_deleted + 1;
+	END LOOP;
+	RAISE NOTICE 'Deleted % access tokens and sent notifications', rows_deleted;
+
+	FOR soon_expiring IN
+		SELECT * FROM user_access_token
+		WHERE expires_at::date = CURRENT_DATE + 7
+	LOOP
+		-- Send notification for each token expiring in 7 days
+		PERFORM pg_notify(
+			'access_token_expiring_7_days',
+			json_build_object(
+				'id', soon_expiring.id,
+				'account', soon_expiring.account,
+				'display_name', soon_expiring.display_name
+			)::text
+		);
+		soon_expiring_count := soon_expiring_count + 1;
+	END LOOP;
+	RAISE NOTICE '% access tokens expiring in 7 days, sent notifications', soon_expiring_count;
+
 END;
 $$ LANGUAGE plpgsql;
