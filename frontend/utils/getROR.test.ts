@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2024 dv4all
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -66,7 +67,7 @@ it('findInROR calls fetch with search param and json header', async () => {
 
   expect(mockFetch).toHaveBeenCalledTimes(1)
   expect(mockFetch).toHaveBeenCalledWith(
-    `https://api.ror.org/organizations?query=${searchFor}`,
+    `https://api.ror.org/v1/organizations?query=${searchFor}`,
     {'headers': {'Content-Type': 'application/json'}}
   )
 })

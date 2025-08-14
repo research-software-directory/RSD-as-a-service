@@ -26,7 +26,7 @@ public class RorScraper {
 	}
 
 	private String getFromApi() throws IOException, InterruptedException, RsdResponseException {
-		// e.g https://api.ror.org/organizations/04tsk2644
+		// e.g https://api.ror.org/v1/organizations/04tsk2644
 		return Utils.get(rorId.asApiV1Url().toString());
 	}
 
