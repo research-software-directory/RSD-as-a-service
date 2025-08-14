@@ -10,12 +10,12 @@ import ListAltIcon from '@mui/icons-material/ListAlt'
 
 import useRsdSettings from '~/config/useRsdSettings'
 
-type PersonMetricsProps = {
+type SoftwareProjectMetricsProps = Readonly<{
   software_cnt: number | null
   project_cnt: number | null
-}
+}>
 
-export default function PersonMetrics({software_cnt,project_cnt}:PersonMetricsProps) {
+export default function SoftwareProjectMetrics({software_cnt,project_cnt}:SoftwareProjectMetricsProps) {
   const {activeModules} = useRsdSettings()
 
   function softwareMessage(){

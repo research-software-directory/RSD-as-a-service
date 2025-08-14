@@ -12,7 +12,7 @@ import {getDisplayInitials} from '~/utils/getDisplayName'
 import CardImageFrame from '~/components/cards/CardImageFrame'
 import CardContentFrame from '~/components/cards/CardContentFrame'
 import KeywordList from '~/components/cards/KeywordList'
-import PersonMetrics from './PersonMetrics'
+import SoftwareProjectMetrics from '~/components/cards/SoftwareProjectMetrics'
 import {PersonsOverview} from './apiPersonsOverview'
 
 export default function PersonCard({person}:{person:PersonsOverview}) {
@@ -28,7 +28,7 @@ export default function PersonCard({person}:{person:PersonsOverview}) {
     >
       <div className="flex flex-col transition overflow-hidden bg-base-100 shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer select-none w-full relative">
         <CardImageFrame>
-          <div className="flex-1 flex gap-8 justify-between items-start pt-4 px-4">
+          <div className="flex-1 flex pt-4 px-4">
             <Avatar
               alt={person.display_name ?? ''}
               src={getImageUrl(person?.avatar_id ?? null) ?? ''}
@@ -40,12 +40,6 @@ export default function PersonCard({person}:{person:PersonsOverview}) {
             >
               {initials}
             </Avatar>
-            <div className="flex gap-4">
-              <PersonMetrics
-                software_cnt={person.software_cnt ?? 0}
-                project_cnt={person.project_cnt ?? 0}
-              />
-            </div>
           </div>
         </CardImageFrame>
         <CardContentFrame>
@@ -68,6 +62,13 @@ export default function PersonCard({person}:{person:PersonsOverview}) {
           <div className="flex-1 overflow-auto py-2">
             <KeywordList
               keywords={person.keywords}
+            />
+          </div>
+          {/* metrics */}
+          <div className="flex gap-4 justify-end text-center">
+            <SoftwareProjectMetrics
+              software_cnt={person.software_cnt ?? 0}
+              project_cnt={person.project_cnt ?? 0}
             />
           </div>
         </CardContentFrame>

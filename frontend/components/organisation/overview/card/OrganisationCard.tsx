@@ -9,11 +9,11 @@
 
 import Link from 'next/link'
 import {getImageUrl} from '~/utils/editImage'
-import CardTitleSubtitle from '~/components/cards/CardTitleSubtitle'
-import OrganisationCardMetrics from './OrganisationCardMetrics'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
+import CardTitleSubtitle from '~/components/cards/CardTitleSubtitle'
 import CardImageFrame from '~/components/cards/CardImageFrame'
 import CardContentFrame from '~/components/cards/CardContentFrame'
+import SoftwareProjectMetrics from '~/components/cards/SoftwareProjectMetrics'
 import CountryLabel from './CountryLabel'
 import TenantBadge from './TenantBadge'
 
@@ -57,19 +57,19 @@ export default function OrganisationCard({organisation}: { organisation: Organis
                 subtitle={organisation.short_description ?? ''}
               />
             </div>
-            <div className="flex gap-8 justify-evenly text-center">
-              <OrganisationCardMetrics
+            <div className="flex gap-4 justify-end text-center">
+              {organisation.is_tenant ?
+                <div className="flex-1 flex items-end text-base-600">
+                  <TenantBadge/>
+                </div>
+                :null
+              }
+              <SoftwareProjectMetrics
                 software_cnt={organisation.software_cnt}
                 project_cnt={organisation.project_cnt}
               />
             </div>
           </CardContentFrame>
-          {organisation.is_tenant ?
-            <div className="flex items-end text-base-600 absolute top-2 right-1">
-              <TenantBadge/>
-            </div>
-            :null
-          }
         </div>
       </Link>
     </div>
