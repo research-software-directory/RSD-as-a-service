@@ -1,6 +1,6 @@
+-- SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
--- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -64,9 +64,9 @@ CREATE TABLE remote_software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	remote_rsd_id UUID NOT NULL REFERENCES remote_rsd(id),
 	remote_software_id UUID NOT NULL,
-	slug VARCHAR(200) NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+	slug VARCHAR(250) NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,
-	brand_name VARCHAR(200) NOT NULL,
+	brand_name VARCHAR(250) NOT NULL,
 	short_statement VARCHAR(300),
 	image_id VARCHAR(40),
 	updated_at TIMESTAMPTZ,

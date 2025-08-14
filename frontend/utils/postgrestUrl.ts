@@ -286,18 +286,19 @@ export function baseQueryString(props: baseQueryStringProps) {
   }
   // RSD Host
   if (rsd_host !== undefined) {
+    const rsd_host_encoded = encodeURIComponent(rsd_host)
     if (query) {
       // the null value is passed as string in url query
-      if (rsd_host === 'null') {
+      if (rsd_host_encoded === 'null') {
         query = `${query}&rsd_host=is.null`
       } else {
-        query = `${query}&rsd_host=eq.${rsd_host}`
+        query = `${query}&rsd_host=eq.${rsd_host_encoded}`
       }
-    } else if (rsd_host === 'null' || rsd_host === null) {
+    } else if (rsd_host_encoded === 'null' || rsd_host_encoded === null) {
       // the null value is passed as string in url query
       query = 'rsd_host=is.null'
     } else {
-      query = `rsd_host=eq.${rsd_host}`
+      query = `rsd_host=eq.${rsd_host_encoded}`
     }
   }
   if (organisations !== undefined &&
@@ -369,7 +370,7 @@ export function softwareListUrl(props: PostgrestParams) {
     const encodedSearch = encodeURIComponent(search)
     // search query is performed in aggregated_software_search RPC
     // we search in title,subtitle,slug,keywords_text and prog_lang
-    // check rpc in 105-project-views.sql for exact filtering
+    // check rpc in 124-aggregated-software-views.sql for exact filtering
     query += `&search=${encodedSearch}`
 
     url = `${baseUrl}/rpc/aggregated_software_search`
