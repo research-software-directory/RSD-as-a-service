@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -12,6 +12,7 @@ import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import nl.esciencecenter.rsd.scraper.Config;
+import nl.esciencecenter.rsd.scraper.RsdParsingException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 import org.slf4j.Logger;
@@ -23,18 +24,19 @@ public class MainRor {
 	private static final int SCRAPING_LIMIT = Config.maxRequestsRor();
 
 	public static void main(String[] args) {
-		LOGGER.info("Start scraping ROR data.");
+		LOGGER.info("Start harvesting ROR data.");
 		long t1 = System.currentTimeMillis();
 		scrapeLocationData();
 		long time = System.currentTimeMillis() - t1;
-		LOGGER.info("Done scraping ROR data ({} ms).", time);
+		LOGGER.info("Done harvesting ROR data ({} ms).", time);
 	}
 
 	private static void scrapeLocationData() {
 		RorPostgrestConnector organisationsInRSD = new RorPostgrestConnector();
-		Collection<OrganisationDatabaseData> organisationsToScrape = organisationsInRSD.organisationsWithoutLocation(
-			SCRAPING_LIMIT
-		);
+		Collection<OrganisationDatabaseData> organisationsToScrape =
+			organisationsInRSD.leastRecentlyScrapedOrganisations(SCRAPING_LIMIT);
+		LOGGER.info("Harvesting {} organisations from ROR", organisationsToScrape.size());
+
 		CompletableFuture<?>[] futures = new CompletableFuture[organisationsToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
@@ -54,7 +56,7 @@ public class MainRor {
 						data
 					);
 					organisationsInRSD.saveLocationData(updatedOrganisationDatabaseData);
-				} catch (RsdResponseException | IOException | InterruptedException e) {
+				} catch (RsdResponseException | RsdParsingException | IOException | InterruptedException e) {
 					Utils.saveExceptionInDatabase("ROR location scraper", tableName, organisation.id(), e);
 					Utils.saveErrorMessageInDatabase(
 						e.getMessage(),
@@ -68,7 +70,7 @@ public class MainRor {
 					if (e instanceof InterruptedException) {
 						Thread.currentThread().interrupt();
 					}
-				} catch (Exception e) {
+				} catch (RuntimeException e) {
 					Utils.saveExceptionInDatabase("ROR location scraper", tableName, organisation.id(), e);
 					Utils.saveErrorMessageInDatabase(
 						"Unknown error",
