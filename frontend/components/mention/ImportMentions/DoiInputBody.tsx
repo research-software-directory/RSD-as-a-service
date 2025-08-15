@@ -1,21 +1,21 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useState} from 'react'
 import DialogContent from '@mui/material/DialogContent'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-
-import {useState} from 'react'
-import {DoiBulkImportReport, useValidateInputList} from './apiImportMentions'
-import {useSession} from '~/auth'
 import Box from '@mui/material/Box'
+
+import {useSession} from '~/auth/AuthProvider'
 import ImportDialogTitle from './ImportDialogTitle'
 import ImportDialogActions from './ImportDialogActions'
+import {DoiBulkImportReport, useValidateInputList} from './apiImportMentions'
 
 import config from './config'
 

@@ -11,7 +11,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import Dialog from '@mui/material/Dialog'
 import MailOutlineOutlined from '@mui/icons-material/MailOutlineOutlined'
 
-import {config,personalSignUp} from './config'
+import {home_config,personalSignUp} from './home_config'
 import useRsdSettings from '~/config/useRsdSettings'
 import {useForm} from 'react-hook-form'
 
@@ -92,7 +92,7 @@ export default function PersonalSignUp({minWidth = '9rem'}:{minWidth:string}) {
             }}
           >
             <span className="space-y-2 text-xl font-medium whitespace-nowrap">
-              {config.button.signUp.label}
+              {home_config.button.signUp.label}
             </span>
           </div>
         </div>
@@ -106,7 +106,7 @@ export default function PersonalSignUp({minWidth = '9rem'}:{minWidth:string}) {
         <div className="h-full w-full bg-[#232323] p-6">
           <div className="mx-auto">
             <div className="text-base-100 text-xl mb-4">
-              {config.button.signUp.label}
+              {home_config.button.signUp.label}
             </div>
             <div className="text-sm text-[#B7B7B7] pb-4">
               You can find more information about how to get access in our <u><a href="/documentation/users/getting-access/" target="_blank" rel="noreferrer">documentation</a></u>.
@@ -166,7 +166,7 @@ export default function PersonalSignUp({minWidth = '9rem'}:{minWidth:string}) {
                 className="text-sm text-base-100 hover:text-base-100 bg-primary px-4 py-1 rounded-sm hover:opacity-90 active:opacity-95"
                 target="_blank"
                 rel="noreferrer"
-                href={`mailto:${host.email}?subject=${encodeURIComponent(config.button.signUp.label)}&body=${mailBody()}`}
+                href={`mailto:${host.email}?subject=${encodeURIComponent(home_config.button.signUp.label)}&body=${mailBody()}`}
               >
                 <MailOutlineOutlined/> Create email *
               </a>

@@ -7,7 +7,7 @@
 
 import {useEffect,useMemo,useState} from 'react'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {decodeJsonParam} from '~/utils/extractQueryParam'
 import {SoftwareOfOrganisation} from '~/types/Organisation'
 import {getSoftwareForOrganisation} from '../apiOrganisations'

@@ -2,11 +2,11 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useAuth} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {MentionItemProps} from '~/types/Mention'
 import {getMentionByDoiFromRsd, getMentionByOpenalexIdFromRsd} from '~/utils/editMentions'
 import {getMentionByDoi} from '~/utils/getDOI'
@@ -38,7 +38,7 @@ type FindProjectMentionProps={
 }
 
 export default function FindMentionSection({id,config,findPublicationByTitle}:FindProjectMentionProps) {
-  const {session: {token}} = useAuth()
+  const {token} = useSession()
   const {onAdd} = useEditMentionReducer()
   const {showErrorMessage} = useSnackbar()
 

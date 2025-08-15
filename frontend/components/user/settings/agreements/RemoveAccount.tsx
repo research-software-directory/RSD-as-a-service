@@ -13,7 +13,7 @@ import AlertTitle from '@mui/material/AlertTitle'
 import Button from '@mui/material/Button'
 import {useFormContext} from 'react-hook-form'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {deleteRsdAccount} from '~/components/admin/rsd-users/apiRsdUsers'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import useSnackbar from '~/components/snackbar/useSnackbar'

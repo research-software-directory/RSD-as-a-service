@@ -5,11 +5,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {createContext, useContext, useState} from 'react'
 
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
-import {rowsPerPageOptions} from './pagination'
 import {setDocumentCookie} from '~/utils/userSettings'
+import {rowsPerPageOptions} from './pagination'
 
 export type UserSettingsProps={
   rsd_page_layout: LayoutType,

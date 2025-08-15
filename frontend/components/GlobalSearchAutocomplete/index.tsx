@@ -8,11 +8,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import React, {useCallback, useEffect, useRef, useState} from 'react'
-import {useRouter} from 'next/router'
+import {useRouter} from 'next/navigation'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 
-import {useAuth} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {useDebounce} from '~/utils/useDebounce'
 import logger from '~/utils/logger'
 import {composeUrl} from '~/utils/fetchHelpers'
@@ -31,7 +33,7 @@ type Props = {
 }
 
 export default function GlobalSearchAutocomplete(props: Props) {
-  const {session} = useAuth()
+  const {token} = useSession()
   const router = useRouter()
   const {activeModules} = useRsdSettings()
   const {showErrorMessage} = useSnackbar()
@@ -99,7 +101,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
     // Fetch api
     let data: GlobalSearchResults[]
     try {
-      data = await getGlobalSearch(search, session.token, activeModules) || []
+      data = await getGlobalSearch(search, token, activeModules) || []
     } catch (e: any) {
       logger(e?.message, 'error')
       showErrorMessage('Something went wrong getting the search results')

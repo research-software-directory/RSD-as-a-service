@@ -1,13 +1,16 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {useEffect, useState} from 'react'
-import {useAuth} from '~/auth'
+
+import {useAuth} from './AuthProvider'
 import ContentLoader from '~/components/layout/ContentLoader'
 import PageErrorMessage from '~/components/layout/PageErrorMessage'
 
