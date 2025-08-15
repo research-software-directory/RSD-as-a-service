@@ -28,7 +28,7 @@ public class RorPostgrestConnector {
 		this.backendUrl = Config.backendBaseUrl();
 	}
 
-	public Collection<OrganisationDatabaseData> organisationsWithoutLocation(int limit) {
+	public Collection<OrganisationDatabaseData> leastRecentlyScrapedOrganisations(int limit) {
 		String filter =
 			"organisation?ror_id=not.is.null&order=ror_scraped_at.asc.nullsfirst&select=id,ror_id&limit=" + limit;
 		String data = Utils.getAsAdmin(backendUrl + "/" + filter);

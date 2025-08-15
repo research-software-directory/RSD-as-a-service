@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -28,7 +28,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
-import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -378,15 +377,6 @@ public class Utils {
 
 	public static String stringOrNull(JsonElement e) {
 		return e == null || !e.isJsonPrimitive() ? null : e.getAsString();
-	}
-
-	public static <T> T safelyGetOrNull(JsonElement element, Function<JsonElement, T> extractor) {
-		try {
-			return extractor.apply(element);
-		} catch (RuntimeException e) {
-			LOGGER.warn("Exception extracting data from JSON: " + element, e);
-			return null;
-		}
 	}
 
 	public static Integer integerOrNull(JsonElement e) {
