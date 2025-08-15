@@ -7,8 +7,11 @@
 
 package nl.esciencecenter.rsd.scraper.ror;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,10 +35,11 @@ public class RorScraper {
 
 	public RorData scrapeData() throws RsdResponseException, IOException, InterruptedException {
 		String json = getFromApi();
-		return parseData(json);
+		return parseV1Data(json);
 	}
 
-	static RorData parseData(String json) {
+	// the full schema is at https://github.com/ror-community/ror-schema/blob/master/ror_schema.json
+	static RorData parseV1Data(String json) {
 		JsonElement jsonElement = JsonParser.parseString(json);
 		final String addressesKey = "addresses";
 
@@ -128,5 +132,38 @@ public class RorScraper {
 			lat,
 			lon
 		);
+	}
+
+	// the full schema is at https://github.com/ror-community/ror-schema/blob/master/ror_schema_v2_1.json
+	static RorData parseV2Data(String json) {
+		JsonObject parsedJson = JsonParser.parseString(json).getAsJsonObject();
+
+		JsonArray addressesJson = parsedJson.getAsJsonArray("locations");
+		// what to do when multiple addresses exist?
+		JsonObject firstAddressJson = addressesJson.get(0).getAsJsonObject().getAsJsonObject("geonames_details");
+
+		JsonElement countryJson = firstAddressJson.getAsJsonPrimitive("country_name");
+		String country = countryJson != null && countryJson.isJsonPrimitive()
+			? countryJson.getAsJsonPrimitive().getAsString()
+			: null;
+
+		String city = firstAddressJson.getAsJsonPrimitive("name").getAsString();
+
+		JsonArray linksJson = parsedJson.getAsJsonArray("links");
+		String wikipediaUrl = null;
+		for (JsonElement jsonElement : linksJson) {
+			JsonObject linkObjectJson = jsonElement.getAsJsonObject();
+			if (linkObjectJson.getAsJsonPrimitive("type").getAsString().equals("wikipedia")) {
+				wikipediaUrl = linkObjectJson.getAsJsonPrimitive("value").getAsString();
+				break;
+			}
+		}
+
+		List<String> rorTypes = List.of();
+		List<String> rorNames = List.of();
+		Double lat = null;
+		Double lon = null;
+
+		return new RorData(country, city, wikipediaUrl, rorTypes, rorNames, lat, lon);
 	}
 }
