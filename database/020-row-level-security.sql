@@ -793,12 +793,12 @@ CREATE POLICY admin_all_rights ON project_for_organisation TO rsd_admin
 
 
 -- meta-pages
-ALTER TABLE meta_pages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE meta_page ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON meta_pages FOR SELECT TO rsd_web_anon, rsd_user
+CREATE POLICY anyone_can_read ON meta_page FOR SELECT TO rsd_web_anon, rsd_user
 	USING (TRUE);
 
-CREATE POLICY admin_all_rights ON meta_pages TO rsd_admin
+CREATE POLICY admin_all_rights ON meta_page TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 
