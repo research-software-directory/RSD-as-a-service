@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -239,7 +239,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const settings = await getRsdSettings()
   const activeModules = activeModulesKeys(settings.modules)
   // do not show software overview if module is not enabled
-  if (activeModules.includes('software')===false){
+  if (!activeModules.includes('software')){
     return {
       notFound: true
     }
@@ -260,7 +260,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // default order
   let softwareOrder = order ?? 'mention_cnt'
   // remove order key if NOT in list of allowed
-  if (order && allowedOrderings.includes(order)===false) {
+  if (order && !allowedOrderings.includes(order)) {
     softwareOrder = 'mention_cnt'
   }
 
