@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,7 +22,7 @@ public class UserDeletingItemsIntegrationTest {
 			.header(Commons.requestEntry)
 			.contentType(ContentType.JSON)
 			.body(
-				"{\"slug\":  \"%s\", \"is_published\": true, \"brand_name\": \"test software\"}".formatted(softwareSlug)
+				"{\"slug\": \"%s\", \"is_published\": true, \"brand_name\": \"test software\"}".formatted(softwareSlug)
 			)
 			.when()
 			.post("software")
@@ -56,7 +56,7 @@ public class UserDeletingItemsIntegrationTest {
 			.header(Commons.requestEntry)
 			.contentType(ContentType.JSON)
 			.body(
-				"{\"slug\":  \"%s\", \"is_published\": true, \"brand_name\": \"test software\"}".formatted(softwareSlug)
+				"{\"slug\": \"%s\", \"is_published\": true, \"brand_name\": \"test software\"}".formatted(softwareSlug)
 			)
 			.when()
 			.post("software")
@@ -90,7 +90,7 @@ public class UserDeletingItemsIntegrationTest {
 			.header(user.authHeader)
 			.header(Commons.requestEntry)
 			.contentType(ContentType.JSON)
-			.body("{\"slug\":  \"%s\", \"is_published\": true, \"title\": \"test project\"}".formatted(projectSlug))
+			.body("{\"slug\": \"%s\", \"is_published\": true, \"title\": \"test project\"}".formatted(projectSlug))
 			.when()
 			.post("project")
 			.then()
@@ -123,7 +123,7 @@ public class UserDeletingItemsIntegrationTest {
 			.header(user.authHeader)
 			.header(Commons.requestEntry)
 			.contentType(ContentType.JSON)
-			.body("{\"slug\":  \"%s\", \"name\": \"test organisation\"}".formatted(organisationSlug))
+			.body("{\"slug\": \"%s\", \"name\": \"test organisation\"}".formatted(organisationSlug))
 			.when()
 			.post("organisation")
 			.then()
@@ -154,7 +154,7 @@ public class UserDeletingItemsIntegrationTest {
 			.header(SetupAllTests.adminAuthHeader)
 			.header(Commons.requestEntry)
 			.contentType(ContentType.JSON)
-			.body("{\"slug\":  \"%s\", \"name\": \"test community\"}".formatted(communitySlug))
+			.body("{\"slug\": \"%s\", \"name\": \"test community\"}".formatted(communitySlug))
 			.when()
 			.post("community")
 			.then()

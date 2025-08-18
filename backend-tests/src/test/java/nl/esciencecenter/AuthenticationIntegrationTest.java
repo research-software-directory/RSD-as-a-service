@@ -121,7 +121,7 @@ public class AuthenticationIntegrationTest {
 			.statusCode(204);
 
 		String getStartedUrl = "https://www.example.com";
-		List response = RestAssured.given()
+		List<?> response = RestAssured.given()
 			.header(user.authHeader)
 			.header(new Header("Prefer", "return=representation"))
 			.contentType(ContentType.JSON)
@@ -159,7 +159,7 @@ public class AuthenticationIntegrationTest {
 			.then()
 			.statusCode(201);
 
-		List response = RestAssured.when()
+		List<?> response = RestAssured.when()
 			.get("software?slug=eq." + slug)
 			.then()
 			.statusCode(200)
@@ -247,7 +247,7 @@ public class AuthenticationIntegrationTest {
 
 		// check if category IDs appear in proper location of result (=CategoryPath[])
 		JsonArray jsonArray = JsonParser.parseString(response).getAsJsonArray();
-		Assertions.assertEquals(jsonArray.size(), 2);
+		Assertions.assertEquals(2, jsonArray.size());
 		for (JsonElement jsonElement : jsonArray) {
 			JsonArray categoryPath = jsonElement.getAsJsonArray();
 			String shortName = categoryPath.get(1).getAsJsonObject().getAsJsonPrimitive("short_name").getAsString();
