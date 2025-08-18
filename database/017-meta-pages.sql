@@ -54,3 +54,14 @@ $$;
 
 CREATE TRIGGER sanitise_update_meta_page BEFORE UPDATE ON meta_page
 	FOR EACH ROW EXECUTE PROCEDURE sanitise_update_meta_page();
+
+
+-- row level security
+ALTER TABLE meta_page ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON meta_page FOR SELECT TO rsd_web_anon, rsd_user
+	USING (is_published);
+
+CREATE POLICY admin_all_rights ON meta_page TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
