@@ -9,9 +9,9 @@ import Avatar from '@mui/material/Avatar'
 
 import {getImageUrl} from '~/utils/editImage'
 import {getDisplayInitials} from '~/utils/getDisplayName'
+import PersonMetrics from '~/components/cards/SoftwareProjectMetrics'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import {PersonsOverview} from './apiPersonsOverview'
-import PersonMetrics from './PersonMetrics'
 
 export default function CommunityListItem({person}:{person:PersonsOverview}) {
   const given_names = person.display_name.split(' ')[0] ?? ''
