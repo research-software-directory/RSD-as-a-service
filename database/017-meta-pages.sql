@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 dv4all
 --
@@ -8,7 +8,7 @@
 -- CUSTOM META PAGES TO BE ADDED TO RSD
 -- THE PAGES ARE LISTED IN THE FOOTER
 
-CREATE TABLE meta_pages (
+CREATE TABLE meta_page (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	slug VARCHAR(100) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
 	title VARCHAR(100) NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE meta_pages (
 );
 
 
-CREATE FUNCTION sanitise_insert_meta_pages() RETURNS TRIGGER LANGUAGE plpgsql AS
+CREATE FUNCTION sanitise_insert_meta_page() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = gen_random_uuid();
@@ -30,11 +30,11 @@ BEGIN
 END
 $$;
 
-CREATE TRIGGER sanitise_insert_meta_pages BEFORE INSERT ON meta_pages
-	FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_meta_pages();
+CREATE TRIGGER sanitise_insert_meta_page BEFORE INSERT ON meta_page
+	FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_meta_page();
 
 
-CREATE FUNCTION sanitise_update_meta_pages() RETURNS TRIGGER LANGUAGE plpgsql AS
+CREATE FUNCTION sanitise_update_meta_page() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = OLD.id;
@@ -52,5 +52,16 @@ BEGIN
 END
 $$;
 
-CREATE TRIGGER sanitise_update_meta_pages BEFORE UPDATE ON meta_pages
-	FOR EACH ROW EXECUTE PROCEDURE sanitise_update_meta_pages();
+CREATE TRIGGER sanitise_update_meta_page BEFORE UPDATE ON meta_page
+	FOR EACH ROW EXECUTE PROCEDURE sanitise_update_meta_page();
+
+
+-- row level security
+ALTER TABLE meta_page ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON meta_page FOR SELECT TO rsd_web_anon, rsd_user
+	USING (is_published);
+
+CREATE POLICY admin_all_rights ON meta_page TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);

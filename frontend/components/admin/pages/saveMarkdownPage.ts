@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +13,7 @@ import {MarkdownPage} from './useMarkdownPages'
 
 export async function addMarkdownPage({page,token}:{page:MarkdownPage,token:string}) {
   try {
-    const query = 'meta_pages'
+    const query = 'meta_page'
     const url = `/api/v1/${query}`
 
     const resp = await fetch(url,{
@@ -43,7 +45,7 @@ export async function addMarkdownPage({page,token}:{page:MarkdownPage,token:stri
 
 export async function saveMarkdownPage({page,token}:{page:MarkdownPage,token:string}) {
   try {
-    const query = `meta_pages?id=eq.${page.id}`
+    const query = `meta_page?id=eq.${page.id}`
     const url = `/api/v1/${query}`
 
     const resp = await fetch(url,{
@@ -111,7 +113,7 @@ export async function updatePagePositions({items,token}:{items:RsdLink[],token:s
 
 export async function patchMarkdownData({id,data,token}:{id:string,data:any,token:string}) {
   try {
-    const query = `meta_pages?id=eq.${id}`
+    const query = `meta_page?id=eq.${id}`
     const url = `/api/v1/${query}`
 
     const resp = await fetch(url,{
@@ -134,7 +136,7 @@ export async function patchMarkdownData({id,data,token}:{id:string,data:any,toke
 
 export async function deleteMarkdownPage({slug,token}:{slug:string,token:string}) {
   try {
-    const query = `meta_pages?slug=eq.${slug}`
+    const query = `meta_page?slug=eq.${slug}`
     const url = `/api/v1/${query}`
 
     const resp = await fetch(url,{

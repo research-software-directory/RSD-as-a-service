@@ -3,6 +3,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -27,7 +28,7 @@ beforeEach(() => {
 })
 
 it('addMarkdownPage', async() => {
-  const expectUrl = '/api/v1/meta_pages'
+  const expectUrl = '/api/v1/meta_page'
   const expectBody = {
     'body': '{"id":null,"slug":"test-slug","title":"Test title 1","description":null,"is_published":false,"position":1}',
     'headers': {
@@ -66,7 +67,7 @@ it('addMarkdownPage', async() => {
 it('saveMarkdownPage', async () => {
   mockParams.page.id = 'test-page-id'
 
-  const expectUrl = `/api/v1/meta_pages?id=eq.${mockParams.page.id}`
+  const expectUrl = `/api/v1/meta_page?id=eq.${mockParams.page.id}`
   const expectBody = {
     'body': '{"id":"test-page-id","slug":"test-slug","title":"Test title 1","description":null,"is_published":false,"position":1}',
     'headers': {
@@ -121,7 +122,7 @@ it('deleteMarkdownPage', async() => {
     token: 'TEST-TOKEN'
   }
 
-  const expectedUrl = `/api/v1/meta_pages?slug=eq.${params.slug}`
+  const expectedUrl = `/api/v1/meta_page?slug=eq.${params.slug}`
   const expectBody = {
     'headers': {
       'Authorization': `Bearer ${params.token}`,

@@ -1,6 +1,6 @@
 <!--
-SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -26,7 +26,7 @@ Tests should be written taking the following principles in account:
 
 ## Contributing
 
-This module uses [EditorConfig](https://editorconfig.org/) for basic formatting. Please check if your editor [already supports EditorConfig](https://editorconfig.org/#pre-installed) or if you need to [install a plugin](https://editorconfig.org/#download). A GitHub workflow is run on every PR to check if any files violate the formatting settings.
+This module uses [Prettier](https://prettier.io/) for code formatting. Please make sure your contributions comply with Prettier. A GitHub workflow is run on every PR to check if any files violate the formatting settings.
 
 ## Writing tests
 

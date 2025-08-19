@@ -1260,7 +1260,7 @@ const globalCategoryPromise = Promise.all([softwarePromise, categoryPromise])
 	.then(() => 'global categories for software done');
 globalPromises.push(globalCategoryPromise);
 
-const metaPagesPromise = postToBackend('/meta_pages', generateMetaPages()).then(() => console.log('meta pages done'));
+const metaPagesPromise = postToBackend('/meta_page', generateMetaPages()).then(() => console.log('meta pages done'));
 globalPromises.push(metaPagesPromise);
 
 const newsPromise = imageIdsPromise.then(imageIds =>
