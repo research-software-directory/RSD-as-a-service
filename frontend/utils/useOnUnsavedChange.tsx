@@ -1,14 +1,13 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect} from 'react'
 import {useRouter} from 'next/router'
-import nprogress from 'nprogress'
 
 function onRouteChangeNext(e:any,warning:string) {
   // console.log('onRouteChangeNext...e...', e)
@@ -16,8 +15,6 @@ function onRouteChangeNext(e:any,warning:string) {
   const leavePage = confirm(warning)
   // if user wants to stay
   if (leavePage === false) {
-    // set progres to done (otherwise it will hang)
-    nprogress.done()
     // we need to throw error here to cancel navigation
     // at this moment there is no 'handler' to cancel navigation.
     // This workaround is based on this issue https://github.com/vercel/next.js/issues/2476

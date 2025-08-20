@@ -5,9 +5,9 @@
 
 import PersonalSignUp from './PersonalSignUp'
 import OrganisationSignUp from './OrganisationSignUp'
-import {config} from './config'
+import {home_config} from './home_config'
 
-const {button} = config
+const {button} = home_config
 
 function GlowingButton({text, url, target = '_self', minWidth = '9rem'}: { text: string, url: string, target?: string, minWidth?: string }) {
   return <a

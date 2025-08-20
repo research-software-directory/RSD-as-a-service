@@ -6,7 +6,7 @@
 
 import Tabs from '@mui/material/Tabs'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useRsdSettings from '~/config/useRsdSettings'
 import {UserCounts, useUserContext} from '~/components/user/context/UserContext'
 import {UserPageId, userTabItems} from './UserTabItems'

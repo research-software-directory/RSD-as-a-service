@@ -7,7 +7,7 @@
 import {GetServerSidePropsContext} from 'next/types'
 
 import {app} from '~/config/app'
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import {getUserSettings} from '~/utils/userSettings'
