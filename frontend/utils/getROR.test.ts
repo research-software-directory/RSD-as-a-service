@@ -26,15 +26,12 @@ beforeEach(() => {
 it('findInROR calls fetch with search param and json header', async () => {
   const searchFor = 'ABCD'
   // mock ROR response
-  mockFetchJson.mockResolvedValueOnce({items:[{
-    id:'test-id',
-    name:'Test organisation',
-    country:{country_name:'Test country'},
-    addresses:[
-      {city: 'Test city'}
-    ],
-    links:[],
-    types:['Education']
+  mockFetchJson.mockResolvedValueOnce({items: [{
+    id: 'test-id',
+    names: [{value: 'Test organisation', types: ['ror_display']}],
+    locations: [{geonames_details: {country_name:'Test country', name: 'Test city'}}],
+    links: [],
+    types: ['Education']
   }]})
 
   const resp = await findInROR({searchFor})
@@ -67,7 +64,7 @@ it('findInROR calls fetch with search param and json header', async () => {
 
   expect(mockFetch).toHaveBeenCalledTimes(1)
   expect(mockFetch).toHaveBeenCalledWith(
-    `https://api.ror.org/v1/organizations?query=${searchFor}`,
+    `https://api.ror.org/v2/organizations?query=${searchFor}`,
     {'headers': {'Content-Type': 'application/json'}}
   )
 })

@@ -22,7 +22,7 @@ public class RorId {
 	private static final String ROR_BASE_URL = "https://ror.org/";
 	// https://ror.org/blog/2024-04-15-announcing-ror-v2/
 	// https://ror.readme.io/changelog/2025-07-01-sunset-of-version-1
-	private static final String ROR_BASE_API_V1_URL = "https://api.ror.org/v1/organizations/";
+	private static final String ROR_BASE_API_V2_URL = "https://api.ror.org/v2/organizations/";
 	private static final Pattern ROR_URL_PATTERN = Pattern.compile(
 		"^https://ror\\.org/(0[a-hj-km-np-tv-z|\\d]{6}\\d{2})$"
 	);
@@ -59,11 +59,13 @@ public class RorId {
 	public static RorId fromUrlString(String url) {
 		Objects.requireNonNull(url);
 		if (!isValidRorUrl(url)) {
-			throw new IllegalArgumentException("The url %s is not a valid ROR ID".formatted(url));
+			throw new IllegalArgumentException("The URL %s is not a valid ROR ID".formatted(url));
 		}
 
 		Matcher matcher = ROR_URL_PATTERN.matcher(url);
-		matcher.find();
+		if (!matcher.find()) {
+			throw new AssertionError("URL %s passed isValidRorUrl but now no match found".formatted(url));
+		}
 		String id = matcher.group(1);
 		return new RorId(id);
 	}
@@ -72,8 +74,8 @@ public class RorId {
 		return URI.create(ROR_BASE_URL + id);
 	}
 
-	public URI asApiV1Url() {
-		return URI.create(ROR_BASE_API_V1_URL + id);
+	public URI asApiV2Url() {
+		return URI.create(ROR_BASE_API_V2_URL + id);
 	}
 
 	@Override

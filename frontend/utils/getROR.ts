@@ -6,16 +6,17 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {AutocompleteOption} from '../types/AutocompleteOptions'
-import {OrganisationSource, SearchOrganisation} from '../types/Organisation'
+import {AutocompleteOption} from '~/types/AutocompleteOptions'
+import {OrganisationSource, SearchOrganisation} from '~/types/Organisation'
 import {createJsonHeaders} from './fetchHelpers'
 import {getSlugFromString} from './getSlugFromString'
 import logger from './logger'
 
 export async function findInROR({searchFor}:{searchFor:string}) {
   try {
-    // this query will match organisation by name or website values
-    const url = `https://api.ror.org/v1/organizations?query=${encodeURIComponent(searchFor)}`
+    // this query will match organisation by name
+    // https://ror.readme.io/docs/api-query
+    const url = `https://api.ror.org/v2/organizations?query=${encodeURIComponent(searchFor)}`
 
     // make request
     const resp = await fetch(url, {
@@ -27,8 +28,7 @@ export async function findInROR({searchFor}:{searchFor:string}) {
 
     if (resp.status === 200) {
       const json: any = await resp.json()
-      const options = buildAutocompleteOptions(json['items'])
-      return options
+      return buildAutocompleteOptions(json['items'])
     }
     logger(`findInROR FAILED: ${resp.status}: ${resp.statusText}`, 'warn')
     // we return nothing
@@ -40,170 +40,232 @@ export async function findInROR({searchFor}:{searchFor:string}) {
 }
 
 function buildAutocompleteOptions(rorItems: RORItem[]): AutocompleteOption<SearchOrganisation>[] {
-  if (typeof rorItems === 'undefined') return []
-  if (rorItems.length === 0) return []
+  if (rorItems === undefined || rorItems.length === 0) return []
 
   const options = rorItems.map(item => {
-    const slug = getSlugFromString(item.name)
-    return {
-      // we use ror_id as primary key
-      key: item?.id ?? slug,
-      label: item.name,
-      data: {
-        id: null,
-        parent: null,
-        primary_maintainer: null,
-        slug,
-        name: item.name,
-        short_description: null,
-        description: null,
-        ror_id: item.id,
-        website: item.links[0] ?? null,
-        is_tenant: false,
-        country: item?.country?.country_name ?? null,
-        city: item?.addresses[0]?.city ?? null,
-        wikipedia_url: item.wikipedia_url ?? null,
-        ror_types: item.types ?? [],
-        logo_id: null,
-        source: 'ROR' as OrganisationSource
+    try {
+      const name = item.names
+        .filter(name => name.types.includes('ror_display'))
+        .map(name => name.value)[0]
+      const slug = getSlugFromString(name)
+
+      const wikipediaUrls = item.links.filter(link => link.type === 'wikipedia')
+
+      const websites = item.links ? item.links.filter(link => link.type === 'website') : null
+
+      const firstAddress = item.locations.length ? item.locations[0] : null
+
+      return {
+        // we use ror_id as primary key
+        key: item?.id ?? slug,
+        label: name,
+        data: {
+          id: null,
+          parent: null,
+          primary_maintainer: null,
+          slug,
+          name: name,
+          short_description: null,
+          description: null,
+          ror_id: item.id,
+          website: websites?.length ? websites[0].value : null,
+          is_tenant: false,
+          country: firstAddress?.geonames_details?.country_name ?? null,
+          city: firstAddress?.geonames_details?.name ?? null,
+          wikipedia_url: wikipediaUrls.length ? wikipediaUrls[0].type : null,
+          ror_types: item.types ?? [],
+          logo_id: null,
+          source: 'ROR' as OrganisationSource
+        }
       }
+    } catch (e: any) {
+      logger(`Could not parse ROR v2 item with error ${e} and value ${JSON.stringify(item)}`, 'error')
+      return null
     }
   })
-  return options
+
+  return options.filter(item => item !== null)
 }
 
-// example of ROR item response
+// https://github.com/ror-community/ror-schema/blob/master/example_record_v2_1.json
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const rorItem = {
-  'id': 'https://ror.org/008xxew50',
-  'name': 'VU Amsterdam',
-  'email_address': null,
-  'ip_addresses': [],
-  'established': 1880,
-  'types': [
-    'Education'
+const rorV2Item = {
+  'locations': [
+    {
+      'geonames_id': 5378538,
+      'geonames_details': {
+        'continent_code': 'NA',
+        'continent_name': 'North America',
+        'country_code': 'US',
+        'country_name': 'United States',
+        'country_subdivision_code': 'CA',
+        'country_subdivision_name': 'California',
+        'lat': 37.802168,
+        'lng': -122.271281,
+        'name': 'Oakland'
+      }
+    }
+  ],
+  'established': 1868,
+  'external_ids': [
+    {
+      'type': 'fundref',
+      'all': [
+        '100005595',
+        '100009350',
+        '100004802',
+        '100010574',
+        '100005188',
+        '100005192'
+      ],
+      'preferred': '100005595'
+    },
+    {
+      'type': 'grid',
+      'all': [
+        'grid.30389.31'
+      ],
+      'preferred': 'grid.30389.31'
+    },
+    {
+      'type': 'isni',
+      'all': [
+        '0000 0001 2348 0690'
+      ],
+      'preferred': null
+    }
+  ],
+  'id': 'https://ror.org/00pjdza24',
+  'domains': [
+    'universityofcalifornia.edu'
+  ],
+  'links': [
+    {
+      'type': 'website',
+      'value': 'http://www.universityofcalifornia.edu/'
+    },
+    {
+      'type': 'wikipedia',
+      'value': 'http://en.wikipedia.org/wiki/University_of_California'
+    }
+  ],
+  'names': [
+    {
+      'value': 'UC',
+      'types': [
+        'acronym'
+      ],
+      'lang': 'en'
+    },
+    {
+      'value': 'UC System',
+      'types': [
+        'alias'
+      ],
+      'lang': 'en'
+    },
+    {
+      'value': 'University of California System',
+      'types': [
+        'ror_display',
+        'label'
+      ],
+      'lang': 'en'
+    },
+    {
+      'value': 'Université de Californie',
+      'types': [
+        'label'
+      ],
+      'lang': 'fr'
+    }
   ],
   'relationships': [
     {
-      'label': 'Amsterdam UMC Location VUmc',
-      'type': 'Related',
-      'id': 'https://ror.org/00q6h8f30'
+      'id': 'https://ror.org/02jbv0t02',
+      'label': 'Lawrence Berkeley National Laboratory',
+      'type': 'related'
     },
     {
-      'label': 'Spinoza Centre for Neuroimaging',
-      'type': 'Related',
-      'id': 'https://ror.org/05kgbsy64'
+      'id': 'https://ror.org/03yrm5c26',
+      'label': 'California Digital Library',
+      'type': 'child'
     },
     {
-      'label': 'Advanced Research Center for Nanolithography (Netherlands)',
-      'type': 'Child',
-      'id': 'https://ror.org/04xe7ws48'
+      'id': 'https://ror.org/00zv0wd17',
+      'label': 'Center for Information Technology Research in the Interest of Society',
+      'type': 'child'
     },
     {
-      'label': 'Amsterdam Neuroscience',
-      'type': 'Child',
-      'id': 'https://ror.org/01x2d9f70'
+      'id': 'https://ror.org/03t0t6y08',
+      'label': 'University of California Division of Agriculture and Natural Resources',
+      'type': 'child'
     },
     {
-      'label': 'EMGO Institute for Health and Care Research',
-      'type': 'Child',
-      'id': 'https://ror.org/0258apj61'
+      'id': 'https://ror.org/01an7q238',
+      'label': 'University of California, Berkeley',
+      'type': 'child'
+    },
+    {
+      'id': 'https://ror.org/05rrcem69',
+      'label': 'University of California, Davis',
+      'type': 'child'
+    },
+    {
+      'id': 'https://ror.org/04gyf1771',
+      'label': 'University of California, Irvine',
+      'type': 'child'
+    },
+    {
+      'id': 'https://ror.org/046rm7j60',
+      'label': 'University of California, Los Angeles',
+      'type': 'child'
+    },
+    {
+      'id': 'https://ror.org/00d9ah105',
+      'label': 'University of California, Merced',
+      'type': 'child'
+    },
+    {
+      'id': 'https://ror.org/03nawhv43',
+      'label': 'University of California, Riverside',
+      'type': 'child'
+    },
+    {
+      'id': 'https://ror.org/0168r3w48',
+      'label': 'University of California, San Diego',
+      'type': 'child'
+    },
+    {
+      'id': 'https://ror.org/043mz5j54',
+      'label': 'University of California, San Francisco',
+      'type': 'child'
+    },
+    {
+      'id': 'https://ror.org/02t274463',
+      'label': 'University of California, Santa Barbara',
+      'type': 'child'
+    },
+    {
+      'id': 'https://ror.org/03s65by71',
+      'label': 'University of California, Santa Cruz',
+      'type': 'child'
     }
-  ],
-  'addresses': [
-    {
-      'lat': 52.333941,
-      'lng': 4.865709,
-      'state': 'Noord-Holland',
-      'state_code': 'NL-NH',
-      'city': 'Amsterdam',
-      'geonames_city': {
-        'id': 2759794,
-        'city': 'Amsterdam',
-        'geonames_admin1': {
-          'name': 'North Holland',
-          'id': 2749879,
-          'ascii_name': 'North Holland',
-          'code': 'NL.07'
-        },
-        'geonames_admin2': {
-          'name': 'Gemeente Amsterdam',
-          'id': 2759793,
-          'ascii_name': 'Gemeente Amsterdam',
-          'code': 'NL.07.0363'
-        },
-        'license': {
-          'attribution': 'Data from geonames.org under a CC-BY 3.0 license',
-          'license': 'http://creativecommons.org/licenses/by/3.0/'
-        },
-        'nuts_level1': {
-          'name': 'WEST-NEDERLAND',
-          'code': 'NL3'
-        },
-        'nuts_level2': {
-          'name': 'Noord-Holland',
-          'code': 'NL32'
-        },
-        'nuts_level3': {
-          'name': 'Groot-Amsterdam',
-          'code': 'NL326'
-        }
-      },
-      'postcode': null,
-      'primary': false,
-      'line': null,
-      'country_geonames_id': 2750405
-    }
-  ],
-  'links': [
-    'http://www.vu.nl/en/'
-  ],
-  'aliases': [],
-  'acronyms': [
-    'VU'
   ],
   'status': 'active',
-  'wikipedia_url': 'http://en.wikipedia.org/wiki/VU_University_Amsterdam',
-  'labels': [
-    {
-      'label': 'Vrije Universiteit Amsterdam',
-      'iso639': 'nl'
-    }
+  'types': [
+    'education'
   ],
-  'country': {
-    'country_name': 'Netherlands',
-    'country_code': 'NL'
-  },
-  'external_ids': {
-    'ISNI': {
-      'preferred': null,
-      'all': [
-        '0000 0004 1754 9227'
-      ]
+  'admin': {
+    'created': {
+      'date': '2020-04-25',
+      'schema_version': '1.0'
     },
-    'FundRef': {
-      'preferred': null,
-      'all': [
-        '501100001833'
-      ]
-    },
-    'OrgRef': {
-      'preferred': null,
-      'all': [
-        '324167'
-      ]
-    },
-    'Wikidata': {
-      'preferred': null,
-      'all': [
-        'Q1065414'
-      ]
-    },
-    'GRID': {
-      'preferred': 'grid.12380.38',
-      'all': 'grid.12380.38'
+    'last_modified': {
+      'date': '2022-10-18',
+      'schema_version': '2.0'
     }
   }
 }
 
-export type RORItem = typeof rorItem
+type RORItem = typeof rorV2Item
