@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -53,6 +53,12 @@ public class PostgrestConnector {
 			Utils.atLeastOneHourAgoFilter("languages_scraped_at")
 		);
 		return parseBasicJsonData(data);
+	}
+
+	public void saveCommitHistoryScrapedAt(UUID softwareId, ZonedDateTime scrapedAt) {
+		JsonObject root = new JsonObject();
+		root.addProperty("commit_history_scraped_at", scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		Utils.patchAsAdmin(backendUrl + "?software=eq." + softwareId, root.toString());
 	}
 
 	/**

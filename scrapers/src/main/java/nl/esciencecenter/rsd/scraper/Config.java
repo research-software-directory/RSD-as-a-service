@@ -154,6 +154,15 @@ public class Config {
 	}
 
 	/**
+	 * The maximum requests rate for the Codeberg API.
+	 *
+	 * @return the maximum request rate (default 6).
+	 */
+	public static int maxRequestsCodeberg() {
+		return getIntEnv("MAX_REQUESTS_CODEBERG", 6);
+	}
+
+	/**
 	 * Get the maximum number of mentions to scrape in one run of the MentionScraper.
 	 *
 	 * @return the maximum number of mentions to scrape (default 6).
