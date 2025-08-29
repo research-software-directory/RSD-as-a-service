@@ -38,6 +38,9 @@ async function suggestPlatform(repositoryUrl: string | null): Promise<null | Cod
   if (repositoryUrl?.includes('data.4tu.nl')) {
     return '4tu'
   }
+  if (repositoryUrl?.includes('codeberg.org')) {
+    return 'codeberg'
+  }
 
   try {
     const repositoryUrlDomain = new URL(repositoryUrl)

@@ -18,13 +18,13 @@ import {AutocompleteOption} from './AutocompleteOptions'
 import {CategoryPath} from './Category'
 import {OrganisationStatus} from './Organisation'
 
-export type CodePlatform = 'github' | 'gitlab' | 'bitbucket' | '4tu' | 'other'
+export type CodePlatform = 'github' | 'gitlab' | 'bitbucket' | '4tu' | 'codeberg' | 'other'
 
 export type RepositoryUrl = {
   software: string,
   url: string,
   // enum based on db enum defined as
-  // platform_type in 003-create-relations-for-software.sql
+  // platform_type in 005-create-relations-for-software.sql
   code_platform: CodePlatform,
   // options fields used to reset values on update
   // these are filled by scrapers

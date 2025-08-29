@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -9,7 +10,7 @@ import GitHubIcon from '@mui/icons-material/GitHub'
 import FolderOpenIcon from '@mui/icons-material/FolderOpen'
 import {CodePlatform} from '~/types/SoftwareTypes'
 import GitlabIcon from '~/assets/logos/gitlab-icon-rgb.svg'
-
+import Image from 'next/image'
 
 export default function AboutSourceCode({repository,platform}: { repository: string | null, platform: CodePlatform}) {
   const code = '</>'
@@ -21,7 +22,7 @@ export default function AboutSourceCode({repository,platform}: { repository: str
       case 'github':
         return (
           <a key={repository} href={repository ?? ''}
-            title="Github repository" target="_blank" rel="noreferrer"
+            title="GitHub repository" target="_blank" rel="noreferrer"
             className="hover:text-base-content"
           >
             <GitHubIcon sx={{
@@ -33,11 +34,26 @@ export default function AboutSourceCode({repository,platform}: { repository: str
       case 'gitlab':
         return (
           <a key={repository} href={repository ?? ''}
-            title="Gitlab repository" target="_blank" rel="noreferrer"
+            title="GitLab repository" target="_blank" rel="noreferrer"
             className="hover:text-base-content"
           >
             <GitlabIcon
               className="w-[3rem] h-[3rem]"
+            />
+          </a>
+        )
+      case 'codeberg':
+        return (
+          <a key={repository} href={repository ?? ''}
+            title="Codeberg repository" target="_blank" rel="noreferrer"
+            className="hover:text-base-content"
+          >
+            <Image
+              src="/images/codeberg-logo_vertical_blue.svg"
+              alt="Codeberg logo"
+              width={500}
+              height={500}
+              style={{width: '5rem'}}
             />
           </a>
         )

@@ -40,6 +40,7 @@ export const config={
       {label: 'GitLab', value: 'gitlab'},
       {label: 'Bitbucket', value: 'bitbucket'},
       {label: '4TU', value: '4tu'},
+      {label: 'Codeberg', value: 'codeberg'},
       {label: 'Other', value: 'other'},
     ]
   },

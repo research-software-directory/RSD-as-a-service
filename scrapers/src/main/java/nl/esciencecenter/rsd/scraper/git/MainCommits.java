@@ -31,6 +31,7 @@ public class MainCommits {
 		scrapeGitHub();
 		scrapeGitLab();
 		scrape4tu();
+		scrapeCodeberg();
 
 		long time = System.currentTimeMillis() - t1;
 
@@ -245,6 +246,102 @@ public class MainCommits {
 					);
 				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("4TU commit scraper", "repository_url", commitData.software(), e);
+					Utils.saveErrorMessageInDatabase(
+						"Unknown error",
+						"repository_url",
+						"commit_history_last_error",
+						commitData.software().toString(),
+						"software",
+						scrapedAt,
+						"commit_history_scraped_at"
+					);
+				}
+			});
+			futures[i] = future;
+			i++;
+		}
+		CompletableFuture.allOf(futures).join();
+	}
+
+	private static void scrapeCodeberg() {
+		PostgrestConnector softwareInfoRepository = new PostgrestConnector(
+			Config.backendBaseUrl() + "/repository_url",
+			CodePlatformProvider.CODEBERG
+		);
+		Collection<BasicRepositoryDataWithHistory> dataToScrape = softwareInfoRepository.commitDataWithHistory(
+			Config.maxRequestsCodeberg()
+		);
+		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
+		ZonedDateTime scrapedAt = ZonedDateTime.now();
+		int i = 0;
+		for (BasicRepositoryDataWithHistory commitData : dataToScrape) {
+			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+				try {
+					softwareInfoRepository.saveCommitHistoryScrapedAt(commitData.software(), scrapedAt);
+					String repoUrl = commitData.url();
+
+					Optional<CodebergScraper> codebergScraperOptional = CodebergScraper.fromUrl(
+						repoUrl,
+						commitData.commitsPerWeek()
+					);
+					if (codebergScraperOptional.isEmpty()) {
+						Utils.saveErrorMessageInDatabase(
+							"Not a valid Codeberg URL: " + repoUrl,
+							"repository_url",
+							"commit_history_last_error",
+							commitData.software().toString(),
+							"software",
+							scrapedAt,
+							"commit_history_scraped_at"
+						);
+						return;
+					}
+
+					CodebergScraper codebergScraper = codebergScraperOptional.get();
+					CommitsPerWeek scrapedCommits = codebergScraper.contributions();
+					BasicRepositoryData basicData = new BasicRepositoryData(commitData.software(), commitData.url());
+					CommitData updatedData = new CommitData(basicData, scrapedCommits, scrapedAt);
+					softwareInfoRepository.saveCommitData(updatedData);
+				} catch (RsdRateLimitException e) {
+					// in case we hit the rate limit, we don't update the scraped_at time, so it gets scraped first next time
+					Utils.saveExceptionInDatabase(
+						"Codeberg commit scraper",
+						"repository_url",
+						commitData.software(),
+						e
+					);
+					Utils.saveErrorMessageInDatabase(
+						e.getMessage(),
+						"repository_url",
+						"commit_history_last_error",
+						commitData.software().toString(),
+						"software",
+						null,
+						null
+					);
+				} catch (RsdResponseException e) {
+					Utils.saveExceptionInDatabase(
+						"Codeberg commit scraper",
+						"repository_url",
+						commitData.software(),
+						e
+					);
+					Utils.saveErrorMessageInDatabase(
+						e.getMessage(),
+						"repository_url",
+						"commit_history_last_error",
+						commitData.software().toString(),
+						"software",
+						scrapedAt,
+						"commit_history_scraped_at"
+					);
+				} catch (Exception e) {
+					Utils.saveExceptionInDatabase(
+						"Codeberg commit scraper",
+						"repository_url",
+						commitData.software(),
+						e
+					);
 					Utils.saveErrorMessageInDatabase(
 						"Unknown error",
 						"repository_url",

@@ -28,6 +28,7 @@ public class MainBasicData {
 
 		scrapeGitHub();
 		scrapeGitLab();
+		scrapeCodeberg();
 
 		long time = System.currentTimeMillis() - t1;
 
@@ -178,6 +179,94 @@ public class MainBasicData {
 				} catch (Exception e) {
 					Utils.saveExceptionInDatabase(
 						"GitLab basic data scraper",
+						"repository_url",
+						basicData.software(),
+						e
+					);
+					Utils.saveErrorMessageInDatabase(
+						"Unknown error",
+						"repository_url",
+						"basic_data_last_error",
+						basicData.software().toString(),
+						"software",
+						scrapedAt,
+						"basic_data_scraped_at"
+					);
+				}
+			});
+			futures[i] = future;
+			i++;
+		}
+		CompletableFuture.allOf(futures).join();
+	}
+
+	private static void scrapeCodeberg() {
+		PostgrestConnector softwareInfoRepository = new PostgrestConnector(
+			Config.backendBaseUrl() + "/repository_url",
+			CodePlatformProvider.CODEBERG
+		);
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.statsData(Config.maxRequestsCodeberg());
+		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
+		ZonedDateTime scrapedAt = ZonedDateTime.now();
+		int i = 0;
+		for (BasicRepositoryData basicData : dataToScrape) {
+			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+				try {
+					String repoUrl = basicData.url();
+
+					Optional<CodebergScraper> codebergScraperOptional = CodebergScraper.fromUrl(repoUrl);
+					if (codebergScraperOptional.isEmpty()) {
+						Utils.saveErrorMessageInDatabase(
+							"Not a valid Codeberg URL: " + repoUrl,
+							"repository_url",
+							"basic_data_last_error",
+							basicData.software().toString(),
+							"software",
+							scrapedAt,
+							"basic_data_scraped_at"
+						);
+						return;
+					}
+
+					CodebergScraper codebergScraper = codebergScraperOptional.get();
+					BasicGitData scrapedBasicData = codebergScraper.basicData();
+					BasicGitDatabaseData updatedData = new BasicGitDatabaseData(basicData, scrapedBasicData, scrapedAt);
+					softwareInfoRepository.saveBasicData(updatedData);
+				} catch (RsdRateLimitException e) {
+					Utils.saveExceptionInDatabase(
+						"Codeberg basic data scraper",
+						"repository_url",
+						basicData.software(),
+						e
+					);
+					Utils.saveErrorMessageInDatabase(
+						e.getMessage(),
+						"repository_url",
+						"basic_data_last_error",
+						basicData.software().toString(),
+						"software",
+						null,
+						null
+					);
+				} catch (RsdResponseException e) {
+					Utils.saveExceptionInDatabase(
+						"Codeberg basic data scraper",
+						"repository_url",
+						basicData.software(),
+						e
+					);
+					Utils.saveErrorMessageInDatabase(
+						e.getMessage(),
+						"repository_url",
+						"basic_data_last_error",
+						basicData.software().toString(),
+						"software",
+						scrapedAt,
+						"basic_data_scraped_at"
+					);
+				} catch (Exception e) {
+					Utils.saveExceptionInDatabase(
+						"Codeberg basic data scraper",
 						"repository_url",
 						basicData.software(),
 						e
