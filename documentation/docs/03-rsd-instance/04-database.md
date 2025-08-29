@@ -2,6 +2,8 @@
 
 This section contains various topics on the RSD database.
 
+We use [version 17](https://www.postgresql.org/docs/release/) of Postgres as database for the RSD, see the Dockerfile in the `database` directory for the exact version.
+
 ## Database structure
 
 ![database diagram](img/database-scheme.webp)
