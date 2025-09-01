@@ -8,7 +8,7 @@
 import {useCallback, useEffect, useState} from 'react'
 
 import logger from '~/utils/logger'
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 

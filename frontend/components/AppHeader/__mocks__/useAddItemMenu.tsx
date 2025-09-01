@@ -6,7 +6,7 @@
 import {JSX} from 'react'
 
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import NewspaperIcon from '@mui/icons-material/Newspaper'

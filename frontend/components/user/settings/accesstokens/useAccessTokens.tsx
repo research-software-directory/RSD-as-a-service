@@ -8,7 +8,7 @@
 import {useCallback, useState, useEffect} from 'react'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {getUserAccessTokens, createUserAccessToken, deleteUserAccessToken, NewAccessToken, AccessToken} from './apiAccessTokens'
 
 export function useAccessTokens() {

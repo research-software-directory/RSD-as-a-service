@@ -12,7 +12,8 @@
 import {GetServerSidePropsContext} from 'next/types'
 
 import {app} from '~/config/app'
-import {getUserFromToken, useSession} from '~/auth'
+import {getUserFromToken} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import ProtectedContent from '~/auth/ProtectedContent'
 import PageMeta from '~/components/seo/PageMeta'
 import BackgroundAndLayout from '~/components/layout/BackgroundAndLayout'

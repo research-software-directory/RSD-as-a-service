@@ -7,7 +7,8 @@
 
 import {ThemeProvider} from '@mui/material/styles'
 import {loadMuiTheme} from '~/styles/rsdMuiTheme'
-import {AuthProvider,defaultSession,Session} from '~/auth'
+import {defaultSession,Session} from '~/auth'
+import {AuthProvider} from '~/auth/AuthProvider'
 import {LoginProvidersProvider} from '~/auth/loginProvidersContext'
 import {Provider} from '~/auth/api/getLoginProviders'
 import {RsdSettingsState,defaultRsdSettings} from '~/config/rsdSettingsReducer'

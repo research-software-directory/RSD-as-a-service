@@ -9,7 +9,7 @@
 
 import {HTMLAttributes, useState} from 'react'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {splitName} from '~/utils/getDisplayName'
 import {isOrcid} from '~/utils/getORCID'
 import {Person} from '~/types/Contributor'
