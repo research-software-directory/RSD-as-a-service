@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -76,6 +76,8 @@ const dois = [
 const packageManagerLinks = [
 	{url: 'https://anaconda.org/conda-forge/parcels/', type: 'anaconda'},
 	{url: 'https://anaconda.org/conda-forge/numpy/', type: 'anaconda'},
+	{url: 'https://bioconductor.org/packages/release/bioc/html/BiocPkgTools.html', type: 'bioconductor'},
+	{url: 'https://bioconductor.org/packages/release/bioc/html/VanillaICE.html', type: 'bioconductor'},
 	{url: 'https://cran.r-project.org/web/packages/GGIR/index.html', type: 'cran'},
 	{url: 'https://cran.r-project.org/web/packages/readr/index.html', type: 'cran'},
 	{url: 'https://hub.docker.com/r/djrobstep/migra', type: 'dockerhub'},

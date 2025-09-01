@@ -46,6 +46,7 @@ CREATE TABLE repository_url (
 -- in the frontend file apiPackageManager.ts
 CREATE TYPE package_manager_type AS ENUM (
 	'anaconda',
+	'bioconductor',
 	'chocolatey',
 	'cran',
 	'crates',

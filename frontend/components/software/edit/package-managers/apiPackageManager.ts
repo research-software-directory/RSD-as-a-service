@@ -26,6 +26,12 @@ export const packageManagerSettings = {
     hostname: ['anaconda.org'],
     services: ['dependents']
   },
+  bioconductor: {
+    name: 'Bioconductor',
+    icon: '/images/bioconductor_logo_spot.svg',
+    hostname: ['bioconductor.org', 'www.bioconductor.org'],
+    services: []
+  },
   cran: {
     name: 'CRAN',
     icon: '/images/cran-r-logo.svg',
