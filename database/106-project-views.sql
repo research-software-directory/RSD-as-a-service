@@ -312,6 +312,31 @@ GROUP BY
 	output_for_project.project;
 $$;
 
+
+-- only counts assigned incidental leaf nodes of the category tree
+-- (nodes that can have children but of which no child is assigned)
+CREATE FUNCTION count_project_categories() RETURNS TABLE (
+	project UUID,
+	category_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+WITH project_category_paths AS (
+	SELECT *
+	FROM
+		category_for_project
+	INNER JOIN category_path(category_for_project.category_id) ON TRUE
+)
+SELECT
+	category_for_project.project_id,
+	COUNT(category_for_project.category_id)
+FROM
+	category_for_project
+WHERE
+	NOT EXISTS (SELECT * FROM project_category_paths WHERE project_category_paths.parent = category_for_project.category_id AND project_category_paths.project_id = category_for_project.project_id)
+GROUP BY category_for_project.project_id
+$$;
+
+
 CREATE FUNCTION project_status() RETURNS TABLE (
 	project UUID,
 	status VARCHAR(20)
@@ -347,7 +372,8 @@ CREATE FUNCTION project_quality(show_all BOOLEAN DEFAULT FALSE) RETURNS TABLE (
 	keyword_cnt INTEGER,
 	research_domain_cnt INTEGER,
 	impact_cnt INTEGER,
-	output_cnt INTEGER
+	output_cnt INTEGER,
+	category_cnt INTEGER
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
@@ -368,7 +394,8 @@ SELECT
 	COALESCE(count_project_keywords.keyword_cnt, 0),
 	COALESCE(count_project_research_domains.research_domain_cnt, 0),
 	COALESCE(count_project_impact.impact_cnt, 0),
-	COALESCE(count_project_output.output_cnt, 0)
+	COALESCE(count_project_output.output_cnt, 0),
+	COALESCE(count_project_categories.category_cnt, 0)
 FROM
 	project
 LEFT JOIN
@@ -387,6 +414,8 @@ LEFT JOIN
 	count_project_impact() ON project.id = count_project_impact.project
 LEFT JOIN
 	count_project_output() ON project.id = count_project_output.project
+LEFT JOIN
+	count_project_categories() ON project.id = count_project_categories.project
 WHERE
 	CASE WHEN show_all IS TRUE THEN TRUE ELSE project.id IN (SELECT * FROM projects_of_current_maintainer()) END;
 $$;
