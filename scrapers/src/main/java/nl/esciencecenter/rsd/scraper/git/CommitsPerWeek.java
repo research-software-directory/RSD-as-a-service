@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -56,7 +56,7 @@ public class CommitsPerWeek {
 	}
 
 	public ZonedDateTime popLatestTimestamp() {
-		if (this.data.size() > 0) {
+		if (!this.data.isEmpty()) {
 			Instant lastTimeStamp = this.data.lastKey();
 			this.data.remove(lastTimeStamp);
 			return ZonedDateTime.ofInstant(lastTimeStamp, ZoneId.systemDefault());
