@@ -44,6 +44,8 @@ jobs:
           skip-git-pull: true
           # skip tag push - it will not push but it will tag
           git-push: false
+          # (hopefully) also complete a release when no fix or feat (but e.g. only chore) commits were made
+          skip-on-empty: false
 
   log_release_tag:
     needs: release_tag
