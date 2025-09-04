@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -29,6 +29,7 @@ export type ProjectQualityProps = {
   research_domain_cnt: number,
   impact_cnt: number,
   output_cnt: number,
+  category_cnt: number,
   score: number
 }
 
@@ -53,8 +54,9 @@ realLabels.set('keyword_cnt', {'label': 'Keywords', 'type': 'number'})
 realLabels.set('research_domain_cnt', {'label': 'Research domains', 'type': 'number'})
 realLabels.set('impact_cnt', {'label': 'Impact', 'type': 'number'})
 realLabels.set('output_cnt', {'label': 'Output', 'type': 'number'})
+realLabels.set('category_cnt', {'label': 'Categories', 'type': 'number'})
 
-async function fetchProjectQuality(showAll: boolean, token:string) {
+async function fetchProjectQuality(showAll: boolean, token:string): Promise<ProjectQualityProps[]> {
   try {
     const url = getBaseUrl() + `/rpc/project_quality?show_all=${showAll}`
     const resp = await fetch(url, {
@@ -64,8 +66,7 @@ async function fetchProjectQuality(showAll: boolean, token:string) {
     })
     if (resp.status === 200) {
       const json:ProjectQualityProps[] = await resp.json()
-      const data = handleData(json)
-      return data
+      return handleData(json)
     }
     logger(`fetchProjectQuality...${resp.status}: ${resp.statusText}`)
     return []
@@ -75,20 +76,23 @@ async function fetchProjectQuality(showAll: boolean, token:string) {
   }
 }
 
-function handleData(data: ProjectQualityProps[]) {
+function handleData(data: ProjectQualityProps[]): ProjectQualityProps[] {
   data.forEach(element => {
     element.score = calculateScore(element)
   })
   return data
 }
 
-function calculateScore(element:ProjectQualityProps) {
+function calculateScore(element:ProjectQualityProps): number {
   let score = 0
   let kpiCount = 0
 
   const keys = Object.keys(element) as ProjectQualityKeys[]
   keys.forEach((key) => {
-    if (key === 'title' || key === 'slug' || key === 'score') return
+    if (key === 'title' || key === 'slug' || key === 'score') {
+      return
+    }
+
     const value = element[key]
     if (typeof value !== 'undefined' && (value === true || (Number.isInteger(value) && value as number > 0) || typeof value === 'string')){
       score += 1
