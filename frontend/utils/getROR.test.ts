@@ -30,7 +30,16 @@ it('findInROR calls fetch with search param and json header', async () => {
     id: 'test-id',
     names: [{value: 'Test organisation', types: ['ror_display']}],
     locations: [{geonames_details: {country_name:'Test country', name: 'Test city'}}],
-    links: [],
+    links: [
+    {
+        'type': 'website',
+        'value': 'https://www.test-organisation.com/'
+    },
+    {
+        'type': 'wikipedia',
+        'value': 'https://en.wikipedia.org/wiki/test-organisation'
+    }
+    ],
     types: ['Education']
   }]})
 
@@ -48,11 +57,11 @@ it('findInROR calls fetch with search param and json header', async () => {
         'short_description': null,
         'description': null,
         'ror_id': 'test-id',
-        'website': null,
+        'website': 'https://www.test-organisation.com/',
         'is_tenant': false,
         'country': 'Test country',
         'city': 'Test city',
-        'wikipedia_url': null,
+        'wikipedia_url': 'https://en.wikipedia.org/wiki/test-organisation',
         'ror_types': ['Education'],
         'logo_id': null,
         'source': 'ROR',

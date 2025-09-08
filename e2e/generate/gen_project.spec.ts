@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -35,7 +35,7 @@ test.describe.serial('Project', async () => {
   })
 
   test('Generate organisations', async ({page}) => {
-    // get mock software for the browser
+    // get mock organisations for the browser
     const proj = mockProject['chrome']
     const organisations = [
       ...mockProjectOrganisation['chrome'].map(item=>item.name),
@@ -62,14 +62,14 @@ test.describe.serial('Project', async () => {
     // https://playwright.dev/docs/test-timeouts#test-timeout
     // this test need to be marked as slow because it saves all data per DOI
     test.slow()
-    // get mock software for the browser
+    // we use chrome project mocks by default
     const project = mockProject['chrome']
 
-    // directly open edit software page
+    // directly open edit project page
     const url = `/projects/${project.slug}`
     await openEditPage(page, url, project.title)
 
-    // navigate to organisations sectiont
+    // navigate to mentions page
     await openEditSection(page, 'Mentions')
     // select impact tab
     await selectTab(page,'Impact')
@@ -89,16 +89,16 @@ test.describe.serial('Project', async () => {
     // https://playwright.dev/docs/test-timeouts#test-timeout
     // this test need to be marked as slow because it saves all data per DOI
     test.slow()
-    // get mock software for the browser
+    // we use chrome project mocks by default
     const project = mockProject['chrome']
 
-    // directly open edit software page
+    // directly open edit project page
     const url = `/projects/${project.slug}`
     await openEditPage(page, url, project.title)
 
-    // navigate to organisations sectiont
+    // navigate to mentions page
     await openEditSection(page, 'Mentions')
-    // select impact tab
+    // select output tab
     await selectTab(page,'Output')
 
     // save all impact requests

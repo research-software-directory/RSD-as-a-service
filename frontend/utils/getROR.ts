@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -72,7 +72,7 @@ function buildAutocompleteOptions(rorItems: RORItem[]): AutocompleteOption<Searc
           is_tenant: false,
           country: firstAddress?.geonames_details?.country_name ?? null,
           city: firstAddress?.geonames_details?.name ?? null,
-          wikipedia_url: wikipediaUrls.length ? wikipediaUrls[0].type : null,
+          wikipedia_url: wikipediaUrls.length ? wikipediaUrls[0].value : null,
           ror_types: item.types ?? [],
           logo_id: null,
           source: 'ROR' as OrganisationSource
