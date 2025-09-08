@@ -9,7 +9,7 @@
 
 import {useEffect,useState} from 'react'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'

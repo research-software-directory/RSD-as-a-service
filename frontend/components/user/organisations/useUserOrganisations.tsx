@@ -8,7 +8,7 @@
 
 import {useEffect,useState} from 'react'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import logger from '~/utils/logger'
 import {OrganisationForOverview} from '~/types/Organisation'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'

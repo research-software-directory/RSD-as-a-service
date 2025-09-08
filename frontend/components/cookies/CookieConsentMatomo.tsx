@@ -6,18 +6,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState, useEffect} from 'react'
+import Link from 'next/link'
+import {usePathname} from 'next/navigation'
 import Button from '@mui/material/Button'
+import CookieTwoToneIcon from '@mui/icons-material/CookieTwoTone'
 
+import logger from '~/utils/logger'
 import {Matomo} from './nodeCookies'
 import {useMatomoConsent} from './useCookieConsent'
-import Link from 'next/link'
-import CookieTwoToneIcon from '@mui/icons-material/CookieTwoTone'
-import logger from '~/utils/logger'
+
 
 type CookieConsentMatomoProps = {
-  matomo: Matomo,
-  route: string
+  matomo: Matomo
 }
 
 /**
@@ -25,9 +27,10 @@ type CookieConsentMatomoProps = {
  * and matomo cookies (mtm_consent or mtm_consent_removed) are not present
  * @returns
  */
-export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomoProps) {
+export default function CookieConsentMatomo({matomo}: CookieConsentMatomoProps) {
   const {setMatomoConsent} = useMatomoConsent()
   const [open, setOpen] = useState(false)
+  const route = usePathname()
 
   // console.group('CookieConsentModal')
   // console.log('matomo...', matomo)
@@ -39,7 +42,8 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
     try {
       if (localStorage) {
         const cookieConsent = localStorage.getItem('rsd_cookies_consent')
-        setOpen(cookieConsent === null && matomo.id !== null && matomo.consent === null && route !== '/cookies')
+        const showModal = cookieConsent === null && matomo.id !== null && matomo.consent === null && route !== '/cookies'
+        setOpen(showModal)
       }
     } catch (e: any) {
       // just show info log
@@ -63,8 +67,14 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
     >
       <div className="container mx-auto sm:px-20">
         <div className="border border-b-base-content border-t-4 border-x-4 border-b-0 bg-base-100 shadow-lg p-6 rounded-tr-3xl sm:w-96">
-          <div className="w-16 mx-auto relative  mb-3">
-            <CookieTwoToneIcon className="scale-2  mb-3" color="primary" fontSize="large"/>
+          <div className="flex justify-center mb-3">
+            <CookieTwoToneIcon
+              sx={{
+                fill: 'var(--rsd-primary,#006649)',
+                width:'5rem',
+                height: '5rem'
+              }}
+            />
           </div>
           <span
             className="w-full block leading-normal text-base-800 text-md mb-3">We use&nbsp;

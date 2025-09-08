@@ -8,7 +8,7 @@
 import InputAdornment from '@mui/material/InputAdornment'
 import {useController, useFormContext} from 'react-hook-form'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import AutosaveSoftwareTextField from '~/components/software/edit/information/AutosaveSoftwareTextField'

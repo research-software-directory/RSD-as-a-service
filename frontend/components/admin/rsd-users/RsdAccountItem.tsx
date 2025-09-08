@@ -11,7 +11,7 @@ import ListItem from '@mui/material/ListItem'
 import DeleteIcon from '@mui/icons-material/Delete'
 import ListItemText from '@mui/material/ListItemText'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import RsdLoginList from './RsdLoginList'
 import {RsdAccountInfo} from './useRsdAccounts'
 import RsdRoleSwitch from './RsdRoleSwitch'

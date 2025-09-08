@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -10,7 +10,7 @@ import Button from '@mui/material/Button'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {deleteImage} from '~/utils/editImage'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import {NewsImageProps, deleteNewsItem, deleteNewsImages} from '../apiNews'

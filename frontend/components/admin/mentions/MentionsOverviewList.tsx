@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,7 +10,7 @@ import ListItem from '@mui/material/ListItem'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import Alert from '@mui/material/Alert'
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 import {MentionItemProps} from '~/types/Mention'

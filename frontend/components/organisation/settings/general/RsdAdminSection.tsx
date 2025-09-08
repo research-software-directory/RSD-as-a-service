@@ -8,7 +8,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useFormContext} from 'react-hook-form'
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import config from './generalSettingsConfig'
 import AutosaveOrganisationTextField from './AutosaveOrganisationTextField'

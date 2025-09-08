@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,7 @@ import {useState} from 'react'
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
 
-import {useAuth} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import {PageTitleSticky} from '~/components/layout/PageTitle'
@@ -24,7 +24,7 @@ import PageEditorBody from './PageEditorBody'
 import AdminNav from '../../AdminNav'
 
 export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
-  const {session} = useAuth()
+  const {token} = useSession()
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const [navItems, setNavItems] = useState<RsdLink[]>(links)
   const [selected, setSelected] = useState<string>(links.length>0 ? links[0].slug : '')
@@ -103,7 +103,7 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
   async function deletePage(slug: string) {
     closeDeleteModal()
     // console.log('delete page...', slug)
-    const resp = await deleteMarkdownPage({slug, token: session.token})
+    const resp = await deleteMarkdownPage({slug, token})
     if (resp.status === 200) {
       const newLinks = navItems
         .filter(item => item.slug !== slug)
@@ -140,7 +140,7 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
     setNavItems(newList)
     const resp = await updatePagePositions({
       items: newList,
-      token:session.token
+      token
     })
     if (resp.status !== 200) {
       showErrorMessage(`Failed to update page positions. ${resp?.message}`)

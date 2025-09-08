@@ -1,18 +1,18 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createContext, Dispatch, SetStateAction, useState, useContext, useEffect} from 'react'
+import {Dispatch, SetStateAction} from 'react'
 import {IncomingMessage, OutgoingMessage} from 'http'
 import {parse} from 'cookie'
 import logger from '~/utils/logger'
 import verifyJwt, {decodeJwt} from './jwtUtils'
-import {refreshSession} from './refreshSession'
+
 
 // refresh schedule margin 5min. before expiration time
 // REFRESH_MARGIN_MSEC env variable is used for test purposes ONLY
@@ -56,113 +56,8 @@ export const initSession: AuthSession = {
   setSession: () => defaultSession
 }
 
-const AuthContext = createContext<AuthSession>(initSession)
-
-// AuthProvider used in _app to share session between all components
-export function AuthProvider(props: any) {
-  const [session, setSession] = useState<Session>(props?.session)
-
-  // console.group('AuthProvider')
-  // console.log('session...', session)
-  // console.log('props.session...', props?.session)
-  // console.groupEnd()
-
-  useEffect(() => {
-    // schedule
-    let schedule: any
-    // only if authenticated = valid token
-    if (session.status === 'authenticated'
-      && session?.user?.exp) {
-      const {user} = session
-      const expiresInMs = getExpInMs(user.exp)
-      const waitInMs = getWaitInMs(expiresInMs)
-      // console.log('waitInMs...', waitInMs)
-      if (schedule) clearTimeout(schedule)
-      if (expiresInMs <= 0) {
-        // token expired
-        setSession({
-          ...session,
-          status: 'expired',
-          token: `AuthProvider session EXPIRED for account ${session.user.account}`,
-          user: null
-        })
-      }else{
-        // console.log(`schedule refresh in ${waitInMs/1000}sec.`)
-        schedule = setTimeout(() => {
-          // console.log('call...refreshSession...',user.account)
-          // refresh token by sending current valid cookie
-          refreshSession()
-            .then(newSession => {
-              // console.log('newSession.token...', newSession?.token)
-              // update only if "valid" session
-              if (newSession?.status === 'authenticated') {
-                setSession(newSession)
-                // console.log('AuthProvider...session...UPDATED')
-              } else {
-                // replace with default, not authenticated
-                setSession(defaultSession)
-                // console.log('AuthProvider...session...REMOVED')
-              }
-            })
-        },waitInMs)
-      }
-    }
-    return () => {
-      if (schedule) {
-        // console.log('remove schedule...', schedule)
-        clearTimeout(schedule)
-      }
-    }
-  }, [session])
-
-  return <AuthContext.Provider value={{session, setSession}} {...props}/>
-}
-
-// Auth hook to use in the components
-export const useAuth = () => useContext(AuthContext)
-
-// More specific session hook which destructures session
-export function useSession(){
-  const {session} = useContext(AuthContext)
-
-  // console.group('useSession')
-  // console.log('session...', session)
-  // console.groupEnd()
-
-  return {
-    ...session
-  }
-}
-
 /**
- * Calculate expiration time from now in milliseconds
- * @param exp in seconds
- * @returns difference in milliseconds
- */
-export function getExpInMs(exp: number) {
-  // current time in milliseconds
-  const nowInMs = new Date().getTime()
-  const diffInMs = Math.floor((exp * 1000) - nowInMs)
-  // difference exp and now is in ms
-  return diffInMs
-}
-
-/**
- * Calculate time to wait before refreshing token, in milliseconds.
- * It uses REFRESH_MARGIN constant to reduce time to schedule token refresh.
- * @param expInMs
- * @returns time to wait in milliseconds
- */
-export function getWaitInMs(expInMs: number) {
-  // wait time excl. margin
-  const waitInMs = Math.floor(expInMs - REFRESH_MARGIN)
-  // if negative return 0
-  if (waitInMs < 0) return 0
-  // else waiting time in ms
-  return waitInMs
-}
-
-/**
+ * Page server side
  * Extract token from rsd_token HttpOnly cookie on the server and validate the token.
  * This method can only used on server side (node).
  * @param req

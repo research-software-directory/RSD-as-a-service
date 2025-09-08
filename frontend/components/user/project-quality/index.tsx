@@ -12,7 +12,7 @@ import Switch from '@mui/material/Switch'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Fab from '@mui/material/Fab'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import ContentLoader from '~/components/layout/ContentLoader'
 import NoContent from '~/components/layout/NoContent'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'

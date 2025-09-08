@@ -13,7 +13,7 @@ import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import {useController, useFormContext} from 'react-hook-form'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import MarkdownInputWithPreview from '~/components/form/MarkdownInputWithPreview'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import useSnackbar from '~/components/snackbar/useSnackbar'

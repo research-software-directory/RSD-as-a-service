@@ -6,7 +6,7 @@
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 
-import {useSession} from '~/auth'
+import {useSession} from '~/auth/AuthProvider'
 import IconBtnMenuOnAction from '~/components/menu/IconBtnMenuOnAction'
 import ListImageWithGradientPlaceholder from '~/components/projects/overview/list/ListImageWithGradientPlaceholder'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
