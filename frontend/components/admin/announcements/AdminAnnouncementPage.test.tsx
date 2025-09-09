@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -50,7 +50,7 @@ describe('components/admin/announcements/index.tsx', () => {
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     // get switch
-    const visible = screen.getByRole('checkbox')
+    const visible = screen.getByRole('switch')
     // validate is ON
     expect(visible).toBeChecked()
     // get text
@@ -74,7 +74,7 @@ describe('components/admin/announcements/index.tsx', () => {
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     // get switch
-    const visible = screen.getByRole('checkbox')
+    const visible = screen.getByRole('switch')
     // validate is ON
     expect(visible).toBeChecked()
 

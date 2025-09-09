@@ -249,7 +249,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     fireEvent.change(affiliation, {target: {value: newPerson.affiliation}})
 
     // switch is_contact_person
-    const isContact = within(modal).getByRole('checkbox', {
+    const isContact = within(modal).getByRole('switch', {
       name: modalConfig.is_contact_person.label
     })
     fireEvent.click(isContact)

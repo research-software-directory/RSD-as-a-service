@@ -135,7 +135,7 @@ describe('components/mention/ImportMentions/index.tsx', () => {
 
     // has select to import buttons
     // const switches = screen.getAllByTestId('switch-toggle-button')
-    const switches = screen.getAllByRole('checkbox')
+    const switches = screen.getAllByRole('switch')
     expect(switches.length).toEqual(switches.length)
 
     // deselect first item

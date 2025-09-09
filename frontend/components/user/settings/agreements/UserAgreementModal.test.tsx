@@ -109,7 +109,7 @@ it('accepts TOS via modal and calls patch account', async() => {
 
   await screen.findByTestId('user-agreement-modal')
 
-  const switches = screen.getAllByRole('checkbox')
+  const switches = screen.getAllByRole('switch')
 
   // first switch is agree_terms value we set to false
   const tosSwitch = switches[0]

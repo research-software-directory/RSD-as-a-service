@@ -51,7 +51,7 @@ it('renders cookies page with anonymous statistics checkbox ON', async() => {
   expect(heading).toBeInTheDocument()
 
 
-  const checkbox = await screen.findByRole('checkbox', {
+  const checkbox = await screen.findByRole('switch', {
     checked:true
   })
   expect(checkbox).toBeInTheDocument()
@@ -67,7 +67,7 @@ it('renders cookies page with anonymous statistics checkbox OFF', async() => {
       props
     }))
 
-  const checkbox = await screen.findByRole('checkbox', {
+  const checkbox = await screen.findByRole('switch', {
     checked:false
   })
   expect(checkbox).toBeInTheDocument()
