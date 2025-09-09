@@ -7,7 +7,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # THIS DOCKER FILE REQUIRES .env FILE
-version: "3.0"
 
 services:
   tests:
