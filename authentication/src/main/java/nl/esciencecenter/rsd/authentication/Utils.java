@@ -116,7 +116,7 @@ public class Utils {
 		return x_www_form_urlencoded.toString();
 	}
 
-	public static HttpRequest formToHttpRequest(URI uri, Map<String, String> form) {
+	static HttpRequest formToHttpRequest(URI uri, Map<String, String> form) {
 		String body = formMapToxWwwFormUrlencoded(form);
 
 		return HttpRequest.newBuilder()
@@ -141,6 +141,14 @@ public class Utils {
 				);
 			}
 			return response.body();
+		}
+	}
+
+	public static HttpResponse<String> postFormReturnResponse(URI uri, Map<String, String> form)
+		throws IOException, InterruptedException {
+		HttpRequest request = formToHttpRequest(uri, form);
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			return client.send(request, HttpResponse.BodyHandlers.ofString());
 		}
 	}
 

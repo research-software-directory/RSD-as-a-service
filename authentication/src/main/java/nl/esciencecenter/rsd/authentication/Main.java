@@ -97,6 +97,10 @@ public class Main {
 
 		app.get("/auth/couple/linkedin", ctx -> handleCoupleRequest(ctx, OpenidProvider.linkedin, rsdProviders));
 
+		app.get("/auth/github/login", ctx -> handleLoginRequest(ctx, OpenidProvider.github, rsdProviders));
+
+		app.get("/auth/github/couple", ctx -> handleCoupleRequest(ctx, OpenidProvider.github, rsdProviders));
+
 		if (Config.isApiAccessTokenEnabled()) {
 			// endpoint for generating new API access token
 			app.post("/auth/accesstoken", new CreateAccessTokenHandler());
@@ -233,6 +237,10 @@ public class Main {
 			case linkedin -> {
 				String code = ctx.queryParam("code");
 				yield new LinkedinLogin(code, redirectUrl).openidInfo();
+			}
+			case github -> {
+				String code = ctx.queryParam("code");
+				yield new GithubLogin(code, redirectUrl).openidInfo();
 			}
 		};
 	}

@@ -42,6 +42,7 @@ public class Config {
 			case orcid -> orcidWellknown();
 			case azure -> azureWellknown();
 			case linkedin -> linkedinWellknown();
+			case github -> githubWellknown();
 		};
 
 		if (rawUrl == null) {
@@ -134,5 +135,18 @@ public class Config {
 
 	public static String linkedinClientSecret() {
 		return System.getenv("AUTH_LINKEDIN_CLIENT_SECRET");
+	}
+
+	// GitHub
+	public static String githubClientId() {
+		return System.getenv("GITHUB_CLIENT_ID");
+	}
+
+	public static String githubWellknown() {
+		return System.getenv("GITHUB_WELL_KNOWN_URL");
+	}
+
+	public static String githubClientSecret() {
+		return System.getenv("AUTH_GITHUB_CLIENT_SECRET");
 	}
 }
