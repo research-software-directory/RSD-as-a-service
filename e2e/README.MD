@@ -1,9 +1,10 @@
 <!--
 SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 SPDX-FileCopyrightText: 2021 - 2023 dv4all
+SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 
 SPDX-License-Identifier: Apache-2.0
 SPDX-License-Identifier: CC-BY-4.0
@@ -41,7 +42,7 @@ docker compose up
 
 ## View test report
 
-To view html test report you need to install all dependencies runnin `npm install`. The reports are saved in the playwright-report folder.
+To view html test report you need to install all dependencies running `npm install`. The reports are saved in the playwright-report folder.
 
 ```bash
 # run html test report
@@ -50,11 +51,11 @@ npm run e2e:report
 
 ## Writing tests
 
-When wrighting end to end tests it is required to run installation locally.
+When writing end to end tests it is required to run installation locally.
 
 ### Installation
 
-Run `npm install` from e2e rooot directory to install all dependencies.
+Run `npm install` from e2e root directory to install all dependencies.
 
 ### Scripts
 
@@ -75,10 +76,11 @@ npm run e2e:record
 
 ### Folder structure
 
+- `generate`: test scripts to generate json responses for mocked api endpoints (organsations and mentions)
 - `helpers`: place for helper functions and reusable functions
 - `images`: example images used for testing image upload
-- `mocks`: the data used in the tests to create software, project, organisation etc.
-- `state`: the browser state after loging in to RSD. It makes possible to login at the start (see helpers/globalSetup.ts) and reuse login credentials for all tests
+- `mocks`: the data used in the tests to create software, project, organisation including mocked api responses.
+- `state`: the browser state after logging in to RSD. It makes possible to login at the start (see helpers/globalSetup.ts) and reuse login credentials for all tests
 - `tests`: place for (main) test files. The files have pattern `*.spec.ts`
 
 Note! Playwright runs test files in parallel. When you need sequential process use configuration mode `serial`. See software.spec.ts line 10.
@@ -98,11 +100,11 @@ npx playwright install --with-deps
 npm install -D eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
 ```
 
-## Generating mention requests
+## Generating mocked api responses (ROR/organisations and mentions requests)
 
-When adding references to research publications for software (mentions) and projects (input/output) RSD needs to make api calls to doi.org, crossref and datacite api's. These calls prove to be "heavy" and less reliable when executed as e2e tests in CI.
+When adding organisations or references to research publications for software (mentions) and projects (input/output) RSD needs to make api calls to ror.org, doi.org, crossref and datacite api's. These calls prove to be "heavy" and less reliable when executed as e2e tests in CI.
 
-To improve e2e tests reliabilty and reduce dependency on external api availablity the json response can be generated once and then reused during test. The json data is saved in mocks/data folder. The files contain DOI in the name.
+To improve e2e tests reliability and reduce dependency on external api availability the json response can be generated once and then reused during test. The json data is saved in mocks/data folder. 
 
 ### How to generate data files
 
@@ -111,11 +113,17 @@ The specific tests are created for generating json files. These test files are i
 1. **Start RSD**
 
 ```bash
+# start RSD locally (so test can run)
 docker compose up --detach
 ```
 
-2. **Start generate project in headed mode**
+2. **Start generate script to create all mocked api responses for chrome tests**
 
 ```bash
+# navigate to e2e folder
+cd e2e
+# NOTE! you might need to install dependencies
+npm install
+# run generate script
 npm run e2e:generate
 ```

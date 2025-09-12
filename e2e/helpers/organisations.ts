@@ -18,7 +18,7 @@ export async function addFundingOrganisation(page: Page, organisation: string) {
 
   // await page.pause()
   await Promise.all([
-    page.waitForResponse(/api\.ror\.org\/v1\/organizations/),
+    page.waitForResponse(/api\.ror\.org\/v2\/organizations/),
     page.waitForLoadState('networkidle'),
     fundingInput.fill(organisation)
   ])
@@ -81,7 +81,7 @@ export async function addOrganisation(page, organisation: Organisation, apiUrl) 
 
   // if not exists we search
   await Promise.all([
-    page.waitForResponse(/api\.ror\.org\/v1\/organizations/),
+    page.waitForResponse(/api\.ror\.org\/v2\/organizations/),
     page.waitForLoadState('networkidle'),
     findOrganisation.fill(organisation.name)
   ])
@@ -142,11 +142,10 @@ export async function addOrganisation(page, organisation: Organisation, apiUrl) 
   return true
 }
 
-
 async function listenForRorCalls(page, input: string) {
   // monitor api calls
   // console.log('input...', input)
-  await page.route(`https://api.ror.org/v1/organizations?query=${encodeURIComponent(input)}`, async route => {
+  await page.route(`https://api.ror.org/v2/organizations?query=${encodeURIComponent(input)}`, async route => {
     // const url = route.request().url()
     // console.log('api.ror.org...url...', url)
     const filename = `mocks/data/ror_${generateFileName(input)}.json`
@@ -158,7 +157,7 @@ async function listenForRorCalls(page, input: string) {
 export async function generateJsonFromApiCalls(page, input: string) {
   // monitor api calls
   // console.log('input...', input)
-  await page.route(`https://api.ror.org/v1/organizations?query=${encodeURIComponent(input)}`, async route => {
+  await page.route(`https://api.ror.org/v2/organizations?query=${encodeURIComponent(input)}`, async route => {
     // const url = route.request().url()
     // console.log('doi.org...url...', url)
     const resp = await route.fetch()
@@ -194,7 +193,7 @@ export async function saveOrganisation(page, input: string) {
 
   // if not exists we search
   await Promise.all([
-    page.waitForResponse(/api\.ror\.org\/v1\/organizations/),
+    page.waitForResponse(/api\.ror\.org\/v2\/organizations/),
     page.waitForLoadState('networkidle'),
     findOrganisation.fill(input)
   ])

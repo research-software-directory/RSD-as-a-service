@@ -26,15 +26,21 @@ beforeEach(() => {
 it('findInROR calls fetch with search param and json header', async () => {
   const searchFor = 'ABCD'
   // mock ROR response
-  mockFetchJson.mockResolvedValueOnce({items:[{
-    id:'test-id',
-    name:'Test organisation',
-    country:{country_name:'Test country'},
-    addresses:[
-      {city: 'Test city'}
+  mockFetchJson.mockResolvedValueOnce({items: [{
+    id: 'test-id',
+    names: [{value: 'Test organisation', types: ['ror_display']}],
+    locations: [{geonames_details: {country_name:'Test country', name: 'Test city'}}],
+    links: [
+    {
+        'type': 'website',
+        'value': 'https://www.test-organisation.com/'
+    },
+    {
+        'type': 'wikipedia',
+        'value': 'https://en.wikipedia.org/wiki/test-organisation'
+    }
     ],
-    links:[],
-    types:['Education']
+    types: ['Education']
   }]})
 
   const resp = await findInROR({searchFor})
@@ -51,11 +57,11 @@ it('findInROR calls fetch with search param and json header', async () => {
         'short_description': null,
         'description': null,
         'ror_id': 'test-id',
-        'website': null,
+        'website': 'https://www.test-organisation.com/',
         'is_tenant': false,
         'country': 'Test country',
         'city': 'Test city',
-        'wikipedia_url': null,
+        'wikipedia_url': 'https://en.wikipedia.org/wiki/test-organisation',
         'ror_types': ['Education'],
         'logo_id': null,
         'source': 'ROR',
@@ -67,7 +73,7 @@ it('findInROR calls fetch with search param and json header', async () => {
 
   expect(mockFetch).toHaveBeenCalledTimes(1)
   expect(mockFetch).toHaveBeenCalledWith(
-    `https://api.ror.org/v1/organizations?query=${searchFor}`,
+    `https://api.ror.org/v2/organizations?query=${searchFor}`,
     {'headers': {'Content-Type': 'application/json'}}
   )
 })

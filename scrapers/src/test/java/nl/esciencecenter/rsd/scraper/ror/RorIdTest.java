@@ -87,6 +87,6 @@ class RorIdTest {
 		RorId rorId = RorId.fromUrlString("https://ror.org/04tsk2644");
 
 		Assertions.assertEquals(URI.create("https://ror.org/04tsk2644"), rorId.asUrl());
-		Assertions.assertEquals(URI.create("https://api.ror.org/v1/organizations/04tsk2644"), rorId.asApiV1Url());
+		Assertions.assertEquals(URI.create("https://api.ror.org/v2/organizations/04tsk2644"), rorId.asApiV2Url());
 	}
 }

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -16,7 +16,7 @@ import {mockSoftwareOrganisation} from '../mocks/mockOrganisation'
 import {saveOrganisation} from '../helpers/organisations'
 
 // run tests in serial mode
-// we first need first to create software
+// we first need to create software
 test.describe.serial('Software', async () => {
 
   test('Create software', async ({page}) => {
@@ -68,9 +68,9 @@ test.describe.serial('Software', async () => {
     const url = `/software/${software.slug}`
     await openEditPage(page, url, software.title)
 
-    // navigate to organisations sectiont
+    // navigate to mentions page
     await openEditSection(page, 'Mentions')
-    // select impact tab
+    // select related output tab
     await selectTab(page,'Related output')
 
     const keys = Object.keys(mockCitations)
@@ -94,9 +94,9 @@ test.describe.serial('Software', async () => {
     const url = `/software/${software.slug}`
     await openEditPage(page, url, software.title)
 
-    // navigate to organisations sectiont
+    // navigate to mentions page
     await openEditSection(page, 'Mentions')
-    // select impact tab
+    // select reference papers tab
     await selectTab(page,'Reference papers')
 
     const keys = Object.keys(mockCitations)
