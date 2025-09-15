@@ -1,66 +1,83 @@
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {notFound} from 'next/navigation'
+
+import {getUserSettings} from '~/utils/userSettingsApp'
+import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import NoContent from '~/components/layout/NoContent'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
-
+import {getOrganisationIdForSlug} from '../apiOrganisations'
+import {getReleasesCountForOrganisation, getReleasesForOrganisation} from './apiOrganisationReleases'
 import ReleaseList from './ReleaseList'
-import ReleaseNavButton from './ReleaseNavButton'
+import SelectReleaseYear from './SelectReleaseYear'
 import ScrollToTopButton from './ScrollToTopButton'
-import {ReleaseCountByYear, SoftwareReleaseInfo} from '~/components/organisation/releases/apiOrganisationReleases'
-import {useRouter} from 'next/router'
 
-type SoftwareReleasesProps = {
-  releaseCountsByYear: ReleaseCountByYear[] | null
-  releases: SoftwareReleaseInfo[] | null
-}
+type SoftwareReleasesProps = Readonly<{
+  slug: string[],
+  query: {[key: string]: string | undefined}
+}>
 
-export default function SoftwareReleases({releaseCountsByYear: countsByYear, releases}: Readonly<SoftwareReleasesProps>) {
-  const router = useRouter()
-  // console.group('SoftwareReleases')
-  // console.log('loading...', loading)
-  // console.log('releases...', releases)
-  // console.log('years...', years)
-  // console.log('countsByYear...', countsByYear)
-  // console.groupEnd()
+export default async function SoftwareReleases({slug,query}: SoftwareReleasesProps) {
+  // extract params, user preferences and active modules
+  const [{token},modules] = await Promise.all([
+    getUserSettings(),
+    getActiveModuleNames()
+  ])
+  // show 404 page if module is not enabled or slug is missing
+  if (
+    modules?.includes('organisations')===false ||
+    slug.length === 0
+  ){
+    notFound()
+  }
+  // resolve slug to organisation id
+  const uuid = await getOrganisationIdForSlug({slug, token})
+  // show 404 page if organisation id missing
+  if (typeof uuid === 'undefined' || uuid === null) {
+    notFound()
+  }
+  const releaseCountsByYear = await getReleasesCountForOrganisation({
+    organisation_id: uuid,
+    token
+  })
 
-  if (!countsByYear || countsByYear.length === 0) return <NoContent />
-
-  const queryYear = router.query['year']
-  let release_year: number = parseInt(queryYear as string)
-  if (isNaN(release_year)) {
-    release_year = countsByYear[0].release_year
+  // get selected release year
+  let queryYear:string|undefined
+  if (query['year']){
+    queryYear = query['year']
+  }else if (releaseCountsByYear.length > 0){
+    queryYear = releaseCountsByYear[0]?.release_year.toString()
   }
 
-  const path = router.asPath
-  const newPath = path.split('?')[0] + '?tab=releases'
+  const releases = await getReleasesForOrganisation({
+    organisation_id: uuid,
+    release_year: queryYear,
+    token
+  })
+
+  // console.group('SoftwareReleases')
+  // console.log('releaseCountsByYear...', releaseCountsByYear)
+  // console.log('queryYear...', queryYear)
+  // console.log('releases...', releases)
+  // console.groupEnd()
+
+  if (releaseCountsByYear.length === 0) return <NoContent />
 
   // releases per year
   return (
-    <BaseSurfaceRounded className="flex-1 flex flex-col mb-12 p-4">
-      <h2 className="pt-4">Releases per year</h2>
-      <nav id="period_nav"
-        className="flex flex-wrap justify-start items-center my-4"
-        style={{gap: '0.5rem 0.25rem'}}>
-        {countsByYear && countsByYear
-          .map(count => {
-            return <ReleaseNavButton
-              key={count.release_year}
-              year={count.release_year}
-              release_cnt={count.release_cnt}
-              selected = {release_year===count.release_year}
-              link={newPath + `&year=${count.release_year}`}
-            />
-          })
-        }
-      </nav>
+    <BaseSurfaceRounded className="flex-1 flex flex-col mb-12 py-4 px-8">
+      <SelectReleaseYear
+        releaseCountsByYear={releaseCountsByYear}
+        queryYear={queryYear}
+      />
       {/* Release items of selected year */}
-      <ReleaseList release_year={release_year} releases={releases ?? []} />
+      <ReleaseList release_year={queryYear} releases={releases} />
       <ScrollToTopButton minOffset={200} />
     </BaseSurfaceRounded>
   )

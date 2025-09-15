@@ -9,7 +9,6 @@
 import {ParsedUrlQuery} from 'querystring'
 import logger from './logger'
 
-
 type EncodeQueryValue = string[] | string | number | undefined | null
 
 type EncodeQueryParamProps = {
@@ -468,3 +467,4 @@ export function getSoftwareParams(query: ParsedUrlQuery) {
     categories_json
   }
 }
+

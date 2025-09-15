@@ -38,6 +38,7 @@ export function getUserSettings(req: IncomingMessage) {
   }
 }
 
+
 /**
  * Set document cookie.
  * Frontend ONLY!

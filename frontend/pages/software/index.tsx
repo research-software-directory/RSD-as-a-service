@@ -49,7 +49,7 @@ import {
   softwareRsdHostsFilter
 } from '~/components/software/overview/filters/softwareFiltersApi'
 import SoftwareFiltersModal from '~/components/software/overview/filters/SoftwareFiltersModal'
-import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
+import {softwareOrderOptions} from '~/components/software/overview/filters/softwareOrderOptions'
 import {HostsFilterOption} from '~/components/filter/RsdHostFilter'
 import {getRemoteRsd} from '~/components/admin/remote-rsd/apiRemoteRsd'
 import {CategoryOption} from '~/components/filter/CategoriesFilter'

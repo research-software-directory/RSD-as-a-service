@@ -5,7 +5,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
+'use client'
+
+import {useRouter,useSearchParams,usePathname} from 'next/navigation'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -16,12 +18,15 @@ import {settingsMenu} from './SettingsNavItems'
 import useOrganisationContext from '../context/useOrganisationContext'
 
 export default function OrganisationSettingsNav() {
+  const searchParam = useSearchParams()
+  const pathname = usePathname()
   const router = useRouter()
   const settings = router.query['settings'] ?? 'general'
   const {rsd_path} = useOrganisationContext()
   // console.group('OrganisationNav')
   // console.log('description...', organisation.description)
   // console.groupEnd()
+
   return (
     <List
       component="nav"

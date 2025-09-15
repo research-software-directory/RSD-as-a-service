@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect,useMemo,useState} from 'react'
+import {useEffect,useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
 import {decodeJsonParam} from '~/utils/extractQueryParam'
@@ -13,7 +13,7 @@ import {SoftwareOfOrganisation} from '~/types/Organisation'
 import {getSoftwareForOrganisation} from '../apiOrganisations'
 import useOrganisationContext from '../context/useOrganisationContext'
 import useSoftwareParams from './filters/useSoftwareParams'
-import {getSoftwareOrderOptions} from './filters/OrgOrderSoftwareBy'
+import {getOrganisationSoftwareOrder} from './filters/OrgSoftwareOrderOptions'
 
 type State = {
   count: number,
@@ -27,8 +27,6 @@ export default function useOrganisationSoftware() {
     search, keywords_json, prog_lang_json, licenses_json,
     categories_json, order, page, rows
   } = useSoftwareParams()
-  // we need to memo orderOptions array to avoid useEffect dependency loop
-  const orderOptions = useMemo(()=>getSoftwareOrderOptions(isMaintainer),[isMaintainer])
 
   const [state, setState] = useState<State>({
     count: 0,
@@ -36,24 +34,15 @@ export default function useOrganisationSoftware() {
   })
   const [loading, setLoading] = useState(true)
 
-  // debugger
-
   useEffect(() => {
     let abort = false
-    let orderBy='slug.asc'
 
     async function getSoftware() {
       if (id) {
         // set loading done
         setLoading(true)
 
-        if (order) {
-          // extract order direction from definitions
-          const orderInfo = orderOptions.find(item=>item.key===order)
-          // ordering options require "stable" secondary order
-          // to ensure proper pagination. We use slug for this purpose
-          if (orderInfo) orderBy=`${order}.${orderInfo.direction},slug.asc`
-        }
+        const orderBy = getOrganisationSoftwareOrder(isMaintainer,order)
 
         const software: State = await getSoftwareForOrganisation({
           organisation:id,
@@ -91,7 +80,7 @@ export default function useOrganisationSoftware() {
   }, [
     search, keywords_json, prog_lang_json,
     licenses_json, categories_json, order, page, rows,
-    id, token, isMaintainer, orderOptions
+    id, token, isMaintainer
   ])
 
   return {

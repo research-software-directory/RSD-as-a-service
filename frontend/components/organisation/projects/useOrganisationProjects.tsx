@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect,useMemo,useState} from 'react'
+import {useEffect,useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
 import {ProjectOfOrganisation} from '~/types/Organisation'
@@ -13,7 +13,7 @@ import {decodeJsonParam} from '~/utils/extractQueryParam'
 import {getProjectsForOrganisation} from '../apiOrganisations'
 import useProjectParams from './useProjectParams'
 import useOrganisationContext from '../context/useOrganisationContext'
-import {getProjectOrderOptions} from './filters/OrgOrderProjectsBy'
+import {getOrganisationProjectsOrder} from './filters/OrgProjectOrderOptions'
 
 
 type State = {
@@ -28,8 +28,6 @@ export default function useOrganisationProjects() {
     search, keywords_json, domains_json, organisations_json,
     project_status, categories_json, order, page, rows
   } = useProjectParams()
-  // we need to memo orderOptions array to avoid useEffect dependency loop
-  const orderOptions = useMemo(()=>getProjectOrderOptions(isMaintainer),[isMaintainer])
 
   const [state, setState] = useState<State>({
     count: 0,
@@ -39,20 +37,13 @@ export default function useOrganisationProjects() {
 
   useEffect(() => {
     let abort = false
-    let orderBy='slug.asc'
 
     async function getProjects() {
       if (id) {
         // set loading start
         setLoading(true)
 
-        if (order) {
-          // extract order direction from definitions
-          const orderInfo = orderOptions.find(item=>item.key===order)
-          // ordering options require "stable" secondary order
-          // to ensure proper pagination. We use slug for this purpose
-          if (orderInfo) orderBy=`${order}.${orderInfo.direction},slug.asc`
-        }
+        const orderBy=getOrganisationProjectsOrder(isMaintainer,order)
 
         const projects: State = await getProjectsForOrganisation({
           organisation: id,
@@ -87,8 +78,8 @@ export default function useOrganisationProjects() {
   }, [
     search, keywords_json, domains_json,
     organisations_json, order, page, rows,
-    id, token, isMaintainer, orderOptions,
-    project_status, categories_json
+    id, token, isMaintainer, project_status,
+    categories_json
   ])
 
   return {

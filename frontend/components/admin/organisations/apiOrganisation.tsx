@@ -13,7 +13,7 @@ import {paginationUrlParams} from '~/utils/postgrestUrl'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import logger from '~/utils/logger'
-import {colForCreate, EditOrganisation, OrganisationList} from '~/types/Organisation'
+import {colForCreate, EditOrganisation} from '~/types/Organisation'
 import {upsertImage} from '~/utils/editImage'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
@@ -31,10 +31,23 @@ type getOrganisationApiParams = {
   orderBy?: string
 }
 
+export type OrganisationAdminProps = {
+  id: string
+  parent: string | null
+  name: string
+  website: string | null
+  is_tenant: boolean
+  rsd_path: string
+  logo_id: string | null,
+  ror_id: string | null
+  software_cnt: number,
+  project_cnt: number
+}
+
 async function getOrganisations({page, rows, token, searchFor, orderBy}: getOrganisationApiParams) {
   try {
     // NOTE 1! selectList need to include all colums used in filtering
-    // NOTE 2! ensure selectList uses identical props as defined in OrganisationList type
+    // NOTE 2! ensure selectList uses identical props as defined in OrganisationAdminList type
     const selectList = 'id,parent,name,website,is_tenant,rsd_path,logo_id,ror_id,software_cnt,project_cnt'
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
@@ -60,7 +73,7 @@ async function getOrganisations({page, rows, token, searchFor, orderBy}: getOrga
     })
 
     if ([200,206].includes(resp.status)) {
-      const organisations: OrganisationList[] = await resp.json()
+      const organisations: OrganisationAdminProps[] = await resp.json()
       return {
         count: extractCountFromHeader(resp.headers) ?? 0,
         organisations
@@ -83,7 +96,7 @@ async function getOrganisations({page, rows, token, searchFor, orderBy}: getOrga
 export function useOrganisations(token: string) {
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const {searchFor, page, rows, count, setCount} = usePaginationWithSearch('Find organisation by name, website or ror_id')
-  const [organisations, setOrganisations] = useState<OrganisationList[]>([])
+  const [organisations, setOrganisations] = useState<OrganisationAdminProps[]>([])
   const [loading, setLoading] = useState(true)
 
   const loadOrganisations = useCallback(async() => {

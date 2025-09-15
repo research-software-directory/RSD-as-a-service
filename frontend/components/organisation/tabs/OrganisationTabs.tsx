@@ -1,25 +1,27 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import Tabs from '@mui/material/Tabs'
-import {useRouter} from 'next/router'
+import {useSearchParams, useParams} from 'next/navigation'
 
 import useRsdSettings from '~/config/useRsdSettings'
-import useOrganisationContext from '../context/useOrganisationContext'
 import TabAsLink from '~/components/layout/TabAsLink'
+import useOrganisationContext from '~/components/organisation/context/useOrganisationContext'
 import {TabKey, organisationTabItems} from './OrganisationTabItems'
 import useSelectedTab from './useSelectedTab'
 
 // extract tab items (object keys)
 const tabItems = Object.keys(organisationTabItems) as TabKey[]
 
-export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
-  const router = useRouter()
+export default function OrganisationTabs() {
+  const params = useParams()
+  const query = useSearchParams()
   const {activeModules} = useRsdSettings()
-  const select_tab = useSelectedTab(tab_id)
+  const select_tab = useSelectedTab(query?.get('tab') as TabKey ?? null)
   const {
     description, software_cnt,
     release_cnt, project_cnt,
@@ -27,7 +29,7 @@ export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
   } = useOrganisationContext()
 
   // console.group('OrganisationTabs')
-  // console.log('tab...', tab_id)
+  // console.log('params...', params)
   // console.log('select_tab...', select_tab)
   // console.log('activeModules...', activeModules)
   // console.groupEnd()
@@ -41,7 +43,7 @@ export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
     >
       {tabItems.map(key => {
         const item = organisationTabItems[key]
-        const slugAsArray = router.query['slug']
+        const slugAsArray = params?.['slug'] ?? []
         let fullSlug: string
         if (Array.isArray(slugAsArray)) {
           fullSlug = slugAsArray.join('/')

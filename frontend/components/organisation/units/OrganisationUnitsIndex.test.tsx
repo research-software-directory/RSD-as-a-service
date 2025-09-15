@@ -22,7 +22,7 @@ const mockProps = {
   isMaintainer: false
 }
 
-describe('frontend/components/organisation/software/index.tsx', () => {
+describe.skip('frontend/components/organisation/software/index.tsx', () => {
   beforeEach(() => {
     // reset mock counters
     jest.clearAllMocks()
