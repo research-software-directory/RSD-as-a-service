@@ -37,7 +37,7 @@ import {
   projectParticipatingOrganisationsFilter,
   projectStatusFilter
 } from '~/components/projects/overview/filters/projectFiltersApi'
-import {projectOrderOptions} from '~/components/projects/overview/filters/OrderProjectsBy'
+import {projectOrderOptions} from '~/components/projects/overview/filters/projectOrderOptions'
 import ProjectFilters from '~/components/projects/overview/filters/index'
 import ProjectSearchSection from '~/components/projects/overview/search/ProjectSearchSection'
 import ProjectOverviewContent from '~/components/projects/overview/ProjectOverviewContent'

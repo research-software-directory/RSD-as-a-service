@@ -7,6 +7,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useRouter} from 'next/navigation'
 import {useFormContext} from 'react-hook-form'
 
 import {useSession} from '~/auth/AuthProvider'
@@ -16,7 +17,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import {patchOrganisationTable} from '../updateOrganisationSettings'
 import {OrganisationForOverview} from '~/types/Organisation'
 import useOrganisationContext from '../../context/useOrganisationContext'
-import {useRouter} from 'next/router'
+
 
 export type AutosaveOrganisationTextFieldProps = {
   options: ControlledTextFieldOptions<OrganisationForOverview>
@@ -26,7 +27,7 @@ export type AutosaveOrganisationTextFieldProps = {
 export default function AutosaveOrganisationTextField({options,rules}:AutosaveOrganisationTextFieldProps) {
   const router = useRouter()
   const {token} = useSession()
-  const {id,updateOrganisation} = useOrganisationContext()
+  const {id,updateOrganisationContext} = useOrganisationContext()
   const {showErrorMessage} = useSnackbar()
   const {control, resetField} = useFormContext()
 
@@ -50,7 +51,7 @@ export default function AutosaveOrganisationTextField({options,rules}:AutosaveOr
       showErrorMessage(`Failed to save ${options.name}. ${resp?.message}`)
     } else {
       // debugger
-      updateOrganisation({
+      updateOrganisationContext({
         key: options.name,
         value
       })
@@ -67,7 +68,7 @@ export default function AutosaveOrganisationTextField({options,rules}:AutosaveOr
           const json = await slugResp.json()
           const updatedSlug = json[0].rsd_path
           const newUrl = `/organisations/${updatedSlug}?tab=settings&settings=general`
-          router.push(newUrl, newUrl, {scroll: false})
+          router.push(newUrl, {scroll: false})
         }
       }
     }

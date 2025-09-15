@@ -1,14 +1,14 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {FormProvider, useForm} from 'react-hook-form'
 
-import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import config from '../general/generalSettingsConfig'
-import useOrganisationContext from '../../context/useOrganisationContext'
+import useOrganisationContext from '~/components/organisation/context/useOrganisationContext'
+import config from '~/components/organisation/settings/general/generalSettingsConfig'
 import AutosaveOrganisationDescription from './AutosaveOrganisationDescription'
 
 type AboutPageFormProps = {
@@ -28,29 +28,24 @@ export default function AboutPageSettings() {
   })
 
   return (
-    <BaseSurfaceRounded
-      className="flex-1 flex flex-col mb-12 p-4"
-      type="section"
-    >
-      <FormProvider {...methods}>
-        <form
-          autoComplete="off"
-          className="flex-1 flex flex-col py-4"
-        >
-          {/* hidden inputs */}
-          <input type="hidden"
-            {...methods.register('id')}
-          />
-          <EditSectionTitle
-            title={config.description.title}
-            subtitle={config.description.subtitle}
-          />
-          <AutosaveOrganisationDescription
-            name="description"
-            maxLength={config.description.validation.maxLength.value}
-          />
-        </form>
-      </FormProvider>
-    </BaseSurfaceRounded>
+    <FormProvider {...methods}>
+      <form
+        autoComplete="off"
+        className="flex-1 flex flex-col"
+      >
+        {/* hidden inputs */}
+        <input type="hidden"
+          {...methods.register('id')}
+        />
+        <EditSectionTitle
+          title={config.description.title}
+          subtitle={config.description.subtitle}
+        />
+        <AutosaveOrganisationDescription
+          name="description"
+          maxLength={config.description.validation.maxLength.value}
+        />
+      </form>
+    </FormProvider>
   )
 }

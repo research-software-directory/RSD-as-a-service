@@ -8,13 +8,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState} from 'react'
 
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {maintainers as config} from '~/components/projects/edit/maintainers/config'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
-import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import MaintainersList from '~/components/maintainers/MaintainersList'
 import useOrganisationContext from '~/components/organisation/context/useOrganisationContext'
 import {useOrganisationMaintainers} from './useOrganisationMaintainers'
@@ -66,11 +66,10 @@ export default function OrganisationMaintainers() {
 
   return (
     <>
-      <BaseSurfaceRounded
-        className="flex-1 p-4 mb-12 xl:grid xl:grid-cols-[1fr_1fr] xl:gap-8"
-        type="section"
+      <div
+        className="flex-1 xl:grid xl:grid-cols-[1fr_1fr] xl:gap-8"
       >
-        <div className="py-4">
+        <div>
           <EditSectionTitle
             title={config.title}
           />
@@ -79,14 +78,14 @@ export default function OrganisationMaintainers() {
             maintainers={maintainers}
           />
         </div>
-        <div className="py-4 min-w-[21rem] xl:my-0">
+        <div className="min-w-[21rem] xl:my-0">
           <EditSectionTitle
             title={config.inviteLink.title}
             subtitle={config.inviteLink.subtitle}
           />
           <OrganisationMaintainerLinks />
         </div>
-      </BaseSurfaceRounded>
+      </div>
       <ConfirmDeleteModal
         open={modal.open}
         title="Remove maintainer"

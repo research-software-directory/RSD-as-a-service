@@ -1,21 +1,21 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState} from 'react'
 import TextField from '@mui/material/TextField'
 
-import {OrganisationList} from '~/types/Organisation'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
+import {OrganisationAdminProps} from './apiOrganisation'
 
 export type OrganisationModalProps={
   open: boolean
-  item?: OrganisationList
+  item?: OrganisationAdminProps
 }
 
 type RemoveOrganisationModalProps={
-  item?: OrganisationList
+  item?: OrganisationAdminProps
   onCancel: ()=>void
   onDelete: ()=>void
 }

@@ -4,6 +4,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import CategoryEditTree from '~/components/category/CategoryEditTree'
@@ -27,10 +28,7 @@ export default function OrganisationCategories() {
   }
 
   return (
-    <BaseSurfaceRounded
-      className="flex-1 p-8 mb-12 flex flex-col gap-4"
-      type="section"
-    >
+    <>
       {error && <Alert severity="error">{error}</Alert>}
       {roots &&
         <CategoryEditTree
@@ -46,6 +44,6 @@ export default function OrganisationCategories() {
           }}
         />
       }
-    </BaseSurfaceRounded>
+    </>
   )
 }
