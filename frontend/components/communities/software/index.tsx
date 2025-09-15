@@ -6,6 +6,7 @@
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Pagination from '@mui/material/Pagination'
 
+import {useUserSettings} from '~/config/UserSettingsContext'
 import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
 import FiltersPanel from '~/components/filter/FiltersPanel'
 import {useCommunityContext} from '~/components/communities/context'
@@ -39,7 +40,8 @@ export default function CommunitySoftware({
   const smallScreen = useMediaQuery('(max-width:640px)')
   const {isMaintainer} = useCommunityContext()
   const {handleQueryChange} = useFilterQueryChange()
-  const {rows,view,setPageLayout} = useSoftwareParams()
+  const {rows,view} = useSoftwareParams()
+  const {setPageLayout} = useUserSettings()
   const numPages = Math.ceil(count / rows)
 
   // console.group('CommunitySoftware')

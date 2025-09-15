@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -10,7 +10,7 @@
 
 import OrderBy from '~/components/filter/OrderBy'
 import useSoftwareParams from '~/components/organisation/software/filters/useSoftwareParams'
-import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
+import {softwareOrderOptions} from '~/components/software/overview/filters/softwareOrderOptions'
 import useFilterQueryChange from '~/components/filter/useFilterQueryChange'
 import {useCommunityContext} from '../../context'
 

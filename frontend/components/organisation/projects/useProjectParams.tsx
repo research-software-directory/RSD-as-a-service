@@ -3,21 +3,27 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
+'use client'
+
+import {useSearchParams} from 'next/navigation'
 import {useUserSettings} from '~/config/UserSettingsContext'
-import {getProjectsParams} from '~/utils/extractQueryParam'
 
 export default function useProjectParams() {
-  // initialise router
-  const router = useRouter()
+  const searchParams = useSearchParams()
   // get user preferences
-  const {rsd_page_rows,rsd_page_layout,setPageLayout} = useUserSettings()
+  const {rsd_page_rows,rsd_page_layout} = useUserSettings()
   // use encoded array params as json string to avoid
   // useEffect re-renders in api hooks
-  const params = getProjectsParams(router.query)
-
-  if (typeof params.rows === 'undefined' && rsd_page_rows) {
-    params.rows = rsd_page_rows
+  const params = {
+    search: searchParams?.get('search') ?? null,
+    order: searchParams?.get('order') ?? null,
+    rows: searchParams?.has('rows') ? parseInt(searchParams?.get('rows') as string) : rsd_page_rows,
+    page: searchParams?.get('page') ? parseInt(searchParams?.get('page') as string) : 1,
+    project_status: searchParams?.get('project_status') ?? null,
+    keywords_json: searchParams?.get('keywords') ?? null,
+    domains_json: searchParams?.get('domains') ?? null,
+    organisations_json: searchParams?.get('organisations') ?? null,
+    categories_json: searchParams?.get('categories') ?? null
   }
 
   // if masonry we change to grid
@@ -45,7 +51,6 @@ export default function useProjectParams() {
   return {
     ...params,
     filterCnt,
-    view,
-    setPageLayout
+    view
   }
 }

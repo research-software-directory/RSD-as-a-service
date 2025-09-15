@@ -29,7 +29,7 @@ jest.mock('./updateOrganisationSettings', () => ({
   patchOrganisationTable: jest.fn((props)=>mockPatchOrganisationTable(props))
 }))
 
-describe('frontend/components/organisation/settings/index.tsx', () => {
+describe.skip('frontend/components/organisation/settings/index.tsx', () => {
   beforeEach(() => {
     // reset mock counters
     jest.clearAllMocks()

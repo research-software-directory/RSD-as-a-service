@@ -1,14 +1,16 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext} from 'react'
+'use client'
 
+import {useContext} from 'react'
 import OrganisationContext from './OrganisationContext'
 
 export default function useOrganisationContext() {
   const {organisation, isMaintainer, updateOrganisation} = useContext(OrganisationContext)
+  // console.group('useOrganisationContext')ntext(OrganisationContext)
   // console.group('useOrganisationContext')
   // console.log('organisation...', organisation)
   // console.log('isMaintainer....', isMaintainer)
@@ -18,6 +20,6 @@ export default function useOrganisationContext() {
   return {
     ...organisation,
     isMaintainer,
-    updateOrganisation
+    updateOrganisationContext: updateOrganisation
   }
 }

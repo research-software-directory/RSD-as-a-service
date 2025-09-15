@@ -5,10 +5,10 @@
 
 import NoContent from '~/components/layout/NoContent'
 
-import {OrganisationForOverview} from '~/types/Organisation'
+import {OrganisationListProps} from '~/types/Organisation'
 import OrganisationListItem from '~/components/user/organisations/OrganisationListItem'
 
-export default function OrganisationList({organisations}:Readonly<{organisations: OrganisationForOverview[]}>) {
+export default function OrganisationList({organisations}:Readonly<{organisations: OrganisationListProps[]}>) {
   if (typeof organisations == 'undefined' || organisations.length===0){
     return <NoContent />
   }
