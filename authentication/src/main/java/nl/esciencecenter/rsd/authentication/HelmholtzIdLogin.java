@@ -168,7 +168,7 @@ public class HelmholtzIdLogin implements Login {
 			AuthorizationCode authcode = new AuthorizationCode(code);
 			URI callback = new URI(redirectUrl);
 			AuthorizationGrant codeGrant = new AuthorizationCodeGrant(authcode, callback);
-			ClientID clientID = new ClientID(Config.helmholtzIdClientId());
+			ClientID clientID = new ClientID(RsdProviders.obtainClientId(OpenidProvider.helmholtz));
 			Secret clientSecret = new Secret(Config.helmholtzIdClientSecret());
 			ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
 			URI tokenEndpoint = Utils.getTokenUrlFromWellKnownUrl(URI.create(Config.helmholtzIdWellknown()));

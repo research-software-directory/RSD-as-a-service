@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
@@ -52,7 +52,7 @@ public class SurfconextLogin implements Login {
 		form.put("grant_type", "authorization_code");
 		form.put("redirect_uri", redirectUrl);
 		form.put("scope", "openid");
-		form.put("client_id", Config.surfconextClientId());
+		form.put("client_id", RsdProviders.obtainClientId(OpenidProvider.surfconext));
 		form.put("client_secret", Config.surfconextClientSecret());
 		return form;
 	}

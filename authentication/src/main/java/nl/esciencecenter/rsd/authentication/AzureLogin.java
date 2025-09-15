@@ -52,7 +52,7 @@ public class AzureLogin implements Login {
 		form.put("grant_type", "authorization_code");
 		form.put("redirect_uri", redirectUrl);
 		form.put("scope", "openid");
-		form.put("client_id", Config.azureClientId());
+		form.put("client_id", RsdProviders.obtainClientId(OpenidProvider.azure));
 		form.put("client_secret", Config.azureClientSecret());
 		return form;
 	}

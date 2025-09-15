@@ -41,7 +41,7 @@ public class GithubLogin implements Login {
 		form.put("code", code);
 		form.put("grant_type", "authorization_code");
 		form.put("redirect_uri", redirectUrl);
-		form.put("client_id", Config.githubClientId());
+		form.put("client_id", RsdProviders.obtainClientId(OpenidProvider.github));
 		form.put("client_secret", Config.githubClientSecret());
 		return form;
 	}

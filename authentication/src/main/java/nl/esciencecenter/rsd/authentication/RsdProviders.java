@@ -330,38 +330,66 @@ public class RsdProviders {
 		};
 	}
 
+	static String obtainLoginPath(OpenidProvider provider) {
+		return switch (provider) {
+			case local -> "/auth/login/local";
+			case surfconext -> "/auth/login/surfconext";
+			case helmholtz -> "/auth/login/helmholtzid";
+			case orcid -> "/auth/login/orcid";
+			case azure -> "/auth/login/azure";
+			case linkedin -> "/auth/login/linkedin";
+			// switched path components because GitHub only allows one redirect URL but allows sub-paths
+			case github -> "/auth/github/login";
+		};
+	}
+
 	static String obtainRedirectUrl(OpenidProvider provider) {
+		String loginPath = obtainLoginPath(provider);
 		return switch (provider) {
 			case local -> throw new IllegalArgumentException();
-			case surfconext -> Config.hostUrl() + "/auth/login/surfconext";
-			case helmholtz -> Config.hostUrl() + "/auth/login/helmholtzid";
-			case orcid -> Config.hostUrl() + "/auth/login/orcid";
-			case azure -> Config.hostUrl() + "/auth/login/azure";
-			case linkedin -> Config.hostUrl() + "/auth/login/linkedin";
-			case github -> Config.hostUrl() + "/auth/github/login";
+			case surfconext -> Config.hostUrl() + loginPath;
+			case helmholtz -> Config.hostUrl() + loginPath;
+			case orcid -> Config.hostUrl() + loginPath;
+			case azure -> Config.hostUrl() + loginPath;
+			case linkedin -> Config.hostUrl() + loginPath;
+			case github -> Config.hostUrl() + loginPath;
+		};
+	}
+
+	static String obtainCouplingPath(OpenidProvider provider) {
+		return switch (provider) {
+			case local -> "/auth/couple/local";
+			case surfconext -> "/auth/couple/surfconext";
+			case helmholtz -> "/auth/couple/helmholtzid";
+			case orcid -> "/auth/couple/orcid";
+			case azure -> "/auth/couple/azure";
+			case linkedin -> "/auth/couple/linkedin";
+			// switched path components because GitHub only allows one redirect URL but allows sub-paths
+			case github -> "/auth/github/couple";
 		};
 	}
 
 	static String obtainCouplingRedirectUrl(OpenidProvider provider) {
+		String couplingPath = obtainCouplingPath(provider);
 		return switch (provider) {
 			case local -> throw new IllegalArgumentException();
-			case surfconext -> Config.hostUrl() + "/auth/couple/surfconext";
-			case helmholtz -> Config.hostUrl() + "/auth/couple/helmholtzid";
+			case surfconext -> Config.hostUrl() + couplingPath;
+			case helmholtz -> Config.hostUrl() + couplingPath;
 			case orcid -> {
 				String hostUrl = Config.hostUrl();
 				// ORCID needs a dot in its redirect URL, which is why we prepend "www."
 				if (hostUrl.equals("http://localhost")) {
-					yield "http://www.localhost/auth/couple/orcid";
+					yield "http://www.localhost" + couplingPath;
 				}
-				yield hostUrl + "/auth/couple/orcid";
+				yield hostUrl + couplingPath;
 			}
-			case azure -> Config.hostUrl() + "/auth/couple/azure";
-			case linkedin -> Config.hostUrl() + "/auth/couple/linkedin";
-			case github -> Config.hostUrl() + "/auth/github/couple";
+			case azure -> Config.hostUrl() + couplingPath;
+			case linkedin -> Config.hostUrl() + couplingPath;
+			case github -> Config.hostUrl() + couplingPath;
 		};
 	}
 
-	private static String obtainClientId(OpenidProvider provider) {
+	public static String obtainClientId(OpenidProvider provider) {
 		return switch (provider) {
 			case local -> null;
 			case surfconext -> System.getenv("SURFCONEXT_CLIENT_ID");
