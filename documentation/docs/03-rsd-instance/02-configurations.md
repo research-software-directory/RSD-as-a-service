@@ -26,6 +26,7 @@ The RSD supports the following third party OpenID Connect authentication service
 - [SURFconext](#enable-surfconext-authentication)
 - [Helmholtz AI](#enable-helmholtz-ai-authentication)
 - [LinkedIn](#enable-linkedin-authentication)
+- [GitHub](#enable-github-authentication)
 
 :::warning
 The RSD requires one of the aforementioned authentication providers to be used in production. Please obtain the required information for setting up the authentication service directly from the provider. The required information about the authentication provider is stored in `.env` file (environment variables). After changing any value in the `.env` file, you should restart the RSD instance.
@@ -113,6 +114,10 @@ Helmholtz already runs an RSD instance at [https://helmholtz.software/](https://
 
 First, create an app on [https://developer.linkedin.com/](https://developer.linkedin.com/). Follow the steps [here](https://www.linkedin.com/help/linkedin/answer/a1665329) to get your app approved by the company you linked it to. Copy the related environment variables from `.env.example` to your `.env` and fill in the missing values. Finally, add `LINKEDIN` to the values in the environment variable `RSD_AUTH_PROVIDERS`.
 
+### Enable GitHub authentication
+
+First, [create an OAuth app](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app) on GitHub. Make sure the (only) redirect URL ends with `/auth/github`. Copy the related environment variables from `.env.example` to your `.env` and fill in the missing values. Finally, add `GITHUB` to the values in the environment variable `RSD_AUTH_PROVIDERS`.
+
 ## e-Mail service
 
 The RSD provides a mail service functionality.
@@ -153,7 +158,7 @@ The `host` section of settings.json defines following settings. **Most of them s
   - `enabled`: The feedback button can be enabled.
   - `host_label`: Used in the body of message to indicate app name
   - `url`: The `url` value is actually the email.
-  - `issues_page_url`: There is also a link to Github issues page if the user wants to create an GitHub issue concerning his/her feedback.
+  - `issues_page_url`: There is also a link to GitHub issues page if the user wants to create an GitHub issue concerning his/her feedback.
 - `login_info_url`: the link to getting access documentation shown in the "Sign in with" modal. It is relevant only if you use more than one authentication provider. If you use only one authentication provider "Sign in with" modal is not used, instead the user is directly redirected to authentication page.
 - `terms_of_service_url`: the link to your Terms of Service page. Used on the user profile page to let user accept the terms of service
 - `privacy_statement_url`: the link to your privacy statement page. Used on the user profile page to let user accept the privacy statement.
