@@ -407,7 +407,7 @@ public class RsdProviders {
 			case azure -> new QueryParameterBuilder()
 				.addQueryParameter("response_mode", "query")
 				.addQueryParameter("response_type", "code")
-				.addQueryParameter("scope", "openid")
+				.addQueryParameter("scope", "openid profile email")
 				.addQueryParameter("prompt", "select_account")
 				.addQueryParameter(
 					"redirect_uri",
