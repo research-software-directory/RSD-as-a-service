@@ -65,7 +65,7 @@ it('renders upload image inputs', () => {
   // has image caption
   screen.getByRole('textbox',{name:'Image caption'})
   // has contain switch
-  screen.getByRole('checkbox', {
+  screen.getByRole('switch', {
     name: config.image_contain.label
   })
   // has input for file
@@ -124,7 +124,7 @@ it('set contain image to true', () => {
   )
 
   // has contain switch
-  const containSwitch = screen.getByRole('checkbox', {
+  const containSwitch = screen.getByRole('switch', {
     name: config.image_contain.label
   })
   // click on switch (set to true)

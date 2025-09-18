@@ -12,8 +12,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-version: "2.1"
-
 services:
   database:
     build: ./database
@@ -128,7 +126,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend:4.1.0
+    image: rsd/frontend:5.2.0
     environment:
       # it uses values from .env file
       - POSTGREST_URL
