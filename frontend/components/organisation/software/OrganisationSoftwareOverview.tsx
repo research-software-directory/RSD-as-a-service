@@ -9,7 +9,9 @@
 'use client'
 
 import Link from 'next/link'
+
 import {SoftwareOfOrganisation} from '~/types/Organisation'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import NoContent from '~/components/layout/NoContent'
 import SoftwareGridCard from '~/components/software/overview/cards/SoftwareGridCard'
 import SoftwareOverviewGrid from '~/components/software/overview/cards/SoftwareOverviewGrid'
@@ -18,7 +20,6 @@ import SoftwareListItemContent from '~/components/software/overview/list/Softwar
 import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
 import AdminSoftwareGridCard from './card/AdminSoftwareGridCard'
 import AdminSoftwareListItem from './list/AdminSoftwareListItem'
-import {useUserSettings} from '~/config/UserSettingsContext'
 
 type OrganisationSoftwareOverviewProps = Readonly<{
   software: SoftwareOfOrganisation[]

@@ -27,11 +27,10 @@ export type TabKey = 'about'|'software'|'requests'|'rejected'|'settings'
 export type CommunityTabProps = {
   [key in TabKey]: CommunityTabItemProps
 }
+export const defaultTabKey='software' as TabKey
 
 /**
  * Community Tab items. Defines tab values.
- * NOTE! When changing the tab options also update
- * TabContent.tsx file to load proper component.
  */
 export const communityTabItems:CommunityTabProps = {
   software: {
