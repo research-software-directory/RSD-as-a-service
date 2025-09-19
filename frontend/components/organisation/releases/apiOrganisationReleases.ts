@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -40,11 +40,11 @@ export async function getReleasesForOrganisation({organisation_id, release_year,
       return data
     }
     // some other errors
-    logger(`getReleasesForOrganisation...${resp.status} ${resp.statusText}`)
-    return null
+    logger(`getReleasesForOrganisation...${resp.status} ${resp.statusText}`,'warn')
+    return []
   } catch (e: any) {
-    logger(`getReleasesForOrganisation...error...${e.message}`)
-    return null
+    logger(`getReleasesForOrganisation...error...${e.message}`,'error')
+    return []
   }
 }
 
@@ -65,10 +65,10 @@ export async function getReleasesCountForOrganisation({organisation_id, token}: 
       return data
     }
     // some other errors
-    logger(`getReleasesCountForOrganisation...${resp.status} ${resp.statusText}`)
-    return null
+    logger(`getReleasesCountForOrganisation...${resp.status} ${resp.statusText}`,'warn')
+    return []
   } catch (e: any) {
-    logger(`getReleasesCountForOrganisation...error...${e.message}`)
-    return null
+    logger(`getReleasesCountForOrganisation...error...${e.message}`,'error')
+    return []
   }
 }

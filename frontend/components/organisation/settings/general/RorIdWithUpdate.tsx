@@ -13,19 +13,19 @@ import FindReplaceIcon from '@mui/icons-material/FindReplace'
 
 import {useSession} from '~/auth/AuthProvider'
 import {SearchOrganisation} from '~/types/Organisation'
+import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import {findInROR} from '~/utils/getROR'
 import useSnackbar from '~/components/snackbar/useSnackbar'
+import useOrganisationContext from '~/components/organisation/context/useOrganisationContext'
+import {patchOrganisationTable} from '../updateOrganisationSettings'
 import config from './generalSettingsConfig'
-import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import RorIdOptionsModal from './RorIdOptionsModal'
 import AutosaveOrganisationTextField from './AutosaveOrganisationTextField'
-import {patchOrganisationTable} from '../updateOrganisationSettings'
-import useOrganisationContext from '../../context/useOrganisationContext'
 
 export default function FindRorId() {
   const {token} = useSession()
   const {watch, resetField} = useFormContext()
-  const {updateOrganisation} = useOrganisationContext()
+  const {updateOrganisationContext} = useOrganisationContext()
   const {showWarningMessage, showInfoMessage} = useSnackbar()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -38,8 +38,6 @@ export default function FindRorId() {
     setLoading(true)
     // find by organisation name
     const options = await findInROR({searchFor: name})
-    // make slug from name
-    // const key = getSlugFromString(name)
     // match the results by key/slug
     const found = options.filter(item => item.label.toLowerCase() === name.toLowerCase())
     // if exact match
@@ -50,7 +48,6 @@ export default function FindRorId() {
         showInfoMessage(`The ROR id for ${name} is correct.`)
       } else if (id) {
         updateValue(id)
-        // showSuccessMessage(`Updated ROR id for ${name}.`)
       }
     } else {
       if (options.length > 0) {
@@ -58,7 +55,6 @@ export default function FindRorId() {
         setOptions(options)
         // show modal to select one
         setOpen(true)
-        // showWarningMessage('Failed to find exact match. Select from alternatives.')
       } else {
         showWarningMessage(`Failed to find exact match for ${name}. Check the organisation name.`)
       }
@@ -79,7 +75,7 @@ export default function FindRorId() {
     })
     if (resp.status === 200) {
       // debugger
-      updateOrganisation({
+      updateOrganisationContext({
         key: 'ror_id',
         value: ror_id
       })

@@ -45,7 +45,7 @@ import {
   softwareCategoriesFilter,
 } from '~/components/software/overview/filters/softwareFiltersApi'
 import SoftwareFiltersModal from '~/components/software/overview/filters/SoftwareFiltersModal'
-import {highlightOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
+import {highlightOrderOptions} from '~/components/software/overview/filters/softwareOrderOptions'
 
 type SpotlightsOverviewProps = {
   search?: string | null

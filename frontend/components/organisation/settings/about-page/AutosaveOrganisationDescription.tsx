@@ -23,7 +23,7 @@ export default function AutosaveOrganisationDescription(props: AutosaveControlle
   const {showErrorMessage} = useSnackbar()
   const {name,maxLength} = props
   const {register,control,resetField} = useFormContext()
-  const {id,updateOrganisation} = useOrganisationContext()
+  const {id,updateOrganisationContext} = useOrganisationContext()
   const {field:{value},fieldState:{isDirty,error}} = useController({
     control,
     name
@@ -53,7 +53,7 @@ export default function AutosaveOrganisationDescription(props: AutosaveControlle
       showErrorMessage(`Failed to save ${name}. ${resp?.message}`)
     } else {
       // debugger
-      updateOrganisation({
+      updateOrganisationContext({
         key: name,
         value
       })

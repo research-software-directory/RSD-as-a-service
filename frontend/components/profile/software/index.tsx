@@ -5,6 +5,7 @@
 
 import Pagination from '@mui/material/Pagination'
 
+import {useUserSettings} from '~/config/UserSettingsContext'
 import useSoftwareParams from '~/components/organisation/software/filters/useSoftwareParams'
 import useQueryChange from '~/components/organisation/projects/useQueryChange'
 import {useProfileContext} from '../context/ProfileContext'
@@ -13,7 +14,8 @@ import ProfileSearchSoftware from './ProfileSearchSoftware'
 
 export default function ProfileSoftware() {
   const {software_cnt,software} = useProfileContext()
-  const {page,rows,view,setPageLayout} = useSoftwareParams()
+  const {page,rows,view} = useSoftwareParams()
+  const {setPageLayout} = useUserSettings()
   const {handleQueryChange} = useQueryChange()
   const numPages = Math.ceil(software_cnt / rows)
 
