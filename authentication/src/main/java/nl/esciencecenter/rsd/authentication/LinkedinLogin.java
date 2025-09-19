@@ -52,7 +52,7 @@ public class LinkedinLogin implements Login {
 		form.put("code", code);
 		form.put("grant_type", "authorization_code");
 		form.put("redirect_uri", redirectUrl);
-		form.put("client_id", Config.linkedinClientId());
+		form.put("client_id", RsdProviders.obtainClientId(OpenidProvider.linkedin));
 		form.put("client_secret", Config.linkedinClientSecret());
 		return form;
 	}

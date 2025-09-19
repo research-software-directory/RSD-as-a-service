@@ -42,6 +42,7 @@ public class Config {
 			case orcid -> orcidWellknown();
 			case azure -> azureWellknown();
 			case linkedin -> linkedinWellknown();
+			case github -> githubWellknown();
 		};
 
 		if (rawUrl == null) {
@@ -60,10 +61,6 @@ public class Config {
 	}
 
 	// SURFconext
-	public static String surfconextClientId() {
-		return System.getenv("SURFCONEXT_CLIENT_ID");
-	}
-
 	public static String surfconextWellknown() {
 		return System.getenv("SURFCONEXT_WELL_KNOWN_URL");
 	}
@@ -73,10 +70,6 @@ public class Config {
 	}
 
 	//	Helmholtz ID
-	public static String helmholtzIdClientId() {
-		return System.getenv("HELMHOLTZID_CLIENT_ID");
-	}
-
 	public static String helmholtzIdWellknown() {
 		return System.getenv("HELMHOLTZID_WELL_KNOWN_URL");
 	}
@@ -94,10 +87,6 @@ public class Config {
 	}
 
 	// ORCID
-	public static String orcidClientId() {
-		return System.getenv("ORCID_CLIENT_ID");
-	}
-
 	public static String orcidWellknown() {
 		return System.getenv("ORCID_WELL_KNOWN_URL");
 	}
@@ -107,10 +96,6 @@ public class Config {
 	}
 
 	// Azure Active Directory
-	public static String azureClientId() {
-		return System.getenv("AZURE_CLIENT_ID");
-	}
-
 	public static String azureWellknown() {
 		return System.getenv("AZURE_WELL_KNOWN_URL");
 	}
@@ -124,15 +109,20 @@ public class Config {
 	}
 
 	// LinkedIn
-	public static String linkedinClientId() {
-		return System.getenv("LINKEDIN_CLIENT_ID");
-	}
-
 	public static String linkedinWellknown() {
 		return System.getenv("LINKEDIN_WELL_KNOWN_URL");
 	}
 
 	public static String linkedinClientSecret() {
 		return System.getenv("AUTH_LINKEDIN_CLIENT_SECRET");
+	}
+
+	// GitHub
+	public static String githubWellknown() {
+		return System.getenv("GITHUB_WELL_KNOWN_URL");
+	}
+
+	public static String githubClientSecret() {
+		return System.getenv("AUTH_GITHUB_CLIENT_SECRET");
 	}
 }

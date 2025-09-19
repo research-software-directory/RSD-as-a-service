@@ -51,15 +51,23 @@ public class Main {
 
 		app.get("/auth/providers", ctx -> ctx.json(rsdProviders.activeProvidersAsJson()));
 
-		app.post("/auth/login/local", ctx -> handleLoginRequest(ctx, OpenidProvider.local, rsdProviders));
+		app.post(RsdProviders.obtainLoginPath(OpenidProvider.local), ctx ->
+			handleLoginRequest(ctx, OpenidProvider.local, rsdProviders)
+		);
 
-		app.post("/auth/couple/local", ctx -> handleCoupleRequest(ctx, OpenidProvider.local, rsdProviders));
+		app.post(RsdProviders.obtainCouplingPath(OpenidProvider.local), ctx ->
+			handleCoupleRequest(ctx, OpenidProvider.local, rsdProviders)
+		);
 
-		app.get("/auth/login/surfconext", ctx -> handleLoginRequest(ctx, OpenidProvider.surfconext, rsdProviders));
+		app.get(RsdProviders.obtainLoginPath(OpenidProvider.surfconext), ctx ->
+			handleLoginRequest(ctx, OpenidProvider.surfconext, rsdProviders)
+		);
 
-		app.get("/auth/couple/surfconext", ctx -> handleCoupleRequest(ctx, OpenidProvider.surfconext, rsdProviders));
+		app.get(RsdProviders.obtainCouplingPath(OpenidProvider.surfconext), ctx ->
+			handleCoupleRequest(ctx, OpenidProvider.surfconext, rsdProviders)
+		);
 
-		app.get("/auth/login/helmholtzid", ctx -> {
+		app.get(RsdProviders.obtainLoginPath(OpenidProvider.helmholtz), ctx -> {
 			OpenidProvider helmholtzProvider = OpenidProvider.helmholtz;
 			switch (rsdProviders.accessMethodOfProvider(helmholtzProvider)) {
 				case MISCONFIGURED -> handleMisconfiguredProvider(ctx, helmholtzProvider);
@@ -83,19 +91,41 @@ public class Main {
 			}
 		});
 
-		app.get("/auth/couple/helmholtzid", ctx -> handleCoupleRequest(ctx, OpenidProvider.helmholtz, rsdProviders));
+		app.get(RsdProviders.obtainCouplingPath(OpenidProvider.helmholtz), ctx ->
+			handleCoupleRequest(ctx, OpenidProvider.helmholtz, rsdProviders)
+		);
 
-		app.get("/auth/login/orcid", ctx -> handleLoginRequest(ctx, OpenidProvider.orcid, rsdProviders));
+		app.get(RsdProviders.obtainLoginPath(OpenidProvider.orcid), ctx ->
+			handleLoginRequest(ctx, OpenidProvider.orcid, rsdProviders)
+		);
 
-		app.get("/auth/couple/orcid", ctx -> handleCoupleRequest(ctx, OpenidProvider.orcid, rsdProviders));
+		app.get(RsdProviders.obtainCouplingPath(OpenidProvider.orcid), ctx ->
+			handleCoupleRequest(ctx, OpenidProvider.orcid, rsdProviders)
+		);
 
-		app.get("/auth/login/azure", ctx -> handleLoginRequest(ctx, OpenidProvider.azure, rsdProviders));
+		app.get(RsdProviders.obtainLoginPath(OpenidProvider.azure), ctx ->
+			handleLoginRequest(ctx, OpenidProvider.azure, rsdProviders)
+		);
 
-		app.get("/auth/couple/azure", ctx -> handleCoupleRequest(ctx, OpenidProvider.azure, rsdProviders));
+		app.get(RsdProviders.obtainCouplingPath(OpenidProvider.azure), ctx ->
+			handleCoupleRequest(ctx, OpenidProvider.azure, rsdProviders)
+		);
 
-		app.get("/auth/login/linkedin", ctx -> handleLoginRequest(ctx, OpenidProvider.linkedin, rsdProviders));
+		app.get(RsdProviders.obtainLoginPath(OpenidProvider.linkedin), ctx ->
+			handleLoginRequest(ctx, OpenidProvider.linkedin, rsdProviders)
+		);
 
-		app.get("/auth/couple/linkedin", ctx -> handleCoupleRequest(ctx, OpenidProvider.linkedin, rsdProviders));
+		app.get(RsdProviders.obtainCouplingPath(OpenidProvider.linkedin), ctx ->
+			handleCoupleRequest(ctx, OpenidProvider.linkedin, rsdProviders)
+		);
+
+		app.get(RsdProviders.obtainLoginPath(OpenidProvider.github), ctx ->
+			handleLoginRequest(ctx, OpenidProvider.github, rsdProviders)
+		);
+
+		app.get(RsdProviders.obtainCouplingPath(OpenidProvider.github), ctx ->
+			handleCoupleRequest(ctx, OpenidProvider.github, rsdProviders)
+		);
 
 		if (Config.isApiAccessTokenEnabled()) {
 			// endpoint for generating new API access token
@@ -233,6 +263,10 @@ public class Main {
 			case linkedin -> {
 				String code = ctx.queryParam("code");
 				yield new LinkedinLogin(code, redirectUrl).openidInfo();
+			}
+			case github -> {
+				String code = ctx.queryParam("code");
+				yield new GithubLogin(code, redirectUrl).openidInfo();
 			}
 		};
 	}

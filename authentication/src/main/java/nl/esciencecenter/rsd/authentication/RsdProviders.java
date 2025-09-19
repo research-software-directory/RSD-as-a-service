@@ -41,9 +41,12 @@ public class RsdProviders {
 
 	private static final OpenidProviderAccessMethodOrder DEFAULT_ACCESS_METHOD_ORDER =
 		new OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod.DISABLED, Integer.MAX_VALUE);
+
 	private final ConcurrentMap<OpenidProvider, OpenidProviderAccessMethod> accessMethodOrderMap =
 		new ConcurrentHashMap<>();
+
 	private String activeProvidersString = "[]";
+
 	private final ReadWriteLock jsonProvidersLock = new ReentrantReadWriteLock(false);
 
 	public RsdProviders() {
@@ -283,6 +286,7 @@ public class RsdProviders {
 			case orcid -> "ORCID";
 			case azure -> Utils.coalesce(System.getenv("AZURE_DISPLAY_NAME"), "Azure Active Directory");
 			case linkedin -> "LinkedIn";
+			case github -> "GitHub";
 		};
 	}
 
@@ -297,6 +301,7 @@ public class RsdProviders {
 				"Login with your institutional credentials."
 			);
 			case linkedin -> "Sign in with your LinkedIn account.";
+			case github -> "Sign in with your GitHub account.";
 		};
 	}
 
@@ -306,8 +311,17 @@ public class RsdProviders {
 		throws IOException, InterruptedException, RsdResponseException {
 		return switch (provider) {
 			case local -> new AuthUrls(URI.create("/login/local"), URI.create("/login/local/couple"));
-			case surfconext, helmholtz, orcid, azure, linkedin -> {
-				URI authUrl = Utils.getAuthUrlFromWellKnownUrl(wellKnownUrl);
+			case surfconext, helmholtz, orcid, azure, linkedin, github -> {
+				URI authUrl;
+				if (provider == OpenidProvider.github) {
+					// GitHub's well-known endpoint doesn't return this info,
+					// so we have to hardcode it and hope it doesn't change.
+					// URL obtained from https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authenticating-to-the-rest-api-with-an-oauth-app#accepting-user-authorization
+					authUrl = URI.create("https://github.com/login/oauth/authorize");
+				} else {
+					authUrl = Utils.getAuthUrlFromWellKnownUrl(wellKnownUrl);
+				}
+
 				yield new AuthUrls(
 					addQueryParametersToAuthUrl(authUrl, provider, false),
 					addQueryParametersToAuthUrl(authUrl, provider, true)
@@ -316,36 +330,66 @@ public class RsdProviders {
 		};
 	}
 
+	static String obtainLoginPath(OpenidProvider provider) {
+		return switch (provider) {
+			case local -> "/auth/login/local";
+			case surfconext -> "/auth/login/surfconext";
+			case helmholtz -> "/auth/login/helmholtzid";
+			case orcid -> "/auth/login/orcid";
+			case azure -> "/auth/login/azure";
+			case linkedin -> "/auth/login/linkedin";
+			// switched path components because GitHub only allows one redirect URL but allows sub-paths
+			case github -> "/auth/github/login";
+		};
+	}
+
 	static String obtainRedirectUrl(OpenidProvider provider) {
+		String loginPath = obtainLoginPath(provider);
 		return switch (provider) {
 			case local -> throw new IllegalArgumentException();
-			case surfconext -> Config.hostUrl() + "/auth/login/surfconext";
-			case helmholtz -> Config.hostUrl() + "/auth/login/helmholtzid";
-			case orcid -> Config.hostUrl() + "/auth/login/orcid";
-			case azure -> Config.hostUrl() + "/auth/login/azure";
-			case linkedin -> Config.hostUrl() + "/auth/login/linkedin";
+			case surfconext -> Config.hostUrl() + loginPath;
+			case helmholtz -> Config.hostUrl() + loginPath;
+			case orcid -> Config.hostUrl() + loginPath;
+			case azure -> Config.hostUrl() + loginPath;
+			case linkedin -> Config.hostUrl() + loginPath;
+			case github -> Config.hostUrl() + loginPath;
+		};
+	}
+
+	static String obtainCouplingPath(OpenidProvider provider) {
+		return switch (provider) {
+			case local -> "/auth/couple/local";
+			case surfconext -> "/auth/couple/surfconext";
+			case helmholtz -> "/auth/couple/helmholtzid";
+			case orcid -> "/auth/couple/orcid";
+			case azure -> "/auth/couple/azure";
+			case linkedin -> "/auth/couple/linkedin";
+			// switched path components because GitHub only allows one redirect URL but allows sub-paths
+			case github -> "/auth/github/couple";
 		};
 	}
 
 	static String obtainCouplingRedirectUrl(OpenidProvider provider) {
+		String couplingPath = obtainCouplingPath(provider);
 		return switch (provider) {
 			case local -> throw new IllegalArgumentException();
-			case surfconext -> Config.hostUrl() + "/auth/couple/surfconext";
-			case helmholtz -> Config.hostUrl() + "/auth/couple/helmholtzid";
+			case surfconext -> Config.hostUrl() + couplingPath;
+			case helmholtz -> Config.hostUrl() + couplingPath;
 			case orcid -> {
 				String hostUrl = Config.hostUrl();
 				// ORCID needs a dot in its redirect URL, which is why we prepend "www."
 				if (hostUrl.equals("http://localhost")) {
-					yield "http://www.localhost/auth/couple/orcid";
+					yield "http://www.localhost" + couplingPath;
 				}
-				yield hostUrl + "/auth/couple/orcid";
+				yield hostUrl + couplingPath;
 			}
-			case azure -> Config.hostUrl() + "/auth/couple/azure";
-			case linkedin -> Config.hostUrl() + "/auth/couple/linkedin";
+			case azure -> Config.hostUrl() + couplingPath;
+			case linkedin -> Config.hostUrl() + couplingPath;
+			case github -> Config.hostUrl() + couplingPath;
 		};
 	}
 
-	private static String obtainClientId(OpenidProvider provider) {
+	public static String obtainClientId(OpenidProvider provider) {
 		return switch (provider) {
 			case local -> null;
 			case surfconext -> System.getenv("SURFCONEXT_CLIENT_ID");
@@ -353,6 +397,7 @@ public class RsdProviders {
 			case orcid -> System.getenv("ORCID_CLIENT_ID");
 			case azure -> System.getenv("AZURE_CLIENT_ID");
 			case linkedin -> System.getenv("LINKEDIN_CLIENT_ID");
+			case github -> System.getenv("GITHUB_CLIENT_ID");
 		};
 	}
 
@@ -419,6 +464,16 @@ public class RsdProviders {
 				.addQueryParameter("response_mode", "query")
 				.addQueryParameter("response_type", "code")
 				.addQueryParameter("scope", "openid profile email")
+				.addQueryParameter(
+					"redirect_uri",
+					isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider)
+				)
+				.addQueryParameter("client_id", obtainClientId(openidProvider))
+				.toString();
+			case github -> new QueryParameterBuilder()
+				.addQueryParameter("response_mode", "query")
+				.addQueryParameter("response_type", "code")
+				.addQueryParameter("scope", "openid")
 				.addQueryParameter(
 					"redirect_uri",
 					isCoupleUrl ? obtainCouplingRedirectUrl(openidProvider) : obtainRedirectUrl(openidProvider)

@@ -11,7 +11,8 @@ public enum OpenidProvider {
 	helmholtz,
 	orcid,
 	azure,
-	linkedin;
+	linkedin,
+	github;
 
 	public String toUserFriendlyString() {
 		return switch (this) {
@@ -21,6 +22,7 @@ public enum OpenidProvider {
 			case orcid -> "ORCID";
 			case azure -> "Azure";
 			case linkedin -> "LinkedIn";
+			case github -> "GitHub";
 		};
 	}
 }
