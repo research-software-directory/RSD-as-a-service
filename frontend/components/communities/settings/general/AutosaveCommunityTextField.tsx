@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useFormContext} from 'react-hook-form'
-import {useRouter} from 'next/router'
+import {useRouter} from 'next/navigation'
 
 import {useSession} from '~/auth/AuthProvider'
 import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
@@ -54,7 +54,7 @@ export default function AutosaveCommunityTextField({options,rules}:AutosaveCommu
       })
       if (name === 'slug') {
         const url = `/communities/${value}/settings?tab=general`
-        router.push(url, url, {scroll: false})
+        router.push(url, {scroll: false})
       }
     }
   }

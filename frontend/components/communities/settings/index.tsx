@@ -3,14 +3,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {useSession} from '~/auth/AuthProvider'
-import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
 import ProtectedContent from '~/components/layout/ProtectedContent'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import SettingsNav from './SettingsNav'
 import SettingsContent from './SettingsContent'
 
-export default function CommunitySettingsContent({isMaintainer}:{isMaintainer:boolean}) {
+export default function CommunitySettings({isMaintainer}:Readonly<{isMaintainer:boolean}>) {
   const {status,user} = useSession()
 
   return (
@@ -19,7 +20,6 @@ export default function CommunitySettingsContent({isMaintainer}:{isMaintainer:bo
       role={user?.role}
       isMaintainer={isMaintainer}
     >
-      <UserAgreementModal />
       <div className="flex-1 grid grid-cols-[1fr_4fr] gap-4">
         <BaseSurfaceRounded
           className="mb-12 p-4"

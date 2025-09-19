@@ -17,6 +17,8 @@ export type SettingsMenuProps = {
   icon: JSX.Element
 }
 
+export const defaultNav = 'general'
+
 export const settingsMenu: SettingsMenuProps[] = [
   {
     id:'general',

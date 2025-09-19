@@ -1,29 +1,30 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import Link from 'next/link'
 
+import {useUserSettings} from '~/config/UserSettingsContext'
 import NoContent from '~/components/layout/NoContent'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 import SoftwareGridCard from '~/components/software/overview/cards/SoftwareGridCard'
 import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
 import SoftwareOverviewGrid from '~/components/software/overview/cards/SoftwareOverviewGrid'
 import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
-import {useCommunityContext} from '~/components/communities/context'
 import AdminSoftwareGridCard from './card/AdminSoftwareGridCard'
 import AdminSoftwareListItem from './list/AdminSoftwareListItem'
 import {SoftwareOfCommunity} from './apiCommunitySoftware'
 
 type CommunitySoftwareOverviewProps = Readonly<{
-  layout: ProjectLayoutType
   software: SoftwareOfCommunity[]
+  isMaintainer: boolean
 }>
 
-export default function CommunitySoftwareOverview({layout,software}: CommunitySoftwareOverviewProps) {
-  const {isMaintainer} = useCommunityContext()
+export default function CommunitySoftwareOverview({software,isMaintainer}: CommunitySoftwareOverviewProps) {
+  const {rsd_page_layout} = useUserSettings()
 
   // console.group('CommunitySoftwareOverview')
   // console.log('isMaintainer...', isMaintainer)
@@ -37,7 +38,7 @@ export default function CommunitySoftwareOverview({layout,software}: CommunitySo
     return <NoContent />
   }
 
-  if (layout === 'list') {
+  if (rsd_page_layout === 'list') {
     return (
       <SoftwareOverviewList>
         {software.map(item => {
