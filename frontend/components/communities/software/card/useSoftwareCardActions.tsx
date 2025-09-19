@@ -5,8 +5,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
+'use client'
 
+import {useRouter} from 'next/navigation'
 import {useSession} from '~/auth/AuthProvider'
 import logger from '~/utils/logger'
 import useSnackbar from '~/components/snackbar/useSnackbar'
@@ -25,16 +26,13 @@ export type SoftwareMenuAction = {
 
 export function useSoftwareCardActions({software}: SoftwareCardWithMenuProps) {
   const {token} = useSession()
+  const router = useRouter()
   const {community:{id}} = useCommunityContext()
   const {showErrorMessage} = useSnackbar()
   const {menuOptions} = useAdminMenuOptions({
     status: software.status,
     is_published: software.is_published
   })
-
-  // refresh "signal" for child component(s) to reload project item after update
-  // and updated menuOptions
-  const [,setRefresh] = useState<number>(0)
 
   async function setStatus(status: CommunityRequestStatus) {
     const resp = await patchSoftwareForCommunity({
@@ -48,10 +46,8 @@ export function useSoftwareCardActions({software}: SoftwareCardWithMenuProps) {
     if (resp.status !== 200) {
       showErrorMessage(`Failed to update ${software.brand_name}. ${resp.message}`)
     } else {
-      // directly update object value
-      software.status = status
-      // send refresh signal - to reload changes
-      setRefresh(v=>v+1)
+      // refresh page to reflect changes
+      router.refresh()
     }
   }
 

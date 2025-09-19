@@ -1,23 +1,30 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
+'use client'
+
+import {useSearchParams,usePathname,useRouter} from 'next/navigation'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
-import {settingsMenu} from './SettingsNavItems'
+import {defaultNav, settingsMenu} from './SettingsNavItems'
 
 export default function CommunitySettingsNav() {
   const router = useRouter()
-  const tab = router.query['tab'] ?? 'general'
+  const searchParam = useSearchParams()
+  const pathname = usePathname()
+  const params = new URLSearchParams(searchParam ?? '')
+  const nav = searchParam?.get('nav') ?? defaultNav
+
   // console.group('CommunitySettingsNav')
-  // console.log('description...', organisation.description)
+  // console.log('nav...', nav)
   // console.groupEnd()
+
   return (
     <List
       component="nav"
@@ -26,19 +33,16 @@ export default function CommunitySettingsNav() {
       }}
     >
       {settingsMenu.map((item, pos) => {
-        const selected = tab === settingsMenu[pos].id
+        const selected = nav === settingsMenu[pos].id
+        params.set('nav',item.id)
+        const url = `${pathname}?${params.toString()}`
         return (
           <ListItemButton
             data-testid="organisation-settings-nav-item"
             key={`step-${pos}`}
             selected={selected}
             onClick={() => {
-              router.push({
-                query: {
-                  ...router.query,
-                  tab: item.id
-                }
-              },{},{scroll:false})
+              router.push(url,{scroll:false})
             }}
             sx={editMenuItemButtonSx}
           >

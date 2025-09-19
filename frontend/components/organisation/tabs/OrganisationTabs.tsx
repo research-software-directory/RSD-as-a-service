@@ -5,8 +5,8 @@
 
 'use client'
 
-import Tabs from '@mui/material/Tabs'
 import {useSearchParams, useParams} from 'next/navigation'
+import Tabs from '@mui/material/Tabs'
 
 import useRsdSettings from '~/config/useRsdSettings'
 import TabAsLink from '~/components/layout/TabAsLink'

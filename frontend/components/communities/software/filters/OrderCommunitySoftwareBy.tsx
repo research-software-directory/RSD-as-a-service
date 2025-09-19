@@ -8,11 +8,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import useHandleQueryChange from '~/utils/useHandleQueryChange'
 import OrderBy from '~/components/filter/OrderBy'
 import useSoftwareParams from '~/components/organisation/software/filters/useSoftwareParams'
 import {softwareOrderOptions} from '~/components/software/overview/filters/softwareOrderOptions'
-import useFilterQueryChange from '~/components/filter/useFilterQueryChange'
-import {useCommunityContext} from '../../context'
+import {useCommunityContext} from '~/components/communities/context'
 
 const adminOrderOptions = [
   {key: 'is_published', label: 'Not published', direction: 'asc.nullslast'},
@@ -33,7 +33,7 @@ export function getSoftwareOrderOptions(isMaintainer:boolean) {
 export default function OrderCommunitySoftwareBy() {
   const {isMaintainer} = useCommunityContext()
   let {order} = useSoftwareParams()
-  const {handleQueryChange} = useFilterQueryChange()
+  const {handleQueryChange} = useHandleQueryChange()
   const orderOptions = getSoftwareOrderOptions(isMaintainer)
 
   const allowedOrderings = orderOptions.map(o => o.key)

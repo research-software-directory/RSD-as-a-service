@@ -3,10 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import AppFooter from '~/components/AppFooter'
-import AppHeader from '~/components/AppHeader'
-import PageBackground from '~/components/layout/PageBackground'
-import MainContent from '~/components/layout/MainContent'
+import MainLayout from '~/components/layout/MainLayout'
 
 // force to be dynamic route
 export const dynamic = 'force-dynamic'
@@ -18,16 +15,11 @@ export default function OrganisationsLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+
   return (
-    <PageBackground>
-      {/* Header  */}
-      <AppHeader />
-      {/* Main content */}
-      <MainContent>
-        {children}
-      </MainContent>
-      {/* Footer */}
-      <AppFooter />
-    </PageBackground>
+    <MainLayout>
+      {children}
+    </MainLayout>
   )
+
 }

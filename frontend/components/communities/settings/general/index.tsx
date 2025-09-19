@@ -8,13 +8,12 @@ import {FormProvider, useForm} from 'react-hook-form'
 import {useSession} from '~/auth/AuthProvider'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import {useCommunityContext} from '~/components/communities/context'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import {EditCommunityProps} from '~/components/communities/apiCommunities'
 import config from './config'
 import CommunityAdminSection from './CommunityAdminSection'
 import AutosaveCommunityTextField from './AutosaveCommunityTextField'
 import AutosaveCommunityKeywords from './AutosaveCommunityKeywords'
-import {EditCommunityProps} from '../../apiCommunities'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
-
 
 export default function CommunityGeneralSettings() {
   const {user} = useSession()
@@ -25,7 +24,6 @@ export default function CommunityGeneralSettings() {
   })
   // extract used methods
   const {watch, register} = methods
-
   const [name,short_description,website]=watch(['name','short_description','website'])
 
   // console.group('CommunityGeneralSettings')
