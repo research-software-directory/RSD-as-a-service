@@ -8,10 +8,8 @@
 
 'use client'
 
-import {useState, useEffect} from 'react'
 import Link from 'next/link'
-
-// local dependencies (project components)
+import {usePathname} from 'next/navigation'
 
 import LogoApp from '~/assets/LogoApp.svg'
 import LogoAppSmall from '~/assets/LogoAppSmall.svg'
@@ -27,21 +25,14 @@ import DesktopMenu from './DesktopMenu'
 
 export default function AppHeader() {
   const {status} = useSession()
-  const [activePath, setActivePath] = useState('/')
   const {host} = useRsdSettings()
+  const pathname = usePathname()
 
   // console.group('AppHeader')
-  // console.log('activePath...',activePath)
   // console.log('status...',status)
   // console.log('host...',host)
+  // console.log('pathname...',pathname)
   // console.groupEnd()
-
-  useEffect(() => {
-    // set activePath to currently loaded route/page
-    if (typeof window != 'undefined') {
-      setActivePath(window.location.pathname)
-    }
-  }, [])
 
   return (
     <header
@@ -73,7 +64,7 @@ export default function AppHeader() {
           <GlobalSearchAutocomplete className="hidden xl:block ml-12 mr-6"/>
 
           {/* Large menu*/}
-          <DesktopMenu activePath={activePath}/>
+          <DesktopMenu activePath={pathname ?? '/'}/>
 
           <div className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
             {/* FEEDBACK panel */}
@@ -88,7 +79,7 @@ export default function AppHeader() {
             {/* ADD menu button */}
             {status === 'authenticated' ? <AddMenu/> : null}
             {/* Responsive menu */}
-            <ResponsiveMenu activePath={activePath} />
+            <ResponsiveMenu activePath={pathname ?? '/'} />
             {/* LOGIN / USER MENU */}
             <LoginButton/>
           </div>
