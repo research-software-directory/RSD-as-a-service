@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -42,8 +41,7 @@ public class AzureLogin implements Login {
 		String subject = idJwt.getSubject();
 		String email = idJwt.getClaim("email").asString();
 		String name = idJwt.getClaim("name").asString();
-		Map<String, List<String>> emptyData = Collections.emptyMap();
-		return new OpenIdInfo(subject, name, email, Config.azureOrganisation(), emptyData);
+		return new OpenIdInfo(subject, name, email, Config.azureOrganisation(), Collections.emptyMap());
 	}
 
 	private Map<String, String> createForm() {
