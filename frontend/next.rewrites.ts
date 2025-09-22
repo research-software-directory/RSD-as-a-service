@@ -19,24 +19,7 @@ import {Rewrite} from 'next/dist/lib/load-custom-routes'
 
 let rewritesConfig: Rewrite[] = [] // NOSONAR
 
-if (process.env.NODE_ENV === 'docker' as any) {
-  // proxies for frontend-dev service
-  // developing using node docker container
-  rewritesConfig = [
-    {
-      source: '/image/:path*',
-      destination: 'http://nginx/image/:path*', // NOSONAR
-    },
-    {
-      source: '/api/v1/:path*',
-      destination: 'http://nginx/api/v1/:path*',// NOSONAR
-    },
-    {
-      source: '/auth/login/local',
-      destination: 'http://nginx/auth/login/local', // NOSONAR
-    }
-  ]
-} else if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development') {
   rewritesConfig = [
     {
       source: '/image/:path*',
