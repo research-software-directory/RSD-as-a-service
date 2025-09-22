@@ -67,7 +67,6 @@ services:
       # it uses values from .env file
       - RSD_ENVIRONMENT
       - POSTGREST_URL
-      - RSD_AUTH_COUPLE_PROVIDERS
       - RSD_AUTH_PROVIDERS
       - SURFCONEXT_CLIENT_ID
       - SURFCONEXT_WELL_KNOWN_URL
@@ -130,11 +129,8 @@ services:
       - CROSSREF_CONTACT_EMAIL
       - MATOMO_URL
       - MATOMO_ID
-      # link your orcid account
-      - RSD_AUTH_COUPLE_PROVIDERS
       - ORCID_CLIENT_ID
       - ORCID_WELL_KNOWN_URL
-      # link your linkedin account
       - LINKEDIN_CLIENT_ID
       - LINKEDIN_WELL_KNOWN_URL
     expose:

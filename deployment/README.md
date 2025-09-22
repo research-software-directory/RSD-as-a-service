@@ -54,7 +54,6 @@ The default index.css and settings.json are already in the frontend image. If yo
       - POSTGREST_URL
       - PGRST_JWT_SECRET
       - RSD_AUTH_URL
-      - RSD_AUTH_COUPLE_PROVIDERS
       - RSD_AUTH_PROVIDERS
       - MATOMO_URL
       - MATOMO_ID
