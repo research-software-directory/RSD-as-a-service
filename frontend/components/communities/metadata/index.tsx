@@ -3,15 +3,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import LanguageIcon from '@mui/icons-material/Language'
 
 import {getHostnameFromUrl} from '~/utils/getHostname'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import KeywordList from '~/components/cards/KeywordList'
 import Links from '~/components/organisation/metadata/Links'
-import {useCommunityContext} from '../context'
+import {useCommunityContext} from '~/components/communities/context'
 import CommunityLogo from './CommunityLogo'
-
 
 function Website({url}:Readonly<{url:string|null}>){
   if (!url) return null

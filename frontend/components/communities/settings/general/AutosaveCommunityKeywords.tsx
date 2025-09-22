@@ -12,13 +12,13 @@ import {sortOnStrProp} from '~/utils/sortFn'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import FindKeyword, {Keyword} from '~/components/keyword/FindKeyword'
 import {EditCommunityProps} from '~/components/communities/apiCommunities'
+import {useCommunityContext} from '~/components/communities/context'
+import config from './config'
 import {
   KeywordForCommunity,
   addKeywordsToCommunity, deleteKeywordFromCommunity
 } from './apiCommunityKeywords'
 import {searchForCommunityKeyword} from './searchForCommunityKeyword'
-import config from './config'
-import {useCommunityContext} from '../../context'
 
 export default function AutosaveCommunityKeywords(){
   const {token} = useSession()

@@ -3,20 +3,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
+'use client'
 
 import {decodeJsonParam} from '~/utils/extractQueryParam'
+import useHandleQueryChange from '~/utils/useHandleQueryChange'
 import FilterHeader from '~/components/filter/FilterHeader'
 import KeywordsFilter, {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import LicensesFilter, {LicensesFilterOption} from '~/components/filter/LicensesFilter'
 import ProgrammingLanguagesFilter, {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import CategoriesFilter, {CategoryOption} from '~/components/filter/CategoriesFilter'
-import useFilterQueryChange from '~/components/filter/useFilterQueryChange'
 
 import useSoftwareParams from '~/components/organisation/software/filters/useSoftwareParams'
 import OrderCommunitySoftwareBy from './OrderCommunitySoftwareBy'
 import useCommunityHasCategories from './useCommunityHasCategories'
-
+import useResetFilters from './useResetFilters'
 
 type CommunitySoftwareFiltersProps = {
   keywordsList: KeywordFilterOption[]
@@ -28,14 +28,15 @@ type CommunitySoftwareFiltersProps = {
 export default function CommunitySoftwareFilters({
   keywordsList,languagesList,licensesList,categoryList
 }:CommunitySoftwareFiltersProps) {
-  const router = useRouter()
   const hasCategories = useCommunityHasCategories()
-  const {handleQueryChange} = useFilterQueryChange()
+  const {handleQueryChange} = useHandleQueryChange()
+  const {resetFilters} = useResetFilters()
   // extract query params
   const {
     filterCnt,keywords_json,prog_lang_json,
     licenses_json,categories_json
   } = useSoftwareParams()
+
   // decode query params
   const keywords = decodeJsonParam(keywords_json, [])
   const prog_lang = decodeJsonParam(prog_lang_json, [])
@@ -53,22 +54,12 @@ export default function CommunitySoftwareFilters({
     return true
   }
 
-  function resetFilters(){
-    // use basic params
-    const query: any = {
-      slug: router.query.slug,
-      // keep order if provided
-      order: router.query?.order ? router.query?.order : 'mention_cnt'
-    }
-    router.push({query},undefined,{scroll: false})
-  }
-
   return (
     <>
       <FilterHeader
         filterCnt={filterCnt}
         disableClear={clearDisabled()}
-        resetFilters={resetFilters}
+        resetFilters={()=>resetFilters('software')}
       />
       {/* Order by */}
       <OrderCommunitySoftwareBy />
@@ -96,7 +87,7 @@ export default function CommunitySoftwareFilters({
           handleQueryChange={handleQueryChange}
         />
       </div>
-
+      {/* Custom community categories */}
       {hasCategories ?
         <div>
           <CategoriesFilter

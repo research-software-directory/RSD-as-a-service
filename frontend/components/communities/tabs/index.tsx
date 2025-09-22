@@ -4,30 +4,27 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
+import {useParams} from 'next/navigation'
 import Tabs from '@mui/material/Tabs'
-import {useRouter} from 'next/router'
-import {CommunityTabItemProps, TabKey, communityTabItems} from './CommunityTabItems'
+
 import TabAsLink from '~/components/layout/TabAsLink'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
+import {useCommunityContext} from '~/components/communities/context'
+import {CommunityTabItemProps, TabKey, communityTabItems, defaultTabKey} from './CommunityTabItems'
 
 // extract tab items (object keys)
 const tabItems = Object.keys(communityTabItems) as TabKey[]
 
-type CommunityTabsProps={
-  tab:TabKey
-  software_cnt: number
-  pending_cnt: number
-  rejected_cnt: number
-  description: string | null
-  isMaintainer: boolean
-}
-
-export default function CommunityTabs({
-  tab,software_cnt,pending_cnt,rejected_cnt,
-  description,isMaintainer
-}:CommunityTabsProps) {
-
-  const router = useRouter()
+export default function CommunityTabs() {
+  const params = useParams()
+  const {community:{
+    description,
+    software_cnt,
+    pending_cnt,
+    rejected_cnt
+  },isMaintainer} = useCommunityContext()
 
   // filter tabs to show to this user
   const activeTabs:CommunityTabItemProps[] = []
@@ -39,6 +36,16 @@ export default function CommunityTabs({
       activeTabs.push(communityTabItems[key])
     }
   })
+
+  // determine community page based on pathname and community slug
+  const tab = params?.tab as TabKey ?? defaultTabKey
+
+  // console.group('CommunityTabs')
+  // console.log('slug...', params?.['slug'])
+  // console.log('activeTabs...', activeTabs)
+  // console.log('params...', params)
+  // console.log('tab...', tab)
+  // console.groupEnd()
 
   // do not show tabs if only one item to show
   if (activeTabs.length < 2){
@@ -69,7 +76,7 @@ export default function CommunityTabs({
             sx={{
               minWidth: '9rem'
             }}
-            href={`/communities/${router.query['slug']}/${item.id}`}
+            href={`/communities/${params?.['slug']}/${item.id}`}
             scroll={false}
           />
         })}
