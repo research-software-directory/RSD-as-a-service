@@ -3,7 +3,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
+'use client'
+
 import Link from 'next/link'
 
 import {useSession} from '~/auth/AuthProvider'
@@ -14,11 +15,15 @@ import StatusBanner from '~/components/cards/StatusBanner'
 import {NewsListItem, getCardImageUrl} from '~/components/news/apiNews'
 import PublicationDate from '~/components/news/overview/card/PublicationDate'
 import NewsAuthors from '~/components/news/overview/card/NewsAuthors'
-import {getMenuOptions, onNewsAction} from '~/components/news/overview/card/NewsCardNav'
+import {getMenuOptions} from '~/components/news/overview/card/NewsCardNav'
+import useOnNewsAction from '~/components/news/overview/useOnNewsAction'
 
+type ListItemProps=Readonly<{
+  item:NewsListItem
+}>
 
-function ListItemNav({item}:{item:NewsListItem}){
-  const router = useRouter()
+export function ListItemNav({item}:ListItemProps){
+  const onNewsAction = useOnNewsAction()
   const {user} = useSession()
 
   if (user?.role === 'rsd_admin'){
@@ -26,7 +31,7 @@ function ListItemNav({item}:{item:NewsListItem}){
       <div className="bg-base-100 rounded-[50%] mr-2">
         <IconBtnMenuOnAction
           options={getMenuOptions(item)}
-          onAction={(action)=>onNewsAction(action,router)}
+          onAction={onNewsAction}
         />
       </div>
     )
@@ -35,7 +40,7 @@ function ListItemNav({item}:{item:NewsListItem}){
 }
 
 
-export default function ListItemNews({item}: {item:NewsListItem}) {
+export default function ListItemNews({item}:ListItemProps) {
   // construct image url
   const imgUrl = getCardImageUrl(item.image_for_news)
 

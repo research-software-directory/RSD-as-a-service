@@ -114,6 +114,7 @@ it('extracts ssrProjectsParams from url query', () => {
     'keywords': '["Big data","GPU"]',
     'domains': '["SH6","LS"]',
     'organisations': '["Organisation 1","Organisation 2"]',
+    'categories': '["cat 1","cat 2"]',
     'project_status': 'finished',
     'order': 'impact_cnt',
     'page': '1',
@@ -124,6 +125,7 @@ it('extracts ssrProjectsParams from url query', () => {
     keywords: ['Big data', 'GPU'],
     domains: ['SH6', 'LS'],
     organisations: ['Organisation 1', 'Organisation 2'],
+    categories: ['cat 1','cat 2'],
     project_status: 'finished',
     order: 'impact_cnt',
     page: 1,
@@ -138,12 +140,14 @@ it('extracts ssrBasicParams from url query', () => {
   const query: ParsedUrlQuery = {
     'search': 'another search',
     'page': '3',
-    'rows': '48'
+    'rows': '48',
+    'order': 'test-order'
   }
   const expected = {
     search: 'another search',
     page: 3,
-    rows: 48
+    rows: 48,
+    order: 'test-order'
   }
   const params = ssrBasicParams(query)
 

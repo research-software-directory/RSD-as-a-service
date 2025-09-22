@@ -19,11 +19,21 @@ type EncodeQueryParamProps = {
 type BuildUrlQueryProps = EncodeQueryParamProps & {
   query: string
 }
-
-export function encodeQueryValue(value: EncodeQueryValue) {
+/**
+ * Encode query values to be url "safe" values.
+ * Array values are stringified and URI encoded.
+ * Simple string and number values are encoded on request using encode param
+ * @param value
+ * @param encode boolean Encode string values
+ * @returns encoded/raw value depending on value type
+ */
+export function encodeQueryValue(value: EncodeQueryValue, encode?:boolean) {
   try {
     if (typeof value === 'string' || typeof value === 'number') {
-      return encodeURIComponent(value)
+      // encode URI on request
+      if (encode) return encodeURIComponent(value)
+      // do not encode simple values
+      return value.toString()
     } else if (Array.isArray(value) && (value as any[]).length > 0) {
       // arrays are stringified
       return encodeURIComponent(JSON.stringify(value))
@@ -140,81 +150,33 @@ export function decodeQueryParam({query,param,castToType='string',defaultValue}:
   }
 }
 
-export type SoftwareParams = {
-  search?: string
-  order?: string,
-  keywords?: string[],
-  prog_lang?: string[],
-  licenses?: string[],
-  categories?: string[],
-  rsd_host?: string,
-  page?: number,
-  rows?: number
-}
-
-export function ssrSoftwareParams(query: ParsedUrlQuery): SoftwareParams {
+export function ssrSoftwareParams(query: ParsedUrlQuery) {
   // console.group('ssrSoftwareParams')
   // console.log('query...', query)
 
-  const rows:number = decodeQueryParam({
-    query,
-    param: 'rows',
-    defaultValue: undefined,
-    castToType:'number'
-  })
-  const page:number = decodeQueryParam({
-    query,
-    param: 'page',
-    defaultValue: 1,
-    castToType:'number'
-  })
-  const search:string = decodeQueryParam({
-    query,
-    param: 'search',
-    defaultValue: null,
-    // search string is already decoded by next
-    // and decodeURIComponent fails when % is in the string to decode
-    // see this issue https://github.com/vercel/next.js/issues/10080
-    castToType:'raw'
-  })
-  const keywords:string[]|undefined = decodeQueryParam({
-    query,
-    param: 'keywords',
-    castToType: 'json-encoded',
-    defaultValue: null
-  })
+  // extract basic params
+  const {search,order,rows,page} = ssrBasicParams(query)
+  // extract filters shared by project and software
+  const {keywords, categories} = sharedFilters(query)
+  // extract software specific filters
   const prog_lang:string[]|undefined = decodeQueryParam({
     query,
     param: 'prog_lang',
     castToType: 'json-encoded',
-    defaultValue: null
+    defaultValue: undefined
   })
   const licenses:string[]|undefined = decodeQueryParam({
     query,
     param: 'licenses',
     castToType: 'json-encoded',
-    defaultValue: null
-  })
-  const categories:string[]|undefined = decodeQueryParam({
-    query,
-    param: 'categories',
-    castToType: 'json-encoded',
-    defaultValue: null
+    defaultValue: undefined
   })
   const rsd_host:string|undefined = decodeQueryParam({
     query,
     param: 'rsd_host',
     defaultValue: undefined
   })
-  const order:string = decodeQueryParam({
-    query,
-    param: 'order',
-    castToType: 'string',
-    defaultValue: null
-  })
-  // console.log('keywords...', keywords)
-  // console.log('keywords...', typeof keywords)
-  // console.groupEnd()
+
   return {
     search,
     keywords,
@@ -229,33 +191,11 @@ export function ssrSoftwareParams(query: ParsedUrlQuery): SoftwareParams {
 }
 
 export function ssrProjectsParams(query: ParsedUrlQuery) {
-  const rows:number = decodeQueryParam({
-    query,
-    param: 'rows',
-    defaultValue: undefined,
-    castToType: 'number'
-  })
-  const page:number = decodeQueryParam({
-    query,
-    param: 'page',
-    defaultValue: 1,
-    castToType: 'number'
-  })
-  const search:string|null = decodeQueryParam({
-    query,
-    param: 'search',
-    defaultValue: null,
-    // search string is already decoded by next
-    // and decodeURIComponent fails when % is in the string to decode
-    // see this issue https://github.com/vercel/next.js/issues/10080
-    castToType:'raw'
-  })
-  const keywords:string[]|null = decodeQueryParam({
-    query,
-    param: 'keywords',
-    castToType: 'json-encoded',
-    defaultValue: null
-  })
+  // extract basic params
+  const {search,order,rows,page} = ssrBasicParams(query)
+  // extract filters shared by project and software
+  const {keywords, categories} = sharedFilters(query)
+  // extract project specific filters
   const domains:string[]|null= decodeQueryParam({
     query,
     param: 'domains',
@@ -273,12 +213,7 @@ export function ssrProjectsParams(query: ParsedUrlQuery) {
     param: 'project_status',
     defaultValue: null
   })
-  const order: string|null = decodeQueryParam({
-    query,
-    param: 'order',
-    castToType: 'string',
-    defaultValue: null
-  })
+
   return {
     search,
     order,
@@ -287,184 +222,70 @@ export function ssrProjectsParams(query: ParsedUrlQuery) {
     keywords,
     domains,
     organisations,
-    project_status
+    project_status,
+    categories
+  }
+}
+
+export function sharedFilters(query: ParsedUrlQuery){
+  const keywords:string[]|undefined = decodeQueryParam({
+    query,
+    param: 'keywords',
+    castToType: 'json-encoded',
+    defaultValue: undefined
+  })
+
+  const categories:string[]|undefined = decodeQueryParam({
+    query,
+    param: 'categories',
+    castToType: 'json-encoded',
+    defaultValue: undefined
+  })
+
+  return {
+    keywords,
+    categories
   }
 }
 
 /**
- * Extract basic query parameters search, page and rows.
+ * Extract basic query parameters search, page, rows and order.
  * Used by organisation, news and communities overview pages.
  * @param query
  * @returns
  */
 export function ssrBasicParams(query: ParsedUrlQuery) {
-  const rows = decodeQueryParam({
+  const rows:number|undefined = decodeQueryParam({
     query,
     param: 'rows',
     defaultValue: undefined,
     castToType: 'number'
   })
-  const page = decodeQueryParam({
+  const page:number = decodeQueryParam({
     query,
     param: 'page',
     defaultValue: 1,
     castToType: 'number'
   })
-  const search = decodeQueryParam({
+  const search:string|undefined = decodeQueryParam({
     query,
     param: 'search',
-    defaultValue: null,
+    defaultValue: undefined,
     // search string is already decoded by next
     // and decodeURIComponent fails when % is in the string to decode
     // see this issue https://github.com/vercel/next.js/issues/10080
     castToType:'raw'
   })
-  return {
-    search,
-    rows,
-    page,
-  }
-}
-
-/** Provides complex query parameters (keywords,domains,organisations) in encoded form.
-  NOTE! These parameters need to be decoded before passed to the component as array data.
-  Use decodeJsonParam method to decode these params into data arrays.
-**/
-export function getProjectsParams(query: ParsedUrlQuery) {
-  const rows: number = decodeQueryParam({
-    query,
-    param: 'rows',
-    defaultValue: undefined,
-    castToType: 'number'
-  })
-  const page: number = decodeQueryParam({
-    query,
-    param: 'page',
-    defaultValue: 1,
-    castToType: 'number'
-  })
-  const search: string | null = decodeQueryParam({
-    query,
-    param: 'search',
-    defaultValue: null
-  })
-  const project_status: string | null = decodeQueryParam({
-    query,
-    param: 'project_status',
-    defaultValue: null
-  })
-  // string encoded array used to avoid
-  // useEffect change detection with string[]
-  const keywords_json: string | null = decodeQueryParam({
-    query,
-    param: 'keywords',
-    defaultValue: null
-  })
-  // string encoded array used to avoid
-  // useEffect change detection with string[]
-  const domains_json: string | null = decodeQueryParam({
-    query,
-    param: 'domains',
-    defaultValue: null
-  })
-  // string encoded array used to avoid
-  // useEffect change detection with string[]
-  const organisations_json: string | null = decodeQueryParam({
-    query,
-    param: 'organisations',
-    defaultValue: null
-  })
-  // string encoded array used to avoid
-  // useEffect change detection with string[]
-  const categories_json: string | null = decodeQueryParam({
-    query,
-    param: 'categories',
-    defaultValue: null
-  })
-  const order: string | null = decodeQueryParam({
+  const order:string|undefined = decodeQueryParam({
     query,
     param: 'order',
     castToType: 'string',
-    defaultValue: null
+    defaultValue: undefined
   })
   return {
     search,
-    order,
     rows,
     page,
-    project_status,
-    keywords_json,
-    domains_json,
-    organisations_json,
-    categories_json
+    order
   }
 }
-
-/** Provides complex query parameters (keywords,domains,organisations) in encoded form.
-  NOTE! These parameters need to be decoded before passed to the component as array data.
-  Use decodeJsonParam method to decode these params into data arrays.
-**/
-export function getSoftwareParams(query: ParsedUrlQuery) {
-  const rows: number = decodeQueryParam({
-    query,
-    param: 'rows',
-    defaultValue: undefined,
-    castToType: 'number'
-  })
-  const page: number = decodeQueryParam({
-    query,
-    param: 'page',
-    defaultValue: 1,
-    castToType: 'number'
-  })
-  const search: string | null = decodeQueryParam({
-    query,
-    param: 'search',
-    defaultValue: null
-  })
-  // string encoded array used to avoid
-  // useEffect change detection with string[]
-  const keywords_json: string | null = decodeQueryParam({
-    query,
-    param: 'keywords',
-    defaultValue: null
-  })
-  // string encoded array used to avoid
-  // useEffect change detection with string[]
-  const prog_lang_json: string | null = decodeQueryParam({
-    query,
-    param: 'prog_lang',
-    defaultValue: null
-  })
-  // string encoded array used to avoid
-  // useEffect change detection with string[]
-  const licenses_json: string | null = decodeQueryParam({
-    query,
-    param: 'licenses',
-    defaultValue: null
-  })
-  // string encoded array used to avoid
-  // useEffect change detection with string[]
-  const categories_json: string | null = decodeQueryParam({
-    query,
-    param: 'categories',
-    defaultValue: null
-  })
-  const order: string | null = decodeQueryParam({
-    query,
-    param: 'order',
-    castToType: 'string',
-    defaultValue: null
-  })
-  return {
-    search,
-    order,
-    rows,
-    page,
-    keywords_json,
-    prog_lang_json,
-    licenses_json,
-    categories_json
-  }
-}
-
