@@ -9,8 +9,8 @@
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
-import {CodePlatform} from '~/types/SoftwareTypes'
-import {PackageManagerTypes} from '../package-managers/apiPackageManager'
+import {PackageManagerTypes} from '~/components/software/edit/package-managers/config'
+import {CodePlatform} from '~/components/software/edit/repositories/apiRepositories'
 
 export type SoftwareServices = {
   software:string,

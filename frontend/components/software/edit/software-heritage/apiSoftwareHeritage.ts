@@ -93,7 +93,7 @@ export async function patchSoftwareHeritageList({items, token}: {items: Software
       message: 'OK'
     }
   } catch (e: any) {
-    logger(`patchPackageManagers failed. ${e.message}`, 'error')
+    logger(`patchSoftwareHeritageList failed. ${e.message}`, 'error')
     return {
       status: 500,
       message: e.message

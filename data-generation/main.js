@@ -179,7 +179,7 @@ function generateProjectTestimonials(ids) {
 	return result;
 }
 
-function generateRepositoryUrls(ids) {
+function generateRepositoryUrls() {
 	const githubUrls = [
 		'https://github.com/research-software-directory/RSD-as-a-service',
 		'https://github.com/wadpac/GGIR',
@@ -201,13 +201,9 @@ function generateRepositoryUrls(ids) {
 
 	const result = [];
 
-	for (let index = 0; index < ids.length; index++) {
-		if (!!faker.helpers.maybe(() => true, {probability: 0.25})) continue;
-
-		const repoUrl = faker.helpers.arrayElement(repoUrls);
+	for (const repoUrl of repoUrls) {
 		const codePlatform = repoUrl.startsWith('https://github.com') ? 'github' : 'gitlab';
 		result.push({
-			software: ids[index],
 			url: repoUrl,
 			code_platform: codePlatform,
 		});
@@ -902,7 +898,6 @@ const backendUrl = process.env.POSTGREST_URL || 'http://localhost/api/v1';
 
 async function postToBackend(endpoint, body) {
 	const url = `${backendUrl}${endpoint}`;
-	// console.log("postToBackend...",url)
 	const response = await fetch(url, {
 		method: 'POST',
 		body: JSON.stringify(body),
@@ -1096,18 +1091,16 @@ const accountsPromise = postAccountsToBackend(100)
 		console.log(`${accountIds.length} accounts in RSD`);
 		const logins = generateLoginForAccount(accountIds, orcids);
 		const profiles = generateUserProfiles(accountIds);
-		// console.log("profiles...", profiles)
 		return Promise.allSettled([
 			postToBackend('/login_for_account', logins),
 			postToBackend('/user_profile', profiles),
 		]);
 	})
 	.then(([login_for_account, user_profile]) => {
-		// log status of api post
+		// log status of API POST
 		console.log(`login_for_account...${login_for_account.status}`);
 		console.log(`user_profile...${user_profile.status}`);
 	});
-// .catch(e => console.error(`postAccountsToBackend: ${e.message}`));
 
 globalPromises.push(accountsPromise);
 
@@ -1151,17 +1144,30 @@ const softwarePromise = localSoftwareLogoIdsPromise
 	});
 globalPromises.push(softwarePromise);
 
+const repoUrlPromise = postToBackend('/repository_url', generateRepositoryUrls())
+	.then(resp => resp.json())
+	.then(repoArray => {
+		const idsRepos = repoArray.map(repo => repo['id']);
+		console.log('repo URLs done');
+		return idsRepos;
+	});
+globalPromises.push(repoUrlPromise);
+
 const relatedSoftwareItemsPromise = Promise.all([
 	softwarePromise,
+	repoUrlPromise,
 	peopleWithOrcidsPromise,
 	imageIdsPromise,
 	keywordPromise,
 	mentionsPromise,
-]).then(async ([{idsSoftware, idsRealSoftware}, peopleWithOrcid, imageIds, keywordIds, mentionIds]) => {
+]).then(async ([{idsSoftware, idsRealSoftware}, repoIds, peopleWithOrcid, imageIds, keywordIds, mentionIds]) => {
 	const promises = [
+		postToBackend(
+			'/repository_url_for_software',
+			generateRelationsForDifferingEntities(idsSoftware, repoIds, 'software', 'repository_url', 4),
+		),
 		postToBackend('/contributor', generateContributors(idsSoftware, peopleWithOrcid, imageIds)),
 		postToBackend('/testimonial', generateTestimonials(idsSoftware)),
-		postToBackend('/repository_url', generateRepositoryUrls(idsSoftware)),
 		postToBackend('/package_manager', generatePackageManagers(idsRealSoftware)),
 		postToBackend('/license_for_software', generateLicensesForSoftware(idsSoftware)),
 		postToBackend('/keyword_for_software', generateKeywordsForEntity(idsSoftware, keywordIds, 'software')),

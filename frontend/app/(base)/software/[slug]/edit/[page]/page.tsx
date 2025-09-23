@@ -3,7 +3,7 @@ import {notFound} from 'next/navigation'
 import EditSoftwareCommunities from '~/components/software/edit/communities'
 import EditSoftwareContributors from '~/components/software/edit/contributors'
 import {EditSoftwarePageId} from '~/components/software/edit/editSoftwareMenuItems'
-import EditSoftwareDescrptionPage from '~/components/software/edit/information'
+import EditSoftwareDescriptionPage from '~/components/software/edit/information'
 import EditSoftwareLinksPage from '~/components/software/edit/links'
 import EditSoftwareMaintainers from '~/components/software/edit/maintainers'
 import EditSoftwareMentionsPage from '~/components/software/edit/mentions'
@@ -11,9 +11,9 @@ import SoftwareOrganisations from '~/components/software/edit/organisations'
 import EditPackageManagers from '~/components/software/edit/package-managers'
 import RelatedProjectsForSoftware from '~/components/software/edit/related-projects'
 import RelatedSoftwareForSoftware from '~/components/software/edit/related-software'
-import SoftwareServices from '~/components/software/edit/services'
 import SoftwareHeritagePage from '~/components/software/edit/software-heritage'
 import SoftwareTestimonials from '~/components/software/edit/testimonials'
+import SoftwareRepositories from '~/components/software/edit/repositories'
 
 import {app} from '~/config/app'
 
@@ -32,9 +32,11 @@ export default async function EditSoftwarePageRouter({
 
   switch (page){
     case 'information':
-      return <EditSoftwareDescrptionPage />
+      return <EditSoftwareDescriptionPage />
     case 'links':
       return <EditSoftwareLinksPage />
+    case 'repositories':
+      return <SoftwareRepositories />
     case 'contributors':
       return <EditSoftwareContributors />
     case 'organisations':
@@ -55,8 +57,6 @@ export default async function EditSoftwarePageRouter({
       return <RelatedProjectsForSoftware />
     case 'maintainers':
       return <EditSoftwareMaintainers />
-    case 'services':
-      return <SoftwareServices />
     default:
       // edit software 404 page
       return notFound()

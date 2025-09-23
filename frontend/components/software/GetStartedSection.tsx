@@ -9,16 +9,18 @@
 
 import LinkIcon from '@mui/icons-material/Link'
 import CommitsChart from './CommitsChart'
-import {RepositoryInfo} from '../../types/SoftwareTypes'
+import {RepositoryForSoftware} from './edit/repositories/apiRepositories'
 
 type GetStartedSectionProps = {
   get_started_url: string | null,
-  repositoryInfo: RepositoryInfo | null
+  repositories: RepositoryForSoftware[]
 }
 
-export default function GetStartedSection({get_started_url,repositoryInfo}:GetStartedSectionProps) {
+export default function GetStartedSection({get_started_url,repositories}:GetStartedSectionProps) {
   // if no get_started_url and repository_url we do not render this section
-  if (!get_started_url && !repositoryInfo?.url) return null
+  if (!get_started_url && repositories?.length===0) return null
+
+  const firstRepo = repositories[0]
 
   function renderGetStartedUrl() {
     if (get_started_url) {
@@ -44,12 +46,12 @@ export default function GetStartedSection({get_started_url,repositoryInfo}:GetSt
     return (
       <CommitsChart
         className={classes}
-        repository_url={repositoryInfo?.url}
-        commit_history={repositoryInfo?.commit_history}
-        commit_history_scraped_at={repositoryInfo?.commit_history_scraped_at}
-        archived={repositoryInfo?.archived}
-        star_count={repositoryInfo?.star_count}
-        fork_count={repositoryInfo?.fork_count}
+        repository_url={firstRepo?.url}
+        commit_history={firstRepo?.commit_history ?? undefined}
+        commit_history_scraped_at={firstRepo?.commit_history_scraped_at}
+        archived={firstRepo?.archived}
+        star_count={firstRepo?.star_count}
+        fork_count={firstRepo?.fork_count}
       />
     )
   }

@@ -16,7 +16,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import useSoftwareContext from '../context/useSoftwareContext'
-import {config} from './config'
+import {cfg} from './config'
 import EditSoftwareHeritageModal from './EditSoftwareHeritageModal'
 import {NewSoftwareHeritage,SoftwareHeritageItem} from './apiSoftwareHeritage'
 import useSoftwareHeritage from './useSoftwareHeritage'
@@ -114,8 +114,8 @@ export default function SoftwareHeritagePage() {
     <>
       <EditSection className="py-4">
         <EditSectionTitle
-          title={config.title}
-          subtitle={config.subtitle}
+          title={cfg.title}
+          subtitle={cfg.subtitle}
         >
           <Button
             variant='contained'
