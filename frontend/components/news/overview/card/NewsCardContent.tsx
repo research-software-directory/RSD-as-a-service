@@ -1,15 +1,15 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
-import {NewsListItem, getCardImageUrl} from '~/components/news/apiNews'
+import {NewsListItemProps, getCardImageUrl} from '~/components/news/apiNews'
 import PublicationDate from './PublicationDate'
 import NewsAuthors from './NewsAuthors'
 import NewsCardTextBody from './NewsCardTextBody'
 
-export default function NewsCardContent({item}:{item:NewsListItem}) {
+export default function NewsCardContent({item}:{item:NewsListItemProps}) {
   // construct image url
   const imgUrl = getCardImageUrl(item.image_for_news)
 

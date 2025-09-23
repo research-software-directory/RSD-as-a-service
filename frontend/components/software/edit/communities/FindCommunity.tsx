@@ -9,7 +9,7 @@ import {useSession} from '~/auth/AuthProvider'
 import logger from '~/utils/logger'
 import AsyncAutocompleteSC, {AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
 import {CommunityListProps, getCommunityList} from '~/components/communities/apiCommunities'
-import {config} from './config'
+import {cfg} from './config'
 
 type FindCommunityProps={
   readonly onAdd: (item: CommunityListProps) => void,
@@ -112,9 +112,9 @@ export default function FindCommunity({onAdd}:FindCommunityProps) {
         onClear={clearSearch}
         config={{
           freeSolo: false,
-          minLength: config.findCommunity.validation.minLength,
-          label: config.findCommunity.label,
-          help: config.findCommunity.help,
+          minLength: cfg.findCommunity.validation.minLength,
+          label: cfg.findCommunity.label,
+          help: cfg.findCommunity.help,
           reset: true
         }}
       />

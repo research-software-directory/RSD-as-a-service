@@ -1,9 +1,9 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export const config = {
+export const cfg = {
   title: 'Your communities',
   findCommunity: {
     title: 'Join community',
@@ -17,4 +17,4 @@ export const config = {
   },
 }
 
-export default config
+export default cfg

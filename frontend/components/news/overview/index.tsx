@@ -11,7 +11,7 @@ import {useUserSettings} from '~/config/UserSettingsContext'
 import SearchInput from '~/components/search/SearchInput'
 import ToggleViewGroup from '~/components/search/ToggleViewGroup'
 import ShowItemsSelect from '~/components/search/ShowItemsSelect'
-import {NewsListItem} from '~/components/news/apiNews'
+import {NewsListItemProps} from '~/components/news/apiNews'
 import NewsList from './list'
 import NewsGrid from './NewsGrid'
 
@@ -19,7 +19,7 @@ type NewsOverviewProps = Readonly<{
   page: number,
   pages: number,
   rows: number,
-  news: NewsListItem[],
+  news: NewsListItemProps[],
   search?: string|null,
 }>
 

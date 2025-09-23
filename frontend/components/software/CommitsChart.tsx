@@ -8,11 +8,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {CommitHistory} from '~/types/SoftwareTypes'
 import {getTimeAgoSince} from '~/utils/dateFn'
 import {prepareDataForSoftwarePage} from '~/components/charts/d3LineChart/formatData'
 import NoDataAvailableChart from '~/components/charts/d3LineChart/NoDataAvailableChart'
 import SingleLineChart from '~/components/charts/d3LineChart/SingleLineChart'
+import {CommitHistory} from '~/components/software/edit/repositories/apiRepositories'
 
 export type CommitsChartProps = Readonly<{
   repository_url?: string | null,
@@ -20,7 +20,7 @@ export type CommitsChartProps = Readonly<{
   star_count?: number | null,
   fork_count?: number | null,
   commit_history?: CommitHistory
-  commit_history_scraped_at?: string
+  commit_history_scraped_at?: string | null
   className?: string
 }>
 

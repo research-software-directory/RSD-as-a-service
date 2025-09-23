@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -85,7 +86,7 @@ public class MainCommits {
 						"repository_url",
 						"commit_history_last_error",
 						repositoryDataToScrape.software().toString(),
-						"software",
+						"id",
 						null,
 						null
 					);
@@ -101,7 +102,7 @@ public class MainCommits {
 						"repository_url",
 						"commit_history_last_error",
 						repositoryDataToScrape.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"commit_history_scraped_at"
 					);
@@ -117,7 +118,7 @@ public class MainCommits {
 						"repository_url",
 						"commit_history_last_error",
 						repositoryDataToScrape.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"commit_history_scraped_at"
 					);
@@ -150,7 +151,7 @@ public class MainCommits {
 							"repository_url",
 							"commit_history_last_error",
 							commitData.software().toString(),
-							"software",
+							"id",
 							scrapedAt,
 							"commit_history_scraped_at"
 						);
@@ -169,7 +170,7 @@ public class MainCommits {
 						"repository_url",
 						"commit_history_last_error",
 						commitData.software().toString(),
-						"software",
+						"id",
 						null,
 						null
 					);
@@ -180,7 +181,7 @@ public class MainCommits {
 						"repository_url",
 						"commit_history_last_error",
 						commitData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"commit_history_scraped_at"
 					);
@@ -191,7 +192,7 @@ public class MainCommits {
 						"repository_url",
 						"commit_history_last_error",
 						commitData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"commit_history_scraped_at"
 					);
@@ -229,7 +230,7 @@ public class MainCommits {
 						"repository_url",
 						"commit_history_last_error",
 						commitData.software().toString(),
-						"software",
+						"id",
 						null,
 						null
 					);
@@ -240,7 +241,7 @@ public class MainCommits {
 						"repository_url",
 						"commit_history_last_error",
 						commitData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"commit_history_scraped_at"
 					);
@@ -251,7 +252,7 @@ public class MainCommits {
 						"repository_url",
 						"commit_history_last_error",
 						commitData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"commit_history_scraped_at"
 					);
@@ -290,7 +291,7 @@ public class MainCommits {
 							"repository_url",
 							"commit_history_last_error",
 							commitData.software().toString(),
-							"software",
+							"id",
 							scrapedAt,
 							"commit_history_scraped_at"
 						);
@@ -315,7 +316,7 @@ public class MainCommits {
 						"repository_url",
 						"commit_history_last_error",
 						commitData.software().toString(),
-						"software",
+						"id",
 						null,
 						null
 					);
@@ -331,7 +332,7 @@ public class MainCommits {
 						"repository_url",
 						"commit_history_last_error",
 						commitData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"commit_history_scraped_at"
 					);
@@ -347,7 +348,7 @@ public class MainCommits {
 						"repository_url",
 						"commit_history_last_error",
 						commitData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"commit_history_scraped_at"
 					);

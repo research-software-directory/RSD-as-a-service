@@ -6,71 +6,30 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import GitHubIcon from '@mui/icons-material/GitHub'
-import FolderOpenIcon from '@mui/icons-material/FolderOpen'
-import {CodePlatform} from '~/types/SoftwareTypes'
-import GitlabIcon from '~/assets/logos/gitlab-icon-rgb.svg'
-import Image from 'next/image'
+import {RepositoryForSoftware} from './edit/repositories/apiRepositories'
+import RepositoryIcon from './edit/repositories/RepositoryIcon'
 
-export default function AboutSourceCode({repository,platform}: {repository: string | null, platform?: CodePlatform}) {
+type AboutSourceCodeProps = Readonly<{
+  repositories: RepositoryForSoftware[]
+}>
+
+export default function AboutSourceCode({repositories}: AboutSourceCodeProps) {
   const code = '</>'
 
-  function getIcon() {
+  // do not show section if no repos
+  if (repositories.length===0) return null
+
+  function getIcon(repository:RepositoryForSoftware) {
     if (repository===null) return (<i>Not specified</i>)
     // abort if no info
-    switch (platform) {
-      case 'github':
-        return (
-          <a key={repository} href={repository ?? ''}
-            title="GitHub repository" target="_blank" rel="noreferrer"
-            className="hover:text-base-content"
-          >
-            <GitHubIcon sx={{
-              width: '3.25rem',
-              height: '3.25rem'
-            }} />
-          </a>
-        )
-      case 'gitlab':
-        return (
-          <a key={repository} href={repository ?? ''}
-            title="GitLab repository" target="_blank" rel="noreferrer"
-            className="hover:text-base-content"
-          >
-            <GitlabIcon
-              className="w-[3rem] h-[3rem]"
-            />
-          </a>
-        )
-      case 'codeberg':
-        return (
-          <a key={repository} href={repository ?? ''}
-            title="Codeberg repository" target="_blank" rel="noreferrer"
-            className="hover:text-base-content"
-          >
-            <Image
-              src="/images/codeberg-logo_vertical_blue.svg"
-              alt="Codeberg logo"
-              width={500}
-              height={500}
-              style={{width: '5rem'}}
-            />
-          </a>
-        )
-      default:
-        return (
-          <a key={repository} href={repository ?? ''}
-            title="Repository" target="_blank" rel="noreferrer"
-            className="hover:text-base-content"
-          >
-            <FolderOpenIcon sx={{
-              width: '3rem',
-              height: '3rem',
-              color: 'secondary'
-            }} />
-          </a>
-        )
-    }
+    return (
+      <a key={repository.url} href={repository.url ?? ''}
+        title={repository.url ?? ''} target="_blank" rel="noreferrer"
+        className="hover:text-base-content"
+      >
+        <RepositoryIcon platform={repository.code_platform} />
+      </a>
+    )
   }
 
   return (
@@ -79,8 +38,10 @@ export default function AboutSourceCode({repository,platform}: {repository: stri
         <span className="font-bold text-primary">{code}</span>
         <span className="text-primary pl-2">Source code</span>
       </div>
-      <div className="py-1">
-        {getIcon()}
+      <div className="flex flex-wrap items-end gap-4 py-1">
+        {repositories.map(repo=>{
+          return getIcon(repo)
+        })}
       </div>
     </div>
   )

@@ -3,7 +3,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export const config = {
+// NOTE! export const config produces error in next app router
+// example: Page config in components/software/edit/software-heritage/config.ts is deprecated. Replace `export const config=…` with the following:
+// PLEASE use cfg or some other name
+export const cfg = {
   title: 'Software Heritage',
   subtitle:'List of unique identifiers for archived software',
   modal: {

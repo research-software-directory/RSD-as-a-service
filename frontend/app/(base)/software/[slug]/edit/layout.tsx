@@ -1,10 +1,10 @@
 import {notFound} from 'next/navigation'
 
 import {getActiveModuleNames} from '~/config/getSettingsServerSide'
-import {getSoftwareToEdit} from '~/components/software/edit/apiEditSoftware'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import ProtectedContent from '~/auth/ProtectedContent'
 import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
+import {getSoftwareItem} from '~/components/software/apiSoftware'
 import {EditSoftwareProvider} from '~/components/software/edit/context/editSoftwareContext'
 import EditSoftwareStickyHeader from '~/components/software/edit/EditSoftwareStickyHeader'
 import EditSoftwareNav from '~/components/software/edit/EditSoftwareNav'
@@ -36,7 +36,7 @@ export default async function EditProjectLayout({
     return notFound()
   }
 
-  const editSoftware = await getSoftwareToEdit({slug, token})
+  const editSoftware = await getSoftwareItem({slug, token})
   // if software not found in DB
   if (editSoftware === undefined) {
     return notFound()

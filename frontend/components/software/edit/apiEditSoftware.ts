@@ -7,13 +7,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-  NewSoftwareItem, SoftwareItem, RepositoryUrl,
-  SoftwarePropsToSave, SoftwareItemFromDB,
+  NewSoftwareItem,
   LicenseForSoftware
 } from '~/types/SoftwareTypes'
 import logger from '~/utils/logger'
-import {getPropsFromObject} from '~/utils/getPropsFromObject'
-import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
+import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 
 export async function addSoftware({software, token}:
 {software: NewSoftwareItem, token: string}) {
@@ -44,85 +42,6 @@ export async function addSoftware({software, token}:
     }
   } catch (e: any) {
     logger(`addSoftware: ${e?.message}`, 'error')
-    return {
-      status: 500,
-      message: e?.message
-    }
-  }
-}
-
-export async function getSoftwareToEdit({slug, token}:
-{slug: string, token?: string}) {
-  try {
-    // GET
-    const select = '*,repository_url!left(url,code_platform,scraping_disabled_reason)'
-    const url = `${getBaseUrl()}/software?select=${select}&slug=eq.${slug}`
-    const resp = await fetch(url, {
-      method: 'GET',
-      headers: createJsonHeaders(token),
-    })
-    if (resp.status === 200) {
-      const data: SoftwareItemFromDB[] = await resp.json()
-      // fix repositoryUrl
-      const software: SoftwareItem = getPropsFromObject(data[0], SoftwarePropsToSave)
-      // repository url should at least be http://a.b
-      if (data[0]?.repository_url?.url?.length > 9) {
-        software.repository_url = data[0]?.repository_url?.url
-        software.repository_platform = data[0]?.repository_url?.code_platform
-      } else {
-        software.repository_url = null
-        software.repository_platform = null
-      }
-      software.scraping_disabled_reason = data[0]?.repository_url?.scraping_disabled_reason
-      return software
-    }
-  } catch (e: any) {
-    logger(`getSoftwareToEdit: ${e?.message}`, 'error')
-  }
-}
-
-export async function addToRepositoryTable({data, token}:
-{data: RepositoryUrl, token: string}) {
-  try {
-    // add new repository
-    const url = '/api/v1/repository_url'
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: {
-        ...createJsonHeaders(token),
-        // UPSERT=merging also works with POST method
-        'Prefer': 'resolution=merge-duplicates'
-      },
-      body: JSON.stringify(data)
-    })
-
-    return extractReturnMessage(resp, data.software ?? '')
-
-  } catch (e: any) {
-    logger(`addToRepositoryTable: ${e?.message}`, 'error')
-    return {
-      status: 500,
-      message: e?.message
-    }
-  }
-}
-
-export async function deleteFromRepositoryTable({software, token}:
-{software: string, token: string}) {
-  try {
-    // DELETE
-    const url = `/api/v1/repository_url?software=eq.${software}`
-    const resp = await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        ...createJsonHeaders(token)
-      }
-    })
-
-    return extractReturnMessage(resp, software ?? '')
-
-  } catch (e: any) {
-    logger(`deleteFromRepositoryTable: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message
@@ -242,3 +161,4 @@ export async function deleteRelatedProject({origin, relation, token}: {
 
   return extractReturnMessage(resp)
 }
+
