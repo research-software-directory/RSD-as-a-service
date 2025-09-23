@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,23 +14,16 @@ import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import List from '@mui/material/List'
 
-import ContentLoader from '~/components/layout/ContentLoader'
+import {OrganisationUnitsForOverview} from '~/types/Organisation'
 import ResearchUnitItem from './ResearchUnitItem'
 
-import {OrganisationUnitsForOverview} from '~/types/Organisation'
-
 type UnitsListProps = {
-  loading: boolean
   units: OrganisationUnitsForOverview[]
   isPrimaryMaintainer: boolean
   onEdit: (pos: number) => void
 }
 
-export default function ResearchUnitsList({loading, units, onEdit, isPrimaryMaintainer}: UnitsListProps) {
-
-  if (loading) {
-    return <ContentLoader />
-  }
+export default function ResearchUnitsList({units, onEdit, isPrimaryMaintainer}: UnitsListProps) {
 
   if (units.length === 0) {
     return (
@@ -58,7 +51,7 @@ export default function ResearchUnitsList({loading, units, onEdit, isPrimaryMain
             name={item.name}
             website={item.website}
             logo_id={item.logo_id}
-            isMaintainer={isPrimaryMaintainer}
+            isPrimaryMaintainer={isPrimaryMaintainer}
             onEdit={onEdit}
           />
         )

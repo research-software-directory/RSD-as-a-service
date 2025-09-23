@@ -5,6 +5,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import FilterHeader from '~/components/filter/FilterHeader'
 
 import {decodeJsonParam} from '~/utils/extractQueryParam'

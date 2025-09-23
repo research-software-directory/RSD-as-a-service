@@ -5,6 +5,7 @@
 
 import Pagination from '@mui/material/Pagination'
 
+import {useUserSettings} from '~/config/UserSettingsContext'
 import useProjectParams from '~/components/organisation/projects/useProjectParams'
 import useQueryChange from '~/components/organisation/projects/useQueryChange'
 import {useProfileContext} from '~/components/profile/context/ProfileContext'
@@ -13,7 +14,8 @@ import ProfileProjectOverview from './ProfileProjectOverview'
 
 export default function ProfileProjects() {
   const {project_cnt,projects} = useProfileContext()
-  const {page,rows,view,setPageLayout} = useProjectParams()
+  const {page,rows,view} = useProjectParams()
+  const {setPageLayout} = useUserSettings()
   const {handleQueryChange} = useQueryChange()
   const numPages = Math.ceil(project_cnt / rows)
 

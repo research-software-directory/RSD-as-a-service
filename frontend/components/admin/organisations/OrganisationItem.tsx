@@ -11,15 +11,15 @@ import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import DeleteIcon from '@mui/icons-material/Delete'
 
-import {OrganisationList} from '~/types/Organisation'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import Avatar from '@mui/material/Avatar'
 import {getImageUrl} from '~/utils/editImage'
+import {OrganisationAdminProps} from './apiOrganisation'
 
 
 type OrganisationItemProps = {
-  item: OrganisationList,
+  item: OrganisationAdminProps,
   onDelete: () => void
 }
 

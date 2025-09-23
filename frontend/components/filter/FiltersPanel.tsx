@@ -6,7 +6,22 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
+import useSmallScreen from '~/config/useSmallScreen'
+
+/**
+ * Filters panel for tablet and desktop.
+ * Note! On mobile (smallScreen) this panel is hidden.
+ * @param param0
+ * @returns
+ */
 export default function FiltersPanel({children}: { children: any }) {
+  const smallScreen = useSmallScreen()
+
+  // hide filter panel on mobile
+  if (smallScreen) return null
+
   return (
     <div
       data-testid="filters-panel"
