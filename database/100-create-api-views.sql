@@ -104,14 +104,12 @@ CREATE FUNCTION prog_lang_filter_for_software() RETURNS TABLE (
 ) LANGUAGE sql STABLE AS
 $$
 	SELECT
-		repository_url.software,
-		(SELECT
-			ARRAY_AGG(p_lang ORDER BY repository_url.languages -> p_lang DESC)
-		FROM
-			JSONB_OBJECT_KEYS(repository_url.languages) p_lang
-		) AS "prog_lang"
+		repository_url_for_software.software,
+		ARRAY_AGG(DISTINCT p_lang)
 	FROM
-		repository_url;
+		repository_url_for_software,
+		LATERAL (SELECT JSONB_OBJECT_KEYS(repository_url.languages) FROM repository_url WHERE repository_url.id = repository_url_for_software.repository_url) AS p_lang
+	GROUP BY repository_url_for_software.software;
 $$;
 
 -- license filter for software
