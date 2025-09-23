@@ -8,7 +8,7 @@
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 
-import {packageManagerSettings, PackageManagerTypes} from './apiPackageManager'
+import {packageManagerSettings, PackageManagerTypes} from './config'
 
 export default function PackageManagersInfo() {
   // extract package manager names from settings

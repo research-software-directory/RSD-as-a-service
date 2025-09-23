@@ -13,8 +13,9 @@ import {ProjectListItem} from '~/types/Project'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import NoContent from '~/components/layout/NoContent'
 import GridOverview from '~/components/layout/GridOverview'
+import ListOverviewSection from '~/components/layout/ListOverviewSection'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
-import ProjectOverviewList from './list/ProjectOverviewList'
+import OverviewListItemLink from '~/components/software/overview/list/OverviewListItemLink'
 import ProjectListItemContent from './list/ProjectListItemContent'
 import ProjectCardContent from './cards/ProjectCardContent'
 
@@ -31,24 +32,21 @@ export default function ProjectOverviewContent({projects}: ProjectOverviewConten
 
   if (rsd_page_layout === 'list') {
     return (
-      <ProjectOverviewList>
+      <ListOverviewSection>
         {projects.map(item => {
           return (
             <OverviewListItem
               key={item.id}
             >
-              <Link
-                data-testid="project-list-item"
-                key={item.id}
+              <OverviewListItemLink
                 href={`/projects/${item.slug}`}
-                className='flex-1 flex hover:text-inherit'
               >
                 <ProjectListItemContent {...item} />
-              </Link>
+              </OverviewListItemLink>
             </OverviewListItem>
           )
         })}
-      </ProjectOverviewList>
+      </ListOverviewSection>
     )
   }
   // GRID as default

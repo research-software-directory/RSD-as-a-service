@@ -4,18 +4,20 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useCallback, useEffect, useState} from 'react'
+import useSnackbar from '~/components/snackbar/useSnackbar'
 import {
   NewPackageManager, PackageManager, deletePackageManager,
-  getPackageManagers, patchPackageManager, patchPackageManagers, postPackageManager
+  getPackageManagersForSoftware, patchPackageManager, patchPackageManagers, postPackageManager
 } from './apiPackageManager'
 
 export default function usePackageManagers({token, software}: {token: string, software: string}) {
+  const {showErrorMessage} = useSnackbar()
   const [managers,setManagers]=useState<PackageManager[]>([])
   const [loading,setLoading]=useState(true)
 
   const getManagers = useCallback(async () => {
     setLoading(true)
-    const managers = await getPackageManagers({
+    const managers = await getPackageManagersForSoftware({
       software,
       token
     })
@@ -30,7 +32,7 @@ export default function usePackageManagers({token, software}: {token: string, so
     }
   }, [token, software, getManagers])
 
-  async function saveManager(data: NewPackageManager) {
+  async function addManager(data: NewPackageManager) {
     const resp = await postPackageManager({
       data,
       token
@@ -39,8 +41,9 @@ export default function usePackageManagers({token, software}: {token: string, so
     if (resp.status == 200) {
       // reload package managers
       await getManagers()
+    } else {
+      showErrorMessage(`Failed to save ${data.url}. ${resp.message}`)
     }
-    return resp
   }
 
   async function updateManager(data: PackageManager) {
@@ -64,29 +67,20 @@ export default function usePackageManagers({token, software}: {token: string, so
   }
 
   async function deleteManager(id: string) {
-    if (id) {
-      const resp = await deletePackageManager({
-        id,
-        token
-      })
-      if (resp.status !== 200) {
-        return resp
-      }
-
+    const resp = await deletePackageManager({
+      id,
+      token
+    })
+    if (resp.status == 200) {
       await getManagers()
-      return {
-        status: 200,
-        message: 'OK'
-      }
-    } else {
-      return {
-        status: 400,
-        message: 'Id is missing'
-      }
+    }else{
+      showErrorMessage(`Failed to remove item. ${resp.message}`)
     }
   }
 
   async function sortManagers(items: PackageManager[]) {
+    // copy old items order
+    const previousState = {...managers}
     // visually confirm position change
     setManagers(items)
     // make all request
@@ -94,18 +88,17 @@ export default function usePackageManagers({token, software}: {token: string, so
       items,
       token
     })
-    if (resp.status !== 200) {
+    if (resp.status != 200) {
       // revert back in case of error
-      setManagers(items)
+      setManagers(previousState)
+      showErrorMessage(`Failed to sort items. ${resp.message}`)
     }
-    // return response
-    return resp
   }
 
   return {
     managers,
     loading,
-    saveManager,
+    addManager,
     updateManager,
     sortManagers,
     deleteManager

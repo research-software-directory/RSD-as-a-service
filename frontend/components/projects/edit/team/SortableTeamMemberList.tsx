@@ -13,7 +13,7 @@ import AlertTitle from '@mui/material/AlertTitle'
 
 import {TeamMember} from '~/types/Project'
 import SortableList from '~/components/layout/SortableList'
-import SortableTeamMemberItem from './SortableTeamMemberItem'
+import SortableContributorItem from '~/components/software/edit/contributors/SortableContributorItem'
 
 type TeamMemberListProps = {
   members: TeamMember[],
@@ -36,12 +36,11 @@ export default function SortableTeamMemberList({members, onEdit, onDelete, onSor
   }
 
   function onRenderItem(item:TeamMember,index:number) {
-    return <SortableTeamMemberItem
+    return <SortableContributorItem
       key={item.id ?? index}
-      pos={index}
       item={item}
-      onEdit={onEdit}
-      onDelete={onDelete}
+      onEdit={()=>onEdit(index)}
+      onDelete={()=>onDelete(index)}
     />
   }
 

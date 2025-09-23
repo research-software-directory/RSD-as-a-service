@@ -11,7 +11,7 @@ export default function ProjectOverviewList({children}: {children: JSX.Element |
   return (
     <section
       data-testid="project-overview-list"
-      className="flex-1 flex flex-col gap-2 mt-2 mb-12"
+      className="flex-1 flex flex-col gap-2 mt-2"
     >
       {children}
     </section>

@@ -7,124 +7,34 @@
  * DEFAULT MOCKS OF apiPackageManager methods
  */
 
-import {PackageManagerSettings} from '../apiPackageManager'
+import {BasicApiParams} from '~/utils/postgrestUrl'
+import {packageManagerSettings, PackageManagerSettings} from '../config'
 import mockPackageManagers from './package_manager.json'
-
-export const packageManagerSettings = {
-  anaconda: {
-    name: 'Anaconda',
-    icon: '/images/anaconda-logo-96.svg',
-    hostname: ['anaconda.org'],
-    services: ['dependents']
-  },
-  cran: {
-    name: 'CRAN',
-    icon: '/images/cran-r-logo.svg',
-    hostname: ['cran.r-project.org'],
-    services: ['dependents']
-  },
-  crates: {
-    name: 'Crates.io',
-    icon: '/images/rust-cargo-logo.png',
-    hostname: ['crates.io'],
-    services: ['dependents']
-  },
-  chocolatey: {
-    name: 'Chocolatey',
-    icon: '/images/chocolatey-logo.svg',
-    hostname: ['community.chocolatey.org'],
-    services: []
-  },
-  debian:{
-    name: 'Debian',
-    icon: '/images/debian-logo.svg',
-    hostname: ['packages.debian.org'],
-    services: []
-  },
-  dockerhub: {
-    name: 'Dockerhub',
-    icon: '/images/dockerhub-logo.webp',
-    hostname: ['hub.docker.com'],
-    services: ['downloads']
-  },
-  github: {
-    name: 'Github',
-    icon: '/images/github-logo.svg',
-    hostname: ['github.com'],
-    services: []
-  },
-  gitlab: {
-    name: 'Gitlab',
-    icon: '/images/gitlab-icon-rgb.svg',
-    hostname: ['gitlab.com','registry.gitlab.com'],
-    services: []
-  },
-  golang: {
-    name: 'Golang',
-    icon: '/images/go-logo-blue.svg',
-    hostname: ['pkg.go.dev'],
-    services: ['dependents']
-  },
-  maven: {
-    name: 'Maven',
-    icon: '/images/apache-maven-logo.svg',
-    hostname: ['mvnrepository.com'],
-    services: ['dependents']
-  },
-  npm: {
-    name: 'NPM',
-    icon: '/images/npm-logo-64.png',
-    hostname: ['www.npmjs.com','npmjs.com'],
-    services: ['dependents']
-  },
-  pypi: {
-    name: 'PyPi',
-    icon: '/images/pypi-logo.svg',
-    hostname: ['pypi.org'],
-    services: ['dependents']
-  },
-  sonatype:{
-    name: 'Sonatype',
-    icon: '/images/sonatype-logo.svg',
-    hostname: ['central.sonatype.com'],
-    services: ['dependents']
-  },
-  snapcraft:{
-    name: 'Snapcraft',
-    icon: '/images/snapcraft-logo.svg',
-    hostname: ['snapcraft.io'],
-    services: []
-  },
-  other: {
-    name: 'Other',
-    icon: null,
-    hostname: [],
-    services: []
-  }
-}
 
 export type PackageManagerTypes = keyof typeof packageManagerSettings
 
-
 export type NewPackageManager = {
-  id: string|null
+  id: string | null
   software: string,
   url: string,
-  package_manager: PackageManagerTypes|null,
+  package_manager?: PackageManagerTypes,
   position: number
 }
-
 
 export type PackageManager = NewPackageManager & {
   id: string,
   download_count: number | null,
   download_count_scraped_at: string | null,
+  download_count_last_error: string | null,
+  download_count_scraping_disabled_reason: string | null,
   reverse_dependency_count: number | null,
-  reverse_dependency_count_scraped_at: string | null
+  reverse_dependency_count_scraped_at: string | null,
+  reverse_dependency_count_last_error: string | null,
+  reverse_dependency_count_scraping_disabled_reason: string | null,
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getPackageManagers=jest.fn(async({software, token}: {software: string, token: string})=>{
+export const getPackageManagersForSoftware=jest.fn(async({software, token}: {software: string, token: string})=>{
   // console.log('getPackageManagers...default MOCK')
   return mockPackageManagers
 })
@@ -178,6 +88,12 @@ export const getPackageManagerTypeFromUrl=jest.fn(async(url:string)=>{
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getPackageManagerServices=jest.fn(async(pm_key:PackageManagerTypes|null)=>{
+  // just return no services
+  return []
+})
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const getPackageManagers=jest.fn(async({page,rows,searchFor,orderBy,token}:BasicApiParams)=>{
   // just return no services
   return []
 })

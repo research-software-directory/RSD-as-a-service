@@ -11,10 +11,10 @@ import ArticleIcon from '@mui/icons-material/Article'
 import {useSession} from '~/auth/AuthProvider'
 import StatusBanner from '~/components/cards/StatusBanner'
 import IconBtnMenuOnAction, {IconBtnMenuOption} from '~/components/menu/IconBtnMenuOnAction'
-import {NewsListItem} from '~/components/news/apiNews'
+import {NewsListItemProps} from '~/components/news/apiNews'
 import useOnNewsAction, {NewsAction} from '../useOnNewsAction'
 
-export function getMenuOptions(item:NewsListItem){
+export function getMenuOptions(item:NewsListItemProps){
   const menuOptions:IconBtnMenuOption<NewsAction>[]=[{
     type:'action',
     key: 'edit',
@@ -37,7 +37,7 @@ export function getMenuOptions(item:NewsListItem){
   return menuOptions
 }
 
-export default function NewsCardNav({item}:{item:NewsListItem}) {
+export default function NewsCardNav({item}:{item:NewsListItemProps}) {
   const {user} = useSession()
   const onNewsAction = useOnNewsAction()
 

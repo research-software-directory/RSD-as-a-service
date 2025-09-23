@@ -5,14 +5,13 @@
 
 'use client'
 
-import Link from 'next/link'
-
 import {useUserSettings} from '~/config/UserSettingsContext'
 import NoContent from '~/components/layout/NoContent'
 import GridOverview from '~/components/layout/GridOverview'
+import ListOverviewSection from '~/components/layout/ListOverviewSection'
 import SoftwareGridCard from '~/components/software/overview/cards/SoftwareGridCard'
 import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
-import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
+import OverviewListItemLink from '~/components/software/overview/list/OverviewListItemLink'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import AdminSoftwareGridCard from './card/AdminSoftwareGridCard'
 import AdminSoftwareListItem from './list/AdminSoftwareListItem'
@@ -40,27 +39,23 @@ export default function CommunitySoftwareOverview({software,isMaintainer}: Commu
 
   if (rsd_page_layout === 'list') {
     return (
-      <SoftwareOverviewList>
+      <ListOverviewSection>
         {software.map(item => {
           if (isMaintainer) {
             return <AdminSoftwareListItem key={item.id} item={item} />
           }
 
           return (
-            <Link
-              data-testid="software-list-item"
-              key={item.id}
-              href={`/software/${item.slug}`}
-              className='flex-1 hover:text-inherit'
-              title={item.brand_name}
-            >
-              <OverviewListItem className='pr-4'>
+            <OverviewListItem key={item.id}>
+              <OverviewListItemLink
+                href={`/software/${item.slug}`}
+              >
                 <SoftwareListItemContent key={item.id} {...item} />
-              </OverviewListItem>
-            </Link>
+              </OverviewListItemLink>
+            </OverviewListItem>
           )
         })}
-      </SoftwareOverviewList>
+      </ListOverviewSection>
     )
   }
 

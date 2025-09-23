@@ -2,11 +2,11 @@
 
 ### Why can't I see the software and projects I contributed to when I'm logged in?
 
-Your account is for administration purposes only, i.e., your account is for editing software, project and organisation pages to which someone gave you the rights to edit them. We are working on creating 'profile' pages where you can see all contributions made by one person, aggregated on ORCID, so make sure to add your ORCID on all your contributions.
+Your account is for administration purposes only, i.e., your account is for editing software, project and organisation pages to which someone gave you the rights to edit them. There is a 'public profile' pages where you can see all contributions made by one person, aggregated on ORCID, so make sure to add your ORCID on all your contributions and to enable public profile in your personal settings.
 
 ### Can I add a profile picture to my account?
 
-Currently not, as accounts are for administrative purposes only (see also the question above). We are considering to add this in the future.
+Yes. On your personal page you can add profile picture. This profile picture is not directly linked to avatars used at software pages for contributors and team members on project pages.
 
 ### Why is there no citation block on my software page?
 
@@ -15,6 +15,8 @@ We can harvest the citation information of all releases based on the [Zenodo con
 ### The citation block / Git activity graph / programming languages are still not visible
 
 These are harvested in the background. The various harvesters run every few minutes, harvesting a small part of the RSD. When you change the corresponding fields, you are usually first in line to be harvested, so check again in a few minutes.
+
+Since the introduction of multiple repositories for one software (page), the first entry is used for git activity graph and programming languages.
 
 ### Why can't I delete my software/project page?
 

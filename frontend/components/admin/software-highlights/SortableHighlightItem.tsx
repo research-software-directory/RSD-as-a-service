@@ -5,62 +5,43 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import Avatar from '@mui/material/Avatar'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import {useSortable} from '@dnd-kit/sortable'
-import {CSS} from '@dnd-kit/utilities'
 
 import {getImageUrl} from '~/utils/editImage'
+import useSmallScreen from '~/config/useSmallScreen'
 import SortableListItemActions from '~/components/layout/SortableListItemActions'
+import SortableListItem from '~/components/layout/SortableListItem'
 import {SoftwareHighlight} from './apiSoftwareHighlights'
 
 type HighlightProps = {
   pos: number,
   item: SoftwareHighlight,
   inCarousel: boolean,
-  onEdit: (pos: number) => void,
-  onDelete: (pos: number) => void,
+  onEdit: () => void,
+  onDelete: () => void,
 }
 
-export default function SortableHighlightItem({pos,item,inCarousel,onEdit,onDelete}: HighlightProps) {
-  const smallScreen = useMediaQuery('(max-width:600px)')
-  const {
-    attributes,listeners,setNodeRef,
-    transform,transition,isDragging
-  } = useSortable({id: item.id ?? ''})
+export default function SortableHighlightItem({item,inCarousel,onEdit,onDelete}: HighlightProps) {
+  const smallScreen = useSmallScreen()
 
   const {brand_name, contributor_cnt, mention_cnt, image_id, is_published} = item
 
   return (
-    <ListItem
+    <SortableListItem
       data-testid="admin-highlight-item"
-      // draggable
-      ref={setNodeRef}
-      {...attributes}
+      item = {item}
       secondaryAction={
         <SortableListItemActions
-          pos={pos}
-          listeners={listeners}
           onEdit={onEdit}
           onDelete={onDelete}
         />
       }
       sx={{
-        // this makes space for buttons
-        paddingRight: '11rem',
-        // height:'5rem',
         '&:hover': {
           backgroundColor:'grey.100'
-        },
-        transform: CSS.Translate.toString(transform),
-        transition,
-        opacity: isDragging ? 0.5 : 1,
-        backgroundColor: isDragging ? 'grey.100' : 'paper',
-        zIndex: isDragging ? 9:0,
-        cursor: isDragging ? 'move' : 'default'
+        }
       }}
     >
       {smallScreen ? null :
@@ -94,6 +75,6 @@ export default function SortableHighlightItem({pos,item,inCarousel,onEdit,onDele
           </>
         }
       />
-    </ListItem>
+    </SortableListItem>
   )
 }

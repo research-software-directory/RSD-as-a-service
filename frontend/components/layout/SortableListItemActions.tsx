@@ -1,38 +1,48 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {SyntheticListenerMap} from '@dnd-kit/core/dist/hooks/utilities'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
 import CategoryIcon from '@mui/icons-material/Category'
+import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices'
 
 type SortableListItemActionsProps = {
-  pos: number
-  listeners?: SyntheticListenerMap
-  onEdit?:(pos:number)=>void,
-  onDelete?:(pos:number)=>void,
-  onCategory?:(pos:number)=>void
+  onService?:()=>void
+  onCategory?:()=>void
+  onEdit?:()=>void,
+  onDelete?:()=>void,
 }
 
-export default function SortableListItemActions({pos,listeners,onEdit,onDelete,onCategory}:SortableListItemActionsProps){
+export default function SortableListItemActions({onService,onCategory,onEdit,onDelete}:SortableListItemActionsProps){
+  function serviceAction() {
+    if (typeof onService == 'function') {
+      return (
+        <IconButton
+          title="Background services"
+          aria-label="background services"
+          onClick={onService}
+        >
+          <MiscellaneousServicesIcon />
+        </IconButton>
+      )
+    }
+    return null
+  }
 
   function categoryAction() {
-    if (typeof onCategory !== 'undefined') {
+    if (typeof onCategory == 'function') {
       return (
         <IconButton
           title="Edit categories"
-          edge="end"
           aria-label="edit categories"
-          sx={{marginRight: '1rem'}}
           onClick={() => {
             // alert(`Edit...${item.id}`)
-            onCategory(pos)
+            onCategory()
           }}
         >
           <CategoryIcon />
@@ -43,17 +53,12 @@ export default function SortableListItemActions({pos,listeners,onEdit,onDelete,o
   }
 
   function editAction() {
-    if (typeof onEdit !== 'undefined') {
+    if (typeof onEdit == 'function') {
       return (
         <IconButton
           title="Edit"
-          edge="end"
           aria-label="edit"
-          sx={{marginRight: '1rem'}}
-          onClick={() => {
-            // alert(`Edit...${item.id}`)
-            onEdit(pos)
-          }}
+          onClick={onEdit}
         >
           <EditIcon />
         </IconButton>
@@ -63,16 +68,12 @@ export default function SortableListItemActions({pos,listeners,onEdit,onDelete,o
   }
 
   function deleteAction() {
-    if (typeof onDelete !== 'undefined') {
+    if (typeof onDelete == 'function') {
       return (
         <IconButton
           title="Delete"
-          edge="end"
           aria-label="delete"
-          onClick={() => {
-            onDelete(pos)
-          }}
-          sx={{marginRight: '1rem'}}
+          onClick={onDelete}
         >
           <DeleteIcon />
         </IconButton>
@@ -81,28 +82,12 @@ export default function SortableListItemActions({pos,listeners,onEdit,onDelete,o
     return null
   }
 
-  function dragAction() {
-    if (typeof listeners !== 'undefined') {
-      return (
-        <IconButton
-          title="Drag to change position"
-          edge="end"
-          aria-label="drag to change position"
-          {...listeners}
-        >
-          <DragIndicatorIcon />
-        </IconButton>
-      )
-    }
-    return null
-  }
-
   return (
     <>
-      {categoryAction()}
+      {serviceAction()}
       {editAction()}
+      {categoryAction()}
       {deleteAction()}
-      {dragAction()}
     </>
   )
 }

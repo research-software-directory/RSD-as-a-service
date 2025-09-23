@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,23 +9,26 @@ import ListItemText from '@mui/material/ListItemText'
 
 import {ProjectLink} from '~/types/Project'
 import SortableListItem from '~/components/layout/SortableListItem'
+import SortableListItemActions from '~/components/layout/SortableListItemActions'
 
 type SortableProjectLinkProps = {
-  pos: number,
   item: ProjectLink,
-  onEdit: (pos: number) => void,
-  onDelete: (pos: number) => void,
+  onEdit: () => void,
+  onDelete: () => void,
 }
 
-export default function SortableProjectLinksItem({pos, item, onEdit, onDelete}: SortableProjectLinkProps) {
+export default function SortableProjectLinksItem({item, onEdit, onDelete}: SortableProjectLinkProps) {
   return (
     <SortableListItem
       data-testid="project-link-item"
       key={item.id}
-      pos={pos}
       item={item}
-      onEdit={onEdit}
-      onDelete={onDelete}
+      secondaryAction={
+        <SortableListItemActions
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
+      }
       sx={{
         '&:hover': {
           backgroundColor:'grey.100'

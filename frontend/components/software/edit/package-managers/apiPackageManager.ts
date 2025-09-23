@@ -11,165 +11,36 @@
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractErrorMessages, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
-
-export type PackageManagerSettings = {
-  name: string,
-  icon: string | null,
-  hostname: string[],
-  services: string[]
-}
-
-export const packageManagerSettings = {
-  anaconda: {
-    name: 'Anaconda',
-    icon: '/images/anaconda-logo-96.svg',
-    hostname: ['anaconda.org'],
-    services: ['dependents']
-  },
-  bioconductor: {
-    name: 'Bioconductor',
-    icon: '/images/bioconductor_logo_spot.svg',
-    hostname: ['bioconductor.org', 'www.bioconductor.org'],
-    services: []
-  },
-  cran: {
-    name: 'CRAN',
-    icon: '/images/cran-r-logo.svg',
-    hostname: ['cran.r-project.org'],
-    services: ['dependents']
-  },
-  crates: {
-    name: 'Crates.io',
-    icon: '/images/rust-cargo-logo.png',
-    hostname: ['crates.io'],
-    services: ['dependents']
-  },
-  chocolatey: {
-    name: 'Chocolatey',
-    icon: '/images/chocolatey-logo.svg',
-    hostname: ['community.chocolatey.org'],
-    services: []
-  },
-  debian: {
-    name: 'Debian',
-    icon: '/images/debian-logo.svg',
-    hostname: ['packages.debian.org'],
-    services: []
-  },
-  dockerhub: {
-    name: 'Dockerhub',
-    icon: '/images/dockerhub-logo.webp',
-    hostname: ['hub.docker.com'],
-    services: ['downloads']
-  },
-  fourtu: {
-    name: '4TU.ResearchData',
-    icon: '/images/fourtu-researchdata.png',
-    hostname: ['data.4tu.nl'],
-    services: []
-  },
-  ghcr: {
-    name: 'Github Container Registry',
-    icon: '/images/github-logo.svg',
-    hostname: ['ghcr.io'],
-    services: []
-  },
-  github: {
-    name: 'Github',
-    icon: '/images/github-logo.svg',
-    hostname: ['github.com'],
-    services: []
-  },
-  gitlab: {
-    name: 'Gitlab',
-    icon: '/images/gitlab-icon-rgb.svg',
-    hostname: ['gitlab.com', 'registry.gitlab.com'],
-    services: []
-  },
-  golang: {
-    name: 'Golang',
-    icon: '/images/go-logo-blue.svg',
-    hostname: ['pkg.go.dev'],
-    services: ['dependents']
-  },
-  julia: {
-    name: 'Julia',
-    icon: '/images/julia-logo.svg',
-    hostname: ['github.com/JuliaRegistries/General/', '.jl.git'],
-    services: ['downloads']
-  },
-  maven: {
-    name: 'Maven',
-    icon: '/images/apache-maven-logo.svg',
-    hostname: ['mvnrepository.com'],
-    services: ['dependents']
-  },
-  npm: {
-    name: 'NPM',
-    icon: '/images/npm-logo-64.png',
-    hostname: ['www.npmjs.com', 'npmjs.com'],
-    services: ['dependents']
-  },
-  pixi: {
-    name: 'Pixi',
-    icon: '/images/pixi-logo.png',
-    hostname: ['prefix.dev'],
-    services: ['downloads']
-  },
-  pypi: {
-    name: 'PyPi',
-    icon: '/images/pypi-logo.svg',
-    hostname: ['pypi.org'],
-    services: ['dependents']
-  },
-  sonatype: {
-    name: 'Sonatype',
-    icon: '/images/sonatype-logo.svg',
-    hostname: ['central.sonatype.com'],
-    services: ['dependents']
-  },
-  snapcraft: {
-    name: 'Snapcraft',
-    icon: '/images/snapcraft-logo.svg',
-    hostname: ['snapcraft.io'],
-    services: []
-  },
-  other: {
-    name: 'Other',
-    icon: null,
-    hostname: [],
-    services: []
-  }
-}
-
-export type PackageManagerTypes = keyof typeof packageManagerSettings
-
+import {BasicApiParams, paginationUrlParams} from '~/utils/postgrestUrl'
+import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
+import {PackageManagerSettings, packageManagerSettings, PackageManagerTypes} from './config'
 
 export type NewPackageManager = {
   id: string | null
   software: string,
   url: string,
-  package_manager: PackageManagerTypes | null,
+  package_manager?: PackageManagerTypes,
   position: number
 }
-
 
 export type PackageManager = NewPackageManager & {
   id: string,
   download_count: number | null,
   download_count_scraped_at: string | null,
+  download_count_last_error: string | null,
   download_count_scraping_disabled_reason: string | null,
   reverse_dependency_count: number | null,
   reverse_dependency_count_scraped_at: string | null,
+  reverse_dependency_count_last_error: string | null,
   reverse_dependency_count_scraping_disabled_reason: string | null,
 }
 
-export async function getPackageManagers({software, token}: {
+export async function getPackageManagersForSoftware({software, token}: {
   software: string,
   token?: string
 }): Promise<PackageManager[]> {
   try {
-    const query = `software=eq.${software}&order=position.asc,package_manager.asc`
+    const query = `software=eq.${software}&order=position.asc,url.asc`
     const url = `${getBaseUrl()}/package_manager?${query}`
 
     // make request
@@ -183,10 +54,10 @@ export async function getPackageManagers({software, token}: {
     if (resp.status === 200) {
       return await resp.json()
     }
-    logger(`getPackageManagers...${resp.status} ${resp.statusText}`, 'warn')
+    logger(`getPackageManagersForSoftware...${resp.status} ${resp.statusText}`, 'warn')
     return []
   } catch (e: any) {
-    logger(`getPackageManagers failed. ${e.message}`, 'error')
+    logger(`getPackageManagersForSoftware failed. ${e.message}`, 'error')
     return []
   }
 }
@@ -215,17 +86,13 @@ export async function postPackageManager({data, token}: {data: NewPackageManager
   }
 }
 
-type UpdatePackageManager = {
-  package_manager: PackageManagerTypes | null,
-  download_count_scraping_disabled_reason: string | null,
-  reverse_dependency_count_scraping_disabled_reason: string | null,
+export type PatchPackageManagerProps={
+  id: string,
+  data: Partial<PackageManager>,
+  token: string
 }
 
-export async function patchPackageManager({id, data, token}: {
-  id: string,
-  data: UpdatePackageManager,
-  token: string
-}) {
+export async function patchPackageManager({id, data, token}:PatchPackageManagerProps) {
   try {
     const query = `id=eq.${id}`
     const url = `${getBaseUrl()}/package_manager?${query}`
@@ -253,10 +120,11 @@ export async function patchPackageManagers({items, token}: {items: PackageManage
   try {
     // create all requests
     const requests = items.map(item => {
-      return patchPackageManagerItem({
+      return patchPackageManager({
         id: item.id,
-        key: 'position',
-        value: item.position,
+        data:{
+          position: item.position
+        },
         token
       })
     })
@@ -281,31 +149,6 @@ export async function patchPackageManagers({items, token}: {items: PackageManage
   }
 }
 
-export async function patchPackageManagerItem({id, key, value, token}:
-{id: string, key: string, value: any, token: string}) {
-  try {
-    const url = `/api/v1/package_manager?id=eq.${id}`
-    const resp = await fetch(url, {
-      method: 'PATCH',
-      headers: {
-        ...createJsonHeaders(token),
-      },
-      // just update position!
-      body: JSON.stringify({
-        [key]: value
-      })
-    })
-    // extract errors
-    return extractReturnMessage(resp)
-  } catch (e: any) {
-    logger(`patchPackageManagerData failed. ${e.message}`, 'error')
-    return {
-      status: 500,
-      message: e.message
-    }
-  }
-}
-
 export async function deletePackageManager({id, token}: {id: string, token: string}) {
   try {
     const url = `/api/v1/package_manager?id=eq.${id}`
@@ -318,7 +161,7 @@ export async function deletePackageManager({id, token}: {id: string, token: stri
     // extract errors
     return extractReturnMessage(resp)
   } catch (e: any) {
-    logger(`patchPackageManagerData failed. ${e.message}`, 'error')
+    logger(`deletePackageManager failed. ${e.message}`, 'error')
     return {
       status: 500,
       message: e.message
@@ -370,13 +213,66 @@ export async function getPackageManagerTypeFromUrl(url: string): Promise<Package
   }
 }
 
-export function getPackageManagerServices(pm_key: PackageManagerTypes | null) {
+export function getPackageManagerServices(pm_key?: PackageManagerTypes) {
   // no services if no key
-  if (pm_key === null) return []
+  if (!pm_key) return []
   // return services if key found
   if (Object.hasOwn(packageManagerSettings, pm_key)) {
     return packageManagerSettings[pm_key].services
   }
   // no services if key not found
   return []
+}
+
+export async function getPackageManagers({page,rows,searchFor,orderBy,token}:BasicApiParams){
+  try{
+    let query = '/package_manager?'
+    if (orderBy){
+      // disabled repos first
+      query+=`order=${orderBy}`
+    }else{
+      // disabled repos first
+      query+='order=download_count_scraping_disabled_reason.nullslast,reverse_dependency_count_scraping_disabled_reason.nullslast,url'
+    }
+
+    if (searchFor){
+      const encodedSearch = encodeURIComponent(searchFor)
+      query+=`&or=(url.ilike."*${encodedSearch}*",download_count_scraping_disabled_reason.ilike."*${encodedSearch}*",reverse_dependency_count_scraping_disabled_reason.ilike."*${encodedSearch}*")`
+    }
+    // add paginations params
+    query+=paginationUrlParams({rows,page})
+
+    const url = `${getBaseUrl()}${query}`
+    // console.log('url...',url)
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token),
+        // request record count to be returned
+        // note: it's returned in the header
+        'Prefer': 'count=exact'
+      }
+    })
+
+    if (resp.ok) {
+      const managers:PackageManager[] = await resp.json()
+      return {
+        count: extractCountFromHeader(resp.headers) ?? 0,
+        managers
+      }
+    }
+
+    logger(`getPackageManagers: ${resp.status} ${resp.statusText}`,'warn')
+
+    return {
+      count:0,
+      managers:[]
+    }
+  }catch(e:any){
+    logger(`getPackageManagers: ${e.message}`, 'error')
+    return {
+      count:0,
+      managers:[]
+    }
+  }
 }

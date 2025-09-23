@@ -13,16 +13,20 @@ import {rowsPerPageOptions} from '~/config/pagination'
 import {encodeUrlQuery} from './extractQueryParam'
 import {localeSort} from './sortFn'
 
+export type BasicApiParams = {
+  token: string,
+  page: number
+  rows: number
+  searchFor?: string
+  orderBy?: string
+}
+
 export type OrderByProps<T, K extends keyof T> = {
   column: K,
   direction: 'asc' | 'desc'
 }
 
-export type ApiParams<T, K extends keyof T> = {
-  token: string,
-  page: number
-  rows: number
-  searchFor?: string
+export type ApiParams<T, K extends keyof T> = Omit<BasicApiParams,'orderBy'> & {
   orderBy?: OrderByProps<T, K>
 }
 

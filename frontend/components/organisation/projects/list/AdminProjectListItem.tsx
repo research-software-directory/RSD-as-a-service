@@ -1,15 +1,15 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
 import {ProjectOfOrganisation} from '~/types/Organisation'
-import IconBtnMenuOnAction from '~/components/menu/IconBtnMenuOnAction'
-import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
-import {useProjectCardActions} from '../card/useProjectCardActions'
-import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
 import StatusBanner from '~/components/cards/StatusBanner'
+import IconBtnMenuOnAction from '~/components/menu/IconBtnMenuOnAction'
+import {useProjectCardActions} from '~/components/organisation/projects/card/useProjectCardActions'
+import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
+import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
+import OverviewListItemLink from '~/components/software/overview/list/OverviewListItemLink'
 
 type AdminProjectListItem = {
   item: ProjectOfOrganisation
@@ -28,11 +28,8 @@ export default function AdminProjectListItem({item:project}: AdminProjectListIte
   return (
     <OverviewListItem>
       {/* standard project list item with link */}
-      <Link
-        data-testid="admin-project-list-item"
-        key={project.id}
+      <OverviewListItemLink
         href={`/projects/${project.slug}`}
-        className='flex-1 flex hover:text-inherit'
       >
         <ProjectListItemContent
           statusBanner={
@@ -46,7 +43,7 @@ export default function AdminProjectListItem({item:project}: AdminProjectListIte
           }
           {...project}
         />
-      </Link>
+      </OverviewListItemLink>
       {/* admin menu */}
       <div className="flex mx-2">
         <IconBtnMenuOnAction

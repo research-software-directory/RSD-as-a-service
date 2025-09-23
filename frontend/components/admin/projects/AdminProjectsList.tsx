@@ -8,7 +8,7 @@ import {useState} from 'react'
 import Alert from '@mui/material/Alert'
 
 import ContentLoader from '~/components/layout/ContentLoader'
-import ProjectOverviewList from '~/components/projects/overview/list/ProjectOverviewList'
+import ListOverviewSection from '~/components/layout/ListOverviewSection'
 import useAdminProjects from './useAdminProjects'
 import AdminProjectListItem from './AdminProjectListItem'
 import RemoveProjectModal, {ProjectModalProps} from './RemoveProjectModal'
@@ -29,7 +29,7 @@ export default function AdminProjectList() {
 
   return (
     <>
-      <ProjectOverviewList>
+      <ListOverviewSection>
         {projects.map(item=>{
           return (
             <AdminProjectListItem
@@ -44,7 +44,7 @@ export default function AdminProjectList() {
             />
           )
         })}
-      </ProjectOverviewList>
+      </ListOverviewSection>
       {
         modal.open ?
           <RemoveProjectModal

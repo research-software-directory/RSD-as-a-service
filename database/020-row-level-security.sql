@@ -211,11 +211,13 @@ CREATE POLICY admin_all_rights ON software TO rsd_admin
 ALTER TABLE repository_url ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY anyone_can_read ON repository_url FOR SELECT TO rsd_web_anon, rsd_user
-	USING (software IN (SELECT id FROM software));
+	USING (TRUE);
 
-CREATE POLICY maintainer_all_rights ON repository_url TO rsd_user
-	USING (software IN (SELECT * FROM software_of_current_maintainer()))
-	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
+CREATE POLICY maintainer_insert ON repository_url FOR INSERT TO rsd_user
+	WITH CHECK (TRUE);
+
+CREATE POLICY maintainer_delete ON repository_url FOR DELETE TO rsd_user
+	USING (TRUE);
 
 CREATE POLICY admin_all_rights ON repository_url TO rsd_admin
 	USING (TRUE)

@@ -136,7 +136,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     // wait for loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
-    const members = screen.getAllByTestId('team-member-item')
+    const members = screen.getAllByTestId('contributor-item')
     expect(members.length).toEqual(mockTeamMembers.length)
   })
 
@@ -266,7 +266,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     })
 
     // validate list item loaded
-    const members = await screen.findAllByTestId('team-member-item')
+    const members = await screen.findAllByTestId('contributor-item')
     expect(members.length).toEqual(1)
     expect(members[0]).toHaveTextContent(newPerson.family_names)
   })
@@ -286,7 +286,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     // wait for loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // get all members
-    const members = screen.getAllByTestId('team-member-item')
+    const members = screen.getAllByTestId('contributor-item')
     // delete first member
     const deleteBtn = within(members[0]).getByRole('button', {
       name: 'delete'
@@ -312,7 +312,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
       })
 
       // confirm member removed from list
-      const remainedMembers = screen.getAllByTestId('team-member-item')
+      const remainedMembers = screen.getAllByTestId('contributor-item')
       expect(remainedMembers.length).toEqual(mockTeamMembers.length - 1)
 
       // confirm list position patched
@@ -355,7 +355,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     // wait for loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // get all members
-    const members = screen.getAllByTestId('team-member-item')
+    const members = screen.getAllByTestId('contributor-item')
     // edit first member
     const editBtn = within(members[0]).getByTestId('EditIcon')
     fireEvent.click(editBtn)
@@ -411,7 +411,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     // wait for loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // get all members
-    const members = screen.getAllByTestId('team-member-item')
+    const members = screen.getAllByTestId('contributor-item')
     // edit first member
     const editBtn = within(members[0]).getByTestId('EditIcon')
     fireEvent.click(editBtn)
@@ -484,7 +484,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     // wait for loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // get all members
-    const members = screen.getAllByTestId('team-member-item')
+    const members = screen.getAllByTestId('contributor-item')
     // edit first member
     const editBtn = within(members[0]).getByTestId('EditIcon')
     fireEvent.click(editBtn)

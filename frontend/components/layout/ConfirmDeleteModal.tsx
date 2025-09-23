@@ -66,7 +66,7 @@ export default function ConfirmDeleteModal({
       <DialogContent sx={{
         width:['100%','33rem']
       }}>
-        <section className="min-h-[5rem] text-lg">
+        <section className="min-h-[5rem] text-lg overflow-hidden wrap-break-word">
           {body}
         </section>
       </DialogContent>

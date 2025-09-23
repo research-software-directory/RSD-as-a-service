@@ -1,15 +1,15 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
 import {SoftwareOfOrganisation} from '~/types/Organisation'
 import IconBtnMenuOnAction from '~/components/menu/IconBtnMenuOnAction'
 import StatusBanner from '~/components/cards/StatusBanner'
+import {useSoftwareCardActions} from '~/components/organisation/software/card/useSoftwareCardActions'
 import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
-import {useSoftwareCardActions} from '~/components/organisation/software/card/useSoftwareCardActions'
+import OverviewListItemLink from '~/components/software/overview/list/OverviewListItemLink'
 
 type AdminSoftwareListItem = {
   item: SoftwareOfOrganisation
@@ -21,10 +21,8 @@ export default function AdminSoftwareListItem({item:software}: AdminSoftwareList
   return (
     <OverviewListItem>
       {/* standard software list item with link */}
-      <Link
-        data-testid="software-grid-card"
+      <OverviewListItemLink
         href={`/software/${software.slug}`}
-        className="flex-1 flex hover:text-inherit"
       >
         <SoftwareListItemContent
           statusBanner={
@@ -38,7 +36,7 @@ export default function AdminSoftwareListItem({item:software}: AdminSoftwareList
           }
           {...software}
         />
-      </Link>
+      </OverviewListItemLink>
       {/* admin menu */}
       <div className="flex mx-2">
         <div className="flex items-center gap-2 mx-1">
