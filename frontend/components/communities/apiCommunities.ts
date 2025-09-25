@@ -35,7 +35,7 @@ type GetCommunityListParams={
   page: number,
   rows: number,
   token?: string
-  searchFor?:string,
+  searchFor?:string|null,
   orderBy?:string,
 }
 

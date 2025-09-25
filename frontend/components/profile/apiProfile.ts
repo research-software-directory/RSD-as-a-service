@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
+import {isOrcid} from '~/utils/getORCID'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {ProjectListItem} from '~/types/Project'
@@ -26,7 +27,7 @@ type ProfileRpcQuery = {
   account: string | null
   rows: number
   page: number
-  search?: string,
+  search?: string|null,
   token?: string
 }
 
@@ -126,5 +127,20 @@ export async function getProfileProjects({orcid,account,rows=12,page=0,search,to
       project_cnt: 0,
       projects:[]
     }
+  }
+}
+
+export function parsePersonId(id:string){
+  let account:string|null = null
+  let orcid:string|null = null
+  // ID can be ORCID or account id
+  if (isOrcid(id)){
+    orcid = id
+  } else {
+    account = id
+  }
+  return {
+    account,
+    orcid
   }
 }

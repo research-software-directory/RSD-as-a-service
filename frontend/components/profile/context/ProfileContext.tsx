@@ -1,36 +1,70 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createContext, useContext} from 'react'
-import {ProjectListItem} from '~/types/Project'
-import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
+'use client'
+
+import {createContext, useCallback, useContext, useState} from 'react'
 
 type ProfileContextProps={
-  software_cnt: number,
-  software: SoftwareOverviewItemProps[],
-  project_cnt: number,
-  projects: ProjectListItem[]
+  count:{
+    software_cnt: number,
+    project_cnt: number,
+  }
+  setCount:(val:any)=>void
 }
 
 // create context
-const ProfileContext = createContext<ProfileContextProps|null>(null)
+const ProfileContext = createContext<ProfileContextProps>({
+  count:{
+    software_cnt:0,
+    project_cnt:0
+  },
+  setCount:()=>{}
+})
 
 // profile context provider
 export function ProfileContextProvider(props:any){
+  const [count,setCount] = useState({
+    software_cnt: props?.software_cnt as number ?? 0,
+    project_cnt: props?.project_cnt as number ?? 0
+  })
   return <ProfileContext.Provider
+    value={{count,setCount}}
     {...props}
   />
 }
 
 // profile context hook
 export function useProfileContext(){
-  const props = useContext(ProfileContext)
-  if (props===null){
-    throw Error('useProfileContext requires ProfileContextProvider at parent')
+  const {count,setCount} = useContext(ProfileContext)
+
+  const setSoftwareCnt = useCallback((cnt:number)=>{
+    setCount((data:any)=>{
+      return {
+        ...data,
+        software_cnt: cnt
+      }
+    })
+
+  },[setCount])
+
+  const setProjectCnt = useCallback((cnt:number)=>{
+    setCount((data:any)=>{
+      return {
+        ...data,
+        project_cnt: cnt
+      }
+    })
+
+  },[setCount])
+
+  return {
+    ...count,
+    setSoftwareCnt,
+    setProjectCnt
   }
-  return props
 }
 
 export default ProfileContext

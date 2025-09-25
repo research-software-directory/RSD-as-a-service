@@ -20,7 +20,7 @@ type OrganisationsOverviewProps = Readonly<{
   page: number,
   rows: number,
   organisations: OrganisationListProps[],
-  search?: string,
+  search?: string|null,
 }>
 
 export default function OrganisationsOverviewClient({
@@ -44,7 +44,7 @@ export default function OrganisationsOverviewClient({
           <SearchInput
             placeholder="Search organisation by name, ROR name or website"
             onSearch={(search: string) => handleQueryChange('search', search)}
-            defaultValue={search ?? ''}
+            defaultValue={search ?? undefined}
           />
           <ViewToggleGroup
             layout={view}
