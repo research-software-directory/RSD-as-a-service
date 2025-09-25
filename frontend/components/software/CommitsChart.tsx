@@ -15,16 +15,16 @@ import NoDataAvailableChart from '~/components/charts/d3LineChart/NoDataAvailabl
 import SingleLineChart from '~/components/charts/d3LineChart/SingleLineChart'
 
 export type CommitsChartProps = Readonly<{
-  repository_url: string | null,
-  archived: boolean | null,
-  star_count: number | null,
-  fork_count: number | null,
+  repository_url?: string | null,
+  archived?: boolean | null,
+  star_count?: number | null,
+  fork_count?: number | null,
   commit_history?: CommitHistory
   commit_history_scraped_at?: string
   className?: string
 }>
 
-export function ArchivedRepo({archived}:Readonly<{archived:boolean|null}>){
+export function ArchivedRepo({archived}:Readonly<{archived?:boolean|null}>){
   if (!archived) return null
   return (
     <span data-testid="archived-repository">
@@ -33,7 +33,7 @@ export function ArchivedRepo({archived}:Readonly<{archived:boolean|null}>){
   )
 }
 
-export function StarCount({star_count}:Readonly<{star_count:number|null}>){
+export function StarCount({star_count}:Readonly<{star_count?:number|null}>){
   if (star_count===null || star_count===undefined) return null
   return (
     <span data-testid="star-count">
@@ -42,7 +42,7 @@ export function StarCount({star_count}:Readonly<{star_count:number|null}>){
   )
 }
 
-export function ForkCount({fork_count}:Readonly<{fork_count:number|null}>){
+export function ForkCount({fork_count}:Readonly<{fork_count?:number|null}>){
   if (fork_count===null || fork_count===undefined) return null
   return (
     <span data-testid="fork-count">

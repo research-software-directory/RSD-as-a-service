@@ -6,7 +6,7 @@
 import NoContent from '~/components/layout/NoContent'
 import CommunityCard from './CommunityCard'
 import {CommunityListProps} from '../apiCommunities'
-
+import GridOverview from '~/components/layout/GridOverview'
 
 export default function CommunitiesGrid({items}:{items:CommunityListProps[]}) {
 
@@ -15,12 +15,10 @@ export default function CommunitiesGrid({items}:{items:CommunityListProps[]}) {
   }
 
   return (
-    <section
-      data-testid="communities-overview-list"
-      className="flex-1 my-12 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-[27rem]">
+    <GridOverview fullWidth={true} className="pt-12 pb-6 auto-rows-[28rem]">
       {items.map((item) => (
         <CommunityCard key={item.slug} community={item} />
       ))}
-    </section>
+    </GridOverview>
   )
 }

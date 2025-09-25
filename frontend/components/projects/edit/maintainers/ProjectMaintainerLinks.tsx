@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,7 +8,7 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 
 import InvitationList from '~/components/maintainers/InvitationList'
 import {useProjectInvitations} from './useProjectInvitations'
-import useProjectContext from '../useProjectContext'
+import useProjectContext from '../context/useProjectContext'
 
 export default function ProjectMaintainerLinks() {
   const {project} = useProjectContext()

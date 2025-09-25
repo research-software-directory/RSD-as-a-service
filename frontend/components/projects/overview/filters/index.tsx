@@ -1,16 +1,18 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import FilterHeader from '~/components/filter/FilterHeader'
+'use client'
 
+import useHandleQueryChange from '~/utils/useHandleQueryChange'
+import FilterHeader from '~/components/filter/FilterHeader'
 import KeywordsFilter, {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import OrganisationsFilter, {OrganisationOption} from '~/components/filter/OrganisationsFilter'
 import ResearchDomainFilter, {ResearchDomainOption} from '~/components/filter/ResearchDomainFilter'
-import useProjectOverviewParams from '../useProjectOverviewParams'
+import useResetFilters from '~/components/filter/useResetFilters'
 import OrderProjectsBy from './OrderProjectsBy'
 import ProjectStatusFilter, {StatusFilterOption} from './ProjectStatusFilter'
 
@@ -27,7 +29,6 @@ type ProjectFiltersProps = {
   filterCnt: number,
 }
 
-
 export default function ProjectFilters({
   orderBy,
   keywords,
@@ -41,7 +42,8 @@ export default function ProjectFilters({
   filterCnt
 }: ProjectFiltersProps) {
 
-  const {resetFilters,handleQueryChange} = useProjectOverviewParams()
+  const {handleQueryChange} = useHandleQueryChange()
+  const {resetFilters} = useResetFilters({key:'order',default:'impact_cnt'})
 
   function clearDisabled() {
     if (filterCnt && filterCnt > 0) return false

@@ -12,7 +12,7 @@ import {decodeJsonParam} from '~/utils/extractQueryParam'
 import {loadCategoryRoots} from '~/components/category/apiCategories'
 import {CategoryOption} from '~/components/filter/CategoriesFilter'
 import useOrganisationContext from '~/components/organisation/context/useOrganisationContext'
-import useProjectParams from '../useProjectParams'
+import useProjectParams from '../../../projects/overview/useProjectParams'
 import {buildOrgProjectFilter, OrgProjectFilterProps} from './useOrgProjectKeywordsList'
 
 async function orgProjectCategoriesFilter({token,...params}:OrgProjectFilterProps){

@@ -11,7 +11,7 @@ import {useSession} from '~/auth/AuthProvider'
 import {ProjectOfOrganisation} from '~/types/Organisation'
 import {decodeJsonParam} from '~/utils/extractQueryParam'
 import {getProjectsForOrganisation} from '../apiOrganisations'
-import useProjectParams from './useProjectParams'
+import useProjectParams from '../../projects/overview/useProjectParams'
 import useOrganisationContext from '../context/useOrganisationContext'
 import {getOrganisationProjectsOrder} from './filters/OrgProjectOrderOptions'
 

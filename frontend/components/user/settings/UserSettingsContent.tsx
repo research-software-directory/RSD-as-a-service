@@ -5,7 +5,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
+'use client'
+import {useSearchParams} from 'next/navigation'
 
 import {UserSettingsTab} from './nav/UserSettingsNavItems'
 import UserAboutPage from './about'
@@ -14,8 +15,8 @@ import UserAgreementsPage from './agreements'
 import UserAccessTokensPage from './accesstokens'
 
 export default function UserSettingsContent() {
-  const router = useRouter()
-  const settings = router.query['settings']?.toString() as UserSettingsTab ?? 'profile' as UserSettingsTab
+  const searchParams = useSearchParams()
+  const settings = searchParams?.get('settings') as UserSettingsTab ?? 'profile' as UserSettingsTab
 
   switch (settings) {
     case 'about':

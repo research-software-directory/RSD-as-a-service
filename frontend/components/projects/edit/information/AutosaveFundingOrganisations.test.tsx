@@ -27,8 +27,8 @@ jest.mock('~/utils/editOrganisation', () => ({
 const mockAddOrganisationToProject = jest.fn(props => Promise.resolve({status:200,message:props}))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteOrganisationFromProject = jest.fn(props => Promise.resolve({status:200,message:[]}))
-jest.mock('~/utils/editProject', () => ({
-  // ...jest.requireActual('~/utils/editProject'),
+jest.mock('~/components/projects/edit/apiEditProject', () => ({
+  // ...jest.requireActual('~/components/projects/edit/apiEditProject'),
   addOrganisationToProject: jest.fn(props => mockAddOrganisationToProject(props)),
   deleteOrganisationFromProject: jest.fn(props => mockDeleteOrganisationFromProject(props)),
 }))

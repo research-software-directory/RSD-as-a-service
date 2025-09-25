@@ -70,7 +70,6 @@ export default function NewsOverview({pages,page,rows,search,news}:NewsOverviewP
       <PaginationLinkApp
         count={pages}
         page={page}
-        className="mb-10"
       />
     </>
   )

@@ -115,7 +115,7 @@ export function decodeQueryParam({query,param,castToType='string',defaultValue}:
       switch (castToType){
         case 'number':
           if (typeof rawVal === 'string') {
-            return parseInt(rawVal)
+            return Number.parseInt(rawVal)
           }
           logger(`decodeQueryParam: query param ${param} NOT a string. Returning defaultValue`, 'warn')
           return defaultValue

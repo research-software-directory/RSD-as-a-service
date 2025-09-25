@@ -10,7 +10,7 @@
 
 import {notFound} from 'next/navigation'
 
-import {getUserSettings} from '~/utils/userSettingsApp'
+import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import {getOrganisationChildren, getOrganisationIdForSlug} from '../apiOrganisations'
 import OrganisationUnits from './OrganisationUnits'

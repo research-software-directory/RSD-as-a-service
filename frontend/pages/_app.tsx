@@ -25,7 +25,7 @@ import {saveLocationCookie} from '~/auth/locationCookie'
 import {getLoginProviders, Provider} from '~/auth/api/getLoginProviders'
 import {LoginProvidersProvider} from '~/auth/loginProvidersContext'
 // user settings (from cookies)
-import {getUserAvatar, getUserSettings} from '~/utils/userSettings'
+import {getUserSettings} from '~/utils/userSettings'
 import {UserSettingsProps, UserSettingsProvider} from '~/config/UserSettingsContext'
 // rsd settings
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
@@ -47,6 +47,7 @@ import CookieConsentMatomo from '~/components/cookies/CookieConsentMatomo'
 import {getMatomoConsent,Matomo} from '~/components/cookies/nodeCookies'
 import {initMatomoCustomUrl} from '~/components/cookies/setMatomoPage'
 import Announcement from '~/components/Announcement/Announcement'
+import {getUserAvatar} from '~/components/user/getUserAvatar'
 
 // extend Next app props interface with emotion cache
 export interface MuiAppProps extends AppProps {

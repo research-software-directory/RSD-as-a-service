@@ -36,7 +36,7 @@ export default function SelectReleaseYear({releaseCountsByYear,queryYear}:Select
             key={count.release_year}
             year={count.release_year}
             release_cnt={count.release_cnt}
-            selected = {parseInt(queryYear)==count.release_year}
+            selected = {Number.parseInt(queryYear)==count.release_year}
             link={url}
           />
         })

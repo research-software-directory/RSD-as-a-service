@@ -13,7 +13,7 @@ import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
 
 import SoftwareOrganisations from './index'
 import {organisationInformation as config} from '../editSoftwareConfig'
-import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
+import {initialState as softwareState} from '~/components/software/edit/context/editSoftwareContext'
 
 // MOCKS
 import organisationsOfSoftware from './__mocks__/organisationsOfSoftware.json'
@@ -65,7 +65,7 @@ jest.mock('./organisationForSoftware', () => ({
 // MOCK software category calls
 // by default we return no categories
 jest.mock('~/components/category/apiCategories')
-jest.mock('~/utils/getSoftware')
+jest.mock('~/components/software/apiSoftware')
 // MOCK removeOrganisationCategoriesFromSoftware
 jest.mock('./apiSoftwareOrganisations')
 
@@ -76,7 +76,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
 
   it('renders no organisations message', async () => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // no organisations listed
     mockGetOrganisationsForSoftware.mockResolvedValueOnce([])
 
@@ -96,7 +96,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
 
   it('renders software organisations', async() => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // return list of organisations
     mockGetOrganisationsForSoftware.mockResolvedValueOnce(organisationsOfSoftware)
 
@@ -118,7 +118,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
 
   it('can add NEW organisation to software', async() => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     const newOrganisation = {
       id: 'new-organisation-id',
       parent: null,
@@ -229,7 +229,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
           canEdit: false,
           description: null
         },
-        software: softwareState.software.id,
+        software: softwareState.id,
         token: mockSession.token,
       })
     })
@@ -241,7 +241,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
 
   it('can add RSD organisation to software', async () => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     const searchFor = 'Netherlands eScience Center'
     // return VU from mock data
     const firstOrg = organisationsOfSoftware[0]
@@ -296,7 +296,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
     expect(mockAddOrganisationToSoftware).toHaveBeenCalledWith({
       'position': 1,
       'organisation': firstOrg.id,
-      'software': softwareState.software.id,
+      'software': softwareState.id,
       'token': mockSession.token,
     })
 
@@ -304,7 +304,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
 
   it('can remove organisation from software', async () => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // return list of organisations
     mockGetOrganisationsForSoftware.mockResolvedValueOnce(organisationsOfSoftware)
     // return OK
@@ -352,7 +352,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
       expect(mockDeleteOrganisationFromSoftware).toHaveBeenCalledTimes(1)
       expect(mockDeleteOrganisationFromSoftware).toHaveBeenCalledWith({
         'organisation': organisationsOfSoftware[0].id,
-        'software': softwareState.software.id,
+        'software': softwareState.id,
         'token': mockSession.token,
       })
       // patch organisation positions
@@ -365,7 +365,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
 
   it('shows organisation categories modal',async()=>{
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // return list of organisations
     mockGetOrganisationsForSoftware.mockResolvedValueOnce(organisationsOfSoftware)
 

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,7 +13,7 @@ import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
 import SoftwareMaintainers from './index'
 
 // MOCKS
-import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
+import {initialState as softwareState} from '~/components/software/edit/context/editSoftwareContext'
 
 // MOCK useSoftwareMaintainers hook
 const mockDeleteMaintainer = jest.fn()
@@ -84,7 +84,7 @@ describe('frontend/components/software/edit/maintainers/index.tsx', () => {
 
   it('renders no maintainers', async() => {
     // software id required for requests
-    softwareState.software.id = 'software-test-id'
+    softwareState.id = 'software-test-id'
     // it is maintainer of this organisation
     dummyMaintainersData.loading = false
     // mock hook return with loading true

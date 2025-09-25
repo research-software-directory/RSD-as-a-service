@@ -42,7 +42,7 @@ const mockPatchProjectForOrganisation = jest.fn((props) => Promise.resolve({
   status: 200,
   statusText: 'OK'
 }))
-jest.mock('~/utils/editProject', () => ({
+jest.mock('~/components/projects/edit/apiEditProject', () => ({
   patchProjectForOrganisation: jest.fn((props)=>mockPatchProjectForOrganisation(props))
 }))
 

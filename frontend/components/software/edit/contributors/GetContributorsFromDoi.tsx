@@ -20,7 +20,7 @@ import {getDisplayName} from '~/utils/getDisplayName'
 import {Contributor, ContributorProps} from '~/types/Contributor'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {contributorInformation as config} from '../editSoftwareConfig'
-import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContext from '../context/useSoftwareContext'
 import {postContributor} from './apiContributors'
 
 type GetContributorsFromDoiProps = {

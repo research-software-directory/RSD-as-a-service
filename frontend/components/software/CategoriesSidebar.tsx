@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {CategoryPath} from '~/types/Category'
 import SidebarSection from '~/components/layout/SidebarSection'
 import SidebarTitle from '~/components/layout/SidebarTitle'

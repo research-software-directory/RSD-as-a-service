@@ -12,7 +12,7 @@ import Link from 'next/link'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import {ProjectOfOrganisation} from '~/types/Organisation'
 import NoContent from '~/components/layout/NoContent'
-import ProjectOverviewGrid from '~/components/projects/overview/cards/ProjectOverviewGrid'
+import GridOverview from '~/components/layout/GridOverview'
 import ProjectCardContent from '~/components/projects/overview/cards/ProjectCardContent'
 import ProjectOverviewList from '~/components/projects/overview/list/ProjectOverviewList'
 import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
@@ -71,7 +71,7 @@ export default function OrganisationProjectsOverview({projects,isMaintainer}: Or
 
   // GRID as default
   return (
-    <ProjectOverviewGrid>
+    <GridOverview>
       {projects.map((item) => {
         if (isMaintainer) {
           return (
@@ -92,6 +92,6 @@ export default function OrganisationProjectsOverview({projects,isMaintainer}: Or
           </Link>
         )
       })}
-    </ProjectOverviewGrid>
+    </GridOverview>
   )
 }

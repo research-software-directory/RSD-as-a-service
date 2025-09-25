@@ -16,8 +16,8 @@ export default function useSoftwareParams() {
   const params = {
     search: searchParams?.get('search') ?? null,
     order: searchParams?.get('order') ?? null,
-    rows: searchParams?.has('rows') ? parseInt(searchParams?.get('rows') as string) : rsd_page_rows,
-    page: searchParams?.get('page') ? parseInt(searchParams?.get('page') as string) : 1,
+    rows: searchParams?.has('rows') ? Number.parseInt(searchParams?.get('rows') as string) : rsd_page_rows,
+    page: searchParams?.get('page') ? Number.parseInt(searchParams?.get('page') as string) : 1,
     keywords_json: searchParams?.get('keywords') ?? null,
     prog_lang_json: searchParams?.get('prog_lang') ?? null,
     licenses_json: searchParams?.get('licenses') ?? null,

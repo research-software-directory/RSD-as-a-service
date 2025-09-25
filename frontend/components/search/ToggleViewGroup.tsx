@@ -14,16 +14,17 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 export type ProjectLayoutType = 'list'|'grid'
 export type SoftwareLayoutType = 'list'|'grid'|'masonry'
 
-type ToggleLayoutGroupProps = {
-  view: ProjectLayoutType | SoftwareLayoutType
-  onChangeView: (view:ProjectLayoutType|SoftwareLayoutType)=>void
+// <T> can be ProjectLayoutType or SoftwareLayoutType
+type ToggleLayoutGroupProps <T> = Readonly<{
+  view: T
+  onChangeView: (view:T)=>void
   options?: SoftwareLayoutType[]
   sx?: any
-}
+}>
 
-export default function ToggleViewGroup({
+export default function ToggleViewGroup<T>({
   options=['grid','list'],view,onChangeView,sx
-}:ToggleLayoutGroupProps) {
+}:ToggleLayoutGroupProps<T>) {
   return (
     <ToggleButtonGroup
       data-testid="card-layout-options"

@@ -5,12 +5,11 @@
 
 'use client'
 
-import SearchInput from '~/components/search/SearchInput'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
-import ToggleViewGroup from '../search/ToggleViewGroup'
-import {useUserSettings} from '~/config/UserSettingsContext'
 import useHandleQueryChange from '~/utils/useHandleQueryChange'
-import ShowItemsSelect from '../search/ShowItemsSelect'
+import {useUserSettings} from '~/config/UserSettingsContext'
+import SearchInput from '~/components/search/SearchInput'
+import ToggleViewGroup, {ProjectLayoutType} from '~/components/search/ToggleViewGroup'
+import ShowItemsSelect from '~/components/search/ShowItemsSelect'
 
 type ProfileSearchPanelProps={
   placeholder: string

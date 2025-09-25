@@ -74,7 +74,6 @@ export default function CommunitiesOverview({
       <PaginationLinkApp
         count={numPages}
         page={page}
-        className="mb-10"
       />
     </>
   )

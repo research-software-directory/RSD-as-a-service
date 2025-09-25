@@ -11,7 +11,7 @@ import MainContent, {MainContainerProps} from './MainContent'
  * Main layout to be used on most pages. It contains of AppHeader, MainContent and AppFooter components.
  * It creates header, main and footer html elements.
  * It is based on styles defined on the body element in the root layout.tsx
- * className, children and all other props are passed to MainContent component.
+ * All props (className, children, ...props) are passed to MainContent component (main html element).
  * @param param0
  * @returns
  */

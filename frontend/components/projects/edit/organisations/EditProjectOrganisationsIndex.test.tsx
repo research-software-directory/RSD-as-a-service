@@ -34,7 +34,7 @@ jest.mock('~/auth/permissions/isMaintainerOfOrganisation', () => ({
 // MOCK getOrganisationsOfProject
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetOrganisationsOfProject = jest.fn(props => Promise.resolve([]))
-jest.mock('~/utils/getProjects', () => ({
+jest.mock('~/components/projects/apiProjects', () => ({
   getOrganisationsOfProject: jest.fn(props=>mockGetOrganisationsOfProject(props))
 }))
 
@@ -54,8 +54,8 @@ const mockAddOrganisationToProject = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'approved'
 }))
-jest.mock('~/utils/editProject', () => ({
-  ...jest.requireActual('~/utils/editProject'),
+jest.mock('~/components/projects/edit/apiEditProject', () => ({
+  ...jest.requireActual('~/components/projects/edit/apiEditProject'),
   deleteOrganisationFromProject: jest.fn(props => mockDeleteOrganisationFromProject(props)),
   patchOrganisationPositions: jest.fn(props => mockPatchOrganisationPositions(props)),
   addOrganisationToProject: jest.fn(props=>mockAddOrganisationToProject(props))
@@ -272,7 +272,7 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
     expect(mockAddOrganisationToProject).toHaveBeenCalledWith({
       'position': 1,
       'organisation': firstOrg.id,
-      'project': editProjectState.project.id,
+      'project': editProjectState.id,
       'role': 'participating',
       'token': mockSession.token,
     })
@@ -318,7 +318,7 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
       expect(mockDeleteOrganisationFromProject).toHaveBeenCalledTimes(1)
       expect(mockDeleteOrganisationFromProject).toHaveBeenCalledWith({
         'organisation': mockOrganisationsOfProject[0].id,
-        'project': editProjectState.project.id,
+        'project': editProjectState.id,
         'role': 'participating',
         'token': mockSession.token,
       })

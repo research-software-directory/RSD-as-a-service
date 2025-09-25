@@ -8,7 +8,7 @@
 
 import {notFound} from 'next/navigation'
 
-import {getUserSettings} from '~/utils/userSettingsApp'
+import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import NoContent from '~/components/layout/NoContent'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'

@@ -129,7 +129,7 @@ export type ParticipatingOrganisationProps = {
   website: string | null
   logo_url: string | null
   rsd_path: string
-  slug?: string
+  slug: string | null
 }
 
 export type ProjectOrganisationProps = ParticipatingOrganisationProps & {

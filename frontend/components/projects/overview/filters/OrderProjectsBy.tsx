@@ -5,8 +5,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import useProjectOverviewParams from '../useProjectOverviewParams'
+'use client'
 import OrderBy from '~/components/filter/OrderBy'
+import useHandleQueryChange from '~/utils/useHandleQueryChange'
 import {projectOrderOptions} from './projectOrderOptions'
 
 type OrderByProps = {
@@ -14,7 +15,7 @@ type OrderByProps = {
 }
 
 export default function OrderProjectsBy({orderBy}: OrderByProps) {
-  const {handleQueryChange} = useProjectOverviewParams()
+  const {handleQueryChange} = useHandleQueryChange()
 
   return (
     <OrderBy

@@ -46,7 +46,7 @@ export default function useSearchParams(view:RsdModuleName){
 
     if (key === 'rows'){
       // save number of rows in user settings (saves to cookie too)
-      setPageRows(parseInt(value.toString()))
+      setPageRows(Number.parseInt(value.toString()))
     }
     if (key === 'page' && router) {
       // when changing page we scroll to top

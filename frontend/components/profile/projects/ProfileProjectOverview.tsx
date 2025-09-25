@@ -10,10 +10,10 @@ import Link from 'next/link'
 import {ProjectListItem} from '~/types/Project'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import NoContent from '~/components/layout/NoContent'
+import GridOverview from '~/components/layout/GridOverview'
 import ProjectCardContent from '~/components/projects/overview/cards/ProjectCardContent'
 import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
 import ProjectOverviewList from '~/components/projects/overview/list/ProjectOverviewList'
-import SoftwareOverviewGrid from '~/components/software/overview/cards/SoftwareOverviewGrid'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 
 type ProfileProjectOverviewProps = Readonly<{
@@ -51,7 +51,7 @@ export default function ProfileProjectOverview({projects}:ProfileProjectOverview
 
   // GRID as default
   return (
-    <SoftwareOverviewGrid fullWidth={true}>
+    <GridOverview fullWidth={true}>
       {projects.map((item) => {
         return (
           <Link
@@ -67,6 +67,6 @@ export default function ProfileProjectOverview({projects}:ProfileProjectOverview
           </Link>
         )
       })}
-    </SoftwareOverviewGrid>
+    </GridOverview>
   )
 }

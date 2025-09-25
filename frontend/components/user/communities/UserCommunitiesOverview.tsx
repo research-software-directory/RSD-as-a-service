@@ -5,10 +5,11 @@
 
 import NoContent from '~/components/layout/NoContent'
 import CardSkeleton from '~/components/cards/CardSkeleton'
+import {ProjectLayoutType} from '~/components/search/ToggleViewGroup'
 import {CommunityListProps} from '~/components/communities/apiCommunities'
 import CommunityCard from '~/components/communities/overview/CommunityCard'
 import CommunityListItem from '~/components/communities/overview/CommunityListItem'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import GridOverview from '~/components/layout/GridOverview'
 
 type UserCommunitiesOverviewProps=Readonly<{
   layout: ProjectLayoutType
@@ -39,13 +40,12 @@ export default function UserCommunitiesOverview({loading,skeleton_items,layout,c
     )
   }
 
+  // GRID as default
   return (
-    <div
-      data-testid="communities-overview-list"
-      className="mt-4 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-[27rem]">
+    <GridOverview fullWidth={true}>
       {communities.map((item) => (
         <CommunityCard key={item.slug} community={item} />
       ))}
-    </div>
+    </GridOverview>
   )
 }

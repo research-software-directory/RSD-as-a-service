@@ -20,7 +20,7 @@ import ShowItemsSelect from '~/components/search/ShowItemsSelect'
 import FiltersModal from '~/components/filter/FiltersModal'
 import OrgProjectFilters from '~/components/organisation/projects/filters/index'
 import useQueryChange from '~/components/organisation/projects/useQueryChange'
-import useProjectParams from '~/components/organisation/projects/useProjectParams'
+import useProjectParams from '~/components/projects/overview/useProjectParams'
 
 type SearchSectionProps = Readonly<{
   count: number
@@ -87,7 +87,7 @@ export default function OrganisationSearchProjectSection({
         >
           <OrgProjectFilters />
         </FiltersModal>
-        : undefined
+        : null
       }
 
     </section>

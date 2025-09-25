@@ -7,7 +7,7 @@
 
 import {sortOnNumProp} from '~/utils/sortFn'
 import {MentionItemProps} from '~/types/Mention'
-import {classifyMentionsByType} from '~/utils/editMentions'
+import {classifyMentionsByType} from '~/components/mention/apiEditMentions'
 import {getMentionType, getMentionTypeOrder} from '~/components/mention/config'
 import PageContainer from '~/components/layout/PageContainer'
 import MentionItemFeatured from '~/components/mention/MentionItemFeatured'

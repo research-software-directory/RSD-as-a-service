@@ -11,7 +11,7 @@ import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {decodeJsonParam} from '~/utils/extractQueryParam'
 import {OrganisationOption} from '~/components/filter/OrganisationsFilter'
 import useOrganisationContext from '../../context/useOrganisationContext'
-import useProjectParams from '../useProjectParams'
+import useProjectParams from '../../../projects/overview/useProjectParams'
 import {OrgProjectFilterProps, buildOrgProjectFilter} from './useOrgProjectKeywordsList'
 
 export async function orgProjectOrganisationsFilter({token, ...params}: OrgProjectFilterProps) {

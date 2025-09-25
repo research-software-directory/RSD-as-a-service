@@ -68,7 +68,6 @@ export default function PersonsOverviewClient({pages,page,rows,search,persons}:P
       <PaginationLinkApp
         count={pages}
         page={page}
-        className="mb-10"
       />
     </>
   )

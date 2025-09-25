@@ -21,7 +21,7 @@ import ProjectTeam from './index'
 // MOCK getTeamForProject
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetTeamForProject = jest.fn(props => Promise.resolve([] as any))
-jest.mock('~/utils/getProjects', () => ({
+jest.mock('~/components/projects/apiProjects', () => ({
   getTeamForProject: jest.fn(props=>mockGetTeamForProject(props))
 }))
 
@@ -258,7 +258,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
           'orcid': null,
           'account': null,
           'position': 1,
-          'project': editProjectState.project.id,
+          'project': editProjectState.id,
           'role': newPerson.role,
         },
         'token': mockSession.token,
@@ -334,7 +334,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
       // we remove avatar id
       avatar_id: null,
       // we use project id from context
-      project: editProjectState.project.id
+      project: editProjectState.id
     }
     // mock no members
     mockGetTeamForProject.mockResolvedValueOnce(mockTeamMembers)
@@ -456,7 +456,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     const editedMember = {
       ...mockTeamMembers[0],
       // we use project id from context
-      project: editProjectState.project.id,
+      project: editProjectState.id,
       // new avatar
       avatar_id: newAvatarId
     }

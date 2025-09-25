@@ -7,7 +7,7 @@ import {notFound} from 'next/navigation'
 
 import {getUserFromToken} from '~/auth'
 import {isOrganisationMaintainer} from '~/auth/permissions/isMaintainerOfOrganisation'
-import {getUserSettings} from '~/utils/userSettingsApp'
+import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {ssrSoftwareParams} from '~/utils/extractQueryParam'
 import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import PaginationLinkApp from '~/components/layout/PaginationLinkApp'

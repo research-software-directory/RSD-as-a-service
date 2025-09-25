@@ -5,12 +5,12 @@
 
 'use client'
 
-import SearchInput from '~/components/search/SearchInput'
-import {OrganisationListProps} from '~/types/Organisation'
 import {useUserSettings} from '~/config/UserSettingsContext'
+import {OrganisationListProps} from '~/types/Organisation'
 import useHandleQueryChange from '~/utils/useHandleQueryChange'
-import ViewToggleGroup from '~/components/projects/overview/search/ViewToggleGroup'
-import SelectRows from '~/components/software/overview/search/SelectRows'
+import SearchInput from '~/components/search/SearchInput'
+import ToggleViewGroup from '~/components/search/ToggleViewGroup'
+import ShowItemsSelect from '~/components/search/ShowItemsSelect'
 import OrganisationListView from '~/components/organisation/overview/OrganisationList'
 import OrganisationGrid from '~/components/organisation/overview/OrganisationGrid'
 import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
@@ -28,7 +28,7 @@ export default function OrganisationsOverviewClient({
 }: OrganisationsOverviewProps) {
 
   const {handleQueryChange} = useHandleQueryChange()
-  const {rsd_page_layout,setPageLayout} = useUserSettings()
+  const {rsd_page_layout,setPageLayout,setPageRows} = useUserSettings()
   const numPages = Math.ceil(count / rows)
 
   // if masonry we change to grid
@@ -46,16 +46,19 @@ export default function OrganisationsOverviewClient({
             onSearch={(search: string) => handleQueryChange('search', search)}
             defaultValue={search ?? undefined}
           />
-          <ViewToggleGroup
-            layout={view}
-            onSetView={setPageLayout}
+          <ToggleViewGroup
+            view={view}
+            onChangeView={setPageLayout}
             sx={{
               marginLeft:'0.5rem'
             }}
           />
-          <SelectRows
-            rows={rows}
-            handleQueryChange={handleQueryChange}
+          <ShowItemsSelect
+            items={rows}
+            onItemsChange={(items)=>{
+              setPageRows(items)
+              handleQueryChange('rows', items.toString())
+            }}
           />
         </div>
       </div>
@@ -69,7 +72,6 @@ export default function OrganisationsOverviewClient({
       <PaginationLinkApp
         count={numPages}
         page={page}
-        className="mb-10"
       />
     </>
   )

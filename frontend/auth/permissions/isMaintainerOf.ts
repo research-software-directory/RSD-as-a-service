@@ -1,11 +1,13 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import logger from '~/utils/logger'
 import {isMaintainerOfSoftware} from './isMaintainerOfSoftware'
 import {isMaintainerOfProject} from './isMaintainerOfProject'
-import logger from '~/utils/logger'
 
 export type isMaintainerProps = {
   slug: string,

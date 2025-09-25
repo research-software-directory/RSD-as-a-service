@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,7 @@ import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
 import SoftwareCitationsTab from './index'
 
 // MOCKS
-import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
+import {initialState as softwareState} from '~/components/software/edit/context/editSoftwareContext'
 import citationForSoftware from './__mocks__/citationsForSoftware.json'
 
 // MOCK software mention context
@@ -61,7 +61,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
 
   it('renders mocked citations, ONLY first 50 items per group', async () => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // mock items
     mockSoftwareMentionContext.loading = false
     mockSoftwareMentionContext.citations = citationForSoftware as any

@@ -38,7 +38,7 @@ export default function RsdInvitePage({id,providers}:RsdInvitePageProps) {
   return (
     <PageBackground>
       <AppHeader />
-      <MainContent className="justify-center items-center">
+      <MainContent className="justify-center items-center px-4 lg:container lg:mx-auto">
         {
           id ?
             <section className="bg-base-100 p-12 rounded-md">

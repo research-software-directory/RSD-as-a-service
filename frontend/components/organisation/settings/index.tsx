@@ -11,7 +11,7 @@ import {notFound} from 'next/navigation'
 
 import {createSession} from '~/auth'
 import {isOrganisationMaintainer} from '~/auth/permissions/isMaintainerOfOrganisation'
-import {getUserSettings} from '~/utils/userSettingsApp'
+import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import ProtectedContent from '~/components/layout/ProtectedContent'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'

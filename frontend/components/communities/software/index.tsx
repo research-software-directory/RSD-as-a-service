@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {ssrSoftwareParams} from '~/utils/extractQueryParam'
-import {getUserSettings} from '~/utils/userSettingsApp'
+import {getUserSettings} from '~/components/user/ssrUserSettings'
 import FiltersPanel from '~/components/filter/FiltersPanel'
 import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
 import {CommunityRequestStatus, getSoftwareForCommunity} from '~/components/communities/software/apiCommunitySoftware'

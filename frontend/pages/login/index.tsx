@@ -30,7 +30,7 @@ export default function LoginPage({providers}:Readonly<{providers:Provider[]}>) 
   return (
     <PageBackground>
       <AppHeader />
-      <MainContent className="justify-center items-center">
+      <MainContent className="justify-center items-center px-4 lg:container lg:mx-auto">
         <section className="bg-base-100 p-12 rounded-md">
           <h1 className="flex-1">Sign in with</h1>
           <LoginProviders providers={providers} />

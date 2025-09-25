@@ -4,13 +4,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+import {useParams} from 'next/navigation'
 import Tabs from '@mui/material/Tabs'
 
 import {useSession} from '~/auth/AuthProvider'
 import useRsdSettings from '~/config/useRsdSettings'
+import TabAsLink from '~/components/layout/TabAsLink'
+import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import {UserCounts, useUserContext} from '~/components/user/context/UserContext'
 import {UserPageId, userTabItems} from './UserTabItems'
-import TabAsLink from '~/components/layout/TabAsLink'
 
 // extract tab items (object keys)
 const tabItems = Object.keys(userTabItems) as UserPageId[]
@@ -27,12 +30,12 @@ function useSelectedTab(tab_id: UserPageId|null): UserPageId {
 }
 
 export type UserTabsProps=Readonly<{
-  tab: UserPageId
   counts: UserCounts
 }>
 
-export default function UserTabs({tab,counts}:UserTabsProps) {
-  const select_tab = useSelectedTab(tab)
+export default function UserTabs({counts}:UserTabsProps) {
+  const params = useParams()
+  const select_tab = useSelectedTab(params?.tab as UserPageId ?? null)
   const {activeModules} = useRsdSettings()
   const {user} = useSession()
   const {profile} = useUserContext()
@@ -40,32 +43,38 @@ export default function UserTabs({tab,counts}:UserTabsProps) {
   const isMaintainer = user?.role==='rsd_admin' ? true : user?.account === profile?.account
 
   // console.group('UserTabs')
+  // console.log('params...', params)
   // console.log('select_tab...', select_tab)
   // console.log('profile...', profile)
   // console.groupEnd()
 
   return (
-    <Tabs
-      variant="scrollable"
-      allowScrollButtonsMobile
-      value={select_tab}
-      aria-label="User profile tabs"
+    <BaseSurfaceRounded
+      className="my-4 p-2"
+      type="section"
     >
-      {tabItems.map(key => {
-        const item = userTabItems[key]
-        if (item.isVisible({
-          modules: activeModules,
-          isMaintainer
-        })) {
-          return <TabAsLink
-            icon={item.icon}
-            key={key}
-            label={item.label(counts)}
-            value={key}
-            href={key}
-            scroll={false}
-          />
-        }})}
-    </Tabs>
+      <Tabs
+        variant="scrollable"
+        allowScrollButtonsMobile
+        value={select_tab}
+        aria-label="User profile tabs"
+      >
+        {tabItems.map(key => {
+          const item = userTabItems[key]
+          if (item.isVisible({
+            modules: activeModules,
+            isMaintainer
+          })) {
+            return <TabAsLink
+              icon={item.icon}
+              key={key}
+              label={item.label(counts)}
+              value={key}
+              href={key}
+              scroll={false}
+            />
+          }})}
+      </Tabs>
+    </BaseSurfaceRounded>
   )
 }

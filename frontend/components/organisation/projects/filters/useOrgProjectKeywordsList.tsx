@@ -12,7 +12,7 @@ import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {buildProjectFilter} from '~/components/projects/overview/filters/projectFiltersApi'
 import useOrganisationContext from '../../context/useOrganisationContext'
-import useProjectParams from '../useProjectParams'
+import useProjectParams from '../../../projects/overview/useProjectParams'
 
 export type OrgProjectFilterProps = {
   id: string

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -66,7 +66,7 @@ export default function useSoftwareOverviewParams() {
     const url = createUrl(key, value)
     if (key === 'rows'){
       // save number of rows in user settings (saves to cookie too)
-      setPageRows(parseInt(value.toString()))
+      setPageRows(Number.parseInt(value.toString()))
     }
     if (key === 'page') {
       // when changing page we scroll to top

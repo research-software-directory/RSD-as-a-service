@@ -7,26 +7,31 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
-import Pagination from '@mui/material/Pagination'
+'use client'
+import {useSearchParams} from 'next/navigation'
 
 import {getPageRange} from '~/utils/pagination'
+import useHandleQueryChange from '~/utils/useHandleQueryChange'
 import {useUserSettings} from '~/config/UserSettingsContext'
+import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
 import SearchPanel from '~/components/user/search/SearchPanel'
 import {useUserContext} from '~/components/user/context/UserContext'
 import UserProjectsOverview from './UserProjectsOverview'
 import useUserProjects from './useUserProjects'
 
 export default function UserProjects() {
+  const searchParams = useSearchParams()
+  const {handleQueryChange} = useHandleQueryChange()
   const {counts:{project_cnt}} = useUserContext()
   const {rsd_page_layout,rsd_page_rows,setPageLayout,setPageRows} = useUserSettings()
   // if masonry we change to grid
   const view = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
-  const [searchFor, setSearchFor] = useState<string>()
-  const [page, setPage] = useState<number>(0)
+  // extract search params and assign defaults if not present
+  const searchFor = searchParams?.get('search') ?? undefined
+  const page = Number.parseInt(searchParams?.get('page') ?? '1')
   const {loading, projects, count} = useUserProjects({
     searchFor,
-    page,
+    page: page ? page -1 : 0,
     rows:rsd_page_rows
   })
   // number of items to show in skeleton while loading
@@ -36,9 +41,8 @@ export default function UserProjects() {
 
   // console.group('UserProjects')
   // console.log('rsd_page_layout...', rsd_page_layout)
-  // console.log('layout...', layout)
   // console.log('view...', view)
-  // console.log('rows...', rows)
+  // console.log('rsd_page_rows...', rsd_page_rows)
   // console.log('page...', page)
   // console.log('loading...', loading)
   // console.log('projects...', projects)
@@ -47,14 +51,14 @@ export default function UserProjects() {
   // console.groupEnd()
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 flex flex-col">
       {/* SEARCH */}
       <SearchPanel
         placeholder='Find project'
         layout={view}
         rows={rsd_page_rows}
-        search={searchFor ?? null}
-        onSearch={setSearchFor}
+        search={searchFor}
+        onSearch={(search)=>handleQueryChange('search',search)}
         onSetView={setPageLayout}
         onSetRows={setPageRows}
       />
@@ -73,18 +77,11 @@ export default function UserProjects() {
       />
 
       {/* Pagination */}
-      {numPages > 1 &&
-        <div className="flex flex-wrap justify-center mt-8">
-          <Pagination
-            count={numPages}
-            page={page + 1}
-            onChange={(_, page) => {
-              // handleQueryChange('page',page.toString())
-              setPage(page-1)
-            }}
-          />
-        </div>
-      }
+      <PaginationLinkApp
+        count={numPages}
+        page={page}
+        className="py-6"
+      />
     </div>
   )
 }

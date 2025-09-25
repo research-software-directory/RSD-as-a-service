@@ -7,7 +7,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
+'use client'
+// import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
+import useHandleQueryChange from '~/utils/useHandleQueryChange'
 import OrderBy from '~/components/filter/OrderBy'
 import {highlightOrderOptions, softwareOrderOptions} from './softwareOrderOptions'
 
@@ -16,7 +18,7 @@ type OrderByProps = {
 }
 
 export function OrderHighlightsBy({orderBy}: OrderByProps) {
-  const {handleQueryChange} = useSoftwareOverviewParams()
+  const {handleQueryChange} = useHandleQueryChange()
   return (
     <OrderBy
       order={orderBy}
@@ -27,7 +29,7 @@ export function OrderHighlightsBy({orderBy}: OrderByProps) {
 }
 
 export default function OrderSoftwareBy({orderBy}: OrderByProps) {
-  const {handleQueryChange} = useSoftwareOverviewParams()
+  const {handleQueryChange} = useHandleQueryChange()
   return (
     <OrderBy
       order={orderBy}

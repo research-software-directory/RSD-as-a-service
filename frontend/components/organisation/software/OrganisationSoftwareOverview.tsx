@@ -13,8 +13,8 @@ import Link from 'next/link'
 import {SoftwareOfOrganisation} from '~/types/Organisation'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import NoContent from '~/components/layout/NoContent'
+import GridOverview from '~/components/layout/GridOverview'
 import SoftwareGridCard from '~/components/software/overview/cards/SoftwareGridCard'
-import SoftwareOverviewGrid from '~/components/software/overview/cards/SoftwareOverviewGrid'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
 import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
@@ -67,7 +67,7 @@ export default function OrganisationSoftwareOverview({software,isMaintainer}: Or
 
   // GRID as default
   return (
-    <SoftwareOverviewGrid>
+    <GridOverview>
       {software.map((item) => {
         if (isMaintainer) {
           return (
@@ -76,7 +76,7 @@ export default function OrganisationSoftwareOverview({software,isMaintainer}: Or
         }
         return <SoftwareGridCard key={item.id} {...item}/>
       })}
-    </SoftwareOverviewGrid>
+    </GridOverview>
   )
 
 }

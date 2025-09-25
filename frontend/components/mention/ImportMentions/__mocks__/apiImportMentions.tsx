@@ -1,44 +1,25 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {MentionItemProps} from '~/types/Mention'
 
 // MOCKED responses
-
 import mockMentionResponse from './addMentions.json'
-
-async function mockValidateInput(value: string){
-  const doiList = value.split(/\r\n|\n|\r/)
-  const results = new Map()
-
-  // Just return all values as VALID
-  doiList.forEach((doi) => {
-    results.set(doi.toLocaleLowerCase(), {
-      doi: doi.toLocaleLowerCase(),
-      status: 'valid',
-      include: true,
-      source: 'Crossref',
-      mention: {
-        id: null,
-        doi,
-        title: `Test item ${doi}`
-      }
-    })
-  })
-
-  // console.log('mockValidateInput...results...', results)
-  return results
-}
+import {DoiBulkImportReport} from '../apiImportMentions'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function useValidateInputList(token: string) {
-  // console.log('useValidateInputList...default MOCK...token...', token)
-  return {
-    validateInput: mockValidateInput,
-    validating: false
-  }
+export async function validateInputList(doiList: string[], mentions: MentionItemProps[], token: string) {
+  // here we put validation results for each doi from doiList
+  const mentionResultPerDoi: DoiBulkImportReport = new Map()
+
+  doiList.forEach((doi,pos)=>{
+
+    mentionResultPerDoi.set(doi,{doi, status: 'valid', include: true, source: 'RSD', mention: mentions[pos]})
+  })
+
+  return mentionResultPerDoi
 }
 
 

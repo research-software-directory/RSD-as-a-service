@@ -8,7 +8,7 @@
 
 import OrderBy from '~/components/filter/OrderBy'
 import useQueryChange from '../useQueryChange'
-import useProjectParams from '../useProjectParams'
+import useProjectParams from '../../../projects/overview/useProjectParams'
 import useOrganisationContext from '~/components/organisation/context/useOrganisationContext'
 import {getProjectOrderOptions} from './OrgProjectOrderOptions'
 

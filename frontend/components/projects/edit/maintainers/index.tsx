@@ -6,6 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState} from 'react'
 
 import ContentLoader from '~/components/layout/ContentLoader'
@@ -13,7 +14,7 @@ import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import MaintainersList from '~/components/maintainers/MaintainersList'
-import useProjectContext from '../useProjectContext'
+import useProjectContext from '../context/useProjectContext'
 import {maintainers as config} from './config'
 import ProjectMaintainerLinks from './ProjectMaintainerLinks'
 import {useProjectMaintainers} from './useProjectMaintainers'

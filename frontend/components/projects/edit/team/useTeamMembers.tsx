@@ -5,19 +5,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useCallback, useEffect, useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
 import {TeamMember} from '~/types/Project'
 import {PatchPerson, PersonProps} from '~/types/Contributor'
-import {getTeamForProject} from '~/utils/getProjects'
+import {getTeamForProject} from '~/components/projects/apiProjects'
 import {deleteImage, saveBase64Image} from '~/utils/editImage'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import {sortOnNumProp} from '~/utils/sortFn'
 import {getDisplayName} from '~/utils/getDisplayName'
 import {FormPerson} from '~/components/person/AggregatedPersonModal'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import useProjectContext from '../useProjectContext'
+import useProjectContext from '../context/useProjectContext'
 import {
   deleteTeamMemberById, patchTeamMember,
   patchTeamMemberPositions, postTeamMember

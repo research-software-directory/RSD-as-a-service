@@ -96,14 +96,10 @@ export async function findRSDOrganisation({searchFor, token, rorIds}:
   }
 }
 
-export async function getOrganisationsForSoftware({software, token, frontend = true}:
-  { software: string, token?: string, frontend?: boolean }) {
+export async function getOrganisationsForSoftware({software, token}:
+  { software: string, token?: string }) {
   const query = `rpc/organisations_of_software?software_id=${software}&order=position,name.asc`
-  let url = `/api/v1/${query}`
-  if (frontend === false) {
-    // SSR request within docker network
-    url = `${process.env.POSTGREST_URL}/${query}`
-  }
+  const url = `${getBaseUrl()}/${query}`
   try {
     const resp = await fetch(url, {
       method: 'GET',
@@ -122,9 +118,9 @@ export async function getOrganisationsForSoftware({software, token, frontend = t
   }
 }
 
-export async function getParticipatingOrganisations({software, token, frontend = true}:
-  {software: string, token?: string, frontend?: boolean}) {
-  const resp = await getOrganisationsForSoftware({software, token, frontend})
+export async function getParticipatingOrganisations({software, token}:
+  {software: string, token?: string}) {
+  const resp = await getOrganisationsForSoftware({software, token})
   // filter only approved organisations
   // extract only properties used
   // sort on name

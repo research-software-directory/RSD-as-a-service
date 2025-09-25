@@ -20,6 +20,9 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
+      "~/app/*": [
+        "app/*"
+      ],
       "~/assets/*": [
         "assets/*"
       ],

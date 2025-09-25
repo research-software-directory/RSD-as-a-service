@@ -35,8 +35,8 @@ type AboutSectionType = {
   categories: CategoriesForSoftware
   licenses: LicenseForSoftware[]
   repository: string | null
-  platform: CodePlatform
-  languages: ProgramingLanguages
+  platform?: CodePlatform
+  languages?: ProgramingLanguages
   image_id: string | null
   packages: PackageManager[]
   swhids: SoftwareHeritageItem[]
@@ -69,7 +69,7 @@ export default function AboutSection(props:AboutSectionType) {
             : null
         }
 
-        <SoftwareKeywords keywords={keywords || []} />
+        <SoftwareKeywords keywords={keywords} />
 
         <AboutLanguages languages={languages} platform={platform} />
 

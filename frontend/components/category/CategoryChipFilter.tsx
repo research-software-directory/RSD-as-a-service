@@ -3,8 +3,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {Fragment, useEffect, useState} from 'react'
-import {useRouter} from 'next/router'
+import {usePathname} from 'next/navigation'
 
 import {buildFilterUrl, ssrSoftwareUrl} from '~/utils/postgrestUrl'
 import {CategoryEntry} from '~/types/Category'
@@ -15,10 +17,10 @@ import {getCommunitySlug, getOrganisationSlug} from './apiCategories'
 function useFilterUrl(cat:CategoryEntry){
   const [loading, setLoading] = useState(true)
   const [url, setUrl] = useState<string>()
-  const router = useRouter()
   const {short_name,community,organisation,status} = cat
   // extract tab from the pathname
-  const tab = router.pathname.split('/')[1]
+  const pathname = usePathname()
+  const tab = pathname?.split('/')[1]
 
   useEffect(()=>{
     if (short_name && tab){

@@ -23,7 +23,7 @@ import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useSession} from '~/auth/AuthProvider'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContext from '../context/useSoftwareContext'
 import {deleteServiceDataFromDb} from './apiSoftwareServices'
 
 

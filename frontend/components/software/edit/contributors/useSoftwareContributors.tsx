@@ -13,7 +13,7 @@ import {deleteImage, saveBase64Image} from '~/utils/editImage'
 import {getDisplayName} from '~/utils/getDisplayName'
 import {sortOnNumProp} from '~/utils/sortFn'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContext from '../context/useSoftwareContext'
 import {
   getContributorsForSoftware, postContributor,
   patchContributor, patchContributorPositions,

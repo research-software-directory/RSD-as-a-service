@@ -14,7 +14,8 @@ import {Provider} from '~/auth/api/getLoginProviders'
 import {RsdSettingsState,defaultRsdSettings} from '~/config/rsdSettingsReducer'
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 import {UserSettingsProps, UserSettingsProvider} from '~/config/UserSettingsContext'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
+import {SoftwareLayoutType} from '~/components/search/ToggleViewGroup'
+
 
 export type WrapProps = {
   props?: any
@@ -45,7 +46,7 @@ export const mockSession:Session = {
 }
 
 export const defaultUserSettings={
-  rsd_page_layout:'grid' as LayoutType,
+  rsd_page_layout:'grid' as SoftwareLayoutType,
   rsd_page_rows: 12,
   avatar_id: null
 }

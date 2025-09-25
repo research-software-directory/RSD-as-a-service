@@ -5,15 +5,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState,useEffect} from 'react'
 import {SelectChangeEvent} from '@mui/material/Select'
 
-import DarkThemeProvider from '../layout/DarkThemeProvider'
-import PageContainer from '../layout/PageContainer'
+import DarkThemeProvider from '~/components/layout/DarkThemeProvider'
+import PageContainer from '~/components/layout/PageContainer'
+import {SoftwareVersion} from '~/components/software/apiSoftware'
 import CiteDropdown from './CiteDropdown'
 import CitationDoi from './CitationDoi'
 import CitationDownload from './CitationDownload'
-import {SoftwareVersion} from '~/utils/getSoftware'
 
 export default function CitationSection({releases,concept_doi}:
   {releases:SoftwareVersion[]|null, concept_doi:string|null}) {
@@ -45,7 +46,7 @@ export default function CitationSection({releases,concept_doi}:
   })
 
   function onVersionChange({target}:{target:SelectChangeEvent['target']}){
-    const pos = parseInt(target?.value)
+    const pos = Number.parseInt(target?.value)
     if (releases) {
       const cite = releases[pos]
       // update local state

@@ -39,7 +39,7 @@ export default function ItemsPerPage({items,onItemsPerPage}:ItemsPerPageProps) {
         // label="Items"
         onChange={({target}) =>{
           // console.log('rows...', target.value)
-          onItemsPerPage(parseInt(target?.value.toString()))
+          onItemsPerPage(Number.parseInt(target?.value.toString()))
         }}
         sx={{
           border: '1px solid #fff'

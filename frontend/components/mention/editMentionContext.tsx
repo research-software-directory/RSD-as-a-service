@@ -6,6 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {createContext,JSX} from 'react'
 import {MentionItemProps} from '~/types/Mention'
 import {EditMentionAction, EditMentionState} from './editMentionReducer'

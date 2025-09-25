@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState} from 'react'
-import {useRouter} from 'next/router'
+import {useParams} from 'next/navigation'
 import {SelectChangeEvent} from '@mui/material/Select'
 import Button from '@mui/material/Button'
 import DownloadIcon from '@mui/icons-material/Download'
@@ -23,15 +25,15 @@ function getAvailableOptions(){
 }
 
 export default function CitationDownload({doi}: {doi:string}) {
-  const router = useRouter()
+  const params = useParams()
   const options = getAvailableOptions()
   const [selected, setSelected] = useState<string>()
 
   function getFileName(format: string) {
     const download = citationOptions[format]
     let baseName = format
-    if (router.query['slug']) {
-      baseName = router.query['slug'].toString()
+    if (params?.slug) {
+      baseName = params?.slug.toString()
     }
     return `${baseName}.${download.ext}`
   }

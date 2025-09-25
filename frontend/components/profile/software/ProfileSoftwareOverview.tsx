@@ -10,8 +10,8 @@ import Link from 'next/link'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import NoContent from '~/components/layout/NoContent'
+import GridOverview from '~/components/layout/GridOverview'
 import SoftwareGridCard from '~/components/software/overview/cards/SoftwareGridCard'
-import SoftwareOverviewGrid from '~/components/software/overview/cards/SoftwareOverviewGrid'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
 import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
@@ -51,11 +51,11 @@ export default function ProfileSoftwareOverview({software}:ProfileSoftwareOvervi
 
   // GRID as default
   return (
-    <SoftwareOverviewGrid fullWidth={true}>
+    <GridOverview fullWidth={true}>
       {software.map((item) => {
         return <SoftwareGridCard key={item.id} {...item}/>
       })}
-    </SoftwareOverviewGrid>
+    </GridOverview>
   )
 
 }

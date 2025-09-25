@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState} from 'react'
 import DialogContent from '@mui/material/DialogContent'
 import TextField from '@mui/material/TextField'
@@ -15,8 +16,8 @@ import Box from '@mui/material/Box'
 import {useSession} from '~/auth/AuthProvider'
 import ImportDialogTitle from './ImportDialogTitle'
 import ImportDialogActions from './ImportDialogActions'
-import {DoiBulkImportReport, useValidateInputList} from './apiImportMentions'
-
+import {DoiBulkImportReport} from './apiImportMentions'
+import useValidateInputList from './useValidateInputList'
 import config from './config'
 
 type DoiInputDialogBodyProps = {

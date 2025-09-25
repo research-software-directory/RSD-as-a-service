@@ -9,9 +9,9 @@ import Link from 'next/link'
 
 import {useUserSettings} from '~/config/UserSettingsContext'
 import NoContent from '~/components/layout/NoContent'
+import GridOverview from '~/components/layout/GridOverview'
 import SoftwareGridCard from '~/components/software/overview/cards/SoftwareGridCard'
 import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
-import SoftwareOverviewGrid from '~/components/software/overview/cards/SoftwareOverviewGrid'
 import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import AdminSoftwareGridCard from './card/AdminSoftwareGridCard'
@@ -66,7 +66,7 @@ export default function CommunitySoftwareOverview({software,isMaintainer}: Commu
 
   // GRID as default
   return (
-    <SoftwareOverviewGrid>
+    <GridOverview>
       {software.map((item) => {
         if (isMaintainer) {
           return (
@@ -75,7 +75,7 @@ export default function CommunitySoftwareOverview({software,isMaintainer}: Commu
         }
         return <SoftwareGridCard key={item.id} {...item}/>
       })}
-    </SoftwareOverviewGrid>
+    </GridOverview>
   )
 
 }
