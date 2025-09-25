@@ -20,7 +20,7 @@ type NewsOverviewProps = Readonly<{
   pages: number,
   rows: number,
   news: NewsListItem[],
-  search?: string,
+  search?: string|null,
 }>
 
 export default function NewsOverview({pages,page,rows,search,news}:NewsOverviewProps) {

@@ -4,27 +4,30 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
+'use client'
+
+import {useParams} from 'next/navigation'
 import Tabs from '@mui/material/Tabs'
 
 import useRsdSettings from '~/config/useRsdSettings'
 import TabAsLink from '~/components/layout/TabAsLink'
 import {useProfileContext} from '~/components/profile/context/ProfileContext'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
-import {ProfileTabKey, profileTabItems} from './ProfileTabItems'
-
-type ProfileTabsProps={
-  tab_id: ProfileTabKey,
-  isMaintainer: boolean
-}
+import {ProfileTabKey, defaultTabId, profileTabItems} from './ProfileTabItems'
 
 // extract tab items (object keys)
 const tabItems = Object.keys(profileTabItems) as ProfileTabKey[]
 
-export default function ProfileTabs({tab_id, isMaintainer}:ProfileTabsProps) {
-  const router = useRouter()
+export default function ProfileTabs() {
+  const params = useParams()
   const {activeModules} = useRsdSettings()
   const {software_cnt,project_cnt} = useProfileContext()
+
+  // console.group('ProfileTabs')
+  // console.log('params...', params)
+  // console.log('software_cnt...', software_cnt)
+  // console.log('project_cnt...', project_cnt)
+  // console.groupEnd()
 
   // if only one module active we do not show tabs
   if (
@@ -35,6 +38,8 @@ export default function ProfileTabs({tab_id, isMaintainer}:ProfileTabsProps) {
       <div className="my-2"></div>
     )
   }
+
+  const tab_id = params?.['tab'] ?? defaultTabId
 
   return (
     <BaseSurfaceRounded
@@ -50,11 +55,13 @@ export default function ProfileTabs({tab_id, isMaintainer}:ProfileTabsProps) {
       >
         {tabItems.map(key => {
           const item = profileTabItems[key]
-          if (item.isVisible({isMaintainer,modules:activeModules})===true){
+          const url = `/persons/${params?.['id'].toString()}/${key}`
+          // console.log('url...', url)
+          if (item.isVisible({isMaintainer:false,modules:activeModules})===true){
             return (
               <TabAsLink
                 key={key}
-                href={`../${router.query['id']}/${key}`}
+                href={url}
                 value={key}
                 icon={item.icon}
                 label={item.label({

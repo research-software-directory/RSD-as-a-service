@@ -180,7 +180,7 @@ type GetNewsListProps={
   rows: number
   is_published?: boolean,
   token?:string
-  searchFor?: string
+  searchFor?: string|null
   orderBy?: string
 }
 
@@ -202,7 +202,6 @@ export async function getNewsList({page,rows,is_published=true,token,searchFor,o
       query += '&is_published=eq.true'
     }
     const url = `${getBaseUrl()}/news?select=${select}&${query}`
-
     // get page
     const resp = await fetch(url, {
       method: 'GET',

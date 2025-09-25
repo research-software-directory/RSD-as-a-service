@@ -159,22 +159,22 @@ export function ssrSoftwareParams(query: ParsedUrlQuery) {
   // extract filters shared by project and software
   const {keywords, categories} = sharedFilters(query)
   // extract software specific filters
-  const prog_lang:string[]|undefined = decodeQueryParam({
+  const prog_lang:string[]|null = decodeQueryParam({
     query,
     param: 'prog_lang',
     castToType: 'json-encoded',
-    defaultValue: undefined
+    defaultValue: null
   })
-  const licenses:string[]|undefined = decodeQueryParam({
+  const licenses:string[]|null = decodeQueryParam({
     query,
     param: 'licenses',
     castToType: 'json-encoded',
-    defaultValue: undefined
+    defaultValue: null
   })
-  const rsd_host:string|undefined = decodeQueryParam({
+  const rsd_host:string|null = decodeQueryParam({
     query,
     param: 'rsd_host',
-    defaultValue: undefined
+    defaultValue: null
   })
 
   return {
@@ -228,18 +228,18 @@ export function ssrProjectsParams(query: ParsedUrlQuery) {
 }
 
 export function sharedFilters(query: ParsedUrlQuery){
-  const keywords:string[]|undefined = decodeQueryParam({
+  const keywords:string[]|null = decodeQueryParam({
     query,
     param: 'keywords',
     castToType: 'json-encoded',
-    defaultValue: undefined
+    defaultValue: null
   })
 
-  const categories:string[]|undefined = decodeQueryParam({
+  const categories:string[]|null = decodeQueryParam({
     query,
     param: 'categories',
     castToType: 'json-encoded',
-    defaultValue: undefined
+    defaultValue: null
   })
 
   return {
@@ -255,10 +255,10 @@ export function sharedFilters(query: ParsedUrlQuery){
  * @returns
  */
 export function ssrBasicParams(query: ParsedUrlQuery) {
-  const rows:number|undefined = decodeQueryParam({
+  const rows:number|null = decodeQueryParam({
     query,
     param: 'rows',
-    defaultValue: undefined,
+    defaultValue: null,
     castToType: 'number'
   })
   const page:number = decodeQueryParam({
@@ -267,20 +267,20 @@ export function ssrBasicParams(query: ParsedUrlQuery) {
     defaultValue: 1,
     castToType: 'number'
   })
-  const search:string|undefined = decodeQueryParam({
+  const search:string|null = decodeQueryParam({
     query,
     param: 'search',
-    defaultValue: undefined,
+    defaultValue: null,
     // search string is already decoded by next
     // and decodeURIComponent fails when % is in the string to decode
     // see this issue https://github.com/vercel/next.js/issues/10080
     castToType:'raw'
   })
-  const order:string|undefined = decodeQueryParam({
+  const order:string|null = decodeQueryParam({
     query,
     param: 'order',
     castToType: 'string',
-    defaultValue: undefined
+    defaultValue: null
   })
   return {
     search,
