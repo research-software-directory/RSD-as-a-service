@@ -5,44 +5,40 @@
 
 'use client'
 
-import {useUserSettings} from '~/config/UserSettingsContext'
 import useHandleQueryChange from '~/utils/useHandleQueryChange'
 import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import SearchInput from '~/components/search/SearchInput'
 import ToggleViewGroup from '~/components/search/ToggleViewGroup'
 import ShowItemsSelect from '~/components/search/ShowItemsSelect'
-import {CommunityListProps} from '../apiCommunities'
-import CommunitiesList from './CommunitiesList'
-import CommunitiesGrid from './CommunitiesGrid'
+import {NewsListItem} from '~/components/news/apiNews'
+import NewsList from './list'
+import NewsGrid from './NewsGrid'
 
-type CommunitiesOverviewProps = Readonly<{
-  count: number,
+type NewsOverviewProps = Readonly<{
   page: number,
+  pages: number,
   rows: number,
-  communities: CommunityListProps[],
+  news: NewsListItem[],
   search?: string|null,
 }>
 
-export default function CommunitiesOverview({
-  communities = [], count, page, rows, search
-}: CommunitiesOverviewProps) {
+export default function NewsOverview({pages,page,rows,search,news}:NewsOverviewProps) {
   const {handleQueryChange} = useHandleQueryChange()
   const {rsd_page_layout,setPageLayout,setPageRows} = useUserSettings()
-  const numPages = Math.ceil(count / rows)
 
   // if masonry we change to grid
   const view = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
 
   return (
     <>
-      {/* Page title with search and pagination */}
       <div className="flex flex-wrap mt-4 py-8 px-4 rounded-lg bg-base-100 lg:sticky top-0 border border-base-200 z-11">
         <h1 className="mr-4 lg:flex-1">
-          Communities
+          News
         </h1>
         <div className="flex-2 flex min-w-[20rem]">
           <SearchInput
-            placeholder="Search community by name or short description"
+            placeholder="Search news items by title, summary or author"
             onSearch={(search: string) => handleQueryChange('search', search)}
             defaultValue={search ?? ''}
           />
@@ -63,16 +59,16 @@ export default function CommunitiesOverview({
         </div>
       </div>
 
-      {/* community cards, grid is default */}
+      {/* news cards, grid is default */}
       {view === 'list' ?
-        <CommunitiesList items={communities} />
+        <NewsList news={news} />
         :
-        <CommunitiesGrid items={communities} />
+        <NewsGrid news={news} />
       }
 
       {/* Pagination */}
       <PaginationLinkApp
-        count={numPages}
+        count={pages}
         page={page}
         className="mb-10"
       />

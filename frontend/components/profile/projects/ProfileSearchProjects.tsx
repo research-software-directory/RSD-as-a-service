@@ -1,29 +1,33 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
-import useQueryChange from '~/components/organisation/projects/useQueryChange'
-import useProjectParams from '~/components/organisation/projects/useProjectParams'
-import ProfileSearchPanel from '~/components/profile/ProfileSearchPanel'
+'use client'
+import {useEffect} from 'react'
+
 import {getPageRange} from '~/utils/pagination'
-
-type ProfileSearchSoftware = {
-  count: number
-  layout: ProjectLayoutType
-  setView: (view:ProjectLayoutType)=>void
-}
-
+import {useUserSettings} from '~/config/UserSettingsContext'
+import ProfileSearchPanel from '~/components/profile/ProfileSearchPanel'
+import {ProfileSearch} from '~/components/profile/software/ProfileSearchSoftware'
+import {useProfileContext} from '~/components/profile/context/ProfileContext'
 
 export default function ProfileSearchProjects({
-  count, layout, setView
-}: ProfileSearchSoftware) {
-  const {search,page,rows} = useProjectParams()
-  const {handleQueryChange} = useQueryChange()
+  search,count,page,rows,
+}: ProfileSearch) {
+  const {rsd_page_layout} = useUserSettings()
+  const {project_cnt,setProjectCnt} = useProfileContext()
 
   const placeholder = 'Find project'
+  const layout = rsd_page_layout==='masonry' ? 'grid' : rsd_page_layout
+
+  /**Sync most recent count with software count shown in the tab */
+  useEffect(()=>{
+    if (count!==project_cnt){
+      setProjectCnt(count)
+    }
+  },[count,project_cnt,setProjectCnt])
 
   // console.group('ProfileSearchSoftware')
   // console.log('page...', page)
@@ -35,11 +39,9 @@ export default function ProfileSearchProjects({
     <section data-testid="search-section">
       <ProfileSearchPanel
         placeholder={placeholder}
-        layout={layout}
+        view={layout}
         rows={rows}
         search={search}
-        onSetView={setView}
-        handleQueryChange={handleQueryChange}
       />
       <div className="flex justify-between items-center px-1 py-2">
         <div className="text-sm opacity-70">

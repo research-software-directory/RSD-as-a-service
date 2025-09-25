@@ -14,12 +14,12 @@ export type CommunityRequestStatus='approved'|'pending'|'rejected'
 export type SoftwareForCommunityParams = {
   community: string,
   software_status: CommunityRequestStatus
-  searchFor?: string
+  searchFor?: string | null
   keywords?: string[] | null
   prog_lang?: string[] | null
   licenses?: string[] | null
   categories?: string[] | null
-  order?: string
+  order?: string | null
   page: number,
   rows: number,
   isMaintainer: boolean

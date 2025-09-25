@@ -11,7 +11,8 @@ import {isOrganisationMaintainer} from '~/auth/permissions/isMaintainerOfOrganis
 import {
   OrganisationForOverview,
   OrganisationListProps,
-  ProjectOfOrganisation, SoftwareOfOrganisation
+  ProjectOfOrganisation,
+  SoftwareOfOrganisation
 } from '~/types/Organisation'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
@@ -20,7 +21,7 @@ import {baseQueryString, paginationUrlParams} from '~/utils/postgrestUrl'
 
 
 export function organisationListUrl({search, rows = 12, page = 0}: {
-  search: string | undefined,
+  search: string | null,
   rows: number,
   page: number
 }) {
@@ -41,7 +42,7 @@ export function organisationListUrl({search, rows = 12, page = 0}: {
 }
 
 export async function getOrganisationsList({search, rows, page, token}: {
-  search: string | undefined,
+  search: string | null,
   rows: number,
   page: number,
   token: string | undefined
@@ -208,28 +209,6 @@ export async function getOrganisationChildren({uuid, token}: { uuid: string, tok
   return []
 }
 
-// export async function getOrganisationDescription({uuid, token}: { uuid: string, token?: string }) {
-//   const query = `organisation?id=eq.${uuid}&select=description`
-//   const url = `${getBaseUrl()}/${query}`
-//   // console.log('url...', url)
-//   const resp = await fetch(url, {
-//     method: 'GET',
-//     headers: {
-//       ...createJsonHeaders(token),
-//       // request single object item
-//       'Accept': 'application/vnd.pgrst.object+json'
-//     }
-//   })
-//   if (resp.status === 200) {
-//     const json: Organisation = await resp.json()
-//     return json.description
-//   }
-//   // otherwise request failed
-//   logger(`getOrganisationDescription failed: ${resp.status} ${resp.statusText}`, 'warn')
-//   // we log and return null
-//   return null
-// }
-
 export async function getOrganisationInfo({uuid, token}: { uuid: string, token?: string }) {
   const query = `organisation?id=eq.${uuid}&select=description,wikipedia_url,city,ror_types`
   const url = `${getBaseUrl()}/${query}`
@@ -259,7 +238,7 @@ export async function getOrganisationInfo({uuid, token}: { uuid: string, token?:
 
 export type OrganisationApiParams = {
   organisation: string,
-  searchFor?: string
+  searchFor?: string | null
   project_status?: string
   keywords?: string[] | null
   prog_lang?: string[] | null

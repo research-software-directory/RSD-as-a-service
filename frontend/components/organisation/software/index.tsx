@@ -8,7 +8,7 @@ import {notFound} from 'next/navigation'
 import {getUserFromToken} from '~/auth'
 import {isOrganisationMaintainer} from '~/auth/permissions/isMaintainerOfOrganisation'
 import {getUserSettings} from '~/utils/userSettingsApp'
-import {decodeJsonParam, getSoftwareParams} from '~/utils/extractQueryParam'
+import {ssrSoftwareParams} from '~/utils/extractQueryParam'
 import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
 import FiltersPanel from '~/components/filter/FiltersPanel'
@@ -52,7 +52,7 @@ export default async function OrganisationSoftware({slug,query}:OrganisationSoft
     token
   })
 
-  const params = getSoftwareParams(query)
+  const params = ssrSoftwareParams(query)
   const rows = params.rows ?? rsd_page_rows
 
   // build order query, default order is pinned (is_featured)
@@ -60,11 +60,15 @@ export default async function OrganisationSoftware({slug,query}:OrganisationSoft
 
   const software = await getSoftwareForOrganisation({
     organisation: uuid,
-    searchFor: params?.search ?? undefined,
-    keywords: decodeJsonParam(params.keywords_json,null),
-    prog_lang: decodeJsonParam(params.prog_lang_json,null),
-    licenses: decodeJsonParam(params.licenses_json,null),
-    categories: decodeJsonParam(params.categories_json,null),
+    searchFor: params?.search,
+    // keywords: decodeJsonParam(params.keywords_json,null),
+    // prog_lang: decodeJsonParam(params.prog_lang_json,null),
+    // licenses: decodeJsonParam(params.licenses_json,null),
+    // categories: decodeJsonParam(params.categories_json,null),
+    keywords: params.keywords,
+    prog_lang: params.prog_lang,
+    licenses: params.licenses,
+    categories: params.categories,
     order: orderBy,
     // api works with zero index
     page: params.page ? params.page - 1 : 0,

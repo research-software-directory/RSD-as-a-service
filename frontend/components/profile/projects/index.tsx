@@ -3,46 +3,58 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Pagination from '@mui/material/Pagination'
+import {notFound} from 'next/navigation'
 
-import {useUserSettings} from '~/config/UserSettingsContext'
-import useProjectParams from '~/components/organisation/projects/useProjectParams'
-import useQueryChange from '~/components/organisation/projects/useQueryChange'
-import {useProfileContext} from '~/components/profile/context/ProfileContext'
+import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
+import {ProfileProps} from '~/components/profile/software'
+import {getProfileProjects} from '~/components/profile/apiProfile'
 import ProfileSearchProjects from './ProfileSearchProjects'
 import ProfileProjectOverview from './ProfileProjectOverview'
 
-export default function ProfileProjects() {
-  const {project_cnt,projects} = useProfileContext()
-  const {page,rows,view} = useProjectParams()
-  const {setPageLayout} = useUserSettings()
-  const {handleQueryChange} = useQueryChange()
-  const numPages = Math.ceil(project_cnt / rows)
+export default async function ProfileProjects({search,orcid,account,page,rows,token}:ProfileProps) {
+
+  const data = await getProfileProjects({
+    // api works with zero index
+    page: page ? page-1 : 0,
+    search,
+    orcid,
+    account,
+    rows,
+    token
+  })
+  if (data===null){
+    return notFound()
+  }
+
+  const pages = Math.ceil(data.project_cnt / rows)
+
+  // console.group('ProfileProjects')
+  // console.log('page...', page)
+  // console.log('rows...', rows)
+  // console.log('software_cnt...', data.software_cnt)
+  // console.log('software...', data.software)
+  // console.groupEnd()
 
   return (
     <div className="flex-1">
       <ProfileSearchProjects
-        count={project_cnt}
-        layout={view}
-        setView={setPageLayout}
+        count={data.project_cnt}
+        page={page}
+        rows={rows}
+        search={search}
       />
+
       {/* project overview/content */}
       <ProfileProjectOverview
-        layout={view}
-        projects={projects}
+        projects={data.projects}
       />
+
       {/* Pagination */}
-      {numPages > 1 &&
-        <div className="flex flex-wrap justify-center mt-8">
-          <Pagination
-            count={numPages}
-            page={page}
-            onChange={(_, page) => {
-              handleQueryChange('page',page.toString())
-            }}
-          />
-        </div>
-      }
+      <PaginationLinkApp
+        count={pages}
+        page={page ?? 1}
+        className='mt-4'
+      />
     </div>
   )
 }

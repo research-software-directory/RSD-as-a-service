@@ -3,6 +3,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {FormProvider, useForm} from 'react-hook-form'
 
 import EditSection from '~/components/layout/EditSection'
@@ -38,7 +40,7 @@ export default function EditNewsItem({item}:{item:NewsItem}) {
         data-testid="news-item-form"
         id="news-item"
         // onSubmit={handleSubmit(onSubmit)}
-        className='flex-1 pb-12'>
+        className='flex-1 px-4 lg:container lg:mx-auto '>
         {/* hidden inputs */}
         <input type="hidden"
           {...register('id', {required:'id is required'})}

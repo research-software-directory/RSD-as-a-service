@@ -10,7 +10,7 @@ import {notFound} from 'next/navigation'
 import {getUserFromToken} from '~/auth'
 import {isOrganisationMaintainer} from '~/auth/permissions/isMaintainerOfOrganisation'
 import {getUserSettings} from '~/utils/userSettingsApp'
-import {decodeJsonParam, getProjectsParams} from '~/utils/extractQueryParam'
+import {ssrProjectsParams} from '~/utils/extractQueryParam'
 import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
 import FiltersPanel from '~/components/filter/FiltersPanel'
@@ -54,7 +54,7 @@ export default async function OrganisationProjects({slug,query}:OrganisationProj
     token
   })
 
-  const params = getProjectsParams(query)
+  const params = ssrProjectsParams(query)
   const rows = params.rows ?? rsd_page_rows
 
   // build order query, default order is pinned (is_featured)
@@ -64,10 +64,10 @@ export default async function OrganisationProjects({slug,query}:OrganisationProj
     organisation: uuid,
     searchFor: params?.search ?? undefined,
     project_status: params?.project_status ?? undefined,
-    keywords: decodeJsonParam(params.keywords_json,null),
-    domains: decodeJsonParam(params.domains_json,null),
-    organisations: decodeJsonParam(params.organisations_json,null),
-    categories: decodeJsonParam(params.categories_json, null),
+    keywords: params.keywords,
+    domains: params.domains,
+    organisations: params.organisations,
+    categories: params.categories,
     order: orderBy,
     // api works with zero
     page: params.page ? params.page-1 : 0,

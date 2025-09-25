@@ -22,8 +22,8 @@ export default function useHandleQueryChange() {
   const handleQueryChange = useCallback((key: string, value: string | string[]) => {
     // start with existing searchParams
     const urlParams = new URLSearchParams(searchParams ?? '')
-    // encode new param
-    const encodedValue = encodeQueryValue(value)
+    // encode only array values
+    const encodedValue = encodeQueryValue(value,false)
 
     if (encodedValue){
       if (urlParams.has(key)){

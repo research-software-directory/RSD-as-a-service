@@ -5,46 +5,42 @@
 
 'use client'
 
-import {useUserSettings} from '~/config/UserSettingsContext'
 import useHandleQueryChange from '~/utils/useHandleQueryChange'
-import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import SearchInput from '~/components/search/SearchInput'
-import ToggleViewGroup from '~/components/search/ToggleViewGroup'
+import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
 import ShowItemsSelect from '~/components/search/ShowItemsSelect'
-import {CommunityListProps} from '../apiCommunities'
-import CommunitiesList from './CommunitiesList'
-import CommunitiesGrid from './CommunitiesGrid'
+import ToggleViewGroup from '~/components/search/ToggleViewGroup'
+import {PersonsOverview} from './apiPersonsOverview'
+import PersonsList from './PersonsList'
+import PersonsGrid from './PersonsGrid'
 
-type CommunitiesOverviewProps = Readonly<{
-  count: number,
+type PersonsOverviewProps = Readonly<{
   page: number,
+  pages: number,
   rows: number,
-  communities: CommunityListProps[],
+  persons: PersonsOverview[],
   search?: string|null,
 }>
 
-export default function CommunitiesOverview({
-  communities = [], count, page, rows, search
-}: CommunitiesOverviewProps) {
+export default function PersonsOverviewClient({pages,page,rows,search,persons}:PersonsOverviewProps) {
   const {handleQueryChange} = useHandleQueryChange()
   const {rsd_page_layout,setPageLayout,setPageRows} = useUserSettings()
-  const numPages = Math.ceil(count / rows)
-
   // if masonry we change to grid
   const view = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
 
   return (
     <>
-      {/* Page title with search and pagination */}
+      {/* Page header */}
       <div className="flex flex-wrap mt-4 py-8 px-4 rounded-lg bg-base-100 lg:sticky top-0 border border-base-200 z-11">
         <h1 className="mr-4 lg:flex-1">
-          Communities
+          Persons
         </h1>
         <div className="flex-2 flex min-w-[20rem]">
           <SearchInput
-            placeholder="Search community by name or short description"
+            placeholder="Search person by name or affiliation"
             onSearch={(search: string) => handleQueryChange('search', search)}
-            defaultValue={search ?? ''}
+            defaultValue={search ?? undefined}
           />
           <ToggleViewGroup
             view={view}
@@ -62,17 +58,15 @@ export default function CommunitiesOverview({
           />
         </div>
       </div>
-
-      {/* community cards, grid is default */}
+      {/* Page body */}
       {view === 'list' ?
-        <CommunitiesList items={communities} />
+        <PersonsList items={persons}/>
         :
-        <CommunitiesGrid items={communities} />
+        <PersonsGrid items={persons}/>
       }
-
       {/* Pagination */}
       <PaginationLinkApp
-        count={numPages}
+        count={pages}
         page={page}
         className="mb-10"
       />

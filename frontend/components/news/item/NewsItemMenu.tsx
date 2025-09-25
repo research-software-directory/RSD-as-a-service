@@ -1,29 +1,45 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {useState} from 'react'
-import {useRouter} from 'next/router'
-import Button from '@mui/material/Button'
+import {useRouter} from 'next/navigation'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 import {useSession} from '~/auth/AuthProvider'
+import logger from '~/utils/logger'
 import {deleteImage} from '~/utils/editImage'
+import IconBtnMenuOnAction, {IconBtnMenuOption} from '~/components/menu/IconBtnMenuOnAction'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
-import {NewsImageProps, deleteNewsItem, deleteNewsImages} from '../apiNews'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import Link from 'next/link'
+import {NewsAction} from '~/components/news/overview/useOnNewsAction'
+import {deleteNewsImages, deleteNewsItem, NewsImageProps, NewsListItem} from '~/components/news/apiNews'
 
-type NavButtonsProps={
-  id:string
-  title:string
-  slug:string
-  image_for_news: NewsImageProps[]
-  isMaintainer: boolean
-  token: string
+function getMenuOptions(item:NewsListItem){
+  const menuOptions:IconBtnMenuOption<NewsAction>[]=[{
+    type:'action',
+    key: 'edit',
+    label: 'Edit article',
+    icon: <EditIcon />,
+    action:{
+      type: 'EDIT',
+      payload: `/news/${item.publication_date}/${item.slug}/edit`
+    }
+  },{
+    type:'action',
+    key: 'delete',
+    label: 'Delete article',
+    icon: <DeleteIcon />,
+    action:{
+      type: 'DELETE',
+      payload: `/news/${item.publication_date}/${item.slug}`
+    }
+  }]
+  return menuOptions
 }
 
 async function deleteArticle(id:string,image_for_news:NewsImageProps[],token:string):Promise<{status:number,message:string}>{
@@ -59,53 +75,37 @@ async function deleteArticle(id:string,image_for_news:NewsImageProps[],token:str
   }
 }
 
-export function NavButtons({id,slug,title,image_for_news,isMaintainer}:NavButtonsProps){
+export default function NewsItemMenu({item}:Readonly<{item:NewsListItem}>) {
   const router = useRouter()
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const [delModal, setDelModal] = useState({open:false,title:''})
-  const url = `/news/${slug}/edit`
 
-  if (isMaintainer===false) return null
+  function onMenuAction(action:NewsAction){
+    // console.log('onMenuIcon...', action)
+    switch(action.type){
+      case 'DELETE':
+        setDelModal({
+          open: true,
+          title: item.title
+        })
+        break
+      case 'EDIT':
+        // open edit page
+        router.push(action.payload)
+        break
+      default:
+        logger(`NewsItemMenu: ${action.type}...NOT SUPPORTED!`)
+    }
+  }
 
   return (
     <>
-      <div className="flex flex-col md:flex-row gap-4 items-center">
-        <Button
-          data-testid="delete-button"
-          title="Delete"
-          variant="contained"
-          color='error'
-          startIcon={<DeleteIcon />}
-          sx={{
-            textTransform:'capitalize',
-            minWidth: '7rem'
-          }}
-          onClick={() => {
-            setDelModal({
-              open: true,
-              title: title
-            })
-          }}
-        >
-          {/* Delete page */}
-          Delete
-        </Button>
-        <Button
-          data-testid="edit-button"
-          title='Edit article'
-          variant='contained'
-          startIcon={<EditIcon />}
-          sx={{
-            textTransform:'capitalize',
-            minWidth: '7rem'
-          }}
-          href={url}
-          LinkComponent={Link}
-        >
-          {/* Edit page */}
-          Edit
-        </Button>
+      <div className="bg-base-100 rounded-[50%] mr-2 absolute top-2 right-1">
+        <IconBtnMenuOnAction
+          options={getMenuOptions(item)}
+          onAction={onMenuAction}
+        />
       </div>
       <ConfirmDeleteModal
         title="Delete article"
@@ -121,10 +121,10 @@ export function NavButtons({id,slug,title,image_for_news,isMaintainer}:NavButton
         }}
         onDelete={()=>{
           // delete article
-          deleteArticle(id,image_for_news,token).then(({status,message})=>{
+          deleteArticle(item.id,item.image_for_news,token).then(({status,message})=>{
             // move to news root page after delete
             if (status===200){
-              router.push('/news')
+              router.replace('/news')
             }else{
               showErrorMessage(`Failed to remove article. ${message ?? ''}`)
             }
@@ -133,4 +133,5 @@ export function NavButtons({id,slug,title,image_for_news,isMaintainer}:NavButton
       />
     </>
   )
+
 }
