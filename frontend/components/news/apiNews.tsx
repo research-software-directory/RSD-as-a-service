@@ -191,7 +191,8 @@ export async function getNewsList({page,rows,is_published=true,token,searchFor,o
     // get published meta pages ordered by position
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
-      query+=`&or=(title.ilike."*${searchFor}*",summary.ilike."*${searchFor}*",author.ilike."*${searchFor}*")`
+      const encodedSearch = encodeURIComponent(searchFor)
+      query+=`&or=(title.ilike."*${encodedSearch}*",summary.ilike."*${encodedSearch}*",author.ilike."*${encodedSearch}*")`
     }
     if (orderBy) {
       query+=`&order=${orderBy}`

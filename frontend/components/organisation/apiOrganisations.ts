@@ -31,7 +31,8 @@ export function organisationListUrl({search, rows = 12, page = 0}: {
   let url = `${getBaseUrl()}/rpc/organisations_overview?parent=is.null&score=gt.0&order=is_tenant.desc,score.desc.nullslast,name.asc&select=${selectList}`
   // add search params
   if (search) {
-    url += `&or=(name.ilike."*${search}*", website.ilike."*${search}*", ror_names_string.ilike."*${search}*")`
+    const encodedSearch = encodeURIComponent(search)
+    url += `&or=(name.ilike."*${encodedSearch}*", website.ilike."*${encodedSearch}*", ror_names_string.ilike."*${encodedSearch}*")`
   }
   // add pagination params
   url += paginationUrlParams({

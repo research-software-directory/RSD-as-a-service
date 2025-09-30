@@ -43,8 +43,9 @@ export async function getCommunityList({page,rows,token,searchFor,orderBy}:GetCo
   try{
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
+      const encodedSearch = encodeURIComponent(searchFor)
       // search in name and short description
-      query+=`&or=(name.ilike."*${searchFor}*",short_description.ilike."*${searchFor}*")`
+      query+=`&or=(name.ilike."*${encodedSearch}*",short_description.ilike."*${encodedSearch}*")`
     }
     if (orderBy) {
       query+=`&order=${orderBy}`
