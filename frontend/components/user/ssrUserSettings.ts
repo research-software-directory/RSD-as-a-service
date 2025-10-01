@@ -8,7 +8,7 @@
 import {cookies} from 'next/headers'
 
 import {rowsPerPageOptions} from '~/config/pagination'
-import { SoftwareLayoutType } from '../search/ToggleViewGroup'
+import {SoftwareLayoutType} from '~/components/search/ToggleViewGroup'
 
 /**
  * New app approach with next/headers cookie module.

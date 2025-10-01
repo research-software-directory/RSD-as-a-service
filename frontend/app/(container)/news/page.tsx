@@ -39,7 +39,7 @@ export default async function NewsOverviewPage({
     // api uses 0 based index
     page: page>0 ? page-1 : 0,
     rows: page_rows,
-    is_published: token ? false : true,
+    is_published: token ? false : true, // NOSONAR
     searchFor: search,
     token
   })

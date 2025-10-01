@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import MainLayout from '~/components/layout/MainLayout'
+import MainContent from '~/components/layout/MainContent'
 
 // force to be dynamic route
 export const dynamic = 'force-dynamic'
@@ -23,8 +23,8 @@ export default function BaseLayout({
 }>) {
 
   return (
-    <MainLayout className="bg-base-100">
+    <MainContent className="bg-base-100">
       {children}
-    </MainLayout>
+    </MainContent>
   )
 }

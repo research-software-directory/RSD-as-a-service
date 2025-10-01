@@ -55,6 +55,13 @@ export default function CitationSection({releases,concept_doi}:
     }
   }
 
+  // console.group('CitationSection')
+  // console.log('releases...',releases)
+  // console.log('concept_doi...',concept_doi)
+  // console.log('version...',version)
+  // console.log('citation...',citation)
+  // console.groupEnd()
+
   // render section
   return (
     <PageContainer className='lg:px-4'>

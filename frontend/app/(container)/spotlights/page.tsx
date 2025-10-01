@@ -153,6 +153,7 @@ export default async function SpotlightsOverviewPage({
             orderBy={highlightOrder}
             filterCnt={filterCnt}
             hasRemotes={false}
+            highlightsOnly={true}
           />
         </FiltersPanel>
         {/* Search & main content section */}
@@ -172,6 +173,7 @@ export default async function SpotlightsOverviewPage({
                 orderBy={highlightOrder}
                 filterCnt={filterCnt}
                 hasRemotes={false}
+                highlightsOnly={true}
               />
             }
           />

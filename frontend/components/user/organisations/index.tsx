@@ -41,7 +41,7 @@ export default function UserOrganisations() {
   const numPages = Math.ceil(count / rsd_page_rows)
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1">
       {/* SEARCH */}
       <SearchPanel
         placeholder='Find organisation'

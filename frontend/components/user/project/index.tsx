@@ -51,7 +51,7 @@ export default function UserProjects() {
   // console.groupEnd()
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1">
       {/* SEARCH */}
       <SearchPanel
         placeholder='Find project'

@@ -3,14 +3,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import MainLayout from '~/components/layout/MainLayout'
+import MainContent from '~/components/layout/MainContent'
 
 // force to be dynamic route
 export const dynamic = 'force-dynamic'
 
 /**
  * SoftwareOverviewLayout applies lightgrey background (bg-base-200) to main element.
- * This layout does not use container (lg:container) layout because Highglights section requires fulle page access.
+ * This layout does not use container (lg:container) layout because Highglights section requires full page access.
  * @param param0
  * @returns
  */
@@ -23,8 +23,8 @@ export default function SoftwareOverviewLayout({
 }>) {
 
   return (
-    <MainLayout className="bg-base-200">
+    <MainContent className="bg-base-200">
       {children}
-    </MainLayout>
+    </MainContent>
   )
 }

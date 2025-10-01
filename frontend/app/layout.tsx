@@ -29,6 +29,8 @@ import Announcement from '~/components/Announcement/Announcement'
 import ProgressProviderApp from '~/components/bprogress/ProgressProviderApp'
 
 import '~/styles/global.css'
+import AppHeader from '~/components/AppHeader'
+import AppFooter from '~/components/AppFooter'
 
 export const metadata: Metadata = {
   title: 'Home',
@@ -115,7 +117,9 @@ export default async function RootLayout({
                       <UserSettingsProvider user={userSettings}>
                         {/* Login providers list */}
                         <LoginProvidersProvider providers = {providers}>
-                          {children}
+                          <AppHeader />
+                            {children}
+                          <AppFooter/>
                         </LoginProvidersProvider>
                       </UserSettingsProvider>
                     </ProgressProviderApp>

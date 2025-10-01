@@ -138,7 +138,7 @@ export function classifyMentionsByType(mentions: MentionItemProps[]) {
   const mentionByType: MentionByType = {}
   const featuredMentions: MentionItemProps[] = []
 
-  mentions.forEach(item => {
+  mentions.forEach(item => {// NOSONAR
     // remove array with software uuid
     // delete item.mention_for_software
     // check if type prop exists

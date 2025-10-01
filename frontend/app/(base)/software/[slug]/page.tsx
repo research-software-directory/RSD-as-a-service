@@ -197,7 +197,7 @@ export default async function SoftwareViewPage({
   // split categories into highlighted and filtered
   const highlightedCategories:CategoryPath[] =[]
   const softwareCategories:CategoryPath[] = []
-  categories?.forEach(path=>{
+  categories?.forEach(path=>{ // NOSONAR
     const root = path[0]
     // highlighted categories
     if (root?.properties.is_highlight){
@@ -206,6 +206,9 @@ export default async function SoftwareViewPage({
       softwareCategories.push(path)
     }
   })
+
+  // filter releases that have DOI and version
+  const citableReleases = releases?.filter(item=>item.doi && item.version)
 
   // console.group('SoftwareViewPage')
   // console.log('highlightedCategories...', highlightedCategories)
@@ -243,7 +246,7 @@ export default async function SoftwareViewPage({
         repositoryInfo={repositoryInfo ?? null}
       />
       <CitationSection
-        releases={releases}
+        releases={citableReleases ?? []}
         concept_doi={software.concept_doi}
       />
       {/* Description & sidebar section */}
