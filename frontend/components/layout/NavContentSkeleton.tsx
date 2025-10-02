@@ -14,10 +14,10 @@ export function TextSkeleton({lines=5,fontSize='2rem'}:{lines?:number, fontSize?
   return items
 }
 
-type NavContentSkeletonProps={
+type NavContentSkeletonProps=Readonly<{
   gridCols?: '1fr_1fr'|'1fr_2fr'|'1fr_3fr'|'1fr_4fr'
   contentLines?: number
-}
+}>
 
 export default function NavContentSkeleton({gridCols='1fr_4fr',contentLines=5}:NavContentSkeletonProps) {
   return (

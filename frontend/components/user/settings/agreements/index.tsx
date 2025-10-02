@@ -46,7 +46,7 @@ export default function UserAgreementsPage() {
       </p>
       <FormProvider {...methods}>
         <form
-          id="profile-settings-form"
+          id="user-agreements-form"
           className='flex-1 flex flex-col gap-2 my-8'
         >
           <ControlledSwitch

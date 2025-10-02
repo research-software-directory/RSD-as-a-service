@@ -189,7 +189,7 @@ export function paginationUrlParams({rows = 12, page = 0}:
 /**
  * Provides basic url query string for postgrest endpoints
  */
-export function baseQueryString(props: BaseQueryStringProps) {
+export function baseQueryString(props: BaseQueryStringProps) { // NOSONAR - avoid complexity warning
   const {
     keywords,
     domains,

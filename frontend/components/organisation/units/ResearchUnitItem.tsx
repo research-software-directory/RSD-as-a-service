@@ -18,7 +18,7 @@ import EditIcon from '@mui/icons-material/Edit'
 
 import {getImageUrl} from '~/utils/editImage'
 
-type UnitListItemProps = {
+type UnitListItemProps = Readonly<{
   pos: number
   slug: string,
   name: string,
@@ -26,8 +26,7 @@ type UnitListItemProps = {
   logo_id: string | null,
   isPrimaryMaintainer: boolean
   onEdit: (pos:number)=>void
-  // onDelete: (pos: number) => void
-}
+}>
 
 export default function UnitItem({pos,slug,name,website,logo_id,isPrimaryMaintainer,onEdit}: UnitListItemProps) {
   const pathname = usePathname()

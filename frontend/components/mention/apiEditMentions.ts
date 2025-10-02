@@ -9,10 +9,9 @@
 import {
   MentionByType, MentionItemProps,
   mentionColumns, MentionTypeKeys
-} from '../../types/Mention'
-import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '../../utils/fetchHelpers'
-import {getMentionByDoi} from '../../utils/getDOI'
-import logger from '../../utils/logger'
+} from '~/types/Mention'
+import logger from '~/utils/logger'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 
 export async function getMentionsForSoftware({software,token}:{software: string, token?: string}) {
   try {
@@ -307,43 +306,6 @@ export async function updateMentionItem({mention, token}:
       status: 500,
       message: e.message
     }
-  }
-}
-// OBSOLETE?
-// WE do not allow update of mentions with DOI from FE
-// Dusan 2022-10-19
-export async function updateDoiItem({rsdItem, token}:
-  { rsdItem: MentionItemProps, token: string }) {
-  if (!rsdItem || rsdItem.id === null) return {
-    status: 400,
-    message: 'Failed to update item. Missing payload'
-  }
-  // extract doi
-  const doi = rsdItem.doi
-  if (doi) {
-    let resp = await getMentionByDoi(doi)
-    // if error return it
-    if (resp.status !== 200) return resp
-    // extract item from message
-    const doiItem: MentionItemProps = resp.message
-    // copy to RSD specific values from old item
-    doiItem.id = rsdItem.id
-    doiItem.image_url = rsdItem.image_url
-    // update mention in RSD
-    resp = await updateMentionItem({
-      mention: doiItem,
-      token
-    })
-    // return error
-    if (resp.status !== 200) return resp
-    // return updated item as message
-    resp.message = doiItem
-    return resp
-  }
-  // return error message
-  return {
-    status: 400,
-    message: `Invalid DOI: ${doi}`
   }
 }
 

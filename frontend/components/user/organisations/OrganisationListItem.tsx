@@ -20,7 +20,7 @@ type OrganisationListItemProps=Readonly<{
   project_cnt: number | null,
 }>
 
-export default function OrganisationListItem({organisation}:{organisation:OrganisationListItemProps}) {
+export default function OrganisationListItem({organisation}:Readonly<{organisation:OrganisationListItemProps}>) {
   const imgSrc = getImageUrl(organisation.logo_id ?? null)
 
   return (

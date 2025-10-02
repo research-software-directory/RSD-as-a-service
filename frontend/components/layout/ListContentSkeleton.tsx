@@ -6,9 +6,9 @@
 import CardSkeleton from '../cards/CardSkeleton'
 import BaseSurfaceRounded from './BaseSurfaceRounded'
 
-type ContentSkeletonProps={
+type ContentSkeletonProps=Readonly<{
   lines:number
-}
+}>
 
 export default function ListContentSkeleton({lines}:ContentSkeletonProps){
   return (

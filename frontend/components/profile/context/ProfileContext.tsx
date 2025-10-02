@@ -31,7 +31,7 @@ export function ProfileContextProvider(props:any){
     project_cnt: props?.project_cnt as number ?? 0
   })
   return <ProfileContext.Provider
-    value={{count,setCount}}
+    value={{count,setCount}} // NOSONAR - this object should be refreshed on every render
     {...props}
   />
 }

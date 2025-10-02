@@ -17,11 +17,11 @@ import List from '@mui/material/List'
 import {OrganisationUnitsForOverview} from '~/types/Organisation'
 import ResearchUnitItem from './ResearchUnitItem'
 
-type UnitsListProps = {
+type UnitsListProps = Readonly<{
   units: OrganisationUnitsForOverview[]
   isPrimaryMaintainer: boolean
   onEdit: (pos: number) => void
-}
+}>
 
 export default function ResearchUnitsList({units, onEdit, isPrimaryMaintainer}: UnitsListProps) {
 

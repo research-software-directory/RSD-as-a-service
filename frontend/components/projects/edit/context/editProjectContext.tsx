@@ -42,11 +42,9 @@ export function EditProjectProvider(props: any) {
   // console.groupEnd()
 
   return (
-    <EditProjectContext.Provider value={{
-      state,
-      dispatch
-    }}
-    {...props}
+    <EditProjectContext.Provider
+      value={{state,dispatch}} // NOSONAR - this object should be refreshed on every render
+      {...props}
     />
   )
 }

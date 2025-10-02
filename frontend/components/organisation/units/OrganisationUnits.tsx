@@ -52,14 +52,14 @@ export default function OrganisationUnits({units}: Readonly<ResearchUnitsProps>)
   const [modal, setModal] = useState<EditOrganisationModal>({
     open: false
   })
-  const [isPrimary,setPrimary]=useState(false)
+  const [isPrimary,setIsPrimary]=useState(false)
 
   useEffect(() => {
     let abort = false
     if (primary_maintainer === user?.account ||
       user?.role === 'rsd_admin') {
       if (abort) return
-      setPrimary(true)
+      setIsPrimary(true)
     }
     return ()=>{abort=true}
   },[primary_maintainer,user?.account,user?.role])
@@ -130,7 +130,7 @@ export default function OrganisationUnits({units}: Readonly<ResearchUnitsProps>)
         }
       }
       // SAVE organisation
-      if (typeof pos != 'undefined' && data.id) {
+      if (pos !== undefined && data.id) {
         const unit:Organisation = getPropsFromObject(data,colForUpdate)
         // update existing organisation
         const resp = await updateOrganisation({
@@ -138,12 +138,12 @@ export default function OrganisationUnits({units}: Readonly<ResearchUnitsProps>)
           token
         })
         // debugger
-        if (resp.status !== 200) {
-          showErrorMessage(resp.message)
-        } else {
+        if (resp.status === 200) {
           // reload page
           router.refresh()
           closeModals()
+        } else {
+          showErrorMessage(resp.message)
         }
       } else {
         // create new organisation

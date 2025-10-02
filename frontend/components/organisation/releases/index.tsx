@@ -39,7 +39,7 @@ export default async function SoftwareReleases({slug,query}: SoftwareReleasesPro
   // resolve slug to organisation id
   const uuid = await getOrganisationIdForSlug({slug, token})
   // show 404 page if organisation id missing
-  if (typeof uuid === 'undefined' || uuid === null) {
+  if (uuid === undefined || uuid === null) {
     notFound()
   }
   const releaseCountsByYear = await getReleasesCountForOrganisation({

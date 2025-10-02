@@ -10,10 +10,10 @@ import InputLabel from '@mui/material/InputLabel'
 
 import {rowsPerPageOptions} from '~/config/pagination'
 
-type SelectRowsProps = {
+type SelectRowsProps = Readonly<{
   items: number
   onItemsChange: (items:number)=>void
-}
+}>
 
 export default function ShowItemsSelect({items, onItemsChange}: SelectRowsProps) {
   // console.group('ShowItemsSelect')
