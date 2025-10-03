@@ -5,11 +5,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useEffect, useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
-import {getRelatedProjectsForSoftware} from '~/utils/getSoftware'
-import {addRelatedSoftware, deleteRelatedSoftware} from '~/utils/editProject'
+import {getRelatedProjectsForSoftware} from '~/components/software/apiSoftware'
+import {addRelatedSoftware, deleteRelatedSoftware} from '~/components/projects/edit/apiEditProject'
 import {sortOnStrProp} from '~/utils/sortFn'
 import {OrganisationStatus} from '~/types/Organisation'
 import {SearchProject} from '~/types/Project'
@@ -19,7 +20,7 @@ import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import RelatedProjectList from '~/components/projects/edit/related-projects/RelatedProjectList'
 import EditSection from '~/components/layout/EditSection'
 import {relatedProject as config} from '~/components/projects/edit/related-projects/config'
-import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContext from '../context/useSoftwareContext'
 
 export default function RelatedProjectsForSoftware() {
   const {token} = useSession()
@@ -34,7 +35,6 @@ export default function RelatedProjectsForSoftware() {
       const resp = await getRelatedProjectsForSoftware({
         software: software.id ?? '',
         token,
-        frontend: true,
         approved: false
       })
       // order on title

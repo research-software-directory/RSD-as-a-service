@@ -14,7 +14,7 @@ import {useController, useFormContext} from 'react-hook-form'
 
 import {useSession} from '~/auth/AuthProvider'
 import logger from '~/utils/logger'
-import {addToRepositoryTable, deleteFromRepositoryTable} from '~/utils/editSoftware'
+import {addToRepositoryTable, deleteFromRepositoryTable} from '~/components/software/edit/apiEditSoftware'
 import {getBaseUrl} from '~/utils/fetchHelpers'
 import {CodePlatform, EditSoftwareItem, RepositoryUrl} from '~/types/SoftwareTypes'
 import useSnackbar from '~/components/snackbar/useSnackbar'

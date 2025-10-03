@@ -21,7 +21,7 @@ export default function AppFooter () {
 
   return (
     <footer className="flex flex-wrap text-primary-content border-t bg-secondary border-base-300">
-      <div className="grid grid-cols-1 gap-8 px-4 md:grid-cols-[2fr_1fr] lg:container lg:mx-auto">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr] lg:container lg:mx-auto">
         <div className="pt-8 md:py-8">
           <p className="text-lg">
             The Research Software Directory promotes the impact, re-use and citation of research software.

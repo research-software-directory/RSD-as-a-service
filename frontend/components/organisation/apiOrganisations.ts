@@ -9,8 +9,10 @@
 import {RsdUser} from '~/auth'
 import {isOrganisationMaintainer} from '~/auth/permissions/isMaintainerOfOrganisation'
 import {
-  OrganisationForOverview, OrganisationList,
-  ProjectOfOrganisation, SoftwareOfOrganisation
+  OrganisationForOverview,
+  OrganisationListProps,
+  ProjectOfOrganisation,
+  SoftwareOfOrganisation
 } from '~/types/Organisation'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
@@ -19,17 +21,18 @@ import {baseQueryString, paginationUrlParams} from '~/utils/postgrestUrl'
 
 
 export function organisationListUrl({search, rows = 12, page = 0}: {
-  search: string | undefined,
+  search: string | null,
   rows: number,
   page: number
 }) {
   // NOTE 1! selectList need to include all columns used in filtering
-  // NOTE 2! ensure selectList uses identical props as defined in OrganisationList type
+  // NOTE 2! ensure selectList uses identical props as defined in OrganisationListProps type
   const selectList = 'id,parent,name,short_description,country,website,is_tenant,ror_names_string,rsd_path,logo_id,software_cnt,project_cnt,score'
   let url = `${getBaseUrl()}/rpc/organisations_overview?parent=is.null&score=gt.0&order=is_tenant.desc,score.desc.nullslast,name.asc&select=${selectList}`
   // add search params
   if (search) {
-    url += `&or=(name.ilike."*${search}*", website.ilike."*${search}*", ror_names_string.ilike."*${search}*")`
+    const encodedSearch = encodeURIComponent(search)
+    url += `&or=(name.ilike."*${encodedSearch}*", website.ilike."*${encodedSearch}*", ror_names_string.ilike."*${encodedSearch}*")`
   }
   // add pagination params
   url += paginationUrlParams({
@@ -40,7 +43,7 @@ export function organisationListUrl({search, rows = 12, page = 0}: {
 }
 
 export async function getOrganisationsList({search, rows, page, token}: {
-  search: string | undefined,
+  search: string | null,
   rows: number,
   page: number,
   token: string | undefined
@@ -59,7 +62,7 @@ export async function getOrganisationsList({search, rows, page, token}: {
     })
 
     if ([200, 206].includes(resp.status)) {
-      const json: OrganisationList[] = await resp.json()
+      const json: OrganisationListProps[] = await resp.json()
       return {
         count: extractCountFromHeader(resp.headers),
         data: json
@@ -186,7 +189,7 @@ export async function getOrganisationById({uuid, token, isMaintainer = false}: {
   return undefined
 }
 
-export async function getOrganisationChildren({uuid, token}: { uuid: string, token: string }) {
+export async function getOrganisationChildren({uuid, token}: { uuid: string, token?: string }) {
   const selectList = 'id,name,primary_maintainer,slug,website,logo_id,is_tenant,parent'
   const query = `organisation?parent=eq.${uuid}&order=name.asc&select=${selectList}`
   const url = `${getBaseUrl()}/${query}`
@@ -206,28 +209,6 @@ export async function getOrganisationChildren({uuid, token}: { uuid: string, tok
   // we log and return zero
   return []
 }
-
-// export async function getOrganisationDescription({uuid, token}: { uuid: string, token?: string }) {
-//   const query = `organisation?id=eq.${uuid}&select=description`
-//   const url = `${getBaseUrl()}/${query}`
-//   // console.log('url...', url)
-//   const resp = await fetch(url, {
-//     method: 'GET',
-//     headers: {
-//       ...createJsonHeaders(token),
-//       // request single object item
-//       'Accept': 'application/vnd.pgrst.object+json'
-//     }
-//   })
-//   if (resp.status === 200) {
-//     const json: Organisation = await resp.json()
-//     return json.description
-//   }
-//   // otherwise request failed
-//   logger(`getOrganisationDescription failed: ${resp.status} ${resp.statusText}`, 'warn')
-//   // we log and return null
-//   return null
-// }
 
 export async function getOrganisationInfo({uuid, token}: { uuid: string, token?: string }) {
   const query = `organisation?id=eq.${uuid}&select=description,wikipedia_url,city,ror_types`
@@ -258,7 +239,7 @@ export async function getOrganisationInfo({uuid, token}: { uuid: string, token?:
 
 export type OrganisationApiParams = {
   organisation: string,
-  searchFor?: string
+  searchFor?: string | null
   project_status?: string
   keywords?: string[] | null
   prog_lang?: string[] | null
@@ -288,7 +269,7 @@ export async function getSoftwareForOrganisation({
       const encodedSearch = encodeURIComponent(searchFor)
       url = `${baseUrl}/rpc/software_by_organisation_search?organisation_id=${organisation}&search=${encodedSearch}`
     }
-    // filter for approved only if not maintainer
+    // filter for approved and published only if not maintainer
     if (!isMaintainer) {
       url += '&status=eq.approved&is_published=eq.true'
     }

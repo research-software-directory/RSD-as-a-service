@@ -39,7 +39,7 @@ const mockPatchProjectLinkPositions = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'
 }))
-jest.mock('~/utils/editProject', () => ({
+jest.mock('~/components/projects/edit/apiEditProject', () => ({
   updateProjectLink: jest.fn(props => mockUpdateProjectLink(props)),
   addProjectLink: jest.fn(props => mockAddProjectLink(props)),
   deleteProjectLink: jest.fn(props => mockDeleteProjectLink(props)),

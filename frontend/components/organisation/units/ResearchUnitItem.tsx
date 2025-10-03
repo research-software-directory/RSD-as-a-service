@@ -1,10 +1,13 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
+import {usePathname} from 'next/navigation'
 import Link from 'next/link'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
@@ -14,38 +17,30 @@ import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
 
 import {getImageUrl} from '~/utils/editImage'
-import {useRouter} from 'next/router'
 
-type UnitListItemProps = {
+type UnitListItemProps = Readonly<{
   pos: number
   slug: string,
   name: string,
   website: string | null,
   logo_id: string | null,
-  isMaintainer: boolean
+  isPrimaryMaintainer: boolean
   onEdit: (pos:number)=>void
-  // onDelete: (pos: number) => void
-}
+}>
 
-export default function UnitItem({pos,slug,name,website,logo_id,isMaintainer,onEdit}: UnitListItemProps) {
-  const router = useRouter()
-  const slugs = []
-  if (typeof router.query['slug'] === 'string') {
-    slugs.push(router.query['slug'])
-    slugs.push(slug)
-  } else if (typeof router.query['slug'] === 'object') {
-    slugs.push(
-      ...router.query['slug'],
-      slug
-    )
-  }
+export default function UnitItem({pos,slug,name,website,logo_id,isPrimaryMaintainer,onEdit}: UnitListItemProps) {
+  const pathname = usePathname()
+  const url = `${pathname}/${slug}`
 
   // console.group('UnitItem')
-  // console.log('isMaintainer...', isMaintainer)
+  // console.log('isPrimaryMaintainer...', isPrimaryMaintainer)
+  // console.log('slug...', slug)
+  // console.log('name...', name)
+  // console.log('url...', url)
   // console.groupEnd()
 
   function getSecondaryActions() {
-    if (isMaintainer) {
+    if (isPrimaryMaintainer) {
       return (
         <>
           <IconButton
@@ -83,10 +78,6 @@ export default function UnitItem({pos,slug,name,website,logo_id,isMaintainer,onE
       sx={{
         // this makes space for buttons
         paddingRight: '7.5rem',
-        // disable hover color change to avoid click confusion
-        // '&:hover': {
-        //   backgroundColor:'grey.100'
-        // }
       }}
     >
       <ListItemAvatar>
@@ -110,12 +101,7 @@ export default function UnitItem({pos,slug,name,website,logo_id,isMaintainer,onE
       <ListItemText
         primary={
           <Link
-            href={{
-              pathname: router.pathname,
-              query: {
-                slug: slugs
-              }
-            }}
+            href={url}
             passHref
           >
             {name}

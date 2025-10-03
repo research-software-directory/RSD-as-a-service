@@ -9,10 +9,11 @@ import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {UserCounts} from './context/UserContext'
 
-const defaultResponse = {
-  software_cnt: undefined,
-  project_cnt: undefined,
-  organisation_cnt: undefined
+const defaultResponse:UserCounts = {
+  software_cnt: 0,
+  project_cnt: 0,
+  organisation_cnt: 0,
+  community_cnt: 0
 }
 
 export async function getUserCounts({token}:{token?: string}) {

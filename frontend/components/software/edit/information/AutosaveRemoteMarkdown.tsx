@@ -13,7 +13,7 @@ import {useWatch,useFormState, useFormContext} from 'react-hook-form'
 
 import {EditSoftwareItem} from '~/types/SoftwareTypes'
 import {useDebounceValid} from '~/utils/useDebounce'
-import {apiRemoteMarkdown} from '~/utils/getSoftware'
+import {apiRemoteMarkdown} from '~/components/software/apiSoftware'
 import ReactMarkdownWithSettings from '~/components/layout/ReactMarkdownWithSettings'
 import PageErrorMessage from '~/components/layout/PageErrorMessage'
 import ContentLoader from '~/components/layout/ContentLoader'

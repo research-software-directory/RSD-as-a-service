@@ -25,8 +25,8 @@ jest.mock('~/utils/editImage', () => ({
 }))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPatchOrganisation = jest.fn((props) => Promise.resolve({status: 200, statusText: 'OK'}))
-jest.mock('~/utils/editOrganisation', () => ({
-  ...jest.requireActual('~/utils/editOrganisation'),
+jest.mock('~/components/organisation/apiEditOrganisation', () => ({
+  ...jest.requireActual('~/components/organisation/apiEditOrganisation'),
   patchOrganisation: jest.fn((props)=>mockPatchOrganisation(props))
 }))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

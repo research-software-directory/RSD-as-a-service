@@ -17,7 +17,7 @@ import {searchForProjectKeyword} from './searchForKeyword'
 import {
   addKeywordsToProject, createOrGetKeyword,
   deleteKeywordFromProject, silentKeywordDelete
-} from '~/utils/editKeywords'
+} from '~/components/keyword/apiEditKeywords'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {sortOnStrProp} from '~/utils/sortFn'
 

@@ -22,13 +22,13 @@ import projectState from '../../__mocks__/editProjectState'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetImpactForProject = jest.fn((props) => Promise.resolve(mockImpactForProject))
-jest.mock('~/utils/getProjects', () => ({
+jest.mock('~/components/projects/apiProjects', () => ({
   getMentionsForProject: jest.fn((props)=>mockGetImpactForProject(props))
 }))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetMentionByDoiFromRsd = jest.fn((props) => Promise.resolve([] as any))
-jest.mock('~/utils/editMentions', () => ({
-  ...jest.requireActual('~/utils/editMentions'),
+jest.mock('~/components/mention/apiEditMentions', () => ({
+  ...jest.requireActual('~/components/mention/apiEditMentions'),
   getMentionByDoiFromRsd: jest.fn(props=>mockGetMentionByDoiFromRsd(props))
 }))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -207,7 +207,7 @@ describe('frontend/components/project/edit/mentions/impact/index.tsx', () => {
       // call RSD api to find mention by DOI
       expect(mockFindPublicationByTitle).toHaveBeenCalledTimes(1)
       expect(mockFindPublicationByTitle).toHaveBeenCalledWith({
-        'id': projectState.project.id,
+        'id': projectState.id,
         searchFor,
         'token': mockSession.token
       })
@@ -295,7 +295,7 @@ describe('frontend/components/project/edit/mentions/impact/index.tsx', () => {
           'title': 'Test value',
           'url': 'https://google.com/link1',
         },
-        'project': projectState.project.id,
+        'project': projectState.id,
         'token': mockSession.token,
       })
     })
@@ -333,7 +333,7 @@ describe('frontend/components/project/edit/mentions/impact/index.tsx', () => {
       expect(mockRemoveImpactForProject).toHaveBeenCalledTimes(1)
       expect(mockRemoveImpactForProject).toHaveBeenCalledWith({
         'mention': mockImpactForProject[0].id,
-        'project': projectState.project.id,
+        'project': projectState.id,
         'token': mockSession.token,
       })
     })

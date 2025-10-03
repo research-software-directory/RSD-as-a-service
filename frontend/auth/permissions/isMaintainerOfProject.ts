@@ -1,21 +1,20 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createJsonHeaders} from '../../utils/fetchHelpers'
-import logger from '../../utils/logger'
+import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
+import logger from '~/utils/logger'
 
-export async function isMaintainerOfProject({slug, account, token, frontend = true}:
-  { slug?: string, account?: string, token?: string, frontend?: boolean }) {
+export async function isMaintainerOfProject({slug, account, token}:
+  { slug?: string, account?: string, token?: string}) {
   try {
     // return false directly when missing info
     if (!slug || !account || !token) return false
     // build url
-    let url = `/api/v1/rpc/maintainer_for_project_by_slug?maintainer=eq.${account}&slug=eq.${slug}`
-    if (frontend == false) {
-      url = `${process.env.POSTGREST_URL}/rpc/maintainer_for_project_by_slug?maintainer=eq.${account}&slug=eq.${slug}`
-    }
+    const url = `${getBaseUrl()}/rpc/maintainer_for_project_by_slug?maintainer=eq.${account}&slug=eq.${slug}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)

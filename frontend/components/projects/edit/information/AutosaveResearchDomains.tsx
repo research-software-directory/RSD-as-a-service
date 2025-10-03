@@ -24,7 +24,7 @@ import logger from '~/utils/logger'
 import {ResearchDomain} from '~/types/Project'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
-import {addResearchDomainToProject, deleteResearchDomainFromProject} from '~/utils/editProject'
+import {addResearchDomainToProject, deleteResearchDomainFromProject} from '~/components/projects/edit/apiEditProject'
 
 type ResearchDomainsProps = {
   project_id: string

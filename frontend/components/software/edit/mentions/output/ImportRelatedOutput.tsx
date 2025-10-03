@@ -7,11 +7,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useSession} from '~/auth/AuthProvider'
-import {getMentionsForSoftware} from '~/utils/editMentions'
+import {getMentionsForSoftware} from '~/components/mention/apiEditMentions'
 import ImportMentions from '~/components/mention/ImportMentions/index'
 import ImportMentionsInfoPanel from '~/components/mention/ImportMentions/ImportMentionsInfoPanel'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
-import useSoftwareContext from '~/components/software/edit/useSoftwareContext'
+import useSoftwareContext from '~/components/software/edit/context/useSoftwareContext'
 import {useSoftwareMentionContext} from '../SoftwareMentionContext'
 import {cfgMention as config} from './config'
 

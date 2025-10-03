@@ -8,6 +8,7 @@ import {FormProvider, useForm} from 'react-hook-form'
 
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import ContentLoader from '~/components/layout/ContentLoader'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import useRsdSettings from '~/config/useRsdSettings'
 import {UserSettingsType, useUserAgreements} from './useUserAgreements'
 import RemoveAccount from './RemoveAccount'
@@ -33,7 +34,10 @@ export default function UserAgreementsPage() {
 
   return (
     <>
-      <h2>User agreements</h2>
+      <EditSectionTitle
+        title="User agreements"
+        className="font-medium"
+      />
       <p className="mt-4">
         To be able to contribute to the RSD, we need to know that you agree to our Terms of Service, and that you have read the Privacy Statement.
       </p>
@@ -42,7 +46,7 @@ export default function UserAgreementsPage() {
       </p>
       <FormProvider {...methods}>
         <form
-          id="profile-settings-form"
+          id="user-agreements-form"
           className='flex-1 flex flex-col gap-2 my-8'
         >
           <ControlledSwitch

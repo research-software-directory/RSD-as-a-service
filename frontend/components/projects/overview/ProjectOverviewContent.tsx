@@ -1,32 +1,35 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import Link from 'next/link'
+
 import {ProjectListItem} from '~/types/Project'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import NoContent from '~/components/layout/NoContent'
+import GridOverview from '~/components/layout/GridOverview'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
-import {ProjectLayoutType} from './search/ViewToggleGroup'
 import ProjectOverviewList from './list/ProjectOverviewList'
-import ProjectCardContent from './cards/ProjectCardContent'
-import ProjectOverviewGrid from './cards/ProjectOverviewGrid'
 import ProjectListItemContent from './list/ProjectListItemContent'
+import ProjectCardContent from './cards/ProjectCardContent'
 
-type ProjectOverviewContentProps = {
-  layout: ProjectLayoutType
+type ProjectOverviewContentProps = Readonly<{
   projects: ProjectListItem[]
-}
+}>
 
-export default function ProjectOverviewContent({layout, projects}: ProjectOverviewContentProps) {
+export default function ProjectOverviewContent({projects}: ProjectOverviewContentProps) {
+  const {rsd_page_layout} = useUserSettings()
 
   if (!projects || projects.length === 0) {
     return <NoContent />
   }
 
-  if (layout === 'list') {
+  if (rsd_page_layout === 'list') {
     return (
       <ProjectOverviewList>
         {projects.map(item => {
@@ -50,7 +53,7 @@ export default function ProjectOverviewContent({layout, projects}: ProjectOvervi
   }
   // GRID as default
   return (
-    <ProjectOverviewGrid>
+    <GridOverview className="mt-2 auto-rows-[28rem]">
       {projects.map(item => {
         return (
           <Link
@@ -66,6 +69,6 @@ export default function ProjectOverviewContent({layout, projects}: ProjectOvervi
           </Link>
         )
       })}
-    </ProjectOverviewGrid>
+    </GridOverview>
   )
 }

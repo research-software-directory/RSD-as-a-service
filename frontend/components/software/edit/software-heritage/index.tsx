@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState} from 'react'
 
 import Button from '@mui/material/Button'
@@ -14,7 +15,7 @@ import {useSession} from '~/auth/AuthProvider'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContext from '../context/useSoftwareContext'
 import {config} from './config'
 import EditSoftwareHeritageModal from './EditSoftwareHeritageModal'
 import {NewSoftwareHeritage,SoftwareHeritageItem} from './apiSoftwareHeritage'

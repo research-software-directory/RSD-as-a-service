@@ -17,7 +17,7 @@ import {config} from './config'
 
 // MOCKS
 import licenseForSoftware from './__mocks__/licenseForSoftware.json'
-import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
+import {initialState as softwareState} from '~/components/software/edit/context/editSoftwareContext'
 
 
 const licenseOptions:AutocompleteOption<License>[] = licenseForSoftware.map(item => ({
@@ -48,7 +48,7 @@ const mockAddLicensesForSoftware = jest.fn(props => Promise.resolve({
 }))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteLicense = jest.fn(props=>Promise.resolve('OK' as any))
-jest.mock('~/utils/editSoftware', () => ({
+jest.mock('~/components/software/edit/apiEditSoftware', () => ({
   addLicensesForSoftware: jest.fn(props => mockAddLicensesForSoftware(props)),
   deleteLicense: jest.fn(props=>mockDeleteLicense(props))
 }))
@@ -67,7 +67,7 @@ beforeEach(() => {
 
 it('renders mocked licenses', () => {
   // copy software id
-  softwareState.software.id = licenseForSoftware[0].software
+  softwareState.id = licenseForSoftware[0].software
   // mock values
   defaultValues.id = licenseForSoftware[0].software
   defaultValues.licenses = licenseOptions
@@ -96,7 +96,7 @@ it('can add NEW license', async() => {
   }
   // mock software id value
   defaultValues.id = licenseForSoftware[0].software
-  softwareState.software.id = licenseForSoftware[0].software
+  softwareState.id = licenseForSoftware[0].software
   // mock no licenses
   defaultValues.licenses = []
   defaultValues.concept_doi = null
@@ -146,7 +146,7 @@ it('can add NEW license', async() => {
     expect(mockAddLicensesForSoftware).toHaveBeenCalledWith({
       'license': {
         ...newLicense,
-        software: softwareState.software.id
+        software: softwareState.id
       },
       'token': mockSession.token,
     })
@@ -159,7 +159,7 @@ it('can add NEW license', async() => {
 
 it('can import license from DOI', async() => {
   // copy software id
-  softwareState.software.id = licenseForSoftware[0].software
+  softwareState.id = licenseForSoftware[0].software
   // mock values
   defaultValues.id = licenseForSoftware[0].software
   defaultValues.licenses = []
@@ -205,7 +205,7 @@ it('can import license from DOI', async() => {
         name: licenseForSoftware[0].name,
         reference: licenseForSoftware[0].reference,
         open_source: licenseForSoftware[0].open_source,
-        software: softwareState.software.id
+        software: softwareState.id
       },
       'token': mockSession.token,
     })
@@ -224,7 +224,7 @@ it('can add license from list', async() => {
     open_source: licenseForSoftware[0].open_source
   }
   // copy software id
-  softwareState.software.id = licenseForSoftware[0].software
+  softwareState.id = licenseForSoftware[0].software
   // mock no items
   defaultValues.id = licenseForSoftware[0].software
   defaultValues.licenses = []
@@ -253,7 +253,7 @@ it('can add license from list', async() => {
     expect(mockAddLicensesForSoftware).toHaveBeenCalledWith({
       'license': {
         ...newLicense,
-        'software': softwareState.software.id
+        'software': softwareState.id
       },
       'token': mockSession.token,
     })
@@ -266,7 +266,7 @@ it('can add license from list', async() => {
 
 it('can remove license', async () => {
   // copy software id
-  softwareState.software.id = licenseForSoftware[0].software
+  softwareState.id = licenseForSoftware[0].software
   // mock items
   defaultValues.id = licenseForSoftware[0].software
   defaultValues.licenses = licenseOptions

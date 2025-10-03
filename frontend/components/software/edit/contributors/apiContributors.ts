@@ -31,11 +31,11 @@ export async function getContributorsForSoftware({software, token}:
     if (resp.status === 200) {
       const data: Person[] = await resp.json()
       return data
-    } else if (resp.status === 404) {
-      logger(`getContributorsForSoftware: 404 [${url}]`, 'error')
-      // query not found
-      return []
     }
+    logger(`getContributorsForSoftware: ${resp.status} - ${resp.statusText}: [${url}]`, 'warn')
+    // query not found
+    return []
+
   } catch (e: any) {
     logger(`getContributorsForSoftware: ${e?.message}`, 'error')
     return []

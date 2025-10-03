@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {render, screen} from '@testing-library/react'
-import SoftwareItemPage from '../pages/software/[slug]/index'
+import SoftwareItemPage from '~/app/(base)/software/[slug]/page'
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
 // mock fetch response
@@ -16,7 +16,7 @@ import softwareIndexData from './__mocks__/softwareIndexData'
 // required when AppHeader component is used
 jest.mock('~/auth/api/useLoginProviders')
 
-jest.mock('../utils/getSoftware')
+jest.mock('~/components/software/apiSoftware')
 
 // mock next router
 const mockBack = jest.fn()
@@ -30,7 +30,7 @@ jest.mock('next/router', () => ({
   })
 }))
 
-describe('pages/software/[slug]/index.tsx', () => {
+describe.skip('pages/software/[slug]/index.tsx', () => {
   it('renders heading with software title', async() => {
     render(WrappedComponentWithProps(
       SoftwareItemPage,

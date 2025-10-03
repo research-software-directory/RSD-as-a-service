@@ -6,6 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
@@ -19,7 +20,7 @@ import {
   newOrganisationProps,
   searchToEditOrganisation,
   updateOrganisation,
-} from '~/utils/editOrganisation'
+} from '~/components/organisation/apiEditOrganisation'
 import {upsertImage} from '~/utils/editImage'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
@@ -29,7 +30,7 @@ import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import EditSection from '~/components/layout/EditSection'
 import {organisationInformation as config} from '../editSoftwareConfig'
-import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContext from '../context/useSoftwareContext'
 import useParticipatingOrganisations from './useParticipatingOrganisations'
 import {ModalProps, ModalStates} from '../editSoftwareTypes'
 import FindOrganisation from './FindOrganisation'

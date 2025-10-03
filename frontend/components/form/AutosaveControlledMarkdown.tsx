@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useController, useFormContext} from 'react-hook-form'
 import {useSession} from '~/auth/AuthProvider'
 import MarkdownInputWithPreview from '~/components/form/MarkdownInputWithPreview'

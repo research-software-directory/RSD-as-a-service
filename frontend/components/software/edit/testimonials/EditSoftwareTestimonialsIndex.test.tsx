@@ -10,7 +10,7 @@ import {fireEvent, render, screen, waitFor, waitForElementToBeRemoved, within} f
 
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
-import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
+import {initialState as softwareState} from '~/components/software/edit/context/editSoftwareContext'
 
 import SoftwareTestimonials from './index'
 import {testimonialInformation as config} from '../editSoftwareConfig'
@@ -45,7 +45,7 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
 
   it('renders no testimonials message', async() => {
     // required prop
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // return no items
     mockGetTestimonialsForSoftware.mockResolvedValueOnce([])
 
@@ -65,7 +65,7 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
 
   it('renders mocked testimonials', async() => {
     // required prop
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // return no items
     mockGetTestimonialsForSoftware.mockResolvedValueOnce(mockTestimonials)
 
@@ -89,7 +89,7 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
 
   it('can add testimonial', async() => {
     // required prop
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // return no items
     mockGetTestimonialsForSoftware.mockResolvedValueOnce([])
 
@@ -147,7 +147,7 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
           'id': null,
           'message': newItem.message,
           'position': 1,
-          'software': softwareState.software.id,
+          'software': softwareState.id,
           'source': newItem.source,
         },
         'token': 'TEST_TOKEN'
@@ -157,7 +157,7 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
 
   it('can edit testimonial', async() => {
     // required prop
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // return no items
     mockGetTestimonialsForSoftware.mockResolvedValueOnce(mockTestimonials)
 
@@ -206,7 +206,7 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
 
   it('can delete testimonial', async () => {
     // required prop
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // return no items
     mockGetTestimonialsForSoftware.mockResolvedValueOnce(mockTestimonials)
     // mock delete response

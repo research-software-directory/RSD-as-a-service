@@ -45,7 +45,7 @@
     "persons": {
       "active":false,
       "name":"persons",
-      "menuItem":"Persons"
+      "menuItem": "Persons"
     },
     "news": {
       "active":true,

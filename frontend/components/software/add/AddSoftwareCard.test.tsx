@@ -25,7 +25,7 @@ const mockValidSoftwareItem = jest.fn((slug,token) => {
   })
 })
 
-jest.mock('~/utils/editSoftware', () => {
+jest.mock('~/components/software/edit/apiEditSoftware', () => {
   return {
     addSoftware: jest.fn((props)=> mockAddSoftware(props)),
     validSoftwareItem: jest.fn((slug,token)=> mockValidSoftwareItem(slug,token))

@@ -23,14 +23,14 @@ import outputForProject from './__mocks__/outputForProject.json'
 // MOCK getOutputForProject
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetOutputForProject = jest.fn((props) => Promise.resolve(outputForProject))
-jest.mock('~/utils/getProjects', () => ({
+jest.mock('~/components/projects/apiProjects', () => ({
   getMentionsForProject: jest.fn((props)=>mockGetOutputForProject(props))
 }))
 // MOCK getMentionByDoiFromRsd
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetMentionByDoiFromRsd = jest.fn((props) => Promise.resolve([] as any))
-jest.mock('~/utils/editMentions', () => ({
-  ...jest.requireActual('~/utils/editMentions'),
+jest.mock('~/components/mention/apiEditMentions', () => ({
+  ...jest.requireActual('~/components/mention/apiEditMentions'),
   getMentionByDoiFromRsd: jest.fn(props=>mockGetMentionByDoiFromRsd(props))
 }))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -209,7 +209,7 @@ describe('frontend/components/projects/edit/mentions/output/index.tsx', () => {
       // call RSD api to find mention by DOI
       expect(mockFindPublicationByTitle).toHaveBeenCalledTimes(1)
       expect(mockFindPublicationByTitle).toHaveBeenCalledWith({
-        'id': editProjectState.project.id,
+        'id': editProjectState.id,
         searchFor,
         'token': mockSession.token
       })
@@ -295,7 +295,7 @@ describe('frontend/components/projects/edit/mentions/output/index.tsx', () => {
           'title': 'Test value',
           'url': 'https://google.com/link1',
         },
-        'project': editProjectState.project.id,
+        'project': editProjectState.id,
         'token': mockSession.token,
       })
     })
@@ -335,7 +335,7 @@ describe('frontend/components/projects/edit/mentions/output/index.tsx', () => {
       expect(mockRemoveOutputForProject).toHaveBeenCalledTimes(1)
       expect(mockRemoveOutputForProject).toHaveBeenCalledWith({
         'mention': outputForProject[0].id,
-        'project': editProjectState.project.id,
+        'project': editProjectState.id,
         'token': mockSession.token,
       })
     })

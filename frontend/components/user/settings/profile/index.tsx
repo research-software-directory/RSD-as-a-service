@@ -5,6 +5,7 @@
 
 import {FormProvider, useForm} from 'react-hook-form'
 
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {useUserContext} from '~/components/user/context/UserContext'
 import {UserProfile} from './apiUserProfile'
 import AuthenticationMethods from './AuthenticationMethods'
@@ -21,8 +22,10 @@ export default function UserProfilePage() {
 
   return (
     <>
-      <h2 data-testid="user-profile-page-title" className="mb-8">Profile</h2>
-
+      <EditSectionTitle
+        title="Profile"
+        className="pb-8 font-medium"
+      />
       <FormProvider {...methods}>
         <form
           autoComplete="off"

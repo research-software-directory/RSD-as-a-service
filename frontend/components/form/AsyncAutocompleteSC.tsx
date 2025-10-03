@@ -9,6 +9,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState, ReactNode, HTMLAttributes, SyntheticEvent, useEffect} from 'react'
 import Autocomplete, {AutocompleteChangeReason, AutocompleteInputChangeReason, AutocompleteRenderOptionState} from '@mui/material/Autocomplete'
 import CircularProgress from '@mui/material/CircularProgress'

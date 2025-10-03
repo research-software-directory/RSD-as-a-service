@@ -8,23 +8,20 @@ import {render} from '@testing-library/react'
 import useQueryChange from './useQueryChange'
 import {TabKey} from '../tabs/OrganisationTabItems'
 
-// mock next router
+// mock next navigation router
 const mockBack = jest.fn()
 const mockReplace = jest.fn()
 const mockPush = jest.fn()
+const mockSearchParam = jest.fn(()=>new URLSearchParams())
 
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     back: mockBack,
     replace: mockReplace,
-    push: mockPush,
-    pathname: '/organisations',
-    query: {
-      slug:'test-slug-project',
-      rows: 12,
-      page: 1,
-    }
-  })
+    push: mockPush
+  }),
+  usePathname: () => '/organisations/test-slug-project',
+  useSearchParams: ()=> mockSearchParam()
 }))
 
 beforeEach(() => {
@@ -66,8 +63,7 @@ it('handlesQueryChange with search param', () => {
 
   expect(mockPush).toHaveBeenCalledTimes(1)
   expect(mockPush).toHaveBeenCalledWith(
-    {'query': {'page': 1, 'rows': 12, 'slug': 'test-slug-project','search': 'test-value'}},
-    undefined,
+    '/organisations/test-slug-project?search=test-value&page=1',
     {'scroll': false}
   )
 })
@@ -78,20 +74,32 @@ it('handlesQueryChange pagination', () => {
 
   expect(mockPush).toHaveBeenCalledTimes(1)
   expect(mockPush).toHaveBeenCalledWith(
-    {'query': {'page': '2', 'rows': 12, 'slug': 'test-slug-project'}},
-    undefined,
+    '/organisations/test-slug-project?page=2',
     {'scroll': true}
   )
 })
 
-it('resetFilters pagination', () => {
+it('handlesQueryChange keeps previous params', () => {
+
+  mockSearchParam.mockReturnValue(new URLSearchParams('search=test-search&rows=24') )
+
+  render(<WrappedHandleChangeHook param="page" value="3" />)
+
+  expect(mockPush).toHaveBeenCalledTimes(1)
+  expect(mockPush).toHaveBeenCalledWith(
+    '/organisations/test-slug-project?search=test-search&rows=24&page=3',
+    {'scroll': true}
+  )
+})
+
+it('resetFilters but keep order when on same tab', () => {
+  mockSearchParam.mockReturnValue(new URLSearchParams('search=test-search&rows=24&order=test-order&tab=projects') )
 
   render(<WrappedResetFilterHook tab="projects" />)
 
   expect(mockPush).toHaveBeenCalledTimes(1)
   expect(mockPush).toHaveBeenCalledWith(
-    {'query': {'slug': 'test-slug-project', 'tab': 'projects'}},
-    undefined,
+    '/organisations/test-slug-project?tab=projects&order=test-order',
     {'scroll': false}
   )
 })

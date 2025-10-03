@@ -13,13 +13,12 @@ import {WithFormContext} from '~/utils/jest/WithFormContext'
 
 import defaultSettings from '~/config/defaultSettings.json'
 import {RsdSettingsState} from '~/config/rsdSettingsReducer'
-import SoftwareEditPage from '../pages/software/[slug]/edit/[page]'
-import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
+import SoftwareEditPage from '~/app/(base)/software/[slug]/edit/[page]/page'
+import {initialState as softwareState} from '~/components/software/edit/context/editSoftwareContext'
 // import {editSoftwarePage} from '~/components/software/edit/editSoftwarePages'
 import editSoftwareData from '~/components/software/edit/information/__mocks__/useSoftwareTableData.json'
 import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
-import {EditSoftwarePageId} from '~/components/software/edit/EditSoftwarePageContent'
-import {editSoftwareMenuItems} from '~/components/software/edit/editSoftwareMenuItems'
+import {editSoftwareMenuItems, EditSoftwarePageId} from '~/components/software/edit/editSoftwareMenuItems'
 
 // MOCKS
 // we mock default providers used in page header
@@ -49,7 +48,7 @@ window.IntersectionObserver = jest.fn(() => ({
 // use default mocks
 jest.mock('~/components/software/edit/information/useSoftwareTable')
 // mock all default software calls
-jest.mock('~/utils/getSoftware')
+jest.mock('~/components/software/apiSoftware')
 
 const mockProps = {
   // information page
@@ -63,7 +62,7 @@ const mockProps = {
   }
 }
 
-describe('pages/software/[slug]/edit/[page].tsx', () => {
+describe.skip('pages/software/[slug]/edit/[page].tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })

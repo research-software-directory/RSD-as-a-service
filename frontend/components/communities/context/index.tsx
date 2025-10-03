@@ -4,6 +4,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {PropsWithChildren, createContext, useCallback, useContext, useEffect, useState} from 'react'
 import {EditCommunityProps} from '~/components/communities/apiCommunities'
 

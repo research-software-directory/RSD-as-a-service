@@ -4,9 +4,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {cookies} from 'next/headers'
-import {LayoutType} from '../software/overview/search/ViewToggleGroup'
 import {rowsPerPageOptions} from '~/config/pagination'
-import {getUserAvatar} from '~/utils/userSettings'
+import {getUserAvatar} from '~/components/user/getUserAvatar'
+import {SoftwareLayoutType} from '../search/ToggleViewGroup'
 
 export async function appUserSettings({account,token}:{account?:string,token?:string}){
   // get cookies and avatar
@@ -23,8 +23,8 @@ export async function appUserSettings({account,token}:{account?:string,token?:st
   // console.log('page_rows...',page_rows)
 
   return {
-    rsd_page_layout: page_layout as LayoutType ?? 'grid' as LayoutType,
-    rsd_page_rows: page_rows ? parseInt(page_rows) : rowsPerPageOptions[0],
+    rsd_page_layout: page_layout as SoftwareLayoutType ?? 'grid' as SoftwareLayoutType,
+    rsd_page_rows: page_rows ? Number.parseInt(page_rows) : rowsPerPageOptions[0],
     avatar_id
   }
 }

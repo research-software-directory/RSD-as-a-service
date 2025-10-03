@@ -9,7 +9,7 @@
 import {useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
-import {patchOrganisation} from '~/utils/editOrganisation'
+import {patchOrganisation} from '~/components/organisation/apiEditOrganisation'
 import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import Logo from '~/components/layout/Logo'

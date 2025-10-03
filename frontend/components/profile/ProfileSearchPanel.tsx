@@ -3,23 +3,26 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
+import useHandleQueryChange from '~/utils/useHandleQueryChange'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import SearchInput from '~/components/search/SearchInput'
-import SelectRows from '~/components/software/overview/search/SelectRows'
-import ViewToggleGroup, {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import ToggleViewGroup, {ProjectLayoutType} from '~/components/search/ToggleViewGroup'
+import ShowItemsSelect from '~/components/search/ShowItemsSelect'
 
 type ProfileSearchPanelProps={
   placeholder: string
-  layout: ProjectLayoutType
+  view: ProjectLayoutType
   rows: number
-  search: string | null
-  onSetView: (view:ProjectLayoutType)=>void
-  handleQueryChange: (key:string, value: string|string[])=>void
+  search?: string | null
 }
 
 export default function ProfileSearchPanel({
-  placeholder,layout,rows,search,
-  onSetView,handleQueryChange
+  placeholder,view,rows,search
 }:ProfileSearchPanelProps) {
+  const {setPageLayout,setPageRows} = useUserSettings()
+  const {handleQueryChange} = useHandleQueryChange()
   return (
     <div className="flex rounded-md bg-base-100 p-2">
       <SearchInput
@@ -27,16 +30,19 @@ export default function ProfileSearchPanel({
         onSearch={(search: string) => handleQueryChange('search', search)}
         defaultValue={search ?? ''}
       />
-      <ViewToggleGroup
-        layout={layout}
-        onSetView={onSetView}
+      <ToggleViewGroup
+        view={view}
+        onChangeView={setPageLayout}
         sx={{
           marginLeft:'0.5rem'
         }}
       />
-      <SelectRows
-        rows={rows}
-        handleQueryChange={handleQueryChange}
+      <ShowItemsSelect
+        items={rows}
+        onItemsChange={(items)=>{
+          setPageRows(items)
+          handleQueryChange('rows', items.toString())
+        }}
       />
     </div>
   )

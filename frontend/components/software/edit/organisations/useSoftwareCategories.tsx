@@ -8,7 +8,7 @@ import {useEffect, useState} from 'react'
 import {useSession} from '~/auth/AuthProvider'
 import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
-import {getCategoryForSoftwareIds} from '~/utils/getSoftware'
+import {getCategoryForSoftwareIds} from '~/components/software/apiSoftware'
 import {loadCategoryRoots} from '~/components/category/apiCategories'
 import {sortCategoriesByName} from '~/components/category/useCategoryTree'
 import {

@@ -32,12 +32,23 @@ import {mockCitations} from '../mocks/mockCitations'
 import {addCitation} from '../helpers/citations'
 import {mockTestimonial} from '../mocks/mockTestimonials'
 import {addOrganisation} from '../helpers/organisations'
+import { acceptUserAgreement } from '../helpers/userAgreement'
 
 // run tests in serial mode
 // we first need to create software
 // add info and contributors
 // contributors can be imported when ConceptDOI is added to
 test.describe.serial('Software', async()=> {
+
+  test('Accept user agreement',async ({page}, {project}) => {
+    // go to user settings
+    await page.goto('/user/settings')
+    // accept user agreement first
+    const accepted = await acceptUserAgreement(page)
+    // expect this worked
+    expect(accepted).toBeTruthy()
+  })
+
   test('Create software', async ({page}, {project}) => {
     // get mock software for the browser
     const software = mockSoftware[project.name]

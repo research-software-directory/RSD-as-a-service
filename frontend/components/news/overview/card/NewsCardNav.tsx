@@ -3,57 +3,43 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {NextRouter, useRouter} from 'next/router'
+'use client'
+
+import EditIcon from '@mui/icons-material/Edit'
+import ArticleIcon from '@mui/icons-material/Article'
 
 import {useSession} from '~/auth/AuthProvider'
-import logger from '~/utils/logger'
 import StatusBanner from '~/components/cards/StatusBanner'
 import IconBtnMenuOnAction, {IconBtnMenuOption} from '~/components/menu/IconBtnMenuOnAction'
 import {NewsListItem} from '~/components/news/apiNews'
-
-export type NewsAction={
-  type: 'VIEW'|'EDIT',
-  payload: string
-}
+import useOnNewsAction, {NewsAction} from '../useOnNewsAction'
 
 export function getMenuOptions(item:NewsListItem){
   const menuOptions:IconBtnMenuOption<NewsAction>[]=[{
     type:'action',
-    key: 'view',
-    label: 'View article',
-    action:{
-      type: 'VIEW',
-      payload: `/news/${item.publication_date}/${item.slug}`
-    }
-  },{
-    type:'action',
     key: 'edit',
     label: 'Edit article',
+    icon: <EditIcon />,
     action:{
       type: 'EDIT',
       payload: `/news/${item.publication_date}/${item.slug}/edit`
+    }
+  },{
+    type:'action',
+    key: 'view',
+    label: 'View article',
+    icon: <ArticleIcon />,
+    action:{
+      type: 'VIEW',
+      payload: `/news/${item.publication_date}/${item.slug}`
     }
   }]
   return menuOptions
 }
 
-export function onNewsAction(action:NewsAction,router:NextRouter){
-  // console.log('onAction...', action)
-  switch(action.type){
-    case 'VIEW':
-      router.push(action.payload)
-      break
-    case 'EDIT':
-      router.push(action.payload)
-      break
-    default:
-      logger(`Not support action type ${action.type}`,'warn')
-  }
-}
-
 export default function NewsCardNav({item}:{item:NewsListItem}) {
-  const router = useRouter()
   const {user} = useSession()
+  const onNewsAction = useOnNewsAction()
 
   if (user?.role === 'rsd_admin'){
     return (
@@ -72,7 +58,7 @@ export default function NewsCardNav({item}:{item:NewsListItem}) {
         <div className="bg-base-100 rounded-[50%]">
           <IconBtnMenuOnAction
             options={getMenuOptions(item)}
-            onAction={(action)=>onNewsAction(action,router)}
+            onAction={onNewsAction}
           />
         </div>
       </div>

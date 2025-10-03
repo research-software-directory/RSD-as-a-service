@@ -10,7 +10,7 @@ import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {decodeJsonParam} from '~/utils/extractQueryParam'
 import {StatusFilterOption} from '~/components/projects/overview/filters/ProjectStatusFilter'
 import useOrganisationContext from '../../context/useOrganisationContext'
-import useProjectParams from '../useProjectParams'
+import useProjectParams from '../../../projects/overview/useProjectParams'
 import {buildOrgProjectFilter} from './useOrgProjectKeywordsList'
 
 type OrgProjectStatusFilterProps = {

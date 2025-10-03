@@ -10,7 +10,7 @@ import {fireEvent, render, screen, waitFor, waitForElementToBeRemoved, within} f
 
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithProjectContext} from '~/utils/jest/WithProjectContext'
-import {initialState as projectState} from '~/components/projects/edit/editProjectContext'
+import {initialState as projectState} from '~/components/projects/edit/context/editProjectContext'
 
 import SoftwareTestimonials from './index'
 import config from './config'
@@ -45,7 +45,7 @@ describe('frontend/components/projects/edit/testimonials/index.tsx', () => {
 
   it('renders no testimonials message', async() => {
     // required prop
-    projectState.project.id = 'test-project-id'
+    projectState.id = 'test-project-id'
     // return no items
     mockGetTestimonialsForProject.mockResolvedValueOnce([])
 
@@ -65,7 +65,7 @@ describe('frontend/components/projects/edit/testimonials/index.tsx', () => {
 
   it('renders mocked testimonials', async() => {
     // required prop
-    projectState.project.id = 'test-project-id'
+    projectState.id = 'test-project-id'
     // return no items
     mockGetTestimonialsForProject.mockResolvedValueOnce(mockTestimonials)
 
@@ -89,7 +89,7 @@ describe('frontend/components/projects/edit/testimonials/index.tsx', () => {
 
   it('can add testimonial', async() => {
     // required prop
-    projectState.project.id = 'test-project-id'
+    projectState.id = 'test-project-id'
     // return no items
     mockGetTestimonialsForProject.mockResolvedValueOnce([])
 
@@ -147,7 +147,7 @@ describe('frontend/components/projects/edit/testimonials/index.tsx', () => {
           'id': null,
           'message': newItem.message,
           'position': 1,
-          'project': projectState.project.id,
+          'project': projectState.id,
           'source': newItem.source,
         },
         'token': 'TEST_TOKEN'
@@ -157,7 +157,7 @@ describe('frontend/components/projects/edit/testimonials/index.tsx', () => {
 
   it('can edit testimonial', async() => {
     // required prop
-    projectState.project.id = 'test-project-id'
+    projectState.id = 'test-project-id'
     // return no items
     mockGetTestimonialsForProject.mockResolvedValueOnce(mockTestimonials)
 
@@ -206,7 +206,7 @@ describe('frontend/components/projects/edit/testimonials/index.tsx', () => {
 
   it('can delete testimonial', async () => {
     // required prop
-    projectState.project.id = 'test-project-id'
+    projectState.id = 'test-project-id'
     // return no items
     mockGetTestimonialsForProject.mockResolvedValueOnce(mockTestimonials)
     // mock delete response

@@ -10,7 +10,6 @@ import {expect, Page} from '@playwright/test'
 import {listenForOrcidCalls, Person} from '../mocks/mockPerson'
 import {CreateSoftwareProps, MockedSoftware} from '../mocks/mockSoftware'
 import {Testimonial} from '../mocks/mockTestimonials'
-import {acceptUserAgreement} from './userAgreement'
 import {fillAutosaveInput, generateId, uploadFile} from './utils'
 
 export async function createSoftware({title, desc, slug, page}: CreateSoftwareProps) {
@@ -23,10 +22,6 @@ export async function createSoftware({title, desc, slug, page}: CreateSoftwarePr
   await page.getByRole('menuitem', {
     name: 'New Software'
   }).click()
-  
-  // accept user agreement if modal present
-  // ALREADY DONE in globalSetup
-  // await acceptUserAgreement(page)
 
   // add name
   await page.getByRole('textbox', { name: 'Name', exact: true }).fill(title);
@@ -174,7 +169,7 @@ export async function openSoftwarePage(page:Page,name?:string) {
   }
 }
 
-export async function openEditSoftwarePage(page, name) {
+export async function openEditSoftwarePage(page:Page, name:string) {
   // navigate first to software page
   await openSoftwarePage(page,name)
   // open edit software
@@ -185,7 +180,7 @@ export async function openEditSoftwarePage(page, name) {
   ])
 }
 
-export async function importContributors(page) {
+export async function importContributors(page:Page) {
   // import contributors
   const importContributors = page.getByRole('button', {
     name: 'Import contributors'
@@ -207,7 +202,7 @@ export async function importContributors(page) {
   }
 }
 
-export async function editFirstContact(page) {
+export async function editFirstContact(page:Page) {
   // validate at least one contributor
   const contributors = page.getByTestId('contributor-item')
   expect(await contributors.count()).toBeGreaterThan(0)
@@ -251,7 +246,7 @@ export async function editFirstContact(page) {
   expect(contact).toContain(randomRole)
 }
 
-export async function createContact(page, contact: Person) {
+export async function createContact(page:Page, contact: Person) {
   // find contributor input
   const findContributor = page.getByRole('combobox', {name: 'Find or add contributor'})
 
@@ -306,7 +301,7 @@ export async function createContact(page, contact: Person) {
   expect(contributor).toContain(contact.affiliation)
 }
 
-export async function addTestimonial(page, item: Testimonial) {
+export async function addTestimonial(page:Page, item: Testimonial) {
   // await page.getByRole('button', {name: 'Testimonials Optional information'}).click()
   const addBtn = page.getByTestId('add-testimonial-btn')
   // set breakpoint

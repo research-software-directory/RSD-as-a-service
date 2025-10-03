@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useRef, useEffect, useState} from 'react'
 import {useTheme} from '@mui/material/styles'
 import useResizeObserver from './useResizeObserver'

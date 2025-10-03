@@ -6,7 +6,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {UIEventHandler, useRef, useState, useEffect} from 'react'
+import Skeleton from '@mui/material/Skeleton'
 import {SoftwareHighlight} from '~/components/admin/software-highlights/apiSoftwareHighlights'
 import LeftButton from './LeftButton'
 import RightButton from './RightButton'
@@ -58,8 +61,27 @@ export const HighlightsCarousel = ({items=[]}: {items:SoftwareHighlight[]}) => {
   }
 
   if (typeof distance === 'undefined'){
-    // return only empty reference div if distance is not calculated and keep highlight space
-    return <div ref={divRef} className="container mx-auto invisible sm:h-[22rem]" />
+    // show loading skeleton of 3 items while calculating initial cards position
+    return (
+      <div ref={divRef} className="container mx-auto sm:h-[22rem] flex gap-4 p-4">
+        <Skeleton
+          variant="rectangular"
+          width={'100%'}
+          height={'100%'}
+          sx={{
+            borderRadius:'0.5rem'
+          }}
+        />
+        <Skeleton
+          variant="rectangular"
+          width={'100%'}
+          height={'100%'}
+          sx={{
+            borderRadius:'0.5rem'
+          }}
+        />
+      </div>
+    )
   }
 
   return (

@@ -10,7 +10,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
+'use client'
+import {useRouter, useParams} from 'next/navigation'
 import Link from 'next/link'
 
 import List from '@mui/material/List'
@@ -24,11 +25,17 @@ import {usePluginSlots} from '~/config/RsdPluginContext'
 import SvgFromString from '~/components/icons/SvgFromString'
 import {editSoftwareMenuItems} from './editSoftwareMenuItems'
 
-export default function EditSoftwareNav({slug,pageId}:{slug:string,pageId:string}) {
+export default function EditSoftwareNav({slug}:Readonly<{slug:string}>) {
   const router = useRouter()
+  const params = useParams()
+  const pageId = params?.page
   const {activeModules} = useRsdSettings()
   // get edit software plugins
   const pluginSlots = usePluginSlots('editSoftwareNav')
+
+  // console.group("EditSoftwareNav")
+  // console.log("pageId...",pageId)
+  // console.groupEnd()
 
   return (
     <nav>

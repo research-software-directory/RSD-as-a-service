@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState} from 'react'
 
 import Button from '@mui/material/Button'
@@ -17,7 +18,7 @@ import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {NewPackageManager, PackageManager} from './apiPackageManager'
 import PackageManagersList from './PackageManagersList'
 import EditPackageManagerModal from './EditPackageManagerModal'
-import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContext from '../context/useSoftwareContext'
 import PackageManagersInfo from './PackageManagersInfo'
 import usePackageManagers from './usePackageManagers'
 
@@ -28,7 +29,7 @@ type EditPackManModal = {
   edit: boolean
 }
 
-export default function PackageManagers() {
+export default function EditPackageManagers() {
   const {token,user} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {software} = useSoftwareContext()

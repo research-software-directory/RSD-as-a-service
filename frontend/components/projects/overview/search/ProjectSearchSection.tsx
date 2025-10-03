@@ -6,33 +6,42 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import useMediaQuery from '@mui/material/useMediaQuery'
+'use client'
+
+import {JSX, useState} from 'react'
 import Button from '@mui/material/Button'
 
-import SearchInput from '~/components/search/SearchInput'
-import SelectRows from '~/components/software/overview/search/SelectRows'
-import ViewToggleGroup, {ProjectLayoutType} from './ViewToggleGroup'
-import useProjectOverviewParams from '../useProjectOverviewParams'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import {getPageRange} from '~/utils/pagination'
+import useSmallScreen from '~/config/useSmallScreen'
+import useHandleQueryChange from '~/utils/useHandleQueryChange'
+import SearchInput from '~/components/search/SearchInput'
+import FiltersModal from '~/components/filter/FiltersModal'
+import ToggleViewGroup from '~/components/search/ToggleViewGroup'
+import ShowItemsSelect from '~/components/search/ShowItemsSelect'
+import useProjectParams from '~/components/projects/overview/useProjectParams'
 
 type SearchSectionProps = {
-  page: number
-  rows: number
   count: number
-  placeholder: string
-  layout: ProjectLayoutType
-  search?: string | null
-  setModal: (modal: boolean) => void
-  setView: (view:ProjectLayoutType)=>void
+  filterModal?: JSX.Element
 }
 
-
 export default function ProjectSearchSection({
-  search, placeholder, page, rows, count, layout,
-  setView, setModal
+  count, filterModal
 }: SearchSectionProps) {
-  const {handleQueryChange} = useProjectOverviewParams()
-  const smallScreen = useMediaQuery('(max-width:640px)')
+  const smallScreen = useSmallScreen()
+  const {search,page,rows,view,filterCnt} = useProjectParams()
+  const {setPageLayout,setPageRows} = useUserSettings()
+  const {handleQueryChange} = useHandleQueryChange()
+  const [modal, setModal] = useState(false)
+
+  const placeholder = filterCnt > 0 ? 'Find within selection' : 'Find project'
+
+  // console.group('ProjectSearchSection')
+  // console.log('page...', page)
+  // console.log('rows...', rows)
+  // console.log('search...', search)
+  // console.groupEnd()
 
   return (
     <section data-testid="search-section">
@@ -42,31 +51,45 @@ export default function ProjectSearchSection({
           onSearch={(search: string) => handleQueryChange('search', search)}
           defaultValue={search ?? ''}
         />
-        <ViewToggleGroup
-          layout={layout}
-          onSetView={setView}
+        <ToggleViewGroup
+          view={view}
+          onChangeView={setPageLayout}
           sx={{
             marginLeft:'0.5rem'
           }}
         />
-        <SelectRows
-          rows={rows}
-          handleQueryChange={handleQueryChange}
+        <ShowItemsSelect
+          items={rows}
+          onItemsChange={(items)=>{
+            setPageRows(items)
+            handleQueryChange('rows', items.toString())
+          }}
         />
       </div>
       <div className="flex justify-between items-center px-1 py-2">
         <div className="text-sm opacity-70">
           {getPageRange(rows, page, count)}
         </div>
-        {smallScreen === true &&
+        {smallScreen && filterModal ?
           <Button
             onClick={() => setModal(true)}
             variant="outlined"
           >
             Filters
           </Button>
+          :null
         }
       </div>
+
+      {smallScreen && filterModal ?
+        <FiltersModal
+          open={modal}
+          setModal={setModal}
+        >
+          {filterModal}
+        </FiltersModal>
+        : null
+      }
     </section>
   )
 }

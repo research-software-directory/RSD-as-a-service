@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {NextApiRequest, NextApiResponse} from 'next'
 import {isProperUrl} from '~/utils/fetchHelpers'
-import {getRemoteMarkdown} from '~/utils/getSoftware'
+import {getRemoteMarkdown} from '~/components/software/apiSoftware'
 import logger from '~/utils/logger'
 
 const GITHUB = new RegExp(/^http?s:\/\/github.com\//g)

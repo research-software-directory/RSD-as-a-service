@@ -140,3 +140,27 @@ export async function getCommunitySlug(id:string){
     return undefined
   }
 }
+
+export function categoryFilter({root,isMaintainer,orgMaintainer,comMaintainer}:{
+  root:CategoryEntry,isMaintainer:boolean,orgMaintainer:string[],comMaintainer:string[]
+}){
+  switch (true){
+    // OK categories to show to all
+    case root?.status == 'global':
+    case root?.status == 'other':
+    case root?.status == 'approved':
+      return true
+    // maintainer sees all
+    case isMaintainer:
+      return true
+    // organisation maintainer sees all organisation categories
+    case root?.organisation && orgMaintainer.includes(root?.organisation):
+      return true
+    // community maintainer sees all community categories
+    case root?.community && comMaintainer.includes(root?.community):
+      return true
+    default:
+      // otherwise do not show category tree
+      return false
+  }
+}

@@ -9,13 +9,17 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
+import useHandleQueryChange from '~/utils/useHandleQueryChange'
 import FilterHeader from '~/components/filter/FilterHeader'
 import KeywordsFilter, {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import ProgrammingLanguagesFilter, {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import LicensesFilter, {LicensesFilterOption} from '~/components/filter/LicensesFilter'
 import RsdSourceFilter, {HostsFilterOption} from '~/components/filter/RsdHostFilter'
 import CategoriesFilter, {CategoryOption} from '~/components/filter/CategoriesFilter'
-import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
+import useResetFilters from '~/components/filter/useResetFilters'
+// import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
 import OrderSoftwareBy, {OrderHighlightsBy} from './OrderSoftwareBy'
 import useHasCategories from './useHasCategories'
 
@@ -46,7 +50,9 @@ export default function SoftwareFilters({
   highlightsOnly = false,
   hasRemotes = false
 }:SoftwareFilterProps) {
-  const {resetFilters,handleQueryChange} = useSoftwareOverviewParams()
+
+  const {handleQueryChange} = useHandleQueryChange()
+  const {resetFilters} = useResetFilters({key:'order',default:'mention_cnt'})
   const hasCategories = useHasCategories()
 
   // console.group('SoftwareFilters')

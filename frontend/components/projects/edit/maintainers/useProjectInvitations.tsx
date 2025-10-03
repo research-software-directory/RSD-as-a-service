@@ -9,7 +9,7 @@ import {useSession} from '~/auth/AuthProvider'
 import {deleteMaintainerLink, getUnusedInvitations} from '~/components/maintainers/apiMaintainers'
 import {Invitation} from '~/components/maintainers/InvitationList'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {createMaintainerLink} from '~/utils/editProject'
+import {createMaintainerLink} from '~/components/projects/edit/apiEditProject'
 
 export function useProjectInvitations({project}:{project?:string}) {
   const {token,user} = useSession()

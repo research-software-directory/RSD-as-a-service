@@ -7,7 +7,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {Page, expect} from '@playwright/test'
-import { acceptUserAgreement } from './userAgreement'
 
 type LocalLogin = {
   page: Page,
@@ -79,8 +78,10 @@ export async function loginToRsdUsingSurf({
 }
 
 export async function loginLocal({
-  page, username
-}: LocalLogin) {
+  page,username
+}:{
+  page:Page, username:string
+}) {
   // sign in
   await page.getByRole('button', {
     name: 'Sign in'
@@ -95,13 +96,7 @@ export async function loginLocal({
   const loginBtn = page.getByRole('button', {
     name: 'Login'
   })
-  // open edit page
-  await Promise.all([
-    // click to login button
-    loginBtn.click(),
-    // wait untill all network calls done
-    page.waitForLoadState('networkidle')
-  ])
+  await loginBtn.click()
   // just return
   return true
 }
@@ -116,13 +111,10 @@ export async function logoutUser(page: Page) {
 }
 
 export async function validateUserName(page: Page, name: string, debug=false) {
-  // accept user agreement if present (due to redirect to user page)
-  await acceptUserAgreement(page)
   // navigate to settings
   await page.getByTestId('user-menu-button').click()
   await page.getByRole('menuitem', {name: 'My settings'}).click()
-  // accept user agreement if modal present (it shows on first login)
-  await acceptUserAgreement(page)
+
   // get user name from user page header
   const userName = await page.getByTestId('user-settings-h1').innerText()
   // we stop here (need to be in debug mode)

@@ -11,7 +11,7 @@ import {render, screen, waitForElementToBeRemoved, within, fireEvent, waitFor} f
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
 
-import {initialState as editSoftwareState} from '../editSoftwareContext'
+import {initialState as editSoftwareState} from '../context/editSoftwareContext'
 import {modalConfig} from '~/components/person/config'
 import {contributorInformation} from '../editSoftwareConfig'
 
@@ -106,12 +106,10 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
 
   it('renders no contributors message', async () => {
     // mock software context state
-    editSoftwareState.software = {
-      id: 'test-software-id',
-      slug: 'test-software-slug',
-      brand_name: 'Test software title',
-      concept_doi: ''
-    }
+    editSoftwareState.id='test-software-id'
+    editSoftwareState.slug= 'test-software-slug'
+    editSoftwareState.brand_name= 'Test software title'
+    editSoftwareState.concept_doi= ''
     // resolve no contributors
     mockGetContributorsForSoftware.mockResolvedValueOnce([])
 
@@ -133,12 +131,10 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
 
   it('renders contributors list', async () => {
     // mock software context state
-    editSoftwareState.software = {
-      id: 'test-software-id',
-      slug: 'test-software-slug',
-      brand_name: 'Test software title',
-      concept_doi: ''
-    }
+    editSoftwareState.id='test-software-id'
+    editSoftwareState.slug= 'test-software-slug'
+    editSoftwareState.brand_name= 'Test software title'
+    editSoftwareState.concept_doi= ''
     // resolve list of contributors
     mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)
 
@@ -167,12 +163,10 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     const memberId='new-contributor-id'
     const searchFor = `${newPerson.given_names} ${newPerson.family_names}`
     // mock software context state
-    editSoftwareState.software = {
-      id: 'test-software-id',
-      slug: 'test-software-slug',
-      brand_name: 'Test software title',
-      concept_doi: ''
-    }
+    editSoftwareState.id='test-software-id'
+    editSoftwareState.slug= 'test-software-slug'
+    editSoftwareState.brand_name= 'Test software title'
+    editSoftwareState.concept_doi= ''
     // resolve no contributors
     mockGetContributorsForSoftware.mockResolvedValueOnce([])
     // mock search options returned
@@ -278,7 +272,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
           'is_contact_person': true,
           'orcid': null,
           'position': 1,
-          'software': editSoftwareState.software.id,
+          'software': editSoftwareState.id,
           'role': newPerson.role,
         },
         'token': mockSession.token,
@@ -293,12 +287,10 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
 
   it('can import contributors', async() => {
     // mock software context state
-    editSoftwareState.software = {
-      id: 'test-software-id',
-      slug: 'test-software-slug',
-      brand_name: 'Test software title',
-      concept_doi: '10.5281/zenodo.6379973'
-    }
+    editSoftwareState.id='test-software-id'
+    editSoftwareState.slug= 'test-software-slug'
+    editSoftwareState.brand_name= 'Test software title'
+    editSoftwareState.concept_doi= '10.5281/zenodo.6379973'
 
     // resolve no contributors
     mockGetContributorsForSoftware.mockResolvedValueOnce([])
@@ -325,19 +317,17 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
 
     expect(mockGetContributorsFromDoi).toHaveBeenCalledTimes(1)
     expect(mockGetContributorsFromDoi).toHaveBeenCalledWith([
-      editSoftwareState.software.id,
-      editSoftwareState.software.concept_doi
+      editSoftwareState.id,
+      editSoftwareState.concept_doi
     ])
   })
 
   it('can remove contributor', async() => {
     // mock software context state
-    editSoftwareState.software = {
-      id: 'test-software-id',
-      slug: 'test-software-slug',
-      brand_name: 'Test software title',
-      concept_doi: ''
-    }
+    editSoftwareState.id='test-software-id'
+    editSoftwareState.slug= 'test-software-slug'
+    editSoftwareState.brand_name= 'Test software title'
+    editSoftwareState.concept_doi= ''
 
     // resolve contributors
     mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)
@@ -398,18 +388,18 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
 
   it('can remove avatar', async () => {
     // mock software context state
-    editSoftwareState.software = {
-      id: 'test-software-id',
-      slug: 'test-software-slug',
-      brand_name: 'Test software title',
-      concept_doi: ''
-    }
+    // mock software context state
+    editSoftwareState.id='test-software-id'
+    editSoftwareState.slug= 'test-software-slug'
+    editSoftwareState.brand_name= 'Test software title'
+    editSoftwareState.concept_doi= ''
+
     const editedMember = {
       ...mockContributors[0],
       // we remove avatar id
       avatar_id: null,
       // software id received from software context
-      software: editSoftwareState.software.id
+      software: editSoftwareState.id
     }
     // mock return list of contributors
     mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)
@@ -469,12 +459,10 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
 
   it('can CANCEL modal changes', async () => {
     // mock software context state
-    editSoftwareState.software = {
-      id: 'test-software-id',
-      slug: 'test-software-slug',
-      brand_name: 'Test software title',
-      concept_doi: ''
-    }
+    editSoftwareState.id='test-software-id'
+    editSoftwareState.slug= 'test-software-slug'
+    editSoftwareState.brand_name= 'Test software title'
+    editSoftwareState.concept_doi= ''
     // mock no members
     mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)
     // mock patch contributor response
@@ -536,18 +524,17 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     const newAvatarId = 'new-avatar-test-id-with-length-10-or-more'
     const fileToUpload = 'test-file-name.png'
     // mock software context state
-    editSoftwareState.software = {
-      id: 'test-software-id',
-      slug: 'test-software-slug',
-      brand_name: 'Test software title',
-      concept_doi: ''
-    }
+    editSoftwareState.id='test-software-id'
+    editSoftwareState.slug= 'test-software-slug'
+    editSoftwareState.brand_name= 'Test software title'
+    editSoftwareState.concept_doi= ''
+
     const editedMember = {
       ...mockContributors[0],
       // we have new avatar id
       avatar_id: newAvatarId,
       // software id received from software context
-      software: editSoftwareState.software.id,
+      software: editSoftwareState.id,
     }
     // mock no members
     mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)

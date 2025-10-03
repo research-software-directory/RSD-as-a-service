@@ -2,10 +2,10 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {SortableTableProperties} from './SortableTable'
@@ -35,28 +35,28 @@ export type ProjectQualityProps = {
 
 export type ProjectQualityKeys = keyof ProjectQualityProps
 
-const realLabels = new Map<string, SortableTableProperties>()
-realLabels.set('title', {'label': 'Title', 'type': 'link', sx:{minWidth:'14rem'}})
-realLabels.set('score', {'label': 'Metadata score', 'type': 'pct'})
-realLabels.set('has_subtitle', {'label': 'Subtitle', 'type': 'boolean'})
-realLabels.set('is_published', {'label': 'Published', 'type': 'boolean'})
-realLabels.set('date_start', {'label': 'Start date', 'type': 'text', sx:{'whiteSpace': 'nowrap'}})
-realLabels.set('date_end', {'label': 'End date', 'type': 'text', sx:{'whiteSpace': 'nowrap'}})
-realLabels.set('grant_id', {'label': 'Grant ID', 'type': 'text'})
-realLabels.set('has_image', {'label': 'Image', 'type': 'boolean'})
-realLabels.set('has_contact_person', {'label': 'Contact person', 'type': 'boolean'})
-realLabels.set('team_member_cnt', {'label': 'Team members', 'type': 'number'})
-realLabels.set('participating_org_cnt', {'label': 'Participating organisations', 'type': 'number'})
-realLabels.set('funding_org_cnt', {'label': 'Funding organisations', 'type': 'number'})
-realLabels.set('software_cnt', {'label': 'Related software', 'type': 'number'})
-realLabels.set('project_cnt', {'label': 'Related projects', 'type': 'number'})
-realLabels.set('keyword_cnt', {'label': 'Keywords', 'type': 'number'})
-realLabels.set('research_domain_cnt', {'label': 'Research domains', 'type': 'number'})
-realLabels.set('impact_cnt', {'label': 'Impact', 'type': 'number'})
-realLabels.set('output_cnt', {'label': 'Output', 'type': 'number'})
-realLabels.set('category_cnt', {'label': 'Categories', 'type': 'number'})
+export const colLabels = new Map<string, SortableTableProperties>()
+colLabels.set('title', {'label': 'Title', 'type': 'link', sx:{minWidth:'14rem'}})
+colLabels.set('score', {'label': 'Metadata score', 'type': 'pct'})
+colLabels.set('has_subtitle', {'label': 'Subtitle', 'type': 'boolean'})
+colLabels.set('is_published', {'label': 'Published', 'type': 'boolean'})
+colLabels.set('date_start', {'label': 'Start date', 'type': 'text', sx:{'whiteSpace': 'nowrap'}})
+colLabels.set('date_end', {'label': 'End date', 'type': 'text', sx:{'whiteSpace': 'nowrap'}})
+colLabels.set('grant_id', {'label': 'Grant ID', 'type': 'text'})
+colLabels.set('has_image', {'label': 'Image', 'type': 'boolean'})
+colLabels.set('has_contact_person', {'label': 'Contact person', 'type': 'boolean'})
+colLabels.set('team_member_cnt', {'label': 'Team members', 'type': 'number'})
+colLabels.set('participating_org_cnt', {'label': 'Participating organisations', 'type': 'number'})
+colLabels.set('funding_org_cnt', {'label': 'Funding organisations', 'type': 'number'})
+colLabels.set('software_cnt', {'label': 'Related software', 'type': 'number'})
+colLabels.set('project_cnt', {'label': 'Related projects', 'type': 'number'})
+colLabels.set('keyword_cnt', {'label': 'Keywords', 'type': 'number'})
+colLabels.set('research_domain_cnt', {'label': 'Research domains', 'type': 'number'})
+colLabels.set('impact_cnt', {'label': 'Impact', 'type': 'number'})
+colLabels.set('output_cnt', {'label': 'Output', 'type': 'number'})
+colLabels.set('category_cnt', {'label': 'Categories', 'type': 'number'})
 
-async function fetchProjectQuality(showAll: boolean, token:string): Promise<ProjectQualityProps[]> {
+export async function fetchProjectQuality(showAll: boolean, token?:string): Promise<ProjectQualityProps[]> {
   try {
     const url = getBaseUrl() + `/rpc/project_quality?show_all=${showAll}`
     const resp = await fetch(url, {
@@ -102,31 +102,4 @@ function calculateScore(element:ProjectQualityProps): number {
 
   if (kpiCount === 0) return 0
   return Math.round((score/kpiCount)*100)
-}
-
-
-export function useProjectQuality({token, showAll}: { token: string, showAll: boolean }) {
-  const [data, setData] = useState<ProjectQualityProps[]>([])
-  const [dataLoaded, setDataLoaded] = useState(false)
-
-  // console.group('useProjectQuality')
-  // console.log('showAll...', showAll)
-  // console.groupEnd()
-
-  useEffect(() => {
-    if (token) {
-      setDataLoaded(false)
-      fetchProjectQuality(showAll, token)
-        .then(data => {
-          setData(data)
-          setDataLoaded(true)
-        })
-    }
-  }, [showAll,token])
-
-  return {
-    data,
-    dataLoaded,
-    realLabels
-  }
 }

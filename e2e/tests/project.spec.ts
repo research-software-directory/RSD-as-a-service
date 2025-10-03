@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,10 +22,20 @@ import {mockCitations} from '../mocks/mockCitations'
 import {addCitation} from '../helpers/citations'
 import {mockProjectOrganisation} from '../mocks/mockOrganisation'
 import {addFundingOrganisation, addOrganisation} from '../helpers/organisations'
+import {acceptUserAgreement} from '../helpers/userAgreement'
 
 // run tests in serial mode
 // we first need first to create software
 test.describe.serial('Project', async () => {
+  test('Accept user agreement',async ({page}, {project}) => {
+    // go to user settings
+    await page.goto('/user/settings')
+    // accept user agreement first
+    const accepted = await acceptUserAgreement(page)
+    // expect this worked
+    expect(accepted).toBeTruthy()
+  })
+
   test('Create project', async ({page},{project}) => {
     // get mock project for the browser
     const proj = mockProject[project.name]

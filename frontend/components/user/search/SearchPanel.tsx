@@ -4,16 +4,16 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import SearchInput from '~/components/search/SearchInput'
-import ViewToggleGroup, {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import ToggleViewGroup, {ProjectLayoutType} from '~/components/search/ToggleViewGroup'
 import ItemsPerPage from './ItemsPerPage'
 
 export type SearchPanelProps=Readonly<{
   placeholder: string
   layout: ProjectLayoutType
   rows: number
-  search: string | null
+  search?: string
   onSearch: (search: string) => void
-  onSetView: (view:ProjectLayoutType)=>void
+  onSetView: (view: ProjectLayoutType)=>void
   onSetRows: (rows: number)=>void
 }>
 
@@ -26,11 +26,11 @@ export default function SearchPanel({
       <SearchInput
         placeholder={placeholder}
         onSearch={onSearch}
-        defaultValue={search ?? ''}
+        defaultValue={search}
       />
-      <ViewToggleGroup
-        layout={layout}
-        onSetView={onSetView}
+      <ToggleViewGroup
+        view={layout}
+        onChangeView={onSetView}
         sx={{
           marginLeft:'0.5rem'
         }}

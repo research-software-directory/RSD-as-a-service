@@ -20,6 +20,8 @@ import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 import getPlugins from '~/config/getPlugins'
 import PluginSettingsProvider from '~/config/RsdPluginContext'
 import {UserSettingsProvider} from '~/config/UserSettingsContext'
+import AppHeader from '~/components/AppHeader'
+import AppFooter from '~/components/AppFooter'
 import {getMatomoSettings} from '~/components/cookies/getMatomoSettings'
 import MatomoScript from '~/components/cookies/MatomoScript'
 import MuiSnackbarProvider from '~/components/snackbar/MuiSnackbarProvider'
@@ -96,7 +98,7 @@ export default async function RootLayout({
         {/* inject matomo script */}
         <MatomoScript matomo={matomo} nonce={nonce} />
       </head>
-      <body className="dark bg-base-200 flex flex-col min-h-[100vh]">
+      <body className="dark flex flex-col min-h-[100vh]">
         {/* material-ui cache provider */}
         <AppRouterCacheProvider options={{nonce}}>
           {/* material-ui theme provider */}
@@ -115,7 +117,9 @@ export default async function RootLayout({
                       <UserSettingsProvider user={userSettings}>
                         {/* Login providers list */}
                         <LoginProvidersProvider providers = {providers}>
-                          {children}
+                          <AppHeader />
+                            {children}
+                          <AppFooter/>
                         </LoginProvidersProvider>
                       </UserSettingsProvider>
                     </ProgressProviderApp>

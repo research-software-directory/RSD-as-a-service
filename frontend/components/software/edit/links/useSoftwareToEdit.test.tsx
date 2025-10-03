@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -16,7 +16,7 @@ import useSoftwareToEdit from './useSoftwareToEdit'
 import useSoftwareToEditData from './__mocks__/useSoftwareToEditData.json'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetSoftwareToEdit = jest.fn(props => Promise.resolve([]as any))
-jest.mock('~/utils/editSoftware', () => ({
+jest.mock('~/components/software/edit/apiEditSoftware', () => ({
   getSoftwareToEdit: jest.fn(props=>mockGetSoftwareToEdit(props))
 }))
 
@@ -29,7 +29,7 @@ const mockGetCategoriesForSoftware = jest.fn(props => Promise.resolve([] as Cate
 const mockGetCategoriesForSoftwareIds = jest.fn(props => Promise.resolve(new Set() as CategoryForSoftwareIds))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetLicenseForSoftware = jest.fn(props => Promise.resolve([] as any))
-jest.mock('~/utils/getSoftware', () => ({
+jest.mock('~/components/software/apiSoftware', () => ({
   getKeywordsForSoftware: jest.fn(props => mockGetKeywordsForSoftware(props)),
   getCategoriesForSoftware: jest.fn(props => mockGetCategoriesForSoftware(props)),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

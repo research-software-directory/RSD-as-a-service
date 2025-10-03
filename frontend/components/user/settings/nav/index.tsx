@@ -4,7 +4,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
+'use client'
+import {usePathname,useSearchParams} from 'next/navigation'
+import Link from 'next/link'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -12,11 +14,11 @@ import ListItemText from '@mui/material/ListItemText'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 import {settingsMenu} from './UserSettingsNavItems'
-import Link from 'next/link'
 
 export default function UserSettingsNav() {
-  const router = useRouter()
-  const settings = router.query['settings'] ?? 'profile'
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const settings = searchParams?.get('settings') ?? 'profile'
   // console.group('UserSettingsNav')
   // console.log('settings...', settings)
   // console.groupEnd()
@@ -35,7 +37,7 @@ export default function UserSettingsNav() {
             data-testid="user-settings-nav-item"
             key={item.id}
             selected={selected}
-            href={`${router.query.section}?settings=${item.id}`}
+            href={`${pathname}?settings=${item.id}`}
             LinkComponent={Link}
             sx={editMenuItemButtonSx}
           >

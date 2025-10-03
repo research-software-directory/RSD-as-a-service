@@ -4,13 +4,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState} from 'react'
 
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import ContentLoader from '~/components/layout/ContentLoader'
-import useSoftwareContext from '~/components/software/edit/useSoftwareContext'
+import useSoftwareContext from '~/components/software/edit/context/useSoftwareContext'
 import {CommunityListProps} from '~/components/communities/apiCommunities'
 import config from './config'
 import {useSoftwareCommunities} from './useSoftwareCommunities'
@@ -32,7 +33,7 @@ type ModalProps={
   }
 }
 
-export default function SoftwareCommunities() {
+export default function EditSoftwareCommunities() {
   const {software} = useSoftwareContext()
   const {loading,communities,joinCommunity,leaveCommunity} = useSoftwareCommunities(software.id)
   const [modal,setModal] = useState<ModalProps>({

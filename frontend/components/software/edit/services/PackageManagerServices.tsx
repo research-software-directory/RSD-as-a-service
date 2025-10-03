@@ -1,17 +1,18 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import List from '@mui/material/List'
-import {usePackageManagerServices} from './apiSoftwareServices'
 import ContentLoader from '~/components/layout/ContentLoader'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 
 import {PackageManagerSettings, packageManagerSettings} from '../package-managers/apiPackageManager'
 import {ServiceInfoListItem} from './ServiceInfoListItem'
+import usePackageManagerServices from './usePackageManagerServices'
 
 
 export default function PackageManagerServices() {

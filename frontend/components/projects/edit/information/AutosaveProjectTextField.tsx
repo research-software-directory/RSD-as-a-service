@@ -12,7 +12,7 @@ import {EditProject} from '~/types/Project'
 import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
 import {ControlledTextFieldOptions} from '~/components/form/ControlledTextField'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import useProjectContext from '../useProjectContext'
+import useProjectContext from '../context/useProjectContext'
 import {patchProjectTable} from './patchProjectInfo'
 
 export type AutosaveProjectInfoProps = {

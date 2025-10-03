@@ -5,6 +5,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {RelatedProject} from '../../types/Project'

@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -12,7 +12,7 @@ import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
-import {createKeyword} from '~/utils/editKeywords'
+import {createKeyword} from '~/components/keyword/apiEditKeywords'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 
 type getKeywordApiParams = {

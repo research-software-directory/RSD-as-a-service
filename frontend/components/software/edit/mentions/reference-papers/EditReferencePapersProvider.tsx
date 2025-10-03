@@ -6,11 +6,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useEffect, useReducer} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
 import logger from '~/utils/logger'
-import {deleteMentionItem, updateMentionItem} from '~/utils/editMentions'
+import {deleteMentionItem, updateMentionItem} from '~/components/mention/apiEditMentions'
 import {MentionItemProps} from '~/types/Mention'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {
@@ -18,7 +19,7 @@ import {
   editMentionReducer, EditMentionState
 } from '~/components/mention/editMentionReducer'
 import EditMentionContext from '~/components/mention/editMentionContext'
-import useSoftwareContext from '../../useSoftwareContext'
+import useSoftwareContext from '../../context/useSoftwareContext'
 import {
   addToReferencePaperForSoftware,
   addNewReferencePaperToSoftware,

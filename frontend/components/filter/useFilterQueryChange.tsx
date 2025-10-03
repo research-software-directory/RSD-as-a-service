@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -27,7 +27,7 @@ export default function useFilterQueryChange(){
       params['rows'] = rsd_page_rows
     } else if (key === 'rows'){
       // save number of rows in user settings (saves to cookie too)
-      setPageRows(parseInt(value.toString()))
+      setPageRows(Number.parseInt(value.toString()))
     }
 
     // update query parameters

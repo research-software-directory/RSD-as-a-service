@@ -9,6 +9,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState} from 'react'
 
 import {getDisplayName} from '~/utils/getDisplayName'
@@ -25,7 +26,7 @@ import AggregatedPersonModal, {FormPerson} from '~/components/person/AggregatedP
 import {AggregatedPerson} from '~/components/person/groupByOrcid'
 import FindPerson from '~/components/person/FindPerson'
 import {personAlreadyPresent} from '~/components/person/searchForPerson'
-import useProjectContext from '../useProjectContext'
+import useProjectContext from '../context/useProjectContext'
 import {cfgTeamMembers} from './config'
 import {ModalProps, ModalStates} from './apiTeamMembers'
 import useTeamMembers from './useTeamMembers'
@@ -54,10 +55,8 @@ export default function ProjectTeam() {
   })
 
   // console.group('ProjectTeam')
-  // console.log('slug...', slug)
   // console.log('loading...', loading)
   // console.log('project...', project)
-  // console.log('token...', token)
   // console.log('members...', members)
   // console.groupEnd()
 

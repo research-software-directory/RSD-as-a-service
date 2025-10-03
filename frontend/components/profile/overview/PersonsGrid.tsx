@@ -7,6 +7,7 @@ import NoContent from '~/components/layout/NoContent'
 
 import {PersonsOverview} from './apiPersonsOverview'
 import PersonCard from './PersonCard'
+import GridOverview from '~/components/layout/GridOverview'
 
 
 export default function PersonsGrid({items}:{items:PersonsOverview[]}) {
@@ -16,12 +17,10 @@ export default function PersonsGrid({items}:{items:PersonsOverview[]}) {
   }
 
   return (
-    <section
-      data-testid="persons-grid"
-      className="my-12 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-[27rem]">
+    <GridOverview fullWidth={true} className="pt-12 pb-6 auto-rows-[28rem]">
       {items.map((item) => (
         <PersonCard key={item.account} person={item} />
       ))}
-    </section>
+    </GridOverview>
   )
 }

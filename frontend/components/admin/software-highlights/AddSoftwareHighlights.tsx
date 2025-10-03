@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -10,7 +10,7 @@ import {HTMLAttributes, useState} from 'react'
 
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {getBaseUrl} from '~/utils/fetchHelpers'
-import {getSoftwareList} from '~/utils/getSoftware'
+import {getSoftwareList} from '~/components/software/apiSoftware'
 import {softwareListUrl} from '~/utils/postgrestUrl'
 import AsyncAutocompleteSC, {AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'

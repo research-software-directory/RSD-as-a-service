@@ -18,15 +18,15 @@ import {mentionModal} from '~/components/mention/config'
 
 // MOCKS
 import outputForSoftware from './__mocks__/outputForSoftware.json'
-import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
+import {initialState as softwareState} from '~/components/software/edit/context/editSoftwareContext'
 import mockCrossrefItems from '~/utils/__mocks__/crossrefItems.json'
 
 // Mock getMentionsForSoftware
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetMentionByDoiFromRsd = jest.fn((props) => Promise.resolve([] as any))
 
-jest.mock('~/utils/editMentions', () => ({
-  ...jest.requireActual('~/utils/editMentions'),
+jest.mock('~/components/mention/apiEditMentions', () => ({
+  ...jest.requireActual('~/components/mention/apiEditMentions'),
   getMentionByDoiFromRsd: jest.fn(props=>mockGetMentionByDoiFromRsd(props))
 }))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -97,7 +97,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
 
   it('renders no related output items', async () => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // mock no items
     mockSoftwareMentionContext.loading=false
     mockSoftwareMentionContext.output=[]
@@ -116,7 +116,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
 
   it('renders mocked mention items', async () => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // mock items
     mockSoftwareMentionContext.loading = false
     mockSoftwareMentionContext.output = outputForSoftware as any
@@ -137,7 +137,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
   it('search mention by DOI', async () => {
     const validDOI = '10.5281/zenodo.3401363'
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     mockSoftwareMentionContext.loading = false
     mockSoftwareMentionContext.output = []
     mockUseSoftwareMentionContext.mockReturnValueOnce(mockSoftwareMentionContext)
@@ -183,7 +183,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
   it('search mention by text', async() => {
     const searchFor = 'My lovely mention'
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     mockSoftwareMentionContext.loading = false
     mockSoftwareMentionContext.output = []
     mockUseSoftwareMentionContext.mockReturnValueOnce(mockSoftwareMentionContext)
@@ -208,7 +208,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
       // call RSD api to find mention by DOI
       expect(mockFindPublicationByTitle).toHaveBeenCalledTimes(1)
       expect(mockFindPublicationByTitle).toHaveBeenCalledWith({
-        'id': softwareState.software.id,
+        'id': softwareState.id,
         searchFor,
         'token': mockSession.token
       })
@@ -217,7 +217,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
 
   it('add custom mention', async() => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     mockSoftwareMentionContext.loading = false
     mockSoftwareMentionContext.output = []
     mockUseSoftwareMentionContext.mockReturnValueOnce(mockSoftwareMentionContext)
@@ -294,7 +294,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
           'title': 'Test value',
           'url': 'https://google.com/link1',
         },
-        'software': softwareState.software.id,
+        'software': softwareState.id,
         'token': mockSession.token,
       })
     })
@@ -302,7 +302,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
 
   it('delete mention item', async() => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     mockSoftwareMentionContext.loading = false
     mockSoftwareMentionContext.output = outputForSoftware as any
     mockUseSoftwareMentionContext.mockReturnValueOnce(mockSoftwareMentionContext)
@@ -330,7 +330,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
       expect(mockRemoveMentionForSoftware).toHaveBeenCalledTimes(1)
       expect(mockRemoveMentionForSoftware).toHaveBeenCalledWith({
         'mention': outputForSoftware[0].id,
-        'software': softwareState.software.id,
+        'software': softwareState.id,
         'token': mockSession.token,
       })
     })

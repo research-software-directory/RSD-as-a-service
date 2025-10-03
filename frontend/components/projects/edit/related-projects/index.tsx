@@ -5,11 +5,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useEffect, useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
-import {getRelatedProjectsForProject} from '~/utils/getProjects'
-import {addRelatedProject, deleteRelatedProject} from '~/utils/editProject'
+import {getRelatedProjectsForProject} from '~/components/projects/apiProjects'
+import {addRelatedProject, deleteRelatedProject} from '~/components/projects/edit/apiEditProject'
 import {sortOnStrProp} from '~/utils/sortFn'
 import {extractErrorMessages} from '~/utils/fetchHelpers'
 import {ProjectStatusKey, RelatedProjectForProject, SearchProject} from '~/types/Project'
@@ -19,7 +20,7 @@ import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import EditSection from '~/components/layout/EditSection'
 import {relatedProject as config} from './config'
 import FindRelatedProject from './FindRelatedProject'
-import useProjectContext from '../useProjectContext'
+import useProjectContext from '../context/useProjectContext'
 import RelatedProjectList from './RelatedProjectList'
 
 export default function RelatedProjectsForProject() {
@@ -36,7 +37,6 @@ export default function RelatedProjectsForProject() {
       const projects = await getRelatedProjectsForProject({
         project: project.id,
         token,
-        frontend: true,
         approved: false,
         // order by title only
         order:'title.asc'

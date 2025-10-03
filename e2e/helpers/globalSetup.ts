@@ -16,7 +16,7 @@ import {acceptUserAgreement} from './userAgreement'
  * @returns
  */
 function fixCookiesProps(cookies:any) {
-  const fixed = cookies.map(cookie => {
+  const fixed = cookies.map((cookie:any) => {
     cookie.httpOnly = false
     cookie.secure = false
     cookie.sameSite = 'Lax'
@@ -37,7 +37,7 @@ async function globalSetup(config: FullConfig) {
   const {baseURL, storageState} = config.projects[0].use
   // console.log('globalSetup...timeout...', config.projects[0].timeout)
   // launch chromium browser
-  // set headles = false if you want to see/debug
+  // set headless = false if you want to see/debug
   const browser = await chromium.launch({
     headless: true
   })
@@ -52,6 +52,7 @@ async function globalSetup(config: FullConfig) {
     }).click()
   }
   // sign in - we need to do this because we loose cookies
+  // RSD is in DEV mode => First user is rsd-admin => no accept user agreement modal!
   await loginLocal({
     page,
     username: user.name
@@ -70,7 +71,7 @@ async function globalSetup(config: FullConfig) {
   // after login user is send to settings
   // for "normal" users the modal will appear automatically to
   // accept user agreement (if modal present)
-  await acceptUserAgreement(page)
+  // await acceptUserAgreement(page, baseURL)
 
   // close browser
   await browser.close()

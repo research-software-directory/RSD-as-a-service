@@ -1,30 +1,33 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import Link from 'next/link'
+
+import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import NoContent from '~/components/layout/NoContent'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import GridOverview from '~/components/layout/GridOverview'
 import SoftwareGridCard from '~/components/software/overview/cards/SoftwareGridCard'
-import SoftwareOverviewGrid from '~/components/software/overview/cards/SoftwareOverviewGrid'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
 import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
-import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 
-type ProfileSoftwareOverviewProps = {
-  layout: ProjectLayoutType
+type ProfileSoftwareOverviewProps = Readonly<{
   software: SoftwareOverviewItemProps[]
-}
+}>
 
-export default function ProfileSoftwareOverview({layout,software}:ProfileSoftwareOverviewProps) {
+export default function ProfileSoftwareOverview({software}:ProfileSoftwareOverviewProps) {
+  const {rsd_page_layout} = useUserSettings()
 
   if (!software || software.length === 0) {
     return <NoContent />
   }
 
-  if (layout === 'list') {
+  if (rsd_page_layout === 'list') {
     return (
       <SoftwareOverviewList>
         {software.map(item => {
@@ -48,11 +51,11 @@ export default function ProfileSoftwareOverview({layout,software}:ProfileSoftwar
 
   // GRID as default
   return (
-    <SoftwareOverviewGrid fullWidth={true}>
+    <GridOverview fullWidth={true}>
       {software.map((item) => {
         return <SoftwareGridCard key={item.id} {...item}/>
       })}
-    </SoftwareOverviewGrid>
+    </GridOverview>
   )
 
 }

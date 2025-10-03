@@ -1,8 +1,9 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 
@@ -46,7 +47,7 @@ export default function SoftwareMentionTabs(){
   // console.groupEnd()
 
   return (
-    <>
+    <section>
       <Tabs
         value={tab}
         onChange={(_,value)=>setTab(value)}
@@ -61,6 +62,6 @@ export default function SoftwareMentionTabs(){
         })}
       </Tabs>
       <SoftwareMentionContent tab={tab} />
-    </>
+    </section>
   )
 }

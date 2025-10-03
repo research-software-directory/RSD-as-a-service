@@ -6,9 +6,10 @@
 import {OrganisationForOverview} from '~/types/Organisation'
 import CardSkeleton from '~/components/cards/CardSkeleton'
 import NoContent from '~/components/layout/NoContent'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import {ProjectLayoutType} from '~/components/search/ToggleViewGroup'
 import OrganisationCard from '~/components/organisation/overview/card/OrganisationCard'
 import OrganisationListItem from './OrganisationListItem'
+import GridOverview from '~/components/layout/GridOverview'
 
 type UserOrganisationsOverviewProps=Readonly<{
   layout: ProjectLayoutType
@@ -40,16 +41,15 @@ export default function UserOrganisationsOverview({loading,skeleton_items,layout
     )
   }
 
+  // GRID as default
   return (
-    <section
-      data-testid="organisation-overview-grid"
-      className="mt-4 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-[27rem]">
+    <GridOverview fullWidth={true}>
       {organisations.map((organisation) => (
         <OrganisationCard
           key={organisation.id}
           organisation={organisation}
         />
       ))}
-    </section>
+    </GridOverview>
   )
 }

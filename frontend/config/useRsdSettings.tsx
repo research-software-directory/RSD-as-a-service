@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useContext} from 'react'
 import {RsdTheme} from '~/styles/rsdMuiTheme'
 import {RsdSettingsContext} from './RsdSettingsContext'

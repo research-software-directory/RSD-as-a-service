@@ -25,7 +25,7 @@ type GetPersonsListParams={
   page: number,
   rows: number,
   token?: string
-  searchFor?:string,
+  searchFor?:string|null,
   orderBy?:string,
 }
 
@@ -72,6 +72,46 @@ export async function getPersonsList({page,rows,token,searchFor,orderBy}:GetPers
     return {
       count: 0,
       persons: []
+    }
+  }
+}
+
+export async function getPersonStats({account,token}:{account:string,token?:string}){
+  try{
+    const query = `select=account,software_cnt,project_cnt&account=eq.${account}`
+    const url = `${getBaseUrl()}/rpc/public_persons_overview?${query}`
+    // console.log('url...', url)
+    // get community
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token),
+        // request record count to be returned
+        // note: it's returned in the header
+        'Prefer': 'count=exact'
+      }
+    })
+
+    if (resp.ok){
+      const json = await resp.json()
+      return {
+        account: json[0].account as string,
+        software_cnt: json[0].software_cnt as number ?? 0,
+        project_cnt: json[0].project_cnt as number ?? 0
+      }
+    }
+    logger(`getPersonStats: ${resp.status}: ${resp.statusText}`,'warn')
+    return {
+      account,
+      software_cnt:0,
+      project_cnt:0
+    }
+  }catch(e:any){
+    logger(`getPersonStats: ${e.message}`,'error')
+    return {
+      account,
+      software_cnt:0,
+      project_cnt:0
     }
   }
 }

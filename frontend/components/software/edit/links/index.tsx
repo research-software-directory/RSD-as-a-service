@@ -4,13 +4,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useSession} from '~/auth/AuthProvider'
 import ContentLoader from '~/components/layout/ContentLoader'
-import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContext from '../context/useSoftwareContext'
 import useSoftwareToEdit from './useSoftwareToEdit'
 import EditSoftwareMetadataForm from './EditSoftwareMetadataForm'
 
-export default function EditSoftwareDescriptionPage() {
+export default function EditSoftwareLinksPage() {
   const {token} = useSession()
   const {software:{slug}} = useSoftwareContext()
   const {editSoftware,loading} = useSoftwareToEdit({slug, token})

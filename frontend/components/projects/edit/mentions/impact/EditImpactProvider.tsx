@@ -11,7 +11,7 @@ import {useEffect, useReducer} from 'react'
 import {useSession} from '~/auth/AuthProvider'
 import logger from '~/utils/logger'
 import {MentionItemProps} from '~/types/Mention'
-import {deleteMentionItem, updateMentionItem} from '~/utils/editMentions'
+import {deleteMentionItem, updateMentionItem} from '~/components/mention/apiEditMentions'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {
   EditMentionAction, EditMentionActionType,
@@ -20,7 +20,7 @@ import {
 import EditMentionContext from '~/components/mention/editMentionContext'
 import {getMentionType} from '~/components/mention/config'
 import SanitizedMathMLBox from '~/components/layout/SanitizedMathMLBox'
-import useProjectContext from '../../useProjectContext'
+import useProjectContext from '../../context/useProjectContext'
 import {useProjectMentionContext} from '../ProjectMentionContext'
 import {addToImpactForProject, addNewImpactToProject, removeImpactForProject} from './impactForProjectApi'
 import NoImpactItems from './NoImpactItems'

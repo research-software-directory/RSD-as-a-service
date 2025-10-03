@@ -5,9 +5,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import PageContainer from '../layout/PageContainer'
+import PageContainer from '~/components/layout/PageContainer'
 import RelatedSoftwareGrid, {SoftwareGridType} from './RelatedSoftwareGrid'
 
 export default function RelatedSoftwareSection({relatedSoftware = []}:Readonly<{relatedSoftware:SoftwareGridType[]}>) {

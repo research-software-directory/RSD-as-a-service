@@ -8,6 +8,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import UserSettingsNav from './nav'
 import UserSettingsContent from './UserSettingsContent'
