@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,10 +11,12 @@ import ListItemText from '@mui/material/ListItemText'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 import {settingsMenu} from './SettingsNavItems'
+import {useCommunityContext} from '../context'
 
 export default function CommunitySettingsNav() {
   const router = useRouter()
   const tab = router.query['tab'] ?? 'general'
+  const {community:{slug}} = useCommunityContext()
   // console.group('CommunitySettingsNav')
   // console.log('description...', organisation.description)
   // console.groupEnd()
@@ -27,18 +29,14 @@ export default function CommunitySettingsNav() {
     >
       {settingsMenu.map((item, pos) => {
         const selected = tab === settingsMenu[pos].id
+        const url = `${router.pathname.replace('[slug]',slug)}?tab=${item.id}`
         return (
           <ListItemButton
-            data-testid="organisation-settings-nav-item"
+            data-testid="community-settings-nav-item"
             key={`step-${pos}`}
             selected={selected}
             onClick={() => {
-              router.push({
-                query: {
-                  ...router.query,
-                  tab: item.id
-                }
-              },{},{scroll:false})
+              router.push(url,url,{scroll:false})
             }}
             sx={editMenuItemButtonSx}
           >

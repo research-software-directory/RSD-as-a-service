@@ -17,6 +17,23 @@ import mockOrganisation from '../__mocks__/mockOrganisation'
 // mock user agreement call
 jest.mock('~/components/user/settings/agreements/useUserAgreements')
 
+// MOCK page useRouter (next/router)
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(()=>{
+    return {
+      pathname: {
+        replace:jest.fn()
+      },
+      asPath: 'test-path',
+      // ... whatever else you call on `router`
+      query: {
+        test: 'query',
+        slug: 'test-slug'
+      }
+    }
+  }),
+}))
+
 const mockProps = {
   organisation: mockOrganisation,
   isMaintainer: false
