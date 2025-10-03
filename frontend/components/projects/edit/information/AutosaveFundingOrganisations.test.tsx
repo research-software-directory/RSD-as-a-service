@@ -19,7 +19,7 @@ import mockFundingOrganisations from './__mocks__/fundingOrganisations.json'
 const mockSearchForOrganisation = jest.fn(props => Promise.resolve([]))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockCreateOrganisation = jest.fn(props => Promise.resolve([] as any))
-jest.mock('~/utils/editOrganisation', () => ({
+jest.mock('~/components/organisation/apiEditOrganisation', () => ({
   searchForOrganisation: jest.fn(props => mockSearchForOrganisation(props)),
   createOrganisation: jest.fn(props=>mockCreateOrganisation(props))
 }))

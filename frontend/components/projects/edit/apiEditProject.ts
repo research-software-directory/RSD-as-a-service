@@ -8,14 +8,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import logger from '../../../utils/logger'
-import {createJsonHeaders, extractReturnMessage} from '../../../utils/fetchHelpers'
 import {
   NewProject, ProjectLink, ResearchDomainForProject
 } from '~/types/Project'
+import logger from '~/utils/logger'
+import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import {colForCreate, EditOrganisation, OrganisationRole, OrganisationStatus} from '~/types/Organisation'
-import {createOrganisation} from '../../../utils/editOrganisation'
-import {getPropsFromObject} from '../../../utils/getPropsFromObject'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
+import {createOrganisation} from '~/components/organisation/apiEditOrganisation'
 
 // query for software item page based on slug
 export async function validProjectItem(slug: string | undefined, token?: string) {

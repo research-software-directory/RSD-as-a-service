@@ -11,6 +11,7 @@ import {getUserSettings} from '~/components/user/ssrUserSettings'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import {fetchProjectQuality} from './apiProjectQuality'
 import ProjectQualityTable from './ProjectQualityTable'
+import NoContent from '~/components/layout/NoContent'
 
 export default async function ProjectQuality() {
   const {token} = await getUserSettings()
@@ -25,6 +26,10 @@ export default async function ProjectQuality() {
   // console.log('data...', data)
   // console.log('dataLoaded...', dataLoaded)
   // console.groupEnd()
+
+  if (data.length === 0) {
+    return <NoContent />
+  }
 
   return (
     <BaseSurfaceRounded

@@ -69,8 +69,8 @@ const mockCreateOrganisation = jest.fn(props => Promise.resolve({
   status: 201,
   message: 'new-organisation-id'
 }))
-jest.mock('~/utils/editOrganisation', () => ({
-  ...jest.requireActual('~/utils/editOrganisation'),
+jest.mock('~/components/organisation/apiEditOrganisation', () => ({
+  ...jest.requireActual('~/components/organisation/apiEditOrganisation'),
   searchForOrganisation: jest.fn(props => mockSearchForOrganisation(props)),
   createOrganisation: jest.fn(props=>mockCreateOrganisation(props))
 }))

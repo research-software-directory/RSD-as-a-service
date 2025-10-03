@@ -9,7 +9,7 @@ import {HTMLAttributes, useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
 import {findInROR} from '~/utils/getROR'
-import {newOrganisationProps, searchToEditOrganisation} from '~/utils/editOrganisation'
+import {newOrganisationProps, searchToEditOrganisation} from '~/components/organisation/apiEditOrganisation'
 import {EditOrganisation, SearchOrganisation} from '~/types/Organisation'
 import AsyncAutocompleteSC, {AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'

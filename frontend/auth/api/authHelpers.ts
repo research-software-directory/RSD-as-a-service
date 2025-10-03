@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -57,14 +57,11 @@ export function getRedirectUrl(props: RedirectToProps) {
   return redirectUrl
 }
 
-export async function claimProjectMaintainerInvite({id, token, frontend = false}:
-  {id: string, token?: string, frontend?:boolean}) {
+export async function claimProjectMaintainerInvite({id, token}:
+  {id: string, token?: string}) {
   try {
     const query = 'rpc/accept_invitation_project'
-    let url = `${process.env.POSTGREST_URL}/${query}`
-    if (frontend) {
-      url = `/api/v1/${query}`
-    }
+    const url = `${getBaseUrl()}/${query}`
     // console.log('url...', url)
     const resp = await fetch(url, {
       method: 'POST',
@@ -79,7 +76,10 @@ export async function claimProjectMaintainerInvite({id, token, frontend = false}
     if (resp.status === 200) {
       const json = await resp.json()
       return {
-        projectInfo: json,
+        projectInfo: json as {
+          title: string
+          slug: string
+        },
         error: null
       }
     }
@@ -102,14 +102,11 @@ export async function claimProjectMaintainerInvite({id, token, frontend = false}
 }
 
 
-export async function claimSoftwareMaintainerInvite({id, token, frontend = false}:
-  { id: string, token?: string, frontend?: boolean }) {
+export async function claimSoftwareMaintainerInvite({id, token}:
+  { id: string, token?: string}) {
   try {
     const query = 'rpc/accept_invitation_software'
-    let url = `${process.env.POSTGREST_URL}/${query}`
-    if (frontend) {
-      url = `/api/v1/${query}`
-    }
+    const url = `${getBaseUrl()}/${query}`
     // console.log('url...', url)
     const resp = await fetch(url, {
       method: 'POST',
@@ -124,7 +121,10 @@ export async function claimSoftwareMaintainerInvite({id, token, frontend = false
     if (resp.status === 200) {
       const json = await resp.json()
       return {
-        softwareInfo: json,
+        softwareInfo: json as {
+          brand_name: string
+          slug: string
+        },
         error: null
       }
     }
@@ -146,14 +146,11 @@ export async function claimSoftwareMaintainerInvite({id, token, frontend = false
   }
 }
 
-export async function claimOrganisationMaintainerInvite({id, token, frontend = false}:
-  { id: string, token?: string, frontend?: boolean }) {
+export async function claimOrganisationMaintainerInvite({id, token}:
+  { id: string, token?: string}) {
   try {
     const query = 'rpc/accept_invitation_organisation'
-    let url = `${process.env.POSTGREST_URL}/${query}`
-    if (frontend) {
-      url = `/api/v1/${query}`
-    }
+    const url = `${getBaseUrl()}/${query}`
     // console.log('url...', url)
     const resp = await fetch(url, {
       method: 'POST',
@@ -168,7 +165,10 @@ export async function claimOrganisationMaintainerInvite({id, token, frontend = f
     if (resp.status === 200) {
       const json = await resp.json()
       return {
-        organisationInfo: json,
+        organisationInfo: json as {
+          id: string
+          name: string
+        },
         error: null
       }
     }
@@ -210,7 +210,11 @@ export async function claimCommunityMaintainerInvite({id, token}:
     if (resp.status === 200) {
       const json = await resp.json()
       return {
-        communityInfo: json,
+        communityInfo: json as {
+          id: string
+          name: string
+          slug: string
+        },
         error: null
       }
     }

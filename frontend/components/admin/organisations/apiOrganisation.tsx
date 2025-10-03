@@ -8,7 +8,7 @@
 import {useCallback, useEffect, useState} from 'react'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {createOrganisation, deleteOrganisation} from '~/utils/editOrganisation'
+import {createOrganisation, deleteOrganisation} from '~/components/organisation/apiEditOrganisation'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'

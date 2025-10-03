@@ -18,7 +18,7 @@ import {
   createOrganisation,
   newOrganisationProps,
   updateOrganisation
-} from '~/utils/editOrganisation'
+} from '~/components/organisation/apiEditOrganisation'
 import {
   colForCreate,
   colForUpdate,

@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {ReactNode} from 'react'
 import {styled} from '@mui/material/styles'
 

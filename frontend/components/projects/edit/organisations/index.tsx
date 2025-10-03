@@ -14,7 +14,7 @@ import {colForUpdate, EditOrganisation, SearchOrganisation} from '~/types/Organi
 import {
   newOrganisationProps,
   searchToEditOrganisation, updateOrganisation
-} from '~/utils/editOrganisation'
+} from '~/components/organisation/apiEditOrganisation'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {
   addOrganisationToProject, createOrganisationAndAddToProject,

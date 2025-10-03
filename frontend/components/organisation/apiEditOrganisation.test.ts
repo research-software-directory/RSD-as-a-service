@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {mockResolvedValueOnce} from './jest/mockFetch'
-import {getRsdPathForOrganisation} from './editOrganisation'
+import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
+import {getRsdPathForOrganisation} from './apiEditOrganisation'
 
 describe('getRsdPathForOrganisation', () => {
   it('returns rsd_path in response message', async () => {

@@ -20,7 +20,7 @@ import {
   newOrganisationProps,
   searchToEditOrganisation,
   updateOrganisation,
-} from '~/utils/editOrganisation'
+} from '~/components/organisation/apiEditOrganisation'
 import {upsertImage} from '~/utils/editImage'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'

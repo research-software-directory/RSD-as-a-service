@@ -8,7 +8,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {AutocompleteOption} from '../types/AutocompleteOptions'
+import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import {
   CoreOrganisationProps,
   EditOrganisation, Organisation,
@@ -17,14 +17,14 @@ import {
   OrganisationSource,
   PatchOrganisation,
   SearchOrganisation
-} from '../types/Organisation'
-import {createJsonHeaders, extractReturnMessage, getBaseUrl} from './fetchHelpers'
-import {deleteImage, getImageUrl} from './editImage'
-import {findInROR} from './getROR'
-import {getSlugFromString} from './getSlugFromString'
-import {itemsNotInReferenceList} from './itemsNotInReferenceList'
-import logger from './logger'
-import {sortBySearchFor} from './sortFn'
+} from '~/types/Organisation'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
+import {deleteImage, getImageUrl} from '~/utils/editImage'
+import {findInROR} from '~/utils/getROR'
+import {getSlugFromString} from '~/utils/getSlugFromString'
+import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
+import logger from '~/utils/logger'
+import {sortBySearchFor} from '~/utils/sortFn'
 
 export async function searchForOrganisation({searchFor, token}:
   { searchFor: string, token?: string}) {

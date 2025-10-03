@@ -20,6 +20,8 @@ import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 import getPlugins from '~/config/getPlugins'
 import PluginSettingsProvider from '~/config/RsdPluginContext'
 import {UserSettingsProvider} from '~/config/UserSettingsContext'
+import AppHeader from '~/components/AppHeader'
+import AppFooter from '~/components/AppFooter'
 import {getMatomoSettings} from '~/components/cookies/getMatomoSettings'
 import MatomoScript from '~/components/cookies/MatomoScript'
 import MuiSnackbarProvider from '~/components/snackbar/MuiSnackbarProvider'
@@ -29,8 +31,6 @@ import Announcement from '~/components/Announcement/Announcement'
 import ProgressProviderApp from '~/components/bprogress/ProgressProviderApp'
 
 import '~/styles/global.css'
-import AppHeader from '~/components/AppHeader'
-import AppFooter from '~/components/AppFooter'
 
 export const metadata: Metadata = {
   title: 'Home',

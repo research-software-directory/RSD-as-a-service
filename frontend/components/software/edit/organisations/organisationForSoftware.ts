@@ -1,13 +1,13 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {colForCreate, EditOrganisation, SoftwareForOrganisation} from '~/types/Organisation'
-import {createOrganisation} from '~/utils/editOrganisation'
+import {createOrganisation} from '~/components/organisation/apiEditOrganisation'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import logger from '~/utils/logger'
