@@ -9,7 +9,7 @@
 import {styled} from '@mui/material/styles'
 import {ReactNode} from 'react'
 
-const StyledArticle = styled('article')(()=>({
+const StyledSection = styled('section')(()=>({
   flex:1,
   display:'flex',
   justifyContent:'center',
@@ -18,10 +18,10 @@ const StyledArticle = styled('article')(()=>({
 
 export default function ContentInTheMiddle({children,...props}:{children:ReactNode,props?:any}) {
   return (
-    <StyledArticle
+    <StyledSection
       {...props}
     >
       {children}
-    </StyledArticle>
+    </StyledSection>
   )
 }

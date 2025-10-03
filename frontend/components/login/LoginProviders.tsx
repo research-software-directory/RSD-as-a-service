@@ -4,6 +4,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import Link from 'next/link'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -16,6 +17,7 @@ import useRsdSettings from '~/config/useRsdSettings'
 type LoginProvidersProps=Readonly<{
   providers: Provider[]
   login_info_url?:string
+  onClick?:()=>void
 }>
 
 function SecondaryProviderText({provider}:Readonly<{provider:Provider}>){
@@ -46,7 +48,7 @@ function SecondaryProviderText({provider}:Readonly<{provider:Provider}>){
   return null
 }
 
-export default function LoginProviders({providers,login_info_url}:LoginProvidersProps) {
+export default function LoginProviders({providers,login_info_url,onClick}:LoginProvidersProps) {
 
   return (
     <>
@@ -60,6 +62,10 @@ export default function LoginProviders({providers,login_info_url}:LoginProviders
             <Link
               key={provider.signInUrl}
               href={provider.signInUrl}
+              onClick={()=>{
+                // close modal for local account
+                if (provider.openidProvider==='local' && onClick) onClick()
+              }}
               passHref
             >
               <ListItem
