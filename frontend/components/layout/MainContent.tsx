@@ -17,7 +17,7 @@ export default function MainContent({className, children, ...props}: MainContain
   // keep these styles in sync with AppHeader and AppFooter
   return (
     <main
-      className={`flex-1 flex flex-col pb-12 ${className ?? ''}`}
+      className={`flex-1 flex flex-col py-4 lg:pb-12 ${className ?? ''}`}
       {...props}
     >
       {children}
