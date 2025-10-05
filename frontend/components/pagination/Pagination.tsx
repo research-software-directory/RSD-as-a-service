@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {ChangeEvent,MouseEvent} from 'react'
 import TablePagination from '@mui/material/TablePagination'
 

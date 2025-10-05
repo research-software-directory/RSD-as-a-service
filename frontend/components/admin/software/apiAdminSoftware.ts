@@ -5,8 +5,8 @@
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
-import {getSoftwareList} from '~/components/software/apiSoftware'
 import {softwareListUrl} from '~/utils/postgrestUrl'
+import {getSoftwareList} from '~/components/software/apiSoftware'
 
 export type GetSoftwareListParams={
   page: number,

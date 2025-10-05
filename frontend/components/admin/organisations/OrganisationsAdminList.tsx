@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState} from 'react'
 import List from '@mui/material/List'
 import Alert from '@mui/material/Alert'

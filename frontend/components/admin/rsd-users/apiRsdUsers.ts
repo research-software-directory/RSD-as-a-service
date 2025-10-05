@@ -44,8 +44,9 @@ export async function getRsdAccounts({page,rows,token,searchFor,adminsOnly,locke
         // else if searchFor is an ORCID we search on login_for_account sub
 		  query += `&login_for_account_text_filter.sub=eq.${searchFor}&login_for_account_text_filter.provider=eq.orcid`
 	  } else {
+      const encodedSearch = encodeURIComponent(searchFor)
 		  // else we search by name, email or organisation
-		  query += `&login_for_account_text_filter.or=(name.ilike."*${searchFor}*",email.ilike."*${searchFor}*",home_organisation.ilike."*${searchFor}*")`
+		  query += `&login_for_account_text_filter.or=(name.ilike."*${encodedSearch}*",email.ilike."*${encodedSearch}*",home_organisation.ilike."*${encodedSearch}*")`
 	  }
     }
     // complete url

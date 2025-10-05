@@ -4,11 +4,22 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {notFound} from 'next/navigation'
+import {Metadata} from 'next'
 
+import {app} from '~/config/app'
 import RsdAdminContent from '~/auth/RsdAdminContent'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {getNewsItemBySlug} from '~/components/news/apiNews'
 import EditNewsItem from '~/components/news/edit'
+
+// force to be dynamic route
+export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: `Edit news item | ${app.title}`,
+  description: 'Edit news item page.'
+}
+
 
 export default async function EditNewsItemPage({
   params

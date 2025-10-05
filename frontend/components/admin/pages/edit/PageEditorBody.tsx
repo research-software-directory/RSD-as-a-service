@@ -23,7 +23,6 @@ type CustomMarkdownPagesProps = {
   onSubmit: ({status, message, data}: SubmitProps) => void
 }
 
-
 export default function PageEditorBody({links,selected,onSelect,onSorted,onDelete,onSubmit}: CustomMarkdownPagesProps) {
   const methods = useForm<MarkdownPage>({
     mode: 'onChange'
