@@ -46,12 +46,6 @@ const nextConfig: NextConfig = {
   // default redirects
   async redirects() {
     return [
-      // community default page
-      {
-        source: '/communities/:slug',
-        destination: '/communities/:slug/software',
-        permanent: true,
-      },
       // forward old links to new location
       {
         source: '/profile/:orcid*',
