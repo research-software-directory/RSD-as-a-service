@@ -74,6 +74,7 @@ export default async function OrganisationPage({
     case 'settings':
       return (
         // Suspense is not support when Javascript is disabled!
+        // But to edit settings Javascript is REQUIRED!
         <Suspense fallback={<NavContentSkeleton />}>
           <OrganisationSettings slug={slug} query={query}/>
         </Suspense>

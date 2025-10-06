@@ -104,7 +104,7 @@ export async function getOrganisationSlug(id:string){
     if (resp.ok){
       const data:any = await resp.json()
       if (data[0]?.rsd_path){
-        return data[0].rsd_path
+        return data[0].rsd_path as string
       }
       return undefined
     }

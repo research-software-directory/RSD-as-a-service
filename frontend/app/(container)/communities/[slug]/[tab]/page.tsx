@@ -1,6 +1,8 @@
+import {Suspense} from 'react'
 import {notFound} from 'next/navigation'
 
 import {getUserFromToken} from '~/auth'
+import NavContentSkeleton from '~/components/layout/NavContentSkeleton'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {getCommunityBySlug} from '~/components/communities/apiCommunities'
 import {TabKey} from '~/components/communities/tabs/CommunityTabItems'
@@ -56,7 +58,13 @@ export default async function CommunityPages({
         />
       )
     case 'settings':
-      return <CommunitySettingsContent isMaintainer={isMaintainer} />
+      return (
+        // Suspense is not support when Javascript is disabled!
+        // But to edit settings Javascript is REQUIRED!
+        <Suspense fallback={<NavContentSkeleton />}>
+          <CommunitySettingsContent isMaintainer={isMaintainer} />
+        </Suspense>
+      )
     case 'about':
       return <AboutCommunity description={community?.description} />
     default:

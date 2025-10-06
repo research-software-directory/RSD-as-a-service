@@ -5,13 +5,18 @@
 
 import Skeleton from '@mui/material/Skeleton'
 import BaseSurfaceRounded from './BaseSurfaceRounded'
+import JavaScriptRequiredMsg from './JavaScriptRequiredMsg'
 
-export function TextSkeleton({lines=5,fontSize='2rem'}:{lines?:number, fontSize?:string}){
+export function TextSkeleton({lines=5,fontSize='2rem'}:Readonly<{lines?:number, fontSize?:string}>){
   const items = []
   for (let i = 0; i < lines; i++){
     items.push(<Skeleton key={`skelton-line-${i}`} variant="text" sx={{fontSize}} />)
   }
-  return items
+  return (
+    <div className="noscript:hidden">
+      {items}
+    </div>
+  )
 }
 
 type NavContentSkeletonProps=Readonly<{
@@ -38,7 +43,10 @@ export default function NavContentSkeleton({gridCols='1fr_4fr',contentLines=5}:N
         className="flex-1 flex flex-col mb-12 p-4"
         type="section"
       >
+        {/* show loading skeleton only when JS enabled */}
         <TextSkeleton lines={contentLines} fontSize='3rem' />
+        {/* show JS requited message only when JS disabled */}
+        <JavaScriptRequiredMsg />
       </BaseSurfaceRounded>
     </div>
   )
