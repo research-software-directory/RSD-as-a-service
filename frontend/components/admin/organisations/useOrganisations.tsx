@@ -98,12 +98,12 @@ export function useOrganisations(token: string) {
       ...props,
       token
     })
-    if (resp.status !== 200) {
-      showErrorMessage(`Failed to remove organisation. ${resp.message}`)
-    }else{
+    if (resp.status === 200) {
       showSuccessMessage('Organisation deleted from RSD!')
       // reload organisations
       loadOrganisations()
+    }else{
+      showErrorMessage(`Failed to remove organisation. ${resp.message}`)
     }
   }
 

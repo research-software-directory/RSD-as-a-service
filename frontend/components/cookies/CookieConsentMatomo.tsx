@@ -14,9 +14,8 @@ import Button from '@mui/material/Button'
 import CookieTwoToneIcon from '@mui/icons-material/CookieTwoTone'
 
 import logger from '~/utils/logger'
-import {Matomo} from './nodeCookies'
 import {useMatomoConsent} from './useCookieConsent'
-
+import {Matomo} from './getMatomoSettings'
 
 type CookieConsentMatomoProps = {
   matomo: Matomo
@@ -87,7 +86,7 @@ export default function CookieConsentMatomo({matomo}: CookieConsentMatomoProps) 
               matomo.org
             </Link> to provide a better user experience. </span>
           <div className="flex items-center justify-between">
-            <Link href="/cookies" passHref className="text-xs text-base-400 mr-1 hover:text-base-800 hover:underline">
+            <Link href="/cookies" passHref className="text-xs text-base-700 mr-1 hover:underline">
               Read more
             </Link>
             <div className="flex gap-4">

@@ -81,8 +81,6 @@ export default function RsdHome({
         <HomepageDivider />
         {/* Logos  */}
         <LogoSection />
-        {/* Footer */}
-        <div className="mt-20"></div>
       </div >
     </main >
   )

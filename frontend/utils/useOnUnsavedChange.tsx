@@ -8,20 +8,6 @@
 
 'use client'
 import {useEffect} from 'react'
-// import {useRouter} from 'next/router'
-
-// function onRouteChangeNext(e:any,warning:string) {
-//   // console.log('onRouteChangeNext...e...', e)
-//   // notify user about unsaved changes
-//   const leavePage = confirm(warning)
-//   // if user wants to stay
-//   if (leavePage === false) {
-//     // we need to throw error here to cancel navigation
-//     // at this moment there is no 'handler' to cancel navigation.
-//     // This workaround is based on this issue https://github.com/vercel/next.js/issues/2476
-//     throw 'Abort navigation'
-//   }
-// }
 
 /**
  * NOTE! I have not found a way to show custom message at this stage of page navigation
@@ -47,10 +33,6 @@ export default function useOnUnsavedChange({
   // const router = useRouter()
   useEffect(() => {
     // needs to be registered fn in order to remove it on unload
-    // const handleRouteChange = (...args:any) => {
-    //   onRouteChangeNext(args,warning)
-    // }
-    // needs to be registered fn in order to remove it on unload
     const handleBrowserChange = (e:any) => {
       onWebsiteChange(e,warning)
     }
@@ -62,18 +44,8 @@ export default function useOnUnsavedChange({
       // console.log('useUnsavedChanges.isDirty...REMOVE onbeforeunload')
       window.removeEventListener('beforeunload', handleBrowserChange)
     }
-    // NEXT router
-    // if (isDirty) {
-    //   // console.log('useUnsavedChanges.isDirty...listen to routeChangeStart')
-    //   router.events.on('routeChangeStart', handleRouteChange)
-    // } else {
-    //   // console.log('useUnsavedChanges.isDirty...REMOVE listen routeChangeStart')
-    //   router.events.off('routeChangeStart', handleRouteChange)
-    // }
     return () => {
       // console.log('useUnsavedChanges...unloading')
-      // remove even from NEXT router
-      // router.events.off('routeChangeStart', handleRouteChange)
       // remove event from window
       window.removeEventListener('beforeunload', handleBrowserChange)
     }

@@ -22,7 +22,7 @@ import {deleteMarkdownPage, updatePagePositions} from '../saveMarkdownPage'
 import {SubmitProps} from './EditMarkdownPage'
 import PageEditorBody from './PageEditorBody'
 
-export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
+export default function EditMarkdownPages({links}:Readonly<{links:RsdLink[]}>) {
   const {token} = useSession()
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const [navItems, setNavItems] = useState<RsdLink[]>(links)
@@ -116,8 +116,8 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
       // select first item
       if (newLinks.length > 0) {
         setSelected(newLinks[0].slug)
+        patchPositions(newLinks)
       }
-      patchPositions(newLinks)
     } else {
       showErrorMessage(`Failed to remove ${delModal.title}`)
     }
@@ -150,7 +150,7 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
 
   return (
     <>
-      <section className="mb-12  min-h-[60rem]">
+      <section className={`mb-12 ${links.length>0 ? 'min-h-[60rem]':''}`}>
         <div className="flex pb-4 justify-end">
           <Button
             variant='contained'

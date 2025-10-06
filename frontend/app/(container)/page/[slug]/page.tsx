@@ -11,7 +11,7 @@ import {app} from '~/config/app'
  * @returns
  */
 export async function generateMetadata(
-  {params}:{params: Promise<{ slug: string }>}
+  {params}:Readonly<{params: Promise<{ slug: string }>}>
 ): Promise<Metadata> {
   // read route params
   const {slug} = await params
@@ -40,7 +40,7 @@ export async function generateMetadata(
   }
 }
 
-export default async function CustomPage({params}:{params: Promise<{ slug: string }>}){
+export default async function CustomPage({params}:Readonly<{params: Promise<{ slug: string }>}>){
   // read route params
   const {slug} = await params
 

@@ -74,32 +74,4 @@ export function getCspPolicy(nonce:string) {
   return policy
 }
 
-/**
- * Extract nonce from the request header 'x-nonce' or from meta tag.
- * In case nonce is not found a new one is created.
- * @param headers
- * @returns string
- */
-export function getNonce(headers?: Record<string, string | string[] | undefined>) {
-  let nonce:string
-  // console.group('getNonce')
-  // get existing nonce from header x-nonce (middleware.ts)
-  if (headers) {
-    nonce = headers['x-nonce'] as string
-    return nonce
-  }
-  // get existing nonce from meta tag (_document.tsx)
-  if (typeof document !== 'undefined') {
-    const nonceMeta = document.querySelector('meta[name="csp-nonce"]')
-    if (typeof nonceMeta?.getAttribute('content')==='string') {
-      nonce = nonceMeta?.getAttribute('content') as string
-      return nonce
-    }
-  }
-  // create new nonce
-  nonce = createNonce()
-  // console.log('createNonce...', nonce)
-  // console.groupEnd()
-  return nonce
-}
 

@@ -19,7 +19,7 @@ export default function AdminKeywordsClient() {
   const {token} = useSession()
   const keywordProps = useKeywords(token)
   const {addKeyword, searchFor} = keywordProps
-  const disabled = (typeof searchFor === 'undefined' || searchFor.length < 2)
+  const disabled = (searchFor === undefined || searchFor.length < 2)
 
   // console.group('AdminKeywordsClient')
   // console.log('token...', token)

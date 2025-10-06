@@ -28,7 +28,7 @@ export default function ErrorLogsClient() {
 
   // update columns order
   if (orderBy) {
-    columns.forEach(col => {
+    columns.forEach(col => { // NOSONAR
       if (col.key === orderBy.column) {
         col.order = {
           active: true,

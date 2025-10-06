@@ -8,7 +8,11 @@
 import {cookies} from 'next/headers'
 
 import logger from '~/utils/logger'
-import {Matomo} from './nodeCookies'
+
+export type Matomo = {
+  id: string | null
+  consent: boolean | null
+}
 
 export type MatomoSettings = Matomo & {
   url: string | null

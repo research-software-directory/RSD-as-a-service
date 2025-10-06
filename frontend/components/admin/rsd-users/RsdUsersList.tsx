@@ -32,9 +32,9 @@ export type AccountModal = {
 
 export default function RsdUsersList({
   adminsOnly, lockedOnly, inactiveDays
-}: {
+}: Readonly<{
   adminsOnly: boolean, lockedOnly: boolean, inactiveDays: number
-}) {
+}>) {
   const {token} = useSession()
   const {loading, accounts, lockAccount,deleteAccount} = useRsdAccounts(token, adminsOnly, lockedOnly, inactiveDays)
   const [modal, setModal] = useState<AccountModal>({
