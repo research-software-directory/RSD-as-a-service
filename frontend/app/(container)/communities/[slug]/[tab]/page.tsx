@@ -1,7 +1,7 @@
 import {Suspense} from 'react'
 import {notFound} from 'next/navigation'
 
-import {getUserFromToken} from '~/auth'
+import {getUserFromToken} from '~/auth/getSessionServerSide'
 import NavContentSkeleton from '~/components/layout/NavContentSkeleton'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {getCommunityBySlug} from '~/components/communities/apiCommunities'
@@ -23,8 +23,8 @@ export default async function CommunityPages({
     searchParams,
     getUserSettings()
   ])
-
-  const user = getUserFromToken(token ?? null)
+  // extract user from token and verify
+  const user = await getUserFromToken(token)
 
   // find community by slug
   const {community,isMaintainer} = await getCommunityBySlug({

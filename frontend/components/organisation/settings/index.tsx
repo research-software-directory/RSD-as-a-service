@@ -9,7 +9,7 @@
 
 import {notFound} from 'next/navigation'
 
-import {createSession} from '~/auth'
+import {createSession} from '~/auth/getSessionServerSide'
 import {isOrganisationMaintainer} from '~/auth/permissions/isMaintainerOfOrganisation'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {getActiveModuleNames} from '~/config/getSettingsServerSide'
@@ -47,7 +47,7 @@ export default async function OrganisationSettings({slug,query}:OrganisationSett
   }
 
   // is this user maintainer of this organisation
-  const {user,status} = createSession(token ?? null)
+  const {user,status} = await createSession(token ?? null)
   const isMaintainer = await isOrganisationMaintainer({
     organisation: uuid,
     account: user?.account,

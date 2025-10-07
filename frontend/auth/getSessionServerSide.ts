@@ -14,7 +14,7 @@ import {RsdUser, Session, defaultSession} from './index'
 
 /**
  * Extract token from rsd_token HttpOnly cookie on the server and validate the token.
- * This method can only used on server side (node).
+ * This method can only be used on server side (node).
  * @returns
  */
 export async function getAppSessionSeverSide() {
@@ -25,7 +25,7 @@ export async function getAppSessionSeverSide() {
   // remove invalid cookie
   if (session.status === 'invalid') {
     // console.log('remove rsd cookies...')
-    await removeRsdTokenNode()
+    await removeRsdTokenCookie()
     // return default
     return defaultSession
   }
@@ -86,7 +86,7 @@ export async function createSession(token: string | null): Promise<Session> {
  * Remove rsd_token cookie. Use it for logout or when invalid token
  * @param res
  */
-export async function removeRsdTokenNode() {
+export async function removeRsdTokenCookie() {
   try {
     const cookie = await cookies()
     cookie.delete(app.rsdTokenId)
@@ -94,4 +94,24 @@ export async function removeRsdTokenNode() {
   } catch (e: any) {
     logger(`removeRsdTokenCookie: ${e?.message}`, 'error')
   }
+}
+
+/**
+ * Creates user object RsdUser from token and verifies token validity.
+ * If token is not present or NOT valid returns null.
+ * @param token
+ * @returns
+ */
+export async function getUserFromToken(token?: string | null) {
+  if (token) {
+    const result = verifyJwt(token)
+    if (result === 'valid') {
+      // decode JWT
+      const user = decodeJwt(token) as RsdUser
+      //
+      return user
+    }
+    return null
+  }
+  return null
 }

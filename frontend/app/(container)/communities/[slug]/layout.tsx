@@ -3,7 +3,7 @@ import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 
 import {app} from '~/config/app'
-import {getUserFromToken} from '~/auth'
+import {getUserFromToken} from '~/auth/getSessionServerSide'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import PageBreadcrumbs from '~/components/layout/PageBreadcrumbs'
 import {CommunityProvider} from '~/components/communities/context'
@@ -73,7 +73,7 @@ export default async function CommunityPageLayout({
     params,
     getUserSettings()
   ])
-  const user = getUserFromToken(token ?? null)
+  const user = await getUserFromToken(token)
   // find community by slug
   const {community,isMaintainer} = await getCommunityBySlug({
     slug: slug ?? '',

@@ -39,7 +39,8 @@ export default function ProfileTabs() {
     )
   }
 
-  const tab_id = params?.['tab'] ?? defaultTabId
+  const tab_id = params?.tab ?? defaultTabId
+  const uuid = params?.id
 
   return (
     <BaseSurfaceRounded
@@ -55,7 +56,7 @@ export default function ProfileTabs() {
       >
         {tabItems.map(key => {
           const item = profileTabItems[key]
-          const url = `/persons/${params?.['id'].toString()}/${key}`
+          const url = `/persons/${uuid}/${key}`
           // console.log('url...', url)
           if (item.isVisible({isMaintainer:false,modules:activeModules})===true){
             return (

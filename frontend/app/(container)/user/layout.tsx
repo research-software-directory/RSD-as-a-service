@@ -2,7 +2,7 @@ import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 
 import {app} from '~/config/app'
-import {getUserFromToken} from '~/auth'
+import {getUserFromToken} from '~/auth/getSessionServerSide'
 import ProtectedContent from '~/auth/ProtectedContent'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {UserContextProvider} from '~/components/user/context/UserContext'
@@ -20,7 +20,7 @@ import UserTabs from '~/components/user/tabs/UserTabs'
 export async function generateMetadata(): Promise<Metadata> {
   // read route params
   const {token} = await getUserSettings()
-  const user = getUserFromToken(token ?? null)
+  const user = await getUserFromToken(token)
 
   // console.group('UserPageLayout.generateMetadata')
   // console.log('token...', token)
@@ -50,7 +50,7 @@ export default async function UserPageLayout({
 }>) {
   // read route params
   const {token} = await getUserSettings()
-  const user = getUserFromToken(token ?? null)
+  const user = await getUserFromToken(token ?? null)
 
   if (user === null) {
     // 404 if no section parameter

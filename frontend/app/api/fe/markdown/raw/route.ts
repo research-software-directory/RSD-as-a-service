@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {NextApiRequest, NextApiResponse} from 'next'
+import {type NextRequest} from 'next/server'
+import logger from '~/utils/logger'
 import {isProperUrl} from '~/utils/fetchHelpers'
 import {getRemoteMarkdown} from '~/components/software/apiSoftware'
-import logger from '~/utils/logger'
 
 const GITHUB = new RegExp(/^http?s:\/\/github.com\//g)
 const HTML = new RegExp(/<html[^>]*>([\s\S]*?)<\/html>/i)
@@ -18,7 +18,7 @@ function suggestRawMarkdownUrl(url:string){
   if (GITHUB.test(url)){
     const rawUrl = url
       .replaceAll(GITHUB,'https://raw.githubusercontent.com/')
-      .replace(/\/blob\//g,'/refs/heads/')
+      .replace(/\/blob\//g,'/refs/heads/') // NOSONAR
 
     return rawUrl
   }
@@ -30,7 +30,7 @@ function suggestRawMarkdownUrl(url:string){
   }
 
   // Gitlab & on premise ?
-  const rawUrl = url.replace(/\/blob\//g,'/raw/')
+  const rawUrl = url.replace(/\/blob\//g,'/raw/') // NOSONAR
 
   if (rawUrl!==url){
     return rawUrl
@@ -51,32 +51,31 @@ function suggestRawMarkdownUrl(url:string){
  * @param req
  * @param res
  */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  try {
-    const url = req.query.url as string
+export async function GET(request: NextRequest) {
+  try{
+    // extract parameters
+    const searchParams = request.nextUrl.searchParams
+    const url = searchParams.get('url')
 
     // validation 1: url should be string
-    if (url === undefined || Array.isArray(url)) {
-      // we return 200 to api call
-      // and the error as json body
-      res.status(200)
-      res.json({
-        status: 400,
-        message: 'Missing url as query parameter'
+    if (!url || Array.isArray(url)){
+      return Response.json({
+        'status': 400,
+        'message':'Url param (url) missing or array. Url should be string.'
+      },{
+        status: 200,
+        statusText: 'OK'
       })
     }
 
     // validation 2: check if url syntax is correct
     if (isProperUrl(url)===false){
-      // we return 200 to api call
-      // and the error as json body
-      res.status(200)
-      res.json({
-        status: 400,
-        message: 'Not a valid url. Please validate your input.'
+      return Response.json({
+        'status': 400,
+        'message': 'Not a valid url. Please validate your input.'
+      },{
+        status: 200,
+        statusText: 'OK'
       })
     }
 
@@ -88,37 +87,39 @@ export default async function handler(
       if (HTML.test(rawMarkdown)){
         const rawUrl = suggestRawMarkdownUrl(url)
         // we return 200 to api call
-        // and the error as json body
-        res.status(200)
-        // we send 400 error and raw url suggestion
-        res.json({
-          status:400,
-          message:'HTML page, not a raw text/markdown content.',
-          rawUrl
+        // we send 400 error and raw url suggestion in json body
+        return Response.json({
+          'status': 400,
+          'message': 'HTML page, not a raw text/markdown content.',
+          'rawUrl': rawUrl
+        },{
+          status: 200,
+          statusText: 'OK'
         })
       }else{
         // assuming text/markdown returned
-        res.status(200)
-        res.json({status:200,message:rawMarkdown})
+        return Response.json({
+          'status': 200,
+          'message': rawMarkdown
+        })
       }
     }else{
-      // we return 200 to api call
-      // and the error as json body
-      res.status(200)
       // pass error returned from fetch
-      res.json({
-        status: rawMarkdown.status,
-        message: rawMarkdown.message
+      return Response.json({
+        'status': rawMarkdown.status,
+        'message': rawMarkdown.message
       })
     }
-  } catch (e: any) {
-    // we return 200 to api call
-    // and the error as json body
-    res.status(200)
-    res.json({
-      status: 500,
-      message: e.message ?? 'Unknown server error'
+
+  }catch(e:any){
+    logger(`GET api/fe/cite: ${e.message}`,'error')
+    // unexpected error
+    return Response.json({
+      'status': 500,
+      'message': e.message ?? 'Unknown server error'
+    },{
+      status: 200,
+      statusText: 'OK'
     })
-    logger(`api/fe/markdown/raw: ${e.message}`)
   }
 }

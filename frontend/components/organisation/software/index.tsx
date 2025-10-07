@@ -5,7 +5,7 @@
 
 import {notFound} from 'next/navigation'
 
-import {getUserFromToken} from '~/auth'
+import {getUserFromToken} from '~/auth/getSessionServerSide'
 import {isOrganisationMaintainer} from '~/auth/permissions/isMaintainerOfOrganisation'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {ssrSoftwareParams} from '~/utils/extractQueryParam'
@@ -36,15 +36,17 @@ export default async function OrganisationSoftware({slug,query}:OrganisationSoft
   ){
     notFound()
   }
-  // resolve slug to organisation id
-  const uuid = await getOrganisationIdForSlug({slug, token})
+  // resolve slug to organisation id and verify user
+  const [uuid, user] = await Promise.all([
+    getOrganisationIdForSlug({slug, token}),
+    getUserFromToken(token)
+  ])
   // show 404 page if organisation id missing
   if (uuid === undefined || uuid === null) {
     notFound()
   }
 
   // is this user maintainer of this organisation
-  const user = getUserFromToken(token ?? null)
   const isMaintainer = await isOrganisationMaintainer({
     organisation: uuid,
     account: user?.account,

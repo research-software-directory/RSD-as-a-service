@@ -7,7 +7,7 @@ import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 
 import {app} from '~/config/app'
-import {getUserFromToken} from '~/auth'
+import {getUserFromToken} from '~/auth/getSessionServerSide'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import PageBreadcrumbs from '~/components/layout/PageBreadcrumbs'
 import OrganisationMetadata from '~/components/organisation/metadata'
@@ -72,9 +72,12 @@ export default async function OrganisationPageLayout({
   params: Promise<{ slug: string[] }>
 }>) {
   // read route params
-  const {slug} = await params
-  const {token} = await getUserSettings()
-  const user = getUserFromToken(token ?? null)
+  const [{slug},{token}] = await Promise.all([
+    params,
+    getUserSettings()
+  ])
+  // extract user and verify token
+  const user = await getUserFromToken(token ?? null)
 
   // find organisation by slug
   const resp = await getOrganisationBySlug({

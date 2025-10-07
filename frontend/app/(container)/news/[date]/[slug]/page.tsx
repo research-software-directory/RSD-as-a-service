@@ -2,7 +2,7 @@ import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 
 import {app} from '~/config/app'
-import {getUserFromToken} from '~/auth'
+import {getUserFromToken} from '~/auth/getSessionServerSide'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {getNewsItemBySlug} from '~/components/news/apiNews'
 import NewsItemHeader from '~/components/news/item/NewsItemHeader'
@@ -72,9 +72,10 @@ export default async function NewsItemPage({
     return notFound()
   }
 
-  const user = getUserFromToken(token ?? null)
-
-  const newsItem = await getNewsItemBySlug({date, slug, token})
+  const [user, newsItem] = await Promise.all([
+    getUserFromToken(token),
+    getNewsItemBySlug({date, slug, token})
+  ])
 
   if (!newsItem){
     return notFound()

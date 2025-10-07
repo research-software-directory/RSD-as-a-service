@@ -3,7 +3,7 @@ import {notFound} from 'next/navigation'
 
 import {app} from '~/config/app'
 import {getActiveModuleNames} from '~/config/getSettingsServerSide'
-import {getUserFromToken} from '~/auth'
+import {getUserFromToken} from '~/auth/getSessionServerSide'
 import {getCommunitiesOfMaintainer} from '~/auth/permissions/isMaintainerOfCommunity'
 import {getMaintainerOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
 import isMaintainerOfProject from '~/auth/permissions/isMaintainerOfProject'
@@ -98,14 +98,15 @@ export default async function ProjectViewPage({
     notFound()
   }
 
-  const project = await getProjectItem({slug, token})
+  const [project, userInfo] = await Promise.all([
+    getProjectItem({slug, token}),
+    getUserFromToken(token)
+  ])
   // show 404 page if project undefined
   if (project === undefined){
     notFound()
   }
 
-  // get user info
-  const userInfo = getUserFromToken(token)
   // fetch all info about project in parallel based on project.id
   const [
     organisations,

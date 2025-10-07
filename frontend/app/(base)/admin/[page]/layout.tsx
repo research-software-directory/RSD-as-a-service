@@ -1,4 +1,5 @@
-import {getUserFromToken} from '~/auth'
+
+import {getUserFromToken} from '~/auth/getSessionServerSide'
 import AdminNav from '~/components/admin/AdminNav'
 import {adminPages, AdminPageTypes} from '~/components/admin/AdminNavItems'
 import PageErrorMessage from '~/components/layout/PageErrorMessage'
@@ -32,7 +33,7 @@ export default async function AdminLayout({
   }
 
   // Note! The token is verified
-  const user = getUserFromToken(token)
+  const user = await getUserFromToken(token)
 
   // console.group('AdminLayout')
   // console.log('page...',page)

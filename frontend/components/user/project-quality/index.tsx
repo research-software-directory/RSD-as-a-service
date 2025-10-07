@@ -6,16 +6,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {getUserFromToken} from '~/auth'
+import {getUserFromToken} from '~/auth/getSessionServerSide'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
+import NoContent from '~/components/layout/NoContent'
 import {fetchProjectQuality} from './apiProjectQuality'
 import ProjectQualityTable from './ProjectQualityTable'
-import NoContent from '~/components/layout/NoContent'
 
 export default async function ProjectQuality() {
   const {token} = await getUserSettings()
-  const user = getUserFromToken(token ?? null)
+  const user = await getUserFromToken(token)
   const isAdmin = user?.role === 'rsd_admin'
 
   const data = await fetchProjectQuality(isAdmin,token)
