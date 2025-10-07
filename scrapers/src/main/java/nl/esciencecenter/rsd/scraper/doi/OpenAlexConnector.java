@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,9 +18,13 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import nl.esciencecenter.rsd.scraper.Config;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+import nl.esciencecenter.rsd.scraper.Throttler;
 import nl.esciencecenter.rsd.scraper.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +33,35 @@ class OpenAlexConnector {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OpenAlexConnector.class);
 
-	static final String DOI_FILTER_URL_UNFORMATTED = "https://api.openalex.org/works?filter=doi:%s";
-	static final String OPENALEX_ID_URL_UNFORMATTED = "https://api.openalex.org/works?filter=ids.openalex:%s";
+	private static final String DOI_FILTER_URL_UNFORMATTED = "https://api.openalex.org/works?filter=doi:%s";
+	private static final String OPENALEX_ID_URL_UNFORMATTED = "https://api.openalex.org/works?filter=ids.openalex:%s";
+	private static final Throttler apiThrottler = new Throttler(1, 1050, TimeUnit.MILLISECONDS);
 
-	public Collection<ExternalMentionRecord> mentionDataByDois(Collection<Doi> dois, String email)
-		throws IOException, InterruptedException {
+	private static String doOpenAlexGetRequest(String url)
+		throws IOException, InterruptedException, RsdResponseException {
+		Objects.requireNonNull(url);
+
+		String email = Config.crossrefContactEmail().orElse(null);
+
+		apiThrottler.awaitPermission();
+		HttpResponse<String> response = email == null
+			? Utils.getAsHttpResponse(url)
+			: Utils.getAsHttpResponse(url, "User-Agent", "mailto:" + email);
+
+		if (response.statusCode() == 200) {
+			return response.body();
+		} else {
+			throw new RsdResponseException(
+				response.statusCode(),
+				response.uri(),
+				response.body(),
+				"Unexpected response on GET request to OpenAlex"
+			);
+		}
+	}
+
+	public Collection<ExternalMentionRecord> mentionDataByDois(Collection<Doi> dois)
+		throws IOException, InterruptedException, RsdResponseException {
 		if (dois == null || dois.isEmpty()) {
 			return Collections.emptyList();
 		}
@@ -42,14 +70,9 @@ class OpenAlexConnector {
 		// e.g. https://api.openalex.org/works?filter=doi:10.1038%2Fs41598-024-73248-4|10.5194%2Ftc-2022-249-rc1&per-page=200
 		String worksUri = DOI_FILTER_URL_UNFORMATTED.formatted(Utils.urlEncode(filter)) + "&per-page=200";
 
-		HttpResponse<String> response;
-		if (email == null || email.isBlank()) {
-			response = Utils.getAsHttpResponse(worksUri);
-		} else {
-			response = Utils.getAsHttpResponse(worksUri, "User-Agent", "mailto:" + email);
-		}
+		String responseBody = doOpenAlexGetRequest(worksUri);
 
-		JsonObject tree = JsonParser.parseString(response.body()).getAsJsonObject();
+		JsonObject tree = JsonParser.parseString(responseBody).getAsJsonObject();
 		JsonArray mentionsArray = tree.getAsJsonArray("results");
 
 		Collection<ExternalMentionRecord> mentions = new ArrayList<>();
@@ -67,8 +90,8 @@ class OpenAlexConnector {
 		return mentions;
 	}
 
-	public Collection<ExternalMentionRecord> mentionDataByOpenalexIds(Collection<OpenalexId> openalexIds, String email)
-		throws IOException, InterruptedException {
+	public Collection<ExternalMentionRecord> mentionDataByOpenalexIds(Collection<OpenalexId> openalexIds)
+		throws IOException, InterruptedException, RsdResponseException {
 		if (openalexIds == null || openalexIds.isEmpty()) {
 			return Collections.emptyList();
 		}
@@ -81,14 +104,9 @@ class OpenAlexConnector {
 		// e.g. https://api.openalex.org/works?filter=ids.openalex:W4402994101|W4319593220&per-page=200
 		String worksUri = OPENALEX_ID_URL_UNFORMATTED.formatted(Utils.urlEncode(filter)) + "&per-page=200";
 
-		HttpResponse<String> response;
-		if (email == null || email.isBlank()) {
-			response = Utils.getAsHttpResponse(worksUri);
-		} else {
-			response = Utils.getAsHttpResponse(worksUri, "User-Agent", "mailto:" + email);
-		}
+		String responseBody = doOpenAlexGetRequest(worksUri);
 
-		JsonObject tree = JsonParser.parseString(response.body()).getAsJsonObject();
+		JsonObject tree = JsonParser.parseString(responseBody).getAsJsonObject();
 		JsonArray mentionsArray = tree.getAsJsonArray("results");
 
 		Collection<ExternalMentionRecord> mentions = new ArrayList<>();
@@ -106,8 +124,8 @@ class OpenAlexConnector {
 		return mentions;
 	}
 
-	public Collection<ExternalMentionRecord> citations(OpenalexId openalexId, Doi doi, String email, UUID id)
-		throws IOException, InterruptedException {
+	public Collection<ExternalMentionRecord> citations(OpenalexId openalexId, Doi doi, UUID id)
+		throws IOException, InterruptedException, RsdResponseException {
 		// This shouldn't happen, but let's check it to prevent unexpected exceptions:
 		if (doi == null && openalexId == null) {
 			return Collections.emptyList();
@@ -117,23 +135,19 @@ class OpenAlexConnector {
 			? OPENALEX_ID_URL_UNFORMATTED.formatted(openalexId.toUrlEncodedString())
 			: DOI_FILTER_URL_UNFORMATTED.formatted(doi.toUrlEncodedString());
 
-		Optional<String> optionalCitationsUri = citationsUri(worksUri, email);
+		Optional<String> optionalCitationsUri = citationsUri(worksUri);
 		if (optionalCitationsUri.isEmpty()) {
 			return Collections.emptyList();
 		}
 
-		return scrapeCitations(optionalCitationsUri.get(), email, id);
+		return scrapeCitations(optionalCitationsUri.get(), id);
 	}
 
-	static Optional<String> citationsUri(String worksUri, String email) throws IOException, InterruptedException {
-		HttpResponse<String> response;
-		if (email == null || email.isBlank()) {
-			response = Utils.getAsHttpResponse(worksUri);
-		} else {
-			response = Utils.getAsHttpResponse(worksUri, "User-Agent", "mailto:" + email);
-		}
+	static Optional<String> citationsUri(String worksUri)
+		throws IOException, InterruptedException, RsdResponseException {
+		String responseBody = doOpenAlexGetRequest(worksUri);
 
-		JsonObject tree = JsonParser.parseString(response.body()).getAsJsonObject();
+		JsonObject tree = JsonParser.parseString(responseBody).getAsJsonObject();
 
 		int count = tree.getAsJsonObject("meta").getAsJsonPrimitive("count").getAsInt();
 
@@ -164,21 +178,16 @@ class OpenAlexConnector {
 
 	// we use cursor paging as that will always work
 	// https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging#cursor-paging
-	static Collection<ExternalMentionRecord> scrapeCitations(String citationsUri, String email, UUID id)
-		throws IOException, InterruptedException {
+	static Collection<ExternalMentionRecord> scrapeCitations(String citationsUri, UUID id)
+		throws IOException, InterruptedException, RsdResponseException {
 		final int perPage = 200;
 		String cursor = "*";
 
 		Collection<ExternalMentionRecord> citations = new ArrayList<>();
 		while (cursor != null) {
-			HttpResponse<String> response;
 			String citationsUriWithCursor = citationsUri + "&per-page=" + perPage + "&cursor=" + cursor;
-			if (email == null || email.isBlank()) {
-				response = Utils.getAsHttpResponse(citationsUriWithCursor);
-			} else {
-				response = Utils.getAsHttpResponse(citationsUriWithCursor, "User-Agent", "mailto:" + email);
-			}
-			JsonObject tree = JsonParser.parseString(response.body()).getAsJsonObject();
+			String responseBody = doOpenAlexGetRequest(citationsUriWithCursor);
+			JsonObject tree = JsonParser.parseString(responseBody).getAsJsonObject();
 
 			cursor = Utils.stringOrNull(tree.getAsJsonObject("meta").get("next_cursor"));
 

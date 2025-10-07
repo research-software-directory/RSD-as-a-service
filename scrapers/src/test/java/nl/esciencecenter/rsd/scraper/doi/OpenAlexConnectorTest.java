@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -34,12 +34,12 @@ class OpenAlexConnectorTest {
 		OpenAlexConnector openAlexConnector = new OpenAlexConnector();
 
 		Collection<ExternalMentionRecord> doiMentions = Assertions.assertDoesNotThrow(() ->
-			openAlexConnector.mentionDataByDois(Collections.emptyList(), null)
+			openAlexConnector.mentionDataByDois(Collections.emptyList())
 		);
 		Assertions.assertTrue(doiMentions.isEmpty());
 
 		Collection<ExternalMentionRecord> openalexMentions = Assertions.assertDoesNotThrow(() ->
-			openAlexConnector.mentionDataByOpenalexIds(Collections.emptyList(), null)
+			openAlexConnector.mentionDataByOpenalexIds(Collections.emptyList())
 		);
 		Assertions.assertTrue(openalexMentions.isEmpty());
 	}

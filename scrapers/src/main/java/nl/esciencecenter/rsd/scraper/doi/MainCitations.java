@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import nl.esciencecenter.rsd.scraper.Config;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +60,6 @@ public class MainCitations {
 
 		OpenAlexConnector openAlexConnector = new OpenAlexConnector();
 		PostgrestMentionRepository localMentionRepository = new PostgrestMentionRepository(backendUrl);
-		String email = Config.crossrefContactEmail().orElse(null);
 		Instant now = Instant.now();
 
 		for (CitationData citationData : referencePapersToScrape) {
@@ -67,12 +67,18 @@ public class MainCitations {
 
 			LOGGER.info("Scraping for DOI {}, OpenAlex ID {}", citationData.doi(), citationData.openalexId());
 
-			Collection<ExternalMentionRecord> citingMentions = openAlexConnector.citations(
-				citationData.openalexId(),
-				citationData.doi(),
-				email,
-				citationData.id()
-			);
+			Collection<ExternalMentionRecord> citingMentions = null;
+			try {
+				citingMentions = openAlexConnector.citations(
+					citationData.openalexId(),
+					citationData.doi(),
+					citationData.id()
+				);
+			} catch (RsdResponseException e) {
+				LOGGER.error("Exception while scraping citations", e);
+				Utils.saveExceptionInDatabase("Citation scraper", null, citationData.id(), e);
+				continue;
+			}
 			// we don't update mentions that have a DOI in the database with OpenAlex data, as they can already be
 			// scraped through Crossref or DataCite
 
