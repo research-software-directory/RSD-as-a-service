@@ -11,7 +11,7 @@ export type Data = {
   [key:string]:number
 }
 
-export function formatUnixDateData(data: Data) {
+function formatUnixDateData(data: Data) {
   if (typeof data === 'undefined' || data === null) {
     return {
       lineData: [],

@@ -227,7 +227,7 @@ export function ssrProjectsParams(query: ParsedUrlQuery) {
   }
 }
 
-export function sharedFilters(query: ParsedUrlQuery){
+function sharedFilters(query: ParsedUrlQuery){
   const keywords:string[]|null = decodeQueryParam({
     query,
     param: 'keywords',

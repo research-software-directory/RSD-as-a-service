@@ -67,5 +67,3 @@ export function useUserContext(){
   }
   return props
 }
-
-export default UserContext

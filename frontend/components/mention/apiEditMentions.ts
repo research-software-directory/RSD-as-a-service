@@ -223,7 +223,7 @@ export async function addOrGetMentionItem({mention, token}:
 /**
  * RSD admin role can update mention item.
  * RSD user role is only able to remove mention item,
- * if not refferenced somewhere else and replace it
+ * if not referenced somewhere else and replace it
  * with new item. To user this will "look-like" an update action
  * but only in situations when item is linked only to users item.
  * @param param0

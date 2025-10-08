@@ -10,7 +10,7 @@ import {AuthSession, Session, defaultSession, initSession} from './index'
 import refreshSession from './refreshSession'
 
 
-export const AuthContext = createContext<AuthSession>(initSession)
+const AuthContext = createContext<AuthSession>(initSession)
 
 type AuthProviderProps = PropsWithChildren & {
   session: Session,

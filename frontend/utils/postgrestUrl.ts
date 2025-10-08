@@ -50,17 +50,6 @@ export type PostgrestParams = BaseQueryStringProps & {
   baseUrl: string
 }
 
-export type ViewQueryParams = {
-  view: string,
-  params: QueryParams
-}
-
-export function ssrViewUrl(viewParams: ViewQueryParams) {
-  const {view, params} = viewParams
-  const url = buildFilterUrl(params, view)
-  return url
-}
-
 export function ssrSoftwareUrl(params: QueryParams) {
   const view = 'software'
   const url = buildFilterUrl(params, view)

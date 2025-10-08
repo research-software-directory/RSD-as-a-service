@@ -5,8 +5,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
-import {ProviderName} from '~/auth/api/authEndpoint'
 
+export type ProviderName = 'surfconext'|'helmholtz'|'orcid'|'azure'|'linkedin'|'local'
 export type AccessType = 'INVITE_ONLY' | 'EVERYONE'
 
 export type Provider = {

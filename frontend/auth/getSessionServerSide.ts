@@ -19,7 +19,7 @@ import {RsdUser, Session, defaultSession} from './index'
  */
 export async function getAppSessionSeverSide() {
   // get token from cookie
-  const token = await getRsdTokenNode()
+  const token = await getRsdTokenFromCookie()
   // create session from token
   const session = await createSession(token)
   // remove invalid cookie
@@ -39,7 +39,7 @@ export async function getAppSessionSeverSide() {
  * @param req
  * @returns Session
  */
-export async function getRsdTokenNode() {
+async function getRsdTokenFromCookie() {
   // check for cookies
   const cookie = await cookies()
   const token = cookie.get(app.rsdTokenId)

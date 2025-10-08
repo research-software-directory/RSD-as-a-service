@@ -19,7 +19,6 @@ import LicensesFilter, {LicensesFilterOption} from '~/components/filter/Licenses
 import RsdSourceFilter, {HostsFilterOption} from '~/components/filter/RsdHostFilter'
 import CategoriesFilter, {CategoryOption} from '~/components/filter/CategoriesFilter'
 import useResetFilters from '~/components/filter/useResetFilters'
-// import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
 import OrderSoftwareBy, {OrderHighlightsBy} from './OrderSoftwareBy'
 import useHasCategories from './useHasCategories'
 

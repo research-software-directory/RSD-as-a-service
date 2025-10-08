@@ -23,7 +23,7 @@
 
 
 // default policies
-export const sharedPolicy = `
+const sharedPolicy = `
   default-src 'self';
   connect-src 'self' https://*;
   font-src 'self' https://fonts.gstatic.com;
@@ -39,7 +39,7 @@ export function createNonce(){
   return '5ef14870-46fd-11ed-b878-0242ac120002'
 }
 
-export function devScript() {
+function devScript() {
   if (process.env.NODE_ENV !== 'production') {
     // enable script eval in development
     return '\'unsafe-eval\''
@@ -47,14 +47,14 @@ export function devScript() {
   return ''
 }
 
-export function stylePolicy(){
+function stylePolicy(){
   // NOTE! nonce approach does not work on all injected style tags so we use unsafe-inline
   // const styleSrc = `style-src 'self' 'nonce-${nonce}';`
   const styleSrc = 'style-src \'self\' \'unsafe-inline\';'
   return styleSrc
 }
 
-export function scriptPolicy(nonce:string){
+function scriptPolicy(nonce:string){
   // all scripts have nonce, except in dev where we need more "freedom"
   const scriptSrc = `script-src 'self' 'nonce-${nonce}' ${devScript()};`
   return scriptSrc

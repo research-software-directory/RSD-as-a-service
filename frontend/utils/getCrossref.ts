@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,7 +16,7 @@ import {PromisePool} from '~/utils/promisePool'
 // size 5 got from email communication with Crossref and testing
 const promisePool = new PromisePool(5)
 
-export function addPoliteEmail(url: string) {
+function addPoliteEmail(url: string) {
   const mailto = process.env.CROSSREF_CONTACT_EMAIL
   // console.log('addPoliteEmail...',mailto)
   if (mailto) {

@@ -8,7 +8,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 'use client'
-// import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
+
 import useHandleQueryChange from '~/utils/useHandleQueryChange'
 import OrderBy from '~/components/filter/OrderBy'
 import {highlightOrderOptions, softwareOrderOptions} from './softwareOrderOptions'

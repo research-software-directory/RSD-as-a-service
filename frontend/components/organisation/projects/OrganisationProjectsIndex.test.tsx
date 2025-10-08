@@ -31,10 +31,10 @@ const mockUseOrganisationProjects = jest.fn((props) => ({
   count: 0,
   projects: []
 }))
-jest.mock('~/components/organisation/projects/useOrganisationProjects', () => ({
-  __esModule: true,
-  default: jest.fn((props)=>mockUseOrganisationProjects(props))
-}))
+// jest.mock('~/components/organisation/projects/useOrganisationProjects', () => ({
+//   __esModule: true,
+//   default: jest.fn((props)=>mockUseOrganisationProjects(props))
+// }))
 
 // MOCK patchProjectForOrganisation
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

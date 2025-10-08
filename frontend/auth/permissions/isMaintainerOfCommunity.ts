@@ -37,7 +37,7 @@ export async function isCommunityMaintainer({community, role, account, token}: i
   return isMaintainer
 }
 
-export async function isMaintainerOfCommunity({community, account, token}: isCommunityMaintainerProps) {
+async function isMaintainerOfCommunity({community, account, token}: isCommunityMaintainerProps) {
   try {
     if ( typeof account == 'undefined' ||
       typeof token == 'undefined'
@@ -87,5 +87,3 @@ export async function getCommunitiesOfMaintainer({token}:
     return []
   }
 }
-
-export default isMaintainerOfCommunity

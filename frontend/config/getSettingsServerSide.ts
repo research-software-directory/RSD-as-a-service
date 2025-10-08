@@ -8,7 +8,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 'use server'
-import {IncomingMessage} from 'http'
 
 import logger from '~/utils/logger'
 import {getPageLinks} from '~/components/admin/pages/useMarkdownPages'
@@ -43,50 +42,6 @@ export async function getRsdSettings() {
     // return default settings
     return defaultSettings as unknown as RsdSettingsState
   }
-}
-
-/**
- * Page server side
- * @param req
- * @returns
- */
-export async function getSettingsServerSide(req: IncomingMessage | undefined): Promise<RsdSettingsState> {
-  // if not SSR we return default
-  if (typeof req === 'undefined') return defaultRsdSettings as RsdSettingsState
-  // get links, settings and announcements in parallel
-  const [pages, settings, announcement] = await Promise.all([
-    getPageLinks({is_published: true}),
-    getRsdSettings(),
-    getAnnouncement()
-  ])
-
-  // set default values that should not be overwritten if they don't exist in settings.host
-  if (!settings.host.software_highlights) {
-    settings.host.software_highlights = defaultSettings.host.software_highlights
-  }
-  // console.log('settings...', settings)
-  // use default modules if custom not provided
-  if (!settings.modules){
-    settings.modules = {
-      ...defaultRsdSettings.modules
-    }
-  }
-
-  // compose all settings
-  const rsdSettings:RsdSettingsState = {
-    ...defaultRsdSettings,
-    host: settings.host,
-    modules: settings.modules,
-    links: settings.links,
-    theme: settings.theme,
-    pages,
-    announcement: announcement?.enabled ? announcement?.text : undefined
-  }
-  // console.group('getSettingsServerSide')
-  // console.log('settings...', settings)
-  // console.log('rsdSettings...', rsdSettings)
-  // console.groupEnd()
-  return rsdSettings
 }
 
 /**

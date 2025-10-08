@@ -10,7 +10,7 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
 import {WithOrganisationContext} from '~/utils/jest/WithOrganisationContext'
 
-import OrganisationSoftware from './index.tsx'
+import OrganisationSoftware from './index'
 import mockOrganisation from '../__mocks__/mockOrganisation'
 import mockSoftware from './__mocks__/mockSoftware.json'
 
@@ -28,10 +28,10 @@ const mockUseOrganisationSoftware = jest.fn((props) => ({
   count: 0,
   software: []
 }))
-jest.mock('./useOrganisationSoftware', () => ({
-  __esModule: true,
-  default: jest.fn((props)=>mockUseOrganisationSoftware(props))
-}))
+// jest.mock('./useOrganisationSoftware', () => ({
+//   __esModule: true,
+//   default: jest.fn((props)=>mockUseOrganisationSoftware(props))
+// }))
 
 // MOCK patchSoftwareForOrganisation
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
