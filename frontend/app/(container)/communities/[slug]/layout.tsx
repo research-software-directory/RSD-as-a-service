@@ -38,17 +38,9 @@ export async function generateMetadata(
   // console.log('community...', community)
   // console.groupEnd()
 
-  // if organisation exists we create metadata
-  if (community?.name && community?.short_description){
-    return {
-      title: `${community.name} | ${app.title}`,
-      description: community.short_description ?? `${community?.name ?? 'The RSD community'} with ${community.software_cnt ?? 0} software packages.`
-    }
-  }
-
   return {
-    title: `Community | ${app.title}`,
-    description: 'This community is part of RSD',
+    title: `${community?.name ?? 'Community'} | ${app.title}`,
+    description: community?.short_description ?? `${community?.name ?? 'The RSD community'} with ${community?.software_cnt ?? 0} software packages.`
   }
 }
 

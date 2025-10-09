@@ -41,17 +41,9 @@ export async function generateMetadata(
   // console.log('resp...', resp)
   // console.groupEnd()
 
-  // if organisation exists we create metadata
-  if (resp?.organisation?.name && resp?.organisation?.short_description){
-    return {
-      title: `${resp?.organisation?.name} | ${app.title}`,
-      description: resp?.organisation?.short_description,
-    }
-  }
-
   return {
-    title: `Organisation | ${app.title}`,
-    description: 'This organisation participates in RSD',
+    title: `${resp?.organisation?.name ?? 'Organisation'} | ${app.title}`,
+    description: resp?.organisation?.short_description ?? 'This organisation participates in RSD',
   }
 }
 
