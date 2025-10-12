@@ -1,7 +1,8 @@
 # SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 dv4all
+# SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-# SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -57,15 +58,25 @@ jobs:
         run: |
           IMAGE_TAG_VERSION=${{inputs.base_image_name}}:${{inputs.image_tag}}
           IMAGE_TAG_LASTEST=${{inputs.base_image_name}}:latest
-          echo image_tag_version $IMAGE_TAG_VERSION
-          docker build -t $IMAGE_TAG_VERSION -t $IMAGE_TAG_LASTEST -f ${{inputs.dockerfile}} ${{inputs.docker_context}}
-          echo "{image_build}={$IMAGE_TAG_VERSIONvalue}" >> $GITHUB_OUTPUT
+
+          echo "Build image: $IMAGE_TAG_VERSION and pass APP_VERSION=${{ inputs.image_tag }}"
+
+          docker build \
+            --build-arg APP_VERSION=${{ inputs.image_tag }} \
+            -t $IMAGE_TAG_VERSION \
+            -t $IMAGE_TAG_LATEST \
+            -f ${{ inputs.dockerfile }} \
+            ${{ inputs.docker_context }}
+
+          echo "image_build=$IMAGE_TAG_VERSION" >> $GITHUB_OUTPUT
       - name: push to ghcr.io
         id: push_image
         run: |
-          echo login
+          echo "Logging in to GHCR..."
+
           echo "${{secrets.token}}" | docker login https://ghcr.io -u ${{inputs.ghcr_user}} --password-stdin
           echo push auth image with all tags
           docker push ${{inputs.base_image_name}} --all-tags
-          echo "{image_build}={$IMAGE_TAG_VERSIONvalue}" >> $GITHUB_OUTPUT
+
+          echo "image_pushed=true" >> $GITHUB_OUTPUT
 

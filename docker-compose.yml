@@ -127,8 +127,12 @@ services:
       context: ./frontend
       # dockerfile to use for build
       dockerfile: Dockerfile
+      # rsd version passed into image
+      # for release the tag is passed in GH action _ghcr.yml
+      args:
+        APP_VERSION: "5.3.1"
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend:5.3.0
+    image: rsd/frontend:5.3.1
     environment:
       # it uses values from .env file
       - POSTGREST_URL

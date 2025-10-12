@@ -37,7 +37,7 @@ COPY . .
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry.
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # unit tests are already runned on PR and push to main
 # RUN npm run test
@@ -55,7 +55,11 @@ FROM node:22.13.1-bookworm-slim AS runner
 
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
+
+# Pass version as build argument
+ARG APP_VERSION=unknown
+ENV RSD_VERSION=$APP_VERSION
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -72,8 +76,8 @@ EXPOSE 3000
 
 # required to enable fetch to localhost:3000
 # set next port
-ENV PORT 3000
+ENV PORT=3000
 # set next hostname
-ENV HOSTNAME "0.0.0.0"
+ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "server.js"]
