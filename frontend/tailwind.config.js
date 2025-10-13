@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -25,7 +25,9 @@
  */
 
 // get theme variables
-const defaultSettings = require('./public/data/settings.json')
+import defaultSettings from './public/data/settings.json'
+// import plugins
+import typograhy from '@tailwindcss/typography'
 // console.log('defaultSettings...', defaultSettings)
 // load colors and typography
 const colors = defaultSettings.theme.light.colors
@@ -35,7 +37,7 @@ const typography = defaultSettings.theme.typography
 
 module.exports = {
   darkMode: 'class',
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [typograhy],
   content: [
     './auth/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
