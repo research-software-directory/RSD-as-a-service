@@ -13,7 +13,7 @@
 # ----------------------------------------
 # 1. Install dependencies only when needed
 # ----------------------------------------
-FROM node:22.13.1-bookworm-slim AS deps
+FROM node:24.10.0-bookworm-slim AS deps
 
 WORKDIR /app
 
@@ -48,7 +48,7 @@ RUN npm run build
 # ----------------------------------------
 # 3. Production image (standalone mode)
 # ----------------------------------------
-FROM node:22.13.1-bookworm-slim AS runner
+FROM node:24.10.0-bookworm-slim AS runner
 
 # optional install updates
 # RUN apt-get upgrade -y
