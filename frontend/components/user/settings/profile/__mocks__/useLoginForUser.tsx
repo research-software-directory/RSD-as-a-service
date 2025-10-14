@@ -17,7 +17,7 @@ export type LoginForAccount={
   home_organisation:string|null
 }
 
-export function findProviderSubInLogin(logins:LoginForAccount[],provider:string){
+export const findProviderSubInLogin=jest.fn((logins:LoginForAccount[],provider:string)=>{
   try{
     const login = logins.find(item=>item?.provider===provider)
     if (login){
@@ -27,11 +27,11 @@ export function findProviderSubInLogin(logins:LoginForAccount[],provider:string)
   }catch{
     return null
   }
-}
+})
 
-export function useLoginForUser(){
+export const useLoginForUser=jest.fn(()=>{
   return {
     logins:logins,
     deleteLogin: jest.fn()
   }
-}
+})

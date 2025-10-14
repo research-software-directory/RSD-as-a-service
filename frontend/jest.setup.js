@@ -58,7 +58,11 @@ jest.mock('rehype-external-links', jest.fn((...props) => {
   return props
 }))
 
-// MOCK app useRouter (next/navigation)
+// MOCK app router (next/navigation)
+// NOTE! You can overwrite/validate this mock by simply importing the method you need to test.
+// For example:
+// import {notFound} from 'next/navigation'
+// expect(notFound).toBeCalledTimes(1)
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(()=>{
     return {
@@ -73,7 +77,14 @@ jest.mock('next/navigation', () => ({
   }),
   usePathname: jest.fn(()=>'/'),
   useParams: jest.fn(()=>[]),
-  useSearchParams: jest.fn(()=>[]),
+  useSearchParams: jest.fn(()=>({
+    get: jest.fn(),
+    getAll: jest.fn(),
+    keys: jest.fn(),
+    values: jest.fn(),
+    has: jest.fn()
+  })),
+  notFound: jest.fn()
 }))
 
 // mock console log

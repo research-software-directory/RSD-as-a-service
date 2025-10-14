@@ -3,21 +3,23 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import {CategoriesForSoftware, CategoryForSoftwareIds,} from '~/types/SoftwareTypes'
 import {CategoryPath} from '~/types/Category'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getSoftwareList({url,token}:{url:string,token?:string }){
+
+export const getSoftwareList=jest.fn(async({url,token}:{url:string,token?:string })=>{
   return []
-}
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getSoftwareItem(slug:string|undefined, token?:string){
+})
+
+export const getSoftwareItem=jest.fn(async(slug:string|undefined, token?:string)=>{
   return []
-}
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getRepostoryInfoForSoftware(software: string | undefined, token?: string) {
+})
+
+export const getRepostoryInfoForSoftware=jest.fn(async(software: string | undefined, token?: string)=>{
   return []
-}
+})
 
 
 /**
@@ -31,49 +33,48 @@ export type SoftwareVersion = {
   version: string,
   doi_registration_date: string
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getReleasesForSoftware(uuid:string,token?:string){
-  return []
-}
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getKeywordsForSoftware(uuid:string,frontend?:boolean,token?:string){
-  return []
-}
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getCategoriesForSoftware(software_id: string, token?: string): Promise<CategoriesForSoftware> {
-  return []
-}
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getCategoryForSoftwareIds(software_id: string, token?: string): Promise<CategoryForSoftwareIds> {
-  return new Set()
-}
 
-export async function getAvailableCategories(): Promise<CategoryPath[]> {
+export const getReleasesForSoftware=jest.fn(async(uuid:string,token?:string)=>{
   return []
-}
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function addCategoryToSoftware(softwareId: string, categoryId: string, token: string) {
+})
+
+export const getKeywordsForSoftware=jest.fn(async(uuid:string,frontend?:boolean,token?:string)=>{
   return []
-}
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function deleteCategoryToSoftware(softwareId: string, categoryId: string, token: string) {
+})
+
+export const getCategoriesForSoftware=jest.fn(async(software_id: string, token?: string): Promise<CategoriesForSoftware>=>{
+  return []
+})
+
+export const getCategoryForSoftwareIds=jest.fn(async(software_id: string, token?: string): Promise<CategoryForSoftwareIds>=>{
+  return new Set()
+})
+
+export const getAvailableCategories=jest.fn(async(): Promise<CategoryPath[]>=>{
+  return []
+})
+
+export const addCategoryToSoftware=jest.fn(async(softwareId: string, categoryId: string, token: string)=>{
+  return []
+})
+
+export const deleteCategoryToSoftware=jest.fn(async(softwareId: string, categoryId: string, token: string)=>{
   return null
-}
+})
 
 
 /**
  * LICENSE
  */
-
 export type License = {
   id:string
   software:string
   license: string
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getLicenseForSoftware(uuid:string,frontend?:boolean,token?:string){
+
+export const getLicenseForSoftware=jest.fn(async(uuid:string,frontend?:boolean,token?:string)=>{
   return []
-}
+})
 
 /**
  * Contributors and mentions counts
@@ -84,26 +85,24 @@ export type ContributorMentionCount = {
   contributor_cnt: number | null
   mention_cnt: number | null
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getContributorMentionCount(uuid: string,token?: string){
+
+export const getContributorMentionCount=jest.fn(async(uuid: string,token?: string)=>{
   return []
-}
+})
 
 /**
  * REMOTE MARKDOWN FILE
- */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getRemoteMarkdown(url: string) {
+*/
+export const getRemoteMarkdown=jest.fn(async(url: string)=>{
   return []
-}
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function getRemoteMarkdownTest(url: string) {
+})
+
+export const getRemoteMarkdownTest=jest.fn(async(url: string)=>{
   return []
-}
+})
 
 // RELATED PROJECTS FOR SORFTWARE
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getRelatedProjectsForSoftware({software, token, frontend, approved=true}:
-  { software: string, token?: string, frontend?: boolean, approved?:boolean }) {
+export const getRelatedProjectsForSoftware=jest.fn(async({software, token, frontend, approved=true}:
+  { software: string, token?: string, frontend?: boolean, approved?:boolean })=>{
   return []
-}
+})

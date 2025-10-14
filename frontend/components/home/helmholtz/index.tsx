@@ -264,16 +264,6 @@ export default function HelmholtzHome() {
   const {token}=useSession()
   const {organisations} = useOrganisations(token)
 
-  // const handleClickOpen = () => {
-  //   const loginButton = document.querySelector('.rsd-login-button')
-  //   if (loginButton) {
-  //     const evt = new MouseEvent('click', {
-  //       bubbles: true
-  //     })
-  //     loginButton.dispatchEvent(evt)
-  //   }
-  // }
-
   return (
     <main className="bg-base-100" data-testid="rsd-helmholtz-home">
 

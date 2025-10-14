@@ -8,7 +8,6 @@
 
 import {ProjectInfo} from '../context/editProjectContext'
 
-
 // MOCK project state
 const projectState: ProjectInfo = {
   id: 'test-id',

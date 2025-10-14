@@ -63,10 +63,6 @@ export default async function OrganisationSoftware({slug,query}:OrganisationSoft
   const software = await getSoftwareForOrganisation({
     organisation: uuid,
     searchFor: params?.search,
-    // keywords: decodeJsonParam(params.keywords_json,null),
-    // prog_lang: decodeJsonParam(params.prog_lang_json,null),
-    // licenses: decodeJsonParam(params.licenses_json,null),
-    // categories: decodeJsonParam(params.categories_json,null),
     keywords: params.keywords,
     prog_lang: params.prog_lang,
     licenses: params.licenses,

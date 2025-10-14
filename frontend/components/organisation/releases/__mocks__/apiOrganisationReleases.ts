@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,12 +26,14 @@ export type ReleaseCountByYear = {
 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getReleasesForOrganisation({organisation_id, release_year, token}: UseSoftwareReleaseProps) {
+export const getReleasesForOrganisation=jest.fn(({organisation_id, release_year, token}: UseSoftwareReleaseProps)=>{
   // console.log('getReleasesForOrganisation...default MOCK')
-  return mockReleasesForOrganisation
-}
+  return Promise.resolve(mockReleasesForOrganisation)
+})
+
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getReleasesCountForOrganisation({organisation_id, token}: UseSoftwareReleaseProps) {
+export const getReleasesCountForOrganisation=jest.fn(async({organisation_id, token}: UseSoftwareReleaseProps)=>{
   // console.log('getReleasesCountForOrganisation...default MOCK')
   return mockReleaseCntByYear
-}
+})

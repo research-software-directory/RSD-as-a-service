@@ -1,17 +1,17 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect,useState} from 'react'
 
-import {SpdxLicense} from '../../types/SpdxLicense'
-import {sortOnStrProp} from '../sortFn'
-import {AutocompleteOption} from '../../types/AutocompleteOptions'
+import {SpdxLicense} from '~/types/SpdxLicense'
+import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import {License} from '~/types/SoftwareTypes'
+import {sortOnStrProp} from '../sortFn'
 
 export type SpdxLicenseResponse = {
   licenseListVersion: string,
@@ -21,7 +21,7 @@ export type SpdxLicenseResponse = {
 
 import spdxLicenses from './spdxLisences.json'
 
-export default function useSpdxLicenses({software}:{software?:string}) {
+const useSpdxLicenses=jest.fn(({software}:{software?:string})=>{
   const [options, setOptions] = useState<AutocompleteOption<License>[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -74,4 +74,6 @@ export default function useSpdxLicenses({software}:{software?:string}) {
     loading,
     options
   }
-}
+})
+
+export default useSpdxLicenses

@@ -3,13 +3,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import mockSoftwareByMaintainer from './softwareByMaintainer.json'
-
-const useUserSoftware=jest.fn(()=>{
+export const useAnnouncement=jest.fn(()=>{
+  // console.log('useAnnouncement...MOCK')
   return {
-    software: mockSoftwareByMaintainer,
-    loading: false
+    loading: true,
+    announcement: null
   }
 })
 
-export default useUserSoftware
+export default useAnnouncement

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,7 @@ export type AggregatedPersonOptions={
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function useAggregatedPerson(orcid:string|null){
+const useAggregatedPerson=jest.fn((orcid:string|null)=>{
 
   const options:AggregatedPersonOptions = {
     avatars: [],
@@ -25,4 +25,6 @@ export default function useAggregatedPerson(orcid:string|null){
     options,
     aggregatedPerson: undefined
   }
-}
+})
+
+export default useAggregatedPerson

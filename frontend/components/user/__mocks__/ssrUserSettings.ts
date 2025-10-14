@@ -3,10 +3,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export const useHasRemotes=jest.fn(async()=>{
-  // const [hasRemotes, setHasRemotes] = useState(false)
-  return {
-    hasRemotes:true
-  }
-})
+/** Default mock of getUserSettings */
+export const getUserSettings = jest.fn(()=>Promise.resolve({
+  rsd_page_layout:'grid',
+  rsd_page_rows:12,
+  token:'test-token'
+}))
 

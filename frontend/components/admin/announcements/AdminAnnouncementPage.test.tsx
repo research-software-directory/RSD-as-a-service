@@ -3,7 +3,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {fireEvent, render, screen, waitFor, waitForElementToBeRemoved} from '@testing-library/react'
+// api mock
+jest.mock('~/components/admin/announcements/useAnnouncement')
+
+import {fireEvent, render, screen, waitFor} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
 import AdminAnnouncementsPage from '~/components/admin/announcements/index'
@@ -11,8 +14,8 @@ import {Session} from '~/auth'
 
 // MOCKS
 import {mockAnnouncement} from './__mocks__/apiAnnouncement'
-// api mock
-jest.mock('~/components/admin/announcements/apiAnnouncement')
+import useAnnouncement from '~/components/admin/announcements/useAnnouncement'
+const mockUseAnnouncement = useAnnouncement as jest.Mock
 
 const testSession = {
   ...mockSession,
@@ -26,7 +29,7 @@ const testSession = {
 describe('components/admin/announcements/index.tsx', () => {
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    jest.clearAllMocks()
   })
 
   it('shows progressbar initially', () => {
@@ -36,18 +39,24 @@ describe('components/admin/announcements/index.tsx', () => {
       </WithAppContext>
     )
     screen.getByRole('progressbar')
-    // screen.debug()
   })
 
 
-  it('shows announcement returned from api', async() => {
+  it('shows announcement returned from api', () => {
+
+    mockUseAnnouncement.mockReturnValue({
+      loading:false,
+      announcement: mockAnnouncement
+    })
+
     render(
       <WithAppContext options={{session: testSession}}>
         <AdminAnnouncementsPage />
       </WithAppContext>
     )
+
     // wait for loader to be removed
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+    // await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     // get switch
     const visible = screen.getByRole('switch')
@@ -65,13 +74,16 @@ describe('components/admin/announcements/index.tsx', () => {
 
   it('can turn off announcement', async () => {
 
+    mockUseAnnouncement.mockReturnValue({
+      loading:false,
+      announcement: mockAnnouncement
+    })
+
     render(
       <WithAppContext options={{session: testSession}}>
         <AdminAnnouncementsPage />
       </WithAppContext>
     )
-    // wait for loader to be removed
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     // get switch
     const visible = screen.getByRole('switch')

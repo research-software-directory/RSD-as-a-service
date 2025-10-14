@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,16 +19,16 @@ export const mockAnnouncement = {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getAnnouncement(token?: string) {
+export const getAnnouncement=jest.fn((token?: string)=>{
   // console.log('getAnnouncement...default MOCK...')
-  return mockAnnouncement
-}
+  return Promise.resolve(mockAnnouncement)
+})
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function saveAnnouncement(item: AnnouncementItem, token: string) {
+export const saveAnnouncement=jest.fn(async(item: AnnouncementItem, token: string)=>{
   // console.log('saveAnnouncement...default MOCK...')
   return jest.fn(()=>({
     status: 200,
     message: mockAnnouncement
   }))
-}
+})

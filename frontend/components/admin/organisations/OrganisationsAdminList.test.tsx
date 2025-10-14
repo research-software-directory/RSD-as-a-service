@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,7 +8,7 @@ import {render, screen} from '@testing-library/react'
 import OrganisationsAdminList from './OrganisationsAdminList'
 
 // MOCKS
-import mockOrganisationList from '../../../__tests__/__mocks__/organisationsOverview.json'
+import mockOrganisationList from '../../../utils/jest/__mocks__/organisationsOverview.json'
 const mockOnDelete = jest.fn()
 const mockProps = {
   loading: true,

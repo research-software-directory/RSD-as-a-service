@@ -7,8 +7,8 @@
 
 import {NewSoftwareItem} from '~/types/SoftwareTypes'
 
-export async function addSoftware({software, token}:
-  { software: NewSoftwareItem, token: string }) {
+export const addSoftware=jest.fn(async({software, token}:
+  { software: NewSoftwareItem, token: string })=>{
   // console.log('Mocked addSoftware...')
   return {
     status: 201,
@@ -17,10 +17,10 @@ export async function addSoftware({software, token}:
       token
     }
   }
-}
+})
 
-export async function getSoftwareToEdit({slug, token, baseUrl}:
-  { slug: string, token: string, baseUrl?: string }) {
+export const getSoftwareToEdit=jest.fn(async({slug, token, baseUrl}:
+  { slug: string, token: string, baseUrl?: string })=>{
   return {
     status: 200,
     message: {
@@ -29,4 +29,5 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
       baseUrl
     }
   }
-}
+})
+

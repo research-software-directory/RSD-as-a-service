@@ -36,12 +36,11 @@ const mockDoiList = [
   '10.23943/princeton/9780691209258.003.0001'
 ]
 
-beforeEach(() => {
-  jest.resetAllMocks()
-})
-
 
 describe('components/mention/ImportMentions/index.tsx', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
 
   it('validates provided doi list', async() => {
 
