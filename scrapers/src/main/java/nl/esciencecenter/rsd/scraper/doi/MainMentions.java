@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -147,7 +147,6 @@ public class MainMentions {
 		// END CROSSREF
 
 		// OPENALEX (other DOI registry agents)
-		String email = Config.crossrefContactEmail().orElse(null);
 		Collection<ExternalMentionRecord> scrapedOpenalexMentions = new ArrayList<>();
 		OpenAlexConnector openAlexConnector = new OpenAlexConnector();
 		Collection<String> invalidDoiRas = Set.of(
@@ -165,7 +164,7 @@ public class MainMentions {
 			.map(Doi::fromString)
 			.toList();
 		try {
-			scrapedOpenalexMentions.addAll(openAlexConnector.mentionDataByDois(europeanPublicationsOfficeDois, email));
+			scrapedOpenalexMentions.addAll(openAlexConnector.mentionDataByDois(europeanPublicationsOfficeDois));
 		} catch (Exception e) {
 			Exception exceptionToSave = new Exception(
 				"Failed scraping the following EPO DOIs: " + europeanPublicationsOfficeDois,
@@ -179,7 +178,7 @@ public class MainMentions {
 			.map(RsdMentionIds::openalexId)
 			.toList();
 		try {
-			scrapedOpenalexMentions.addAll(openAlexConnector.mentionDataByOpenalexIds(openalexIdsToScrape, email));
+			scrapedOpenalexMentions.addAll(openAlexConnector.mentionDataByOpenalexIds(openalexIdsToScrape));
 		} catch (Exception e) {
 			Exception exceptionToSave = new Exception(
 				"Failed scraping the following OpenAlex IDs: " + openalexIdsToScrape,
