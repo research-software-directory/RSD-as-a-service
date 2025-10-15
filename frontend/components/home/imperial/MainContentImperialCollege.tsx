@@ -58,21 +58,6 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
             software at Imperial? Add your package to the directory!
           </div>
         </div>
-        <div className="relative justify-center">
-          <div className="bg-secondary text-primary-content p-4 text-center max-w-fit mx-auto rounded-full border-4 border-primary">
-            <Link href="/software">
-              <div className="text-4xl">Browse Software</div>
-            </Link>
-          </div>
-          <div className="bg-secondary text-primary-content p-4 text-center max-w-fit mx-auto rounded-full border-4 border-primary mt-8">
-            <Link
-              href={submit_software_href(auth_status, providers)}
-              onClick={set_location_cookie}
-            >
-              <div className="text-3xl">Submit Software</div>
-            </Link>
-          </div>
-        </div>
       </div>
 
       <div className="max-w-(--breakpoint-xl) mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
