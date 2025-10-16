@@ -5,45 +5,26 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Button from '@mui/material/Button'
-import AddIcon from '@mui/icons-material/Add'
+'use client'
+import {PaginationProvider} from '~/components/pagination/PaginationContext'
+import {SearchProvider} from '~/components/search/SearchContext'
+import {defaultPagination, rowsPerPageOptions} from '~/config/pagination'
+import {useUserSettings} from '~/config/UserSettingsContext'
+import AdminKeywordsClient from './AdminKeywordsClient'
 
-import {useSession} from '~/auth/AuthProvider'
-import Pagination from '~/components/pagination/Pagination'
-import Searchbox from '~/components/search/Searchbox'
-import {useKeywords} from './apiKeywords'
-import KeywordTable from './KeywordTable'
-
-export default function KeywordsPage() {
-  const {token} = useSession()
-  const keywordProps = useKeywords(token)
-  const {addKeyword, searchFor} = keywordProps
-  const disabled = (typeof searchFor === 'undefined' || searchFor.length < 2)
-
-  // console.group('KeywordsPage')
-  // console.log('token...', token)
-  // console.log('keywordProps...', keywordProps)
-  // console.log('disabled...', disabled)
-  // console.groupEnd()
+export default function AdminKeywordsPage() {
+  // use page rows from user settings
+  const {rsd_page_rows} = useUserSettings()
+  const pagination = {
+    ...defaultPagination,
+    rows: rsd_page_rows ?? rowsPerPageOptions[0]
+  }
 
   return (
-    <section className="flex-1">
-      <div className="flex flex-wrap items-center justify-end">
-        <Searchbox />
-        <Button
-          variant='contained'
-          disabled={disabled}
-          startIcon={<AddIcon/> }
-          onClick={() => addKeyword(searchFor)}
-          sx={{
-            marginLeft:'1rem'
-          }}
-        >
-          Add
-        </Button>
-        <Pagination />
-      </div>
-      <KeywordTable {...keywordProps} />
-    </section>
+    <SearchProvider>
+      <PaginationProvider pagination={pagination}>
+        <AdminKeywordsClient />
+      </PaginationProvider>
+    </SearchProvider>
   )
 }

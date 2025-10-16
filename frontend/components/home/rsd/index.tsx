@@ -10,8 +10,6 @@
 import {useEffect} from 'react'
 import AOS from 'aos'
 
-import AppHeader from '~/components/AppHeader'
-import AppFooter from '~/components/AppFooter'
 import {TopNewsProps} from '~/components/news/apiNews'
 import Arc from './arc.svg'
 import AboutUsSection from './AboutUsSection'
@@ -47,10 +45,7 @@ export default function RsdHome({
   }, [])
 
   return (
-    <div className="bg-base-100 dark:bg-base-900 dark:text-base-100" data-testid="rsd-home-page">
-      {/* Header  */}
-      <AppHeader />
-
+    <main className="bg-base-100 dark:bg-base-900 dark:text-base-100" data-testid="rsd-home-page">
       {/* Jumbo Banner  */}
       <JumboBanner />
 
@@ -86,10 +81,7 @@ export default function RsdHome({
         <HomepageDivider />
         {/* Logos  */}
         <LogoSection />
-        {/* Footer */}
-        <div className="mt-20"></div>
-        <AppFooter />
       </div >
-    </div >
+    </main >
   )
 }

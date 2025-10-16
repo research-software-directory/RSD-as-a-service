@@ -21,7 +21,7 @@ export type DatacitePerson = typeof dataciteItem.creators[0]
 
 const baseUrl = 'https://api.datacite.org/application/vnd.datacite.datacite+json/'
 
-export async function getDoiInfo(doiId: string) {
+async function getDoiInfo(doiId: string) {
   try {
     const url = `${baseUrl}${doiId}`
 

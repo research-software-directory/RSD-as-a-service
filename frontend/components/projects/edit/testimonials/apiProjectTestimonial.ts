@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,7 +16,7 @@ export type ProjectTestimonial = NewProjectTestimonial & {
   position: number
 }
 
-export async function getTestimonialsForProject({project,token}:{project:string,token:string}){
+export async function getTestimonialsForProject({project,token}:{project:string,token?:string}){
   try{
     const url = `${getBaseUrl()}/testimonial_for_project?project=eq.${project}&order=position`
     const resp = await fetch(url, {

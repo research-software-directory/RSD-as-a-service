@@ -5,14 +5,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
+'use client'
+
+import {useRouter} from 'next/navigation'
 import {useFormContext} from 'react-hook-form'
 import {useSession} from '~/auth/AuthProvider'
 import {EditSoftwareItem} from '~/types/SoftwareTypes'
 import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
 import {ControlledTextFieldOptions} from '~/components/form/ControlledTextField'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContext from '../context/useSoftwareContext'
 import {patchSoftwareTable} from './patchSoftwareTable'
 
 export type AutosaveSoftwareInfoProps = {

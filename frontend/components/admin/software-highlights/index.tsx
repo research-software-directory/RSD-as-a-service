@@ -8,6 +8,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useSession} from '~/auth/AuthProvider'
 import useRsdSettings from '~/config/useRsdSettings'
 import AddSoftwareHighlights from './AddSoftwareHighlights'

@@ -10,7 +10,6 @@ import {QueryParams,buildFilterUrl} from '~/utils/postgrestUrl'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import {RsdModuleName} from '~/config/rsdSettingsReducer'
 
-
 /**
  * Hook to extract basic query parameters rows, page and search from the url.
  * This hook is used by organisation, news and communities overview.
@@ -25,7 +24,7 @@ export default function useSearchParams(view:RsdModuleName){
     const params: QueryParams = {
       // take existing params from url (query)
       // basic params are search, page and rows
-      ...ssrBasicParams(router.query),
+      ...ssrBasicParams(router ? router.query : {}),
       // overwrite with new value
       [key]: value,
     }
@@ -47,12 +46,12 @@ export default function useSearchParams(view:RsdModuleName){
 
     if (key === 'rows'){
       // save number of rows in user settings (saves to cookie too)
-      setPageRows(parseInt(value.toString()))
+      setPageRows(Number.parseInt(value.toString()))
     }
-    if (key === 'page') {
+    if (key === 'page' && router) {
       // when changing page we scroll to top
       router.push(url, url, {scroll: true})
-    } else {
+    } else if (router) {
       // update page url but keep scroll position
       router.push(url, url, {scroll: false})
     }
@@ -60,7 +59,7 @@ export default function useSearchParams(view:RsdModuleName){
 
   function resetFilters() {
     // remove params from url and keep scroll position
-    router.push(router.pathname, router.pathname, {scroll: false})
+    if (router) router.push(router.pathname, router.pathname, {scroll: false})
   }
 
   return {

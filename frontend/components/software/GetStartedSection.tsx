@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,7 +13,7 @@ import {RepositoryInfo} from '../../types/SoftwareTypes'
 
 type GetStartedSectionProps = {
   get_started_url: string | null,
-  repositoryInfo: RepositoryInfo
+  repositoryInfo: RepositoryInfo | null
 }
 
 export default function GetStartedSection({get_started_url,repositoryInfo}:GetStartedSectionProps) {
@@ -40,6 +40,7 @@ export default function GetStartedSection({get_started_url,repositoryInfo}:GetSt
       // add margin when get_started_url is present
       classes = 'pl-0 lg:pl-24'
     }
+
     return (
       <CommitsChart
         className={classes}

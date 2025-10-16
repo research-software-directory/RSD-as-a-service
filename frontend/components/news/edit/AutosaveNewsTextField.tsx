@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
+import {useRouter} from 'next/navigation'
 import {useFormContext} from 'react-hook-form'
 
 import {useSession} from '~/auth/AuthProvider'
@@ -56,8 +56,8 @@ export default function AutosaveNewsTextField({news_id,options,rules}:AutosaveNe
 
   function updateSharedInfo(value:string) {
     if (options.name === 'slug') {
-      // reload page
-      router.push(`/news/${value}/edit`)
+      // replace old page
+      router.replace(`/news/${value}/edit`)
     }
   }
 

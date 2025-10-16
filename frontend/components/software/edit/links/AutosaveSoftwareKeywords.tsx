@@ -15,7 +15,7 @@ import {useSession} from '~/auth/AuthProvider'
 import {
   addKeywordsToSoftware, createOrGetKeyword,
   deleteKeywordFromSoftware, silentKeywordDelete
-} from '~/utils/editKeywords'
+} from '~/components/keyword/apiEditKeywords'
 import {sortOnStrProp} from '~/utils/sortFn'
 import {EditSoftwareItem, KeywordForSoftware} from '~/types/SoftwareTypes'
 import useSnackbar from '~/components/snackbar/useSnackbar'

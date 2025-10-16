@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'

@@ -7,6 +7,7 @@
 
 import {NewsListItem} from '~/components/news/apiNews'
 import NoContent from '~/components/layout/NoContent'
+import GridOverview from '~/components/layout/GridOverview'
 import NewsCard from './card/NewsCard'
 
 export type NewsGridProps = {
@@ -20,12 +21,10 @@ export default function NewsGrid({news}: NewsGridProps) {
   }
 
   return (
-    <section
-      data-testid="news-overview-grid"
-      className="flex-1 my-12 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-[27rem]">
+    <GridOverview fullWidth={true} className="pt-12 pb-6 auto-rows-[27rem]">
       {news.map((news) => (
         <NewsCard key={`${news.publication_date}/${news.slug}`} item={news} />
       ))}
-    </section>
+    </GridOverview>
   )
 }

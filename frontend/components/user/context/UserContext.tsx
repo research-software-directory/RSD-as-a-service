@@ -4,6 +4,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {createContext, useCallback, useContext, useState} from 'react'
 
 import {LoginForAccount} from '~/components/user/settings/profile/apiLoginForAccount'
@@ -66,5 +67,3 @@ export function useUserContext(){
   }
   return props
 }
-
-export default UserContext

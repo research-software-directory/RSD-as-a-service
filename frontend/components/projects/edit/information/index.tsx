@@ -6,9 +6,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {useSession} from '~/auth/AuthProvider'
 import ContentLoader from '~/components/layout/ContentLoader'
-import useProjectContext from '../useProjectContext'
+import useProjectContext from '../context/useProjectContext'
 import useProjectToEdit from './useProjectToEdit'
 import ProjectInformationForm from './ProjectInformationForm'
 

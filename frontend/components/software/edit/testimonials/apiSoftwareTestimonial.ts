@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -37,11 +37,10 @@ export async function getTestimonialsForSoftware({software, token}:
           position: pos + 1
         }
       })
-    } else if (resp.status === 404) {
-      logger(`getTestimonialsForSoftware: 404 [${url}]`, 'error')
-      // query not found
-      return []
     }
+    // errors
+    logger(`getTestimonialsForSoftware: ${resp.status} ${resp.statusText} ${url}`, 'warn')
+    return []
   } catch (e: any) {
     logger(`getTestimonialsForSoftware: ${e?.message}`, 'error')
     return []

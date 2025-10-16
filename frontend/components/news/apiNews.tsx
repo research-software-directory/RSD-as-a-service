@@ -180,7 +180,7 @@ type GetNewsListProps={
   rows: number
   is_published?: boolean,
   token?:string
-  searchFor?: string
+  searchFor?: string|null
   orderBy?: string
 }
 
@@ -191,7 +191,8 @@ export async function getNewsList({page,rows,is_published=true,token,searchFor,o
     // get published meta pages ordered by position
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
-      query+=`&or=(title.ilike."*${searchFor}*",summary.ilike."*${searchFor}*",author.ilike."*${searchFor}*")`
+      const encodedSearch = encodeURIComponent(searchFor)
+      query+=`&or=(title.ilike."*${encodedSearch}*",summary.ilike."*${encodedSearch}*",author.ilike."*${encodedSearch}*")`
     }
     if (orderBy) {
       query+=`&order=${orderBy}`
@@ -202,7 +203,6 @@ export async function getNewsList({page,rows,is_published=true,token,searchFor,o
       query += '&is_published=eq.true'
     }
     const url = `${getBaseUrl()}/news?select=${select}&${query}`
-
     // get page
     const resp = await fetch(url, {
       method: 'GET',

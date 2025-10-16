@@ -4,6 +4,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import Alert from '@mui/material/Alert'
 
 import InvitationList, {Invitation} from '~/components/maintainers/InvitationList'
@@ -13,7 +14,7 @@ import {useRsdInvite} from './useRsdInvite'
 
 const extraLineGenerators: ((inv: Invitation) => string)[] = [inv => inv.id, inv => inv.comment ?? '']
 
-export default function RsdInvites() {
+export default function AdminRsdInvites() {
   const {loading,activeInvites,createInvite,deleteInvite} = useRsdInvite()
 
   if (loading) {

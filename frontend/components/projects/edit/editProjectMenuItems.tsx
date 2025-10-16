@@ -23,6 +23,9 @@ export type EditProjectMenuItemProps = {
   active: (props:any) => boolean
 }
 
+export const defaultEditPageId = 'information'
+export type EditProjectPageId = 'information' | 'team' | 'organisations' | 'mentions' | 'testimonials' | 'related-projects' | 'related-software' | 'maintainers'
+
 export const editProjectMenuItems: EditProjectMenuItemProps[] = [
   {
     id: 'information',

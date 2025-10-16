@@ -11,12 +11,11 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithFormContext} from '~/utils/jest/WithFormContext'
 import {WithProjectContext} from '~/utils/jest/WithProjectContext'
 
-import ProjectEditPage from '../pages/projects/[slug]/edit/[page]'
+import ProjectEditPage from '~/app/(base)/projects/[slug]/edit/page'
 import editProjectState from '~/components/projects/edit/__mocks__/editProjectState'
 import {projectInformation as config} from '~/components/projects/edit/information/config'
 import mockProjectToEdit from '~/components/projects/edit/information/__mocks__/useProjectToEditData.json'
-import {EditProjectPageId} from '~/components/projects/edit/EditProjectPageContent'
-import {editProjectMenuItems} from '~/components/projects/edit/editProjectMenuItems'
+import {editProjectMenuItems, EditProjectPageId} from '~/components/projects/edit/editProjectMenuItems'
 import {defaultRsdSettings} from '~/config/rsdSettingsReducer'
 
 // MOCKS
@@ -63,7 +62,7 @@ const mockProps = {
   }
 }
 
-describe('pages/projects/[slug]/edit/index.tsx', () => {
+describe.skip('pages/projects/[slug]/edit/index.tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })

@@ -6,6 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
@@ -13,12 +14,12 @@ import {colForUpdate, EditOrganisation, SearchOrganisation} from '~/types/Organi
 import {
   newOrganisationProps,
   searchToEditOrganisation, updateOrganisation
-} from '~/utils/editOrganisation'
+} from '~/components/organisation/apiEditOrganisation'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {
   addOrganisationToProject, createOrganisationAndAddToProject,
   deleteOrganisationFromProject, patchOrganisationPositions
-} from '~/utils/editProject'
+} from '~/components/projects/edit/apiEditProject'
 import SortableOrganisationsList from '~/components/software/edit/organisations/SortableOrganisationsList'
 import {upsertImage} from '~/utils/editImage'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
@@ -30,7 +31,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import {EditOrganisationModalProps, OrganisationModalStates} from '~/components/software/edit/organisations'
 import FindOrganisation from '~/components/software/edit/organisations/FindOrganisation'
 import EditOrganisationModal from '~/components/software/edit/organisations/EditOrganisationModal'
-import useProjectContext from '../useProjectContext'
+import useProjectContext from '../context/useProjectContext'
 import useParticipatingOrganisations from './useParticipatingOrganisations'
 import {cfgOrganisations as config} from './config'
 import ProjectCategoriesDialog from './ProjectCategoriesDialog'

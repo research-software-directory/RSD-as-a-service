@@ -26,25 +26,6 @@ export type ApiParams<T, K extends keyof T> = {
   orderBy?: OrderByProps<T, K>
 }
 
-type baseQueryStringProps = {
-  search?: string | null,
-  project_status?: string | null,
-  keywords?: string[] | null,
-  domains?: string[] | null,
-  prog_lang?: string[] | null,
-  licenses?: string[] | null,
-  rsd_host?: string,
-  organisations?: string[] | null,
-  categories?: string[] | null,
-  order?: string,
-  limit?: number,
-  offset?: number
-}
-
-export type PostgrestParams = baseQueryStringProps & {
-  baseUrl: string
-}
-
 export type QueryParams = {
   search?: string | null
   order?: string | null,
@@ -53,22 +34,20 @@ export type QueryParams = {
   prog_lang?: string[] | null,
   licenses?: string[] | null,
   categories?: string[] | null,
-  rsd_host?: string,
+  rsd_host?: string | null,
   organisations?: string[] | null,
   project_status?: string | null,
   page?: number | null,
   rows?: number | null
 }
 
-export type ViewQueryParams = {
-  view: string,
-  params: QueryParams
+export type BaseQueryStringProps = Omit<QueryParams,'page,rows'> & {
+  limit?: number,
+  offset?: number
 }
 
-export function ssrViewUrl(viewParams: ViewQueryParams) {
-  const {view, params} = viewParams
-  const url = buildFilterUrl(params, view)
-  return url
+export type PostgrestParams = BaseQueryStringProps & {
+  baseUrl: string
 }
 
 export function ssrSoftwareUrl(params: QueryParams) {
@@ -199,7 +178,7 @@ export function paginationUrlParams({rows = 12, page = 0}:
 /**
  * Provides basic url query string for postgrest endpoints
  */
-export function baseQueryString(props: baseQueryStringProps) {
+export function baseQueryString(props: BaseQueryStringProps) { // NOSONAR - avoid complexity warning
   const {
     keywords,
     domains,
@@ -285,7 +264,9 @@ export function baseQueryString(props: baseQueryStringProps) {
     }
   }
   // RSD Host
-  if (rsd_host !== undefined) {
+  if (rsd_host !== undefined &&
+    rsd_host !== null
+  ) {
     const rsd_host_encoded = encodeURIComponent(rsd_host)
     if (query) {
       // the null value is passed as string in url query

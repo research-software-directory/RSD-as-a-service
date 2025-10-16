@@ -93,7 +93,7 @@ export default function useLogs({orderBy}:useContributorsProps) {
     if (resp.status===200) {
       showSuccessMessage(`Removed ${resp.message} log items`)
       // load logs again if some records are deleted
-      if (parseInt(resp.message) > 0) loadLogs()
+      if (Number.parseInt(resp.message) > 0) loadLogs()
     } else {
       showErrorMessage(`Failed to remove old logs. ${resp.message}`)
     }

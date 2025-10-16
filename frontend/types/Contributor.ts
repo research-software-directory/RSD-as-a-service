@@ -71,11 +71,6 @@ export const PersonProps = [
   'account'
 ]
 
-export const TeamMemberProps = [
-  ...PersonProps,
-  'project'
-]
-
 export const ContributorProps = [
   ...PersonProps,
   'software'

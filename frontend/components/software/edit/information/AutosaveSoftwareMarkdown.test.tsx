@@ -26,7 +26,7 @@ const mockApiRemoteMarkdown = jest.fn(props => Promise.resolve({
   status:200,
   message: 'Remote markdown'
 }))
-jest.mock('~/utils/getSoftware', () => ({
+jest.mock('~/components/software/apiSoftware', () => ({
   getRemoteMarkdown: jest.fn(props=>mockGetRemoteMarkdown(props)),
   apiRemoteMarkdown: jest.fn(props=>mockApiRemoteMarkdown(props))
 }))

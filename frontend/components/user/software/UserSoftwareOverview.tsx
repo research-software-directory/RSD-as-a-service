@@ -6,13 +6,13 @@
 import Link from 'next/link'
 
 import NoContent from '~/components/layout/NoContent'
+import GridOverview from '~/components/layout/GridOverview'
 import CardSkeleton from '~/components/cards/CardSkeleton'
+import {ProjectLayoutType} from '~/components/search/ToggleViewGroup'
 import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
-import SoftwareOverviewGrid from '~/components/software/overview/cards/SoftwareOverviewGrid'
 import SoftwareGridCard from '~/components/software/overview/cards/SoftwareGridCard'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 import {SoftwareByMaintainer} from './useUserSoftware'
 
 type UserSoftwareOverviewProps=Readonly<{
@@ -65,10 +65,10 @@ export default function UserSoftwareOverview({loading,skeleton_items,layout,soft
 
   // GRID as default
   return (
-    <SoftwareOverviewGrid fullWidth={true}>
+    <GridOverview fullWidth={true}>
       {software.map((item) => {
         return <SoftwareGridCard key={item.id} {...item as any}/>
       })}
-    </SoftwareOverviewGrid>
+    </GridOverview>
   )
 }

@@ -15,7 +15,7 @@ import {
   createDomainsList, getResearchDomainInfo
 } from '~/components/projects/overview/filters/projectFiltersApi'
 import useOrganisationContext from '../../context/useOrganisationContext'
-import useProjectParams from '../useProjectParams'
+import useProjectParams from '../../../projects/overview/useProjectParams'
 import {OrgProjectFilterProps, buildOrgProjectFilter} from './useOrgProjectKeywordsList'
 
 

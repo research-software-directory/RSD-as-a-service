@@ -23,7 +23,7 @@ export type CommunitySoftwareFilterProps = {
   token?:string
 }
 
-export function buildCommunitySoftwareFilter({id, software_status, ...params}: CommunitySoftwareFilterProps) {
+function buildCommunitySoftwareFilter({id, software_status, ...params}: CommunitySoftwareFilterProps) {
   const filter = {
     // additional organisation filter
     community_id: id,

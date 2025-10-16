@@ -196,7 +196,7 @@ export const userMenuItems: MenuItemType[] = [
     type: 'link',
     label: 'Administration',
     active: ({role})=>['rsd_admin'].includes(role),
-    path: '/admin/public-pages',
+    path: '/admin/rsd-invites',
     icon: <ManageAccountsIcon />,
   },{
     module: 'user',

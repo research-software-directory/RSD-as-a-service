@@ -58,22 +58,6 @@ jest.mock('rehype-external-links', jest.fn((...props) => {
   return props
 }))
 
-
-// MOCK page useRouter (next/router)
-jest.mock('next/router', () => ({
-  useRouter: jest.fn(()=>{
-    return {
-      // pathname: 'testPaths',
-      asPath: 'test-path',
-      // ... whatever else you call on `router`
-      query: {
-        test: 'query',
-        slug: 'test-slug'
-      }
-    }
-  }),
-}))
-
 // MOCK app useRouter (next/navigation)
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(()=>{
@@ -87,7 +71,9 @@ jest.mock('next/navigation', () => ({
       }
     }
   }),
-  usePathname: jest.fn(()=>'/')
+  usePathname: jest.fn(()=>'/'),
+  useParams: jest.fn(()=>[]),
+  useSearchParams: jest.fn(()=>[]),
 }))
 
 // mock console log

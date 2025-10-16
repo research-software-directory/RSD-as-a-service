@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
-import {isMaintainerOfOrganisation} from './isMaintainerOfOrganisation'
+import {isOrganisationMaintainer} from './isMaintainerOfOrganisation'
 
 const mockData = {
   organisation: 'test-organisation-id',
@@ -32,7 +32,7 @@ it('returns true when organisation in list', async () => {
   // return mocked organisation
   mockResolvedValueOnce([mockData.organisation])
   // get maintainer value
-  const isMaintainer = await isMaintainerOfOrganisation(mockData)
+  const isMaintainer = await isOrganisationMaintainer(mockData)
   // should return true
   expect(isMaintainer).toBe(true)
 
@@ -45,7 +45,7 @@ it('returns false when organisation NOT in list', async () => {
   // return mocked organisation
   mockResolvedValueOnce([])
   // get maintainer value
-  const isMaintainer = await isMaintainerOfOrganisation(mockData)
+  const isMaintainer = await isOrganisationMaintainer(mockData)
   // should return true
   expect(isMaintainer).toBe(false)
 })
@@ -62,7 +62,7 @@ it('makes call to expected rpc ', async () => {
   // return mocked organisation
   mockResolvedValueOnce([mockData.organisation])
   // get maintainer value
-  await isMaintainerOfOrganisation(mockData)
+  await isOrganisationMaintainer(mockData)
   // validate call
   expect(global.fetch).toHaveBeenCalledTimes(1)
   expect(global.fetch).toHaveBeenCalledWith(expectedUrl, expectedOptions)

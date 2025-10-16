@@ -17,7 +17,7 @@ import {config} from './config'
 // MOCK patchSoftwareTable
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockAddToRepositoryTable = jest.fn(props => Promise.resolve('OK'))
-jest.mock('~/utils/editSoftware', () => ({
+jest.mock('~/components/software/edit/apiEditSoftware', () => ({
   addToRepositoryTable: jest.fn(props=>mockAddToRepositoryTable(props))
 }))
 

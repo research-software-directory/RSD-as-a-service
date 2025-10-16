@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import jwt from 'jsonwebtoken'
-import logger from '../utils/logger'
+import logger from '~/utils/logger'
 
 // secret key is only available in Node (backend=SSR)
 const jwtKey = process.env.PGRST_JWT_SECRET
@@ -46,7 +48,7 @@ export function getAccountFromToken(token?: string) {
  */
 export default function verifyJwt(token: string): 'valid' | 'invalid' | 'jwtkey' {
   try {
-    // if the key is not avaliable we might be in FE mode
+    // if the key is not available we might be in FE mode
     if (!jwtKey) return 'jwtkey'
     const verified = jwt.verify(token, jwtKey, verifyOptions)
     // for now we just check for object

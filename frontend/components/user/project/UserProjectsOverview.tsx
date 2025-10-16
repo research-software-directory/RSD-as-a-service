@@ -6,10 +6,10 @@
 import Link from 'next/link'
 
 import NoContent from '~/components/layout/NoContent'
+import GridOverview from '~/components/layout/GridOverview'
 import CardSkeleton from '~/components/cards/CardSkeleton'
-import SoftwareOverviewGrid from '~/components/software/overview/cards/SoftwareOverviewGrid'
+import {ProjectLayoutType} from '~/components/search/ToggleViewGroup'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 import ProjectCardContent from '~/components/projects/overview/cards/ProjectCardContent'
 import ProjectOverviewList from '~/components/projects/overview/list/ProjectOverviewList'
 import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
@@ -58,7 +58,7 @@ export default function UserProjectsOverview({loading,skeleton_items,layout,proj
   // GRID as default
   // use software overview component for full width (4 items in row)
   return (
-    <SoftwareOverviewGrid fullWidth={true}>
+    <GridOverview fullWidth={true}>
       {projects.map((item) => {
         return (
           <Link
@@ -74,6 +74,6 @@ export default function UserProjectsOverview({loading,skeleton_items,layout,proj
           </Link>
         )
       })}
-    </SoftwareOverviewGrid>
+    </GridOverview>
   )
 }

@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
-import {getSoftwareList} from '~/utils/getSoftware'
 import {softwareListUrl} from '~/utils/postgrestUrl'
+import {getSoftwareList} from '~/components/software/apiSoftware'
 
 export type GetSoftwareListParams={
   page: number,

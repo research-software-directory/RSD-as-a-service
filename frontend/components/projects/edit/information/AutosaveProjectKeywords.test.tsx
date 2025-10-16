@@ -44,7 +44,7 @@ const mockSilentKeywordDelete = jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'
 }))
-jest.mock('~/utils/editKeywords', () => ({
+jest.mock('~/components/keyword/apiEditKeywords', () => ({
   addKeywordsToProject: jest.fn(props => mockAddKeywordsToProject(props)),
   createOrGetKeyword: jest.fn(props => mockCreateOrGetKeyword(props)),
   deleteKeywordFromProject: jest.fn(props => mockDeleteKeywordFromProject(props)),

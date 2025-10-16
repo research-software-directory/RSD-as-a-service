@@ -14,6 +14,8 @@ export type ProfileTabProps = {
   [key in ProfileTabKey]: OrganisationTabItemProps
 }
 
+export const defaultTabId = 'software'
+
 export const profileTabItems:ProfileTabProps = {
   software: {
     id:'software',

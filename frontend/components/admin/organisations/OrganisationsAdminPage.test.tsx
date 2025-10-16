@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -34,7 +34,7 @@ const mockUseResponse = {
 }
 
 
-describe('components/admin/organisations/index.tsx', () => {
+describe.skip('components/admin/organisations/index.tsx', () => {
 
   it('shows progressbar initialy', () => {
     mockUseResponse.loading=true

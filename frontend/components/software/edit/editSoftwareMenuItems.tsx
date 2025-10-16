@@ -18,7 +18,7 @@ import DonutLargeIcon from '@mui/icons-material/DonutLarge'
 import ArticleIcon from '@mui/icons-material/Article'
 import Diversity3Icon from '@mui/icons-material/Diversity3'
 import SoftwareHeritageIcon from './software-heritage/SoftwareHeritageIcon'
-// import AcUnitIcon from '@mui/icons-material/AcUnit'
+
 import {RsdModuleName} from '~/config/rsdSettingsReducer'
 
 
@@ -29,6 +29,13 @@ export type EditSoftwareMenuItemsProps = {
   icon: JSX.Element,
   active: (props:any) => boolean
 }
+
+export const defaultPageId = 'information'
+
+export type EditSoftwarePageId = 'information' | 'links' | 'contributors' | 'organisations'| 'mentions' |
+  'testimonials' | 'package-managers'|'software-heritage'|'communities'|'related-projects' | 'related-software' | 'maintainers'|
+  'services'
+
 
 export const editSoftwareMenuItems:EditSoftwareMenuItemsProps[] = [{
   id: 'information',

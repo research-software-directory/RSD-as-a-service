@@ -45,7 +45,7 @@ type IsMaintainerOfOrganisationProps = {
   token?: string
 }
 
-export async function isMaintainerOfOrganisation({organisation, account, token}: IsMaintainerOfOrganisationProps) {
+async function isMaintainerOfOrganisation({organisation, account, token}: IsMaintainerOfOrganisationProps) {
   try {
     if (typeof account == 'undefined' ||
     typeof token == 'undefined') {
@@ -154,5 +154,3 @@ export async function canEditOrganisations({organisations,account,token}:CanEdit
     })
   }
 }
-
-export default isMaintainerOfOrganisation

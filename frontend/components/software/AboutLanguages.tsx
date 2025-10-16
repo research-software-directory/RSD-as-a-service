@@ -63,7 +63,7 @@ function calculateStats(languages: ProgramingLanguages) {
 }
 
 export default function AboutLanguages({languages, platform}:
-  { languages: ProgramingLanguages, platform: CodePlatform }) {
+  { languages?: ProgramingLanguages, platform?: CodePlatform }) {
   let label = 'Programming language'
 
   // don't render section if no languages

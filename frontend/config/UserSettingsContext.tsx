@@ -8,14 +8,15 @@
 'use client'
 import {createContext, useContext, useState} from 'react'
 
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
-import {setDocumentCookie} from '~/utils/userSettings'
+
+import {setDocumentCookie} from '~/components/cookies/documentCookie'
+import {SoftwareLayoutType} from '~/components/search/ToggleViewGroup'
 import {rowsPerPageOptions} from './pagination'
 
 export type UserSettingsProps={
-  rsd_page_layout: LayoutType,
+  rsd_page_layout: SoftwareLayoutType,
   rsd_page_rows: number,
-  avatar_id: string | null
+  avatar_id?: string | null
 }
 
 export type UserSettingsContextProps={
@@ -57,7 +58,7 @@ export function UserSettingsProvider(props:any){
 export function useUserSettings(){
   const {user,setUser} = useContext(UserSettingsContext)
 
-  function setPageLayout(layout:LayoutType='grid'){
+  function setPageLayout(layout:SoftwareLayoutType='grid'){
     // ignore null value - click on "same" button
     if (layout===null) return
     // console.log('layout...',layout)

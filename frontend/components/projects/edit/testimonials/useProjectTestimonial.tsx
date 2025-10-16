@@ -8,7 +8,7 @@ import {useCallback, useEffect, useState} from 'react'
 import {useSession} from '~/auth/AuthProvider'
 import {NewTestimonial, Testimonial} from '~/types/Testimonial'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import useProjectContext from '../useProjectContext'
+import useProjectContext from '../context/useProjectContext'
 import {addProjectTestimonial, deleteProjectTestimonial,
   getTestimonialsForProject, patchTestimonialPositions,
   updateProjectTestimonial

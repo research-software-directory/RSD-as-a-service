@@ -5,49 +5,40 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import Link from 'next/link'
-import NoContent from '~/components/layout/NoContent'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
-import AdminProjectGridCard from './card/AdminProjectGridCard'
+
+import {useUserSettings} from '~/config/UserSettingsContext'
 import {ProjectOfOrganisation} from '~/types/Organisation'
-import useOrganisationContext from '../context/useOrganisationContext'
-import ProjectOverviewGrid from '~/components/projects/overview/cards/ProjectOverviewGrid'
-import ProjectOverviewList from '~/components/projects/overview/list/ProjectOverviewList'
-import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
-import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
-import AdminProjectListItem from './list/AdminProjectListItem'
+import NoContent from '~/components/layout/NoContent'
+import GridOverview from '~/components/layout/GridOverview'
 import ProjectCardContent from '~/components/projects/overview/cards/ProjectCardContent'
-import CardSkeleton from '~/components/cards/CardSkeleton'
+import ProjectOverviewList from '~/components/projects/overview/list/ProjectOverviewList'
+import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
+import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
+import AdminProjectListItem from './list/AdminProjectListItem'
+import AdminProjectGridCard from './card/AdminProjectGridCard'
 
 type OrganisationProjectsOverviewProps = Readonly<{
-  layout: ProjectLayoutType
   projects: ProjectOfOrganisation[]
-  loading: boolean
-  rows: number
+  isMaintainer: boolean
 }>
 
-export default function OrganisationProjectsOverview({layout,projects,loading,rows}: OrganisationProjectsOverviewProps) {
-  const {isMaintainer, project_cnt} = useOrganisationContext()
-  // max item to be set to rows
-  let itemCnt = rows
-  if (project_cnt && project_cnt < rows) itemCnt = project_cnt
+export default function OrganisationProjectsOverview({projects,isMaintainer}: OrganisationProjectsOverviewProps) {
+  const {rsd_page_layout} = useUserSettings()
 
-  // console.group('ProjectsOfOrganisation')
+  // console.group('OrganisationProjectsOverview')
   // console.log('projects...',projects)
-  // console.log('layout...', layout)
+  // console.log('rsd_page_layout...', rsd_page_layout)
   // console.log('isMaintainer...',isMaintainer)
   // console.groupEnd()
 
-  // if loading show skeleton loader
-  if (loading) {
-    return <CardSkeleton layout={layout} count={itemCnt} />
-  }
-
-  if (loading===false && (!projects || projects.length === 0)) {
+  if (!projects || projects.length === 0) {
     return <NoContent />
   }
 
-  if (layout === 'list') {
+  if (rsd_page_layout === 'list') {
     return (
       <ProjectOverviewList>
         {projects.map(item => {
@@ -80,7 +71,7 @@ export default function OrganisationProjectsOverview({layout,projects,loading,ro
 
   // GRID as default
   return (
-    <ProjectOverviewGrid>
+    <GridOverview>
       {projects.map((item) => {
         if (isMaintainer) {
           return (
@@ -101,6 +92,6 @@ export default function OrganisationProjectsOverview({layout,projects,loading,ro
           </Link>
         )
       })}
-    </ProjectOverviewGrid>
+    </GridOverview>
   )
 }

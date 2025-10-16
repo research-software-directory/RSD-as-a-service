@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import {canEditOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
-import {getOrganisationsForSoftware} from '~/utils/editOrganisation'
+import {getOrganisationsForSoftware} from '~/components/organisation/apiEditOrganisation'
 
 
 export type UseParticipatingOrganisationsProps = {

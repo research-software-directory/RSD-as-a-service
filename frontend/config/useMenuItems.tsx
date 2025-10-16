@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {menuItems, MenuItemType} from '~/config/menuItems'
 import useRsdSettings from './useRsdSettings'
 

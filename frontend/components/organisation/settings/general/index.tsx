@@ -3,12 +3,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {FormProvider, useForm} from 'react-hook-form'
 
 import {useSession} from '~/auth/AuthProvider'
 import {OrganisationForOverview} from '~/types/Organisation'
-import useOrganisationContext from '../../context/useOrganisationContext'
-import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import useOrganisationContext from '~/components/organisation/context/useOrganisationContext'
 import config from './generalSettingsConfig'
 import AutosaveOrganisationTextField from './AutosaveOrganisationTextField'
 import RorIdWithUpdate from './RorIdWithUpdate'
@@ -36,72 +37,68 @@ export default function OrganisationGeneralSettings() {
   // console.groupEnd()
 
   return (
-    <BaseSurfaceRounded
-      className="mb-12 p-4"
-      type="section"
-    >
-      <FormProvider {...methods}>
-        <form
-          autoComplete="off"
-          className="py-4"
-        >
-          {/* hidden inputs */}
-          <input type="hidden"
-            {...register('id')}
-          />
-          <input type="hidden"
-            {...register('parent')}
-          />
+    <FormProvider {...methods}>
+      <EditSectionTitle
+        title="General settings"
+        className="pb-8 font-medium"
+      />
+      <form
+        autoComplete="off"
+      >
+        {/* hidden inputs */}
+        <input type="hidden"
+          {...register('id')}
+        />
+        <input type="hidden"
+          {...register('parent')}
+        />
 
-          <h2 className="pb-8">General settings</h2>
+        <AutosaveOrganisationTextField
+          options={{
+            name: 'name',
+            label: config.name.label,
+            useNull: true,
+            defaultValue: name,
+            helperTextMessage: config.name.help,
+            helperTextCnt: `${name?.length ?? 0}/${config.name.validation.maxLength.value}`,
+          }}
+          rules={config.name.validation}
+        />
 
+        <div className="py-4"></div>
+        <AutosaveOrganisationTextField
+          options={{
+            name: 'short_description',
+            label: config.short_description.label,
+            useNull: true,
+            defaultValue: short_description,
+            helperTextMessage: config.short_description.help,
+            helperTextCnt: `${short_description?.length ?? 0}/${config.short_description.validation.maxLength.value}`,
+          }}
+          rules={config.short_description.validation}
+        />
+        <div className="py-4"></div>
+        <section className="grid grid-cols-[1fr_1fr] gap-8">
           <AutosaveOrganisationTextField
             options={{
-              name: 'name',
-              label: config.name.label,
+              name: 'website',
+              label: config.website.label,
               useNull: true,
-              defaultValue: name,
-              helperTextMessage: config.name.help,
-              helperTextCnt: `${name?.length ?? 0}/${config.name.validation.maxLength.value}`,
+              defaultValue: website,
+              helperTextMessage: config.website.help,
+              helperTextCnt: `${website?.length ?? 0}/${config.website.validation.maxLength.value}`,
             }}
-            rules={config.name.validation}
+            rules={config.website.validation}
           />
-
-          <div className="py-4"></div>
-          <AutosaveOrganisationTextField
-            options={{
-              name: 'short_description',
-              label: config.short_description.label,
-              useNull: true,
-              defaultValue: short_description,
-              helperTextMessage: config.short_description.help,
-              helperTextCnt: `${short_description?.length ?? 0}/${config.short_description.validation.maxLength.value}`,
-            }}
-            rules={config.short_description.validation}
-          />
-          <div className="py-4"></div>
-          <section className="grid grid-cols-[1fr_1fr] gap-8">
-            <AutosaveOrganisationTextField
-              options={{
-                name: 'website',
-                label: config.website.label,
-                useNull: true,
-                defaultValue: website,
-                helperTextMessage: config.website.help,
-                helperTextCnt: `${website?.length ?? 0}/${config.website.validation.maxLength.value}`,
-              }}
-              rules={config.website.validation}
-            />
-            <RorIdWithUpdate />
-          </section>
-          <div className="py-4"></div>
-          {/* RSD admin section */}
-          {user?.role === 'rsd_admin' ?
-            <RsdAdminSection />
-            : null
-          }
-        </form>
-      </FormProvider>
-    </BaseSurfaceRounded>
+          <RorIdWithUpdate />
+        </section>
+        <div className="py-4"></div>
+        {/* RSD admin section */}
+        {user?.role === 'rsd_admin' ?
+          <RsdAdminSection />
+          : null
+        }
+      </form>
+    </FormProvider>
   )
 }

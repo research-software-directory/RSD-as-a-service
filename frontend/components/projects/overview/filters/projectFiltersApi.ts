@@ -9,6 +9,7 @@ import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {ResearchDomainOption} from '~/components/filter/ResearchDomainFilter'
+import {StatusFilterOption} from './ProjectStatusFilter'
 
 export type ResearchDomainInfo = {
   key: string,
@@ -23,11 +24,6 @@ export type DomainsFilterOption = {
 type ParicipatingOrganisationFilterOption = {
   organisation: string
   organisation_cnt: number
-}
-
-type ProjectStatusFilterProps = {
-  project_status: string
-  project_status_cnt: number
 }
 
 export type ProjectFilterProps = {
@@ -172,6 +168,8 @@ export async function getResearchDomainInfo(keys: string[]) {
     const select = 'select=key,name'
     const url = `${getBaseUrl()}/research_domain?${select}&${query}`
 
+    // console.log('url...', url)
+
     const resp = await fetch(url, {
       method: 'GET'
     })
@@ -269,7 +267,7 @@ export async function projectStatusFilter({search, keywords, domains, organisati
     })
 
     if (resp.status === 200) {
-      const json: ProjectStatusFilterProps[] = await resp.json()
+      const json: StatusFilterOption[] = await resp.json()
       return json
     }
 

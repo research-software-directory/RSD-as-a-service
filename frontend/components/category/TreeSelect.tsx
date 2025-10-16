@@ -29,7 +29,7 @@ type RecursiveTreeSelectProps<T> = {
   nodes: TreeNode<T>[]
 }
 
-export function RecursivelyGenerateItems<T>({
+function RecursivelyGenerateItems<T>({
   isSelected,
   keyExtractor,
   nodes,

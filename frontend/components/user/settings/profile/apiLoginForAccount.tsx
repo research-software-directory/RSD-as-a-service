@@ -6,7 +6,7 @@
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
-import {ProviderName} from '~/auth/api/authEndpoint'
+import {ProviderName} from '~/auth/api/getLoginProviders'
 
 export type LoginForAccount={
   id:string

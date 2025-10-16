@@ -1,21 +1,22 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {HTMLAttributes, useState} from 'react'
 
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {getBaseUrl} from '~/utils/fetchHelpers'
-import {getSoftwareList} from '~/utils/getSoftware'
 import {softwareListUrl} from '~/utils/postgrestUrl'
+import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
+import {getSoftwareList} from '~/components/software/apiSoftware'
 import AsyncAutocompleteSC, {AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import SoftwareOptionFound from './SoftwareOptionFound'
-import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
 import {SoftwareHighlight} from './apiSoftwareHighlights'
 
 type AddSoftwareHighlightsProps = {

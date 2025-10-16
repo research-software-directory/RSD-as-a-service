@@ -6,12 +6,21 @@
 import Link from 'next/link'
 
 import {getImageUrl} from '~/utils/editImage'
-import {OrganisationForOverview} from '~/types/Organisation'
 import ListImageWithGradientPlaceholder from '~/components/projects/overview/list/ListImageWithGradientPlaceholder'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import OrganisationMetrics from './OrganisationMetrics'
 
-export default function OrganisationListItem({organisation}:{readonly organisation:OrganisationForOverview}) {
+type OrganisationListItemProps=Readonly<{
+  id: string
+  name: string
+  short_description: string | null
+  logo_id: string | null,
+  rsd_path: string
+  software_cnt: number | null,
+  project_cnt: number | null,
+}>
+
+export default function OrganisationListItem({organisation}:Readonly<{organisation:OrganisationListItemProps}>) {
   const imgSrc = getImageUrl(organisation.logo_id ?? null)
 
   return (

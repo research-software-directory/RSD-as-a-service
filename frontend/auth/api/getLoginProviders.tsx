@@ -5,8 +5,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
-import {ProviderName} from '~/auth/api/authEndpoint'
 
+export type ProviderName = 'surfconext'|'helmholtz'|'orcid'|'azure'|'linkedin'|'local'
 export type AccessType = 'INVITE_ONLY' | 'EVERYONE'
 
 export type Provider = {
@@ -20,12 +20,12 @@ export type Provider = {
 
 export async function getLoginProviders(): Promise<Provider[]> {
   try{
+    const url = `${typeof window === 'undefined' ? process.env.RSD_AUTH_URL : '/auth'}/providers`
+
     // console.group('getLoginProviders')
-    // console.log('loginProviders...', loginProviders)
+    // console.log('url...', url)
     // console.groupEnd()
 
-    const url = `${typeof window === 'undefined' ? process.env.RSD_AUTH_URL : '/auth'}/providers`
-    // console.log('url...', url)
     const resp = await fetch(url)
 
     if (resp.status === 200){

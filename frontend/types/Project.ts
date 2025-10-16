@@ -150,9 +150,3 @@ export type TeamMember = Person & {
   avatar_b64?: string | null
   avatar_mime_type?: string | null
 }
-
-export const ProjectTableProps = [
-  'id', 'slug', 'title', 'subtitle', 'is_published',
-  'description', 'date_start', 'date_end', 'image_caption',
-  'image_contain', 'grant_id'
-]

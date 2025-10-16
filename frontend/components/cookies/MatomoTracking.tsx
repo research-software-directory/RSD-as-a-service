@@ -1,7 +1,11 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
+
+'use client'
 
 import {useEffect, useState} from 'react'
 import FormGroup from '@mui/material/FormGroup'
@@ -41,22 +45,6 @@ export default function MatomoTracking({matomoId,matomoConsent}:MatomoTrackingPr
     setConsent(checked)
   }
 
-  function renderSwitch() {
-    return (
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={consent}
-              onChange={handleChange}
-            />
-          }
-          label={`Allow anonymous statistics (${consent ? 'on' : 'off'})`}
-        />
-      </FormGroup>
-    )
-  }
-
   // return nothing if there is no matomo active
   if (matomoId === null || typeof consent === 'undefined') return null
 
@@ -92,7 +80,17 @@ export default function MatomoTracking({matomoId,matomoConsent}:MatomoTrackingPr
         Your consent to be tracked by Matomo can be revoked at any time by setting the &quot;Allow anonymous statistics&quot; to off position.
       </p>
 
-      {renderSwitch()}
+      <FormGroup>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={consent}
+              onChange={handleChange}
+            />
+          }
+          label={`Allow anonymous statistics (${consent ? 'on' : 'off'})`}
+        />
+      </FormGroup>
     </>
   )
 }

@@ -6,50 +6,40 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import Link from 'next/link'
-import NoContent from '~/components/layout/NoContent'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
-import AdminSoftwareGridCard from './card/AdminSoftwareGridCard'
-import useOrganisationContext from '../context/useOrganisationContext'
+
 import {SoftwareOfOrganisation} from '~/types/Organisation'
+import {useUserSettings} from '~/config/UserSettingsContext'
+import NoContent from '~/components/layout/NoContent'
+import GridOverview from '~/components/layout/GridOverview'
 import SoftwareGridCard from '~/components/software/overview/cards/SoftwareGridCard'
-import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
-import SoftwareOverviewGrid from '~/components/software/overview/cards/SoftwareOverviewGrid'
-import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
-import AdminSoftwareListItem from './list/AdminSoftwareListItem'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
-import CardSkeleton from '~/components/cards/CardSkeleton'
+import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
+import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
+import AdminSoftwareGridCard from './card/AdminSoftwareGridCard'
+import AdminSoftwareListItem from './list/AdminSoftwareListItem'
 
 type OrganisationSoftwareOverviewProps = Readonly<{
-  layout: ProjectLayoutType
   software: SoftwareOfOrganisation[]
-  loading: boolean
-  rows: number
+  isMaintainer: boolean
 }>
 
-export default function OrganisationSoftwareOverview({layout,software,loading,rows}: OrganisationSoftwareOverviewProps) {
-  const {isMaintainer, software_cnt} = useOrganisationContext()
-  // max item to be set to rows
-  let itemCnt = rows
-  if (software_cnt && software_cnt < rows) itemCnt = software_cnt
+export default function OrganisationSoftwareOverview({software,isMaintainer}: OrganisationSoftwareOverviewProps) {
+  const {rsd_page_layout} = useUserSettings()
 
   // console.group('OrganisationSoftwareOverview')
   // console.log('isMaintainer...', isMaintainer)
-  // console.log('software_cnt...', software_cnt)
   // console.log('software...', software)
-  // console.log('loading...', loading)
-  // console.log('layout...', layout)
+  // console.log('rsd_page_layout...', rsd_page_layout)
   // console.groupEnd()
-
-  if (loading) {
-    return <CardSkeleton layout={layout} count={itemCnt} />
-  }
 
   if (!software || software.length === 0) {
     return <NoContent />
   }
 
-  if (layout === 'list') {
+  if (rsd_page_layout === 'list') {
     return (
       <SoftwareOverviewList>
         {software.map(item => {
@@ -77,7 +67,7 @@ export default function OrganisationSoftwareOverview({layout,software,loading,ro
 
   // GRID as default
   return (
-    <SoftwareOverviewGrid>
+    <GridOverview>
       {software.map((item) => {
         if (isMaintainer) {
           return (
@@ -86,7 +76,7 @@ export default function OrganisationSoftwareOverview({layout,software,loading,ro
         }
         return <SoftwareGridCard key={item.id} {...item}/>
       })}
-    </SoftwareOverviewGrid>
+    </GridOverview>
   )
 
 }

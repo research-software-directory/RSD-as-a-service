@@ -7,6 +7,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
+import {useParams} from 'next/navigation'
 import Link from 'next/link'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -15,11 +18,12 @@ import ListItemText from '@mui/material/ListItemText'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 import useRsdSettings from '~/config/useRsdSettings'
-import {EditProjectPageId} from './EditProjectPageContent'
 import {editProjectMenuItems} from './editProjectMenuItems'
 
-export default function EditProjectNav({slug,pageId}:Readonly<{slug:string,pageId:EditProjectPageId}>) {
+export default function EditProjectNav({slug}:Readonly<{slug:string}>) {
   const {activeModules} = useRsdSettings()
+  const params = useParams()
+  const pageId = params?.page
   return (
     <nav>
       <List sx={{

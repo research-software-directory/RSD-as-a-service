@@ -129,7 +129,7 @@ export type ParticipatingOrganisationProps = {
   website: string | null
   logo_url: string | null
   rsd_path: string
-  slug?: string
+  slug: string | null
 }
 
 export type ProjectOrganisationProps = ParticipatingOrganisationProps & {
@@ -188,7 +188,7 @@ export type ProjectOfOrganisation = {
   project_status: ProjectStatusKey
 }
 
-export type OrganisationList = {
+export type OrganisationListProps = {
   id: string
   parent: string | null
   name: string
@@ -196,6 +196,7 @@ export type OrganisationList = {
   country: string | null
   website: string | null
   is_tenant: boolean
+  ror_names_string: string | null
   rsd_path: string
   logo_id: string | null,
   software_cnt: number,

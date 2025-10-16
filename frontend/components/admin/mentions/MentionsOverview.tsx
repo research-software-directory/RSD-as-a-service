@@ -4,6 +4,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useEffect, useState} from 'react'
 import MentionsOverviewList from '~/components/admin/mentions/MentionsOverviewList'
 import {extractSearchTerm, SearchTermInfo} from '~/components/software/edit/mentions/utils'

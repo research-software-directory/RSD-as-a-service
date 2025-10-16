@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useContext,JSX} from 'react'
 import snackbarContext, {snackbarDefaults,SnackbarOptions} from './MuiSnackbarContext'
 

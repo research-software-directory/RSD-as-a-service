@@ -8,6 +8,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {select,scaleLinear,line} from 'd3'
 import {useRef, useEffect, useState} from 'react'
 // note! direct import causes jest tests to fail

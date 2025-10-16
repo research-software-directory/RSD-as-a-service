@@ -5,8 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {styled,useTheme} from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
+import {styled} from '@mui/material/styles'
 
 export type FlexGridProps = {
   minWidth?: string,
@@ -15,31 +14,6 @@ export type FlexGridProps = {
   maxHeight?: string,
   height?: string
 }
-/**
- * Hook that returns adviced cell dimensions to be passed to FlexibleGridSelection
- */
-export function useAdvicedDimensions(source:'software'|'project'|'organisation' = 'project') {
-  const theme = useTheme()
-  // use media query hook for small screen logic
-  const smallScreen = useMediaQuery(theme.breakpoints.down('lg'))
-  // adjust grid width and height for mobile
-  const minWidth = smallScreen ? '18rem' : '26rem'
-  let itemHeight = smallScreen ? '26rem' : '18rem'
-
-  if (source === 'software' &&
-    itemHeight === '26rem') {
-    // software card does not have image
-    // it needs less height
-    itemHeight = '22rem'
-  }
-
-  return {
-    minWidth,
-    maxWidth:'1fr',
-    itemHeight
-  }
-}
-
 
 export const FlexibleGridSection = styled('section', {
   // do not forward this props to html element

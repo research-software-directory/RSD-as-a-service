@@ -101,93 +101,94 @@ export default function UserAgreementModal() {
   if (loading) return null
 
   return (
-    <form
-      id="user-agreement-form"
-      data-testid="user-agreement-form"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <input type="hidden"
-        {...register('account', {required:'account id is required'})}
-      />
       <Dialog
         data-testid="user-agreement-modal"
         // use fullScreen modal for small screens (< 600px)
         fullScreen={smallScreen}
         open={open}
       >
-        <DialogTitle sx={{
-          fontSize: '1.5rem',
-          color: 'secondary.main',
-          fontWeight: 500
-        }}>
-          <InfoIcon
-            sx={{
-              width: '2rem',
-              height: '2rem',
-              margin: '0rem 0.5rem 0.25rem 0rem'
-            }}
-          /> User agreements
-        </DialogTitle>
+        <form
+          id="user-agreement-form"
+          data-testid="user-agreement-form"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <input type="hidden"
+            {...register('account', {required:'account id is required'})}
+          />
+          <DialogTitle sx={{
+            fontSize: '1.5rem',
+            color: 'secondary.main',
+            fontWeight: 500
+          }}>
+            <InfoIcon
+              sx={{
+                width: '2rem',
+                height: '2rem',
+                margin: '0rem 0.5rem 0.25rem 0rem'
+              }}
+            /> User agreements
+          </DialogTitle>
 
-        <DialogContent sx={{
-          width:['100%','33rem']
-        }}>
-          {/* Render only if userInfo present in order to properly load defaultValues */}
-          <div className="py-4">
-            To be able to contribute to the RSD, we need to know that you agree to our Terms of Service, and that you have read the Privacy Statement. Please check all of the points below to proceed:
-          </div>
-          <div>
-            <ControlledSwitch
-              defaultValue={agree_terms}
-              name='agree_terms'
-              control={control}
-              // onSave={setAgreeTerms}
-              label={
-                <span>I agree to the <Link className="underline" target='_blank' href={host?.terms_of_service_url ?? ''}>Terms of Service</Link>.</span>
-              }
-            />
-          </div>
-          <div>
-            <ControlledSwitch
-              defaultValue={notice_privacy_statement}
-              name='notice_privacy_statement'
-              control={control}
-              // onSave={setPrivacyStatement}
-              label={
-                <span>I have read the <Link className='underline' target='_blank' href={host?.privacy_statement_url ?? ''}>Privacy Statement</Link>.</span>
-              }
-            />
-          </div>
-          <p className="py-4">You may view or modify your agreement at any time in your profile settings.</p>
-        </DialogContent>
+          <DialogContent sx={{
+            width:['100%','33rem']
+          }}>
 
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-        }}>
-          <Button
-            // on cancel go to the homepage
-            onClick={()=>router.push('/')}
-            color="secondary"
-            sx={{
-              marginRight: '1rem',
-            }}
-          >
-              Cancel
-          </Button>
-          <Button
-            form="user-agreement-form"
-            disabled={!(agreeTerms && privacyStatement)}
-            type="submit"
-            variant="contained"
-            color="primary"
-            endIcon={
-              <CheckIcon />
-            }
-          >
-            Accept
-          </Button>
-        </DialogActions>
+            {/* Render only if userInfo present in order to properly load defaultValues */}
+            <div className="py-4">
+              To be able to contribute to the RSD, we need to know that you agree to our Terms of Service, and that you have read the Privacy Statement. Please check all of the points below to proceed:
+            </div>
+            <div>
+              <ControlledSwitch
+                defaultValue={agree_terms}
+                name='agree_terms'
+                control={control}
+                // onSave={setAgreeTerms}
+                label={
+                  <span>I agree to the <Link className="underline" target='_blank' href={host?.terms_of_service_url ?? ''}>Terms of Service</Link>.</span>
+                }
+              />
+            </div>
+            <div>
+              <ControlledSwitch
+                defaultValue={notice_privacy_statement}
+                name='notice_privacy_statement'
+                control={control}
+                // onSave={setPrivacyStatement}
+                label={
+                  <span>I have read the <Link className='underline' target='_blank' href={host?.privacy_statement_url ?? ''}>Privacy Statement</Link>.</span>
+                }
+              />
+            </div>
+            <p className="py-4">You may view or modify your agreement at any time in your profile settings.</p>
+          </DialogContent>
+
+          <DialogActions sx={{
+            padding: '1rem 1.5rem',
+          }}>
+            <Button
+              // on cancel go to the homepage
+              onClick={()=>router.push('/')}
+              color="secondary"
+              sx={{
+                marginRight: '1rem',
+              }}
+            >
+                Cancel
+            </Button>
+            <Button
+              form="user-agreement-form"
+              disabled={!(agreeTerms && privacyStatement)}
+              type="submit"
+              variant="contained"
+              color="primary"
+              endIcon={
+                <CheckIcon />
+              }
+            >
+              Accept
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
-    </form>
   )
 }

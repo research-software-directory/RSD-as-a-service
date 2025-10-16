@@ -22,7 +22,7 @@ import mockRelatedProjects from './__mocks__/relatedProjectsForProject.json'
 const mockGetRelatedProjectsForProject = jest.fn(props => Promise.resolve([] as any))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSearchForRelatedProjectByTitle = jest.fn(props => Promise.resolve([] as any))
-jest.mock('~/utils/getProjects', () => ({
+jest.mock('~/components/projects/apiProjects', () => ({
   getRelatedProjectsForProject: jest.fn(props => mockGetRelatedProjectsForProject(props)),
   searchForRelatedProjectByTitle: jest.fn(props => mockSearchForRelatedProjectByTitle(props)),
 }))
@@ -36,7 +36,7 @@ const mockDeleteRelatedProject = jest.fn(props => Promise.resolve([] as any))
 const mockAddRelatedSoftware = jest.fn(props => Promise.resolve([] as any))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockDeleteRelatedSoftware = jest.fn(props => Promise.resolve([] as any))
-jest.mock('~/utils/editProject', () => ({
+jest.mock('~/components/projects/edit/apiEditProject', () => ({
   addRelatedProject: jest.fn(props => mockAddRelatedProject(props)),
   deleteRelatedProject: jest.fn(props => mockDeleteRelatedProject(props)),
   addRelatedSoftware: jest.fn(props => mockAddRelatedSoftware(props)),
@@ -44,7 +44,7 @@ jest.mock('~/utils/editProject', () => ({
 }))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSearchForRelatedSoftware = jest.fn(props => Promise.resolve([] as any))
-jest.mock('~/utils/editRelatedSoftware', () => ({
+jest.mock('~/components/software/edit/related-software/apiRelatedSoftware', () => ({
   searchForRelatedSoftware: jest.fn(props=>mockSearchForRelatedSoftware(props))
 }))
 
@@ -111,7 +111,7 @@ describe('frontend/components/projects/edit/related-projects/index.tsx', () => {
     // validate api calls
     expect(mockAddRelatedProject).toHaveBeenCalledTimes(1)
     expect(mockAddRelatedProject).toHaveBeenCalledWith({
-      'origin': editProjectState.project.id,
+      'origin': editProjectState.id,
       'relation': relatedProjectsFound[0].id,
       'status': 'approved',
       'token': mockSession.token,
