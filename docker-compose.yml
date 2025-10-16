@@ -217,7 +217,7 @@ services:
       context: ./documentation
       # dockerfile to use for build
       dockerfile: Dockerfile
-    image: rsd/documentation:4.1.0
+    image: rsd/documentation:5.3.1
     expose:
       - "80"
     networks:
