@@ -11,7 +11,7 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {MarkdownPage} from '../useMarkdownPages'
 import config from './config'
 
-import EditMarkdownPages from './index'
+import EditMarkdownPages from './EditMarkdownPages'
 
 // MOCKS
 // we need to mock this feature - not supported in jsdom
@@ -61,12 +61,12 @@ jest.mock('../saveMarkdownPage', () => ({
 
 // NOTE! The editing is protected at the level of page
 // These components are not protected
-describe.skip('frontend/components/admin/pages/edit/index.tsx', () => {
+describe('frontend/components/admin/pages/edit/index.tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  it('renders no custom markdown pages message', () => {
+  it('renders no custom markdown pages message', async() => {
     render(
       <WithAppContext options={{session:mockSession}}>
         <EditMarkdownPages {...mockProps} />

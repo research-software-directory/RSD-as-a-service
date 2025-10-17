@@ -3,9 +3,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export function useHasRemotes() {
+export const useHasRemotes=jest.fn(async()=>{
   // const [hasRemotes, setHasRemotes] = useState(false)
   return {
     hasRemotes:true
   }
-}
+})
+

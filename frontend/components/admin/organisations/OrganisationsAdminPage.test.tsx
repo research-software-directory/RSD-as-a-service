@@ -10,9 +10,9 @@ import {Session} from '~/auth'
 import OrganisationsAdminPage from './index'
 
 // MOCKS
-import mockOrganisationList from '../../../__tests__/__mocks__/organisationsOverview.json'
+import mockOrganisationList from '~/utils/jest/__mocks__/organisationsOverview.json'
 const mockUseOrganisation = jest.fn()
-jest.mock('./apiOrganisation', () => ({
+jest.mock('./useOrganisations', () => ({
   useOrganisations:(token:string)=>mockUseOrganisation(token)
 }))
 
@@ -34,9 +34,9 @@ const mockUseResponse = {
 }
 
 
-describe.skip('components/admin/organisations/index.tsx', () => {
+describe('components/admin/organisations/index.tsx', () => {
 
-  it('shows progressbar initialy', () => {
+  it('shows progressbar initially', () => {
     mockUseResponse.loading=true
     // mock hook response
     mockUseOrganisation.mockReturnValueOnce(mockUseResponse)

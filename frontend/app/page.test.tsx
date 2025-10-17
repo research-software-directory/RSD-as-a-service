@@ -3,6 +3,24 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+// use DEFAULT MOCK for login providers list
+// required when AppHeader component is used
+// NOTE! if default mocks are defined the mock imports need to be above "normal" imports
+jest.mock('~/auth/api/useLoginProviders')
+// use DEFAULT MOCK for organisation list used by Helmholtz homepage
+// NOTE! if default is defined in __mock__ folder you cannot overwrite it here
+jest.mock('~/components/home/helmholtz/useOrganisations')
+// MOCK getHomepageCounts
+jest.mock('~/components/home/getHomepageCounts')
+// MOCK getTopNews
+jest.mock('~/components/news/apiNews')
+// MOCK getRsdSettings
+jest.mock('~/config/getSettingsServerSide')
+// MOCK useOrganisations for Helmholtz page
+jest.mock('~/components/home/helmholtz/useOrganisations')
+
+// const mockRsdSettings = jest.mock('~/config/getSettingsServerSide')
+
 import {render, screen} from '@testing-library/react'
 
 import Home from '../app/page'
@@ -10,27 +28,14 @@ import Home from '../app/page'
 import {defaultRsdSettings} from '~/config/rsdSettingsReducer'
 import {WithAppContext} from '~/utils/jest/WithAppContext'
 import {getTopNews} from '~/components/news/apiNews'
-import {getRsdSettings} from '~/config/getSettingsServerSide'
-import {getHomepageCounts} from '~/components/home/getHomepageCounts'
-
-// use DEFAULT MOCK for login providers list
-// required when AppHeader component is used
-// NOTE! if default is defined you cannot overwrite it here
-jest.mock('~/auth/api/useLoginProviders')
-// use DEFAULT MOCK for organisation list used by Helmholtz homepage
-// NOTE! if default is defined in __mock__ folder you cannot overwrite it here
-jest.mock('~/components/home/helmholtz/useOrganisations')
-
-// MOCK getHomepageCounts
-jest.mock('~/components/home/getHomepageCounts')
-const mockHomepageCounts = getHomepageCounts as jest.Mock
-// MOCK getTopNews
-jest.mock('~/components/news/apiNews')
 // getTopNews with correct type
 const mockTopNews = getTopNews as jest.Mock
-// MOCK getRsdSettings
-jest.mock('~/config/getSettingsServerSide')
+import {getRsdSettings} from '~/config/getSettingsServerSide'
 const mockRsdSettings = getRsdSettings as jest.Mock
+import {getHomepageCounts} from '~/components/home/getHomepageCounts'
+const mockHomepageCounts = getHomepageCounts as jest.Mock
+import useOrganisations from '~/components/home/helmholtz/useOrganisations'
+const mockUseOrganisations = useOrganisations as jest.Mock
 
 const props = {
   host: {
@@ -47,6 +52,9 @@ const props = {
 }
 
 describe('app/page.tsx', () => {
+  beforeEach(()=>{
+    jest.clearAllMocks()
+  })
   it('renders default RSD Home page when host=rsd', async () => {
     // mock responses
     mockTopNews.mockResolvedValue([])
@@ -141,7 +149,11 @@ describe('app/page.tsx', () => {
     // mock responses
     mockTopNews.mockResolvedValue([])
     mockRsdSettings.mockResolvedValue(defaultRsdSettings)
-    // mockHomepageCounts.mockResolvedValue(props.counts)
+    mockHomepageCounts.mockResolvedValue(props.counts)
+    mockUseOrganisations.mockReturnValueOnce({
+      loading: false,
+      organisations: []
+    })
 
     // we need to resolve async component before wrapping it?!?
     // this might not work when in all situations
@@ -162,7 +174,7 @@ describe('app/page.tsx', () => {
     // mock responses
     mockTopNews.mockResolvedValue([])
     mockRsdSettings.mockResolvedValue(defaultRsdSettings)
-    // mockHomepageCounts.mockResolvedValue(props.counts)
+    mockHomepageCounts.mockResolvedValue(props.counts)
 
     // we need to resolve async component before wrapping it?!?
     // this might not work when in all situations

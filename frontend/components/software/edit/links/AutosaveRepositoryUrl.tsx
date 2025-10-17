@@ -235,7 +235,7 @@ export default function AutosaveRepositoryUrl() {
 
   return (
     <>
-      <div className="flex gap-4 items-baseline">
+      <div className="flex gap-4">
         <AutosaveControlledTextField
           options={options}
           control={control}

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -124,39 +124,39 @@ export type PackageManager = NewPackageManager & {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getPackageManagers({software, token}: { software: string, token: string }) {
+export const getPackageManagers=jest.fn(async({software, token}: { software: string, token: string })=>{
   // console.log('getPackageManagers...default MOCK')
   return mockPackageManagers
-}
+})
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function postPackageManager({data, token}: { data: NewPackageManager, token: string }) {
+export const postPackageManager=jest.fn(async({data, token}: { data: NewPackageManager, token: string })=>{
   // console.log('postPackageManager...default MOCK')
   return {
     status: 200,
     message: 'OK'
   }
-}
+})
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function patchPackageManagers({items, token}: { items: PackageManager[], token: string }) {
+export const patchPackageManagers=jest.fn(async({items, token}: { items: PackageManager[], token: string })=>{
   // console.log('patchPackageManagers...default MOCK')
   return {
     status: 200,
     message: 'OK'
   }
-}
+})
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function deletePackageManager({id, token}: { id: string, token: string }) {
+export const deletePackageManager=jest.fn(async({id, token}: { id: string, token: string })=>{
   // console.log('deletePackageManager...default MOCK')
   return {
     status: 200,
     message: 'OK'
   }
-}
+})
 
-export async function getPackageManagerTypeFromUrl(url:string) {
+export const getPackageManagerTypeFromUrl=jest.fn(async(url:string)=>{
   try {
     const urlObject = new URL(url)
     const keys = Object.keys(packageManagerSettings) as PackageManagerTypes[]
@@ -174,10 +174,10 @@ export async function getPackageManagerTypeFromUrl(url:string) {
   } catch {
     return 'other' as PackageManagerTypes
   }
-}
+})
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function getPackageManagerServices(pm_key:PackageManagerTypes|null){
+export const getPackageManagerServices=jest.fn(async(pm_key:PackageManagerTypes|null)=>{
   // just return no services
   return []
-}
+})

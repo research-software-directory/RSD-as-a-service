@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM node:22.13.1-bookworm-slim
+FROM node:24.10.0-bookworm-slim
 
 #  Change the user and group id of the node user to the specified ids
 ARG DUID=1000

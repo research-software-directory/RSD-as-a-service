@@ -81,7 +81,7 @@ export async function getMaintainerOrganisations({token}:
       headers: createJsonHeaders(token)
     })
     if (resp.status === 200) {
-      const json = await resp.json()
+      const json:string[] = await resp.json()
       return json
     }
     // ERRORS AS NOT MAINTAINER

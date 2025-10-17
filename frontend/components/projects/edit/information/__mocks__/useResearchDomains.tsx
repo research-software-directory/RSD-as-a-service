@@ -8,13 +8,12 @@
 import {useState} from 'react'
 import {ResearchDomain} from '~/types/Project'
 
-
 export type UseResearchDomainProps = {
   l1Selected: ResearchDomain | null,
   l2Selected: ResearchDomain | null
 }
 
-export default function useResearchDomains({l1Selected, l2Selected}: UseResearchDomainProps) {
+const useResearchDomains=jest.fn(({l1Selected, l2Selected}: UseResearchDomainProps)=>{
   // l1=Level 1 domains are root domains without parent (parent===null)
   const [l1Domains] = useState<ResearchDomain[]>(l1Selected ? [l1Selected] : [])
   // l2=Level 2 domains are domains where parent is selected l1 domain
@@ -27,4 +26,6 @@ export default function useResearchDomains({l1Selected, l2Selected}: UseResearch
     l2Domains,
     l3Domains
   }
-}
+})
+
+export default useResearchDomains

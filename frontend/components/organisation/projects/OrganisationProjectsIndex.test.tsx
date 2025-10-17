@@ -6,64 +6,53 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+/**
+ * DEFAULT MOCKS NEED to be imported before "real" imports
+ * DEFAULT MOCKS should return jest.fn() with default results
+ * THIS MAKES possible to overwrite default mock with import (after mock import)
+ */
+// MOCK getUserSettings
+jest.mock('~/components/user/ssrUserSettings')
+// MOCK getActiveModuleNames
+jest.mock('~/config/getSettingsServerSide')
+// MOCK isOrganisationMaintainer
+jest.mock('~/auth/permissions/isMaintainerOfOrganisation')
+// MOCK getOrganisationIdForSlug,getProjectsForOrganisation
+jest.mock('~/components/organisation/apiOrganisations')
+// MOCK patchProjectForOrganisation
+jest.mock('~/components/projects/edit/apiEditProject')
+
 import {fireEvent, render, screen} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithOrganisationContext} from '~/utils/jest/WithOrganisationContext'
-
 import OrganisationProjects from './index'
+
 import mockOrganisation from '../__mocks__/mockOrganisation'
 import mockProjects from './__mocks__/mockProjects.json'
-
-// mock user agreement call
-jest.mock('~/components/user/settings/agreements/useUserAgreements')
-// mock project categories api
-jest.mock('~/components/organisation/projects/filters/useOrgProjectCategoriesList')
+// import MOCKS to return custom values
+import {isOrganisationMaintainer} from '~/auth/permissions/isMaintainerOfOrganisation'
+import {getProjectsForOrganisation} from '~/components/organisation/apiOrganisations'
+const mockGetProjectsForOrganisation = getProjectsForOrganisation as jest.Mock
+import {patchProjectForOrganisation} from '~/components/projects/edit/apiEditProject'
+const mockPatchProjectForOrganisation = patchProjectForOrganisation as jest.Mock
 
 const mockProps = {
   organisation: mockOrganisation,
   isMaintainer: false
 }
 
-// MOCK getProjectsForOrganisation
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockUseOrganisationProjects = jest.fn((props) => ({
-  loading: false,
-  count: 0,
-  projects: []
-}))
-// jest.mock('~/components/organisation/projects/useOrganisationProjects', () => ({
-//   __esModule: true,
-//   default: jest.fn((props)=>mockUseOrganisationProjects(props))
-// }))
-
-// MOCK patchProjectForOrganisation
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockPatchProjectForOrganisation = jest.fn((props) => Promise.resolve({
-  status: 200,
-  statusText: 'OK'
-}))
-jest.mock('~/components/projects/edit/apiEditProject', () => ({
-  patchProjectForOrganisation: jest.fn((props)=>mockPatchProjectForOrganisation(props))
-}))
-
-// MOCK project filters - use default mocks
-jest.mock('~/components/organisation/projects/filters/useOrgProjectDomainsList')
-jest.mock('~/components/organisation/projects/filters/useOrgProjectKeywordsList')
-jest.mock('~/components/organisation/projects/filters/useOrgProjectOrganisationsList')
-jest.mock('~/components/organisation/projects/filters/useOrgProjectStatusList')
-
-
-describe.skip('frontend/components/organisation/projects/index.tsx', () => {
+describe('frontend/components/organisation/projects/index.tsx', () => {
   beforeEach(() => {
     // reset mock counters
     jest.clearAllMocks()
   })
 
   it('shows no items icon when no data', async() => {
+    const ResolvedPage = await OrganisationProjects({slug:['test-project'],query:{}})
     render(
       <WithAppContext>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationProjects />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -73,35 +62,41 @@ describe.skip('frontend/components/organisation/projects/index.tsx', () => {
   })
 
   it('shows project cards', async() => {
-    mockUseOrganisationProjects.mockReturnValueOnce({
-      loading: false,
+    // mock api response
+    mockGetProjectsForOrganisation.mockResolvedValueOnce({
       count: mockProjects.length,
-      projects: mockProjects as any
+      data: mockProjects as any
     })
+
+    const ResolvedPage = await OrganisationProjects({slug:['test-project'],query:{}})
+
     render(
       <WithAppContext>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationProjects />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
 
-    const projects = screen.getAllByTestId('project-grid-card')
+    const projects = await screen.findAllByTestId('project-grid-card')
     expect(projects.length).toEqual(mockProjects.length)
   })
 
   it('shows project cards with menu', async () => {
-    mockProps.isMaintainer=true
-    mockUseOrganisationProjects.mockReturnValueOnce({
-      loading: false,
+    // mock response to true
+    (isOrganisationMaintainer as jest.Mock).mockResolvedValueOnce(true)
+
+    mockGetProjectsForOrganisation.mockResolvedValueOnce({
       count: mockProjects.length,
-      projects: mockProjects as any
+      data: mockProjects as any
     })
+
+    const ResolvedPage = await OrganisationProjects({slug:['test-project'],query:{}})
 
     render(
       <WithAppContext>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationProjects />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -112,17 +107,20 @@ describe.skip('frontend/components/organisation/projects/index.tsx', () => {
   })
 
   it('maintainer can PIN project', async () => {
-    mockProps.isMaintainer=true
-    mockUseOrganisationProjects.mockReturnValueOnce({
-      loading: false,
+    // mock response to true
+    (isOrganisationMaintainer as jest.Mock).mockResolvedValueOnce(true)
+
+    mockGetProjectsForOrganisation.mockResolvedValueOnce({
       count: mockProjects.length,
-      projects: mockProjects as any
+      data: mockProjects as any
     })
+
+    const ResolvedPage = await OrganisationProjects({slug:['test-project'],query:{}})
 
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationProjects />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -154,18 +152,21 @@ describe.skip('frontend/components/organisation/projects/index.tsx', () => {
   })
 
   it('maintainer can UNPIN project', async () => {
-    mockProps.isMaintainer = true
+    // mock response to true
+    (isOrganisationMaintainer as jest.Mock).mockResolvedValueOnce(true)
+
     mockProjects[0].is_featured = true
-    mockUseOrganisationProjects.mockReturnValueOnce({
-      loading: false,
+    mockGetProjectsForOrganisation.mockResolvedValueOnce({
       count: mockProjects.length,
-      projects: mockProjects as any
+      data: mockProjects as any
     })
+
+    const ResolvedPage = await OrganisationProjects({slug:['test-project'],query:{}})
 
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationProjects />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -196,17 +197,21 @@ describe.skip('frontend/components/organisation/projects/index.tsx', () => {
   })
 
   it('maintainer can DENY project affiliation', async () => {
-    mockProps.isMaintainer=true
-    mockUseOrganisationProjects.mockReturnValueOnce({
-      loading: false,
+    // mock response to true
+    (isOrganisationMaintainer as jest.Mock).mockResolvedValueOnce(true)
+
+    mockProjects[0].is_featured = true
+    mockGetProjectsForOrganisation.mockResolvedValueOnce({
       count: mockProjects.length,
-      projects: mockProjects as any
+      data: mockProjects as any
     })
+
+    const ResolvedPage = await OrganisationProjects({slug:['test-project'],query:{}})
 
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationProjects />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -238,18 +243,21 @@ describe.skip('frontend/components/organisation/projects/index.tsx', () => {
   })
 
   it('maintainer can ALLOW project affiliation', async () => {
-    mockProps.isMaintainer = true
+    // mock response to true
+    (isOrganisationMaintainer as jest.Mock).mockResolvedValueOnce(true)
+
     mockProjects[1].status = 'rejected_by_relation'
-    mockUseOrganisationProjects.mockReturnValueOnce({
-      loading: false,
+    mockGetProjectsForOrganisation.mockResolvedValueOnce({
       count: mockProjects.length,
-      projects: mockProjects as any
+      data: mockProjects as any
     })
+
+    const ResolvedPage = await OrganisationProjects({slug:['test-project'],query:{}})
 
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationProjects />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -279,5 +287,4 @@ describe.skip('frontend/components/organisation/projects/index.tsx', () => {
       'token': mockSession.token,
     })
   })
-
 })

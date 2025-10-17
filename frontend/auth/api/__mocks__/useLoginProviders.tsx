@@ -7,8 +7,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export default function useLoginProviders() {
-
+const useLoginProviders=jest.fn(()=>{
   return {
     providers:[{
       name: 'test provider',
@@ -18,4 +17,6 @@ export default function useLoginProviders() {
     }],
     setProviders: jest.fn()
   }
-}
+})
+
+export default useLoginProviders
