@@ -8,7 +8,7 @@
 
 import {render, screen, fireEvent} from '@testing-library/react'
 import {WrappedComponentWithProps} from '~/utils/jest/WrappedComponents'
-import {defaultRsdSettings} from '~/config/rsdSettingsReducer'
+import {defaultRsdSettings, RsdModuleName} from '~/config/rsdSettingsReducer'
 
 import GlobalSearchAutocomplete from '.'
 
@@ -44,8 +44,8 @@ it('renders component with testid global-search', async() => {
 
 it('shows navigation option on focus based on modules defined', async () => {
   mockUseHasRemotes.mockReturnValue({hasRemotes:false})
-  // filter out news as these are not in global search
-  const expectedMenuOptions = Object.keys(defaultRsdSettings.modules).filter(key=>key!=='news')
+  // filter out only active modules
+  const expectedMenuOptions = Object.keys(defaultRsdSettings.modules).filter((key)=>defaultRsdSettings.modules[key as RsdModuleName].active)
   // render component with session
   render(WrappedComponentWithProps(GlobalSearchAutocomplete))
   // find input

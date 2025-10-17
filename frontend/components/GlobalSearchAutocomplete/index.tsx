@@ -202,10 +202,9 @@ export default function GlobalSearchAutocomplete(props: Props) {
   if (activeModules?.includes('communities')) {
     defaultValues.push({name: 'Go to Communities page', slug: '', source: 'communities', domain: null, rsd_host: null})
   }
-  // TODO! Add news to global search?
-  // if (activeModules?.includes('news')) {
-  //   defaultValues.push({name: 'Go to News page', slug: '', source: 'news', domain: null, rsd_host: null})
-  // }
+  if (activeModules?.includes('news')) {
+    defaultValues.push({name: 'Go to News page', slug: '', source: 'news', domain: null, rsd_host: null})
+  }
   if (activeModules?.includes('persons')) {
     defaultValues.push({name: 'Go to Persons page', slug: '', source: 'persons', domain: null, rsd_host: null})
   }
