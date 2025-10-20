@@ -6,36 +6,18 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Image from 'next/legacy/image'
-import Link from 'next/link'
 
 import {HomeProps} from 'app/page'
 import {useSession} from '~/auth/AuthProvider'
-import {Provider} from '~/auth/api/getLoginProviders'
-import useLoginProviders from '~/auth/api/useLoginProviders'
-import useImperialData from './useImperialData'
 import MainContent from '~/components/layout/MainContent'
 import ContentLoader from '~/components/layout/ContentLoader'
+import useImperialData from './useImperialData'
 import CounterBox from './CounterBox'
 import Keywords from './Keywords'
 
-function set_location_cookie() {
-  // set cookie so that user is bounced to the software submission page
-  // after authentication
-  document.cookie = 'rsd_pathname=/add/software;path=/auth;SameSite=None;Secure'
-}
-
-function submit_software_href(auth_status: string, login_providers: Provider[]) {
-  if (auth_status == 'authenticated') {
-    return '/add/software'
-  }
-  return (login_providers[0]?.signInUrl ?? '')
-}
-
 export default function MainContentImperialCollege({counts}: HomeProps) {
-  const {token,status} = useSession()
+  const {token} = useSession()
   const {loading, keywords} = useImperialData(token)
-  const {providers} = useLoginProviders()
-  const auth_status = status || 'loading'
 
   return (
     <MainContent>
