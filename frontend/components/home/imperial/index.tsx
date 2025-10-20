@@ -12,9 +12,7 @@ import MainContentImperialCollege from './MainContentImperialCollege'
 export default function ImperialCollegeHome({counts,news}: HomeProps) {
   return (
     <main className="flex-1 flex flex-col text-secondary-content bg-[url('/images/imperial_bg.png')] bg-cover bg-no-repeat bg-center bg-scroll bg-base-100">
-      <AppHeader />
       <MainContentImperialCollege counts={counts} news={news}/>
-      <AppFooter/>
     </main>
   )
 }
