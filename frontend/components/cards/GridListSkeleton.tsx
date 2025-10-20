@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Skeleton from '@mui/material/Skeleton'
-import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
+import ListOverviewSection from '~/components/layout/ListOverviewSection'
 
 type GridListSkeletonProps = Readonly<{
   count: number
@@ -32,8 +32,8 @@ export default function GridListSkeleton({count=3,height='4rem'}:GridListSkeleto
   }
   // debugger
   return (
-    <SoftwareOverviewList>
+    <ListOverviewSection>
       {items}
-    </SoftwareOverviewList>
+    </ListOverviewSection>
   )
 }

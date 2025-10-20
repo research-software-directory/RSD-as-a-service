@@ -43,7 +43,7 @@
       "menuItem":"Communities"
     },
     "persons": {
-      "active":false,
+      "active":true,
       "name":"persons",
       "menuItem": "Persons"
     },

@@ -21,7 +21,7 @@ export type AddNewsItem={
   publication_date: string
 }
 
-export type NewsListItem=AddNewsItem & {
+export type NewsListItemProps=AddNewsItem & {
   id: string
   publication_date: string
   author: string|null
@@ -31,7 +31,7 @@ export type NewsListItem=AddNewsItem & {
   updated_at: string
 }
 
-export type NewsItem=NewsListItem & {
+export type NewsItem=NewsListItemProps & {
   description: string
 }
 
@@ -215,7 +215,7 @@ export async function getNewsList({page,rows,is_published=true,token,searchFor,o
     })
 
     if ([200,206].includes(resp.status)) {
-      const json:NewsListItem[] = await resp.json()
+      const json:NewsListItemProps[] = await resp.json()
       return {
         count: extractCountFromHeader(resp.headers) ?? 0,
         news: json

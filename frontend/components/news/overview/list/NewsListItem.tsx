@@ -5,21 +5,21 @@
 
 'use client'
 
-import Link from 'next/link'
-
 import {useSession} from '~/auth/AuthProvider'
 import IconBtnMenuOnAction from '~/components/menu/IconBtnMenuOnAction'
 import ListImageWithGradientPlaceholder from '~/components/projects/overview/list/ListImageWithGradientPlaceholder'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import StatusBanner from '~/components/cards/StatusBanner'
-import {NewsListItem, getCardImageUrl} from '~/components/news/apiNews'
+import {NewsListItemProps, getCardImageUrl} from '~/components/news/apiNews'
 import PublicationDate from '~/components/news/overview/card/PublicationDate'
 import NewsAuthors from '~/components/news/overview/card/NewsAuthors'
 import {getMenuOptions} from '~/components/news/overview/card/NewsCardNav'
 import useOnNewsAction from '~/components/news/overview/useOnNewsAction'
+import OverviewListItemLink from '~/components/software/overview/list/OverviewListItemLink'
+import ListTitleSubtitle from '~/components/layout/ListTitleSubtitle'
 
 type ListItemProps=Readonly<{
-  item:NewsListItem
+  item:NewsListItemProps
 }>
 
 export function ListItemNav({item}:ListItemProps){
@@ -40,17 +40,14 @@ export function ListItemNav({item}:ListItemProps){
 }
 
 
-export default function ListItemNews({item}:ListItemProps) {
+export default function NewsListItem({item}:ListItemProps) {
   // construct image url
   const imgUrl = getCardImageUrl(item.image_for_news)
 
   return (
     <OverviewListItem className="flex-none">
-      <Link
-        data-testid="project-list-item"
-        key={item.id}
+      <OverviewListItemLink
         href={`/news/${item.publication_date}/${item.slug}`}
-        className='flex-1 flex items-center hover:text-inherit bg-base-100 rounded-xs'
       >
         <ListImageWithGradientPlaceholder
           imgSrc={imgUrl}
@@ -59,13 +56,11 @@ export default function ListItemNews({item}:ListItemProps) {
         <div className="flex-1 flex flex-col md:flex-row gap-3 py-2">
           {/* basic info */}
           <div className="flex-1">
-            <div className='line-clamp-2 md:line-clamp-1 break-words font-medium'>
-              {item.title}
-            </div>
-            <div className='line-clamp-4 md:line-clamp-2 break-words text-sm opacity-70'>
-              {item.summary}
-            </div>
-            {/* project status - admin only */}
+            <ListTitleSubtitle
+              title={item.title}
+              subtitle={item.summary}
+            />
+            {/* news status - admin only */}
             <div className="pt-2 flex gap-2 text-xs opacity-60">
               <StatusBanner
                 status="approved"
@@ -87,7 +82,7 @@ export default function ListItemNews({item}:ListItemProps) {
             />
           </div>
         </div>
-      </Link>
+      </OverviewListItemLink>
       {/* rsd admin navigation */}
       <ListItemNav item={item} />
     </OverviewListItem>

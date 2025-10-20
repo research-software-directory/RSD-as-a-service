@@ -5,16 +5,15 @@
 
 'use client'
 
-import Link from 'next/link'
-
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import NoContent from '~/components/layout/NoContent'
 import GridOverview from '~/components/layout/GridOverview'
+import ListOverviewSection from '~/components/layout/ListOverviewSection'
 import SoftwareGridCard from '~/components/software/overview/cards/SoftwareGridCard'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
-import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
+import OverviewListItemLink from '~/components/software/overview/list/OverviewListItemLink'
 
 type ProfileSoftwareOverviewProps = Readonly<{
   software: SoftwareOverviewItemProps[]
@@ -29,23 +28,19 @@ export default function ProfileSoftwareOverview({software}:ProfileSoftwareOvervi
 
   if (rsd_page_layout === 'list') {
     return (
-      <SoftwareOverviewList>
+      <ListOverviewSection>
         {software.map(item => {
           return (
-            <Link
-              data-testid="software-list-item"
-              key={item.id}
-              href={`/software/${item.slug}`}
-              className='flex-1 hover:text-inherit'
-              title={item.brand_name}
-            >
-              <OverviewListItem className='pr-4'>
+            <OverviewListItem key={item.id} className='pr-4'>
+              <OverviewListItemLink
+                href={`/software/${item.slug}`}
+              >
                 <SoftwareListItemContent key={item.id} {...item} />
-              </OverviewListItem>
-            </Link>
+              </OverviewListItemLink>
+            </OverviewListItem>
           )
         })}
-      </SoftwareOverviewList>
+      </ListOverviewSection>
     )
   }
 

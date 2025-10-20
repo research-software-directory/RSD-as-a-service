@@ -5,13 +5,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {NewsListItem} from '~/components/news/apiNews'
+import {NewsListItemProps} from '~/components/news/apiNews'
 import NoContent from '~/components/layout/NoContent'
 import GridOverview from '~/components/layout/GridOverview'
 import NewsCard from './card/NewsCard'
 
 export type NewsGridProps = {
-  news: NewsListItem[]
+  news: NewsListItemProps[]
 }
 
 export default function NewsGrid({news}: NewsGridProps) {

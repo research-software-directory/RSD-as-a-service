@@ -17,9 +17,9 @@ import IconBtnMenuOnAction, {IconBtnMenuOption} from '~/components/menu/IconBtnM
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {NewsAction} from '~/components/news/overview/useOnNewsAction'
-import {deleteNewsImages, deleteNewsItem, NewsImageProps, NewsListItem} from '~/components/news/apiNews'
+import {deleteNewsImages, deleteNewsItem, NewsImageProps, NewsListItemProps} from '~/components/news/apiNews'
 
-function getMenuOptions(item:NewsListItem){
+function getMenuOptions(item:NewsListItemProps){
   const menuOptions:IconBtnMenuOption<NewsAction>[]=[{
     type:'action',
     key: 'edit',
@@ -75,7 +75,7 @@ async function deleteArticle(id:string,image_for_news:NewsImageProps[],token:str
   }
 }
 
-export default function NewsItemMenu({item}:Readonly<{item:NewsListItem}>) {
+export default function NewsItemMenu({item}:Readonly<{item:NewsListItemProps}>) {
   const router = useRouter()
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()

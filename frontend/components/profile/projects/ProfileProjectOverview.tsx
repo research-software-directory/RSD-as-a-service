@@ -11,9 +11,10 @@ import {ProjectListItem} from '~/types/Project'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import NoContent from '~/components/layout/NoContent'
 import GridOverview from '~/components/layout/GridOverview'
+import ListOverviewSection from '~/components/layout/ListOverviewSection'
 import ProjectCardContent from '~/components/projects/overview/cards/ProjectCardContent'
 import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
-import ProjectOverviewList from '~/components/projects/overview/list/ProjectOverviewList'
+import OverviewListItemLink from '~/components/software/overview/list/OverviewListItemLink'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 
 type ProfileProjectOverviewProps = Readonly<{
@@ -29,23 +30,19 @@ export default function ProfileProjectOverview({projects}:ProfileProjectOverview
 
   if (rsd_page_layout === 'list') {
     return (
-      <ProjectOverviewList>
+      <ListOverviewSection>
         {projects.map(item => {
           return (
-            <Link
-              data-testid="project-list-item"
-              key={item.id}
-              href={`/projects/${item.slug}`}
-              className='flex-1 hover:text-inherit'
-              title={item.title}
-            >
-              <OverviewListItem className='pr-4'>
+            <OverviewListItem key={item.id} className='pr-4'>
+              <OverviewListItemLink
+                href={`/projects/${item.slug}`}
+              >
                 <ProjectListItemContent key={item.id} {...item} />
-              </OverviewListItem>
-            </Link>
+              </OverviewListItemLink>
+            </OverviewListItem>
           )
         })}
-      </ProjectOverviewList>
+      </ListOverviewSection>
     )
   }
 

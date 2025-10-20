@@ -13,8 +13,9 @@ import {useUserSettings} from '~/config/UserSettingsContext'
 import {ProjectOfOrganisation} from '~/types/Organisation'
 import NoContent from '~/components/layout/NoContent'
 import GridOverview from '~/components/layout/GridOverview'
+import ListOverviewSection from '~/components/layout/ListOverviewSection'
 import ProjectCardContent from '~/components/projects/overview/cards/ProjectCardContent'
-import ProjectOverviewList from '~/components/projects/overview/list/ProjectOverviewList'
+import OverviewListItemLink from '~/components/software/overview/list/OverviewListItemLink'
 import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import AdminProjectListItem from './list/AdminProjectListItem'
@@ -40,7 +41,7 @@ export default function OrganisationProjectsOverview({projects,isMaintainer}: Or
 
   if (rsd_page_layout === 'list') {
     return (
-      <ProjectOverviewList>
+      <ListOverviewSection>
         {projects.map(item => {
           if (isMaintainer) {
             return (
@@ -54,18 +55,15 @@ export default function OrganisationProjectsOverview({projects,isMaintainer}: Or
             <OverviewListItem
               key={item.id}
             >
-              <Link
-                data-testid="project-list-item"
-                key={item.id}
+              <OverviewListItemLink
                 href={`/projects/${item.slug}`}
-                className='flex-1 flex hover:text-inherit'
               >
                 <ProjectListItemContent {...item} />
-              </Link>
+              </OverviewListItemLink>
             </OverviewListItem>
           )
         })}
-      </ProjectOverviewList>
+      </ListOverviewSection>
     )
   }
 
