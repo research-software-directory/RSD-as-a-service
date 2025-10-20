@@ -7,12 +7,14 @@ import Link from 'next/link'
 
 import NoContent from '~/components/layout/NoContent'
 import GridOverview from '~/components/layout/GridOverview'
+import ListOverviewSection from '~/components/layout/ListOverviewSection'
 import CardSkeleton from '~/components/cards/CardSkeleton'
+import StatusBanner from '~/components/cards/StatusBanner'
 import {ProjectLayoutType} from '~/components/search/ToggleViewGroup'
-import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import ProjectCardContent from '~/components/projects/overview/cards/ProjectCardContent'
-import ProjectOverviewList from '~/components/projects/overview/list/ProjectOverviewList'
 import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
+import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
+import OverviewListItemLink from '~/components/software/overview/list/OverviewListItemLink'
 import {ProjectByMaintainer} from './useUserProjects'
 
 type UserProjectsOverviewProps=Readonly<{
@@ -35,23 +37,37 @@ export default function UserProjectsOverview({loading,skeleton_items,layout,proj
 
   if (layout === 'list') {
     return (
-      <ProjectOverviewList>
+      <ListOverviewSection>
         {projects.map(item => {
           return (
-            <Link
-              data-testid="project-list-item"
-              key={item.id}
-              href={`/projects/${item.slug}`}
-              className='flex-1 hover:text-inherit'
-              title={item.title}
-            >
-              <OverviewListItem className='pr-4'>
-                <ProjectListItemContent key={item.id} {...item as any} />
-              </OverviewListItem>
-            </Link>
+            <OverviewListItem key={item.id}>
+              <OverviewListItemLink
+                href={`/projects/${item.slug}`}
+              >
+                <ProjectListItemContent
+                  title={item.title}
+                  subtitle={item.subtitle ?? ''}
+                  image_id={item.image_id}
+                  impact_cnt={item.impact_cnt}
+                  output_cnt={item.output_cnt}
+                  statusBanner={
+                    // show not published status
+                    item.is_published===false ?
+                    <StatusBanner
+                      status={'approved'}
+                      is_featured={false}
+                      is_published={item.is_published}
+                      width='auto'
+                      borderRadius='0.125rem'
+                    />
+                    :undefined
+                  }
+                />
+              </OverviewListItemLink>
+            </OverviewListItem>
           )
         })}
-      </ProjectOverviewList>
+      </ListOverviewSection>
     )
   }
 
