@@ -1,45 +1,25 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
-
 import {extractSearchTerm} from '~/components/software/edit/mentions/utils'
 import {SearchResult} from '.'
-import {getMentionsByDoiFromRsd} from '~/utils/editMentions'
+import {getMentionsByDoiFromRsd} from '~/components/mention/apiEditMentions'
 import {getDoiRAList, getItemsFromCrossref, getItemsFromDatacite, getItemsFromOpenAlex} from '~/utils/getDOI'
 import {MentionItemProps} from '~/types/Mention'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
-import useEditMentionReducer from '../useEditMentionReducer'
 
 export type DoiBulkImportReport = Map<string, SearchResult> | null
-
-export function useValidateInputList(token: string) {
-  const {mentions} = useEditMentionReducer()
-  const [validating, setValidating] = useState(false)
-
-  async function validateInput(value: string) {
-    setValidating(true)
-    const doiList = value.split(/\r\n|\n|\r/)
-    const searchResults = await validateInputList(doiList, mentions, token)
-    setValidating(false)
-    return searchResults
-  }
-
-  return {
-    validateInput,
-    validating
-  }
-}
 
 export async function validateInputList(doiList: string[], mentions: MentionItemProps[], token: string) {
   // here we put validation results for each doi from doiList
   const mentionResultPerDoi: DoiBulkImportReport = new Map()
 
-  // create DOI list of valid entries eligible for futher processing
+  // create DOI list of valid entries eligible for further processing
   const validDois: string[] = doiList
     // filter out lines with white space only
     .filter(input => input.trim().length > 0)

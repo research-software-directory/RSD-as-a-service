@@ -45,7 +45,7 @@ type IsMaintainerOfOrganisationProps = {
   token?: string
 }
 
-export async function isMaintainerOfOrganisation({organisation, account, token}: IsMaintainerOfOrganisationProps) {
+async function isMaintainerOfOrganisation({organisation, account, token}: IsMaintainerOfOrganisationProps) {
   try {
     if (typeof account == 'undefined' ||
     typeof token == 'undefined') {
@@ -81,7 +81,7 @@ export async function getMaintainerOrganisations({token}:
       headers: createJsonHeaders(token)
     })
     if (resp.status === 200) {
-      const json = await resp.json()
+      const json:string[] = await resp.json()
       return json
     }
     // ERRORS AS NOT MAINTAINER
@@ -154,5 +154,3 @@ export async function canEditOrganisations({organisations,account,token}:CanEdit
     })
   }
 }
-
-export default isMaintainerOfOrganisation

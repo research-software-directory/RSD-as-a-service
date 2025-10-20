@@ -6,6 +6,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -54,6 +56,7 @@ export default function LoginDialog({providers,open, onClose}: LoginDialogProps)
         <LoginProviders
           providers={providers}
           login_info_url={host.login_info_url}
+          onClick={onClose}
         />
       </DialogContent>
     </Dialog>

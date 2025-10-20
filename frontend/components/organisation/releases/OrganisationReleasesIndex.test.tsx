@@ -1,8 +1,18 @@
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
+
+// DEFAULT MOCKS returning jest.fn()
+// MOCK getUserSettings
+jest.mock('~/components/user/ssrUserSettings')
+// MOCK getActiveModuleNames
+jest.mock('~/config/getSettingsServerSide')
+// MOCK getReleasesCountForOrganisation, getReleasesForOrganisation
+jest.mock('~/components/organisation/releases/apiOrganisationReleases')
+// MOCK getOrganisationIdForSlug
+jest.mock('~/components/organisation/apiOrganisations')
 
 import {render, screen} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
@@ -29,23 +39,25 @@ const mockProps = {
   isMaintainer: false
 }
 
-// mock api - default mock
-jest.mock('~/components/organisation/releases/apiOrganisationReleases')
 
 describe('components/organisation/releases/index.tsx', () => {
 
   it('shows releases page', async() => {
+
+    const ResolvedPage = await OrganisationSoftwareReleases({slug:['test-project'],query:{}})
+
     render(
       <WithAppContext options={{session: testSession}}>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationSoftwareReleases releaseCountsByYear={mockReleaseCount} releases={mockReleases} />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
 
     // buttons
     const years = screen.getAllByRole('release-year-button')
-    expect(years.length).toEqual(mockReleaseCount.length)
+    // NOTE! one period is loaded and therefore not a button hence length-1
+    expect(years.length).toEqual(mockReleaseCount.length - 1)
 
     // find release items
     const releases = await screen.findAllByTestId('release-item')

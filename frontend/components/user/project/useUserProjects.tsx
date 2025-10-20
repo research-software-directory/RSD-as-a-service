@@ -48,7 +48,8 @@ export async function getProjectsForMaintainer(
 
     // search
     if (searchFor) {
-      url += `&or=(title.ilike."*${searchFor}*", subtitle.ilike."*${searchFor}*")`
+      const encodedSearch = encodeURIComponent(searchFor)
+      url += `&or=(title.ilike."*${encodedSearch}*", subtitle.ilike."*${encodedSearch}*")`
     }
 
     // pagination

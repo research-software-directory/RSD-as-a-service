@@ -5,11 +5,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useEffect, useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
 import {sortOnStrProp} from '~/utils/sortFn'
-import {addRelatedSoftware, deleteRelatedSoftware, getRelatedSoftwareForSoftware} from '~/utils/editRelatedSoftware'
+import {addRelatedSoftware, deleteRelatedSoftware, getRelatedSoftwareForSoftware} from '~/components/software/edit/related-software/apiRelatedSoftware'
 import {RelatedSoftwareOfSoftware, SearchSoftware} from '~/types/SoftwareTypes'
 import {OrganisationStatus} from '~/types/Organisation'
 import useSnackbar from '~/components/snackbar/useSnackbar'
@@ -17,7 +18,7 @@ import FindRelatedSoftware from '~/components/projects/edit/related-software/Fin
 import RelatedSoftwareList from '~/components/projects/edit/related-software/RelatedSoftwareList'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import EditSection from '~/components/layout/EditSection'
-import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContext from '../context/useSoftwareContext'
 import {relatedSoftware as config} from './config'
 
 
@@ -33,8 +34,7 @@ export default function RelatedSoftwareForSoftware() {
     async function getRelatedSoftware() {
       const resp = await getRelatedSoftwareForSoftware({
         software: software.id ?? '',
-        token,
-        frontend: true
+        token
       })
       const softwareList = resp
         .map(item => {

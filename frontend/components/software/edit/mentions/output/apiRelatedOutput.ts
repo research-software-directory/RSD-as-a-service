@@ -1,15 +1,15 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import {MentionItemProps} from '~/types/Mention'
-import {addOrGetMentionItem} from '~/utils/editMentions'
+import {addOrGetMentionItem} from '~/components/mention/apiEditMentions'
 
 /**
  * Request to next api to aggreate search from Crossref, Datacite and RSD

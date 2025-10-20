@@ -6,6 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import NoContent from '~/components/layout/NoContent'
+import GridOverview from '~/components/layout/GridOverview'
 import OrganisationCard, {OrganisationCardProps} from './card/OrganisationCard'
 
 export type OrganisationGridProps = {
@@ -19,15 +20,14 @@ export default function OrganisationGrid({organisations}: OrganisationGridProps)
   }
 
   return (
-    <section
-      data-testid="organisation-overview-grid"
-      className="flex-1 my-12 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-[27rem]">
+    <GridOverview fullWidth={true} className="pt-12 pb-6 auto-rows-[28rem]">
       {organisations.map((organisation) => (
         <OrganisationCard
           key={organisation.id}
           organisation={organisation}
         />
       ))}
-    </section>
+    </GridOverview>
   )
+
 }

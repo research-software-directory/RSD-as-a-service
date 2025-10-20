@@ -8,9 +8,10 @@ import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOv
 
 type GridListSkeletonProps = Readonly<{
   count: number
+  height?: string
 }>
 
-export default function GridListSkeleton({count=3}:GridListSkeletonProps) {
+export default function GridListSkeleton({count=3,height='4rem'}:GridListSkeletonProps) {
   // let items = new Array(count).fill('a') as string[]
   const items = []
 
@@ -20,7 +21,7 @@ export default function GridListSkeleton({count=3}:GridListSkeletonProps) {
         key={i}
         variant="rectangular"
         width={'100%'}
-        height={'4rem'}
+        height={height}
         sx={{
           borderRadius:'0.25rem'
         }}

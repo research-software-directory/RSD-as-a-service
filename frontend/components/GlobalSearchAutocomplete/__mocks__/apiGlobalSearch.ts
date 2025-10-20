@@ -24,6 +24,6 @@ import apiResponse from './globalSearchApiResponse.json'
  * @param searchText
  * @param token
  */
-export async function getGlobalSearch(){
+export const getGlobalSearch=jest.fn(async()=>{
   return apiResponse
-}
+})

@@ -8,7 +8,7 @@
 
 import {useSession} from '~/auth/AuthProvider'
 import {MentionItemProps} from '~/types/Mention'
-import {getMentionByDoiFromRsd, getMentionByOpenalexIdFromRsd} from '~/utils/editMentions'
+import {getMentionByDoiFromRsd, getMentionByOpenalexIdFromRsd} from '~/components/mention/apiEditMentions'
 import {getMentionByDoi} from '~/utils/getDOI'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import FindMention from '~/components/mention/FindMention'

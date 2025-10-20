@@ -30,7 +30,7 @@ export default function TagChipFilter({
     <Chip
       title={title ?? label}
       label={label}
-      icon={<div><CircularProgress size={16} /></div>}
+      icon={<div className="noscript:hidden"><CircularProgress size={16} /></div>}
       sx={{
         maxWidth: '19rem',
         borderRadius: '0.125rem',

@@ -6,6 +6,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+// DEFAULT mocks first in order to be able to perform custom mocks
+// MOCK loadCategoryRoots
+jest.mock('~/components/category/apiCategories')
+// MOCK getCategoryForSoftwareIds
+jest.mock('~/components/software/apiSoftware')
+// MOCK searchForOrganisation,createOrganisation
+jest.mock('~/components/organisation/apiEditOrganisation')
+// MOCK isMaintainerOfOrganisation, canEditOrganisations
+jest.mock('~/auth/permissions/isMaintainerOfOrganisation')
+// MOCK getParticipatingOrganisationsForSoftware,removeOrganisationCategoriesFromSoftware
+jest.mock('~/components/software/edit/organisations/apiSoftwareOrganisations')
+// MOCK createOrganisationAndAddToSoftware, addOrganisationToSoftware, deleteOrganisationFromSoftware, patchOrganisationPositions
+jest.mock('~/components/software/edit/organisations/organisationForSoftware')
+
 import {fireEvent, render, screen, waitFor, waitForElementToBeRemoved, within} from '@testing-library/react'
 
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
@@ -13,73 +27,34 @@ import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
 
 import SoftwareOrganisations from './index'
 import {organisationInformation as config} from '../editSoftwareConfig'
-import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
+import {initialState as softwareState} from '~/components/software/edit/context/editSoftwareContext'
 
 // MOCKS
 import organisationsOfSoftware from './__mocks__/organisationsOfSoftware.json'
-
-// MOCK getOrganisationsForSoftware, searchForOrganisation, mockCreateOrganisation
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockGetOrganisationsForSoftware = jest.fn(props => Promise.resolve([] as any))
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockSearchForOrganisation = jest.fn(props => Promise.resolve([] as any))
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockCreateOrganisation = jest.fn(props => Promise.resolve({
-  status: 201,
-  message: 'new-organisation-id'
-}))
-jest.mock('~/utils/editOrganisation', () => ({
-  ...jest.requireActual('~/utils/editOrganisation'),
-  getOrganisationsForSoftware: jest.fn(props=>mockGetOrganisationsForSoftware(props)),
-  searchForOrganisation: jest.fn(props => mockSearchForOrganisation(props)),
-  createOrganisation: jest.fn(props=>mockCreateOrganisation(props))
-}))
-
-// MOCK isMaintainerOfOrganisation
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockIsMaintainerOfOrganisation = jest.fn(props => Promise.resolve(false))
-jest.mock('~/auth/permissions/isMaintainerOfOrganisation', () => ({
-  __esModule: true,
-  default: jest.fn(props=>mockIsMaintainerOfOrganisation(props)),
-  isMaintainerOfOrganisation: jest.fn(props=>mockIsMaintainerOfOrganisation(props)),
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  canEditOrganisations: jest.fn(({organisations,...other})=>organisations)
-}))
-
-// MOCK organisationForSoftware methods
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockCreateOrganisationAndAddToSoftware = jest.fn(props => Promise.resolve([] as any))
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockAddOrganisationToSoftware = jest.fn(props => Promise.resolve([] as any))
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockDeleteOrganisationFromSoftware = jest.fn(props => Promise.resolve([] as any))
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockPatchOrganisationPositions = jest.fn(props=>Promise.resolve([]as any))
-jest.mock('./organisationForSoftware', () => ({
-  createOrganisationAndAddToSoftware: jest.fn(props=>mockCreateOrganisationAndAddToSoftware(props)),
-  addOrganisationToSoftware: jest.fn(props => mockAddOrganisationToSoftware(props)),
-  deleteOrganisationFromSoftware: jest.fn(props => mockDeleteOrganisationFromSoftware(props)),
-  patchOrganisationPositions: jest.fn(props=>mockPatchOrganisationPositions(props))
-}))
-
-// MOCK software category calls
-// by default we return no categories
-jest.mock('~/components/category/apiCategories')
-jest.mock('~/utils/getSoftware')
-// MOCK removeOrganisationCategoriesFromSoftware
-jest.mock('./apiSoftwareOrganisations')
+import {searchForOrganisation,createOrganisation} from '~/components/organisation/apiEditOrganisation'
+import {getParticipatingOrganisationsForSoftware} from '~/components/software/edit/organisations/apiSoftwareOrganisations'
+import {
+  createOrganisationAndAddToSoftware,addOrganisationToSoftware,
+  deleteOrganisationFromSoftware,patchOrganisationPositions
+} from '~/components/software/edit/organisations/organisationForSoftware'
+const mockParticipatingOrganisationsForSoftware = getParticipatingOrganisationsForSoftware as jest.Mock
+const mockSearchForOrganisation = searchForOrganisation as jest.Mock
+const mockCreateOrganisation = createOrganisation as jest.Mock
+const mockCreateOrganisationAndAddToSoftware = createOrganisationAndAddToSoftware as jest.Mock
+const mockAddOrganisationToSoftware = addOrganisationToSoftware as jest.Mock
+const mockDeleteOrganisationFromSoftware = deleteOrganisationFromSoftware as jest.Mock
+const mockPatchOrganisationPositions = patchOrganisationPositions as jest.Mock
 
 describe('frontend/components/software/edit/organisations/index.tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  it('renders no organisations message', async () => {
+  it('renders no organisations message', async() => {
     // required software id
-    softwareState.software.id = 'test-software-id'
-    // no organisations listed
-    mockGetOrganisationsForSoftware.mockResolvedValueOnce([])
-
+    softwareState.id = 'test-software-id'
+    // mock empty list of organisations
+    mockParticipatingOrganisationsForSoftware.mockResolvedValue([])
     render(
       <WithAppContext options={{session:mockSession}}>
         <WithSoftwareContext state={softwareState}>
@@ -87,18 +62,17 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
         </WithSoftwareContext>
       </WithAppContext>
     )
-
     // wait for loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // shows no maintainers message
     screen.getByText('No participating organisations')
   })
 
-  it('renders software organisations', async() => {
+  it('renders software organisations',async() => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // return list of organisations
-    mockGetOrganisationsForSoftware.mockResolvedValueOnce(organisationsOfSoftware)
+    mockParticipatingOrganisationsForSoftware.mockResolvedValue(organisationsOfSoftware)
 
     render(
       <WithAppContext options={{session:mockSession}}>
@@ -107,10 +81,8 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
         </WithSoftwareContext>
       </WithAppContext>
     )
-
     // wait for loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
-
     // renders project organisations
     const organisations = screen.getAllByTestId('organisation-list-item')
     expect(organisations.length).toEqual(organisationsOfSoftware.length)
@@ -118,7 +90,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
 
   it('can add NEW organisation to software', async() => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     const newOrganisation = {
       id: 'new-organisation-id',
       parent: null,
@@ -138,7 +110,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
       description: null
     }
     // mock empty list of organisations
-    mockGetOrganisationsForSoftware.mockResolvedValueOnce([])
+    mockParticipatingOrganisationsForSoftware.mockResolvedValue([])
     // mock no organisation found by search
     mockSearchForOrganisation.mockResolvedValueOnce([])
     // mock createOrganisation response
@@ -218,7 +190,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
           is_tenant: false,
           slug: newOrganisation.slug,
           ror_id: null,
-          position: 1,
+          position: newOrganisation.position,
           logo_b64: null,
           logo_mime_type: null,
           logo_id: null,
@@ -229,7 +201,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
           canEdit: false,
           description: null
         },
-        software: softwareState.software.id,
+        software: softwareState.id,
         token: mockSession.token,
       })
     })
@@ -241,7 +213,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
 
   it('can add RSD organisation to software', async () => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     const searchFor = 'Netherlands eScience Center'
     // return VU from mock data
     const firstOrg = organisationsOfSoftware[0]
@@ -255,7 +227,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
     }
 
     // mock empty list of organisations
-    mockGetOrganisationsForSoftware.mockResolvedValueOnce([])
+    mockParticipatingOrganisationsForSoftware.mockResolvedValueOnce([])
     // mock organisation found by search
     mockSearchForOrganisation.mockResolvedValueOnce([rsdOption])
     // mock added
@@ -296,7 +268,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
     expect(mockAddOrganisationToSoftware).toHaveBeenCalledWith({
       'position': 1,
       'organisation': firstOrg.id,
-      'software': softwareState.software.id,
+      'software': softwareState.id,
       'token': mockSession.token,
     })
 
@@ -304,9 +276,9 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
 
   it('can remove organisation from software', async () => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // return list of organisations
-    mockGetOrganisationsForSoftware.mockResolvedValueOnce(organisationsOfSoftware)
+    mockParticipatingOrganisationsForSoftware.mockResolvedValueOnce(organisationsOfSoftware)
     // return OK
     mockDeleteOrganisationFromSoftware.mockResolvedValueOnce({
       status: 200,
@@ -352,7 +324,7 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
       expect(mockDeleteOrganisationFromSoftware).toHaveBeenCalledTimes(1)
       expect(mockDeleteOrganisationFromSoftware).toHaveBeenCalledWith({
         'organisation': organisationsOfSoftware[0].id,
-        'software': softwareState.software.id,
+        'software': softwareState.id,
         'token': mockSession.token,
       })
       // patch organisation positions
@@ -365,9 +337,9 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
 
   it('shows organisation categories modal',async()=>{
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // return list of organisations
-    mockGetOrganisationsForSoftware.mockResolvedValueOnce(organisationsOfSoftware)
+    mockParticipatingOrganisationsForSoftware.mockResolvedValueOnce(organisationsOfSoftware)
 
     render(
       <WithAppContext options={{session:mockSession}}>

@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {render, screen, waitFor} from '@testing-library/react'
-import {REFRESH_MARGIN, getSessionSeverSide, Session} from './index'
+import {REFRESH_MARGIN, Session} from './index'
 import {AuthProvider, useAuth} from './AuthProvider'
 
 const session:Session = {
@@ -86,20 +86,4 @@ it('schedules token refresh and calls refreshSession after timeout', async () =>
   await waitFor(() => {
     expect(mockRefreshSession).toHaveBeenCalledTimes(1)
   })
-})
-
-it('getSessionSeverSide extracts token from headers', () => {
-  const dummyToken ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoicnNkX3VzZXIiLCJpc3MiOiJyc2RfYXV0aCIsImV4cCI6MTY0NjMwNDk2NywiYWNjb3VudCI6IjQ1MjE1MTRkLTczM2EtNDcyYi1hMzRmLWFjZTQzYmMzMDhjMCJ9.LFXaALl8xxjoc24H-eDpZfm-0VL9MAfieuAIw8teSvs'
-  const req:any = {
-    headers: {
-      cookie:`rsd_token=${dummyToken}; Secure; HttpOnly; Path=/; SameSite=Lax;`
-    }
-  }
-  const res:any = {
-    setHeader: jest.fn()
-  }
-  const session:any = getSessionSeverSide(req, res)
-  expect(session.token).toEqual(dummyToken)
-  // it fails as we do not have jwt key provided
-  expect(session.status).toEqual('jwtkey')
 })

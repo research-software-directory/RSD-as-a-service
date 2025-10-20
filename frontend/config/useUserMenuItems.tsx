@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useSession} from '~/auth/AuthProvider'
 import SvgFromString from '~/components/icons/SvgFromString'
 import {MenuItemType, userMenuItems} from './menuItems'

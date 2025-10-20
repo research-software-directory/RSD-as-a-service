@@ -11,7 +11,7 @@ import {useSession} from '~/auth/AuthProvider'
 import {sortOnNumProp} from '~/utils/sortFn'
 import {NewTestimonial, Testimonial} from '~/types/Testimonial'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContext from '../context/useSoftwareContext'
 import {
   deleteTestimonialById, getTestimonialsForSoftware,
   patchTestimonial, patchTestimonialPositions,

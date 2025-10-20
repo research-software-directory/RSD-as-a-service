@@ -4,7 +4,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Skeleton from '@mui/material/Skeleton'
-import SoftwareOverviewGrid from '~/components/software/overview/cards/SoftwareOverviewGrid'
+
+import GridOverview from '~/components/layout/GridOverview'
 
 type CardSkeletonProps = Readonly<{
   count: number
@@ -32,8 +33,8 @@ export default function GridCardSkeleton({count=3,fullWidth=false}:CardSkeletonP
   }
   // debugger
   return (
-    <SoftwareOverviewGrid fullWidth={fullWidth}>
+    <GridOverview fullWidth={fullWidth}>
       {items}
-    </SoftwareOverviewGrid>
+    </GridOverview>
   )
 }

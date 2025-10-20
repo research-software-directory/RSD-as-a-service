@@ -5,38 +5,30 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useSession} from '~/auth/AuthProvider'
-import Pagination from '~/components/pagination/Pagination'
-import Searchbox from '~/components/search/Searchbox'
-import OrganisationsAdminList from './OrganisationsAdminList'
-import AddOrganisation from './AddOrganisation'
-import {useOrganisations} from './apiOrganisation'
+'use client'
+import {defaultPagination, rowsPerPageOptions} from '~/config/pagination'
+import {useUserSettings} from '~/config/UserSettingsContext'
+import {PaginationProvider} from '~/components/pagination/PaginationContext'
+import {SearchProvider} from '~/components/search/SearchContext'
+import AdminOrganisationsClient from './AdminOrganisationClient'
 
-export default function OrganisationsAdminPage() {
-  const {token} = useSession()
-  const {organisations, loading, page, addOrganisation, removeOrganisation} = useOrganisations(token)
+export default function AdminOrganisations() {
+  // use page rows from user settings
+  const {rsd_page_rows} = useUserSettings()
+  const pagination = {
+    ...defaultPagination,
+    rows: rsd_page_rows ?? rowsPerPageOptions[0]
+  }
 
   // console.group('OrganisationAdminPage')
   // console.log('organisations...', organisations)
   // console.groupEnd()
 
   return (
-    <section className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-8">
-      <div>
-        <div className="flex flex-wrap items-center justify-end">
-          <Searchbox />
-          <Pagination />
-        </div>
-        <div className="pt-1">
-          <OrganisationsAdminList
-            page={page}
-            loading={loading}
-            organisations={organisations}
-            onDeleteOrganisation={removeOrganisation}
-          />
-        </div>
-      </div>
-      <AddOrganisation onAddOrganisationToRsd={addOrganisation} />
-    </section>
+    <SearchProvider>
+      <PaginationProvider pagination={pagination}>
+        <AdminOrganisationsClient />
+      </PaginationProvider>
+    </SearchProvider>
   )
 }

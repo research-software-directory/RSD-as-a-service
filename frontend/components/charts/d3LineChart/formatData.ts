@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,7 @@ export type Data = {
   [key:string]:number
 }
 
-export function formatUnixDateData(data: Data) {
+function formatUnixDateData(data: Data) {
   if (typeof data === 'undefined' || data === null) {
     return {
       lineData: [],
@@ -25,11 +25,11 @@ export function formatUnixDateData(data: Data) {
   keys.forEach(key => {
     const point = data[key]
     lineData.push({
-      x: parseInt(key) * 1000,
+      x: Number.parseInt(key) * 1000,
       y: point
     })
     // mark as last update if > 0
-    if (point > 0) lastUpdateInMs = parseInt(key) * 1000
+    if (point > 0) lastUpdateInMs = Number.parseInt(key) * 1000
   })
 
   return {

@@ -6,7 +6,7 @@
 import {createContext, useContext, useEffect, useState} from 'react'
 import {useSession} from '~/auth/AuthProvider'
 import {MentionItemProps} from '~/types/Mention'
-import useProjectContext from '../useProjectContext'
+import useProjectContext from '../context/useProjectContext'
 import {ProjectMentionTabKey} from './ProjectMentionTabs'
 import {getProjectMention} from './getProjectMention'
 

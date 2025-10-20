@@ -23,7 +23,7 @@ const mockValidProjectItem = jest.fn((slug,token) => {
   })
 })
 
-jest.mock('~/utils/editProject', () => {
+jest.mock('~/components/projects/edit/apiEditProject', () => {
   return {
     addProject: jest.fn((props)=> mockAddProject(props)),
     validProjectItem: jest.fn((slug,token)=> mockValidProjectItem(slug,token))

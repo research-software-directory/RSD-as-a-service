@@ -10,7 +10,6 @@ import {expect, Page} from '@playwright/test'
 import {listenForOrcidCalls, Person} from '../mocks/mockPerson'
 import {MockedProject} from '../mocks/mockProject'
 import {CreateSoftwareProps} from '../mocks/mockSoftware'
-import {acceptUserAgreement} from './userAgreement'
 import {fillAutosaveInput, generateId, uploadFile} from './utils'
 
 export async function createProject({title, desc, slug, page}: CreateSoftwareProps) {
@@ -23,10 +22,6 @@ export async function createProject({title, desc, slug, page}: CreateSoftwarePro
   await page.getByRole('menuitem', {
     name: 'New Project'
   }).click()
-
-  // accept user agreement if modal present
-  // ALREADY DONE in globalSetup
-  // await acceptUserAgreement(page)
 
   // add title
   await page.getByRole('textbox', { name: 'Title', exact: true }).fill(title);
@@ -118,7 +113,7 @@ export async function createProjectLink(page: Page, {label, url}: { label: strin
   ])
 }
 
-export async function addResearchDomain(page) {
+export async function addResearchDomain(page:Page) {
   const random = generateId(100)
   // select add button
   const addBtn = page.getByTestId('add-research-domains')
@@ -245,7 +240,7 @@ export async function openEditTeamPage(page: Page) {
   }).click()
 }
 
-export async function createTeamMember(page, contact: Person) {
+export async function createTeamMember(page:Page, contact: Person) {
   // const findContributor = page.getByLabel('Find or add team member')
   const findContributor = page.getByRole('combobox', {name: 'Find or add team member'})
   // fake api response

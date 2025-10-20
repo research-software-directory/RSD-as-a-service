@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,9 +10,9 @@ import {Session} from '~/auth'
 import OrganisationsAdminPage from './index'
 
 // MOCKS
-import mockOrganisationList from '../../../__tests__/__mocks__/organisationsOverview.json'
+import mockOrganisationList from '~/utils/jest/__mocks__/organisationsOverview.json'
 const mockUseOrganisation = jest.fn()
-jest.mock('./apiOrganisation', () => ({
+jest.mock('./useOrganisations', () => ({
   useOrganisations:(token:string)=>mockUseOrganisation(token)
 }))
 
@@ -36,7 +36,7 @@ const mockUseResponse = {
 
 describe('components/admin/organisations/index.tsx', () => {
 
-  it('shows progressbar initialy', () => {
+  it('shows progressbar initially', () => {
     mockUseResponse.loading=true
     // mock hook response
     mockUseOrganisation.mockReturnValueOnce(mockUseResponse)

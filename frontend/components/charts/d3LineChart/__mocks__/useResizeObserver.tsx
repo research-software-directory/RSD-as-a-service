@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState,useEffect} from 'react'
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 export type SizeType = {
   w: number|undefined,
@@ -11,16 +13,11 @@ export type SizeType = {
 }
 
 // DEFAULT MOCK of useResizeObserver hook
-export default function useResizeObserver(element: HTMLElement | undefined){
-  const [size, setSize] = useState<SizeType>({w: undefined, h: undefined})
-  // console.log('useResizeObserver...MOCKED...')
-  useEffect(() => {
-    if (!element) return
-    setSize({
-      w: 300,
-      h: 150
-    })
-  }, [element])
+const useResizeObserver=jest.fn((element: HTMLElement | undefined)=>{
+  return {
+    w: 300,
+    h: 150
+  }
+})
 
-  return size
-}
+export default useResizeObserver

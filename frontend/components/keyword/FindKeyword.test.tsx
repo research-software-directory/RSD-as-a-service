@@ -28,7 +28,7 @@ const props = {
     label: 'Test label',
     help: 'Test help',
     reset: true,
-    variant: 'standard'
+    variant: 'standard' as any
   },
   searchForKeyword: mockSearch,
   onAdd:mockAdd,

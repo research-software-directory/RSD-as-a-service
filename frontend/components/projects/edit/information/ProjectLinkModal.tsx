@@ -20,7 +20,7 @@ import {useForm} from 'react-hook-form'
 
 import {useSession} from '~/auth/AuthProvider'
 import {ProjectLink} from '~/types/Project'
-import {addProjectLink, updateProjectLink} from '~/utils/editProject'
+import {addProjectLink, updateProjectLink} from '~/components/projects/edit/apiEditProject'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {projectInformation as config} from './config'

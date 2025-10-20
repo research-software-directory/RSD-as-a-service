@@ -7,7 +7,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// jest.config.js
+// import does not work, so we need to use require here
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const nextJest = require('next/jest')
 
 const createJestConfig = nextJest({

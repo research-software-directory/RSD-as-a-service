@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {getImageUrl} from '~/utils/editImage'
 import useRsdSettings from '~/config/useRsdSettings'
 import PageContainer from '~/components/layout/PageContainer'

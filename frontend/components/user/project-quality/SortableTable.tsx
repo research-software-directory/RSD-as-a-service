@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
+import {useRef, useState} from 'react'
 import Link from 'next/link'
 
 import Table from '@mui/material/Table'
@@ -37,6 +37,7 @@ export default function SortableTable({metadata, initialData, initialOrder=''}: 
   const [sortColumn, setSortColumn] = useState(initialOrder)
   const [data] = useState(initialData)
   const [ascending, setAscending] = useState(true)
+  const tableRef = useRef<any>(null)
 
   function getDirection(metadataKey:string){
     if (metadataKey === sortColumn) {
@@ -44,56 +45,6 @@ export default function SortableTable({metadata, initialData, initialOrder=''}: 
     }
     return 'asc'
   }
-
-  return (
-    <Table stickyHeader >
-      <TableHead>
-        <TableRow>
-          {propKeys.map((metadataKey) => {
-            return (
-              <TableCell
-                key={metadataKey}
-                onClick={() => sortByLabel(metadataKey)}
-                sx={{
-                  padding: '0.25rem 0.5rem',
-                  cursor: 'pointer',
-                  ...metadata.get(metadataKey)?.sx
-                }}
-              >
-                <TableSortLabel
-                  active={sortColumn===metadataKey}
-                  direction={getDirection(metadataKey)}
-                  onClick={() => sortByLabel(metadataKey)}
-                >
-                  {metadata.get(metadataKey)?.label}
-                </TableSortLabel>
-              </TableCell>
-            )
-          })}
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {data.map((item, pos) => {
-          return (
-            <TableRow key={pos}>
-              {propKeys.map((metadataKey) => {
-                return (
-                  <TableCell
-                    key={metadataKey}
-                    sx={{
-                      padding: '0.25rem 0.5rem',
-                    }}
-                  >
-                    {renderCell(item,metadataKey as ProjectQualityKeys)}
-                  </TableCell>
-                )
-              })}
-            </TableRow>
-          )
-        })}
-      </TableBody>
-    </Table>
-  )
 
   function renderCell(item: ProjectQualityProps, metadataKey: ProjectQualityKeys) {
     const metaData = metadata.get(metadataKey)
@@ -142,4 +93,54 @@ export default function SortableTable({metadata, initialData, initialOrder=''}: 
 
     return ascending ? s1!.localeCompare(s2!) : s2!.localeCompare(s1!)
   }
+
+  return (
+    <Table stickyHeader ref={tableRef}>
+      <TableHead>
+        <TableRow>
+          {propKeys.map((metadataKey) => {
+            return (
+              <TableCell
+                key={metadataKey}
+                onClick={() => sortByLabel(metadataKey)}
+                sx={{
+                  padding: '0.25rem 0.5rem',
+                  cursor: 'pointer',
+                  ...metadata.get(metadataKey)?.sx
+                }}
+              >
+                <TableSortLabel
+                  active={sortColumn===metadataKey}
+                  direction={getDirection(metadataKey)}
+                  onClick={() => sortByLabel(metadataKey)}
+                >
+                  {metadata.get(metadataKey)?.label}
+                </TableSortLabel>
+              </TableCell>
+            )
+          })}
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {data.map((item, pos) => {
+          return (
+            <TableRow key={pos}>
+              {propKeys.map((metadataKey) => {
+                return (
+                  <TableCell
+                    key={metadataKey}
+                    sx={{
+                      padding: '0.25rem 0.5rem',
+                    }}
+                  >
+                    {renderCell(item,metadataKey as ProjectQualityKeys)}
+                  </TableCell>
+                )
+              })}
+            </TableRow>
+          )
+        })}
+      </TableBody>
+    </Table>
+  )
 }

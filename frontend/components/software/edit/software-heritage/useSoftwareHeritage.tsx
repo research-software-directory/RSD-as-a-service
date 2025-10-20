@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useCallback, useEffect, useState} from 'react'
 import {
   deleteSoftwareHeritageItem, getSoftwareHeritageItems, NewSoftwareHeritage,

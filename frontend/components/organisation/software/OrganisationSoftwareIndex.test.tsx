@@ -5,6 +5,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+/**
+ * DEFAULT MOCKS NEED to be imported before "real" imports
+ * DEFAULT MOCKS should return jest.fn() with default results
+ * THIS MAKES possible to overwrite default mock with import (after mock import)
+ */
+// MOCK getUserSettings
+jest.mock('~/components/user/ssrUserSettings')
+// MOCK getActiveModuleNames
+jest.mock('~/config/getSettingsServerSide')
+// MOCK isOrganisationMaintainer
+jest.mock('~/auth/permissions/isMaintainerOfOrganisation')
+// MOCK getOrganisationIdForSlug,getSoftwareForOrganisation
+jest.mock('~/components/organisation/apiOrganisations')
+
 import {fireEvent, render, screen} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
@@ -13,6 +27,10 @@ import {WithOrganisationContext} from '~/utils/jest/WithOrganisationContext'
 import OrganisationSoftware from './index'
 import mockOrganisation from '../__mocks__/mockOrganisation'
 import mockSoftware from './__mocks__/mockSoftware.json'
+import {getSoftwareForOrganisation} from '~/components/organisation/apiOrganisations'
+const mockGetSoftwareForOrganisation = getSoftwareForOrganisation as jest.Mock
+import {isOrganisationMaintainer} from '~/auth/permissions/isMaintainerOfOrganisation'
+const mockIsOrganisationMaintainer = isOrganisationMaintainer as jest.Mock
 
 // mock software categories api
 jest.mock('~/components/organisation/software/filters/useOrgSoftwareCategoriesList')
@@ -21,17 +39,6 @@ const mockProps = {
   organisation: mockOrganisation,
   isMaintainer: false
 }
-// MOCK getSoftwareForOrganisation
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockUseOrganisationSoftware = jest.fn((props) => ({
-  loading: false,
-  count: 0,
-  software: []
-}))
-jest.mock('./useOrganisationSoftware', () => ({
-  __esModule: true,
-  default: jest.fn((props)=>mockUseOrganisationSoftware(props))
-}))
 
 // MOCK patchSoftwareForOrganisation
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -50,30 +57,32 @@ describe('frontend/components/organisation/software/index.tsx', () => {
   })
 
   it('shows no items icon when no data', async() => {
+    const ResolvedPage = await OrganisationSoftware({slug:['test-project'],query:{}})
+
     render(
       <WithAppContext>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationSoftware />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
-
-    // await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     const icon = screen.getByTestId('DoDisturbIcon')
     expect(icon).toBeInTheDocument()
   })
 
   it('shows software cards', async() => {
-    mockUseOrganisationSoftware.mockReturnValueOnce({
-      loading:false,
+
+    mockGetSoftwareForOrganisation.mockResolvedValueOnce({
       count: mockSoftware.length,
-      software: mockSoftware as any
+      data: mockSoftware
     })
+
+    const ResolvedPage = await OrganisationSoftware({slug:['test-project'],query:{}})
     render(
       <WithAppContext>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationSoftware />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -83,16 +92,21 @@ describe('frontend/components/organisation/software/index.tsx', () => {
   })
 
   it('shows software cards with menu when isMaintainer=true', async () => {
+    // pass in session
     mockProps.isMaintainer=true
-    mockUseOrganisationSoftware.mockReturnValueOnce({
-      loading:false,
+    // mock is maintainer server side
+    mockIsOrganisationMaintainer.mockResolvedValueOnce(true)
+    // mock data
+    mockGetSoftwareForOrganisation.mockResolvedValueOnce({
       count: mockSoftware.length,
-      software: mockSoftware as any
+      data: mockSoftware as any
     })
+
+    const ResolvedPage = await OrganisationSoftware({slug:['test-project'],query:{}})
     render(
       <WithAppContext>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationSoftware />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -103,16 +117,22 @@ describe('frontend/components/organisation/software/index.tsx', () => {
   })
 
   it('maintainer can PIN software', async () => {
+    // pass in session
     mockProps.isMaintainer=true
-    mockUseOrganisationSoftware.mockReturnValueOnce({
-      loading:false,
+    // mock is maintainer server side
+    mockIsOrganisationMaintainer.mockResolvedValueOnce(true)
+    // mock data
+    mockGetSoftwareForOrganisation.mockResolvedValueOnce({
       count: mockSoftware.length,
-      software: mockSoftware as any
+      data: mockSoftware as any
     })
+
+    const ResolvedPage = await OrganisationSoftware({slug:['test-project'],query:{}})
+
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationSoftware />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -144,17 +164,22 @@ describe('frontend/components/organisation/software/index.tsx', () => {
   })
 
   it('maintainer can UNPIN pinned software', async () => {
-    mockProps.isMaintainer = true
+    // pass in session
+    mockProps.isMaintainer=true
+    // mock is maintainer server side
+    mockIsOrganisationMaintainer.mockResolvedValueOnce(true)
+    // mock data
     mockSoftware[0].is_featured = true
-    mockUseOrganisationSoftware.mockReturnValueOnce({
-      loading:false,
+    mockGetSoftwareForOrganisation.mockResolvedValueOnce({
       count: mockSoftware.length,
-      software: mockSoftware as any
+      data: mockSoftware as any
     })
+
+    const ResolvedPage = await OrganisationSoftware({slug:['test-project'],query:{}})
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationSoftware/>
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -186,16 +211,22 @@ describe('frontend/components/organisation/software/index.tsx', () => {
   })
 
   it('maintainer can DENY software affiliation', async () => {
-    mockProps.isMaintainer = true
-    mockUseOrganisationSoftware.mockReturnValueOnce({
-      loading:false,
+    // pass in session
+    mockProps.isMaintainer=true
+    // mock is maintainer server side
+    mockIsOrganisationMaintainer.mockResolvedValueOnce(true)
+    // mock data
+    mockGetSoftwareForOrganisation.mockResolvedValueOnce({
       count: mockSoftware.length,
-      software: mockSoftware as any
+      data: mockSoftware as any
     })
+
+    const ResolvedPage = await OrganisationSoftware({slug:['test-project'],query:{}})
+
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationSoftware />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -229,17 +260,23 @@ describe('frontend/components/organisation/software/index.tsx', () => {
   })
 
   it('maintainer can APPROVE denied software affiliation', async () => {
-    mockProps.isMaintainer = true
+    // pass in session
+    mockProps.isMaintainer=true
+    // mock is maintainer server side
+    mockIsOrganisationMaintainer.mockResolvedValueOnce(true)
+    // mock data
     mockSoftware[1].status = 'rejected_by_relation'
-    mockUseOrganisationSoftware.mockReturnValueOnce({
-      loading:false,
+    mockGetSoftwareForOrganisation.mockResolvedValueOnce({
       count: mockSoftware.length,
-      software: mockSoftware as any
+      data: mockSoftware as any
     })
+
+    const ResolvedPage = await OrganisationSoftware({slug:['test-project'],query:{}})
+
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <OrganisationSoftware />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )

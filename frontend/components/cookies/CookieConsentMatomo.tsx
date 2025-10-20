@@ -9,18 +9,20 @@
 'use client'
 import {useState, useEffect} from 'react'
 import Link from 'next/link'
-import {usePathname} from 'next/navigation'
+import {usePathname, useSearchParams} from 'next/navigation'
 import Button from '@mui/material/Button'
 import CookieTwoToneIcon from '@mui/icons-material/CookieTwoTone'
 
 import logger from '~/utils/logger'
-import {Matomo} from './nodeCookies'
 import {useMatomoConsent} from './useCookieConsent'
-
+import {Matomo} from './getMatomoSettings'
 
 type CookieConsentMatomoProps = {
   matomo: Matomo
 }
+
+// keep previousPath in memory
+let previousUrl: string | null = null
 
 /**
  * The CookieConsent component will only open when Matomo is used
@@ -31,6 +33,7 @@ export default function CookieConsentMatomo({matomo}: CookieConsentMatomoProps) 
   const {setMatomoConsent} = useMatomoConsent()
   const [open, setOpen] = useState(false)
   const route = usePathname()
+  const search = useSearchParams()
 
   // console.group('CookieConsentModal')
   // console.log('matomo...', matomo)
@@ -50,6 +53,54 @@ export default function CookieConsentMatomo({matomo}: CookieConsentMatomoProps) 
       logger(`CookieConsentMatomo.useEffect...${e.message}`,'info')
     }
   },[matomo.id,matomo.consent,route])
+
+  /**
+   * This effect is used to register next router changes.
+   * These route changes are not registered by Matomo automatically.
+   * The function should be called after navigation is completed in order
+   * to extract correct (dynamic) page title
+   * https://matomo.org/faq/how-to/how-do-i-set-a-custom-url-using-the-matomo-javascript-tracker/
+   * @param param0
+   */
+  useEffect(()=>{
+    if (matomo?.id && matomo?.consent && // NOSONAR
+      typeof window != 'undefined' && // NOSONAR
+      typeof location != 'undefined' // NOSONAR
+    ) {
+      // extract push function from matomo/piwik
+      const setValue = (window as any)?._paq?.push // NOSONAR
+
+      // console.log('typeof setValue...', typeof setValue)
+      if (typeof setValue === 'function') {
+        // if location changed
+        if (previousUrl !== location.href) {
+          // set previous page/url if not null
+          if (previousUrl !== null) setValue(['setReferrerUrl', previousUrl])
+          // console.log('setReferrerUrl...', previousUrl)
+          // set current page/url
+          setValue(['setCustomUrl', location.href])
+          // console.log('setCustomUrl...', href)
+          // set page title
+          setValue(['setDocumentTitle', document.title])
+          // console.log('setDocumentTitle...', document.title)
+          // this push triggers piwik.php script to track new page
+          setValue(['trackPageView'])
+          // console.group('CookieConsentMatomo.useEffect')
+          // console.log('matomo.id...', matomo.id)
+          // console.log('matomo.consent...', matomo.consent)
+          // console.log('setReferrerUrl...', previousUrl)
+          // console.log('setCustomUrl...', location.href)
+          // console.log('setDocumentTitle...', document.title)
+          // console.log('setValue...', setValue)
+          // console.log('route...', route)
+          // console.log('search...', search)
+          // console.groupEnd()
+          // save current url as previous url
+          previousUrl = location.href
+        }
+      }
+    }
+  },[matomo.id,matomo.consent,route,search])
 
   // do not render if matomo is not used
   if (matomo.id === null) return null
@@ -87,7 +138,7 @@ export default function CookieConsentMatomo({matomo}: CookieConsentMatomoProps) 
               matomo.org
             </Link> to provide a better user experience. </span>
           <div className="flex items-center justify-between">
-            <Link href="/cookies" passHref className="text-xs text-base-400 mr-1 hover:text-base-800 hover:underline">
+            <Link href="/cookies" passHref className="text-xs text-base-700 mr-1 hover:underline">
               Read more
             </Link>
             <div className="flex gap-4">

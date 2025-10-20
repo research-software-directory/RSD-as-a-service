@@ -66,8 +66,8 @@ export default function CreateRsdInvite({createInvite}:CreateRsdInviteProps) {
           onChange={({target})=>{
             if (target.value===''){
               setUsers(null)
-            }else if (parseInt(target.value)>0) {
-              setUsers(parseInt(target.value))
+            }else if (Number.parseInt(target.value)>0) {
+              setUsers(Number.parseInt(target.value))
             }
           }}
           sx={{

@@ -26,7 +26,7 @@ const mockDeleteResearchDomainFromProject=jest.fn(props => Promise.resolve({
   status: 200,
   message: 'OK'
 }))
-jest.mock('~/utils/editProject', () => ({
+jest.mock('~/components/projects/edit/apiEditProject', () => ({
   addResearchDomainToProject: jest.fn(props => mockAdResearchDomainToProject(props)),
   deleteResearchDomainFromProject: jest.fn(props=> mockDeleteResearchDomainFromProject(props))
 }))

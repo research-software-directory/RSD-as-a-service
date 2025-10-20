@@ -44,7 +44,7 @@ export const addItemMenu:AddItemMenuItem[]=[{
 }]
 
 
-function useAddItemMenu(){
+const useAddItemMenu=jest.fn(()=>{
   const {user} = useSession()
   const {activeModules} = useRsdSettings()
 
@@ -59,6 +59,6 @@ function useAddItemMenu(){
   // console.groupEnd()
 
   return menuItems
-}
+})
 
 export default useAddItemMenu

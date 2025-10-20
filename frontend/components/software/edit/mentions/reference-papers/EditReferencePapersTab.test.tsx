@@ -17,7 +17,7 @@ import {cfgReferencePapers} from './config'
 
 // MOCKS
 import referencePapersForSoftware from './__mocks__/referencePapersForSoftware.json'
-import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
+import {initialState as softwareState} from '~/components/software/edit/context/editSoftwareContext'
 import mockCrossrefItems from '~/utils/__mocks__/crossrefItems.json'
 
 // Mock getMentionsForSoftware
@@ -26,8 +26,8 @@ const mockGetMentionsForSoftware = jest.fn(props => Promise.resolve([] as any))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetMentionByDoiFromRsd = jest.fn((props) => Promise.resolve([] as any))
 
-jest.mock('~/utils/editMentions', () => ({
-  ...jest.requireActual('~/utils/editMentions'),
+jest.mock('~/components/mention/apiEditMentions', () => ({
+  ...jest.requireActual('~/components/mention/apiEditMentions'),
   getMentionsForSoftware: jest.fn(props => mockGetMentionsForSoftware(props)),
   getMentionByDoiFromRsd: jest.fn(props=>mockGetMentionByDoiFromRsd(props))
 }))
@@ -99,7 +99,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
 
   it('renders no reference papers message', async () => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // mock no items
     mockSoftwareMentionContext.loading=false
     mockSoftwareMentionContext.reference_papers=[]
@@ -118,7 +118,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
 
   it('renders mocked reference papers', async () => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     // mock items
     mockSoftwareMentionContext.loading = false
     mockSoftwareMentionContext.reference_papers = referencePapersForSoftware as any
@@ -141,7 +141,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
   it('search reference paper by DOI', async () => {
     const validDOI = '10.5281/zenodo.3401363'
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     mockSoftwareMentionContext.loading = false
     mockSoftwareMentionContext.reference_papers = []
     mockUseSoftwareMentionContext.mockReturnValueOnce(mockSoftwareMentionContext)
@@ -187,7 +187,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
   it('search reference paper by text', async() => {
     const searchFor = 'My lovely mention'
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     mockSoftwareMentionContext.loading = false
     mockSoftwareMentionContext.reference_papers = []
     mockUseSoftwareMentionContext.mockReturnValueOnce(mockSoftwareMentionContext)
@@ -212,7 +212,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
       // call RSD api to find mention by DOI
       expect(mockFindPublicationByTitle).toHaveBeenCalledTimes(1)
       expect(mockFindPublicationByTitle).toHaveBeenCalledWith({
-        'id': softwareState.software.id,
+        'id': softwareState.id,
         searchFor,
         'token': mockSession.token
       })
@@ -222,7 +222,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
 
   it('delete reference paper', async() => {
     // required software id
-    softwareState.software.id = 'test-software-id'
+    softwareState.id = 'test-software-id'
     mockSoftwareMentionContext.loading = false
     mockSoftwareMentionContext.reference_papers = referencePapersForSoftware as any
     mockUseSoftwareMentionContext.mockReturnValueOnce(mockSoftwareMentionContext)
@@ -250,7 +250,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
       expect(mockRemoveMentionForSoftware).toHaveBeenCalledTimes(1)
       expect(mockRemoveMentionForSoftware).toHaveBeenCalledWith({
         'mention': referencePapersForSoftware[0].id,
-        'software': softwareState.software.id,
+        'software': softwareState.id,
         'token': mockSession.token,
       })
     })

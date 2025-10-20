@@ -5,9 +5,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {styled} from '@mui/material/styles'
-import {ParticipatingOrganisationProps} from '../../types/Organisation'
-import PageContainer from '../layout/PageContainer'
+import {ParticipatingOrganisationProps} from '~/types/Organisation'
+import PageContainer from '~/components/layout/PageContainer'
 import ParticipatingOrganisation from './ParticipatingOrganisation'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

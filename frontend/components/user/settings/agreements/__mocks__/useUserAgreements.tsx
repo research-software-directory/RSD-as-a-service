@@ -7,7 +7,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // DEFAULT MOCK with terms accepted
-export function useUserAgreements() {
+export const useUserAgreements=jest.fn(()=>{
   return {
     loading: false,
     agree_terms: true,
@@ -17,4 +17,4 @@ export function useUserAgreements() {
     setPrivacyStatement:(props:any) => { return props },
     setPublicOrcidProfile:(props:any) => { return props }
   }
-}
+})

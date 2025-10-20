@@ -23,7 +23,7 @@
 
 
 // default policies
-export const sharedPolicy = `
+const sharedPolicy = `
   default-src 'self';
   connect-src 'self' https://*;
   font-src 'self' https://fonts.gstatic.com;
@@ -39,7 +39,7 @@ export function createNonce(){
   return '5ef14870-46fd-11ed-b878-0242ac120002'
 }
 
-export function devScript() {
+function devScript() {
   if (process.env.NODE_ENV !== 'production') {
     // enable script eval in development
     return '\'unsafe-eval\''
@@ -47,14 +47,14 @@ export function devScript() {
   return ''
 }
 
-export function stylePolicy(){
+function stylePolicy(){
   // NOTE! nonce approach does not work on all injected style tags so we use unsafe-inline
   // const styleSrc = `style-src 'self' 'nonce-${nonce}';`
   const styleSrc = 'style-src \'self\' \'unsafe-inline\';'
   return styleSrc
 }
 
-export function scriptPolicy(nonce:string){
+function scriptPolicy(nonce:string){
   // all scripts have nonce, except in dev where we need more "freedom"
   const scriptSrc = `script-src 'self' 'nonce-${nonce}' ${devScript()};`
   return scriptSrc
@@ -74,32 +74,4 @@ export function getCspPolicy(nonce:string) {
   return policy
 }
 
-/**
- * Extract nonce from the request header 'x-nonce' or from meta tag.
- * In case nonce is not found a new one is created.
- * @param headers
- * @returns string
- */
-export function getNonce(headers?: Record<string, string | string[] | undefined>) {
-  let nonce:string
-  // console.group('getNonce')
-  // get existing nonce from header x-nonce (middleware.ts)
-  if (headers) {
-    nonce = headers['x-nonce'] as string
-    return nonce
-  }
-  // get existing nonce from meta tag (_document.tsx)
-  if (typeof document !== 'undefined') {
-    const nonceMeta = document.querySelector('meta[name="csp-nonce"]')
-    if (typeof nonceMeta?.getAttribute('content')==='string') {
-      nonce = nonceMeta?.getAttribute('content') as string
-      return nonce
-    }
-  }
-  // create new nonce
-  nonce = createNonce()
-  // console.log('createNonce...', nonce)
-  // console.groupEnd()
-  return nonce
-}
 

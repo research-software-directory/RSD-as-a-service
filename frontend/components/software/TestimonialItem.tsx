@@ -5,8 +5,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {styled} from '@mui/material/styles'
-import {Testimonial} from '../../types/Testimonial'
+import {Testimonial} from '~/types/Testimonial'
 
 const TestimonialContent = styled('div')(({theme}) => ({
   position:'relative',

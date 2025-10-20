@@ -14,7 +14,9 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 })
 
-const eslintConfig = [
+const eslintConfig = [{
+    ignores: ['node_modules/**', '.next/**', 'out/**', 'build/**', 'next-env.d.ts','__tests__/**']
+  },
   // Note! it does not work if only core-web-vitals are used
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   // add custom rules
@@ -62,7 +64,6 @@ const eslintConfig = [
       'array-bracket-spacing': ['warn', 'never'],
       // ---------------------------------------
     },
-  }
-]
+}]
 
 export default eslintConfig

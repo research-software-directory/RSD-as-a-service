@@ -6,6 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {JSX} from 'react'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'

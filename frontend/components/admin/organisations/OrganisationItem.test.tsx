@@ -6,22 +6,19 @@
 import {fireEvent, render, screen} from '@testing-library/react'
 
 import OrganisationItem from './OrganisationItem'
-import {OrganisationList} from '~/types/Organisation'
+import {OrganisationAdminProps} from './apiOrganisation'
 
 const mockOrganisationItem = {
   id:'test-organisation-id',
   parent: null,
   name: 'Test organisation',
-  short_description: null,
-  country: null,
   website: 'https://organisation.org',
   is_tenant: true,
   rsd_path: 'test-organistion-path',
   logo_id: null,
   software_cnt: 0,
   project_cnt: 0,
-  score: 0
-} as OrganisationList
+} as OrganisationAdminProps
 
 const mockOnDelete = jest.fn()
 

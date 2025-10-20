@@ -3,16 +3,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ParsedUrlQuery} from 'querystring'
-
 import logger from '~/utils/logger'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import {baseQueryString} from '~/utils/postgrestUrl'
-import {ssrSoftwareParams} from '~/utils/extractQueryParam'
-import {getKeywordsByCommunity} from '~/components/communities/settings/general/apiCommunityKeywords'
-import {CommunityListProps} from '~/components/communities/apiCommunities'
-import {comSoftwareCategoriesFilter, comSoftwareKeywordsFilter, comSoftwareLanguagesFilter, comSoftwareLicensesFilter} from './filters/apiCommunitySoftwareFilters'
 import {getSoftwareOrderOptions} from './filters/OrderCommunitySoftwareBy'
 
 export type CommunityRequestStatus='approved'|'pending'|'rejected'
@@ -20,12 +14,12 @@ export type CommunityRequestStatus='approved'|'pending'|'rejected'
 export type SoftwareForCommunityParams = {
   community: string,
   software_status: CommunityRequestStatus
-  searchFor?: string
+  searchFor?: string | null
   keywords?: string[] | null
   prog_lang?: string[] | null
   licenses?: string[] | null
   categories?: string[] | null
-  order?: string
+  order?: string | null
   page: number,
   rows: number,
   isMaintainer: boolean
@@ -66,7 +60,7 @@ export async function getSoftwareForCommunity({
     }
     // filter for status
     url+= `&status=eq.${software_status}`
-    // filter for approved only if not maintainer
+    // filter for published if not maintainer
     if (!isMaintainer) {
       url += '&is_published=eq.true'
     }
@@ -127,126 +121,6 @@ export async function getSoftwareForCommunity({
     }
   }
 }
-
-type SsrCommunitySoftwareDataProps={
-  community: CommunityListProps,
-  software_status: CommunityRequestStatus
-  query: ParsedUrlQuery
-  isMaintainer: boolean
-  token?: string
-  rsd_page_rows?: number
-}
-
-/**
- * Get community software page data server side.
- */
-export async function ssrCommunitySoftwareProps({
-  community,software_status,query,isMaintainer,token,rsd_page_rows
-}:SsrCommunitySoftwareDataProps){
-  try{
-    // extract and decode query params
-    const {search, keywords, prog_lang, licenses, categories, order, rows, page} = ssrSoftwareParams(query)
-
-    // get other data
-    const [
-      software,
-      keywordsList,
-      languagesList,
-      licensesList,
-      categoryList,
-      communityKeywords
-    ] = await Promise.all([
-      getSoftwareForCommunity({
-        community: community.id,
-        software_status,
-        searchFor: search,
-        keywords,
-        prog_lang,
-        licenses,
-        categories,
-        order,
-        rows: rows ?? rsd_page_rows ?? 12,
-        page: page ? page-1 : 0,
-        isMaintainer,
-        token
-      }),
-      comSoftwareKeywordsFilter({
-        id: community.id,
-        software_status,
-        search,
-        keywords,
-        prog_lang,
-        licenses,
-        categories,
-        token
-      }),
-      comSoftwareLanguagesFilter({
-        id: community.id,
-        software_status,
-        search,
-        keywords,
-        prog_lang,
-        licenses,
-        categories,
-        token
-      }),
-      comSoftwareLicensesFilter({
-        id: community.id,
-        software_status,
-        search,
-        keywords,
-        prog_lang,
-        licenses,
-        categories,
-        token
-      }),
-      comSoftwareCategoriesFilter({
-        id: community.id,
-        software_status,
-        search,
-        keywords,
-        prog_lang,
-        licenses,
-        categories,
-        token
-      }),
-      getKeywordsByCommunity(community.id,token)
-    ])
-
-    return{
-      isMaintainer,
-      software,
-      keywordsList,
-      languagesList,
-      licensesList,
-      categoryList,
-      community:{
-        ...community,
-        // use keywords for editing
-        keywords: communityKeywords
-      }
-    }
-
-  }catch(e:any){
-    // otherwise request failed
-    logger(`ssrCommunitySoftwareProps: ${e.message}`, 'error')
-    // we log and return zero
-    return {
-      isMaintainer: false,
-      communityKeywords:[],
-      software:{
-        count:0,
-        data: []
-      },
-      keywordsList:[],
-      languagesList:[],
-      licensesList:[],
-      categoryList:[],
-      community
-    }
-  }
-}
-
 
 export async function patchSoftwareForCommunity({software, community, data, token}:
   { software: string, community: string, data: any, token: string }) {

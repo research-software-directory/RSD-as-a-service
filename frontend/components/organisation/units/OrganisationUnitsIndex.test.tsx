@@ -6,6 +6,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+/**
+ * DEFAULT MOCKS NEED to be imported before "real" imports
+ * DEFAULT MOCKS should return jest.fn() with default results
+ * THIS MAKES possible to overwrite default mock with import (after mock import)
+ */
+// MOCK getUserSettings
+jest.mock('~/components/user/ssrUserSettings')
+// MOCK getActiveModuleNames
+jest.mock('~/config/getSettingsServerSide')
+// MOCK isOrganisationMaintainer
+jest.mock('~/auth/permissions/isMaintainerOfOrganisation')
+// MOCK getOrganisationIdForSlug,getProjectsForOrganisation
+jest.mock('~/components/organisation/apiOrganisations')
+
 import {fireEvent, render, screen, waitFor, within} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithOrganisationContext} from '~/utils/jest/WithOrganisationContext'
@@ -15,7 +29,8 @@ import config from '../settings/general/generalSettingsConfig'
 import mockOrganisation from '../__mocks__/mockOrganisation'
 import mockUnits from './__mocks__/mockUnits.json'
 import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
-
+import {getOrganisationChildren} from '~/components/organisation/apiOrganisations'
+const mockOrganisationChildren = getOrganisationChildren as jest.Mock
 
 const mockProps = {
   organisation: mockOrganisation,
@@ -29,10 +44,11 @@ describe('frontend/components/organisation/software/index.tsx', () => {
   })
 
   it('shows no units message', async() => {
+    const ResolvedPage = await ResearchUnits({slug:['test-project']})
     render(
       <WithAppContext>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits units={[]}/>
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -45,10 +61,11 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     // set mocked user as primary maintainer
     mockOrganisation.primary_maintainer = mockSession.user?.account
 
+    const ResolvedPage = await ResearchUnits({slug:['test-project']})
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits units={[]}/>
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -64,10 +81,11 @@ describe('frontend/components/organisation/software/index.tsx', () => {
       mockSession.user.role='rsd_admin'
     }
 
+    const ResolvedPage = await ResearchUnits({slug:['test-project']})
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits units={[]}/>
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -84,10 +102,12 @@ describe('frontend/components/organisation/software/index.tsx', () => {
       mockSession.user.role='rsd_user'
     }
 
+    const ResolvedPage = await ResearchUnits({slug:['test-project']})
+
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits units={[]} />
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -103,11 +123,15 @@ describe('frontend/components/organisation/software/index.tsx', () => {
     if (mockSession.user) {
       mockSession.user.role='rsd_user'
     }
+    // return list of mocked units
+    mockOrganisationChildren.mockResolvedValueOnce(mockUnits)
+
+    const ResolvedPage = await ResearchUnits({slug:['test-project']})
 
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits units={mockUnits}/>
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -123,10 +147,15 @@ describe('frontend/components/organisation/software/index.tsx', () => {
       mockSession.user.role='rsd_user'
     }
 
+    // return list of mocked units
+    mockOrganisationChildren.mockResolvedValueOnce(mockUnits)
+
+    const ResolvedPage = await ResearchUnits({slug:['test-project']})
+
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits units={mockUnits}/>
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -144,10 +173,15 @@ describe('frontend/components/organisation/software/index.tsx', () => {
       mockSession.user.role='rsd_admin'
     }
 
+    // return list of mocked units
+    mockOrganisationChildren.mockResolvedValueOnce(mockUnits)
+
+    const ResolvedPage = await ResearchUnits({slug:['test-project']})
+
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits units={mockUnits}/>
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )
@@ -170,10 +204,12 @@ describe('frontend/components/organisation/software/index.tsx', () => {
       website: 'https://google.com/test'
     }
 
+    const ResolvedPage = await ResearchUnits({slug:['test-project']})
+
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
-          <ResearchUnits units={mockUnits}/>
+          {ResolvedPage}
         </WithOrganisationContext>
       </WithAppContext>
     )

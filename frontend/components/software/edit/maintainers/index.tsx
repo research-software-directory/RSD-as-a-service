@@ -6,6 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState} from 'react'
 
 import ContentLoader from '~/components/layout/ContentLoader'
@@ -14,7 +15,7 @@ import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {maintainers as config} from '~/components/projects/edit/maintainers/config'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import MaintainersList from '~/components/maintainers/MaintainersList'
-import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContext from '../context/useSoftwareContext'
 import {useSoftwareMaintainers} from './useSoftwareMaintainers'
 import SoftwareMaintainerLinks from './SoftwareMaintainerLinks'
 
@@ -25,7 +26,7 @@ type DeleteModal = {
   displayName?: string
 }
 
-export default function SoftwareMaintainers() {
+export default function EditSoftwareMaintainers() {
   const {software} = useSoftwareContext()
   const {loading,maintainers,deleteMaintainer} = useSoftwareMaintainers({software:software.id})
   const [modal, setModal] = useState<DeleteModal>({

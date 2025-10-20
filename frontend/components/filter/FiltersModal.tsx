@@ -7,9 +7,9 @@ import {JSX} from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
+import useSmallScreen from '~/config/useSmallScreen'
 
 type FiltersModalProps={
   open: boolean,
@@ -19,7 +19,7 @@ type FiltersModalProps={
 }
 
 export default function FiltersModal({open,setModal,children,title='Filters'}:FiltersModalProps) {
-  const smallScreen = useMediaQuery('(max-width:640px)')
+  const smallScreen = useSmallScreen()
 
   return (
     <Dialog

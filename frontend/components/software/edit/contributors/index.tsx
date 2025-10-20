@@ -10,6 +10,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState} from 'react'
 
 import {PersonProps, Person} from '~/types/Contributor'
@@ -28,7 +29,7 @@ import FindPerson from '~/components/person/FindPerson'
 import {personAlreadyPresent} from '~/components/person/searchForPerson'
 import {contributorInformation as config} from '../editSoftwareConfig'
 import {ModalProps, ModalStates} from '../editSoftwareTypes'
-import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContext from '../context/useSoftwareContext'
 import GetContributorsFromDoi from './GetContributorsFromDoi'
 import useSoftwareContributors from './useSoftwareContributors'
 import SortableContributorsList from './SortableContributorsList'
@@ -37,7 +38,7 @@ type EditContributorModal = ModalProps & {
   contributor?: Person
 }
 
-export default function SoftwareContributors() {
+export default function EditSoftwareContributors() {
   const {host} = useRsdSettings()
   const {software} = useSoftwareContext()
   const {showInfoMessage} = useSnackbar()

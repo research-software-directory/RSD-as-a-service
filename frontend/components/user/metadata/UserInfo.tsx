@@ -3,7 +3,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// import OrcidLink from '~/components/layout/OrcidLink'
+'use client'
+
 import {getDisplayName} from '~/utils/getDisplayName'
 import PersonalInfo from '~/components/software/PersonalInfo'
 import {useUserContext} from '~/components/user/context/UserContext'

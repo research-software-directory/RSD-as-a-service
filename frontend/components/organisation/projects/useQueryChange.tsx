@@ -1,34 +1,41 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useCallback} from 'react'
-import {useRouter} from 'next/router'
+'use client'
 
-import useFilterQueryChange from '~/components/filter/useFilterQueryChange'
+import {useCallback} from 'react'
+import {useRouter,usePathname,useSearchParams} from 'next/navigation'
+
+import useHandleQueryChange from '~/utils/useHandleQueryChange'
 import {TabKey} from '~/components/organisation/tabs/OrganisationTabItems'
 
 export default function useQueryChange() {
   const router = useRouter()
-  const {handleQueryChange} = useFilterQueryChange()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const {handleQueryChange} = useHandleQueryChange()
 
   // console.group('useQueryChange')
-  // console.log('hook called...')
+  // console.log('pathname...',pathname)
+  // console.log('searchParams...',searchParams)
   // console.groupEnd()
 
   const resetFilters = useCallback((tab: TabKey) => {
-    // use basic params
-    const query: any = {
-      slug: router.query.slug,
-      tab
+    // use tab param only
+    let url = `${pathname}?tab=${tab}`
+
+    // keep order if we are on same tab
+    const order = searchParams?.get('order')
+    const currentTab = searchParams?.get('tab')
+    if ( order && tab === currentTab) {
+      url+=`&order=${order}`
     }
-    // keep order param if we are on same tab
-    if (router.query['order'] && tab === router.query['tab']) {
-      query['order'] = router.query['order']
-    }
-    router.push({query},undefined,{scroll: false})
-  },[router])
+
+    router.push(url,{scroll: false})
+
+  },[router,pathname,searchParams])
 
   return {
     handleQueryChange,

@@ -7,12 +7,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import List from '@mui/material/List'
-import {useSoftwareServices} from './apiSoftwareServices'
 import ContentLoader from '~/components/layout/ContentLoader'
 
 import {repoServiceList} from './config'
 import {ServiceInfoListItem} from './ServiceInfoListItem'
+import useSoftwareServices from './useSoftwareServices'
 
 
 export default function SoftwareRepoServices() {

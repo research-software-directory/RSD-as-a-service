@@ -12,7 +12,7 @@ import {CategoryEntry} from '~/types/Category'
 import {TreeNode} from '~/types/TreeNode'
 import {ssrSoftwareUrl} from '~/utils/postgrestUrl'
 
-export function calcTreeLevelDepth(tree: TreeNode<CategoryEntry>): number {
+function calcTreeLevelDepth(tree: TreeNode<CategoryEntry>): number {
 
   function walk (tree: TreeNode<CategoryEntry>, depth:number): number {
     return Math.max(depth, ...tree.children().map(sub => walk(sub, depth+1)))

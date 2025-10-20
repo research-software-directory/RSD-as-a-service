@@ -3,6 +3,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {useSession} from '~/auth/AuthProvider'
 import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
 import {getDisplayInitials, getDisplayName} from '~/utils/getDisplayName'

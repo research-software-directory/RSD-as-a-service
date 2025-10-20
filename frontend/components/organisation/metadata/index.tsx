@@ -5,6 +5,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import LanguageIcon from '@mui/icons-material/Language'
 import AutoStoriesIcon from '@mui/icons-material/AutoStories'
 import MapIcon from '@mui/icons-material/Map'
@@ -76,7 +78,7 @@ export default function OrganisationMetadata() {
   }
 
   return (
-    <section className="grid  md:grid-cols-[1fr_2fr] xl:grid-cols-[1fr_4fr] gap-4">
+    <section className="grid md:grid-cols-[1fr_2fr] xl:grid-cols-[1fr_4fr] gap-4">
       <BaseSurfaceRounded className="flex justify-center p-8 overflow-hidden relative">
         <OrganisationLogo isMaintainer={isMaintainer} />
       </BaseSurfaceRounded>

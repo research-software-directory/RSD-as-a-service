@@ -79,8 +79,8 @@ it('renders upload image inputs', () => {
 it('saves image caption', () => {
   const expectedValue = 'Test caption value'
   const defaultValues = {
-    id: projectState.project.id,
-    slug: projectState.project.slug
+    id: projectState.id,
+    slug: projectState.slug
   }
   render(
     <WithAppContext options={{session: mockSession}}>
@@ -110,8 +110,8 @@ it('saves image caption', () => {
 
 it('set contain image to true', () => {
   const defaultValues = {
-    id: projectState.project.id,
-    slug: projectState.project.slug
+    id: projectState.id,
+    slug: projectState.slug
   }
   render(
     <WithAppContext options={{session: mockSession}}>
@@ -142,8 +142,8 @@ it('set contain image to true', () => {
 
 it('shows image as background', () => {
   const defaultValues = {
-    id: projectState.project.id,
-    slug: projectState.project.slug,
+    id: projectState.id,
+    slug: projectState.slug,
     image_id: 'any-string-id-longer-than-10-positions'
   }
   render(
@@ -165,8 +165,8 @@ it('shows image as background', () => {
 
 it('can delete existing image', async() => {
   const defaultValues = {
-    id: projectState.project.id,
-    slug: projectState.project.slug,
+    id: projectState.id,
+    slug: projectState.slug,
     image_id: 'any-string-id-longer-than-10-positions'
   }
 
@@ -218,8 +218,8 @@ it('can upload new image', async () => {
   const fileType = 'image/png'
   const newImageId = 'new-uploaded-image-id'
   const defaultValues = {
-    id: projectState.project.id,
-    slug: projectState.project.slug,
+    id: projectState.id,
+    slug: projectState.slug,
     image_id: null
   }
 
@@ -267,7 +267,7 @@ it('can upload new image', async () => {
       'data': {
         'image_id': newImageId,
       },
-      'id': projectState.project.id,
+      'id': projectState.id,
       'token': mockSession.token,
     })
   })
@@ -281,8 +281,8 @@ it('can replace existing image', async () => {
   const newImageId = 'new-uploaded-image-id'
   const oldImageId = 'old-image-id'
   const defaultValues = {
-    id: projectState.project.id,
-    slug: projectState.project.slug,
+    id: projectState.id,
+    slug: projectState.slug,
     image_id: oldImageId
   }
 
@@ -328,7 +328,7 @@ it('can replace existing image', async () => {
       'data': {
         'image_id': null,
       },
-      'id': projectState.project.id,
+      'id': projectState.id,
       'token': mockSession.token,
     })
     // second call to save new image
@@ -336,7 +336,7 @@ it('can replace existing image', async () => {
       'data': {
         'image_id': newImageId,
       },
-      'id': projectState.project.id,
+      'id': projectState.id,
       'token': mockSession.token,
     })
     // delete old image

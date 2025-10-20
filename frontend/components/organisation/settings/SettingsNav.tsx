@@ -5,23 +5,28 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
+'use client'
+
+import {useRouter,useSearchParams,usePathname} from 'next/navigation'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
-import {settingsMenu} from './SettingsNavItems'
-import useOrganisationContext from '../context/useOrganisationContext'
+import {defaultTab, settingsMenu} from './SettingsNavItems'
 
 export default function OrganisationSettingsNav() {
   const router = useRouter()
-  const settings = router.query['settings'] ?? 'general'
-  const {rsd_path} = useOrganisationContext()
+  const searchParam = useSearchParams()
+  const pathname = usePathname()
+  const params = new URLSearchParams(searchParam ?? '')
+  const settings = searchParam?.get('settings') ?? defaultTab
+
   // console.group('OrganisationNav')
   // console.log('description...', organisation.description)
   // console.groupEnd()
+
   return (
     <List
       component="nav"
@@ -31,14 +36,15 @@ export default function OrganisationSettingsNav() {
     >
       {settingsMenu.map((item, pos) => {
         const selected = settings === settingsMenu[pos].id
-        const url = `${router.pathname.replace('[...slug]',rsd_path ?? '')}?tab=settings&settings=${item.id}`
+        params.set('settings',item.id)
+        const url = `${pathname}?${params.toString()}`
         return (
           <ListItemButton
             data-testid="organisation-settings-nav-item"
             key={`step-${pos}`}
             selected={selected}
             onClick={() => {
-              router.push(url,url,{scroll:false})
+              router.push(url,{scroll:false})
             }}
             sx={editMenuItemButtonSx}
           >

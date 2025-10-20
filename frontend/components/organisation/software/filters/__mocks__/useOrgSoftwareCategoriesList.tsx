@@ -3,9 +3,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export default function useOrgSoftwareCategoriesList(){
+const useOrgSoftwareCategoriesList=jest.fn(()=>{
   return {
     hasCategories: false,
     categoryList: []
   }
-}
+})
+
+export default useOrgSoftwareCategoriesList

@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,7 +23,7 @@ type DoiRA = {
   RA?: string
 }
 
-export async function getDoiRA(doi: string) {
+async function getDoiRA(doi: string) {
   try {
     const url = `https://doi.org/doiRA/${doi}`
     const resp = await fetch(url)
@@ -54,7 +54,7 @@ export async function getDoiRAList(doiList: string[]) {
     logger(`getDoiRAList failed ${resp.status} ${resp.statusText}`)
     return []
   } catch (e: any) {
-    logger(`getDoiRA: ${e?.message}`, 'error')
+    logger(`getDoiRAList: ${e?.message}`, 'error')
     return []
   }
 }

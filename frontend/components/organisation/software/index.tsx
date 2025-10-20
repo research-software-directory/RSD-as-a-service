@@ -1,82 +1,118 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Pagination from '@mui/material/Pagination'
-import useMediaQuery from '@mui/material/useMediaQuery'
+import {notFound} from 'next/navigation'
 
-import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
+import {getUserFromToken} from '~/auth/getSessionServerSide'
+import {isOrganisationMaintainer} from '~/auth/permissions/isMaintainerOfOrganisation'
+import {getUserSettings} from '~/components/user/ssrUserSettings'
+import {ssrSoftwareParams} from '~/utils/extractQueryParam'
+import {getActiveModuleNames} from '~/config/getSettingsServerSide'
+import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
 import FiltersPanel from '~/components/filter/FiltersPanel'
-import useOrganisationContext from '../context/useOrganisationContext'
-import useQueryChange from '../projects/useQueryChange'
-import OrgSoftwareFilters from './filters/index'
-import useSoftwareParams from './filters/useSoftwareParams'
-import OrgSearchSoftwareSection from './search/OrgSearchSoftwareSection'
-import useOrganisationSoftware from './useOrganisationSoftware'
+import {getOrganisationIdForSlug, getSoftwareForOrganisation} from '~/components/organisation/apiOrganisations'
+import OrgSoftwareFilters from '~/components/organisation/software/filters'
+import {getOrganisationSoftwareOrder} from '~/components/organisation/software/filters/OrgSoftwareOrderOptions'
+import OrgSearchSoftwareSection from '~/components/organisation/software/search/OrgSearchSoftwareSection'
 import OrganisationSoftwareOverview from './OrganisationSoftwareOverview'
 
-export default function OrganisationSoftware() {
-  const smallScreen = useMediaQuery('(max-width:767px)')
-  const {isMaintainer} = useOrganisationContext()
-  const {handleQueryChange} = useQueryChange()
-  const {page,rows,view,setPageLayout} = useSoftwareParams()
-  const {software,count,loading} = useOrganisationSoftware()
-  const numPages = Math.ceil(count / rows)
+type OrganisationSoftwareTabProps = Readonly<{
+  slug: string[],
+  query: {[key: string]: string | undefined}
+}>
+
+export default async function OrganisationSoftware({slug,query}:OrganisationSoftwareTabProps) {
+  // extract params, user preferences and active modules
+  const [{token,rsd_page_rows},modules] = await Promise.all([
+    getUserSettings(),
+    getActiveModuleNames()
+  ])
+  // show 404 page if module is not enabled or slug is missing
+  if (
+    modules?.includes('organisations')===false ||
+    slug.length === 0
+  ){
+    notFound()
+  }
+  // resolve slug to organisation id and verify user
+  const [uuid, user] = await Promise.all([
+    getOrganisationIdForSlug({slug, token}),
+    getUserFromToken(token)
+  ])
+  // show 404 page if organisation id missing
+  if (uuid === undefined || uuid === null) {
+    notFound()
+  }
+
+  // is this user maintainer of this organisation
+  const isMaintainer = await isOrganisationMaintainer({
+    organisation: uuid,
+    account: user?.account,
+    role: user?.role,
+    token
+  })
+
+  const params = ssrSoftwareParams(query)
+  const rows = params.rows ?? rsd_page_rows
+
+  // build order query, default order is pinned (is_featured)
+  const orderBy=getOrganisationSoftwareOrder(isMaintainer,params?.order)
+
+  const software = await getSoftwareForOrganisation({
+    organisation: uuid,
+    searchFor: params?.search,
+    keywords: params.keywords,
+    prog_lang: params.prog_lang,
+    licenses: params.licenses,
+    categories: params.categories,
+    order: orderBy,
+    // api works with zero index
+    page: params.page ? params.page - 1 : 0,
+    isMaintainer,
+    rows,
+    token
+  })
+  const numPages = Math.ceil(software.count / rows)
 
   // console.group('OrganisationSoftware')
-  // console.log('isMaintainer...', isMaintainer)
-  // console.log('page...', page)
+  // console.log('slug...', slug)
+  // console.log('token...', token)
+  // console.log('uuid...', uuid)
+  // console.log('params...', params)
+  // console.log('count...', software.count)
+  // console.log('software...', software.data)
+  // console.log('numPages...', numPages)
   // console.log('rows...', rows)
-  // console.log('count...', count)
-  // console.log('software...', software)
-  // console.log('loading...', loading)
-  // console.log('view...', view)
-  // console.log('rsd_page_layout...', rsd_page_layout)
+  // console.log('isMaintainer...', isMaintainer)
   // console.groupEnd()
 
+  /* Page grid with 2 sections: left filter panel and main content */
   return (
-    <>
-      {/* Only when maintainer */}
-      {isMaintainer && <UserAgreementModal />}
-      {/* Page grid with 2 sections: left filter panel and main content */}
-      <div className="flex-1 grid md:grid-cols-[1fr_2fr] xl:grid-cols-[1fr_4fr] gap-4 mb-12">
-        {/* Filters panel large screen */}
-        {smallScreen === false &&
-          <FiltersPanel>
-            <OrgSoftwareFilters />
-          </FiltersPanel>
-        }
-        {/* Search & main content section */}
-        <div className="flex-1">
-          <OrgSearchSoftwareSection
-            count={count}
-            layout={view}
-            setView={setPageLayout}
-          />
-          {/* software overview/content */}
-          <OrganisationSoftwareOverview
-            layout={view}
-            software={software}
-            loading={loading}
-            rows={rows}
-          />
-          {/* Pagination */}
-          {numPages > 1 &&
-            <div className="flex flex-wrap justify-center mt-8">
-              <Pagination
-                count={numPages}
-                page={page}
-                onChange={(_, page) => {
-                  handleQueryChange('page',page.toString())
-                }}
-              />
-            </div>
-          }
-        </div>
+    <div className="flex-1 grid md:grid-cols-[1fr_2fr] xl:grid-cols-[1fr_4fr] gap-4 mb-12">
+      {/* Filters panel large screen */}
+      <FiltersPanel>
+        <OrgSoftwareFilters />
+      </FiltersPanel>
+      {/* Search & main content section */}
+      <div className="flex-1">
+        <OrgSearchSoftwareSection
+          rows={rows}
+          count={software.count}
+        />
+        {/* software overview/content */}
+        <OrganisationSoftwareOverview
+          software={software.data}
+          isMaintainer={isMaintainer}
+        />
+        {/* Pagination */}
+        <PaginationLinkApp
+          count={numPages}
+          page={params.page ?? 1}
+          className='mt-4'
+        />
       </div>
-    </>
+    </div>
   )
 }

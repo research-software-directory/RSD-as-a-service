@@ -1,14 +1,14 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
 import {canEditOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
 import {EditOrganisation} from '~/types/Organisation'
-import {getOrganisationsOfProject} from '~/utils/getProjects'
+import {getOrganisationsOfProject} from '~/components/projects/apiProjects'
 
 type UseParticipatingOrganisationsProps = {
   project: string | undefined,
@@ -30,7 +30,6 @@ export function useParticipatingOrganisations({project, token, account}: UsePart
       const resp = await getOrganisationsOfProject({
         project,
         token,
-        frontend: true,
         roles:['participating','hosting']
       })
       // convert to EditOrganisation type and add canEdit flag

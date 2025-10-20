@@ -1,13 +1,15 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect,useState} from 'react'
 import {SearchOrganisation} from '~/types/Organisation'
 import {EditProject, OrganisationsOfProject, ProjectLink} from '~/types/Project'
-import {getKeywordsForProject, getLinksForProject, getOrganisationsOfProject, getProjectItem, getResearchDomainsForProject} from '~/utils/getProjects'
+import {getKeywordsForProject, getLinksForProject, getOrganisationsOfProject, getProjectItem, getResearchDomainsForProject} from '~/components/projects/apiProjects'
 
 function prepareUrlForProject(url_for_project:ProjectLink[]) {
   const data = url_for_project.map((item, pos) => {
@@ -53,10 +55,10 @@ async function getProjectInfoForEdit({slug,token}:
       research_domains,
       keywords
     ] = await Promise.all([
-      getLinksForProject({project: project.id, token, frontend: true}),
-      getOrganisationsOfProject({project: project.id, token, frontend: true, roles:['funding']}),
-      getResearchDomainsForProject({project: project.id, token, frontend: true}),
-      getKeywordsForProject({project: project.id, token, frontend: true})
+      getLinksForProject({project: project.id, token}),
+      getOrganisationsOfProject({project: project.id, token, roles:['funding']}),
+      getResearchDomainsForProject({project: project.id, token}),
+      getKeywordsForProject({project: project.id, token})
     ])
 
     const data = {

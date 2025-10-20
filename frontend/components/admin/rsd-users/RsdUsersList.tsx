@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useState} from 'react'
 
 import Alert from '@mui/material/Alert'
@@ -29,7 +30,11 @@ export type AccountModal = {
   }
 }
 
-export default function RsdUsersList({adminsOnly, lockedOnly, inactiveDays}: {adminsOnly: boolean, lockedOnly: boolean, inactiveDays: number}) {
+export default function RsdUsersList({
+  adminsOnly, lockedOnly, inactiveDays
+}: Readonly<{
+  adminsOnly: boolean, lockedOnly: boolean, inactiveDays: number
+}>) {
   const {token} = useSession()
   const {loading, accounts, lockAccount,deleteAccount} = useRsdAccounts(token, adminsOnly, lockedOnly, inactiveDays)
   const [modal, setModal] = useState<AccountModal>({

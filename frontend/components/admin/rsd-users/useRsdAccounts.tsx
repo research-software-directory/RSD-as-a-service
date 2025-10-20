@@ -4,6 +4,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {useCallback, useEffect, useState} from 'react'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'

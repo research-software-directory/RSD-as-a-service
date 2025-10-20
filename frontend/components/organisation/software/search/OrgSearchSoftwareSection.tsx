@@ -6,31 +6,33 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {useState} from 'react'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import Button from '@mui/material/Button'
 
+import useSmallScreen from '~/config/useSmallScreen'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import {getPageRange} from '~/utils/pagination'
 import SearchInput from '~/components/search/SearchInput'
-import SelectRows from '~/components/software/overview/search/SelectRows'
-import ViewToggleGroup, {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import ShowItemsSelect from '~/components/search/ShowItemsSelect'
+import ToggleViewGroup from '~/components/search/ToggleViewGroup'
 import useQueryChange from '~/components/organisation/projects/useQueryChange'
 import FiltersModal from '~/components/filter/FiltersModal'
 import useSoftwareParams from '~/components/organisation/software/filters/useSoftwareParams'
 import OrgSoftwareFilters from '~/components/organisation/software/filters/index'
 
-type SearchSectionProps = {
+type SearchSectionProps = Readonly<{
   count: number
-  layout: ProjectLayoutType
-  setView: (view:ProjectLayoutType)=>void
-}
-
+  rows: number
+}>
 
 export default function OrgSearchSoftwareSection({
-  count, layout, setView
+  count, rows
 }: SearchSectionProps) {
-  const smallScreen = useMediaQuery('(max-width:640px)')
-  const {search,page,rows,filterCnt} = useSoftwareParams()
+  const smallScreen = useSmallScreen()
+  const {search,page,filterCnt,view} = useSoftwareParams()
+  const {setPageLayout,setPageRows} = useUserSettings()
   const {handleQueryChange} = useQueryChange()
   const [modal, setModal] = useState(false)
 
@@ -50,16 +52,19 @@ export default function OrgSearchSoftwareSection({
           onSearch={(search: string) => handleQueryChange('search', search)}
           defaultValue={search ?? ''}
         />
-        <ViewToggleGroup
-          layout={layout}
-          onSetView={setView}
+        <ToggleViewGroup
+          view={view}
+          onChangeView={setPageLayout}
           sx={{
             marginLeft:'0.5rem'
           }}
         />
-        <SelectRows
-          rows={rows}
-          handleQueryChange={handleQueryChange}
+        <ShowItemsSelect
+          items={rows}
+          onItemsChange={(items)=>{
+            setPageRows(items)
+            handleQueryChange('rows', items.toString())
+          }}
         />
       </div>
       <div className="flex justify-between items-center px-1 py-2">

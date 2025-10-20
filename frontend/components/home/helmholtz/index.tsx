@@ -15,8 +15,6 @@ import {useSession} from '~/auth/AuthProvider'
 import LogoHelmholtz from '~/assets/logos/LogoHelmholtz.svg'
 import {getImageUrl} from '~/utils/editImage'
 import {OrganisationForOverview} from '~/types/Organisation'
-import AppHeader from '~/components/AppHeader'
-import AppFooter from '~/components/AppFooter'
 import useOrganisations from './useOrganisations'
 
 type SpotlightDescription = {
@@ -266,20 +264,8 @@ export default function HelmholtzHome() {
   const {token}=useSession()
   const {organisations} = useOrganisations(token)
 
-  // const handleClickOpen = () => {
-  //   const loginButton = document.querySelector('.rsd-login-button')
-  //   if (loginButton) {
-  //     const evt = new MouseEvent('click', {
-  //       bubbles: true
-  //     })
-  //     loginButton.dispatchEvent(evt)
-  //   }
-  // }
-
   return (
-    <div className="bg-base-100" data-testid="rsd-helmholtz-home">
-
-      <AppHeader/>
+    <main className="bg-base-100" data-testid="rsd-helmholtz-home">
 
       {/* Head and claim */}
       <div className="bg-secondary bg-landing-page mb-10">
@@ -348,69 +334,13 @@ export default function HelmholtzHome() {
         </div>
       </div>
 
-      {/* Participating organsiations */}
+      {/* Participating organsations */}
       <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-(--breakpoint-xl) text-secondary">
         <div className="py-6">
           <h2 className="text-5xl">Participating organisations</h2>
           <ParticipatingOrganisations organisations={organisations}/>
         </div>
       </div>
-
-      {/* For RSEs and Researchers */}
-      {/* <div className="conainer mx-auto p-6 md:p-10 max-w-(--breakpoint-xl) text-secondary">
-          <div className='py-6'>
-            <h2 className='text-5xl'>For RSEs and Researchers</h2>
-            <div className="text-2xl my-4">A place for Research Software that is being developed in the Helmholtz Association.</div>
-            <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8">
-              <div className='text-center text-2xl py-4'>
-                <div className="pb-4">For Research Software Engineers</div>
-                <div className="grid gridl-cols-1 sm:grid-cols-2 gap-8 pt-4">
-                  <div className="aspect-video grid place-items-center bg-center bg-cover group text-base-100 bg-promote">
-                    <div className="group-hover:hidden text-4xl">Promote</div>
-                    <div className="hidden group-hover:block justify-center m-2">Increase the impact of your software by reaching a broader audience</div>
-                  </div>
-                  <div className="aspect-video grid place-items-center bg-center bg-cover group text-base-100 bg-reference">
-                    <div className="group-hover:hidden text-4xl">Impact</div>
-                    <div className="hidden group-hover:block justify-center m-2">Gain acknowledgement by proper citation of your code</div>
-                  </div>
-                </div>
-              </div>
-              <div className='text-center text-2xl my-4'>
-                <div className="mb-4">For Researchers</div>
-                <div className="grid gridl-cols-1 sm:grid-cols-2 gap-8 pt-4">
-                  <div className="aspect-video grid place-items-center bg-center bg-cover group text-base-100 bg-discover">
-                    <div className="group-hover:hidden text-4xl">Discover</div>
-                    <div className="hidden group-hover:block justify-center m-2">Discover software relevant to your research interest</div>
-                  </div>
-                  <div className="aspect-video grid place-items-center bg-center bg-cover group text-base-100 bg-cite">
-                    <div className="group-hover:hidden text-4xl">Cite</div>
-                    <div className="hidden group-hover:block justify-center m-2">Version specific bibliography supports correct software citation</div>
-                  </div>
-                </div>
-              </div>
-              <div className="">
-                <a onClick={handleClickOpen}>
-                  <div className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-base-100 text-center font-medium text-2xl py-4 px-6 rounded-xs">
-                    Add your software
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div> */}
-      <AppFooter/>
-    </div>
+    </main>
   )
 }
-
-// export async function getServerSideProps(context: GetServerSidePropsContext) {
-//   const {req} = context
-//   const token = req?.cookies['rsd_token']
-//   const url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null`
-//   const {data} = await getOrganisationsList({url, token})
-//   return {
-//     props: {
-//       organisations: data
-//     }
-//   }
-// }

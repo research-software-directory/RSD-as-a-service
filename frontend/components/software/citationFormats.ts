@@ -1,13 +1,13 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 /**
  * Citation file formats supported by RSD
  */
-
-// type DownloadFormat = 'bibtex' | 'codemeta' | 'jats' | 'ris' | 'apa' | 'mla'
 
 export type CitationDownloadFormat = {
   [key: string]: {

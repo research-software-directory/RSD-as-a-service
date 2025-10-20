@@ -3,10 +3,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
 import {createContext, useContext, useEffect, useState} from 'react'
 import {useSession} from '~/auth/AuthProvider'
 import {MentionItemProps} from '~/types/Mention'
-import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContext from '../context/useSoftwareContext'
 import {SoftwareMentionTabKey} from './SoftwareMentionTabs'
 import {getSoftwareMention} from './getSoftwareMention'
 

@@ -5,6 +5,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import {useEffect, useRef, useState} from 'react'
 import styled from '@emotion/styled'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb'

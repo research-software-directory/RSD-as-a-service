@@ -18,7 +18,9 @@ export type SettingsMenuProps = {
   label: (props?:any)=>string,
   icon: JSX.Element
 }
+export type SettingsPageId = 'general' | 'categories' | 'maintainers' | 'about'
 
+export const defaultTab:SettingsPageId = 'general'
 export const settingsMenu: SettingsMenuProps[] = [
   {
     id:'general',

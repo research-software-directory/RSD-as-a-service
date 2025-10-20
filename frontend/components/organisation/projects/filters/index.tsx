@@ -5,6 +5,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+'use client'
+
 import FilterHeader from '~/components/filter/FilterHeader'
 
 import {decodeJsonParam} from '~/utils/extractQueryParam'
@@ -13,8 +15,8 @@ import ResearchDomainFilter from '~/components/filter/ResearchDomainFilter'
 import OrganisationsFilter from '~/components/filter/OrganisationsFilter'
 import CategoriesFilter from '~/components/filter/CategoriesFilter'
 import ProjectStatusFilter from '~/components/projects/overview/filters/ProjectStatusFilter'
-import useQueryChange from '../useQueryChange'
-import useProjectParams from '../useProjectParams'
+import useProjectParams from '~/components/projects/overview/useProjectParams'
+import useQueryChange from '~/components/organisation/projects/useQueryChange'
 import OrgOrderProjectsBy from './OrgOrderProjectsBy'
 import useOrgProjectKeywordsList from './useOrgProjectKeywordsList'
 import useOrgProjectDomainsFilter from './useOrgProjectDomainsList'

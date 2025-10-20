@@ -6,33 +6,35 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import useMediaQuery from '@mui/material/useMediaQuery'
+'use client'
+import {JSX, useState} from 'react'
 import Button from '@mui/material/Button'
 
 import {getPageRange} from '~/utils/pagination'
+import useHandleQueryChange from '~/utils/useHandleQueryChange'
+import useSmallScreen from '~/config/useSmallScreen'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import SearchInput from '~/components/search/SearchInput'
-import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
-import ViewToggleGroup, {LayoutType} from './ViewToggleGroup'
-import SelectRows from './SelectRows'
+import ToggleViewGroup from '~/components/search/ToggleViewGroup'
+import ShowItemsSelect from '~/components/search/ShowItemsSelect'
+import FiltersModal from '~/components/filter/FiltersModal'
+import useSoftwareParams from '~/components/software/overview/useSoftwareParams'
 
 type SearchSectionProps = {
-  page: number
-  rows: number
   count: number
-  placeholder: string
-  layout: LayoutType
-  search?: string | null
-  setModal: (modal: boolean) => void
-  setView: (view:LayoutType)=>void
+  filterModal?: JSX.Element
 }
 
-
 export default function SoftwareSearchSection({
-  search, placeholder, page, rows, count, layout,
-  setView, setModal
+  count, filterModal
 }: SearchSectionProps) {
-  const {handleQueryChange} = useSoftwareOverviewParams()
-  const smallScreen = useMediaQuery('(max-width:640px)')
+  const smallScreen = useSmallScreen()
+  const {handleQueryChange} = useHandleQueryChange()
+  const {setPageLayout,setPageRows} = useUserSettings()
+  const {search,page,rows,view,filterCnt} = useSoftwareParams()
+  const [modal, setModal] = useState(false)
+
+  const placeholder = filterCnt > 0 ? 'Find within selection' : 'Find software'
 
   return (
     <section data-testid="search-section">
@@ -42,31 +44,45 @@ export default function SoftwareSearchSection({
           onSearch={(search: string) => handleQueryChange('search', search)}
           defaultValue={search ?? ''}
         />
-        <ViewToggleGroup
-          layout={layout}
-          onSetView={setView}
+        <ToggleViewGroup
+          options={['grid','list','masonry']}
+          view={view}
+          onChangeView={setPageLayout}
           sx={{
             marginLeft:'0.5rem'
           }}
         />
-        <SelectRows
-          rows={rows}
-          handleQueryChange={handleQueryChange}
+        <ShowItemsSelect
+          items={rows}
+          onItemsChange={(items)=>{
+            setPageRows(items)
+            handleQueryChange('rows', items.toString())
+          }}
         />
       </div>
       <div className="flex justify-between items-center px-1 py-2">
         <div className="text-sm opacity-70">
           {getPageRange(rows, page, count)}
         </div>
-        {smallScreen === true &&
+        {smallScreen && filterModal ?
           <Button
             onClick={() => setModal(true)}
             variant="outlined"
           >
             Filters
           </Button>
+          : null
         }
       </div>
+      {smallScreen && filterModal ?
+        <FiltersModal
+          open={modal}
+          setModal={setModal}
+        >
+          {filterModal}
+        </FiltersModal>
+        : null
+      }
     </section>
   )
 }

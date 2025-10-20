@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,7 +7,7 @@ import {fireEvent, render, screen, waitFor, waitForElementToBeRemoved, within} f
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
 import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
-import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
+import {initialState as softwareState} from '~/components/software/edit/context/editSoftwareContext'
 
 import EditPackageManager from './index'
 
@@ -18,13 +18,10 @@ import mockManagers from './__mocks__/package_manager.json'
 jest.mock('~/components/software/edit/package-managers/apiPackageManager')
 
 const mockSoftware = {
-  ...softwareState,
-  software: {
-    id: 'software-test-id',
-    slug: 'software-test-slug',
-    brand_name:'software-brand-name',
-    concept_doi: 'software-concept-doi',
-  }
+  id: 'software-test-id',
+  slug: 'software-test-slug',
+  brand_name:'software-brand-name',
+  concept_doi: 'software-concept-doi',
 }
 
 
