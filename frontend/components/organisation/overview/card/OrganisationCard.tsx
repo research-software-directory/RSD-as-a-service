@@ -10,11 +10,11 @@
 import Link from 'next/link'
 import {getImageUrl} from '~/utils/editImage'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
+import CardTitleMuted from '~/components/layout/CardTitleMuted'
 import CardTitleSubtitle from '~/components/cards/CardTitleSubtitle'
 import CardImageFrame from '~/components/cards/CardImageFrame'
 import CardContentFrame from '~/components/cards/CardContentFrame'
 import SoftwareProjectMetrics from '~/components/cards/SoftwareProjectMetrics'
-import CountryLabel from './CountryLabel'
 import TenantBadge from './TenantBadge'
 
 export type OrganisationCardProps = {
@@ -51,7 +51,7 @@ export default function OrganisationCard({organisation}: { organisation: Organis
           </CardImageFrame>
           <CardContentFrame>
             <div className="flex-1">
-              <CountryLabel country={organisation.country} />
+              <CardTitleMuted label={organisation.country ?? ''} />
               <CardTitleSubtitle
                 title={organisation.name}
                 subtitle={organisation.short_description ?? ''}

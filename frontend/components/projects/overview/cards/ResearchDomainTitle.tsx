@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -24,8 +24,6 @@ export default function ResearchDomainTitle({domains=[]}:{domains: string[]}) {
       mainDomain.push('Social Sciences and Humanities')
     }
   })
-
-  if (mainDomain.length===0) return null
 
   const mainDomains = mainDomain.join(', ')
 

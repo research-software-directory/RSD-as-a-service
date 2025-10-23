@@ -166,6 +166,26 @@ $$
 	WHERE
 		community.slug ILIKE CONCAT('%', query, '%') OR community."name" ILIKE CONCAT('%', query, '%')
 	UNION ALL
+	-- NEWS search
+	SELECT
+		CONCAT(news.publication_date,'/',news.slug) AS slug,
+		NULL AS domain,
+		NULL as rsd_host,
+		news.title as "name",
+		'news' AS "source",
+		news.is_published,
+		(CASE
+			WHEN news.title ILIKE query OR news.summary ILIKE query THEN 0
+			WHEN news.title ILIKE CONCAT(query, '%') OR news.summary ILIKE CONCAT(query, '%') THEN 1
+			WHEN news.title ILIKE CONCAT('%', query, '%') OR news.summary ILIKE CONCAT('%', query, '%') THEN 2
+				ELSE 3
+			END) AS rank,
+			0 as index_found
+	FROM
+		news
+	WHERE
+		news.title ILIKE CONCAT('%', query, '%') OR news.summary ILIKE CONCAT('%', query, '%')
+	UNION ALL
 	-- PERSONS search
 	SELECT
 		CAST (public_user_profile.account AS VARCHAR) as slug,
