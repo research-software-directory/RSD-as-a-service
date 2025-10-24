@@ -57,7 +57,7 @@ jobs:
         id: build_image
         run: |
           IMAGE_TAG_VERSION=${{inputs.base_image_name}}:${{inputs.image_tag}}
-          IMAGE_TAG_LASTEST=${{inputs.base_image_name}}:latest
+          IMAGE_TAG_LATEST=${{inputs.base_image_name}}:latest
 
           echo "Build image: $IMAGE_TAG_VERSION and pass APP_VERSION=${{inputs.image_tag}}"
 
