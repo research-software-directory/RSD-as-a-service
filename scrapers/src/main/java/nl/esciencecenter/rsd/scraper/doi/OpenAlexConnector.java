@@ -35,7 +35,10 @@ class OpenAlexConnector {
 
 	private static final String DOI_FILTER_URL_UNFORMATTED = "https://api.openalex.org/works?filter=doi:%s";
 	private static final String OPENALEX_ID_URL_UNFORMATTED = "https://api.openalex.org/works?filter=ids.openalex:%s";
-	private static final Throttler apiThrottler = new Throttler(1, 1050, TimeUnit.MILLISECONDS);
+	// https://docs.openalex.org/how-to-use-the-api/rate-limits-and-authentication
+	// The docs and empirical experiments indicate 10 requests per second.
+	// We make it slightly lower to be safe.
+	private static final Throttler apiThrottler = new Throttler(9, 1050, TimeUnit.MILLISECONDS);
 
 	private static String doOpenAlexGetRequest(String url)
 		throws IOException, InterruptedException, RsdResponseException {
