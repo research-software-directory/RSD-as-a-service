@@ -59,16 +59,12 @@ jobs:
           IMAGE_TAG_VERSION=${{inputs.base_image_name}}:${{inputs.image_tag}}
           IMAGE_TAG_LASTEST=${{inputs.base_image_name}}:latest
 
-          echo "Build image: $IMAGE_TAG_VERSION and pass APP_VERSION=${{ inputs.image_tag }}"
+          echo "Build image: $IMAGE_TAG_VERSION and pass APP_VERSION=${{inputs.image_tag}}"
 
-          docker build \
-            --build-arg APP_VERSION=${{ inputs.image_tag }} \
-            -t $IMAGE_TAG_VERSION \
-            -t $IMAGE_TAG_LATEST \
-            -f ${{ inputs.dockerfile }} \
-            ${{ inputs.docker_context }}
+          docker build -t $IMAGE_TAG_VERSION -t $IMAGE_TAG_LATEST --build-arg APP_VERSION=${{inputs.image_tag}} -f ${{inputs.dockerfile}} ${{inputs.docker_context}}
 
           echo "image_build=$IMAGE_TAG_VERSION" >> $GITHUB_OUTPUT
+
       - name: push to ghcr.io
         id: push_image
         run: |
