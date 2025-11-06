@@ -14,12 +14,12 @@
 import {useEffect, useState} from 'react'
 import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import {EditSoftwareItem, KeywordForSoftware, License, LicenseForSoftware} from '~/types/SoftwareTypes'
-import {getSoftwareToEdit} from '~/components/software/edit/apiEditSoftware'
 import {
   getCategoriesForSoftware,
   getCategoryForSoftwareIds,
   getKeywordsForSoftware,
-  getLicenseForSoftware
+  getLicenseForSoftware,
+  getSoftwareItem
 } from '~/components/software/apiSoftware'
 
 function prepareLicenses(rawLicense: LicenseForSoftware[]=[]) {
@@ -34,7 +34,7 @@ function prepareLicenses(rawLicense: LicenseForSoftware[]=[]) {
 }
 
 export async function getSoftwareInfoForEdit({slug, token}: { slug: string, token: string }) {
-  const software = await getSoftwareToEdit({slug, token})
+  const software = await getSoftwareItem({slug, token})
 
   if (software) {
     const requests = [

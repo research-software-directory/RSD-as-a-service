@@ -9,21 +9,7 @@
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
-import {CodePlatform} from '~/types/SoftwareTypes'
 import {PackageManagerTypes} from '../package-managers/apiPackageManager'
-
-export type SoftwareServices = {
-  software:string,
-  url:string,
-  code_platform: CodePlatform,
-  basic_data_scraped_at: string|null,
-  basic_data_last_error: string|null,
-  languages_scraped_at: string|null,
-  languages_last_error: string|null,
-  commit_history_scraped_at: string|null,
-  commit_history_last_error: string|null,
-  scraping_disabled_reason: string|null,
-}
 
 export type PackageManagerService = {
   software:string
@@ -35,30 +21,6 @@ export type PackageManagerService = {
 	reverse_dependency_count_scraped_at: string|null,
 	reverse_dependency_count_last_error: string|null,
   reverse_dependency_count_scraping_disabled_reason: string|null,
-}
-
-export async function getSoftwareServices(id:string,token:string){
-  try{
-    const select='select=software,url,code_platform,basic_data_scraped_at,basic_data_last_error,languages_scraped_at,languages_last_error,commit_history_scraped_at,commit_history_last_error,scraping_disabled_reason'
-    const query = `${select}&software=eq.${id}`
-    const url = `${getBaseUrl()}/repository_url?${query}`
-
-    // make request
-    const resp = await fetch(url,{
-      method: 'GET',
-      headers: {
-        ...createJsonHeaders(token),
-      },
-    })
-
-    if (resp.status === 200) {
-      const json:SoftwareServices[] = await resp.json()
-      return json[0]
-    }
-    logger(`getSoftwareServices...${resp.status} ${resp.statusText}`,'warn')
-  }catch(e:any){
-    logger(`getSoftwareServices failed. ${e.message}`,'error')
-  }
 }
 
 export async function getPackageManagerServices(id:string,token:string){
@@ -87,10 +49,11 @@ export async function getPackageManagerServices(id:string,token:string){
   }
 }
 
-export async function deleteServiceDataFromDb({dbprops, software, token}:
-  {dbprops:string[], software: string, token:string}){
+// TODO! Adjust repository_url query for new tables
+export async function deleteServiceDataFromDb({dbprops, id, token}:
+  {dbprops:string[], id: string, token:string}){
   try {
-    const query = `repository_url?software=eq.${software}`
+    const query = `repository_url?id=eq.${id}`
     const url = `${getBaseUrl()}/${query}`
     const resp = await fetch(url, {
       method: 'PATCH',

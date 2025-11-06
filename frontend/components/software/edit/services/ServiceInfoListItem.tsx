@@ -16,35 +16,34 @@ import ListItemText from '@mui/material/ListItemText'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import ScheduleIcon from '@mui/icons-material/Schedule'
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn'
-import {CodePlatform} from '~/types/SoftwareTypes'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
 import DeleteIcon from '@mui/icons-material/Delete'
+
 import {useSession} from '~/auth/AuthProvider'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import useSoftwareContext from '../context/useSoftwareContext'
+import {CodePlatform} from '../repositories/apiRepositories'
 import {deleteServiceDataFromDb} from './apiSoftwareServices'
 
 
 type ServiceInfoListItemProps=Readonly<{
-  title:string
+  id?: string | null
+  title: string
   scraped_at: string|null
   last_error: string|null
   url: string|null
   platform: CodePlatform|null
-  scraping_disabled_reason: string|null
+  scraping_disabled_reason?: string|null
   dbprops?: string[]
   onClear?:()=>void
 }>
 
 export function ServiceInfoListItem({
-  title,scraped_at,last_error,url,platform,
+  id,title,scraped_at,last_error,url,platform,
   scraping_disabled_reason,dbprops, onClear
 }:ServiceInfoListItemProps){
   let status:'error'|'success'|'not_active'|'scheduled'|'not_supported' = 'not_active'
   const {token} = useSession()
-  const {software} = useSoftwareContext()
   const {showErrorMessage, showSuccessMessage} = useSnackbar()
 
 
@@ -100,8 +99,8 @@ export function ServiceInfoListItem({
     )
   }
 
-  async function clearServiceData(dbprops: string[]) {
-    const resp = await deleteServiceDataFromDb({dbprops, software: software.id, token: token})
+  async function clearServiceData(dbprops: string[],id:string) {
+    const resp = await deleteServiceDataFromDb({dbprops, id, token: token})
     if (resp?.status === 200) {
       const formattedProps = dbprops
         .map((str, index) => (index === 0 ? str.replace(/_/g, ' ').replace(/^./, c => c.toUpperCase()) : str.replace(/_/g, ' ')))
@@ -117,6 +116,24 @@ export function ServiceInfoListItem({
   return (
     <ListItem
       data-testid="software-service-item"
+      secondaryAction={
+        dbprops && id ?
+          <Tooltip title={(status === 'success') ? 'Clear service data' : 'No repository URL or no data to delete.'}>
+            <span>
+              <IconButton
+                onClick={() => {
+                  clearServiceData(dbprops,id)
+                }}
+                aria-label="delete"
+                size="large"
+                disabled={status !== 'success'}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+        : null
+      }
     >
       <ListItemAvatar>
         <Avatar
@@ -136,26 +153,6 @@ export function ServiceInfoListItem({
         primary={title}
         secondary={getStatusMsg()}
       />
-
-      { dbprops ?
-        <ListItemSecondaryAction>
-          <Tooltip title={(status === 'success') ? 'Clear service data' : 'No repository URL or no data to delete.'}>
-            <span>
-              <IconButton
-                onClick={() => {
-                  clearServiceData(dbprops)
-                }}
-                aria-label="delete"
-                size="large"
-                disabled={status !== 'success'}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
-        </ListItemSecondaryAction>
-        : null
-      }
     </ListItem>
   )
 }

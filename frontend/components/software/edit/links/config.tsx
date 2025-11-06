@@ -1,13 +1,11 @@
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
-
-import VerifyGithubUrl from './VerifyGithubUrl'
 
 export const config={
   get_started_url: {
@@ -19,35 +17,6 @@ export const config={
         value: /^https?:\/\/\S+$/,
         message: 'URL must start with http(s):// and cannot include white spaces'
       }
-    }
-  },
-  repository_url: {
-    label: 'Repository URL',
-    help: (repoUrl: string | null) => repoUrl ? <VerifyGithubUrl url={repoUrl}/> : '',
-    validation: {
-      maxLength: {value: 200, message: 'Maximum length is 200'},
-      pattern: {
-        value: /^https?:\/\/\S+$/,
-        message: 'URL must start with http(s):// and cannot include white spaces.'
-      }
-    }
-  },
-  repository_platform: {
-    label: 'Platform',
-    help: 'To scrape repository information',
-    options: [
-      {label: 'GitHub', value: 'github'},
-      {label: 'GitLab', value: 'gitlab'},
-      {label: 'Bitbucket', value: 'bitbucket'},
-      {label: '4TU', value: '4tu'},
-      {label: 'Codeberg', value: 'codeberg'},
-      {label: 'Other', value: 'other'},
-    ]
-  },
-  repository_disabled_scraping_reason: {
-    label: 'Reason why scraping is disabled',
-    validation: {
-      maxLength: {value: 200, message: 'Maximum length is 200'}
     }
   },
   concept_doi: {

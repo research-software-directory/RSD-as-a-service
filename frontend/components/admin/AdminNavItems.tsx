@@ -26,6 +26,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt'
 import HubIcon from '@mui/icons-material/Hub'
 import InfoIcon from '@mui/icons-material/Info'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import CodeIcon from '@mui/icons-material/Code'
 
 import {RsdModuleName} from '~/config/rsdSettingsReducer'
 
@@ -135,6 +136,13 @@ export const adminPages = {
     icon: <HubIcon />,
     path: '/admin/remote-rsd',
     active: () => true,
+  },
+  repositories:{
+    title: 'Repositories',
+    subtitle: '',
+    icon: <CodeIcon />,
+    path: '/admin/repositories',
+    active: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('software'),
   },
   logs:{
     title: 'Error logs',
