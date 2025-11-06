@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
@@ -64,7 +64,7 @@ export const packageManagerSettings = {
   },
   fourtu: {
     name: '4TU.ResearchData',
-    icon: '/images/fourtu-researchdata.png',
+    icon: '/images/4tu-logo.png',
     hostname: ['data.4tu.nl'],
     services: []
   },
@@ -282,7 +282,7 @@ export async function patchPackageManagers({items, token}: { items: PackageManag
 }
 
 export async function patchPackageManagerItem({id, key, value, token}:
-                                              { id: string, key: string, value: any, token: string }) {
+  { id: string, key: string, value: any, token: string }) {
   try {
     const url = `/api/v1/package_manager?id=eq.${id}`
     const resp = await fetch(url, {

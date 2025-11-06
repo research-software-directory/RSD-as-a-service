@@ -23,12 +23,13 @@ import {
   getCategoriesForSoftware, getCommunitiesOfSoftware,
   getKeywordsForSoftware, getLicenseForSoftware,
   getRelatedProjectsForSoftware, getReleasesForSoftware,
-  getRemoteMarkdown, getRepositoryInfoForSoftware, getSoftwareItem
+  getRemoteMarkdown, getSoftwareItem
 } from '~/components/software/apiSoftware'
 import CategoriesSection from '~/components/software/CategoriesSection'
 import CitationSection from '~/components/software/CitationSection'
 import CommunitiesSection from '~/components/software/CommunitiesSection'
 import ContributorsSection from '~/components/software/ContributorsSection'
+import {getRepositoryInfoForSoftware} from '~/components/software/edit/repositories/apiRepositories'
 import {getContributorsForSoftware} from '~/components/software/edit/contributors/apiContributors'
 import {getReferencePapersForSoftware} from '~/components/software/edit/mentions/reference-papers/apiReferencePapers'
 import {getPackageManagers} from '~/components/software/edit/package-managers/apiPackageManager'
@@ -139,7 +140,7 @@ export default async function SoftwareViewPage({
     keywords,
     categories,
     licenseInfo,
-    repositoryInfo,
+    repositories,
     mentions,
     testimonials,
     contributors,
@@ -218,7 +219,7 @@ export default async function SoftwareViewPage({
   // console.log('comMaintainer...', comMaintainer)
   // console.log('isMaintainer...', isMaintainer)
   // console.log('swhids...', swhids)
-  // console.log('repositoryInfo...', repositoryInfo)
+  // console.log('repositories...', repositories)
   // console.log('testimonials...', testimonials)
   // console.log('contributors...', contributors)
   // console.groupEnd()
@@ -243,7 +244,7 @@ export default async function SoftwareViewPage({
       {/* Get started && activity chart */}
       <GetStartedSection
         get_started_url={software.get_started_url}
-        repositoryInfo={repositoryInfo ?? null}
+        repositories={repositories ?? null}
       />
       <CitationSection
         releases={citableReleases ?? []}
@@ -257,9 +258,7 @@ export default async function SoftwareViewPage({
         keywords={keywords ?? []}
         categories={softwareCategories}
         licenses={licenseInfo ?? []}
-        languages={repositoryInfo?.languages}
-        repository={repositoryInfo?.url ?? null}
-        platform={repositoryInfo?.code_platform}
+        repositories={repositories}
         image_id={software.image_id}
         packages={packages}
         swhids={swhids}

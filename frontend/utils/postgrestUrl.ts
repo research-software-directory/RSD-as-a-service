@@ -163,7 +163,7 @@ export function buildFilterUrl(params: QueryParams, view: string) {
  * Provides url params for postgrest api pagination
  */
 export function paginationUrlParams({rows = 12, page = 0}:
-                                      { rows: number, page: number }) {
+  { rows: number, page: number }) {
   let params = ''
 
   if (rows) {

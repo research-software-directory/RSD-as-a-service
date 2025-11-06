@@ -6,15 +6,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {SoftwareServices} from './apiSoftwareServices'
+import {RepositoryUrl} from '../repositories/apiRepositories'
 
 type ServiceListProps={
   name: string,
   desc: string,
   props:{
-    scraped_at: keyof SoftwareServices,
-    last_error: keyof SoftwareServices,
-    url: keyof SoftwareServices
+    scraped_at: keyof RepositoryUrl,
+    last_error: keyof RepositoryUrl,
+    url: keyof RepositoryUrl
   },
   dbprops: string[]
 }
