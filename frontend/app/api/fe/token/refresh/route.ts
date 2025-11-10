@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,17 +15,16 @@ import {createSession} from '~/auth/getSessionServerSide'
  * Refresh token before expires. This route is used by frontend auth module to refresh token.
  */
 export async function GET(request: NextRequest){
+  const rsdTokenCookieKey = 'rsd_token'
   try{
-    // const cookieStore = await cookies()
-    const cookie = request.headers.getSetCookie().toString()
-    // const rsd_token = cookieStore.get('rsd_token')
+    const rsdTokenValue = request.cookies.get(rsdTokenCookieKey)?.value
 
     const url = `${process.env.RSD_AUTH_URL}/refresh`
 
     // make request and pass cookies
     const resp = await fetch(url, {
       headers: {
-        cookie: cookie
+        Cookie: `${rsdTokenCookieKey}=${rsdTokenValue}`
       }
     })
 
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest){
     return Response.json({
       status: resp.status,
       message:resp.statusText,
-      cookie,
+      cookie: rsdTokenValue,
     },{
       status: resp.status,
       statusText: resp.statusText,
