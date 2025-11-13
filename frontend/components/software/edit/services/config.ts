@@ -37,7 +37,7 @@ export const repoServiceList:ServiceListProps[]=[{
 }]
 
 
-export const config = {
+export const cfg = {
   repository:{
     title: 'Software repository',
     subtitle: 'Additional information extracted using the source code repository URL'
