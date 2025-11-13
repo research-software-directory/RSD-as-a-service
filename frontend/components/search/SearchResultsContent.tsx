@@ -35,7 +35,7 @@ function SearchResultCard({item, view}: {item: GlobalSearchResults, view: string
       <Link
         href={url}
         target={isExternal ? '_blank' : '_self'}
-        className="flex items-start gap-4 p-4 rounded-lg border border-base-300 hover:border-base-400 hover:shadow-md transition-all bg-base-100"
+        className="flex items-start gap-4 p-4 rounded-md bg-base-100 shadow-md hover:shadow-lg transition"
       >
         {/* Image */}
         <div className="flex-shrink-0 w-20 h-20 rounded overflow-hidden bg-base-200">
@@ -83,10 +83,10 @@ function SearchResultCard({item, view}: {item: GlobalSearchResults, view: string
     <Link
       href={url}
       target={isExternal ? '_blank' : '_self'}
-      className="flex flex-col rounded-lg border border-base-300 hover:border-base-400 hover:shadow-md transition-all bg-base-100 overflow-hidden h-full group"
+      className="flex flex-col rounded-md bg-base-100 shadow-md hover:shadow-lg transition overflow-hidden h-full group"
     >
       {/* Image */}
-      <div className="w-full h-40 bg-base-200 flex-shrink-0">
+      <div className="w-full h-40 bg-base-100 flex-shrink-0">
         <ImageWithPlaceholder
           src={imageUrl}
           alt={`Logo for ${item.name}`}
@@ -163,7 +163,7 @@ export default function SearchResultsContent({
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {items.map((item, index) => (
                 <SearchResultCard key={`${source}-${index}`} item={item} view="grid" />
               ))}
