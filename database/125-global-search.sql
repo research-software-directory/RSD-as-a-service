@@ -48,6 +48,7 @@ CREATE FUNCTION global_search(query VARCHAR) RETURNS TABLE(
 	name VARCHAR,
 	source TEXT,
 	is_published BOOLEAN,
+	image_id VARCHAR,
 	rank INTEGER,
 	index_found INTEGER
 ) LANGUAGE sql STABLE AS
@@ -60,6 +61,7 @@ $$
 		aggregated_software_search.brand_name AS name,
 		'software' AS "source",
 		aggregated_software_search.is_published,
+		aggregated_software_search.image_id,
 		(CASE
 			WHEN aggregated_software_search.slug ILIKE query OR aggregated_software_search.brand_name ILIKE query THEN 0
 			WHEN aggregated_software_search.keywords_text ILIKE CONCAT('%', query, '%') THEN 1
@@ -86,6 +88,7 @@ $$
 		project.title AS name,
 		'projects' AS "source",
 		project.is_published,
+		project.image_id,
 		(CASE
 			WHEN project.slug ILIKE query OR project.title ILIKE query THEN 0
 			WHEN BOOL_OR(keyword.value ILIKE query) THEN 1
@@ -123,6 +126,7 @@ $$
 		organisation."name",
 		'organisations' AS "source",
 		TRUE AS is_published,
+		organisation.logo_id AS image_id,
 		(CASE
 			WHEN organisation.slug ILIKE query OR organisation."name" ILIKE query OR index_of_ror_query(query, organisation.id) = 0 THEN 0
 			WHEN organisation.slug ILIKE CONCAT(query, '%') OR organisation."name" ILIKE CONCAT(query, '%') OR index_of_ror_query(query, organisation.id) = 1 THEN 2
@@ -150,6 +154,7 @@ $$
 		community."name",
 		'communities' AS "source",
 		TRUE AS is_published,
+		community.logo_id AS image_id,
 		(CASE
 			WHEN community.slug ILIKE query OR community."name" ILIKE query THEN 0
 			WHEN community.slug ILIKE CONCAT(query, '%') OR community."name" ILIKE CONCAT(query, '%') THEN 2
@@ -174,6 +179,7 @@ $$
 		news.title as "name",
 		'news' AS "source",
 		news.is_published,
+		NULL AS image_id,
 		(CASE
 			WHEN news.title ILIKE query OR news.summary ILIKE query THEN 0
 			WHEN news.title ILIKE CONCAT(query, '%') OR news.summary ILIKE CONCAT(query, '%') THEN 1
@@ -194,6 +200,7 @@ $$
 		public_user_profile.display_name as "name",
 		'persons' AS "source",
 		public_user_profile.is_public AS is_published,
+		public_user_profile.avatar_id AS image_id,
 		(CASE
 			WHEN public_user_profile.display_name ILIKE query THEN 0
 			WHEN public_user_profile.display_name ILIKE CONCAT(query, '%') THEN 2
