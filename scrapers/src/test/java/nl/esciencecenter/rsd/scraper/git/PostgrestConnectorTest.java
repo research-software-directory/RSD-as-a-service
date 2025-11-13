@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,7 +27,7 @@ class PostgrestConnectorTest {
 		String arrayWithSingleValidObjectJson = """
 			[
 				{
-					"software": "3a07a021-743e-4adf-a2d9-3c85075fe9cf",
+					"id": "3a07a021-743e-4adf-a2d9-3c85075fe9cf",
 					"url": "https://www.example.com"
 				}
 			]""";
@@ -44,7 +45,7 @@ class PostgrestConnectorTest {
 		String invalidUuidJson = """
 			[
 				{
-					"software": "not-a-UUID",
+					"id": "not-a-UUID",
 					"url": "https://www.example.com"
 				}
 			]""";
@@ -56,11 +57,11 @@ class PostgrestConnectorTest {
 
 	@Test
 	void givenInvalidJson_whenParsingJsonData_thenExceptionThrown() {
-		//		missing comma after software UUID
+		//		missing comma after id UUID
 		String invalidJson = """
 			[
 				{
-					"software": "3a07a021-743e-4adf-a2d9-3c85075fe9cf"
+					"id": "3a07a021-743e-4adf-a2d9-3c85075fe9cf"
 					"url": "https://www.example.com"
 				}
 			]""";
@@ -84,7 +85,7 @@ class PostgrestConnectorTest {
 		String missingUrlJson = """
 			[
 				{
-					"software": "3a07a021-743e-4adf-a2d9-3c85075fe9cf"
+					"id": "3a07a021-743e-4adf-a2d9-3c85075fe9cf"
 				}
 			]""";
 
@@ -96,7 +97,7 @@ class PostgrestConnectorTest {
 		String nullSoftwareJson = """
 			[
 				{
-					"software": null,
+					"id": null,
 					"url": "https://www.example.com"
 				}
 			]""";
@@ -106,7 +107,7 @@ class PostgrestConnectorTest {
 		String nullUrlJson = """
 			[
 				{
-					"software": "3a07a021-743e-4adf-a2d9-3c85075fe9cf",
+					"id": "3a07a021-743e-4adf-a2d9-3c85075fe9cf",
 					"url": null
 				}
 			]""";
