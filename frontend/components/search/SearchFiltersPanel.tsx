@@ -121,7 +121,7 @@ export default function SearchFiltersPanel({
       </FormGroup>
 
       {noneSelected && (
-        <div className="mt-4 p-3 bg-warning/10 border border-warning/30 rounded text-sm text-warning-content">
+        <div className="mt-4 p-3 bg-warning/10 border border-warning/30 rounded text-sm ">
           No types selected. Please select at least one type to view results.
         </div>
       )}
