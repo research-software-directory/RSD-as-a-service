@@ -79,7 +79,7 @@ export default function SearchResultsClient({
       {/* Main content */}
       <div className="flex-1 min-w-0">
         {/* Header */}
-        <div className="flex flex-wrap mt-4 py-8 px-4 rounded-lg bg-base-100 lg:sticky top-4 border border-base-200 z-11">
+        <div className="flex flex-wrap mt-4 py-8 px-4 rounded-lg bg-base-100/70 backdrop-blur-xl lg:sticky top-4 border border-base-200 z-11 ">
           <h1 className="mr-4 lg:flex-1">
             Search Results
           </h1>
