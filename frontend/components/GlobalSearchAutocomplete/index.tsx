@@ -39,7 +39,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
   const {showErrorMessage} = useSnackbar()
   const [isOpen, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
-  const [selected, setSelected] = useState(0)
+  const [selected, setSelected] = useState(-1)
   const [isItemSelected, setIsItemSelected] = useState(false)
   const [hasResults, setHasResults] = useState(false)
   const [searchResults, setSearchResults] = useState<GlobalSearchResults[]>([])
@@ -61,13 +61,13 @@ export default function GlobalSearchAutocomplete(props: Props) {
   useEffect(() => {
     if (inputValue === '') {
       setOpen(false)
-      setSelected(0)
+      setSelected(-1)
       setIsItemSelected(false)
       setSearchResults([])
     } else {
       // Reset selection when user types
       setIsItemSelected(false)
-      setSelected(0)
+      setSelected(-1)
     }
   }, [inputValue])
 
@@ -125,7 +125,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
 
   function handleClick() {
     // If user explicitly selected an item from dropdown, navigate to it
-    if (isItemSelected) {
+    if (isItemSelected && selected >= 0) {
       const selectedItem = searchResults[selected] ?? null
       if (selectedItem){
         // build url
@@ -142,7 +142,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
           // local page use next router
           router.push(url)
         }
-        setSelected(0)
+        setSelected(-1)
         setIsItemSelected(false)
         setOpen(false)
         setInputValue('')
@@ -196,7 +196,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
         break
       // Backspace - Remove selection
       case 'Backspace':
-        setSelected(0)
+        setSelected(-1)
         setIsItemSelected(false)
         break
       // Up arrow
@@ -205,12 +205,16 @@ export default function GlobalSearchAutocomplete(props: Props) {
         if (selected > 0) {
           setSelected(selected - 1)
           setIsItemSelected(true)
+        } else if (selected === 0) {
+          // Move back to no selection
+          setSelected(-1)
+          setIsItemSelected(false)
         }
         break
       // Down arrow
       case 'ArrowDown':
         e.preventDefault() // Disallows the cursor to move to the end of the input
-        if (searchResults.length - 1 > selected) {
+        if (selected < searchResults.length - 1) {
           setSelected(selected + 1)
           setIsItemSelected(true)
         }
