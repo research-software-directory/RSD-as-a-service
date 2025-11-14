@@ -19,6 +19,7 @@ export type GlobalSearchResults = {
   name: string,
   source: RsdModuleName,
   is_published?: boolean,
+  image_id?: string | null,
   search_text?: string
 }
 
