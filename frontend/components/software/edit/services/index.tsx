@@ -8,7 +8,7 @@ import ServiceInfoAlert from './ServiceInfoAlert'
 import SoftwareRepoServices from './SoftwareRepoServices'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import PackageManagerServices from './PackageManagerServices'
-import {config} from './config'
+import {cfg} from './config'
 
 export default function SoftwareServices() {
 
@@ -16,14 +16,14 @@ export default function SoftwareServices() {
     <EditSection className="xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]">
       <div className="pt-4 pb-8">
         <EditSectionTitle
-          title={config.repository.title}
-          subtitle={config.repository.subtitle}
+          title={cfg.repository.title}
+          subtitle={cfg.repository.subtitle}
         />
         <SoftwareRepoServices />
         <div className="py-2"></div>
         <EditSectionTitle
-          title={config.package_managers.title}
-          subtitle={config.package_managers.subtitle}
+          title={cfg.package_managers.title}
+          subtitle={cfg.package_managers.subtitle}
         />
         <PackageManagerServices />
       </div>

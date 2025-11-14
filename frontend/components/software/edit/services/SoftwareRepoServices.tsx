@@ -11,36 +11,37 @@
 import List from '@mui/material/List'
 import ContentLoader from '~/components/layout/ContentLoader'
 
+import {CodePlatform} from '../repositories/apiRepositories'
 import {repoServiceList} from './config'
 import {ServiceInfoListItem} from './ServiceInfoListItem'
 import useSoftwareServices from './useSoftwareServices'
 
-
 export default function SoftwareRepoServices() {
-  const {loading,services,loadServices} = useSoftwareServices()
+  const {loading,service,loadServices} = useSoftwareServices()
 
   if (loading) return <ContentLoader />
 
   return (
     <>
-      {services?.scraping_disabled_reason
-        ? <span style={{color: 'red'}}>The harvesters for this repo were disabled by the admins for the following reason: {services?.scraping_disabled_reason}</span>
+      {service?.scraping_disabled_reason
+        ? <span style={{color: 'red'}}>The harvesters for this repo were disabled by the admins for the following reason: {service?.scraping_disabled_reason}</span>
         : null}
       <List>
-        {repoServiceList.map(service=>{
+        {repoServiceList.map(svc=>{
           const props = {
-            title: service.name,
-            desc: service.desc,
-            scraped_at: services ? services[service.props.scraped_at] : null,
-            last_error: services ? services[service.props.last_error] : null,
-            url: services ? services[service.props.url] : null,
-            platform: services ? services['code_platform'] : null,
-            dbprops: service.dbprops
+            id: service?.id,
+            title: svc.name,
+            desc: svc.desc,
+            scraped_at: service?.[svc.props.scraped_at] as string ?? null,
+            last_error: service?.[svc.props.last_error] as string ?? null,
+            url: service?.[svc.props.url] as string ?? null,
+            platform: service?.['code_platform'] as CodePlatform ?? null,
+            dbprops: svc.dbprops
           }
           return (
             <ServiceInfoListItem
-              key={service.name}
-              scraping_disabled_reason={null}
+              key={svc.name}
+              scraping_disabled_reason={service?.scraping_disabled_reason}
               onClear={()=>loadServices(false)}
               {...props}
             />

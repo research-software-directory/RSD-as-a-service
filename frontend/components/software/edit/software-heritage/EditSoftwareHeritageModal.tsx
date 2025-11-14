@@ -21,7 +21,7 @@ import {useForm} from 'react-hook-form'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 
-import {config} from './config'
+import {cfg} from './config'
 import {NewSoftwareHeritage, SoftwareHeritageItem} from './apiSoftwareHeritage'
 
 type EditSoftwareHeritageModalProps = Readonly<{
@@ -94,13 +94,13 @@ export default function EditSoftwareHeritageModal({onCancel, onSubmit, swhid_ite
             control={control}
             options={{
               name: 'swhid',
-              label: config.modal.swhid.label,
+              label: cfg.modal.swhid.label,
               useNull: true,
               defaultValue: swhid,
-              helperTextMessage: errors['swhid']?.message ?? config.modal.swhid.help,
-              helperTextCnt: `${swhid?.length ?? 0}/${config.modal.swhid.validation.maxLength.value}`,
+              helperTextMessage: errors['swhid']?.message ?? cfg.modal.swhid.help,
+              helperTextCnt: `${swhid?.length ?? 0}/${cfg.modal.swhid.validation.maxLength.value}`,
             }}
-            rules={config.modal.swhid.validation}
+            rules={cfg.modal.swhid.validation}
           />
 
         </DialogContent>

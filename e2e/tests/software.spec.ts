@@ -16,6 +16,7 @@ import {
   addTestimonial,
   editSoftwareDescription,
   editSoftwareMetadata,
+  addRepository,
 } from '../helpers/software'
 import {mockSoftware} from '../mocks/mockSoftware'
 import {getRandomPerson} from '../mocks/mockPerson'
@@ -106,6 +107,21 @@ test.describe.serial('Software', async()=> {
     await conceptDoiFeatures(page, software.doi, software.doiApi)
     // open view page
     // await page.getByTestId('view-page-button').click()
+  })
+
+  test('Add repository',async ({page}, {project}) => {
+    // get mock software for the browser
+    const software = mockSoftware[project.name]
+    // open edit software page
+    const url = `/software/${software.slug}`
+    await openEditPage(page, url, software.title)
+
+    // navigate to contributors section
+    await openEditSection(page, 'Source code')
+
+    // add repository
+    await addRepository(page,software)
+
   })
 
   test('Edit contributors', async ({page}, {project}) => {

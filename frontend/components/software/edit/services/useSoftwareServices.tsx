@@ -7,25 +7,27 @@
 import {useCallback, useEffect, useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
-import useSoftwareContext from '../context/useSoftwareContext'
-import {getSoftwareServices, SoftwareServices} from './apiSoftwareServices'
 import logger from '~/utils/logger'
+import useSoftwareContext from '~/components/software/edit/context/useSoftwareContext'
+import {getRepositoryInfoForSoftware, RepositoryForSoftware} from '~/components/software/edit/repositories/apiRepositories'
 
 export default function useSoftwareServices(){
   const {token} = useSession()
   const {software} = useSoftwareContext()
-  const [services,setServices] = useState<SoftwareServices>()
+  const [service , setService] = useState<RepositoryForSoftware>()
   const [loading, setLoading] = useState(true)
 
   const loadServices = useCallback((abort:boolean)=>{
     if (token && software.id){
-      getSoftwareServices(software.id,token)
-        .then(item=>{
-          if (abort===false) setServices(item)
+      getRepositoryInfoForSoftware(software.id,token)
+        .then(items=>{
+          // select first repo for reporting services
+          // NOTE! currently we show stats of first repo ONLY
+          if (abort===false) setService(items[0])
         })
         .catch(e=>{
           logger(`useSoftwareServices failed. ${e.message}`,'error')
-          if (abort===false) setServices(undefined)
+          if (abort===false) setService(undefined)
         })
         .finally(()=>{
           if (abort===false) setLoading(false)
@@ -47,7 +49,7 @@ export default function useSoftwareServices(){
 
   return {
     loading,
-    services,
+    service,
     loadServices
   }
 }
