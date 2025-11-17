@@ -72,7 +72,6 @@ export default function SearchResultsClient({
           <SearchFiltersPanel
             selectedTypes={selectedTypes}
             onTypesChange={setSelectedTypes}
-            groupedResults={groupedResults}
             resultCounts={resultCounts}
             activeModules={activeModules}
           />

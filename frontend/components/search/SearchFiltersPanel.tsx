@@ -9,12 +9,10 @@ import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
 import FilterTitle from '~/components/filter/FilterTitle'
-import {GlobalSearchResults} from '~/components/GlobalSearchAutocomplete/apiGlobalSearch'
 
 type SearchFiltersPanelProps = {
   selectedTypes: string[]
   onTypesChange: (types: string[]) => void
-  groupedResults: {[key: string]: GlobalSearchResults[]}
   resultCounts: Record<string, number>
   activeModules: string[]
 }
@@ -32,7 +30,6 @@ const MODULE_LABELS: {[key: string]: string} = {
 export default function SearchFiltersPanel({
   selectedTypes,
   onTypesChange,
-  groupedResults,
   resultCounts,
   activeModules
 }: SearchFiltersPanelProps) {

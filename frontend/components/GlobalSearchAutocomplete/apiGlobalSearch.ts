@@ -38,7 +38,7 @@ export async function getGlobalSearch(searchText: string, token: string, rsd_mod
     // Fetch 100 results per category in parallel
     const resultsPerCategory = await Promise.all(
       modulesToSearch.map(async (module) => {
-        let query = `query=${searchText}&source=eq.${module}&limit=100&order=rank.asc,index_found.asc`
+        const query = `query=${searchText}&source=eq.${module}&limit=100&order=rank.asc,index_found.asc`
         const url = `${getBaseUrl()}/rpc/global_search?${query}`
 
         const resp = await fetch(url, {
@@ -95,7 +95,7 @@ export async function getGlobalSearchCounts(
     await Promise.all(
       modulesToCount.map(async (module) => {
         // No limit - fetch all results for this source type
-        let query = `query=${searchText}&source=eq.${module}&order=rank.asc`
+        const query = `query=${searchText}&source=eq.${module}&order=rank.asc`
         const url = `${getBaseUrl()}/rpc/global_search?${query}`
 
         const resp = await fetch(url, {
