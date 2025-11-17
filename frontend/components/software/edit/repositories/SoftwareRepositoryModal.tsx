@@ -19,7 +19,7 @@ import {useDebounce} from '~/utils/useDebounce'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ControlledSelect from '~/components/form/ControlledSelect'
-import {config} from './config'
+import {cfg} from './config'
 import {
   CodePlatform, EditRepositoryProps,
   getSoftwareRepositoryByUrl, suggestPlatform
@@ -54,7 +54,7 @@ export default function SoftwareRepositoryModal({onCancel, onSubmit, item}: Edit
   // take the last slugValue
   const bouncedUrl = useDebounce(url ?? '', 700)
   // show platform help text
-  let platformHelpText = config.repository_platform.help
+  let platformHelpText = cfg.repository_platform.help
   if (code_platform && suggestedPlatform.key && code_platform!==suggestedPlatform.key){
     // in case of difference between suggestion and selection
     platformHelpText='Are you sure?'
@@ -149,27 +149,27 @@ export default function SoftwareRepositoryModal({onCancel, onSubmit, item}: Edit
             control={control}
             options={{
               name: 'url',
-              label: config.repository_url.label,
+              label: cfg.repository_url.label,
               useNull: true,
               defaultValue: url,
-              helperTextMessage: errors['url']?.message ?? config.repository_url.help(url),
-              helperTextCnt: `${url?.length ?? 0}/${config.repository_url.validation.maxLength.value}`,
+              helperTextMessage: errors['url']?.message ?? cfg.repository_url.help(url),
+              helperTextCnt: `${url?.length ?? 0}/${cfg.repository_url.validation.maxLength.value}`,
               endAdornment: loading ?
                 <CircularProgress data-testid="slug-circular-progress" color="primary" size={32} />
                 : undefined
             }}
-            rules={config.repository_url.validation}
+            rules={cfg.repository_url.validation}
           />
           {/* code platform */}
           <ControlledSelect
             control={control}
             name='code_platform'
-            label={config.repository_platform.label}
-            options={config.repository_platform.options}
+            label={cfg.repository_platform.label}
+            options={cfg.repository_platform.options}
             disabled={suggestedPlatform.lock}
             defaultValue={code_platform ?? suggestedPlatform}
             helperTextMessage={platformHelpText}
-            rules={config.repository_platform.validation}
+            rules={cfg.repository_platform.validation}
             sx={{
               width:'9rem'
             }}

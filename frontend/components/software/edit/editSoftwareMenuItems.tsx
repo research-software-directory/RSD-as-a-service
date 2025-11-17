@@ -12,7 +12,6 @@ import AddCommentIcon from '@mui/icons-material/AddComment'
 import ThreePIcon from '@mui/icons-material/ThreeP'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
-import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices'
 import JoinInnerIcon from '@mui/icons-material/JoinInner'
 import DonutLargeIcon from '@mui/icons-material/DonutLarge'
 import ArticleIcon from '@mui/icons-material/Article'
@@ -116,11 +115,12 @@ export const editSoftwareMenuItems:EditSoftwareMenuItemsProps[] = [{
   icon: <PersonAddIcon />,
   active: () => true,
   status: ''
-},{
-  id: 'services',
-  label: 'Background services',
-  icon: <MiscellaneousServicesIcon />,
-  active: () => true,
-  status: ''
-}
+},
+// {
+//   id: 'services',
+//   label: 'Background services',
+//   icon: <MiscellaneousServicesIcon />,
+//   active: () => true,
+//   status: ''
+// }
 ]

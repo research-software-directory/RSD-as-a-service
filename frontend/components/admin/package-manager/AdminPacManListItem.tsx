@@ -8,22 +8,22 @@ import ListItem from '@mui/material/ListItem'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 
-import {RepositoryUrl} from '~/components/software/edit/repositories/apiRepositories'
-import RepositoryItemContent from '~/components/software/edit/repositories/RepositoryItemContent'
+import {PackageManager} from '~/components/software/edit/package-managers/apiPackageManager'
+import PackageManagerItemBody from '~/components/software/edit/package-managers/PackageManagerItemBody'
 
-type AdminRepoListItemProps=Readonly<{
-  item: RepositoryUrl,
+type AdminPacManListItemProps=Readonly<{
+  item: PackageManager,
   onEdit: ()=>void
   onDelete: ()=>void
 }>
 
-export default function AdminRepoListItem({item,onEdit,onDelete}:AdminRepoListItemProps) {
+export default function AdminPacManListItem({item,onEdit,onDelete}:AdminPacManListItemProps) {
   return (
     <ListItem
       secondaryAction={
         <>
           <IconButton
-            title="Edit repository"
+            title="Edit package manager"
             edge="end"
             aria-label="edit"
             disabled={item.id===null}
@@ -33,7 +33,7 @@ export default function AdminRepoListItem({item,onEdit,onDelete}:AdminRepoListIt
             <EditIcon />
           </IconButton>
           <IconButton
-            title="Delete repository"
+            title="Delete package manager"
             edge="end"
             aria-label="delete"
             disabled={item.id===null}
@@ -45,7 +45,7 @@ export default function AdminRepoListItem({item,onEdit,onDelete}:AdminRepoListIt
         </>
       }
     >
-      <RepositoryItemContent item={item}/>
+      <PackageManagerItemBody item={item} />
     </ListItem>
   )
 }

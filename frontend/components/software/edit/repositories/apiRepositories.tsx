@@ -5,8 +5,9 @@
 
 import {createJsonHeaders, extractErrorMessages, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
+import {repositorySettings} from './config'
 
-export type CodePlatform = 'github' | 'gitlab' | 'bitbucket' | '4tu' | 'codeberg' | 'other'
+export type CodePlatform = keyof typeof repositorySettings
 
 export type ProgrammingLanguages = {
   [key: string]: number
@@ -50,11 +51,11 @@ export type RepositoryForSoftware = RepositoryUrl & {
 }
 // Just a props needed for editing
 export type EditRepositoryProps={
+  position: number
   id: string | null
   url: string | null
   code_platform: CodePlatform | null
   scraping_disabled_reason: string | null
-  position: number
 }
 
 // query for software item page based on software id
@@ -344,6 +345,33 @@ export async function suggestPlatform(repositoryUrl: string | null){
     return {
       key: null,
       lock: false
+    }
+  }
+}
+
+export type PatchRepositoryUrlProps={
+  id: string,
+  token:string,
+  data: Partial<RepositoryUrl>
+}
+
+export async function patchRepositoryUrl({id, token, data}:PatchRepositoryUrlProps){
+  try {
+    const query = `repository_url?id=eq.${id}`
+    const url = `${getBaseUrl()}/${query}`
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        ...createJsonHeaders(token)
+      },
+      body: JSON.stringify(data)
+    })
+    return extractReturnMessage(resp)
+  } catch (e: any) {
+    logger(`patchRepositoryUrl: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
     }
   }
 }

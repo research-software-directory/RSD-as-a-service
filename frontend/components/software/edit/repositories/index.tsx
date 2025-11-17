@@ -9,6 +9,7 @@ import {useState} from 'react'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import AddButton from '~/components/layout/AddButton'
+import ContentLoader from '~/components/layout/ContentLoader'
 import useSoftwareContext from '../context/useSoftwareContext'
 import SoftwareRepositoriesInfo from './SoftwareRepositoriesInfo'
 import SoftwareRepositoryModal from './SoftwareRepositoryModal'
@@ -23,7 +24,11 @@ type EditRepoModal={
 
 export default function SoftwareRepositories() {
   const {software} = useSoftwareContext()
-  const {newRepo,repositories,addRepository,sortRepositories,deleteRepository} = useRepositoryEdit(software.id)
+  const {
+    loading,newRepo,repositories,
+    addRepository,sortRepositories,
+    deleteRepository
+  } = useRepositoryEdit(software.id)
   // Manage modal state
   const [modal, setModal] = useState<EditRepoModal>({
     open: false
@@ -50,11 +55,15 @@ export default function SoftwareRepositories() {
         </EditSectionTitle>
         <div className="flex-1 xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem] items-start">
           <div className="flex-1">
-            <SoftwareRepositoriesList
-              items={repositories}
-              onSorted={sortRepositories}
-              onDelete={deleteRepository}
-            />
+            {loading ?
+              <ContentLoader />
+              :
+              <SoftwareRepositoriesList
+                items={repositories}
+                onSorted={sortRepositories}
+                onDelete={deleteRepository}
+              />
+            }
           </div>
           <SoftwareRepositoriesInfo />
         </div>

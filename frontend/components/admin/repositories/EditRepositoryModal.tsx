@@ -16,31 +16,54 @@ import useSmallScreen from '~/config/useSmallScreen'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ControlledSelect from '~/components/form/ControlledSelect'
-import {config} from '~/components/software/edit/repositories/config'
-import {EditRepositoryProps} from '~/components/software/edit/repositories/apiRepositories'
+import {cfg} from '~/components/software/edit/repositories/config'
+import {RepositoryUrl} from '~/components/software/edit/repositories/apiRepositories'
 
 type EditSoftwareHeritageModalProps = Readonly<{
   onCancel: () => void,
-  onSubmit: (data:EditRepositoryProps) => void,
-  item?: EditRepositoryProps
+  onSubmit: ({id,data}:{id:string,data:Partial<RepositoryUrl>}) => void,
+  item?: RepositoryUrl
 }>
 
 const formId='edit-repository-modal'
 
 export default function EditRepositoryModal({onCancel, onSubmit, item}: EditSoftwareHeritageModalProps) {
   const smallScreen = useSmallScreen()
-  const {handleSubmit, watch, formState, control, register} = useForm<EditRepositoryProps>({
+  const {handleSubmit, watch, formState, control, register} = useForm<RepositoryUrl>({
     mode: 'onChange',
     defaultValues: item
   })
   // extract form states and possible errors
   const {isValid, isDirty} = formState
   // watch for value changes in the form
-  const [url,code_platform,scraping_disabled_reason] = watch(['url','code_platform','scraping_disabled_reason'])
+  const [
+    url,code_platform,
+    scraping_disabled_reason,
+    basic_data_last_error,
+    languages_last_error,
+    commit_history_last_error,
+    contributor_count_last_error
+  ] = watch([
+    'url','code_platform','scraping_disabled_reason',
+    'basic_data_last_error','languages_last_error',
+    'commit_history_last_error','contributor_count_last_error'
+  ])
 
   function handleCancel() {
     // hide
     onCancel()
+  }
+
+  function prepareData(data:RepositoryUrl){
+    const patchData:Partial<RepositoryUrl> = {
+      code_platform: data.code_platform,
+      scraping_disabled_reason: data.scraping_disabled_reason,
+      basic_data_last_error: data.basic_data_last_error,
+      languages_last_error: data.languages_last_error,
+      commit_history_last_error: data.commit_history_last_error,
+      contributor_count_last_error: data.contributor_count_last_error
+    }
+    onSubmit({id:data.id as string, data:patchData})
   }
 
   return (
@@ -62,7 +85,7 @@ export default function EditRepositoryModal({onCancel, onSubmit, item}: EditSoft
       </DialogTitle>
       <form
         id={formId}
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(prepareData)}
         autoComplete="off"
       >
         {/* hidden inputs */}
@@ -74,32 +97,32 @@ export default function EditRepositoryModal({onCancel, onSubmit, item}: EditSoft
           padding: '2.5rem 1.5rem',
           display: 'flex',
           flexDirection: 'column',
-          gap: '2rem'
+          gap: '1rem'
         }}>
           {/* repository url */}
           <ControlledTextField
             control={control}
             options={{
               name: 'url',
-              label: config.repository_url.label,
+              label: cfg.repository_url.label,
               useNull: true,
               defaultValue: url,
               helperTextMessage: 'The repository url cannot be changed. The repository can only be removed.',
-              helperTextCnt: `${url?.length ?? 0}/${config.repository_url.validation.maxLength.value}`,
+              helperTextCnt: `${url?.length ?? 0}/${cfg.repository_url.validation.maxLength.value}`,
               disabled: true,
             }}
-            rules={config.repository_url.validation}
+            rules={cfg.repository_url.validation}
           />
           {/* code platform */}
           <ControlledSelect
             control={control}
             name='code_platform'
-            label={config.repository_platform.label}
-            options={config.repository_platform.options}
+            label={cfg.repository_platform.label}
+            options={cfg.repository_platform.options}
             disabled={false}
             defaultValue={code_platform}
-            helperTextMessage={config.repository_platform.help}
-            rules={config.repository_platform.validation}
+            helperTextMessage={cfg.repository_platform.help}
+            rules={cfg.repository_platform.validation}
             sx={{
               width:'9rem'
             }}
@@ -108,14 +131,64 @@ export default function EditRepositoryModal({onCancel, onSubmit, item}: EditSoft
             control={control}
             options={{
               name: 'scraping_disabled_reason',
-              label: config.repository_disabled_scraping_reason.label,
+              label: cfg.repository_disabled_scraping_reason.label,
               useNull: true,
               defaultValue: scraping_disabled_reason,
               helperTextMessage: 'Provide reason to exclude repo from scrapers',
-              helperTextCnt: `${scraping_disabled_reason?.length ?? 0}/${config.repository_disabled_scraping_reason.validation.maxLength.value}`
+              helperTextCnt: `${scraping_disabled_reason?.length ?? 0}/${cfg.repository_disabled_scraping_reason.validation.maxLength.value}`
             }}
-            rules={config.repository_disabled_scraping_reason.validation}
+            rules={cfg.repository_disabled_scraping_reason.validation}
           />
+          {/* <div className='bg-error text-error-content p-1 rounded-xs'></div> */}
+          <ControlledTextField
+            control={control}
+            options={{
+              name: 'basic_data_last_error',
+              label: cfg.basic_data_last_error.label,
+              useNull: true,
+              defaultValue: basic_data_last_error,
+              helperTextMessage: cfg.basic_data_last_error.help,
+              helperTextCnt: `${basic_data_last_error?.length ?? 0}/${cfg.basic_data_last_error.validation.maxLength.value}`
+            }}
+            rules={cfg.basic_data_last_error.validation}
+          />
+          <ControlledTextField
+            control={control}
+            options={{
+              name: 'languages_last_error',
+              label: cfg.languages_last_error.label,
+              useNull: true,
+              defaultValue: languages_last_error,
+              helperTextMessage: cfg.languages_last_error.help,
+              helperTextCnt: `${languages_last_error?.length ?? 0}/${cfg.languages_last_error.validation.maxLength.value}`
+            }}
+            rules={cfg.languages_last_error.validation}
+          />
+          <ControlledTextField
+            control={control}
+            options={{
+              name: 'commit_history_last_error',
+              label: cfg.commit_history_last_error.label,
+              useNull: true,
+              defaultValue: commit_history_last_error,
+              helperTextMessage: cfg.commit_history_last_error.help,
+              helperTextCnt: `${commit_history_last_error?.length ?? 0}/${cfg.commit_history_last_error.validation.maxLength.value}`
+            }}
+            rules={cfg.commit_history_last_error.validation}
+          />
+          <ControlledTextField
+            control={control}
+            options={{
+              name: 'contributor_count_last_error',
+              label: cfg.contributor_count_last_error.label,
+              useNull: true,
+              defaultValue: contributor_count_last_error,
+              helperTextMessage: cfg.contributor_count_last_error.help,
+              helperTextCnt: `${contributor_count_last_error?.length ?? 0}/${cfg.contributor_count_last_error.validation.maxLength.value}`
+            }}
+            rules={cfg.contributor_count_last_error.validation}
+          />
+
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',

@@ -17,8 +17,6 @@ type SortableRepositoriesProps={
   items: RepositoryForSoftware[],
   onDelete:(id:string)=>void,
   onSorted:(items: RepositoryForSoftware[])=>void
-  // edit option only on admin pages
-  onEdit?:(pos:number)=>void,
 }
 
 export default function SoftwareRepositoriesList({items, onDelete, onSorted}:SortableRepositoriesProps) {
@@ -48,10 +46,9 @@ export default function SoftwareRepositoriesList({items, onDelete, onSorted}:Sor
       <SoftwareRepositoryListItem
         key={JSON.stringify(item)}
         item={item}
-        pos={index ?? 0}
         onDelete={()=>{
           setModal({
-            open:true,
+            open: true,
             displayName: item.url as string,
             pos: index,
             id: item.id as string

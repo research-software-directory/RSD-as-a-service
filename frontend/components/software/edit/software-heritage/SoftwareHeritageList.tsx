@@ -35,14 +35,13 @@ export default function SoftwareHeritageList({items, onEdit, onDelete, onSorted}
    * @param index
    * @returns React.JSX.Element
    */
-  function renderListItem(item:SoftwareHeritageItem,index?:number) {
+  function renderListItem(item:SoftwareHeritageItem,index:number) {
     return (
       <SoftwareHeritageListItem
         key={JSON.stringify(item)}
         item={item}
-        pos={index ?? 0}
-        onEdit={onEdit}
-        onDelete={onDelete}
+        onEdit={()=>onEdit(index)}
+        onDelete={()=>onDelete(index)}
       />
     )
   }

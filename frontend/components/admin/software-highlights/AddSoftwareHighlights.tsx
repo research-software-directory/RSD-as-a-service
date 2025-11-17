@@ -79,8 +79,8 @@ export default function AddSoftwareHighlights({onAddSoftware,highlights}:AddSoft
     return (
       <li
         data-testid="software-option-found"
-        key={option.key}
         {...props}
+        key={option.key}
       >
         <SoftwareOptionFound option={option} />
       </li>

@@ -19,6 +19,7 @@ import AdminMentions from '~/components/admin/mentions'
 import AdminRsdInfo from '~/components/admin/rsd-info'
 import AdminRemoteRsd from '~/components/admin/remote-rsd'
 import AdminRepositories from '~/components/admin/repositories'
+import AdminPackageManagers from '~/components/admin/package-manager'
 import AdminErrorLogs from '~/components/admin/logs'
 import AdminAnnouncements from '~/components/admin/announcements'
 
@@ -97,6 +98,9 @@ export default async function AdminPage({
 
     case 'repositories':
       return <AdminRepositories />
+
+    case 'package-managers':
+      return <AdminPackageManagers />
 
     case 'logs':
       return <AdminErrorLogs />

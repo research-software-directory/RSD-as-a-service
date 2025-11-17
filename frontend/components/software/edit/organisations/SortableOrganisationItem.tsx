@@ -5,33 +5,26 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import Avatar from '@mui/material/Avatar'
 import BlockIcon from '@mui/icons-material/Block'
-import {useSortable} from '@dnd-kit/sortable'
-import {CSS} from '@dnd-kit/utilities'
 
 import {EditOrganisation} from '~/types/Organisation'
 import {getImageUrl} from '~/utils/editImage'
 import SortableListItemActions from '~/components/layout/SortableListItemActions'
+import SortableListItem from '~/components/layout/SortableListItem'
 
 type OrganisationsListItemProps = {
   organisation: EditOrganisation
-  pos: number
-  onEdit: (pos:number)=>void
-  onDelete: (pos:number)=>void
-  onCategory: (pos:number)=>void
+  onEdit: ()=>void
+  onDelete: ()=>void
+  onCategory: ()=>void
 }
 
-export default function SortableOrganisationsItem({organisation, pos, onEdit, onDelete, onCategory}: OrganisationsListItemProps) {
-  const {
-    attributes,listeners,setNodeRef,
-    transform,transition,isDragging
-  } = useSortable({id: organisation.id ?? ''})
+export default function SortableOrganisationsItem({organisation, onEdit, onDelete, onCategory}: OrganisationsListItemProps) {
 
-  function getSecondaryActions(listeners:any) {
+  function getSecondaryActions() {
     if (organisation.status !== 'approved') {
       return (
         <div
@@ -48,23 +41,12 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
         </div>
       )
     }
-    if (organisation.canEdit) {
-      return (
-        <SortableListItemActions
-          pos={pos}
-          listeners={listeners}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onCategory={onCategory}
-        />
-      )
-    }
     return (
       <SortableListItemActions
-        pos={pos}
-        listeners={listeners}
         onDelete={onDelete}
         onCategory={onCategory}
+        // if maintainer we show edit button
+        onEdit={organisation.canEdit ? onEdit : undefined}
       />
     )
   }
@@ -77,26 +59,15 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
   }
 
   return (
-    <ListItem
+    <SortableListItem
       data-testid="organisation-list-item"
+      item={organisation}
       key={organisation.id}
-      // draggable
-      ref={setNodeRef}
-      {...attributes}
-      secondaryAction={getSecondaryActions(listeners)}
+      secondaryAction={getSecondaryActions()}
       sx={{
-        // position:'relative',
-        // this makes space for buttons
-        paddingRight:'10rem',
         '&:hover': {
           backgroundColor:'grey.100'
-        },
-        transform: CSS.Translate.toString(transform),
-        transition,
-        opacity: isDragging ? 0.5 : 1,
-        backgroundColor: isDragging ? 'grey.100' : 'paper',
-        zIndex: isDragging ? 9:0,
-        cursor: isDragging ? 'move' : 'default'
+        }
       }}
     >
       <ListItemAvatar>
@@ -132,6 +103,6 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
           </>
         }
       />
-    </ListItem>
+    </SortableListItem>
   )
 }

@@ -14,7 +14,9 @@ import {
   deleteSoftwareRepository,
   EditRepositoryProps,
   getRepositoryInfoForSoftware,
+  patchRepositoryUrl,
   RepositoryForSoftware,
+  RepositoryUrl,
   saveRepositoryPositions
 } from './apiRepositories'
 
@@ -22,6 +24,7 @@ export default function useRepositoryEdit(software_id:string) {
   const {token} = useSession()
   const {showErrorMessage,showWarningMessage} = useSnackbar()
   const [repositories, setRepositories] = useState<RepositoryForSoftware[]>([])
+  const [loading, setLoading] = useState(true)
 
   // new repo props (minimal)
   const newRepo: EditRepositoryProps = {
@@ -38,6 +41,7 @@ export default function useRepositoryEdit(software_id:string) {
       token
     )
     setRepositories(repos)
+    setLoading(false)
   },[])
 
   useEffect(()=>{
@@ -101,11 +105,33 @@ export default function useRepositoryEdit(software_id:string) {
     }
   }
 
+  async function updateRepositoryUrl({id,data}:{id:string,data:Partial<RepositoryUrl>}){
+    // update database
+    const resp = await patchRepositoryUrl({id,data,token})
+    if (resp.status===200){
+      const newState = repositories.map(item=>{
+        // update item locally
+        if (item.id === id){
+          return {
+            ...item,
+            ...data
+          }
+        }
+        return item
+      })
+      setRepositories(newState)
+    }else{
+      showErrorMessage(`Operation failed: ${resp.message}`)
+    }
+  }
+
   return{
+    loading,
     newRepo,
     repositories,
     addRepository,
     deleteRepository,
-    sortRepositories
+    sortRepositories,
+    updateRepositoryUrl
   }
 }

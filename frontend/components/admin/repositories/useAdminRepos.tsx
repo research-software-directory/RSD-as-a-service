@@ -7,9 +7,10 @@ import {useCallback, useEffect, useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
-import {CodePlatform, RepositoryUrl} from '~/components/software/edit/repositories/apiRepositories'
+import {BasicApiParams} from '~/utils/postgrestUrl'
+import {RepositoryUrl} from '~/components/software/edit/repositories/apiRepositories'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {deleteRepository, getRepositoryUrl, getRepositoryUrlProps, patchRepositoryTable} from './apiAdminRepo'
+import {deleteRepository, getRepositoryUrl, patchRepositoryTable} from './apiAdminRepo'
 
 export default function useAdminRepos() {
   const {token} = useSession()
@@ -18,7 +19,7 @@ export default function useAdminRepos() {
   const [loading, setLoading] = useState(true)
   const [repositories, setRepositories] = useState<RepositoryUrl[]>([])
 
-  const getRepositories = useCallback(async({page,rows,searchFor,token}:getRepositoryUrlProps)=>{
+  const getRepositories = useCallback(async({page,rows,searchFor,token}:BasicApiParams)=>{
     const {count,repositories} = await getRepositoryUrl({page,rows,searchFor,token})
     setRepositories(repositories)
     setCount(count)
@@ -42,15 +43,12 @@ export default function useAdminRepos() {
   // console.log('rows...',rows)
   // console.groupEnd()
 
-  async function updateRepo({id,code_platform,scraping_disabled_reason}:{
-    id:string,code_platform:CodePlatform,scraping_disabled_reason:string|null
+  async function updateRepo({id,data}:{
+    id:string,data:Partial<RepositoryUrl>
   }){
     const resp = await patchRepositoryTable({
       id,
-      data:{
-        code_platform,
-        scraping_disabled_reason
-      },
+      data,
       token
     })
     if (resp.status!==200){

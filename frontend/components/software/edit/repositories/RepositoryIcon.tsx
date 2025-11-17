@@ -5,12 +5,11 @@
 
 import GitHubIcon from '@mui/icons-material/GitHub'
 import SourceIcon from '@mui/icons-material/Source'
+import Avatar from '@mui/material/Avatar'
 import GitlabIcon from '~/assets/logos/gitlab-icon-rgb.svg'
 import BitbucketIcon from '~/assets/logos/bitbucket_blue.svg'
 import CodebergIcon from '~/assets/logos/codeberg_blue.svg'
-
 import {CodePlatform} from './apiRepositories'
-import Avatar from '@mui/material/Avatar'
 
 type RepositoryIconProps = {
   platform?: CodePlatform|null,

@@ -32,7 +32,7 @@ import ContributorsSection from '~/components/software/ContributorsSection'
 import {getRepositoryInfoForSoftware} from '~/components/software/edit/repositories/apiRepositories'
 import {getContributorsForSoftware} from '~/components/software/edit/contributors/apiContributors'
 import {getReferencePapersForSoftware} from '~/components/software/edit/mentions/reference-papers/apiReferencePapers'
-import {getPackageManagers} from '~/components/software/edit/package-managers/apiPackageManager'
+import {getPackageManagersForSoftware} from '~/components/software/edit/package-managers/apiPackageManager'
 import {getSoftwareHeritageItems} from '~/components/software/edit/software-heritage/apiSoftwareHeritage'
 import {getTestimonialsForSoftware} from '~/components/software/edit/testimonials/apiSoftwareTestimonial'
 import GetStartedSection from '~/components/software/GetStartedSection'
@@ -180,7 +180,7 @@ export default async function SoftwareViewPage({
     // reference papers
     getReferencePapersForSoftware({software:software.id,token}),
     // package managers
-    getPackageManagers({software:software.id,token}),
+    getPackageManagersForSoftware({software:software.id,token}),
     // get software heritage ids
     getSoftwareHeritageItems({software:software.id,token}),
     // communities of software

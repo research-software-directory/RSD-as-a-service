@@ -11,7 +11,6 @@ import SoftwareOrganisations from '~/components/software/edit/organisations'
 import EditPackageManagers from '~/components/software/edit/package-managers'
 import RelatedProjectsForSoftware from '~/components/software/edit/related-projects'
 import RelatedSoftwareForSoftware from '~/components/software/edit/related-software'
-import SoftwareServices from '~/components/software/edit/services'
 import SoftwareHeritagePage from '~/components/software/edit/software-heritage'
 import SoftwareTestimonials from '~/components/software/edit/testimonials'
 import SoftwareRepositories from '~/components/software/edit/repositories'
@@ -58,8 +57,6 @@ export default async function EditSoftwarePageRouter({
       return <RelatedProjectsForSoftware />
     case 'maintainers':
       return <EditSoftwareMaintainers />
-    case 'services':
-      return <SoftwareServices />
     default:
       // edit software 404 page
       return notFound()

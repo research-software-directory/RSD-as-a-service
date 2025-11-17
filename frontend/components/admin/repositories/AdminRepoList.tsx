@@ -8,7 +8,7 @@ import Alert from '@mui/material/Alert'
 import List from '@mui/material/List'
 
 import ContentLoader from '~/components/layout/ContentLoader'
-import {CodePlatform, RepositoryUrl} from '~/components/software/edit/repositories/apiRepositories'
+import {RepositoryUrl} from '~/components/software/edit/repositories/apiRepositories'
 import AdminRepoListItem from './AdminRepoListItem'
 import useAdminRepos from './useAdminRepos'
 import RemoveRepositoryModal from './RemoveRepositoryModal'
@@ -91,22 +91,11 @@ export default function AdminRepoList() {
     {
       modal.edit && modal.item ?
       <EditRepositoryModal
-        item={{
-          id: modal.item.id,
-          url: modal.item.url,
-          code_platform: modal.item.code_platform,
-          scraping_disabled_reason: modal.item.scraping_disabled_reason,
-          // not relevant
-          position: 0
-        }}
+        item={modal.item}
         onCancel={closeModals}
-        onSubmit={(data)=>{
+        onSubmit={(props)=>{
           // console.log('Update...',data)
-          updateRepo({
-            id: data?.id as string,
-            code_platform: data.code_platform as CodePlatform,
-            scraping_disabled_reason: data.scraping_disabled_reason
-          })
+          updateRepo(props)
           closeModals()
         }}
       />

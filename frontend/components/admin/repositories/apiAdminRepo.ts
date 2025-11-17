@@ -4,21 +4,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
-import {paginationUrlParams} from '~/utils/postgrestUrl'
+import {BasicApiParams, paginationUrlParams} from '~/utils/postgrestUrl'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import {RepositoryUrl} from '~/components/software/edit/repositories/apiRepositories'
 
-export type getRepositoryUrlProps={
-  page:number,
-  rows:number,
-  searchFor?:string,
-  orderBy?:string,
-  token?:string
-}
 
-
-export async function getRepositoryUrl({page,rows,searchFor,orderBy,token}:getRepositoryUrlProps){
+export async function getRepositoryUrl({page,rows,searchFor,orderBy,token}:BasicApiParams){
   try{
     let query = '/repository_url?'
     if (orderBy){
