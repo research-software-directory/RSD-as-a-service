@@ -15,6 +15,7 @@ type SearchFiltersPanelProps = {
   selectedTypes: string[]
   onTypesChange: (types: string[]) => void
   groupedResults: {[key: string]: GlobalSearchResults[]}
+  resultCounts: Record<string, number>
   activeModules: string[]
 }
 
@@ -32,6 +33,7 @@ export default function SearchFiltersPanel({
   selectedTypes,
   onTypesChange,
   groupedResults,
+  resultCounts,
   activeModules
 }: SearchFiltersPanelProps) {
 
@@ -51,10 +53,10 @@ export default function SearchFiltersPanel({
     onTypesChange([])
   }
 
-  // Get count for each type
+  // Get count for each type (use real counts from resultCounts)
   const typeCounts = activeModules.map(module => ({
     type: module,
-    count: groupedResults[module]?.length || 0
+    count: resultCounts[module] || 0
   }))
 
   const totalResults = typeCounts.reduce((sum, item) => sum + item.count, 0)

@@ -13,6 +13,7 @@ import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
 
 type SearchResultsContentProps = {
   groupedResults: {[key: string]: GlobalSearchResults[]}
+  resultCounts: Record<string, number>
   view: string
 }
 
@@ -132,45 +133,80 @@ function SearchResultCard({item, view}: {item: GlobalSearchResults, view: string
 }
 
 // Group header component
-function GroupHeader({source, count}: {source: RsdModuleName, count: number}) {
+function GroupHeader({
+  source,
+  displayedCount,
+  totalCount
+}: {
+  source: RsdModuleName,
+  displayedCount: number,
+  totalCount: number
+}) {
   return (
     <h2 className="text-2xl font-medium capitalize mb-4 flex items-center gap-2">
       <SearchItemIcon source={source} />
       {source}
       <span className="text-base text-base-content-secondary font-normal">
-        ({count})
+        ({displayedCount > 0 && totalCount > displayedCount
+          ? `${displayedCount} of ${totalCount}`
+          : totalCount})
       </span>
     </h2>
   )
 }
 
+// More results message component
+function MoreResultsMessage({count}: {count: number}) {
+  return (
+    <div className="mt-6 p-4 rounded-md bg-base-200 text-base-content-secondary text-center">
+      <p className="text-sm">
+        {count} more result{count !== 1 ? 's' : ''} available. Try refining your search or use filters to narrow down results.
+      </p>
+    </div>
+  )
+}
+
 export default function SearchResultsContent({
   groupedResults,
+  resultCounts,
   view
 }: SearchResultsContentProps) {
 
-
   return (
     <div className="px-4 pb-12">
-      {Object.entries(groupedResults).map(([source, items]) => (
-        <div key={source} className="mb-12">
-          <GroupHeader source={source as RsdModuleName} count={items.length} />
+      {Object.entries(groupedResults).map(([source, items]) => {
+        const totalCount = resultCounts[source] || items.length
+        const displayedCount = items.length
+        const hasMoreResults = totalCount > displayedCount
 
-          {view === 'list' ? (
-            <div className="flex flex-col gap-3">
-              {items.map((item, index) => (
-                <SearchResultCard key={`${source}-${index}`} item={item} view="list" />
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {items.map((item, index) => (
-                <SearchResultCard key={`${source}-${index}`} item={item} view="grid" />
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
+        return (
+          <div key={source} className="mb-12">
+            <GroupHeader
+              source={source as RsdModuleName}
+              displayedCount={displayedCount}
+              totalCount={totalCount}
+            />
+
+            {view === 'list' ? (
+              <div className="flex flex-col gap-3">
+                {items.map((item, index) => (
+                  <SearchResultCard key={`${source}-${index}`} item={item} view="list" />
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {items.map((item, index) => (
+                  <SearchResultCard key={`${source}-${index}`} item={item} view="grid" />
+                ))}
+              </div>
+            )}
+
+            {hasMoreResults && (
+              <MoreResultsMessage count={totalCount - displayedCount} />
+            )}
+          </div>
+        )
+      })}
     </div>
   )
 }

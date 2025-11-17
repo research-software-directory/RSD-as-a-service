@@ -17,16 +17,16 @@ import SearchFiltersPanel from './SearchFiltersPanel'
 
 type SearchResultsClientProps = Readonly<{
   query: string
-  results: GlobalSearchResults[]
   groupedResults: {[key: string]: GlobalSearchResults[]}
+  resultCounts: Record<string, number>
   view: string
   activeModules: string[]
 }>
 
 export default function SearchResultsClient({
   query,
-  results,
   groupedResults,
+  resultCounts,
   view: initialView,
   activeModules
 }: SearchResultsClientProps) {
@@ -47,11 +47,13 @@ export default function SearchResultsClient({
     return acc
   }, {} as {[key: string]: GlobalSearchResults[]})
 
-  // Count filtered results
-  const filteredCount = Object.values(filteredGroupedResults).reduce(
-    (sum, items) => sum + items.length,
-    0
-  )
+  // Calculate total real count from resultCounts
+  const totalRealCount = Object.values(resultCounts).reduce((sum, count) => sum + count, 0)
+
+  // Count filtered results (use real counts when available)
+  const filteredCount = selectedTypes.reduce((sum, type) => {
+    return sum + (resultCounts[type] || 0)
+  }, 0)
 
   function handleViewChange(newView: string) {
     setPageLayout(newView as 'grid' | 'list' | 'masonry')
@@ -71,6 +73,7 @@ export default function SearchResultsClient({
             selectedTypes={selectedTypes}
             onTypesChange={setSelectedTypes}
             groupedResults={groupedResults}
+            resultCounts={resultCounts}
             activeModules={activeModules}
           />
         </div>
@@ -132,7 +135,7 @@ export default function SearchResultsClient({
           ) : (
             <p>
               Found {filteredCount} result{filteredCount !== 1 ? 's' : ''}
-              {filteredCount !== results.length && ` (filtered from ${results.length})`}
+              {filteredCount !== totalRealCount && ` (filtered from ${totalRealCount})`}
             </p>
           )}
         </div>
@@ -140,6 +143,7 @@ export default function SearchResultsClient({
         {/* Results */}
         <SearchResultsContent
           groupedResults={filteredGroupedResults}
+          resultCounts={resultCounts}
           view={view}
         />
       </div>

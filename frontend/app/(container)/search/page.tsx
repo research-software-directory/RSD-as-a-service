@@ -9,7 +9,7 @@ import {app} from '~/config/app'
 import {decodeQueryParam} from '~/utils/extractQueryParam'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {getActiveModuleNames} from '~/config/getSettingsServerSide'
-import {getGlobalSearch, GlobalSearchResults} from '~/components/GlobalSearchAutocomplete/apiGlobalSearch'
+import {getGlobalSearch, getGlobalSearchCounts, GlobalSearchResults} from '~/components/GlobalSearchAutocomplete/apiGlobalSearch'
 import SearchResultsClient from '~/components/search/SearchResultsClient'
 
 export const metadata: Metadata = {
@@ -61,26 +61,31 @@ export default async function SearchResultsPage({
     castToType:'string'
   })
 
-  // Fetch search results if query exists
-  let results: GlobalSearchResults[] = []
+  // Fetch search results and counts if query exists
   let groupedResults: {[key: string]: GlobalSearchResults[]} = {}
+  let resultCounts: Record<string, number> = {}
 
   if (query && query.length > 0) {
     try {
-      results = await getGlobalSearch(query, token ?? '', activeModules)
-      groupedResults = groupResultsBySource(results)
+      // Fetch results and counts in parallel
+      const [searchResults, counts] = await Promise.all([
+        getGlobalSearch(query, token ?? '', activeModules),
+        getGlobalSearchCounts(query, token ?? '', activeModules)
+      ])
+      groupedResults = groupResultsBySource(searchResults)
+      resultCounts = counts
     } catch {
-      // Error is already logged by getGlobalSearch
-      results = []
+      // Error is already logged by getGlobalSearch/getGlobalSearchCounts
       groupedResults = {}
+      resultCounts = {}
     }
   }
 
   return (
     <SearchResultsClient
       query={query || ''}
-      results={results}
       groupedResults={groupedResults}
+      resultCounts={resultCounts}
       view={view}
       activeModules={activeModules}
     />
