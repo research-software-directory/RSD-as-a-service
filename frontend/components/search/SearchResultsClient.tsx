@@ -90,6 +90,8 @@ export default function SearchResultsClient({
               placeholder="Search for software, projects, organisations..."
               onSearch={handleSearch}
               defaultValue={query}
+              autoFocus={true}
+              // self focus when component mounts
               sx={{
                 '.MuiOutlinedInput-notchedOutline': {
                   border: '1px solid',

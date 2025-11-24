@@ -183,6 +183,8 @@ export default function GlobalSearchAutocomplete(props: Props) {
       setOpen(false)
       setInputValue('')
     }
+    // remove focus from input
+    inputRef.current?.blur()
   }
 
   // Handle keyup
