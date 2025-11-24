@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
-import { RsdTheme } from '~/styles/rsdMuiTheme'
+import {RsdTheme} from '~/styles/rsdMuiTheme'
 import defaultSettings from '~/config/defaultSettings.json'
 
 export type RsdModuleName = keyof typeof defaultSettings.modules
