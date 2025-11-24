@@ -9,6 +9,8 @@ import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
 import FilterTitle from '~/components/filter/FilterTitle'
+import {RsdModuleName} from '~/config/rsdSettingsReducer'
+import useRsdSettings from '~/config/useRsdSettings'
 
 type SearchFiltersPanelProps = {
   selectedTypes: string[]
@@ -17,15 +19,6 @@ type SearchFiltersPanelProps = {
   activeModules: string[]
 }
 
-// Module display names
-const MODULE_LABELS: {[key: string]: string} = {
-  'software': 'Software',
-  'projects': 'Projects',
-  'organisations': 'Organisations',
-  'communities': 'Communities',
-  'persons': 'Persons',
-  'news': 'News'
-}
 
 export default function SearchFiltersPanel({
   selectedTypes,
@@ -33,6 +26,9 @@ export default function SearchFiltersPanel({
   resultCounts,
   activeModules
 }: SearchFiltersPanelProps) {
+
+  const {modules} = useRsdSettings()
+
 
   function handleTypeChange(type: string, checked: boolean) {
     if (checked) {
@@ -52,7 +48,7 @@ export default function SearchFiltersPanel({
 
   // Get count for each type (use real counts from resultCounts)
   const typeCounts = activeModules.map(module => ({
-    type: module,
+    type: module as RsdModuleName,
     count: resultCounts[module] || 0
   }))
 
@@ -99,7 +95,7 @@ export default function SearchFiltersPanel({
             label={
               <div className="flex justify-between items-center w-full">
                 <span className="text-sm capitalize">
-                  {MODULE_LABELS[type] || type}
+                  {modules[type]?.menuItem || type}
                 </span>
                 <span className="text-xs text-base-content-secondary ml-2">
                   ({count})
