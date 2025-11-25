@@ -10,6 +10,7 @@ import {composeUrl} from '~/utils/fetchHelpers'
 import {getImageUrl} from '~/utils/editImage'
 import SearchItemIcon from '~/components/GlobalSearchAutocomplete/SearchItemIcon'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
+import ListImageWithGradientPlaceholder from '~/components/projects/overview/list/ListImageWithGradientPlaceholder'
 
 type SearchResultsContentProps = {
   groupedResults: {[key: string]: GlobalSearchResults[]}
@@ -36,26 +37,24 @@ function SearchResultCard({item, view}: {item: GlobalSearchResults, view: string
       <Link
         href={url}
         target={isExternal ? '_blank' : '_self'}
-        className="flex items-start gap-4 p-4 rounded-md bg-base-100 shadow-md hover:shadow-lg transition"
+        className="flex-1 flex items-start rounded-md bg-base-100 shadow-md hover:shadow-lg hover:text-inherit transition"
       >
         {/* Image */}
-        <div className="flex-shrink-0 w-20 h-20 rounded overflow-hidden bg-base-200">
-          <ImageWithPlaceholder
-            src={imageUrl}
-            alt={`Logo for ${item.name}`}
-            type="gradient"
-            className="w-full h-full text-base-content-disabled"
-            bgSize='scale-down'
-          />
-        </div>
-
-        <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-medium line-clamp-2 mb-1">
+        <ListImageWithGradientPlaceholder
+          alt={`Cover image for ${item.name}`}
+          imgSrc={imageUrl}
+        />
+        <div className="flex-1 min-w-0 p-2">
+          <div className="font-medium mb-1 line-clamp-2 md:line-clamp-1 break-words">
             {item.name}
-          </h3>
+          </div>
+          <div className="text-sm text-base-content-secondary mb-1 line-clamp-2 md:line-clamp-1 break-words">
+            {/* show test or empty space holder? */}
+            {item?.short_description ?? ' '}
+          </div>
           <div className="flex items-center gap-2 text-sm text-base-content-secondary">
-            <SearchItemIcon source={item.source} />
-            <span className="capitalize">{item.source}</span>
+            {/* <SearchItemIcon source={item.source} />
+            <span className="capitalize">{item.source}</span> */}
             {isExternal && (
               <span className="text-xs">
                 ({item.rsd_host || item.domain})
@@ -84,7 +83,7 @@ function SearchResultCard({item, view}: {item: GlobalSearchResults, view: string
     <Link
       href={url}
       target={isExternal ? '_blank' : '_self'}
-      className="flex flex-col rounded-md bg-base-100 shadow-md hover:shadow-lg transition overflow-hidden h-full group"
+      className="flex flex-col rounded-md bg-base-100 shadow-md hover:shadow-lg hover:text-inherit transition overflow-hidden h-full group"
     >
       {/* Image */}
       <div className="w-full h-40 bg-base-100 flex-shrink-0">
@@ -108,14 +107,18 @@ function SearchResultCard({item, view}: {item: GlobalSearchResults, view: string
             </div>
           )}
         </div>
-        <h3 className="text-base font-medium line-clamp-2 group-hover:text-primary mb-2">
+        <div className="text-base font-medium line-clamp-1 mb-2">
           {item.name}
-        </h3>
+        </div>
+        <div className="text-sm text-base-content-secondary line-clamp-2 mb-2">
+          {/* show test or empty space holder? */}
+          {item?.short_description ?? ' '}
+        </div>
         <div className="mt-auto">
-          <div className="flex items-center gap-2 text-sm text-base-content-secondary">
+          {/* <div className="flex items-center gap-2 text-sm text-base-content-secondary">
             <SearchItemIcon source={item.source} />
             <span className="capitalize">{item.source}</span>
-          </div>
+          </div> */}
           {isExternal && (
             <div className="text-xs text-base-content-secondary mt-1">
               {item.rsd_host || item.domain}
@@ -143,7 +146,7 @@ function GroupHeader({
   totalCount: number
 }) {
   return (
-    <h2 className="text-2xl font-medium capitalize mb-4 flex items-center gap-2">
+    <h2 className="text-2xl font-medium capitalize p-4 flex items-center gap-2">
       <SearchItemIcon source={source} />
       {source}
       <span className="text-base text-base-content-secondary font-normal">
@@ -173,7 +176,7 @@ export default function SearchResultsContent({
 }: SearchResultsContentProps) {
 
   return (
-    <div className="px-4 pb-12">
+    <div className="pb-12">
       {Object.entries(groupedResults).map(([source, items]) => {
         const totalCount = resultCounts[source] || items.length
         const displayedCount = items.length

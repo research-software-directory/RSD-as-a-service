@@ -17,6 +17,7 @@ export type GlobalSearchResults = {
   domain: string | null
   slug: string,
   name: string,
+  short_description?: string,
   source: RsdModuleName,
   is_published?: boolean,
   image_id?: string | null,
