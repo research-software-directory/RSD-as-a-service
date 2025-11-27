@@ -17,7 +17,7 @@ export default function ListImageWithGradientPlaceholder({imgSrc,alt}:{imgSrc:st
     // return gradient square as placeholder
     return (
       <div
-        className="w-[6rem] self-stretch bg-linear-to-br from-base-300 from-0% via-base-100 via-50% to-base-100"
+        className="w-[6rem] min-h-[4rem] self-stretch bg-linear-to-br from-base-300 from-0% via-base-100 via-50% to-base-100"
       />
     )
   }

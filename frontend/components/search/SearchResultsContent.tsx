@@ -8,9 +8,12 @@ import {GlobalSearchResults} from '~/components/GlobalSearchAutocomplete/apiGlob
 import {RsdModuleName} from '~/config/rsdSettingsReducer'
 import {composeUrl} from '~/utils/fetchHelpers'
 import {getImageUrl} from '~/utils/editImage'
+import RsdHostLabel from '~/components/cards/RsdHostLabel'
 import SearchItemIcon from '~/components/GlobalSearchAutocomplete/SearchItemIcon'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
 import ListImageWithGradientPlaceholder from '~/components/projects/overview/list/ListImageWithGradientPlaceholder'
+import ExternalLinkIcon from '~/components/software/overview/cards/ExternalLinkIcon'
+import RsdHostBanner from '~/components/software/overview/list/RsdHostBanner'
 
 type SearchResultsContentProps = {
   groupedResults: {[key: string]: GlobalSearchResults[]}
@@ -37,7 +40,7 @@ function SearchResultCard({item, view}: {item: GlobalSearchResults, view: string
       <Link
         href={url}
         target={isExternal ? '_blank' : '_self'}
-        className="flex-1 flex items-start rounded-md bg-base-100 shadow-md hover:shadow-lg hover:text-inherit transition"
+        className="flex-1 flex items-start rounded-md bg-base-100 shadow-md hover:shadow-lg hover:text-inherit transition group"
       >
         {/* Image */}
         <ListImageWithGradientPlaceholder
@@ -53,13 +56,10 @@ function SearchResultCard({item, view}: {item: GlobalSearchResults, view: string
             {item?.short_description ?? ' '}
           </div>
           <div className="flex items-center gap-2 text-sm text-base-content-secondary">
-            {/* <SearchItemIcon source={item.source} />
-            <span className="capitalize">{item.source}</span> */}
-            {isExternal && (
-              <span className="text-xs">
-                ({item.rsd_host || item.domain})
-              </span>
-            )}
+            {isExternal ?
+              <RsdHostBanner rsd_host={item?.rsd_host} domain={item?.domain}/>
+              : null
+            }
           </div>
           {!item.is_published && (
             <span className="inline-block mt-2 px-2 py-1 text-xs bg-warning text-warning-content rounded">
@@ -67,13 +67,6 @@ function SearchResultCard({item, view}: {item: GlobalSearchResults, view: string
             </span>
           )}
         </div>
-        {isExternal && (
-          <div className="flex-shrink-0 text-base-content-secondary">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </div>
-        )}
       </Link>
     )
   }
@@ -83,8 +76,10 @@ function SearchResultCard({item, view}: {item: GlobalSearchResults, view: string
     <Link
       href={url}
       target={isExternal ? '_blank' : '_self'}
-      className="flex flex-col rounded-md bg-base-100 shadow-md hover:shadow-lg hover:text-inherit transition overflow-hidden h-full group"
+      className="flex flex-col rounded-md bg-base-100 shadow-md hover:shadow-lg hover:text-inherit transition overflow-hidden h-full group relative"
     >
+      {/* Requires tailwind classes relative and group */}
+      <ExternalLinkIcon domain={item.domain} />
       {/* Image */}
       <div className="w-full h-40 bg-base-100 flex-shrink-0">
         <ImageWithPlaceholder
@@ -98,15 +93,7 @@ function SearchResultCard({item, view}: {item: GlobalSearchResults, view: string
 
       {/* Content */}
       <div className="flex flex-col p-4 flex-1">
-        <div className="flex items-start gap-3 mb-3">
-          {isExternal && (
-            <div className="flex-shrink-0 ml-auto text-base-content-secondary">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </div>
-          )}
-        </div>
+        <RsdHostLabel rsd_host={item?.rsd_host} domain={item?.domain}/>
         <div className="text-base font-medium line-clamp-1 mb-2">
           {item.name}
         </div>
@@ -115,15 +102,6 @@ function SearchResultCard({item, view}: {item: GlobalSearchResults, view: string
           {item?.short_description ?? ' '}
         </div>
         <div className="mt-auto">
-          {/* <div className="flex items-center gap-2 text-sm text-base-content-secondary">
-            <SearchItemIcon source={item.source} />
-            <span className="capitalize">{item.source}</span>
-          </div> */}
-          {isExternal && (
-            <div className="text-xs text-base-content-secondary mt-1">
-              {item.rsd_host || item.domain}
-            </div>
-          )}
           {!item.is_published && (
             <span className="inline-block mt-2 px-2 py-1 text-xs bg-warning text-warning-content rounded">
               Unpublished
