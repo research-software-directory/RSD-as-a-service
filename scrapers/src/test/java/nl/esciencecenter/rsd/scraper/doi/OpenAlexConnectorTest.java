@@ -43,4 +43,19 @@ class OpenAlexConnectorTest {
 		);
 		Assertions.assertTrue(openalexMentions.isEmpty());
 	}
+
+	@Test
+	void givenOpenAlexId_whenConvertingToCitationsUrl_thenCorrectUrlReturned() {
+		String openAlexKey = "W12345";
+		OpenalexId openalexId = OpenalexId.fromString("https://openalex.org/" + openAlexKey);
+
+		String citationsUrl = OpenAlexConnector.citationsUri(openalexId);
+
+		Assertions.assertEquals("https://api.openalex.org/works?filter=cites:" + openAlexKey, citationsUrl);
+	}
+
+	@Test
+	void givenNullOpenAlexId_whenConvertingToCitationsUrl_thenNullPointerThrown() {
+		Assertions.assertThrowsExactly(NullPointerException.class, () -> OpenAlexConnector.citationsUri(null));
+	}
 }

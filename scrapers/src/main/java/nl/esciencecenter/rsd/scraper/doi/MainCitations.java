@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
@@ -67,13 +68,24 @@ public class MainCitations {
 
 			LOGGER.info("Scraping for DOI {}, OpenAlex ID {}", citationData.doi(), citationData.openalexId());
 
-			Collection<ExternalMentionRecord> citingMentions = null;
+			Collection<ExternalMentionRecord> citingMentions;
 			try {
-				citingMentions = openAlexConnector.citations(
-					citationData.openalexId(),
-					citationData.doi(),
-					citationData.id()
-				);
+				OpenalexId openalexId = citationData.openalexId();
+				if (openalexId == null) {
+					if (citationData.doi() == null) {
+						continue;
+					}
+
+					Optional<OpenalexId> optionalOpenalexId = openAlexConnector.getOpenAlexIdFromDoi(
+						citationData.doi()
+					);
+					if (optionalOpenalexId.isEmpty()) {
+						continue;
+					}
+
+					openalexId = optionalOpenalexId.get();
+				}
+				citingMentions = openAlexConnector.citations(openalexId, citationData.id());
 			} catch (RsdResponseException e) {
 				LOGGER.error("Exception while scraping citations", e);
 				Utils.saveExceptionInDatabase("Citation scraper", null, citationData.id(), e);

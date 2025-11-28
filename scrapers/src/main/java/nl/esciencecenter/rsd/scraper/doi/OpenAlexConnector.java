@@ -15,6 +15,7 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,15 +27,12 @@ import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Throttler;
 import nl.esciencecenter.rsd.scraper.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class OpenAlexConnector {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(OpenAlexConnector.class);
-
 	private static final String DOI_FILTER_URL_UNFORMATTED = "https://api.openalex.org/works?filter=doi:%s";
 	private static final String OPENALEX_ID_URL_UNFORMATTED = "https://api.openalex.org/works?filter=ids.openalex:%s";
+	private static final String OPENALEX_CITES_URL_UNFORMATTED = "https://api.openalex.org/works?filter=cites:%s";
 	// https://docs.openalex.org/how-to-use-the-api/rate-limits-and-authentication
 	// The docs and empirical experiments indicate 10 requests per second.
 	// We make it slightly lower to be safe.
@@ -61,6 +59,20 @@ class OpenAlexConnector {
 				"Unexpected response on GET request to OpenAlex"
 			);
 		}
+	}
+
+	public Optional<OpenalexId> getOpenAlexIdFromDoi(Doi doi)
+		throws RsdResponseException, IOException, InterruptedException {
+		if (doi == null) {
+			return Optional.empty();
+		}
+
+		Collection<ExternalMentionRecord> harvestedMention = mentionDataByDois(List.of(doi));
+		if (harvestedMention.isEmpty()) {
+			return Optional.empty();
+		}
+
+		return Optional.of(harvestedMention.iterator().next().openalexId());
 	}
 
 	public Collection<ExternalMentionRecord> mentionDataByDois(Collection<Doi> dois)
@@ -127,60 +139,26 @@ class OpenAlexConnector {
 		return mentions;
 	}
 
-	public Collection<ExternalMentionRecord> citations(OpenalexId openalexId, Doi doi, UUID id)
+	public Collection<ExternalMentionRecord> citations(OpenalexId openalexId, UUID id)
 		throws IOException, InterruptedException, RsdResponseException {
 		// This shouldn't happen, but let's check it to prevent unexpected exceptions:
-		if (doi == null && openalexId == null) {
+		if (openalexId == null) {
 			return Collections.emptyList();
 		}
 
-		String worksUri = openalexId != null
-			? OPENALEX_ID_URL_UNFORMATTED.formatted(openalexId.toUrlEncodedString())
-			: DOI_FILTER_URL_UNFORMATTED.formatted(doi.toUrlEncodedString());
-
-		Optional<String> optionalCitationsUri = citationsUri(worksUri);
-		if (optionalCitationsUri.isEmpty()) {
-			return Collections.emptyList();
-		}
-
-		return scrapeCitations(optionalCitationsUri.get(), id);
+		String citationsUri = citationsUri(openalexId);
+		return scrapeCitations(citationsUri, id);
 	}
 
-	static Optional<String> citationsUri(String worksUri)
-		throws IOException, InterruptedException, RsdResponseException {
-		String responseBody = doOpenAlexGetRequest(worksUri);
-
-		JsonObject tree = JsonParser.parseString(responseBody).getAsJsonObject();
-
-		int count = tree.getAsJsonObject("meta").getAsJsonPrimitive("count").getAsInt();
-
-		if (count < 1) {
-			LOGGER.warn("No results found for {}: {}", worksUri, count);
-			return Optional.empty();
-		}
-
-		if (count > 1) {
-			LOGGER.warn("More than 1 result found for {}: {}, taking the first", worksUri, count);
-		}
-
-		String citationsUri = null;
-		try {
-			citationsUri = tree
-				.getAsJsonArray("results")
-				.get(0)
-				.getAsJsonObject()
-				.getAsJsonPrimitive("cited_by_api_url")
-				.getAsString();
-		} catch (RuntimeException e) {
-			LOGGER.error("Exception parsing cited_by_api_url for %s".formatted(worksUri), e);
-			Utils.saveExceptionInDatabase("OpenAlex citations scraper", null, null, e);
-		}
-
-		return Optional.ofNullable(citationsUri);
+	// https://docs.openalex.org/api-entities/works/filter-works#cites
+	static String citationsUri(OpenalexId openalexId) {
+		Objects.requireNonNull(openalexId);
+		return OPENALEX_CITES_URL_UNFORMATTED.formatted(openalexId.getOpenalexKey());
 	}
 
 	// we use cursor paging as that will always work
 	// https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging#cursor-paging
+	// the id parameter is used only for logging exceptions
 	static Collection<ExternalMentionRecord> scrapeCitations(String citationsUri, UUID id)
 		throws IOException, InterruptedException, RsdResponseException {
 		final int perPage = 200;
