@@ -3,16 +3,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
-
 import NoContent from '~/components/layout/NoContent'
 import GridOverview from '~/components/layout/GridOverview'
+import ListOverviewSection from '~/components/layout/ListOverviewSection'
 import CardSkeleton from '~/components/cards/CardSkeleton'
 import {ProjectLayoutType} from '~/components/search/ToggleViewGroup'
-import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
 import SoftwareGridCard from '~/components/software/overview/cards/SoftwareGridCard'
+import OverviewListItemLink from '~/components/software/overview/list/OverviewListItemLink'
 import {SoftwareByMaintainer} from './useUserSoftware'
 
 type UserSoftwareOverviewProps=Readonly<{
@@ -43,23 +42,19 @@ export default function UserSoftwareOverview({loading,skeleton_items,layout,soft
 
   if (layout === 'list') {
     return (
-      <SoftwareOverviewList>
+      <ListOverviewSection>
         {software.map(item => {
           return (
-            <Link
-              data-testid="software-list-item"
-              key={item.id}
-              href={`/software/${item.slug}`}
-              className='hover:text-inherit'
-              title={item.brand_name}
-            >
-              <OverviewListItem className='pr-4'>
+            <OverviewListItem key={item.id}>
+              <OverviewListItemLink
+                href={`/software/${item.slug}`}
+              >
                 <SoftwareListItemContent key={item.id} {...item} />
-              </OverviewListItem>
-            </Link>
+              </OverviewListItemLink>
+            </OverviewListItem>
           )
         })}
-      </SoftwareOverviewList>
+      </ListOverviewSection>
     )
   }
 

@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -73,7 +74,7 @@ public class MainProgrammingLanguages {
 						"repository_url",
 						"languages_last_error",
 						programmingLanguageData.software().toString(),
-						"software",
+						"id",
 						null,
 						null
 					);
@@ -89,7 +90,7 @@ public class MainProgrammingLanguages {
 						"repository_url",
 						"languages_last_error",
 						programmingLanguageData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"languages_scraped_at"
 					);
@@ -105,7 +106,7 @@ public class MainProgrammingLanguages {
 						"repository_url",
 						"languages_last_error",
 						programmingLanguageData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"languages_scraped_at"
 					);
@@ -138,7 +139,7 @@ public class MainProgrammingLanguages {
 							"repository_url",
 							"languages_last_error",
 							programmingLanguageData.software().toString(),
-							"software",
+							"id",
 							scrapedAt,
 							"languages_scraped_at"
 						);
@@ -165,7 +166,7 @@ public class MainProgrammingLanguages {
 						"repository_url",
 						"languages_last_error",
 						programmingLanguageData.software().toString(),
-						"software",
+						"id",
 						null,
 						null
 					);
@@ -181,7 +182,7 @@ public class MainProgrammingLanguages {
 						"repository_url",
 						"languages_last_error",
 						programmingLanguageData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"languages_scraped_at"
 					);
@@ -197,7 +198,7 @@ public class MainProgrammingLanguages {
 						"repository_url",
 						"languages_last_error",
 						programmingLanguageData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"languages_scraped_at"
 					);
@@ -243,7 +244,7 @@ public class MainProgrammingLanguages {
 						"repository_url",
 						"languages_last_error",
 						programmingLanguageData.software().toString(),
-						"software",
+						"id",
 						null,
 						null
 					);
@@ -259,7 +260,7 @@ public class MainProgrammingLanguages {
 						"repository_url",
 						"languages_last_error",
 						programmingLanguageData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"languages_scraped_at"
 					);
@@ -275,7 +276,7 @@ public class MainProgrammingLanguages {
 						"repository_url",
 						"languages_last_error",
 						programmingLanguageData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"languages_scraped_at"
 					);
@@ -310,7 +311,7 @@ public class MainProgrammingLanguages {
 							"repository_url",
 							"languages_last_error",
 							programmingLanguageData.software().toString(),
-							"software",
+							"id",
 							scrapedAt,
 							"languages_scraped_at"
 						);
@@ -337,7 +338,7 @@ public class MainProgrammingLanguages {
 						"repository_url",
 						"languages_last_error",
 						programmingLanguageData.software().toString(),
-						"software",
+						"id",
 						null,
 						null
 					);
@@ -353,7 +354,7 @@ public class MainProgrammingLanguages {
 						"repository_url",
 						"languages_last_error",
 						programmingLanguageData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"languages_scraped_at"
 					);
@@ -369,7 +370,7 @@ public class MainProgrammingLanguages {
 						"repository_url",
 						"languages_last_error",
 						programmingLanguageData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"languages_scraped_at"
 					);

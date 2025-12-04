@@ -6,10 +6,11 @@
 import {OrganisationForOverview} from '~/types/Organisation'
 import CardSkeleton from '~/components/cards/CardSkeleton'
 import NoContent from '~/components/layout/NoContent'
+import GridOverview from '~/components/layout/GridOverview'
+import ListOverviewSection from '~/components/layout/ListOverviewSection'
 import {ProjectLayoutType} from '~/components/search/ToggleViewGroup'
 import OrganisationCard from '~/components/organisation/overview/card/OrganisationCard'
 import OrganisationListItem from './OrganisationListItem'
-import GridOverview from '~/components/layout/GridOverview'
 
 type UserOrganisationsOverviewProps=Readonly<{
   layout: ProjectLayoutType
@@ -31,13 +32,11 @@ export default function UserOrganisationsOverview({loading,skeleton_items,layout
 
   if (layout === 'list') {
     return (
-      <div
-        data-testid="organisation-overview-list"
-        className="flex-1 my-2 flex flex-col gap-2">
+      <ListOverviewSection>
         {organisations.map((item) => (
           <OrganisationListItem key={item.slug} organisation={item} />
         ))}
-      </div>
+      </ListOverviewSection>
     )
   }
 

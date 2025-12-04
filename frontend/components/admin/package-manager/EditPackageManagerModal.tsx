@@ -3,8 +3,8 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -16,28 +16,24 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
-
 import {useForm} from 'react-hook-form'
 
+import useSmallScreen from '~/config/useSmallScreen'
 import {useDebounce} from '~/utils/useDebounce'
 import ControlledSelect from '~/components/form/ControlledSelect'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {
   getPackageManagerServices,
-  getPackageManagerTypeFromUrl, NewPackageManager,
-  PackageManager, packageManagerSettings, PackageManagerTypes
-} from './apiPackageManager'
-import PackageManagerInfo from './PackageManagerInfo'
-import {config} from './config'
+  getPackageManagerTypeFromUrl,
+  PackageManager
+} from '~/components/software/edit/package-managers/apiPackageManager'
+import {cfg,packageManagerSettings, PackageManagerTypes} from '~/components/software/edit/package-managers/config'
 
 type EditPackageManagerModalProps = Readonly<{
-  open: boolean,
   onCancel: () => void,
-  onSubmit: (data: PackageManager | NewPackageManager) => void,
-  package_manager?: PackageManager | NewPackageManager,
-  isAdmin: boolean
+  onSubmit: (data: PackageManager) => void,
+  package_manager: PackageManager
 }>
 
 const formId='edit-package-manager-modal'
@@ -50,13 +46,11 @@ const packageManagerOptions = Object.keys(packageManagerSettings).map(key=>{
   }
 })
 
-export default function EditPackageManagerModal({open, onCancel, onSubmit, package_manager, isAdmin}: EditPackageManagerModalProps) {
-  const smallScreen = useMediaQuery('(max-width:600px)')
-  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<PackageManager|NewPackageManager>({
+export default function EditPackageManagerModal({onCancel, onSubmit, package_manager}: EditPackageManagerModalProps) {
+  const smallScreen = useSmallScreen()
+  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<PackageManager>({
     mode: 'onChange',
-    defaultValues: {
-      ...package_manager
-    }
+    defaultValues: package_manager
   })
   // extract form states and possible errors
   const {isValid, isDirty, errors} = formState
@@ -65,12 +59,16 @@ export default function EditPackageManagerModal({open, onCancel, onSubmit, packa
     url,
     package_manager_form,
     download_disabled,
-    reverse_dependency_disabled
+    reverse_dependency_disabled,
+    download_count_last_error,
+    reverse_dependency_count_last_error
   ] = watch([
     'url',
     'package_manager',
     'download_count_scraping_disabled_reason',
-    'reverse_dependency_count_scraping_disabled_reason'
+    'reverse_dependency_count_scraping_disabled_reason',
+    'download_count_last_error',
+    'reverse_dependency_count_last_error'
   ])
   // take the last url value
   const bouncedUrl = useDebounce(url, 700)
@@ -118,7 +116,7 @@ export default function EditPackageManagerModal({open, onCancel, onSubmit, packa
       data-testid="edit-package-manager-modal"
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
-      open={open}
+      open={true}
       onClose={handleCancel}
     >
       <DialogTitle sx={{
@@ -150,70 +148,104 @@ export default function EditPackageManagerModal({open, onCancel, onSubmit, packa
         />
         <DialogContent sx={{
           width: ['100%', '37rem'],
-          padding: '2rem 1.5rem 2.5rem'
+          padding: '2rem 1.5rem 2.5rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2rem'
         }}>
           <ControlledTextField
             control={control}
             options={{
               name: 'url',
-              label: config.modal.url.label,
+              label: cfg.modal.url.label,
               useNull: true,
               defaultValue: url,
-              helperTextMessage: errors['url']?.message ?? config.modal.url.help,
-              helperTextCnt: `${url?.length ?? 0}/${config.modal.url.validation.maxLength.value}`,
+              helperTextMessage: errors['url']?.message ?? cfg.modal.url.help,
+              helperTextCnt: `${url?.length ?? 0}/${cfg.modal.url.validation.maxLength.value}`,
               // disable url if item is edited (id!=null)
               disabled: package_manager?.id !== null
             }}
-            rules={config.modal.url.validation}
+            rules={cfg.modal.url.validation}
           />
-          <div className="py-4"></div>
-          {isAdmin && package_manager?.id !== null ?
+          <ControlledSelect
+            name="package_manager"
+            label={cfg.modal.package_manager.label}
+            control={control}
+            options={packageManagerOptions}
+            rules={{}}
+            defaultValue={package_manager?.package_manager ?? null}
+            disabled={package_manager?.id === null}
+            helperTextMessage={cfg.modal.package_manager.help}
+            sx={{
+              'width': '100%'
+            }}
+          />
+          {
+            packageManagerServices.includes('download_count') ?
             <>
               <ControlledTextField
                 control={control}
                 options={{
                   name: 'download_count_scraping_disabled_reason',
-                  label: config.modal.download_scraping_disabled.label,
+                  label: cfg.modal.download_scraping_disabled.label,
                   useNull: true,
                   defaultValue: download_disabled,
-                  helperTextMessage: config.modal.download_scraping_disabled.help(packageManagerServices.includes('downloads')),
-                  helperTextCnt: `${download_disabled?.length ?? 0}/${config.modal.download_scraping_disabled.validation.maxLength.value}`,
-                  disabled: package_manager?.id === null || !packageManagerServices.includes('downloads')
+                  helperTextMessage: cfg.modal.download_scraping_disabled.help(packageManagerServices.includes('download_count')),
+                  helperTextCnt: `${download_disabled?.length ?? 0}/${cfg.modal.download_scraping_disabled.validation.maxLength.value}`,
+                  disabled: package_manager?.id === null
                 }}
-                rules={config.modal.download_scraping_disabled.validation}
+                rules={cfg.modal.download_scraping_disabled.validation}
               />
-              <div className="py-4"></div>
+              <ControlledTextField
+                control={control}
+                options={{
+                  name: 'download_count_last_error',
+                  label: cfg.modal.download_count_last_error.label,
+                  useNull: true,
+                  defaultValue: download_count_last_error,
+                  helperTextMessage: cfg.modal.download_count_last_error.help(packageManagerServices.includes('download_count')),
+                  helperTextCnt: `${download_count_last_error?.length ?? 0}/${cfg.modal.download_count_last_error.validation.maxLength.value}`,
+                  disabled: package_manager?.id === null
+                }}
+                rules={cfg.modal.download_count_last_error.validation}
+              />
+            </>
+            : null
+          }{
+            packageManagerServices.includes('reverse_dependency_count') ?
+            <>
               <ControlledTextField
                 control={control}
                 options={{
                   name: 'reverse_dependency_count_scraping_disabled_reason',
-                  label: config.modal.reverse_dependency_scraping_disabled.label,
+                  label: cfg.modal.reverse_dependency_scraping_disabled.label,
                   useNull: true,
                   defaultValue: reverse_dependency_disabled,
-                  helperTextMessage: config.modal.reverse_dependency_scraping_disabled.help(packageManagerServices.includes('dependents')),
-                  helperTextCnt: `${reverse_dependency_disabled?.length ?? 0}/${config.modal.reverse_dependency_scraping_disabled.validation.maxLength.value}`,
-                  disabled: package_manager?.id === null || !packageManagerServices.includes('dependents')
+                  helperTextMessage: cfg.modal.reverse_dependency_scraping_disabled.help(packageManagerServices.includes('reverse_dependency_count')),
+                  helperTextCnt: `${reverse_dependency_disabled?.length ?? 0}/${cfg.modal.reverse_dependency_scraping_disabled.validation.maxLength.value}`,
+                  disabled: package_manager?.id === null
                 }}
-                rules={config.modal.reverse_dependency_scraping_disabled.validation}
+                rules={cfg.modal.reverse_dependency_scraping_disabled.validation}
               />
-              <div className="py-4"></div>
-              <ControlledSelect
-                name="package_manager"
-                label={config.modal.package_manager.label}
+              <ControlledTextField
                 control={control}
-                options={packageManagerOptions}
-                rules={{}}
-                defaultValue={package_manager?.package_manager ?? null}
-                disabled={package_manager?.id === null}
-                helperTextMessage={config.modal.package_manager.help}
-                sx={{
-                  'width': '100%'
+                options={{
+                  name: 'reverse_dependency_count_last_error',
+                  label: cfg.modal.reverse_dependency_count_last_error.label,
+                  useNull: true,
+                  defaultValue: reverse_dependency_count_last_error,
+                  helperTextMessage: cfg.modal.reverse_dependency_count_last_error.help(packageManagerServices.includes('reverse_dependency_count')),
+                  helperTextCnt: `${reverse_dependency_count_last_error?.length ?? 0}/${cfg.modal.reverse_dependency_count_last_error.validation.maxLength.value}`,
+                  disabled: package_manager?.id === null
                 }}
+                rules={cfg.modal.reverse_dependency_count_last_error.validation}
               />
             </>
-            : <PackageManagerInfo pm_key={package_manager_form} />
+            : null
           }
-
+          <div className="pt-4 px-1 text-base-content-disabled text-sm">
+            RSD background services: {packageManagerServices.length}
+          </div>
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',

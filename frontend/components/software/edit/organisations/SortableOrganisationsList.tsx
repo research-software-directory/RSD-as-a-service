@@ -34,11 +34,10 @@ export default function SortableOrganisationsList({organisations,onEdit,onDelete
   function onRenderItem(item:EditOrganisation,index:number) {
     return <SortableOrganisationItem
       key={item.id ?? index}
-      pos={index}
       organisation={item}
-      onEdit={onEdit}
-      onDelete={onDelete}
-      onCategory={onCategory}
+      onEdit={()=>onEdit(index)}
+      onDelete={()=>onDelete(index)}
+      onCategory={()=>onCategory(index)}
     />
   }
 
