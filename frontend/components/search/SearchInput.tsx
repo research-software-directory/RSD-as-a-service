@@ -22,6 +22,7 @@ type SearchInputProps = {
   defaultValue?: string,
   inputProps?: Partial<FilledInputProps> | Partial<OutlinedInputProps> | Partial<InputProps>
   sx?: SxProps<Theme>
+  autoFocus?: boolean
 }
 
 export default function SearchInput({
@@ -30,7 +31,9 @@ export default function SearchInput({
   delay = 700,
   defaultValue = '',
   inputProps,
-  sx
+  sx,
+  autoFocus = false
+
 }: SearchInputProps) {
   const [state, setState] = useState({
     value: defaultValue ?? '',
@@ -67,6 +70,7 @@ export default function SearchInput({
       placeholder={placeholder}
       value={state.value}
       onChange={({target}) => setState({value: target.value, wait: false})}
+      autoFocus={autoFocus}
       sx={{
         // width: '100%',
         flex: 1,

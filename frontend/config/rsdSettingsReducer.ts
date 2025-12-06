@@ -12,16 +12,15 @@ import logger from '~/utils/logger'
 import {RsdTheme} from '~/styles/rsdMuiTheme'
 import defaultSettings from '~/config/defaultSettings.json'
 
-// export type RsdModule= 'software'| 'projects' | 'organisations' | 'communities' | 'news' | 'user' | 'persons'
-export type RsdModuleName= 'software'| 'projects' | 'organisations' | 'communities' | 'news' | 'persons'
-export type RsdModule={
+export type RsdModuleName = keyof typeof defaultSettings.modules
+export type RsdModule = {
   active: boolean,
   name: RsdModuleName,
   // if omitted/undefined or null menu item will not be shown
   menuItem?: string | null
 }
-export type RsdModules={
-  [K in RsdModuleName]:RsdModule
+export type RsdModules = {
+  [K in RsdModuleName]: RsdModule
 }
 
 export type RsdSettingsState = {
@@ -45,7 +44,7 @@ export type RsdHost = {
     issues_page_url: string,
     host_label?: string
   },
-  login_info_url?:string,
+  login_info_url?: string,
   terms_of_service_url?: string,
   privacy_statement_url?: string,
   software_highlights?: {
@@ -82,7 +81,7 @@ export type RsdSettingsAction = {
   payload: any
 }
 
-export type RsdSettingsDispatch = (action: RsdSettingsAction)=>void
+export type RsdSettingsDispatch = (action: RsdSettingsAction) => void
 
 export const defaultRsdSettings = defaultSettings as unknown as RsdSettingsState
 
@@ -113,14 +112,14 @@ export function rsdSettingsReducer(state: RsdSettingsState, action: RsdSettingsA
   }
 }
 
-export function activeModulesKeys(modules:RsdModules){
-  try{
+export function activeModulesKeys(modules: RsdModules) {
+  try {
     // filter out active modules (keys)
-    const keys = Object.keys(modules) as RsdModuleName []
+    const keys = Object.keys(modules) as RsdModuleName[]
     const activeModules = keys
-      .filter(key=>modules[key].active)
+      .filter(key => modules[key].active)
     return activeModules
-  }catch(e:any){
+  } catch (e: any) {
     logger(`activeModulesKeys error: ${e.message}`, 'warn')
     return []
   }
