@@ -1,16 +1,16 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
+import StatusBanner from '~/components/cards/StatusBanner'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
-import StatusBanner from '~/components/cards/StatusBanner'
+import OverviewListItemLink from '~/components/software/overview/list/OverviewListItemLink'
 
 type SoftwareListItemProps = {
   software:SoftwareOverviewItemProps
@@ -21,11 +21,8 @@ export default function AdminSoftwareListItem({software,onDelete}:SoftwareListIt
   return (
     <OverviewListItem>
       {/* standard software list item with link */}
-      <Link
-        data-testid="software-grid-card"
-        title="Click to edit software"
+      <OverviewListItemLink
         href={`/software/${software.slug}/edit/information`}
-        className="flex-1 flex hover:text-inherit"
       >
         <SoftwareListItemContent
           statusBanner={
@@ -39,8 +36,7 @@ export default function AdminSoftwareListItem({software,onDelete}:SoftwareListIt
           }
           {...software}
         />
-      </Link>
-
+      </OverviewListItemLink>
       {/* admin menu */}
       <div className="flex mx-4">
         <IconButton

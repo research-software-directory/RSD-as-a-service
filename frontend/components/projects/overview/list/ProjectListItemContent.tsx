@@ -8,7 +8,8 @@
 
 import {JSX} from 'react'
 import {getImageUrl} from '~/utils/editImage'
-import ProjectMetrics from '../cards/ProjectMetrics'
+import ListTitleSubtitle from '~/components/layout/ListTitleSubtitle'
+import ProjectMetrics from '~/components/projects/overview/cards/ProjectMetrics'
 import ListImageWithGradientPlaceholder from './ListImageWithGradientPlaceholder'
 
 type ProjectListItemProps = {
@@ -30,12 +31,10 @@ export default function ProjectListItemContent(item: ProjectListItemProps) {
       />
       <div className="flex flex-col md:flex-row gap-3 flex-1 py-2">
         <div className="flex-1">
-          <div className='line-clamp-2 md:line-clamp-1 break-words font-medium'>
-            {item.title}
-          </div>
-          <div className='line-clamp-3 md:line-clamp-1 break-words text-sm opacity-70'>
-            {item.subtitle}
-          </div>
+          <ListTitleSubtitle
+            title={item.title}
+            subtitle={item.subtitle}
+          />
           {/* project status - admin only */}
           {item.statusBanner &&
             <div className="pt-2 flex gap-2 text-xs opacity-60">
@@ -43,7 +42,6 @@ export default function ProjectListItemContent(item: ProjectListItemProps) {
             </div>
           }
         </div>
-
         {/* Metrics */}
         <div className="flex gap-4 mr-4">
           <ProjectMetrics

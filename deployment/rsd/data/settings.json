@@ -7,10 +7,11 @@
     "website": "https://www.esciencecenter.nl",
     "feedback": {
       "enabled": true,
+      "host_label": "RSD",
       "url": "rsd@esciencecenter.nl",
       "issues_page_url": "https://github.com/research-software-directory/RSD-as-a-service/issues"
     },
-    "login_info_url": "https://research-software-directory.github.io/documentation/getting-access.html",
+    "login_info_url":"https://research-software-directory.github.io/documentation/getting-access.html",
     "terms_of_service_url": "/page/terms-of-service/",
     "privacy_statement_url": "/page/privacy-statement/",
     "software_highlights": {
@@ -18,7 +19,39 @@
       "limit": 5,
       "description": null
     },
-    "modules":["software","projects","organisations","communities"]
+    "orcid_search":true
+  },
+  "modules":{
+    "software":{
+      "active":true,
+      "name":"software",
+      "menuItem":"Software"
+    },
+    "projects":{
+      "active":true,
+      "name":"projects",
+      "menuItem":"Projects"
+    },
+    "organisations":{
+      "active":true,
+      "name":"organisations",
+      "menuItem":"Organisations"
+    },
+    "communities": {
+      "active":true,
+      "name":"communities",
+      "menuItem":"Communities"
+    },
+    "persons": {
+      "active":false,
+      "name":"persons",
+      "menuItem": "Persons"
+    },
+    "news": {
+      "active":true,
+      "name":"news",
+      "menuItem":"News"
+    }
   },
   "links": [
     {
@@ -28,18 +61,23 @@
     },
     {
       "label": "User Documentation",
-      "url": "https://research-software-directory.github.io/documentation",
+      "url": "/documentation/users/",
       "target": "_blank"
     },
     {
       "label": "Technical Documentation",
-      "url": "https://research-software-directory.github.io/RSD-as-a-service",
+      "url": "/documentation/rsd-instance/",
       "target": "_blank"
     },
     {
       "label": "Netherlands eScienceCenter",
       "url": "https://www.esciencecenter.nl/",
       "target": "_blank"
+    },
+    {
+      "label": "News",
+      "url": "/news",
+      "target": "_self"
     }
   ],
   "theme": {
@@ -47,7 +85,7 @@
     "light": {
       "colors": {
         "base-100": "#fff",
-        "base-200": "#eeeeee",
+        "base-200": "#f5f5f7",
         "base-300": "#dcdcdc",
         "base-400": "#bdbdbd",
         "base-500": "#9e9e9e",
@@ -67,11 +105,13 @@
         "error": "#e53935",
         "error-content": "#fff",
         "warning": "#ed6c02",
-        "warning-content": "#000",
+        "warning-content": "#fff",
         "info": "#0288d1",
-        "info-content": "#000",
+        "info-content": "#fff",
         "success": "#2e7d32",
-        "success-content": "#fff"
+        "success-content": "#fff",
+        "glow-start": "#db2777",
+        "glow-end": "#9333ea"
       },
       "action": {
         "active": "rgba(0, 0, 0, 0.54)",
@@ -114,7 +154,9 @@
         "info": "#0288d1",
         "info-content": "#000",
         "success": "#2e7d32",
-        "success-content": "#fff"
+        "success-content": "#fff",
+        "glow-start": "#db2777",
+        "glow-end": "#9333ea"
       },
       "action": {
         "active": "rgba(255, 255, 255, 0.54)",

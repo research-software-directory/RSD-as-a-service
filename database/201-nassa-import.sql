@@ -91,15 +91,19 @@ BEGIN
 	INSERT INTO software_for_community (software, community, status) VALUES (software_id, nassa_id, 'approved') ON CONFLICT DO NOTHING;
 
 	INSERT INTO repository_url (
-		software,
 		url,
 		code_platform,
 		scraping_disabled_reason
 	) VALUES (
-		software_id,
 		nassa_import.repository_url,
 		'github',
 		'This is a NASSA module which is not a repository root'
+	)
+	ON CONFLICT DO NOTHING;
+
+	INSERT INTO repository_url_for_software (repository_url, software) VALUES (
+		(SELECT id FROM repository_url WHERE repository_url.url = nassa_import.repository_url),
+		software_id
 	)
 	ON CONFLICT DO NOTHING;
 

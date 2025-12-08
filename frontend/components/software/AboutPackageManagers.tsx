@@ -8,8 +8,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import WidgetsIcon from '@mui/icons-material/Widgets'
-import LogoAvatar from '~/components/layout/LogoAvatar'
-import {PackageManager, packageManagerSettings} from './edit/package-managers/apiPackageManager'
+import {PackageManager} from './edit/package-managers/apiPackageManager'
+import PackageMangerIcon from './edit/package-managers/PackageManagerIcon'
 
 type AboutPackageManagersProps={
   packages: PackageManager[]
@@ -18,31 +18,22 @@ type AboutPackageManagersProps={
 function PackageManagerItem({item}:{item:PackageManager}){
   // get package manager only when url provided
   if (item.url){
-    const info = packageManagerSettings[item.package_manager ?? 'other']
-    const link = new URL(item.url)
+    // const info = packageManagerSettings[item.package_manager ?? 'other']
+    // const link = new URL(item.url)
     return (
-      <a href={item.url} target="_blank" rel="noreferrer" className="basis-17 shrink-0">
-        <LogoAvatar
-          name={link.hostname}
-          src={info.icon ?? undefined}
-          sx={{
-            width: 'auto',
-            height: '3rem',
-            fontSize: '3rem',
-            // add 2 pixel margin to align it with same logo in source code
-            margin:'0.125rem',
-            '& img': {
-              // fit icon into area
-              objectFit: 'scale-down'
-            }
-          }}
-        />
+      <a
+        title={item.url}
+        href={item.url}
+        target="_blank"
+        rel="noreferrer"
+        className="hover:text-base-content"
+      >
+        <PackageMangerIcon platform={item.package_manager ?? 'other'}/>
       </a>
     )
   }
   return null
 }
-
 
 export default function AboutPackageManagers({packages}:AboutPackageManagersProps) {
   if (packages?.length > 0){

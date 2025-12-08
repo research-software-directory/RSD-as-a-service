@@ -6,9 +6,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {JSX} from 'react'
+import ListTitleSubtitle from '~/components/layout/ListTitleSubtitle'
 import ListImageWithGradientPlaceholder from '~/components/projects/overview/list/ListImageWithGradientPlaceholder'
-import SoftwareMetrics from '../cards/SoftwareMetrics'
-import {getImgUrl} from '../useSoftwareOverviewProps'
+import SoftwareMetrics from '~/components/software/overview/cards/SoftwareMetrics'
+import {getImgUrl} from '~/components/software/overview/useSoftwareOverviewProps'
 
 type SoftwareOverviewListItemProps = {
   brand_name: string
@@ -33,20 +34,18 @@ export default function SoftwareListItemContent(item:SoftwareOverviewListItemPro
       />
       <div className="flex flex-col md:flex-row gap-3 flex-1 py-2">
         <div className="flex-1">
-          <div className='line-clamp-2 md:line-clamp-1 break-words font-medium'>
-            {item.brand_name}
-          </div>
-          <div className='line-clamp-3 md:line-clamp-1 break-words text-sm text-base-content-secondary'>
-            {item.short_statement}
-          </div>
-          {/* project status - admin only */}
+          <ListTitleSubtitle
+            title={item.brand_name}
+            subtitle={item.short_statement}
+          />
+          {/* software status - admin only */}
           {item.statusBanner &&
             <div className="flex gap-2 text-xs opacity-70">
               {item.statusBanner}
             </div>
           }
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 mr-4">
           {/* Metrics */}
           <SoftwareMetrics
             contributor_cnt={item.contributor_cnt ?? 0}

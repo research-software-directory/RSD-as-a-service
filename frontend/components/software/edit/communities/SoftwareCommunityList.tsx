@@ -9,17 +9,17 @@ import AlertTitle from '@mui/material/AlertTitle'
 import List from '@mui/material/List'
 
 import {useSession} from '~/auth/AuthProvider'
+import {CommunityListProps} from '~/components/communities/apiCommunities'
 import {CommunitiesOfSoftware} from './apiSoftwareCommunities'
 import SoftwareCommunityListItem from './SoftwareCommunityListItem'
-import {CommunityListProps} from '~/components/communities/apiCommunities'
 
-type OrganisationListProps = {
-  readonly communities: CommunitiesOfSoftware[]
-  readonly onEdit?: (community: CommunityListProps) => void
-  readonly onDelete: (id: string) => void
-}
+type SoftwareCommunityListProps = Readonly<{
+  communities: CommunitiesOfSoftware[]
+  onEdit?: (community: CommunityListProps) => void
+  onDelete: (id: string) => void
+}>
 
-export default function SoftwareCommunityList({communities, onEdit, onDelete}: OrganisationListProps) {
+export default function SoftwareCommunityList({communities, onEdit, onDelete}: SoftwareCommunityListProps) {
   const {user} = useSession()
 
   if (communities.length === 0) {
@@ -38,7 +38,12 @@ export default function SoftwareCommunityList({communities, onEdit, onDelete}: O
           // software maintainer cannot remove rejected community status
           const userCanDelete = user?.role === 'rsd_admin' || item.status !=='rejected'
           return (
-            <SoftwareCommunityListItem key={item.id} community={item} onEdit={onEdit} onDelete={userCanDelete ? onDelete : undefined} />
+            <SoftwareCommunityListItem
+              key={item.id}
+              community={item}
+              onEdit={onEdit}
+              onDelete={userCanDelete ? onDelete : undefined}
+            />
           )
         })
       }
