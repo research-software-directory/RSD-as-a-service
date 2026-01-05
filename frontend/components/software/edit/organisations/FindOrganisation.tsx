@@ -100,9 +100,8 @@ export default function FindOrganisation({onAdd, onCreate}:
     return (
       <li
         data-testid="find-organisation-option"
-        {...props}
-        // overwrite props.key
         key={option.key}
+        {...props}
       >
         <FindOrganisationItem {...option.data} />
       </li>
