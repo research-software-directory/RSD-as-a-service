@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +26,7 @@ function PlatformPlaceholder() {
   )
 }
 
-export default function PackageManagerInfo({pm_key}: { pm_key: PackageManagerTypes|null }) {
+export default function PackageManagerInfo({pm_key}: {pm_key: PackageManagerTypes|null}) {
 
   if (typeof pm_key==='undefined' || pm_key===null) return <PlatformPlaceholder />
 

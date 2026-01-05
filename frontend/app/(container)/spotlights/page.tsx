@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 export default async function SpotlightsOverviewPage({
   searchParams
 }:Readonly<{
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+  searchParams: Promise<{[key: string]: string | string[] | undefined}>
 }>) {
 
   // extract params, user preferences and active modules

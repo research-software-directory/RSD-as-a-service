@@ -21,7 +21,7 @@ export default async function OrganisationPage({
   params,
   searchParams
 }:Readonly<{
-  searchParams: Promise<{ [key: string]: string | undefined }>,
+  searchParams: Promise<{[key: string]: string | undefined}>,
   params: Promise<{slug: string[]}>,
 }>) {
 
@@ -47,28 +47,28 @@ export default async function OrganisationPage({
       return (
         // Suspense is not support when Javascript is disabled!
         // <Suspense fallback={<FilterSearchCardSkeleton layout={layout} count={rsd_page_rows} />}>
-          <OrganisationSoftware slug={slug} query={query} />
+        <OrganisationSoftware slug={slug} query={query} />
         // </Suspense>
       )
     case 'projects':
       return (
         // Suspense is not support when Javascript is disabled!
         // <Suspense fallback={<FilterSearchCardSkeleton layout={layout} count={rsd_page_rows} />}>
-          <OrganisationProjects slug={slug} query={query} />
+        <OrganisationProjects slug={slug} query={query} />
         // </Suspense>
       )
     case 'releases':
       return (
         // Suspense is not support when Javascript is disabled!
         // <Suspense fallback={<ListContentSkeleton lines={rsd_page_rows} />}>
-          <OrganisationSoftwareReleases slug={slug} query={query}/>
+        <OrganisationSoftwareReleases slug={slug} query={query}/>
         // </Suspense>
       )
     case 'units':
       return (
         // Suspense is not support when Javascript is disabled!
         // <Suspense fallback={<ListContentSkeleton lines={rsd_page_rows} />}>
-          <OrganisationUnits slug={slug}/>
+        <OrganisationUnits slug={slug}/>
         // </Suspense>
       )
     case 'settings':
@@ -83,7 +83,7 @@ export default async function OrganisationPage({
       return (
         // Suspense is not support when Javascript is disabled!
         // <Suspense fallback={<ContentLoader />}>
-          <AboutOrganisation />
+        <AboutOrganisation />
         // </Suspense>
       )
     default:

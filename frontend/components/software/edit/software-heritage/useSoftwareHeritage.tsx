@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,7 @@ import {
   SoftwareHeritageItem
 } from './apiSoftwareHeritage'
 
-export default function useSoftwareHeritage({token, software}: { token: string, software: string }) {
+export default function useSoftwareHeritage({token, software}: {token: string, software: string}) {
   const [swhids,setSwhids]=useState<SoftwareHeritageItem[]>([])
   const [loading,setLoading]=useState(true)
 

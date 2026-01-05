@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,7 +8,7 @@ import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetch
 import {RawMaintainerProps} from '~/components/maintainers/apiMaintainers'
 
 export async function getMaintainersOfOrganisation({organisation, token}:
-  { organisation: string, token: string}) {
+{organisation: string, token: string}) {
   try {
     // console.log('getMaintainersOfOrganisation.organisation', organisation)
     const query = `rpc/maintainers_of_organisation?organisation_id=${organisation}`
@@ -33,7 +33,7 @@ export async function getMaintainersOfOrganisation({organisation, token}:
 }
 
 export async function deleteMaintainerFromOrganisation({maintainer,organisation,token}:
-  {maintainer:string,organisation:string,token:string}) {
+{maintainer:string,organisation:string,token:string}) {
   try {
     const query = `maintainer_for_organisation?maintainer=eq.${maintainer}&organisation=eq.${organisation}`
     const url = `${getBaseUrl()}/${query}`
@@ -55,7 +55,7 @@ export async function deleteMaintainerFromOrganisation({maintainer,organisation,
 }
 
 export async function organisationMaintainerLink({organisation, account, token}:
-  { organisation: string, account: string, token: string }) {
+{organisation: string, account: string, token: string}) {
   try {
     // POST
     const url = `${getBaseUrl()}/invite_maintainer_for_organisation`

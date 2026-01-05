@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,7 +8,7 @@ import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetch
 import {RawMaintainerProps} from '~/components/maintainers/apiMaintainers'
 
 export async function getMaintainersOfProject({project, token}:
-  {project: string, token: string}) {
+{project: string, token: string}) {
   try {
     const query = `rpc/maintainers_of_project?project_id=${project}`
     const url = `${getBaseUrl()}/${query}`
@@ -32,7 +32,7 @@ export async function getMaintainersOfProject({project, token}:
 }
 
 export async function deleteMaintainerFromProject({maintainer,project,token}:
-  {maintainer:string,project:string,token:string}) {
+{maintainer:string,project:string,token:string}) {
   try {
     const query = `maintainer_for_project?maintainer=eq.${maintainer}&project=eq.${project}`
     const url = `${getBaseUrl()}/${query}`

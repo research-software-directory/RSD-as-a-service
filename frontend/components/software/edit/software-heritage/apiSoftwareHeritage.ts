@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -45,7 +45,7 @@ export async function getSoftwareHeritageItems({software, token}: {
   }
 }
 
-export async function postSoftwareHeritage({data, token}: { data: NewSoftwareHeritage, token: string }) {
+export async function postSoftwareHeritage({data, token}: {data: NewSoftwareHeritage, token: string}) {
   try {
     const url = `${getBaseUrl()}/swhid_for_software`
 
@@ -69,7 +69,7 @@ export async function postSoftwareHeritage({data, token}: { data: NewSoftwareHer
   }
 }
 
-export async function patchSoftwareHeritageList({items, token}: { items: SoftwareHeritageItem[], token: string }) {
+export async function patchSoftwareHeritageList({items, token}: {items: SoftwareHeritageItem[], token: string}) {
   try {
     // create all requests
     const requests = items.map(item => {
@@ -102,7 +102,7 @@ export async function patchSoftwareHeritageList({items, token}: { items: Softwar
 }
 
 export async function patchSoftwareHeritageItem({id, key, value, token}:
-{ id: string, key: string, value: any, token: string }) {
+{id: string, key: string, value: any, token: string}) {
   try {
     const url = `/api/v1/swhid_for_software?id=eq.${id}`
     const resp = await fetch(url, {
@@ -126,7 +126,7 @@ export async function patchSoftwareHeritageItem({id, key, value, token}:
   }
 }
 
-export async function deleteSoftwareHeritageItem({id, token}: { id: string, token: string }) {
+export async function deleteSoftwareHeritageItem({id, token}: {id: string, token: string}) {
   try {
     const url = `/api/v1/swhid_for_software?id=eq.${id}`
     const resp = await fetch(url, {

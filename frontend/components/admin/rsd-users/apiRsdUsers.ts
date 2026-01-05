@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -42,12 +42,12 @@ export async function getRsdAccounts({page,rows,token,searchFor,adminsOnly,locke
         query += `&id=eq.${searchFor}`
       } else if (orcidRegex.test(searchFor)) {
         // else if searchFor is an ORCID we search on login_for_account sub
-		  query += `&login_for_account_text_filter.sub=eq.${searchFor}&login_for_account_text_filter.provider=eq.orcid`
-	  } else {
-      const encodedSearch = encodeURIComponent(searchFor)
-		  // else we search by name, email or organisation
-		  query += `&login_for_account_text_filter.or=(name.ilike."*${encodedSearch}*",email.ilike."*${encodedSearch}*",home_organisation.ilike."*${encodedSearch}*")`
-	  }
+        query += `&login_for_account_text_filter.sub=eq.${searchFor}&login_for_account_text_filter.provider=eq.orcid`
+      } else {
+        const encodedSearch = encodeURIComponent(searchFor)
+        // else we search by name, email or organisation
+        query += `&login_for_account_text_filter.or=(name.ilike."*${encodedSearch}*",email.ilike."*${encodedSearch}*",home_organisation.ilike."*${encodedSearch}*")`
+      }
     }
     // complete url
     const url = `${getBaseUrl()}/account?${query}`
@@ -88,7 +88,7 @@ export async function getRsdAccounts({page,rows,token,searchFor,adminsOnly,locke
   }
 }
 
-export async function deleteRsdAccount({id,token}:{ id: string, token: string }) {
+export async function deleteRsdAccount({id,token}:{id: string, token: string}) {
   try {
 
     const url = `${getBaseUrl()}/rpc/delete_account`
@@ -110,7 +110,7 @@ export async function deleteRsdAccount({id,token}:{ id: string, token: string })
   }
 }
 
-export async function addRsdAdmin({id,token}:{ id: string, token: string }){
+export async function addRsdAdmin({id,token}:{id: string, token: string}){
   try {
 
     const url = `${getBaseUrl()}/admin_account`
@@ -132,7 +132,7 @@ export async function addRsdAdmin({id,token}:{ id: string, token: string }){
   }
 }
 
-export async function removeRsdAdmin({id,token}:{ id: string, token: string }){
+export async function removeRsdAdmin({id,token}:{id: string, token: string}){
   try {
     if (!id) return {
       status: 400,

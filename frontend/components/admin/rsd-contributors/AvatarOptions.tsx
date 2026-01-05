@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,7 +22,7 @@ type AvatarOptionsProps={
   data: RsdContributor
 }
 
-export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
+export default function AvatarOptions({data}:AvatarOptionsProps) {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const [anchorEl, setAnchorEl] = useState(null)
@@ -51,6 +51,7 @@ export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
     // debugger
     if (resp.status==200){
       // update image
+      // eslint-disable-next-line react-hooks/immutability
       data.avatar_id = avatar
     }else{
       showErrorMessage(`Failed to update avatar. ${resp?.message ?? ''}`)

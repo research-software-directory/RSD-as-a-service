@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -58,7 +58,7 @@ export default function useProjectTestimonial(){
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[token,project.id])
 
-  const updateTestimonial = useCallback(async({data, pos}: { data: Testimonial, pos: number })=>{
+  const updateTestimonial = useCallback(async({data, pos}: {data: Testimonial, pos: number})=>{
     if (project.id && token && data.id){
       const testimonial = {
         ...data,

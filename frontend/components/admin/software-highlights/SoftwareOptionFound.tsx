@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,7 +15,7 @@ import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import {getImageUrl} from '~/utils/editImage'
 
-export default function SoftwareOptionFound({option}: { option: AutocompleteOption<SoftwareOverviewItemProps> }) {
+export default function SoftwareOptionFound({option}: {option: AutocompleteOption<SoftwareOverviewItemProps>}) {
 
   const {brand_name, contributor_cnt, mention_cnt, image_id, is_published} = option.data
 

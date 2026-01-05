@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,7 +13,7 @@ import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import logger from '~/utils/logger'
 
 export async function createOrganisationAndAddToSoftware({item, token, software}:
-  { item: EditOrganisation, token: string, software: string}) {
+{item: EditOrganisation, token: string, software: string}) {
   // extract props we need for createOrganisation
   const organisation = getPropsFromObject(item, colForCreate)
   // create new organisation
@@ -57,7 +57,7 @@ export async function createOrganisationAndAddToSoftware({item, token, software}
 }
 
 export async function addOrganisationToSoftware({software, organisation, position, token}:
-  { software: string, organisation: string, position: number | null, token: string }) {
+{software: string, organisation: string, position: number | null, token: string}) {
   // 2a. determine status - default is approved
   const status: SoftwareForOrganisation['status'] = 'approved'
   // 2b. register participating organisation for this software
@@ -87,7 +87,7 @@ export async function addOrganisationToSoftware({software, organisation, positio
 }
 
 export async function patchOrganisationPositions({software, organisations, token}:
-  { software: string, organisations: EditOrganisation[], token: string }) {
+{software: string, organisations: EditOrganisation[], token: string}) {
   try {
     if (organisations.length === 0) return {
       status: 400,
@@ -122,7 +122,7 @@ export async function patchOrganisationPositions({software, organisations, token
 }
 
 export async function deleteOrganisationFromSoftware({software, organisation, token}:
-  { software: string | undefined, organisation: string, token: string }) {
+{software: string | undefined, organisation: string, token: string}) {
   try {
     if (typeof software == 'undefined') {
       return {

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +14,7 @@ import PageContainer from '../layout/PageContainer'
 import RelatedProjectsGrid from './RelatedProjectsGrid'
 
 export default function RelatedProjectsSection({relatedProjects}:
-  Readonly<{relatedProjects: RelatedProject[]}>) {
+Readonly<{relatedProjects: RelatedProject[]}>) {
   // use media query hook for small screen logic
   const smallScreen = useMediaQuery('(max-width:600px)')
   // adjust grid min width for mobile

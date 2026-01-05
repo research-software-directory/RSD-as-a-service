@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,7 +23,7 @@ import {projectInformation as config} from './config'
 import {patchProjectTable} from './patchProjectInfo'
 import PublishingProjectInfo from './PublishingProjectInfo'
 
-export default function ProjectInformationForm({editProject}: { editProject: EditProject }) {
+export default function ProjectInformationForm({editProject}: {editProject: EditProject}) {
   const {user} = useSession()
   // const {loading, setLoading, setProjectInfo} = useProjectContext()
   const methods = useForm<EditProject>({

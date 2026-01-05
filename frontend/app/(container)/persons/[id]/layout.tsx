@@ -15,7 +15,7 @@ import {getPublicUserProfile} from '~/components/user/settings/profile/apiUserPr
  * @returns
  */
 export async function generateMetadata(
-  {params}:{params: Promise<{ id: string }>}
+  {params}:{params: Promise<{id: string}>}
 ): Promise<Metadata> {
   // read route params
   const {id} = await params
@@ -52,7 +52,7 @@ export default async function PersonPageLayout({
 }: Readonly<{
   children: React.ReactNode,
   // extract slug from params
-  params: Promise<{ id: string }>
+  params: Promise<{id: string}>
 }>){
 
   const {id} = await params

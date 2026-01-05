@@ -28,12 +28,12 @@ export default function LearnMoreSection() {
       <div>
         <h2 className="flex justify-center text-3xl lg:text-4xl font-rsd-titles font-bold "
           data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
-              Learn more
+          Learn more
         </h2>
         <p className="text-center text-lg mt-5" data-aos="fade"
           data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
-              Try out our online demo, or get more detailed information in our documentation and
-              FAQ.
+          Try out our online demo, or get more detailed information in our documentation and
+          FAQ.
         </p>
 
         <div

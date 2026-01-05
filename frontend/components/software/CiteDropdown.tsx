@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2021 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 dv4all
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,7 +17,7 @@ export type SelectOption={
 }
 
 export default function CiteDropdown({label,options=[],value,onChange}:
-  {label:string,options:SelectOption[],value:string,onChange:any}) {
+{label:string,options:SelectOption[],value:string,onChange:any}) {
 
   return (
     <FormControl fullWidth>

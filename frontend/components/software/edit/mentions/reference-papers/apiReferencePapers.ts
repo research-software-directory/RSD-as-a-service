@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +9,7 @@ import {MentionItemProps, mentionColumns} from '~/types/Mention'
 import {addOrGetMentionItem} from '~/components/mention/apiEditMentions'
 
 export async function addToReferencePaperForSoftware({mention, software, token}:
-  { mention: string, software: string, token: string }) {
+{mention: string, software: string, token: string}) {
   const url = '/api/v1/reference_paper_for_software'
   try {
     const resp = await fetch(url, {
@@ -33,7 +33,7 @@ export async function addToReferencePaperForSoftware({mention, software, token}:
 }
 
 export async function addNewReferencePaperToSoftware({item, software, token}:
-  { item: MentionItemProps, software: string, token: string }) {
+{item: MentionItemProps, software: string, token: string}) {
   // add new item or get existing by DOI
   let resp = await addOrGetMentionItem({
     mention:item,
@@ -70,7 +70,7 @@ export async function addNewReferencePaperToSoftware({item, software, token}:
 }
 
 export async function removeReferencePaperForSoftware({mention, software, token}:
-  { mention: string, software: string, token: string }) {
+{mention: string, software: string, token: string}) {
   const url = `/api/v1/reference_paper_for_software?software=eq.${software}&mention=eq.${mention}`
   try {
     const resp = await fetch(url, {

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -268,7 +268,7 @@ export async function addNewsItem({page,token}:{page:AddNewsItem,token:string}) 
 }
 
 
-export async function validSlugNews({date, slug, token}: {date:string, slug: string, token: string }) {
+export async function validSlugNews({date, slug, token}: {date:string, slug: string, token: string}) {
   // use server side when available
   const baseUrl = getBaseUrl()
   // get published meta pages ordered by position

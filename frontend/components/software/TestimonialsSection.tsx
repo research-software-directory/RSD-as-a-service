@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +9,7 @@ import {Testimonial} from '../../types/Testimonial'
 import PageContainer from '../layout/PageContainer'
 import TestimonialItem from './TestimonialItem'
 
-export default function TestimonialSection({testimonials = []}: { testimonials: Testimonial[] }) {
+export default function TestimonialSection({testimonials = []}: {testimonials: Testimonial[]}) {
   // do not render section if no data
   if (testimonials?.length === 0) return null
 

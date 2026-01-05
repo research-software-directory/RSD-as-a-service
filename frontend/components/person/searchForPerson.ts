@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2025 dv4all
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -16,7 +16,7 @@ import {rsdPublicProfiles, rsdUniquePersonEntries, UniqueRsdPerson} from './find
 import {AggregatedPerson, groupByOrcid, personsToAutocompleteOptions} from './groupByOrcid'
 
 export async function searchForPerson({searchFor,token,include_orcid=true}:
-  {searchFor: string,token:string,include_orcid?:boolean}) {
+{searchFor: string,token:string,include_orcid?:boolean}) {
   try {
 
     const persons = await getAggregatedPersons({searchFor,token,include_orcid})
@@ -31,7 +31,7 @@ export async function searchForPerson({searchFor,token,include_orcid=true}:
 }
 
 export async function getAggregatedPersons({searchFor,token,include_orcid}:
-  {searchFor:string,token:string, include_orcid?:boolean}) {
+{searchFor:string,token:string, include_orcid?:boolean}) {
   try {
     const [rsdPersons, orcidPersons, profiles] = await Promise.all([
       rsdUniquePersonEntries({searchFor, token, limit:30}),

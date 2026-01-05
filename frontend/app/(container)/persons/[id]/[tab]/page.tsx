@@ -12,7 +12,7 @@ export default async function PersonPages({
   searchParams
 }:Readonly<{
   params: Promise<{id:string, tab:ProfileTabKey}>,
-  searchParams: Promise<{ [key: string]: string | undefined }>,
+  searchParams: Promise<{[key: string]: string | undefined}>,
 }>){
 
   const [{id,tab},query,{token,rsd_page_rows}] = await Promise.all([

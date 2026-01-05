@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,7 +15,7 @@ export default function LogoSection() {
       id="partners"
       className="w-full max-w-(--breakpoint-xl) mx-auto mt-10 p-5 md:p-10">
       <div id="whyrsd" className="text-xl opacity-50">
-            Partners using the Research Software Directory
+        Partners using the Research Software Directory
       </div>
       <div
         className="flex gap-10 w-full max-w-(--breakpoint-xl) flex-wrap mt-6 p-3 md:p-10 items-center opacity-30">

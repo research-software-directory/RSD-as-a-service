@@ -17,7 +17,7 @@ import NewsItemMenu from '~/components/news/item/NewsItemMenu'
  * @returns
  */
 export async function generateMetadata(
-  {params}:{params: Promise<{ slug: string, date:string }>}
+  {params}:{params: Promise<{slug: string, date:string}>}
 ): Promise<Metadata> {
   // read route params
   const [{slug,date},{token}] = await Promise.all([
@@ -110,8 +110,8 @@ export default async function NewsItemPage({
         {/* RSD ADMIN MENU */}
         {
           user?.role==='rsd_admin' ?
-          <NewsItemMenu item={newsItem} />
-          : null
+            <NewsItemMenu item={newsItem} />
+            : null
         }
       </article>
     </>

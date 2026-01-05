@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
@@ -28,7 +28,7 @@ import {CommunitiesOfSoftware} from '~/components/software/edit/communities/apiS
  * Software list for the software overview page
  * Note! url should contain all query params. Use softwareUrl helper fn to construct url.
  */
-export async function getSoftwareList({url,token}:{url:string,token?:string }){
+export async function getSoftwareList({url,token}:{url:string,token?:string}){
   try{
     const resp = await fetch(url, {
       method: 'GET',
@@ -365,7 +365,7 @@ export async function apiRemoteMarkdown(url:string){
 
 // RELATED PROJECTS FOR SOFTWARE
 export async function getRelatedProjectsForSoftware({software, token, approved=true}:
-  { software: string, token?: string, approved?:boolean }) {
+{software: string, token?: string, approved?:boolean}) {
   try {
     // construct api url based on request source
     let query = `rpc/related_projects_for_software?software_id=${software}&order=current_state.desc,date_start.desc,title.asc`

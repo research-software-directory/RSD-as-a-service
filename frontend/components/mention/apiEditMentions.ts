@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -167,7 +167,7 @@ export function classifyMentionsByType(mentions: MentionItemProps[]) {
  * @returns MentionItem
  */
 export async function addOrGetMentionItem({mention, token}:
-  { mention: MentionItemProps, token: string }) {
+{mention: MentionItemProps, token: string}) {
   const url = '/api/v1/mention'
   try {
     // check if publication is already
@@ -230,7 +230,7 @@ export async function addOrGetMentionItem({mention, token}:
  * @returns
  */
 export async function replaceMentionItem({mention,token}:
-  { mention: MentionItemProps, token: string }){
+{mention: MentionItemProps, token: string}){
   try {
     let resp
     if (mention.id) {
@@ -274,7 +274,7 @@ export async function replaceMentionItem({mention,token}:
  * @returns MentionItem
  */
 export async function updateMentionItem({mention, token}:
-  { mention: MentionItemProps, token: string }) {
+{mention: MentionItemProps, token: string}) {
   if (!mention.id) {
     return {
       status: 400,
@@ -333,7 +333,7 @@ export function newMentionItem(title?: string) {
  * delete existing mention item in the mention table
  */
 export async function deleteMentionItem({id, token}:
-  {id: string, token: string }) {
+{id: string, token: string}) {
 
   const url = `/api/v1/mention?id=eq.${id}`
   try {

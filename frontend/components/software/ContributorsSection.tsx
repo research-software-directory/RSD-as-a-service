@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,7 +32,7 @@ function clasifyContributors(contributors: Person[]) {
 
 // shared component with project page for team members
 export default function ContributorsSection({contributors, title='Contributors'}:
-  { contributors: Person[], title?:string }) {
+{contributors: Person[], title?:string}) {
   // do not show section if no content
   if (typeof contributors == 'undefined' || contributors?.length===0) return null
   // clasify

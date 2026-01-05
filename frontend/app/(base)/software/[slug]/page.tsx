@@ -46,7 +46,7 @@ import TestimonialSection from '~/components/software/TestimonialsSection'
  * @returns
  */
 export async function generateMetadata(
-  {params}:Readonly<{params: Promise<{ slug: string }>}>
+  {params}:Readonly<{params: Promise<{slug: string}>}>
 ): Promise<Metadata> {
   // read route params and token
   const [{slug},{token}] = await Promise.all([
@@ -102,7 +102,7 @@ export default async function SoftwareViewPage({
   params,
 }:Readonly<{
   // extract slug from params
-  params: Promise<{ slug: string }>
+  params: Promise<{slug: string}>
 }>) {
   // get slug and token
   const [{slug},{token},modules] = await Promise.all([

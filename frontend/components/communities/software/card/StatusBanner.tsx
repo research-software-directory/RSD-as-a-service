@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -27,7 +27,7 @@ export default function StatusBanner({
         className="bg-error text-base-100 px-2 py-1 uppercase font-medium"
         style={{width, borderRadius, letterSpacing}}
       >
-      Rejected
+        Rejected
       </div>
     )
   }
@@ -37,7 +37,7 @@ export default function StatusBanner({
         className="bg-warning text-base-100 px-2 py-1 uppercase font-medium"
         style={{width, borderRadius, letterSpacing}}
       >
-      Pending
+        Pending
       </div>
     )
   }
@@ -48,7 +48,7 @@ export default function StatusBanner({
         className="bg-base-700 text-base-100 px-2 py-1 uppercase font-medium"
         style={{width, borderRadius, letterSpacing}}
       >
-          Not published
+        Not published
       </div>
     )
   }

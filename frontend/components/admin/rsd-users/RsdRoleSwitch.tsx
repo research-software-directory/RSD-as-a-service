@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
@@ -24,13 +24,13 @@ export default function RsdRoleSwitch({id,admin_account,disabled}:RsdRoleSwitchP
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const [value, setValue] = useState(admin_account ? true : false)
 
-  useEffect(()=>{
-    if (admin_account){
-      setValue(true)
-    }else{
-      setValue(false)
-    }
-  },[admin_account])
+  // useEffect(()=>{
+  //   if (admin_account){
+  //     setValue(true)
+  //   }else{
+  //     setValue(false)
+  //   }
+  // },[admin_account])
 
   async function onRsdAdmin({target}:{target:HTMLInputElement}){
     // save previous value for rollback

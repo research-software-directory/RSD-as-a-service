@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -105,7 +105,7 @@ export default function OrganisationUnits({units}: Readonly<ResearchUnitsProps>)
     })
   }
 
-  async function saveOrganisation({data, pos}:{data: EditOrganisation, pos?: number }) {
+  async function saveOrganisation({data, pos}:{data: EditOrganisation, pos?: number}) {
     try {
       // console.log('saveOrganisation...', data)
       // UPLOAD logo

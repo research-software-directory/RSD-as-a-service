@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -130,7 +130,7 @@ export default function CreateAccessToken({createAccessToken}:CreateRsdAccessTok
             <Alert severity="warning" sx={{margin:'0.5rem 0 1rem 0'}}>
               <AlertTitle sx={{fontWeight:500}}>Copy your generated token</AlertTitle>
               <p>
-              Please note that the generated access token is only displayed to you once, and therefore needs to be copied. The maximum lifetime of a token is also limited to one year. After it expires, you need to generate a new token.
+                Please note that the generated access token is only displayed to you once, and therefore needs to be copied. The maximum lifetime of a token is also limited to one year. After it expires, you need to generate a new token.
               </p>
             </Alert>
             <TextField

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,15 +11,15 @@ export default function JumboBanner() {
         data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000"
       >
         <h1 className="text-4xl xl:text-5xl font-rsd-titles font-bold">
-            Show your research software to the world
+          Show your research software to the world
         </h1>
         <div className="mt-8 text-lg">
-            The <span
+          The <span
             className="text-transparent font-medium bg-clip-text bg-linear-to-tr from-[#03A9F1] to-[#09FBD3] px-1">
-              Research Software Directory
+            Research Software Directory
           </span>
-            is designed to show the impact research software has on research and society. We stimulate
-            the reuse of research software and encourage proper citation to ensure researchers and RSEs get credit for their work.
+          is designed to show the impact research software has on research and society. We stimulate
+          the reuse of research software and encourage proper citation to ensure researchers and RSEs get credit for their work.
         </div>
       </div>
 
@@ -30,7 +30,7 @@ export default function JumboBanner() {
         data-aos-easing="ease-in-out">
         <source src="/video/RSD-video.mp4" type="video/mp4" />
         <source src="/video/RSD-video.webm" type="video/webm" />
-          Your browser does not support HTML5 video.
+        Your browser does not support HTML5 video.
       </video>
     </div>
   )

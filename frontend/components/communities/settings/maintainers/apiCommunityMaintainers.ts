@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,7 +16,7 @@ export type MaintainerOfCommunity = {
 }
 
 export async function getMaintainersOfCommunity({community, token}:
-  { community: string, token: string}) {
+{community: string, token: string}) {
   try {
     const query = `rpc/maintainers_of_community?community_id=${community}`
     const url = `${getBaseUrl()}/${query}`
@@ -40,7 +40,7 @@ export async function getMaintainersOfCommunity({community, token}:
 }
 
 export async function deleteMaintainerFromCommunity({maintainer,community,token}:
-  {maintainer:string,community:string,token:string}) {
+{maintainer:string,community:string,token:string}) {
   try {
     const query = `maintainer_for_community?maintainer=eq.${maintainer}&community=eq.${community}`
     const url = `${getBaseUrl()}/${query}`
@@ -62,7 +62,7 @@ export async function deleteMaintainerFromCommunity({maintainer,community,token}
 }
 
 export async function communityMaintainerLink({community, account, token}:
-  { community: string, account: string, token: string }) {
+{community: string, account: string, token: string}) {
   try {
     // POST
     const url = `${getBaseUrl()}/invite_maintainer_for_community`

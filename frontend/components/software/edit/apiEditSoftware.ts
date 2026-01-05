@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,7 +16,7 @@ import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 
 export async function addSoftware({software, token}:
-  { software: NewSoftwareItem, token: string}) {
+{software: NewSoftwareItem, token: string}) {
   try {
     // console.log('addSoftware...called...', software)
     const url = '/api/v1/software'
@@ -52,7 +52,7 @@ export async function addSoftware({software, token}:
 }
 
 export async function getSoftwareToEdit({slug, token}:
-  { slug: string, token?: string }) {
+{slug: string, token?: string}) {
   try {
     // GET
     const select = '*,repository_url!left(url,code_platform,scraping_disabled_reason)'
@@ -82,7 +82,7 @@ export async function getSoftwareToEdit({slug, token}:
 }
 
 export async function addToRepositoryTable({data, token}:
-  { data: RepositoryUrl, token: string }) {
+{data: RepositoryUrl, token: string}) {
   try {
     // add new repository
     const url = '/api/v1/repository_url'
@@ -108,7 +108,7 @@ export async function addToRepositoryTable({data, token}:
 }
 
 export async function deleteFromRepositoryTable({software, token}:
-  { software: string, token: string }) {
+{software: string, token: string}) {
   try {
     // DELETE
     const url = `/api/v1/repository_url?software=eq.${software}`
@@ -131,7 +131,7 @@ export async function deleteFromRepositoryTable({software, token}:
 }
 
 export async function addLicensesForSoftware({license, token}:
-  { license: LicenseForSoftware, token: string}) {
+{license: LicenseForSoftware, token: string}) {
   try {
     const url = `/api/v1/license_for_software?software=eq.${license.software}`
     const resp = await fetch(url, {
@@ -161,7 +161,7 @@ export async function addLicensesForSoftware({license, token}:
 }
 
 export async function deleteLicense({id, token}:
-  { id: string, token: string }) {
+{id: string, token: string}) {
   try {
     const url = `/api/v1/license_for_software?id=eq.${id}`
     const resp = await fetch(url, {

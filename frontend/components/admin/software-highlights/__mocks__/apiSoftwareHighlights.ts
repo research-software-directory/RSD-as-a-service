@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,7 +28,7 @@ export const getSoftwareHighlights=jest.fn(async({page, rows, token, searchFor, 
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const addSoftwareHighlight=jest.fn(async({id, position, token}: { id: string, position: number, token: string })=>{
+export const addSoftwareHighlight=jest.fn(async({id, position, token}: {id: string, position: number, token: string})=>{
   // console.log('addSoftwareHighlight...mocks DEFAULT')
   return {
     status: 200,
@@ -37,7 +37,7 @@ export const addSoftwareHighlight=jest.fn(async({id, position, token}: { id: str
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const patchSoftwareHighlights=jest.fn(async({highlights, token}: { highlights: SoftwareHighlight[], token: string })=>{
+export const patchSoftwareHighlights=jest.fn(async({highlights, token}: {highlights: SoftwareHighlight[], token: string})=>{
   // console.log('patchSoftwareHighlights...mocks DEFAULT')
   return {
     status: 200,
@@ -46,7 +46,7 @@ export const patchSoftwareHighlights=jest.fn(async({highlights, token}: { highli
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const deleteSoftwareHighlight=jest.fn(async({id, token}: { id: string, token: string })=>{
+export const deleteSoftwareHighlight=jest.fn(async({id, token}: {id: string, token: string})=>{
   // console.log('deleteSoftwareHighlight...mocks DEFAULT')
 
   return {

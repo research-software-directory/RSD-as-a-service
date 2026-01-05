@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +9,7 @@ import {home_config} from './home_config'
 
 const {button} = home_config
 
-function GlowingButton({text, url, target = '_self', minWidth = '9rem'}: { text: string, url: string, target?: string, minWidth?: string }) {
+function GlowingButton({text, url, target = '_self', minWidth = '9rem'}: {text: string, url: string, target?: string, minWidth?: string}) {
   return <a
     href={url}
     className="flex gap-4 cursor-pointer"

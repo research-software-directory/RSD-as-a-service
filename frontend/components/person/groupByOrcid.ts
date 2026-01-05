@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +24,7 @@ export type AggregatedPerson = {
   sources: SourceType[]
 }
 
-const orcidKeys: { targetKey: keyof AggregatedPerson, sourceKey: keyof OrcidRecord }[] = [
+const orcidKeys: {targetKey: keyof AggregatedPerson, sourceKey: keyof OrcidRecord}[] = [
   {targetKey: 'email_options', sourceKey: 'email'},
   {targetKey: 'affiliation_options', sourceKey: 'institution-name'}
 ]
@@ -38,7 +38,7 @@ const rsdKeys: {targetKey: keyof AggregatedPerson, sourceKey: keyof UniqueRsdPer
 
 export function groupByOrcid(rsdPersons: UniqueRsdPerson[], orcidPersons: OrcidRecord[]) {
   try {
-    const personsByOrcid: { [key: string]: AggregatedPerson } = {}
+    const personsByOrcid: {[key: string]: AggregatedPerson} = {}
     const persons: AggregatedPerson[] = []
 
     // ORCID entries first

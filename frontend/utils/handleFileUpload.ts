@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -20,7 +20,7 @@ export const maxFileSize = 2097152
 
 export const allowedImageMimeTypes: string = 'image/avif,image/gif,image/jpeg,image/png,image/svg+xml,image/webp,image/x-icon'
 
-export function handleFileUpload({target}: { target: any }): Promise<HandleFileUploadResponse>{
+export function handleFileUpload({target}: {target: any}): Promise<HandleFileUploadResponse>{
   return new Promise((res) => {
     try {
       if (typeof target==='undefined' || target===null) res({

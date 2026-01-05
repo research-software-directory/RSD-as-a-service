@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -16,7 +16,7 @@ import useSmallScreen from '~/config/useSmallScreen'
  * @param param0
  * @returns
  */
-export default function FiltersPanel({children}: { children: any }) {
+export default function FiltersPanel({children}: {children: any}) {
   const smallScreen = useSmallScreen()
 
   // hide filter panel on mobile

@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -209,7 +209,7 @@ export default function ProjectOrganisations() {
     }
   }
 
-  async function saveOrganisation({data, pos}:{data: EditOrganisation, pos?: number }) {
+  async function saveOrganisation({data, pos}:{data: EditOrganisation, pos?: number}) {
     try {
       // UPLOAD logo
       if (data.logo_b64 && data.logo_mime_type) {

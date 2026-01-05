@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -11,7 +11,7 @@ import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '../../../../u
 import logger from '../../../../utils/logger'
 
 export async function getRelatedSoftwareForSoftware({software, token}:
-  { software: string, token?: string}) {
+{software: string, token?: string}) {
   try {
     const query = `rpc/related_software_for_software?software_id=${software}&is_published=eq.true`
     const order ='order=brand_name.asc'
@@ -84,7 +84,7 @@ export async function addRelatedSoftware({origin,relation, token}: {
 }
 
 export async function deleteRelatedSoftware({origin, relation, token}:
-  { origin: string, relation: string, token: string }) {
+{origin: string, relation: string, token: string}) {
 
   const url = `/api/v1/software_for_software?origin=eq.${origin}&relation=eq.${relation}`
 

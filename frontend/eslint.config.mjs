@@ -48,6 +48,7 @@ export default defineConfig([
       'no-debugger': 'warn',
       'no-console': 'warn',
       'react-hooks/immutability': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
       'no-restricted-imports': ['warn', {
         name: '@mui/material',
         message: 'Please use "import foo from \'@mui/material/foo\'" instead.',

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +9,7 @@ import {
   getPackageManagers, patchPackageManager, patchPackageManagers, postPackageManager
 } from './apiPackageManager'
 
-export default function usePackageManagers({token, software}: { token: string, software: string }) {
+export default function usePackageManagers({token, software}: {token: string, software: string}) {
   const [managers,setManagers]=useState<PackageManager[]>([])
   const [loading,setLoading]=useState(true)
 

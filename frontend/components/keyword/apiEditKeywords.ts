@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,7 +20,7 @@ export type KeywordItem = {
   value: string
 }
 
-export async function createKeyword({keyword, token}: { keyword: string, token: string }) {
+export async function createKeyword({keyword, token}: {keyword: string, token: string}) {
   try {
     // POST
     const url = '/api/v1/keyword'
@@ -52,7 +52,7 @@ export async function createKeyword({keyword, token}: { keyword: string, token: 
   }
 }
 
-export async function createOrGetKeyword({keyword, token}: {keyword: string, token: string }) {
+export async function createOrGetKeyword({keyword, token}: {keyword: string, token: string}) {
   try {
     // try to find keyword
     const url = '/api/v1/keyword'
@@ -83,7 +83,7 @@ export async function createOrGetKeyword({keyword, token}: {keyword: string, tok
   }
 }
 
-export async function silentKeywordDelete({keyword, token}: { keyword: string, token: string }) {
+export async function silentKeywordDelete({keyword, token}: {keyword: string, token: string}) {
   try {
     // try to find keyword
     const url = `/api/v1/keyword?value=eq.${keyword}`
@@ -104,7 +104,7 @@ export async function silentKeywordDelete({keyword, token}: { keyword: string, t
 }
 
 export async function addKeywordsToProject({data, token}:
-  { data: ProjectKeyword[], token: string }) {
+{data: ProjectKeyword[], token: string}) {
   try {
     // POST
     const url = '/api/v1/keyword_for_project'
@@ -128,7 +128,7 @@ export async function addKeywordsToProject({data, token}:
 }
 
 export async function deleteKeywordFromProject({project, keyword, token}:
-  { project: string, keyword: string, token: string }) {
+{project: string, keyword: string, token: string}) {
   try {
     // DELETE record based on project and keyword uuid
     const query = `keyword_for_project?project=eq.${project}&keyword=eq.${keyword}`
@@ -155,7 +155,7 @@ type SoftwareKeyword = {
 }
 
 export async function addKeywordsToSoftware({data, token}:
-  {data: SoftwareKeyword | SoftwareKeyword[], token: string }) {
+{data: SoftwareKeyword | SoftwareKeyword[], token: string}) {
   try {
     // POST
     const url = '/api/v1/keyword_for_software'
@@ -179,7 +179,7 @@ export async function addKeywordsToSoftware({data, token}:
 }
 
 export async function deleteKeywordFromSoftware({software, keyword, token}:
-  { software: string, keyword: string, token: string }) {
+{software: string, keyword: string, token: string}) {
   try {
     // DELETE record based on software and keyword uuid
     const query = `keyword_for_software?software=eq.${software}&keyword=eq.${keyword}`

@@ -41,7 +41,7 @@ export default async function ProjectInvitePage({
   const account = getAccountFromToken(token)
   if (account===undefined){
     return (
-       <PageErrorMessage status={401} message="You need to sign in to RSD first!"/>
+      <PageErrorMessage status={401} message="You need to sign in to RSD first!"/>
     )
   }
 
@@ -52,7 +52,7 @@ export default async function ProjectInvitePage({
   })
   if (error){
     return (
-       <PageErrorMessage {...error}/>
+      <PageErrorMessage {...error}/>
     )
   }
 

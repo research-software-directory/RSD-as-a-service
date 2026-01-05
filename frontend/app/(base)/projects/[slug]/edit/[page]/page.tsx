@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default async function EditProjectPageRouter({
   params
 }:Readonly<{
-  params: Promise<{ slug: string, page: string }>
+  params: Promise<{slug: string, page: string}>
 }>) {
   // extract page to show
   const {page} = await params

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -41,7 +41,7 @@ function HeaderCell<T, K extends keyof T>({column,onSort}: HeaderCellType<T,K>){
 
 
 export default function TableHeader<T, K extends keyof T>({columns, onSort}:
-  {columns: Column<T, K>[], onSort:(column:K)=>void}) {
+{columns: Column<T, K>[], onSort:(column:K)=>void}) {
   return (
     <MuiTableHead>
       <MuiTableRow data-testid="mui-table-head-row">

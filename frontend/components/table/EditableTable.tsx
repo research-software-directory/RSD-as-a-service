@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -31,7 +31,7 @@ export type Column<T,K extends keyof T> = {
   className?: string
   sx?: SxProps<Theme>
   order?: OrderProps
-  patchFn?: (props: UpdateProps) => Promise<{ status: number, message: string }>
+  patchFn?: (props: UpdateProps) => Promise<{status: number, message: string}>
   disabledFn?: (props: UpdateProps) => boolean
   renderFn?: (data:T) => JSX.Element
   headerFn?: () => JSX.Element
@@ -51,7 +51,7 @@ export type MuiTableProps<T extends {id:string,origin?:string}, K extends keyof 
   sx?: SxProps<Theme>
 }
 
-export default function EditableTable<T extends { id: string, origin?:string}, K extends keyof T>({
+export default function EditableTable<T extends {id: string, origin?:string}, K extends keyof T>({
   columns, data, onSort, className='w-full mb-8 text-sm', stickyHeader=false, sx}: MuiTableProps<T, K>) {
 
   return (

@@ -41,7 +41,7 @@ import {
  * @returns
  */
 export async function generateMetadata(
-  {params}:Readonly<{params: Promise<{ slug: string }>}>
+  {params}:Readonly<{params: Promise<{slug: string}>}>
 ): Promise<Metadata> {
   // read route params
   const {slug} = await params
@@ -84,7 +84,7 @@ export default async function ProjectViewPage({
   params,
 }:Readonly<{
   // extract slug from params
-  params: Promise<{ slug: string }>
+  params: Promise<{slug: string}>
 }>) {
   // get slug and token
   const [{slug},{token},modules] = await Promise.all([

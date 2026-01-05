@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 export default async function ProjectsOverviewPage({
   searchParams
 }:Readonly<{
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+  searchParams: Promise<{[key: string]: string | string[] | undefined}>
 }>) {
   // extract params, user preferences and active modules
   const [params, {rsd_page_rows},modules] = await Promise.all([

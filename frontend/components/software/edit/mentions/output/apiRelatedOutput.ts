@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -18,7 +18,7 @@ import {addOrGetMentionItem} from '~/components/mention/apiEditMentions'
  * @returns MentionItemProps[]
  */
 export async function findPublicationByTitle({id, searchFor, token}:
-  { id: string, searchFor: string, token: string }) {
+{id: string, searchFor: string, token: string}) {
   const query = `id=${id}&search=${encodeURIComponent(searchFor)}&relation_type=software`
   const url = `/api/fe/mention/find_by_title?${query}`
   try {
@@ -40,7 +40,7 @@ export async function findPublicationByTitle({id, searchFor, token}:
 }
 
 export async function addNewMentionToSoftware({item, software, token}:
-  { item: MentionItemProps, software: string, token: string }) {
+{item: MentionItemProps, software: string, token: string}) {
   // add new item or get existing by DOI
   let resp = await addOrGetMentionItem({
     mention:item,
@@ -77,7 +77,7 @@ export async function addNewMentionToSoftware({item, software, token}:
 }
 
 export async function addToMentionForSoftware({mention, software, token}:
-  { mention: string, software: string, token: string }) {
+{mention: string, software: string, token: string}) {
   const url = '/api/v1/mention_for_software'
   try {
     const resp = await fetch(url, {
@@ -101,7 +101,7 @@ export async function addToMentionForSoftware({mention, software, token}:
 }
 
 export async function updateMentionForSoftware({mention, software, is_featured = false, token}:
-  { mention: string, software: string, is_featured: boolean, token: string }) {
+{mention: string, software: string, is_featured: boolean, token: string}) {
   const url = `/api/v1/mention_for_software?software=eq.${software}&mention=eq.${mention}`
   try {
     const resp = await fetch(url, {
@@ -126,7 +126,7 @@ export async function updateMentionForSoftware({mention, software, is_featured =
 }
 
 export async function removeMentionForSoftware({mention, software, token}:
-  { mention: string, software: string, token: string }) {
+{mention: string, software: string, token: string}) {
   const url = `/api/v1/mention_for_software?software=eq.${software}&mention=eq.${mention}`
   try {
     const resp = await fetch(url, {

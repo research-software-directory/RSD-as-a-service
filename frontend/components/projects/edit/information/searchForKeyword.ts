@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,7 +16,7 @@ export type Keyword = {
 
 // this is always frontend call
 export async function searchForProjectKeyword({searchFor}:
-  { searchFor: string }) {
+{searchFor: string}) {
   try {
     // GET top 30 matches
     const url = `/api/v1/rpc/keyword_count_for_projects?keyword=ilike.*${searchFor}*&order=cnt.desc.nullslast,keyword.asc&limit=30`

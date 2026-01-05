@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +17,7 @@ import CitationDoi from './CitationDoi'
 import CitationDownload from './CitationDownload'
 
 export default function CitationSection({releases,concept_doi}:
-  {releases:SoftwareVersion[]|null, concept_doi:string|null}) {
+{releases:SoftwareVersion[]|null, concept_doi:string|null}) {
   const [version, setVersion]=useState('')
   const [citation, setCitation] = useState<SoftwareVersion>()
 

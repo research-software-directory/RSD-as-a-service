@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -72,7 +72,7 @@ export async function getKeywords({page, rows, token, searchFor, orderBy}: getKe
   }
 }
 
-export async function patchKeyword({id, value, token}: { id: string, value: string, token: string }) {
+export async function patchKeyword({id, value, token}: {id: string, value: string, token: string}) {
   try {
     const query = `id=eq.${id}`
     const url = `${getBaseUrl()}/keyword?${query}`
@@ -99,7 +99,7 @@ export async function patchKeyword({id, value, token}: { id: string, value: stri
   }
 }
 
-export async function deleteKeywordById({id, token}: { id: string, token: string }) {
+export async function deleteKeywordById({id, token}: {id: string, token: string}) {
   try {
     // try to find keyword
     const url = `/api/v1/keyword?id=eq.${id}`

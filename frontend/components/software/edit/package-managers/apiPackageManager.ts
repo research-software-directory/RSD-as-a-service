@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -191,7 +191,7 @@ export async function getPackageManagers({software, token}: {
   }
 }
 
-export async function postPackageManager({data, token}: { data: NewPackageManager, token: string }) {
+export async function postPackageManager({data, token}: {data: NewPackageManager, token: string}) {
   try {
     const url = `${getBaseUrl()}/package_manager`
 
@@ -249,7 +249,7 @@ export async function patchPackageManager({id, data, token}: {
   }
 }
 
-export async function patchPackageManagers({items, token}: { items: PackageManager[], token: string }) {
+export async function patchPackageManagers({items, token}: {items: PackageManager[], token: string}) {
   try {
     // create all requests
     const requests = items.map(item => {
@@ -282,7 +282,7 @@ export async function patchPackageManagers({items, token}: { items: PackageManag
 }
 
 export async function patchPackageManagerItem({id, key, value, token}:
-                                              { id: string, key: string, value: any, token: string }) {
+{id: string, key: string, value: any, token: string}) {
   try {
     const url = `/api/v1/package_manager?id=eq.${id}`
     const resp = await fetch(url, {
@@ -306,7 +306,7 @@ export async function patchPackageManagerItem({id, key, value, token}:
   }
 }
 
-export async function deletePackageManager({id, token}: { id: string, token: string }) {
+export async function deletePackageManager({id, token}: {id: string, token: string}) {
   try {
     const url = `/api/v1/package_manager?id=eq.${id}`
     const resp = await fetch(url, {
