@@ -71,6 +71,7 @@ export default function SortableHighlightsList({highlights, loading, onSorted, o
 
   function onRenderItem(item: SoftwareHighlight, index?: number) {
     // increase published items count (only published items are included in carousel)
+
     if (item.is_published===true) publishedCnt += 1
     // validate if limit is reached
     const inCarousel = (limit >= publishedCnt) && item.is_published

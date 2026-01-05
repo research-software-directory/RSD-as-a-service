@@ -65,7 +65,7 @@ export function useRsdInvite(){
   },[token,getInvites,showErrorMessage])
 
   useEffect(()=>{
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+
     if (token) getInvites()
   },[token,getInvites])
 

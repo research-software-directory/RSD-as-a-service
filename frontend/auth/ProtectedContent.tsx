@@ -53,7 +53,7 @@ export default function ProtectedContent({children, pageType='software', slug=''
     if (slug && session.token && pageType) {
       getMaintainerFlag()
     } else if (session.status !== status) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+
       setStatus(session.status)
     }
   },[slug,session,status,pageType])

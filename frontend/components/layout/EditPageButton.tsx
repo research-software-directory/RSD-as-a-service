@@ -7,7 +7,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
 import EditIcon from '@mui/icons-material/Edit'
 import Button from '@mui/material/Button'
 import EditFab from './EditFab'

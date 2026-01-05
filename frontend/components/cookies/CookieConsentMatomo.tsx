@@ -31,9 +31,9 @@ let previousUrl: string | null = null
  */
 export default function CookieConsentMatomo({matomo}: CookieConsentMatomoProps) {
   const {setMatomoConsent} = useMatomoConsent()
-  const [open, setOpen] = useState(false)
   const route = usePathname()
   const search = useSearchParams()
+  const [open, setOpen] = useState(false)
 
   // console.group('CookieConsentModal')
   // console.log('matomo...', matomo)
@@ -46,6 +46,7 @@ export default function CookieConsentMatomo({matomo}: CookieConsentMatomoProps) 
       if (localStorage) {
         const cookieConsent = localStorage.getItem('rsd_cookies_consent')
         const showModal = cookieConsent === null && matomo.id !== null && matomo.consent === null && route !== '/cookies'
+
         setOpen(showModal)
       }
     } catch (e: any) {

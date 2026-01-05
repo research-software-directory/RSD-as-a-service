@@ -74,7 +74,7 @@ export default function EditMarkdownPage({slug,onDelete,onSubmit}:EditMarkdownPa
     if (slug && token &&
       slug!==loadedSlug
     ) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+
       getMarkdown()
     }
   }, [slug, loadedSlug, token, getMarkdown])

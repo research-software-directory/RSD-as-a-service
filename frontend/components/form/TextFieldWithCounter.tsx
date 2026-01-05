@@ -48,6 +48,7 @@ export default function TextFieldWithCounter({options, register}:
       rows={options?.rows ?? undefined}
       maxRows={options?.maxRows ?? undefined}
       error={options?.error ?? false}
+      // eslint-disable-next-line react-hooks/purity
       id={options?.label ?? `input-${Math.floor(Math.random()*10000)}`}
       label={options?.label ?? 'Label not provided'}
       type={options?.type ?? 'text'}

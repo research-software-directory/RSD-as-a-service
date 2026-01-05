@@ -1,13 +1,13 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 'use client'
 
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useState} from 'react'
 import styled from '@emotion/styled'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb'
 import Box from '@mui/material/Box'
@@ -31,7 +31,6 @@ const NoContentBody = styled('div')({
 
 export default function NoContent({message='nothing to show'}:{message?:string}) {
   const [show, setShow]=useState(false)
-  const containerRef = useRef(undefined)
 
   useEffect(() => {
     let abort=false
@@ -44,14 +43,13 @@ export default function NoContent({message='nothing to show'}:{message?:string})
 
   return (
     <Box
-      ref={containerRef}
       sx={{
         flex:1,
         overflow: 'hidden'
       }}
       component="div"
     >
-      <Slide direction="up" in={show} container={containerRef.current}>
+      <Slide direction="up" in={show}>
         <NoContentBody>
           <DoDisturbIcon
             sx={{

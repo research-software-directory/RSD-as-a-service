@@ -45,7 +45,7 @@ export function AuthProvider(props:AuthProviderProps) {
       if (schedule) clearTimeout(schedule)
       if (expiresInMs <= 0) {
         // token expired
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+
         setSession({
           ...session,
           status: 'expired',

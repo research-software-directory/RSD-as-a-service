@@ -47,13 +47,10 @@ export default defineConfig([
     rules: {
       'no-debugger': 'warn',
       'no-console': 'warn',
-      'react-hooks/immutability': 'warn',
-      'react-hooks/set-state-in-effect': 'warn',
       'no-restricted-imports': ['warn', {
         name: '@mui/material',
         message: 'Please use "import foo from \'@mui/material/foo\'" instead.',
       }],
-      '@next/next/no-img-element': 'off',
 
       // TypeScript specific warnings
       '@typescript-eslint/no-empty-object-type': 'warn',
@@ -66,6 +63,10 @@ export default defineConfig([
 
       // Overrides
       '@typescript-eslint/no-explicit-any': 'off',
+      '@next/next/no-img-element': 'off',
+      'react-hooks/immutability': 'off',
+      'react-hooks/incompatible-library': 'off',
+      'react-hooks/set-state-in-effect': 'off'
     }
   }
 ])

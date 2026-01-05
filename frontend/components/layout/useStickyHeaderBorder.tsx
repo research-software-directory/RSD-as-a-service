@@ -1,12 +1,14 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {MutableRefObject, useEffect} from 'react'
+import {RefObject, useEffect} from 'react'
 
 type StickyHeaderBorderProps = {
-  headerRef: MutableRefObject<any>
+  headerRef: RefObject<any>
   setClasses: (classes:string)=>void
 }
 
@@ -15,7 +17,7 @@ export default function useStickyHeaderBorder({headerRef,setClasses}:StickyHeade
     /**
      * Observe when header (h1 element) moves in/outside a certain area.
      * It is used to add the border at the bottom of sticky header (border-b-2 class).
-     * The logic is oposite to "common" observer approach:
+     * The logic is:
      * 1. we ignore first 68px at the top of the screen.
      * 2. when header reaches this area the observer will set isIntersecting flag to false
      * 3. when isIntersecting===false, the header is at first 68px of the screen and we add border
@@ -45,6 +47,7 @@ export default function useStickyHeaderBorder({headerRef,setClasses}:StickyHeade
   }, [headerRef, setClasses])
 
   return {
+    // eslint-disable-next-line react-hooks/refs
     el: headerRef?.current ?? undefined
   }
 }

@@ -18,9 +18,9 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import {RsdContributor} from './useContributors'
 import {patchPerson} from './apiRsdContributors'
 
-type AvatarOptionsProps={
+type AvatarOptionsProps=Readonly<{
   data: RsdContributor
-}
+}>
 
 export default function AvatarOptions({data}:AvatarOptionsProps) {
   const {token} = useSession()
@@ -51,7 +51,7 @@ export default function AvatarOptions({data}:AvatarOptionsProps) {
     // debugger
     if (resp.status==200){
       // update image
-      // eslint-disable-next-line react-hooks/immutability
+
       data.avatar_id = avatar
     }else{
       showErrorMessage(`Failed to update avatar. ${resp?.message ?? ''}`)

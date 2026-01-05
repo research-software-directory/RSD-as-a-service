@@ -20,7 +20,7 @@ export default function RsdAdminContent({children}:{children:any}) {
 
   useEffect(() => {
     // sync local status
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+
     if (status!==session.status) setStatus(session.status)
   },[session.status,status])
 

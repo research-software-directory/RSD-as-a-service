@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -63,6 +63,7 @@ export function useProjectCardActions({project}: ProjectCardWithMenuProps) {
       showErrorMessage(`Failed to update ${project.title}. ${pin.message}`)
     } else {
       // directly update object value
+
       project.is_featured = is_featured
       // send refresh signal
       // TO BE USED BY child component to reload item
@@ -82,9 +83,11 @@ export function useProjectCardActions({project}: ProjectCardWithMenuProps) {
     if (resp.status !== 200) {
       showErrorMessage(`Failed to update ${project.title}. ${resp.message}`)
     } else {
+      // directly update object value
+
       project.status = status
       // send refresh signal
-      // TO BE USED BY child component to relaod item
+      // TO BE USED BY child component to reload item
       setRefresh(v=>v+1)
     }
   }

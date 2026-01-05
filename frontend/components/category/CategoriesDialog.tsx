@@ -49,7 +49,7 @@ export default function CategoriesDialog({
 
   useEffect(()=>{
     if (state==='ready'){
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+
       setSelectedCategoryIds(selected)
     }
   },[selected,state])

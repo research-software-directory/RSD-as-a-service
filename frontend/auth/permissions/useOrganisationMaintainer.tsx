@@ -47,7 +47,7 @@ export default function useOrganisationMaintainer({organisation}: UseOrganisatio
     if (organisation && user?.account && user?.role && token != '') {
       organisationMaintainer()
     } else if (abort === false) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+
       setIsMaintainer(false)
       setLoading(false)
     }
