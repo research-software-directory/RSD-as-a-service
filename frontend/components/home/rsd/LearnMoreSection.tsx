@@ -1,9 +1,9 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Image from 'next/legacy/image'
+import Image from 'next/image'
 import GradientBorderButton from './GradientBorderButton'
 import {home_config} from './home_config'
 
@@ -21,7 +21,6 @@ export default function LearnMoreSection() {
             src="/images/screenshots.webp"
             width="877"
             height="767"
-            layout="intrinsic"
             alt="rsd-illustration"
           />
         </div>

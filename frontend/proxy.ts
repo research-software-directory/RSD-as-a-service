@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,7 +12,7 @@ import {createNonce, getCspPolicy} from './utils/contentSecurityPolicy'
  * @param request
  * @returns response:NextResponse
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   // taken from documentation https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
   const nonce = createNonce()
   // create csp header string
