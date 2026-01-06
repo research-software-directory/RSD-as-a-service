@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -71,6 +71,7 @@ export default function SortableHighlightsList({highlights, loading, onSorted, o
 
   function onRenderItem(item: SoftwareHighlight, index?: number) {
     // increase published items count (only published items are included in carousel)
+
     if (item.is_published===true) publishedCnt += 1
     // validate if limit is reached
     const inCarousel = (limit >= publishedCnt) && item.is_published
@@ -100,7 +101,7 @@ export default function SortableHighlightsList({highlights, loading, onSorted, o
         body={
           <>
             <p>
-               Are you sure you want to delete software <strong>{modal?.highlight?.brand_name}</strong> from highlights?
+              Are you sure you want to delete software <strong>{modal?.highlight?.brand_name}</strong> from highlights?
             </p>
           </>
         }

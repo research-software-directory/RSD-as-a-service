@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -26,7 +26,7 @@ function leaveOutSomeFieldsReplacer(key: string, value: any) {
   }
 }
 
-export default function MentionsOverviewList({list, onUpdate}: { list: MentionItemProps[], onUpdate: ()=>void }) {
+export default function MentionsOverviewList({list, onUpdate}: {list: MentionItemProps[], onUpdate: ()=>void}) {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [mentionToEdit, setMentionToEdit] = useState<MentionItemProps | undefined>(undefined)
   const {token} = useSession()

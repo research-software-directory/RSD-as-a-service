@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,7 +12,7 @@ import {useUserSettings} from '~/config/UserSettingsContext'
 import ErrorLogsClient from './ErrorLogsClient'
 
 export default function AdminErrorLogs() {
-   // use page rows from user settings
+  // use page rows from user settings
   const {rsd_page_rows} = useUserSettings()
   const pagination = {
     ...defaultPagination,

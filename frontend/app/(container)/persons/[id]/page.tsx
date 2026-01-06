@@ -6,7 +6,7 @@ import {getActiveModuleNames} from '~/config/getSettingsServerSide'
  * @param param0
  * @returns
  */
-export default async function PersonRedirectPage({params}:{params: Promise<{ id: string }>}) {
+export default async function PersonRedirectPage({params}:{params: Promise<{id: string}>}) {
   const [{id},modules] = await Promise.all([
     params,
     getActiveModuleNames()

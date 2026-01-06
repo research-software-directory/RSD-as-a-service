@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,7 +12,7 @@ import {CodePlatform} from '~/types/SoftwareTypes'
 import GitlabIcon from '~/assets/logos/gitlab-icon-rgb.svg'
 import Image from 'next/image'
 
-export default function AboutSourceCode({repository,platform}: { repository: string | null, platform?: CodePlatform}) {
+export default function AboutSourceCode({repository,platform}: {repository: string | null, platform?: CodePlatform}) {
   const code = '</>'
 
   function getIcon() {

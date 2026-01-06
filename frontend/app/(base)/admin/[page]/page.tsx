@@ -30,7 +30,7 @@ export const dynamic = 'force-dynamic'
  * @returns
  */
 export async function generateMetadata(
-  {params}:Readonly<{params: Promise<{ page: string }>}>
+  {params}:Readonly<{params: Promise<{page: string}>}>
 ): Promise<Metadata> {
   const {page} = await params
 
@@ -46,7 +46,7 @@ export default async function AdminPage({
   params
 }:Readonly<{
   // extract page from params
-  params: Promise<{ page: string}>
+  params: Promise<{page: string}>
 }>){
 
   const {page} = await params

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -57,10 +57,10 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
   it('renders 401 when not authorised', async() => {
     // mock missing session
     mockCreateSession.mockResolvedValueOnce({
-    user: null,
-    token: '',
-    status: 'missing'
-  })
+      user: null,
+      token: '',
+      status: 'missing'
+    })
 
     const ResolvedPage = await OrganisationSettings({slug:['test-project'],query:{}})
 

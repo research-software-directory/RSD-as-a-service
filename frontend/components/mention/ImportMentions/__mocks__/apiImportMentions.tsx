@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -36,7 +36,7 @@ export const linkMentionToEntity=jest.fn(async({ids, table, entityName, entityId
 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const addMentions=jest.fn(async({mentions, token}: { mentions: MentionItemProps[], token: string })=>{
+export const addMentions=jest.fn(async({mentions, token}: {mentions: MentionItemProps[], token: string})=>{
   // console.log('addMentions...default MOCK...mentions...', mentions)
   return {
     status: 200,

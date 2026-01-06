@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -189,7 +189,7 @@ export async function getOrganisationById({uuid, token, isMaintainer = false}: {
   return undefined
 }
 
-export async function getOrganisationChildren({uuid, token}: { uuid: string, token?: string }) {
+export async function getOrganisationChildren({uuid, token}: {uuid: string, token?: string}) {
   const selectList = 'id,name,primary_maintainer,slug,website,logo_id,is_tenant,parent'
   const query = `organisation?parent=eq.${uuid}&order=name.asc&select=${selectList}`
   const url = `${getBaseUrl()}/${query}`
@@ -210,7 +210,7 @@ export async function getOrganisationChildren({uuid, token}: { uuid: string, tok
   return []
 }
 
-export async function getOrganisationInfo({uuid, token}: { uuid: string, token?: string }) {
+export async function getOrganisationInfo({uuid, token}: {uuid: string, token?: string}) {
   const query = `organisation?id=eq.${uuid}&select=description,wikipedia_url,city,ror_types`
   const url = `${getBaseUrl()}/${query}`
   // console.log('url...', url)

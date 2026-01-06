@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,14 +17,14 @@ import {paginationUrlParams} from '~/utils/postgrestUrl'
 
 export type SoftwareByMaintainer={
   id:string ,
-	slug:string,
-	brand_name:string,
-	short_statement:string,
-	is_published:boolean,
-	image_id:string|null
-	updated_at:string,
-	contributor_cnt:number,
-	mention_cnt:number
+  slug:string,
+  brand_name:string,
+  short_statement:string,
+  is_published:boolean,
+  image_id:string|null
+  updated_at:string,
+  contributor_cnt:number,
+  mention_cnt:number
 }
 
 export type UserSoftwareProp = {

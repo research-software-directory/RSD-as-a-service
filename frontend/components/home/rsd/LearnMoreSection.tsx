@@ -1,9 +1,9 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Image from 'next/legacy/image'
+import Image from 'next/image'
 import GradientBorderButton from './GradientBorderButton'
 import {home_config} from './home_config'
 
@@ -21,7 +21,6 @@ export default function LearnMoreSection() {
             src="/images/screenshots.webp"
             width="877"
             height="767"
-            layout="intrinsic"
             alt="rsd-illustration"
           />
         </div>
@@ -29,12 +28,12 @@ export default function LearnMoreSection() {
       <div>
         <h2 className="flex justify-center text-3xl lg:text-4xl font-rsd-titles font-bold "
           data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
-              Learn more
+          Learn more
         </h2>
         <p className="text-center text-lg mt-5" data-aos="fade"
           data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
-              Try out our online demo, or get more detailed information in our documentation and
-              FAQ.
+          Try out our online demo, or get more detailed information in our documentation and
+          FAQ.
         </p>
 
         <div

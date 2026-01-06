@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,7 +22,7 @@ export const validProjectItem=jest.fn(async(slug: string | undefined, token?: st
 })
 
 export const addProject=jest.fn(async({project, token}:
-  { project: NewProject, token: string })=>{
+{project: NewProject, token: string})=>{
   // valid by default
   return {
     status: 201,
@@ -34,7 +34,7 @@ export const addProject=jest.fn(async({project, token}:
  * Returns item with updated props on success
  */
 export const createOrganisationAndAddToProject=jest.fn(async({project, item, token, role='participating'}:
-  { item: EditOrganisation, project: string, token: string, role?: OrganisationRole})=>{
+{item: EditOrganisation, project: string, token: string, role?: OrganisationRole})=>{
   // OK by default
   item.id = 'test-uuid-mock'
   return {
@@ -44,7 +44,7 @@ export const createOrganisationAndAddToProject=jest.fn(async({project, item, tok
 })
 
 export const addOrganisationToProject=jest.fn(async({project, organisation, role, position, token}:
-  { project: string, organisation: string, role: OrganisationRole, position:number|null, token:string })=>{
+{project: string, organisation: string, role: OrganisationRole, position:number|null, token:string})=>{
   // by default request status is approved
   const status = 'approved'
   // return status assigned to organisation
@@ -55,7 +55,7 @@ export const addOrganisationToProject=jest.fn(async({project, organisation, role
 })
 
 export const patchProjectForOrganisation=jest.fn(async({project, organisation, data, token}:
-  { project: string, organisation: string, data: any, token: string })=>{
+{project: string, organisation: string, data: any, token: string})=>{
   return {
     status: 200,
     message: 'OK'
@@ -63,7 +63,7 @@ export const patchProjectForOrganisation=jest.fn(async({project, organisation, d
 })
 
 export const patchOrganisationPositions=jest.fn(async({project,organisations, token}:
-  {project:string,organisations:EditOrganisation[],token:string})=>{
+{project:string,organisations:EditOrganisation[],token:string})=>{
   return {
     status: 200,
     message: 'OK'
@@ -71,7 +71,7 @@ export const patchOrganisationPositions=jest.fn(async({project,organisations, to
 })
 
 export const deleteOrganisationFromProject=jest.fn(async({project, organisation, role, token}:
-  { project: string, organisation:string, role: OrganisationRole, token:string })=>{
+{project: string, organisation:string, role: OrganisationRole, token:string})=>{
   return {
     status: 200,
     message: 'OK'
@@ -79,7 +79,7 @@ export const deleteOrganisationFromProject=jest.fn(async({project, organisation,
 })
 
 export const addResearchDomainToProject=jest.fn(async({data, token}:
-  { data: ResearchDomainForProject[], token: string })=>{
+{data: ResearchDomainForProject[], token: string})=>{
   return {
     status: 200,
     message: 'OK'
@@ -87,7 +87,7 @@ export const addResearchDomainToProject=jest.fn(async({data, token}:
 })
 
 export const deleteResearchDomainFromProject=jest.fn(async({project, research_domain, token}:
-  { project: string, research_domain: string, token: string })=>{
+{project: string, research_domain: string, token: string})=>{
   return {
     status: 200,
     message: 'OK'
@@ -95,7 +95,7 @@ export const deleteResearchDomainFromProject=jest.fn(async({project, research_do
 })
 
 export const addProjectLink = jest.fn(async({link, token}:
-  {link: ProjectLink, token: string })=>{
+{link: ProjectLink, token: string})=>{
   return {
     status: 200,
     message: 'OK'
@@ -103,7 +103,7 @@ export const addProjectLink = jest.fn(async({link, token}:
 })
 
 export const updateProjectLink=jest.fn(async({link, token}:
-  { link: ProjectLink, token: string })=>{
+{link: ProjectLink, token: string})=>{
   return {
     status: 200,
     message: 'OK'
@@ -111,14 +111,14 @@ export const updateProjectLink=jest.fn(async({link, token}:
 })
 
 export const patchProjectLinkPositions=jest.fn(async({links, token}:
-  { links: ProjectLink[], token: string })=>{
+{links: ProjectLink[], token: string})=>{
   return {
     status: 200,
     message: 'OK'
   }
 })
 
-export const deleteProjectLink=jest.fn(async({id,token}:{id:string,token:string })=>{
+export const deleteProjectLink=jest.fn(async({id,token}:{id:string,token:string})=>{
   return {
     status: 200,
     message: 'OK'
@@ -135,7 +135,7 @@ export const createMaintainerLink=jest.fn(async({project,account,token}:{project
 export const addRelatedSoftware=jest.fn(async({project,software,status,token}: {
   project: string, software: string, status: OrganisationStatus, token: string
 })=>{
-   return {
+  return {
     status: 200,
     message: 'OK'
   }

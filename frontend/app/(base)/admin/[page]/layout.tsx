@@ -14,7 +14,7 @@ export default async function AdminLayout({
 }: Readonly<{
   children: React.ReactNode,
   // extract page from params
-  params: Promise<{ page: string}>
+  params: Promise<{page: string}>
 }>){
 
   const [{page},{token}] = await Promise.all([
@@ -65,8 +65,8 @@ export default async function AdminLayout({
   // 403 if not rsd_admin
   return (
     <PageErrorMessage
-        status={403}
-        message='FORBIDDEN'
-      />
+      status={403}
+      message='FORBIDDEN'
+    />
   )
 }

@@ -42,7 +42,7 @@ export default async function OrganisationInvitePage({
   const account = getAccountFromToken(token)
   if (account===undefined){
     return (
-       <PageErrorMessage status={401} message="You need to sign in to RSD first!"/>
+      <PageErrorMessage status={401} message="You need to sign in to RSD first!"/>
     )
   }
 
@@ -53,7 +53,7 @@ export default async function OrganisationInvitePage({
   })
   if (error){
     return (
-       <PageErrorMessage {...error}/>
+      <PageErrorMessage {...error}/>
     )
   }
 
@@ -65,7 +65,7 @@ export default async function OrganisationInvitePage({
 
   if (resp.status!==200){
     return (
-       <PageErrorMessage {...resp} />
+      <PageErrorMessage {...resp} />
     )
   }
 

@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -30,7 +30,7 @@ export function isOrcid(stringToCheck: string): boolean {
   return stringToCheck.match(orcidRegex) !== null
 }
 
-export async function searchORCID({searchFor, limit=30}: { searchFor: string, limit?:number }) {
+export async function searchORCID({searchFor, limit=30}: {searchFor: string, limit?:number}) {
   try {
     const rows = `&start=0&rows=${limit}`
     const query = buildSearchQuery(searchFor)

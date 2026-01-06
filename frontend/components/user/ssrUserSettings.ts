@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,8 +19,8 @@ export async function getUserSettings(){
   const token = appCookie.get('rsd_token')?.value
   const rsd_page_layout = appCookie.get('rsd_page_layout')?.value as SoftwareLayoutType ?? 'grid' as SoftwareLayoutType
   const rsd_page_rows = appCookie.has('rsd_page_rows') ?
-      Number.parseInt(appCookie.get('rsd_page_rows')?.value as string) :
-      rowsPerPageOptions[0]
+    Number.parseInt(appCookie.get('rsd_page_rows')?.value as string) :
+    rowsPerPageOptions[0]
 
   return {
     rsd_page_layout,

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,7 +12,7 @@ import logger from '~/utils/logger'
 export type EditSoftwareDescriptionProps = SoftwareTableItem & EditSoftwareImage
 
 export async function getSoftwareTable({slug, token}:
-  { slug: string, token: string }) {
+{slug: string, token: string}) {
   try {
     // GET
     const url = `${getBaseUrl()}/software?slug=eq.${slug}`

@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -115,7 +115,7 @@ export default function LoginProviders({providers,login_info_url,onClick}:LoginP
       </List>
       {login_info_url ?
         <p className="text-base-content-disabled text-sm">
-        You can find more information on signing in to the RSD in our <a href={login_info_url} target="_blank" rel="noreferrer"><strong>documentation</strong></a>.
+          You can find more information on signing in to the RSD in our <a href={login_info_url} target="_blank" rel="noreferrer"><strong>documentation</strong></a>.
         </p>
         : null
       }

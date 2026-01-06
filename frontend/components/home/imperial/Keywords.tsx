@@ -1,16 +1,16 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import KeywordBox from './KeywordBox'
 
 type KeywordsProps = {
-    keywords: Array<KeywordsObject>
+  keywords: Array<KeywordsObject>
 }
 
 type KeywordsObject = {
-    keyword: string
+  keyword: string
 }
 
 export default function Keywords({keywords}: KeywordsProps) {
@@ -20,7 +20,7 @@ export default function Keywords({keywords}: KeywordsProps) {
   return (
     <div className="max-w-(--breakpoint-xl) mx-auto">
       <div className="text-2xl ml-10 mt-14">
-                Popular Keywords
+        Popular Keywords
       </div>
       <div className="flex flex-wrap gap-10 md:gap-3 p-5 md:p-10 ">
         {keywordButtons}

@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2024 dv4all
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -52,6 +52,7 @@ export default function ControlledTextField<T>({options, control, rules}:Control
     }
   }, [options.autofocus])
 
+
   if (options?.useNull && options?.defaultValue==='') options.defaultValue=null
 
   return (
@@ -66,6 +67,7 @@ export default function ControlledTextField<T>({options, control, rules}:Control
 
         return (
           <TextField
+            // eslint-disable-next-line react-hooks/purity
             id={options.name.toString() ?? `input-${Math.floor(Math.random()*10000)}`}
             inputRef={inputRef}
             disabled={options?.disabled ?? false}

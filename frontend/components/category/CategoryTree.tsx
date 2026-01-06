@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -37,7 +37,7 @@ export default function CategoryTree({onRemove,items,showLongNames,selectedList}
                 </Tooltip>
               </Link>
               { onRemove && selectedList?.has(category.id) ?
-				        <IconButton
+                <IconButton
                   size='small'
                   onClick={()=>onRemove(category.id)}>
                   <CancelIcon fontSize='small'/>
@@ -46,7 +46,7 @@ export default function CategoryTree({onRemove,items,showLongNames,selectedList}
               }
             </div>
             {children.length > 0 ?
-			        <CategoryTree
+              <CategoryTree
                 items={children}
                 showLongNames={showLongNames}
                 selectedList={selectedList}

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
@@ -117,10 +117,10 @@ export default function RsdUsersList({
           body={
             <>
               <p>
-              Are you sure you want to delete the account <strong>{modal.delete?.account?.id}</strong>?
+                Are you sure you want to delete the account <strong>{modal.delete?.account?.id}</strong>?
               </p>
               <p className="mt-4">
-              The user will lose all maintainer rights and all unused maintainer invites created by this user will be deleted.
+                The user will lose all maintainer rights and all unused maintainer invites created by this user will be deleted.
               </p>
             </>
           }

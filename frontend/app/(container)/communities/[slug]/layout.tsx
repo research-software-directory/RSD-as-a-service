@@ -19,7 +19,7 @@ import UserAgreementModal from '~/components/user/settings/agreements/UserAgreem
  * @returns
  */
 export async function generateMetadata(
-  {params}:{params: Promise<{ slug: string }>}
+  {params}:{params: Promise<{slug: string}>}
 ): Promise<Metadata> {
   // read route params
   const {slug} = await params
@@ -58,7 +58,7 @@ export default async function CommunityPageLayout({
 }: Readonly<{
   children: React.ReactNode,
   // extract slug from params
-  params: Promise<{ slug: string }>
+  params: Promise<{slug: string}>
 }>) {
   // get slug and token
   const [{slug},{token}] = await Promise.all([

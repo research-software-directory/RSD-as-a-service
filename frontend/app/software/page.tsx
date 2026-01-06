@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 export default async function SoftwareOverviewPage({
   searchParams
 }:Readonly<{
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+  searchParams: Promise<{[key: string]: string | string[] | undefined}>
 }>) {
 
   // extract params, user preferences and active modules

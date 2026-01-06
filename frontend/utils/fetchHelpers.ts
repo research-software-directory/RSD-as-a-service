@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -84,8 +84,8 @@ export async function extractReturnMessage(resp: Response, dataId?: string) {
   }
 }
 
-export function extractErrorMessages(responses: { status: number, message: string }[]) {
-  const errors: { status: number, message: string }[] = []
+export function extractErrorMessages(responses: {status: number, message: string}[]) {
+  const errors: {status: number, message: string}[] = []
   responses.forEach(resp => {
     if (resp.status !== 200) {
       errors.push(resp)

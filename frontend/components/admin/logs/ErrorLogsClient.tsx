@@ -1,21 +1,21 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 'use client'
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
+import IconButton from '@mui/material/IconButton'
+import RefreshIcon from '@mui/icons-material/Refresh'
 import Pagination from '~/components/pagination/Pagination'
 import Searchbox from '~/components/search/Searchbox'
-import {Column, OrderByProps} from '~/components/table/EditableTable'
+import {OrderByProps} from '~/components/table/EditableTable'
 import LogsTable from './LogsTable'
 import DeleteOldLogsBtn from './DeleteOldLogsBtn'
 import useLogs, {BackendLog} from './useLogs'
 import {createColumns} from './config'
-import IconButton from '@mui/material/IconButton'
-import RefreshIcon from '@mui/icons-material/Refresh'
 
-// inital logs order is on family names
+// initial logs order is on family names
 const initialOrder:OrderByProps<BackendLog, keyof BackendLog> = {
   column: 'created_at',
   direction: 'desc'
@@ -23,8 +23,10 @@ const initialOrder:OrderByProps<BackendLog, keyof BackendLog> = {
 
 export default function ErrorLogsClient() {
   const [orderBy, setOrderBy] = useState<OrderByProps<BackendLog, keyof BackendLog>>(initialOrder)
-  const [columns, setColumns] = useState<Column<BackendLog, keyof BackendLog>[]>([])
   const {loading, logs, loadLogs, deleteLog, deleteOldLogs} = useLogs({orderBy})
+  // here we pass deleteLog method to columns
+  const columns = createColumns(deleteLog)
+  // const [columns, setColumns] = useState<Column<BackendLog, keyof BackendLog>[]>(cols ?? [])
 
   // update columns order
   if (orderBy) {
@@ -43,11 +45,9 @@ export default function ErrorLogsClient() {
     })
   }
 
-  useEffect(()=>{
-    // here we pass deleteLog method to columns
-    const cols = createColumns(deleteLog)
-    setColumns(cols)
-  },[deleteLog])
+  // useEffect(()=>{
+  //   setColumns(cols)
+  // },[deleteLog])
 
   return (
     <section className="flex-1 overflow-hidden">

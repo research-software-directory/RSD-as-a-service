@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -43,7 +43,7 @@ export async function validProjectItem(slug: string | undefined, token?: string)
 }
 
 export async function addProject({project, token}:
-  { project: NewProject, token: string }) {
+{project: NewProject, token: string}) {
   try {
     // console.log('addProject...called...', software)
     const url = '/api/v1/project'
@@ -82,7 +82,7 @@ export async function addProject({project, token}:
  * Returns item with updated props on success
  */
 export async function createOrganisationAndAddToProject({project, item, token, role='participating'}:
-  { item: EditOrganisation, project: string, token: string, role?: OrganisationRole}) {
+{item: EditOrganisation, project: string, token: string, role?: OrganisationRole}) {
   // extract props we need for createOrganisation
   const organisation = getPropsFromObject(item, colForCreate)
   // create new organisation
@@ -127,7 +127,7 @@ export async function createOrganisationAndAddToProject({project, item, token, r
 }
 
 export async function addOrganisationToProject({project, organisation, role, position, token}:
-  { project: string, organisation: string, role: OrganisationRole, position:number|null, token:string }) {
+{project: string, organisation: string, role: OrganisationRole, position:number|null, token:string}) {
   try {
     // by default request status is approved
     const status = 'approved'
@@ -165,7 +165,7 @@ export async function addOrganisationToProject({project, organisation, role, pos
 }
 
 export async function patchProjectForOrganisation({project, organisation, data, token}:
-  { project: string, organisation: string, data: any, token: string }) {
+{project: string, organisation: string, data: any, token: string}) {
   try {
     const query = `project=eq.${project}&organisation=eq.${organisation}`
     const url = `/api/v1/project_for_organisation?${query}`
@@ -188,7 +188,7 @@ export async function patchProjectForOrganisation({project, organisation, data, 
 }
 
 export async function patchOrganisationPositions({project,organisations, token}:
-  {project:string,organisations:EditOrganisation[],token:string}) {
+{project:string,organisations:EditOrganisation[],token:string}) {
   try {
     if (organisations.length === 0) return {
       status: 400,
@@ -223,7 +223,7 @@ export async function patchOrganisationPositions({project,organisations, token}:
 }
 
 export async function deleteOrganisationFromProject({project, organisation, role, token}:
-  { project: string, organisation:string, role: OrganisationRole, token:string }) {
+{project: string, organisation:string, role: OrganisationRole, token:string}) {
   try {
     // POST
     const url = `/api/v1/project_for_organisation?project=eq.${project}&organisation=eq.${organisation}&role=eq.${role}`
@@ -245,7 +245,7 @@ export async function deleteOrganisationFromProject({project, organisation, role
 }
 
 export async function addResearchDomainToProject({data, token}:
-  { data: ResearchDomainForProject[], token: string }) {
+{data: ResearchDomainForProject[], token: string}) {
   try {
     // POST array of items at once
     const url = '/api/v1/research_domain_for_project'
@@ -269,7 +269,7 @@ export async function addResearchDomainToProject({data, token}:
 }
 
 export async function deleteResearchDomainFromProject({project, research_domain, token}:
-  { project: string, research_domain: string, token: string }) {
+{project: string, research_domain: string, token: string}) {
   try {
     // DELETE record based on project and research_domain uuid
     const query = `research_domain_for_project?project=eq.${project}&research_domain=eq.${research_domain}`
@@ -293,7 +293,7 @@ export async function deleteResearchDomainFromProject({project, research_domain,
 }
 
 export async function addProjectLink({link, token}:
-  {link: ProjectLink, token: string }) {
+{link: ProjectLink, token: string}) {
   try {
     // POST
     const url = '/api/v1/url_for_project'
@@ -332,7 +332,7 @@ export async function addProjectLink({link, token}:
 }
 
 export async function updateProjectLink({link, token}:
-  { link: ProjectLink, token: string }) {
+{link: ProjectLink, token: string}) {
   try {
     // PATCH
     const url = `/api/v1/url_for_project?id=eq.${link.id}`
@@ -358,7 +358,7 @@ export async function updateProjectLink({link, token}:
 }
 
 export async function patchProjectLinkPositions({links, token}:
-  { links: ProjectLink[], token: string }) {
+{links: ProjectLink[], token: string}) {
   try {
     // create all requests
     const requests = links.map(link => {
@@ -387,7 +387,7 @@ export async function patchProjectLinkPositions({links, token}:
   }
 }
 
-export async function deleteProjectLink({id,token}:{id:string,token:string }) {
+export async function deleteProjectLink({id,token}:{id:string,token:string}) {
   try {
     // DELETE
     const url = `/api/v1/url_for_project?id=eq.${id}`

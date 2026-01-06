@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2024 dv4all
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -31,14 +31,14 @@ it('findInROR calls fetch with search param and json header', async () => {
     names: [{value: 'Test organisation', types: ['ror_display']}],
     locations: [{geonames_details: {country_name:'Test country', name: 'Test city'}}],
     links: [
-    {
+      {
         'type': 'website',
         'value': 'https://www.test-organisation.com/'
-    },
-    {
+      },
+      {
         'type': 'wikipedia',
         'value': 'https://en.wikipedia.org/wiki/test-organisation'
-    }
+      }
     ],
     types: ['Education']
   }]})

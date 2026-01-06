@@ -22,7 +22,7 @@ export default async function EditProjectLayout({
 }: Readonly<{
   children: React.ReactNode
   // extract slug from params
-  params: Promise<{ slug: string}>
+  params: Promise<{slug: string}>
 }>) {
 
   const [{slug},{token},modules] = await Promise.all([

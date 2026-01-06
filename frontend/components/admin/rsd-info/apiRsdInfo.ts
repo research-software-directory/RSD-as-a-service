@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -77,7 +77,7 @@ export async function getRsdInfo({page, rows, token, searchFor, orderBy}: ApiPar
   }
 }
 
-export async function createInfo({data,token}: {data:RsdInfo,token: string }) {
+export async function createInfo({data,token}: {data:RsdInfo,token: string}) {
   try {
     // POST
     const url = `${getBaseUrl()}/rsd_info`
@@ -107,7 +107,7 @@ export async function createInfo({data,token}: {data:RsdInfo,token: string }) {
   }
 }
 
-export async function patchRsdInfo({id, key, value, token}: {id:string, key: string, value:any, token: string }) {
+export async function patchRsdInfo({id, key, value, token}: {id:string, key: string, value:any, token: string}) {
   try {
     const url = `${getBaseUrl()}/rsd_info?key=eq.${id}`
     // make request
@@ -132,7 +132,7 @@ export async function patchRsdInfo({id, key, value, token}: {id:string, key: str
   }
 }
 
-export async function deleteInfoByKey({key, token}: { key: string, token: string }) {
+export async function deleteInfoByKey({key, token}: {key: string, token: string}) {
   try {
     // try to find keyword
     const url = `${getBaseUrl()}/rsd_info?key=eq.${key}`

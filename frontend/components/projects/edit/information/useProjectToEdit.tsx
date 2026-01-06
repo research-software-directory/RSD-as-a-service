@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -40,7 +40,7 @@ function prepareFundingOrganisations(organisations:OrganisationsOfProject[]) {
 }
 
 async function getProjectInfoForEdit({slug,token}:
-  {slug:string,token:string}):Promise<EditProject|undefined> {
+{slug:string,token:string}):Promise<EditProject|undefined> {
 
   const project = await getProjectItem({
     slug,
@@ -77,7 +77,7 @@ async function getProjectInfoForEdit({slug,token}:
 }
 
 export default function useProjectToEdit({slug,token}:
-  {slug:string,token:string,reload?:boolean}) {
+{slug:string,token:string,reload?:boolean}) {
   const [project, setProject] = useState<EditProject>()
   const [loading, setLoading] = useState(true)
   const [loadedSlug, setLoadedSlug] = useState<string>('')

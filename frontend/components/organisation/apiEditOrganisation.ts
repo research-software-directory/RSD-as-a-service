@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -27,7 +27,7 @@ import logger from '~/utils/logger'
 import {sortBySearchFor} from '~/utils/sortFn'
 
 export async function searchForOrganisation({searchFor, token}:
-  { searchFor: string, token?: string}) {
+{searchFor: string, token?: string}) {
   try {
     // make requests to RSD and ROR
     const rorOptions = await findInROR({searchFor})
@@ -51,7 +51,7 @@ export async function searchForOrganisation({searchFor, token}:
 }
 
 export async function findRSDOrganisation({searchFor, token, rorIds}:
-  { searchFor: string, token?: string, rorIds: string[] }){
+{searchFor: string, token?: string, rorIds: string[]}){
   try {
     // select only columns required for SearchOrganisation (avoid quering counts)
     const columns = ['id', 'slug', 'name', 'ror_id', 'website', 'is_tenant', 'logo_id', 'primary_maintainer','parent','parent_names','rsd_path']
@@ -97,7 +97,7 @@ export async function findRSDOrganisation({searchFor, token, rorIds}:
 }
 
 export async function getOrganisationsForSoftware({software, token}:
-  { software: string, token?: string }) {
+{software: string, token?: string}) {
   const query = `rpc/organisations_of_software?software_id=${software}&order=position,name.asc`
   const url = `${getBaseUrl()}/${query}`
   try {
@@ -119,7 +119,7 @@ export async function getOrganisationsForSoftware({software, token}:
 }
 
 export async function getParticipatingOrganisations({software, token}:
-  {software: string, token?: string}) {
+{software: string, token?: string}) {
   const resp = await getOrganisationsForSoftware({software, token})
   // filter only approved organisations
   // extract only properties used
@@ -140,7 +140,7 @@ export async function getParticipatingOrganisations({software, token}:
 }
 
 export async function createOrganisation({organisation, token}:
-  { organisation: CoreOrganisationProps, token: string}) {
+{organisation: CoreOrganisationProps, token: string}) {
   try {
 
     const url = '/api/v1/organisation'
@@ -174,7 +174,7 @@ export async function createOrganisation({organisation, token}:
 }
 
 export async function updateOrganisation({organisation, token}:
-  { organisation: Organisation, token: string }) {
+{organisation: Organisation, token: string}) {
   try {
     const url = `/api/v1/organisation?id=eq.${organisation.id}`
     const resp = await fetch(url, {
@@ -194,7 +194,7 @@ export async function updateOrganisation({organisation, token}:
 }
 
 export async function patchOrganisation({data, token}:
-  { data: PatchOrganisation, token: string }) {
+{data: PatchOrganisation, token: string}) {
   try {
     const url = `/api/v1/organisation?id=eq.${data.id}`
     const resp = await fetch(url, {
@@ -214,7 +214,7 @@ export async function patchOrganisation({data, token}:
 }
 
 export async function deleteOrganisation({uuid,logo_id, token}:
-  { uuid: string, logo_id: string|null, token: string }) {
+{uuid: string, logo_id: string|null, token: string}) {
   try {
     // delete organisation
     const url = `${getBaseUrl()}/rpc/delete_organisation`
@@ -251,7 +251,7 @@ export async function deleteOrganisation({uuid,logo_id, token}:
 }
 
 export async function getRsdPathForOrganisation({uuid,token}:
-  {uuid: string, token?: string}) {
+{uuid: string, token?: string}) {
   try {
     const query = `rpc/organisation_route?id=${uuid}`
     const url = `${getBaseUrl()}/${query}`
@@ -265,7 +265,7 @@ export async function getRsdPathForOrganisation({uuid,token}:
     })
 
     if (resp.status === 200) {
-      const json: { organisation: string, rsd_path: string, parent_names:string } = await resp.json()
+      const json: {organisation: string, rsd_path: string, parent_names:string} = await resp.json()
       return {
         status: 200,
         message: json.rsd_path
@@ -281,7 +281,7 @@ export async function getRsdPathForOrganisation({uuid,token}:
 }
 
 export function searchToEditOrganisation({item, account, position}:
-  { item: SearchOrganisation, account?: string, position?: number }) {
+{item: SearchOrganisation, account?: string, position?: number}) {
 
   const addOrganisation: EditOrganisation = {
     ...item,

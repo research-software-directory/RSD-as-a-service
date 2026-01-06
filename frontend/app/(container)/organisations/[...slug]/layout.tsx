@@ -22,7 +22,7 @@ import OrganisationTabs from '~/components/organisation/tabs/OrganisationTabs'
  * @returns
  */
 export async function generateMetadata(
-  {params}:{params: Promise<{ slug: string[] }>}
+  {params}:{params: Promise<{slug: string[]}>}
 ): Promise<Metadata> {
   // read route params
   const {slug} = await params
@@ -61,7 +61,7 @@ export default async function OrganisationPageLayout({
 }: Readonly<{
   children: React.ReactNode,
   // extract slug from params
-  params: Promise<{ slug: string[] }>
+  params: Promise<{slug: string[]}>
 }>) {
   // read route params
   const [{slug},{token}] = await Promise.all([

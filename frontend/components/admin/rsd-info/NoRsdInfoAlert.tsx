@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +17,7 @@ export default function NoRsdInfoAlert({addRsdInfo}:Readonly<{addRsdInfo:(data:R
         }}
       >
         <AlertTitle sx={{fontWeight:500}}>RSD info not found</AlertTitle>
-            Use <strong>Add</strong> button to create new entry. At least you should add <strong>remote_name</strong> to communicate name of your instance to other RSD instances.
+        Use <strong>Add</strong> button to create new entry. At least you should add <strong>remote_name</strong> to communicate name of your instance to other RSD instances.
       </Alert>
       <AddRsdInfo onAdd={addRsdInfo} />
     </section>

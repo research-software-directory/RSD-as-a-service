@@ -3,8 +3,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2024 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,7 +29,7 @@ import ControlledImageInput, {FormInputsForImage} from '~/components/form/Contro
 type EditOrganisationModalProps = {
   open: boolean,
   onCancel: () => void,
-  onSubmit: ({data, pos}: { data: EditOrganisation, pos?: number }) => void,
+  onSubmit: ({data, pos}: {data: EditOrganisation, pos?: number}) => void,
   // onDeleteLogo: (logo_id:string) => void,
   organisation?: EditOrganisation,
   // item position in the array

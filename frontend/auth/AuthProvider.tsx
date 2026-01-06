@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -45,6 +45,7 @@ export function AuthProvider(props:AuthProviderProps) {
       if (schedule) clearTimeout(schedule)
       if (expiresInMs <= 0) {
         // token expired
+
         setSession({
           ...session,
           status: 'expired',

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,7 +25,7 @@ export type ModalStates<T> = {
 }
 
 export async function postTeamMember({member, token}:
-  { member: SaveTeamMember, token: string }) {
+{member: SaveTeamMember, token: string}) {
   try {
     const url = '/api/v1/team_member'
 
@@ -59,7 +59,7 @@ export async function postTeamMember({member, token}:
 }
 
 export async function patchTeamMember({member, token}:
-  { member: PatchPerson, token: string }) {
+{member: PatchPerson, token: string}) {
   try {
     const url = `/api/v1/team_member?id=eq.${member.id}`
     const resp = await fetch(url, {
@@ -79,7 +79,7 @@ export async function patchTeamMember({member, token}:
   }
 }
 
-export async function deleteTeamMemberById({ids, token}: { ids: string[], token: string }) {
+export async function deleteTeamMemberById({ids, token}: {ids: string[], token: string}) {
   try {
     const url = `/api/v1/team_member?id=in.("${ids.join('","')}")`
     const resp = await fetch(url, {
@@ -99,7 +99,7 @@ export async function deleteTeamMemberById({ids, token}: { ids: string[], token:
 }
 
 export async function patchTeamMemberPositions({members, token}:
-  { members: TeamMember[], token: string }) {
+{members: TeamMember[], token: string}) {
   try {
     // create all requests
     const requests = members.map(member => {

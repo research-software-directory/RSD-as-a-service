@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,7 @@ import {WithAppContext} from '~/utils/jest/WithAppContext'
 import MuiSnackbarProvider from './MuiSnackbarProvider'
 import useSnackbar from './useSnackbar'
 
-function WithMuiSnackbar({type, message}: { type: string, message: string }) {
+function WithMuiSnackbar({type, message}: {type: string, message: string}) {
   const {showErrorMessage,showSuccessMessage,showInfoMessage,showWarningMessage} = useSnackbar()
 
   function showMessage() {

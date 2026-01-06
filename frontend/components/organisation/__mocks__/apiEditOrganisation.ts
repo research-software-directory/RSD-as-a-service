@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,29 +16,29 @@ import {
 import {getSlugFromString} from '~/utils/getSlugFromString'
 
 export const searchForOrganisation=jest.fn(async({searchFor, token}:
-  { searchFor: string, token?: string})=>{
+{searchFor: string, token?: string})=>{
   // nothing found by default
   return []
 })
 
 export const findRSDOrganisation=jest.fn(async({searchFor, token, rorIds}:
-  { searchFor: string, token?: string, rorIds: string[] })=>{
+{searchFor: string, token?: string, rorIds: string[]})=>{
   // return nothing by default
   return []
 })
 
 export const getOrganisationsForSoftware=jest.fn(async({software, token}:
-  { software: string, token?: string })=>{
+{software: string, token?: string})=>{
   return []
 })
 
 export const getParticipatingOrganisations=jest.fn(async({software, token}:
-  {software: string, token?: string})=>{
+{software: string, token?: string})=>{
   return []
 })
 
 export const createOrganisation=jest.fn(async({organisation, token}:
-  { organisation: CoreOrganisationProps, token: string})=>{
+{organisation: CoreOrganisationProps, token: string})=>{
   return {
     status: 201,
     message: 'new-organisation-id'
@@ -46,7 +46,7 @@ export const createOrganisation=jest.fn(async({organisation, token}:
 })
 
 export const updateOrganisation=jest.fn(async({organisation, token}:
-  { organisation: Organisation, token: string })=>{
+{organisation: Organisation, token: string})=>{
   return {
     status: 200,
     message: 'OK'
@@ -54,7 +54,7 @@ export const updateOrganisation=jest.fn(async({organisation, token}:
 })
 
 export const patchOrganisation=jest.fn(async({data, token}:
-  { data: PatchOrganisation, token: string })=>{
+{data: PatchOrganisation, token: string})=>{
   return {
     status: 200,
     message: 'OK'
@@ -62,7 +62,7 @@ export const patchOrganisation=jest.fn(async({data, token}:
 })
 
 export const deleteOrganisation=jest.fn(async({uuid,logo_id, token}:
-  { uuid: string, logo_id: string|null, token: string })=>{
+{uuid: string, logo_id: string|null, token: string})=>{
   return {
     status: 200,
     message: 'OK'
@@ -70,7 +70,7 @@ export const deleteOrganisation=jest.fn(async({uuid,logo_id, token}:
 })
 
 export const getRsdPathForOrganisation=jest.fn(async({uuid,token}:
-  {uuid: string, token?: string})=>{
+{uuid: string, token?: string})=>{
   return {
     status: 200,
     message: 'test-rsd-path'
@@ -78,7 +78,7 @@ export const getRsdPathForOrganisation=jest.fn(async({uuid,token}:
 })
 
 export const searchToEditOrganisation=jest.fn(({item, account, position}:
-  { item: SearchOrganisation, account?: string, position?: number })=>{
+{item: SearchOrganisation, account?: string, position?: number})=>{
 
   const addOrganisation: EditOrganisation = {
     ...item,

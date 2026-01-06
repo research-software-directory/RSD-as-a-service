@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -78,12 +78,12 @@ export const getOrganisationById=jest.fn(({uuid, token, isMaintainer = false}: {
   return mockOrganisation
 })
 
-export const getOrganisationChildren=jest.fn(async({uuid, token}: { uuid: string, token?: string })=>{
+export const getOrganisationChildren=jest.fn(async({uuid, token}: {uuid: string, token?: string})=>{
   // we log and return zero
   return []
 })
 
-export const getOrganisationInfo=jest.fn(async({uuid, token}: { uuid: string, token?: string })=>{
+export const getOrganisationInfo=jest.fn(async({uuid, token}: {uuid: string, token?: string})=>{
   return {
     city: 'Test city',
     description: 'Test description',

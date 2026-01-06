@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,8 +18,8 @@ export default function PublishingProjectInfo() {
       }}
     >
       <AlertTitle>Publishing project page</AlertTitle>
-        Setting the page status to published will expose the project page to all visitors.
-        Unpublished project can be found under <strong>
+      Setting the page status to published will expose the project page to all visitors.
+      Unpublished project can be found under <strong>
         <Link href="/user/projects">your profile</Link>
       </strong> page.
     </Alert>

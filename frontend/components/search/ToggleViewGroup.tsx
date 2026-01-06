@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -40,24 +40,24 @@ export default function ToggleViewGroup<T>({
     >
       {
         options.includes('grid') ?
-        <ToggleButton value="grid" aria-label="grid">
-          <ViewModuleIcon />
-        </ToggleButton>
-        : null
+          <ToggleButton value="grid" aria-label="grid">
+            <ViewModuleIcon />
+          </ToggleButton>
+          : null
       }
       {
         options.includes('list') ?
-        <ToggleButton value="list" aria-label="list">
-          <ViewListIcon />
-        </ToggleButton>
-        : null
+          <ToggleButton value="list" aria-label="list">
+            <ViewListIcon />
+          </ToggleButton>
+          : null
       }
       {
         options.includes('masonry') ?
-        <ToggleButton value="masonry" aria-label="masonry">
-          <ViewQuiltIcon />
-        </ToggleButton>
-        : null
+          <ToggleButton value="masonry" aria-label="masonry">
+            <ViewQuiltIcon />
+          </ToggleButton>
+          : null
       }
     </ToggleButtonGroup>
   )

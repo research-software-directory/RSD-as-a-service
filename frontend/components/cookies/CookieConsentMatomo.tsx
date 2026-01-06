@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -31,9 +31,9 @@ let previousUrl: string | null = null
  */
 export default function CookieConsentMatomo({matomo}: CookieConsentMatomoProps) {
   const {setMatomoConsent} = useMatomoConsent()
-  const [open, setOpen] = useState(false)
   const route = usePathname()
   const search = useSearchParams()
+  const [open, setOpen] = useState(false)
 
   // console.group('CookieConsentModal')
   // console.log('matomo...', matomo)
@@ -46,6 +46,7 @@ export default function CookieConsentMatomo({matomo}: CookieConsentMatomoProps) 
       if (localStorage) {
         const cookieConsent = localStorage.getItem('rsd_cookies_consent')
         const showModal = cookieConsent === null && matomo.id !== null && matomo.consent === null && route !== '/cookies'
+
         setOpen(showModal)
       }
     } catch (e: any) {
@@ -131,7 +132,7 @@ export default function CookieConsentMatomo({matomo}: CookieConsentMatomoProps) 
             className="w-full block leading-normal text-base-800 text-md mb-3">We use&nbsp;
             <span className="text-primary">
               <Link href="/cookies" passHref target="_blank" className="text-primary" rel="noopener noreferrer">
-                  cookies
+                cookies
               </Link>
             </span> with&nbsp;
             <Link href="https://matomo.org/" target="_blank" className="text-primary" rel="noopener noreferrer">

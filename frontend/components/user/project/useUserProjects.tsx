@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,18 +17,18 @@ import {paginationUrlParams} from '~/utils/postgrestUrl'
 
 export type ProjectByMaintainer={
   id: string
-	slug: string,
-	title: string,
-	subtitle: string | null
-	current_state: string
-	date_start: string
+  slug: string,
+  title: string,
+  subtitle: string | null
+  current_state: string
+  date_start: string
   date_end: string
-	updated_at: string
-	is_published: boolean
-	image_contain: boolean,
-	image_id: string | null
-	impact_cnt: number
-	output_cnt: number
+  updated_at: string
+  is_published: boolean
+  image_contain: boolean,
+  image_id: string | null
+  impact_cnt: number
+  output_cnt: number
 }
 
 type UserProjectsProp = {

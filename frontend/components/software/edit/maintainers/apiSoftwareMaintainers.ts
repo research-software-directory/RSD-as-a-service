@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,7 +8,7 @@ import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetch
 import {RawMaintainerProps} from '~/components/maintainers/apiMaintainers'
 
 export async function getMaintainersOfSoftware({software, token}:
-  {software: string, token: string}) {
+{software: string, token: string}) {
   try {
     const query = `rpc/maintainers_of_software?software_id=${software}`
     const url = `${getBaseUrl()}/${query}`
@@ -32,7 +32,7 @@ export async function getMaintainersOfSoftware({software, token}:
 }
 
 export async function deleteMaintainerFromSoftware({maintainer,software,token}:
-  {maintainer:string,software:string,token:string}) {
+{maintainer:string,software:string,token:string}) {
   try {
     const query = `maintainer_for_software?maintainer=eq.${maintainer}&software=eq.${software}`
     const url = `${getBaseUrl()}/${query}`
@@ -54,7 +54,7 @@ export async function deleteMaintainerFromSoftware({maintainer,software,token}:
 }
 
 export async function softwareMaintainerLink({software, account, token}:
-  { software: string, account: string, token: string }) {
+{software: string, account: string, token: string}) {
   try {
     // POST
     const url = `${getBaseUrl()}/invite_maintainer_for_software`

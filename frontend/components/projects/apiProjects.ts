@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -22,7 +22,7 @@ import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {ProjectStatusLabels} from '~/components/projects/overview/filters/ProjectStatusFilter'
 
-export async function getProjectList({url, token}: { url: string, token?: string }) {
+export async function getProjectList({url, token}: {url: string, token?: string}) {
   try {
     const resp = await fetch(url, {
       method: 'GET',
@@ -57,7 +57,7 @@ export async function getProjectList({url, token}: { url: string, token?: string
 
 //used by view and edit pages
 export async function getProjectItem({slug,token}:
-  {slug: string, token?: string}) {
+{slug: string, token?: string}) {
   try{
     // get project by slug
     const query = `project?slug=eq.${slug}`
@@ -86,7 +86,7 @@ export async function getProjectItem({slug,token}:
 }
 
 export async function getOrganisationsOfProject({project, token, roles}:
-  { project: string, token?: string, roles?: OrganisationRole[] }) {
+{project: string, token?: string, roles?: OrganisationRole[]}) {
   try {
     let query = `rpc/organisations_of_project?project_id=${project}&order=position,name.asc`
     if (roles) query += `&role=in.(${roles.toString()})`
@@ -113,7 +113,7 @@ export async function getOrganisationsOfProject({project, token, roles}:
 }
 
 export async function getOrganisations({project, token}:
-  { project: string, token?: string}) {
+{project: string, token?: string}) {
   const resp = await getOrganisationsOfProject({project, token})
   // filter only approved organisations
   // extract only used properties
@@ -142,7 +142,7 @@ export async function getOrganisations({project, token}:
  * 2. Ensure used labels are same as ProjectStatusLabels used in the filter dropdown
  */
 export function getProjectStatus({date_start, date_end}:
-  {date_start: string | null, date_end: string | null}) {
+{date_start: string | null, date_end: string | null}) {
   try {
     const start_date = date_start ? new Date(date_start) : null
     const end_date = date_end ? new Date(date_end) : null
@@ -167,7 +167,7 @@ export function getProjectStatus({date_start, date_end}:
 }
 
 export async function getResearchDomainsForProject({project, token}:
-  { project: string, token?: string}
+{project: string, token?: string}
 ) {
   try {
     const query = `rpc/research_domain_by_project?project=eq.${project}&order=key.asc`
@@ -189,7 +189,7 @@ export async function getResearchDomainsForProject({project, token}:
 }
 
 export async function getKeywordsForProject({project, token}:
-  { project: string, token?: string}
+{project: string, token?: string}
 ) {
   try {
     const query = `rpc/keywords_by_project?project=eq.${project}&order=keyword.asc`
@@ -212,7 +212,7 @@ export async function getKeywordsForProject({project, token}:
 
 
 export async function getLinksForProject({project, token}:
-  { project: string, token?: string}) {
+{project: string, token?: string}) {
   try {
     const query = `url_for_project?project=eq.${project}&order=position.asc`
     const url = `${getBaseUrl()}/${query}`
@@ -233,7 +233,7 @@ export async function getLinksForProject({project, token}:
 }
 
 export async function getMentionsForProject({project, token, table}:
-  {project: string, token?: string, table: 'output_for_project'|'impact_for_project'}) {
+{project: string, token?: string, table: 'output_for_project'|'impact_for_project'}) {
   try {
     // build query url
     const query = `project?id=eq.${project}&select=id,slug,mention!${table}(${mentionColumns})&mention.order=mention_type.asc`
@@ -264,7 +264,7 @@ export async function getMentionsForProject({project, token, table}:
 }
 
 export async function getImpactByProject({project, token}:
-  {project: string, token?: string}) {
+{project: string, token?: string}) {
   try {
     // the content is ordered by type ascending
     const query = `project=eq.${project}&order=mention_type.asc`
@@ -293,7 +293,7 @@ export async function getImpactByProject({project, token}:
 }
 
 export async function getTeamForProject({project, token}:
-  {project: string, token?: string}) {
+{project: string, token?: string}) {
   try {
     // build url
     const query = `project_id=${project}&order=position.asc,given_names.asc`
@@ -320,7 +320,7 @@ export async function getTeamForProject({project, token}:
 }
 
 export async function getRelatedProjectsForProject({project, token, approved = true, order}:
-  { project: string, token?: string, approved?: boolean, order?:string }) {
+{project: string, token?: string, approved?: boolean, order?:string}) {
   try {
     // construct api url based on request source
     let query = `rpc/related_projects_for_project?project_id=${project}`
@@ -354,7 +354,7 @@ export async function getRelatedProjectsForProject({project, token, approved = t
 
 
 export async function getRelatedSoftwareForProject({project, token, approved = true}:
-  { project: string, token?: string, approved?: boolean}) {
+{project: string, token?: string, approved?: boolean}) {
   try {
     let query = `rpc/related_software_for_project?project_id=${project}&order=brand_name.asc`
     if (approved) {

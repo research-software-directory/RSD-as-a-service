@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -30,7 +30,7 @@ type TextFieldWidthCounterType = {
 }
 
 export default function TextFieldWithCounter({options, register}:
-  { options: TextFieldWidthCounterType, register: any}) {
+{options: TextFieldWidthCounterType, register: any}) {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
@@ -48,6 +48,7 @@ export default function TextFieldWithCounter({options, register}:
       rows={options?.rows ?? undefined}
       maxRows={options?.maxRows ?? undefined}
       error={options?.error ?? false}
+      // eslint-disable-next-line react-hooks/purity
       id={options?.label ?? `input-${Math.floor(Math.random()*10000)}`}
       label={options?.label ?? 'Label not provided'}
       type={options?.type ?? 'text'}

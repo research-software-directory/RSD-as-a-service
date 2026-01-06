@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 export default async function EditSoftwarePageRouter({
   params
 }:Readonly<{
-  params: Promise<{ slug: string, page: EditSoftwarePageId }>
+  params: Promise<{slug: string, page: EditSoftwarePageId}>
 }>) {
   // extract page to show
   const {page} = await params

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +9,7 @@ import {CategoriesForSoftware, CategoryForSoftwareIds,} from '~/types/SoftwareTy
 import {CategoryPath} from '~/types/Category'
 
 
-export const getSoftwareList=jest.fn(async({url,token}:{url:string,token?:string })=>{
+export const getSoftwareList=jest.fn(async({url,token}:{url:string,token?:string})=>{
   return []
 })
 
@@ -103,6 +103,6 @@ export const getRemoteMarkdownTest=jest.fn(async(url: string)=>{
 
 // RELATED PROJECTS FOR SORFTWARE
 export const getRelatedProjectsForSoftware=jest.fn(async({software, token, frontend, approved=true}:
-  { software: string, token?: string, frontend?: boolean, approved?:boolean })=>{
+{software: string, token?: string, frontend?: boolean, approved?:boolean})=>{
   return []
 })

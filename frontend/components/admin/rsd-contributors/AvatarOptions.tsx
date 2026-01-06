@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,11 +18,11 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import {RsdContributor} from './useContributors'
 import {patchPerson} from './apiRsdContributors'
 
-type AvatarOptionsProps={
+type AvatarOptionsProps=Readonly<{
   data: RsdContributor
-}
+}>
 
-export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
+export default function AvatarOptions({data}:AvatarOptionsProps) {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const [anchorEl, setAnchorEl] = useState(null)
@@ -51,6 +51,7 @@ export default function AvatarOptions({data}:Readonly<AvatarOptionsProps>) {
     // debugger
     if (resp.status==200){
       // update image
+
       data.avatar_id = avatar
     }else{
       showErrorMessage(`Failed to update avatar. ${resp?.message ?? ''}`)

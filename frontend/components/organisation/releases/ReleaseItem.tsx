@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -63,7 +63,7 @@ function LinkToVersionDoi({tag,doi}:{tag: string | null,doi:string|null}) {
 }
 
 
-export default function ReleaseItem({release}: { release: SoftwareReleaseInfo }) {
+export default function ReleaseItem({release}: {release: SoftwareReleaseInfo}) {
   const releaseDate = new Date(release.release_date)
   return (
     <article

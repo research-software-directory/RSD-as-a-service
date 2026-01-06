@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -33,7 +33,7 @@ function formatValue<T, K extends keyof T>(col: Column<T, K>, value: any) {
   }
 }
 
-function TableRow<T extends {id:string,origin?:string}, K extends keyof T>({data, cols}: { data: T, cols: Column<T,K>[]}) {
+function TableRow<T extends {id:string,origin?:string}, K extends keyof T>({data, cols}: {data: T, cols: Column<T,K>[]}) {
   return (
     <MuiTableRow data-testid="mui-table-body-row">
       {
@@ -81,7 +81,7 @@ function TableRow<T extends {id:string,origin?:string}, K extends keyof T>({data
 }
 
 export default function TableBody<T extends {id:string,origin?:string}, K extends keyof T>({
-  data, columns}: { data: T[], columns: Column<T, K>[] }) {
+  data, columns}: {data: T[], columns: Column<T, K>[]}) {
   return (
     <MuiTableBody>
       {data.map((item,i) => {

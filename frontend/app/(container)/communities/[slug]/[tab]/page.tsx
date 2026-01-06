@@ -14,7 +14,7 @@ export default async function CommunityPages({
   params,
   searchParams
 }:Readonly<{
-  searchParams: Promise<{ [key: string]: string | undefined }>,
+  searchParams: Promise<{[key: string]: string | undefined}>,
   params: Promise<{slug: string, tab:TabKey}>,
 }>){
 

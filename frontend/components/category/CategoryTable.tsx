@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -22,7 +22,7 @@ function calcTreeLevelDepth(tree: TreeNode<CategoryEntry>): number {
 }
 
 export type CategoryTableProps = Readonly<{
-   tree: TreeNode<CategoryEntry>
+  tree: TreeNode<CategoryEntry>
 }>
 export const CategoryTable = ({tree}: CategoryTableProps) => {
   const category = tree.getValue()

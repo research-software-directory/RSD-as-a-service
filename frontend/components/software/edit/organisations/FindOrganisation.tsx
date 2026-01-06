@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +14,7 @@ import {organisationInformation as config} from '../editSoftwareConfig'
 import FindOrganisationItem from './FindOrganisationItem'
 
 export default function FindOrganisation({onAdd, onCreate}:
-  { onAdd: (item: SearchOrganisation) => void, onCreate:(name:string)=>void}) {
+{onAdd: (item: SearchOrganisation) => void, onCreate:(name:string)=>void}) {
   const [options, setOptions] = useState<AutocompleteOption<SearchOrganisation>[]>([])
   const [status, setStatus] = useState<{
     loading: boolean,
@@ -100,9 +100,8 @@ export default function FindOrganisation({onAdd, onCreate}:
     return (
       <li
         data-testid="find-organisation-option"
-        {...props}
-        // overwrite props.key
         key={option.key}
+        {...props}
       >
         <FindOrganisationItem {...option.data} />
       </li>

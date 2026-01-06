@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -12,7 +12,7 @@ import {MentionItemProps} from '~/types/Mention'
 import {addOrGetMentionItem} from '~/components/mention/apiEditMentions'
 
 export async function findPublicationByTitle({id, searchFor, token}:
-  { id: string, searchFor: string, token: string }) {
+{id: string, searchFor: string, token: string}) {
   const query = `id=${id}&search=${encodeURIComponent(searchFor)}&relation_type=impact`
   const url = `/api/fe/mention/find_by_title?${query}`
   try {
@@ -34,7 +34,7 @@ export async function findPublicationByTitle({id, searchFor, token}:
 }
 
 export async function addNewImpactToProject({item, project, token}:
-  { item: MentionItemProps, project: string, token: string }) {
+{item: MentionItemProps, project: string, token: string}) {
   // add new item or get existing by DOI
   let resp = await addOrGetMentionItem({
     mention: item,
@@ -70,7 +70,7 @@ export async function addNewImpactToProject({item, project, token}:
   }
 }
 
-export async function addToImpactForProject({mention, project, token}: { mention: string, project: string, token: string }) {
+export async function addToImpactForProject({mention, project, token}: {mention: string, project: string, token: string}) {
   const url = '/api/v1/impact_for_project'
   try {
     const resp = await fetch(url, {
@@ -94,7 +94,7 @@ export async function addToImpactForProject({mention, project, token}: { mention
 }
 
 export async function removeImpactForProject({mention, project, token}:
-  { mention: string, project: string, token: string }) {
+{mention: string, project: string, token: string}) {
   const url = `/api/v1/impact_for_project?project=eq.${project}&mention=eq.${mention}`
   try {
     const resp = await fetch(url, {

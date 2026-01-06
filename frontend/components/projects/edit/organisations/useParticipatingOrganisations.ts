@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,7 +26,7 @@ export function useParticipatingOrganisations({project, token, account}: UsePart
   useEffect(() => {
     let abort = false
     async function getOrganisations({project, token, account}:
-      { project: string, token: string, account: string }) {
+    {project: string, token: string, account: string}) {
       const resp = await getOrganisationsOfProject({
         project,
         token,

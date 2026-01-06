@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -64,7 +64,7 @@ const SPOTLIGHTS= [
 ]
 
 function LatestSpotlight({name, description, image, link}:
-  {name:string, description:string, image:string, link: string}) {
+{name:string, description:string, image:string, link: string}) {
   return(
     <Link
       href={link}
@@ -84,7 +84,7 @@ function LatestSpotlight({name, description, image, link}:
 }
 
 function PreviousSpotlight({name, image, link, description}:
-  {name: string, image: string, link: string, description: string | ''}) {
+{name: string, image: string, link: string, description: string | ''}) {
 
   const MAX_CHARS = 150
   function descriptionParagraph (description: string) {
@@ -296,7 +296,7 @@ export default function HelmholtzHome() {
             <Link href="/software" passHref>
               <div
                 className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-base-100 text-center font-medium text-2xl py-4 px-6 rounded-xs">
-                  Browse software
+                Browse software
               </div>
             </Link>
           </div>

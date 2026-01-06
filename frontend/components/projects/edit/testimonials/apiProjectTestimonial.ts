@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -120,7 +120,7 @@ export async function deleteProjectTestimonial({id,token}:{id:string,token:strin
  * @param param0
  * @returns
  */
-export async function patchTestimonialPositions({testimonials, token}: { testimonials: Testimonial[], token: string }) {
+export async function patchTestimonialPositions({testimonials, token}: {testimonials: Testimonial[], token: string}) {
   try {
     // if the array is empty return
     if (testimonials.length === 0) return {status:200,message:'OK'}

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -29,11 +29,11 @@ export type PackageManagerService = {
   software:string
   url: string,
   package_manager: PackageManagerTypes,
-	download_count_scraped_at: string|null,
-	download_count_last_error: string|null,
+  download_count_scraped_at: string|null,
+  download_count_last_error: string|null,
   download_count_scraping_disabled_reason: string|null,
-	reverse_dependency_count_scraped_at: string|null,
-	reverse_dependency_count_last_error: string|null,
+  reverse_dependency_count_scraped_at: string|null,
+  reverse_dependency_count_last_error: string|null,
   reverse_dependency_count_scraping_disabled_reason: string|null,
 }
 
@@ -88,7 +88,7 @@ export async function getPackageManagerServices(id:string,token:string){
 }
 
 export async function deleteServiceDataFromDb({dbprops, software, token}:
-  {dbprops:string[], software: string, token:string}){
+{dbprops:string[], software: string, token:string}){
   try {
     const query = `repository_url?software=eq.${software}`
     const url = `${getBaseUrl()}/${query}`

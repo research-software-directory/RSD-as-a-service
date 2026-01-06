@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,12 +22,12 @@ import {Fragment} from 'react'
 export type InvitationType = 'software' | 'project' | 'organisation' | 'community' | 'rsd'
 
 export type Invitation = {
-    id: string,
-    created_at: string,
-    expires_at: string,
-    type: InvitationType,
-    uses_left?: number | null,
-    comment?: string | null
+  id: string,
+  created_at: string,
+  expires_at: string,
+  type: InvitationType,
+  uses_left?: number | null,
+  comment?: string | null
 }
 
 type InvitationListProps=Readonly<{
