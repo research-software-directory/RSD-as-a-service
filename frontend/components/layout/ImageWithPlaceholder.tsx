@@ -32,7 +32,7 @@ export default function ImageWithPlaceholder({
     if (type === 'gradient') {
       return (
         <div
-          className="w-full bg-linear-to-br from-base-300 from-0% via-base-100 via-50% to-base-100"
+          className="w-full h-full bg-linear-to-br from-base-300 from-0% via-base-100 via-50% to-base-100"
         />
       )
     }
