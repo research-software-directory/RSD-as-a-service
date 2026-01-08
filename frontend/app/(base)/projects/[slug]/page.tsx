@@ -1,5 +1,6 @@
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
+import {headers} from 'next/headers'
 
 import {app} from '~/config/app'
 import {getActiveModuleNames} from '~/config/getSettingsServerSide'
@@ -7,6 +8,7 @@ import {getUserFromToken} from '~/auth/getSessionServerSide'
 import {getCommunitiesOfMaintainer} from '~/auth/permissions/isMaintainerOfCommunity'
 import {getMaintainerOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
 import isMaintainerOfProject from '~/auth/permissions/isMaintainerOfProject'
+import {getImageUrl} from '~/utils/editImage'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {categoryFilter} from '~/components/category/apiCategories'
 import ContentHeader from '~/components/layout/ContentHeader'
@@ -14,6 +16,7 @@ import DarkThemeSection from '~/components/layout/DarkThemeSection'
 import EditPageButton from '~/components/layout/EditPageButton'
 import PageContainer from '~/components/layout/PageContainer'
 import MentionsSection from '~/components/mention/MentionsSection'
+import {createMetadata} from '~/components/seo/apiMetadata'
 import ContributorsSection from '~/components/software/ContributorsSection'
 import OrganisationsSection from '~/components/software/OrganisationsSection'
 import RelatedSoftwareSection from '~/components/software/RelatedSoftwareSection'
@@ -35,6 +38,7 @@ import {
   getTeamForProject
 } from '~/components/projects/apiProjects'
 
+
 /**
  * Next.js app builtin function to dynamically create page metadata
  * @param param0
@@ -44,8 +48,12 @@ export async function generateMetadata(
   {params}:Readonly<{params: Promise<{slug: string}>}>
 ): Promise<Metadata> {
   // read route params
-  const {slug} = await params
-  const {token} = await getUserSettings()
+
+  const [{slug},{token},headersList] = await Promise.all([
+    params,
+    getUserSettings(),
+    headers()
+  ])
 
   // find project by slug
   const project = await getProjectItem({
@@ -61,16 +69,20 @@ export async function generateMetadata(
 
   // if organisation exists we create metadata
   if (project?.title && project?.description){
-    return {
-      title: `${project?.title} | ${app.title}`,
+    // extract domain to use in url
+    const domain = headersList.get('host') || ''
+    // build metadata
+    const metadata = createMetadata({
+      domain,
+      page_title: project?.title,
       description: project.description,
-      openGraph:{
-        title: project?.title,
-        description: project?.description,
-        url: `/projects/${slug}`,
-        siteName: app.title
-      }
-    }
+      url: `https://${domain}/projects/${slug}`,
+      // if image present return array with url else []
+      image_url: project.image_id ? [
+        `https://${domain}${getImageUrl(project.image_id)}`
+      ] : []
+    })
+    return metadata
   }
 
   return {
