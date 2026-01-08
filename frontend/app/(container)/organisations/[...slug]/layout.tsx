@@ -5,9 +5,12 @@
 
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
+import {headers} from 'next/headers'
 
 import {app} from '~/config/app'
 import {getUserFromToken} from '~/auth/getSessionServerSide'
+import {getImageUrl} from '~/utils/editImage'
+import {createMetadata} from '~/components/seo/apiMetadata'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import PageBreadcrumbs from '~/components/layout/PageBreadcrumbs'
 import OrganisationMetadata from '~/components/organisation/metadata'
@@ -25,8 +28,13 @@ export async function generateMetadata(
   {params}:{params: Promise<{slug: string[]}>}
 ): Promise<Metadata> {
   // read route params
-  const {slug} = await params
-  const {token} = await getUserSettings()
+  // read route params
+  const [{slug},{token},headersList] = await Promise.all([
+    params,
+    getUserSettings(),
+    headers()
+  ])
+
 
   // find organisation by slug
   const resp = await getOrganisationBySlug({
@@ -35,15 +43,35 @@ export async function generateMetadata(
     user: null
   })
 
+  const title = `${resp?.organisation?.name ?? 'Organisation'} | ${app.title}`
+  const description = resp?.organisation?.short_description ?? 'This organisation participates in RSD'
+
   // console.group('OrganisationPageLayout.generateMetadata')
   // console.log('slug...', slug)
   // console.log('token...', token)
   // console.log('resp...', resp)
   // console.groupEnd()
 
+  if (resp?.organisation?.name){
+    // extract domain to use in url
+    const domain = headersList.get('host') || ''
+    // build metadata
+    const metadata = createMetadata({
+      domain,
+      page_title: title,
+      description,
+      url: `https://${domain}/organisations/${slug}`,
+      // if image present return array with url else []
+      image_url: resp?.organisation?.logo_id ? [
+        `https://${domain}${getImageUrl(resp?.organisation?.logo_id)}`
+      ] : []
+    })
+    return metadata
+  }
+
   return {
-    title: `${resp?.organisation?.name ?? 'Organisation'} | ${app.title}`,
-    description: resp?.organisation?.short_description ?? 'This organisation participates in RSD',
+    title,
+    description,
   }
 }
 

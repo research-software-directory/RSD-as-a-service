@@ -1,5 +1,6 @@
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
+import {headers} from 'next/headers'
 
 import {app} from '~/config/app'
 import {getActiveModuleNames} from '~/config/getSettingsServerSide'
@@ -9,6 +10,7 @@ import {getCommunitiesOfMaintainer} from '~/auth/permissions/isMaintainerOfCommu
 import {getMaintainerOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
 import isMaintainerOfSoftware from '~/auth/permissions/isMaintainerOfSoftware'
 import {getDisplayName} from '~/utils/getDisplayName'
+import {getImageUrl} from '~/utils/editImage'
 import {getMentionsBySoftware} from '~/components/mention/apiEditMentions'
 import {getRelatedSoftwareForSoftware} from '~/components/software/edit/related-software/apiRelatedSoftware'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
@@ -39,6 +41,7 @@ import OrganisationsSection from '~/components/software/OrganisationsSection'
 import RelatedSoftwareSection from '~/components/software/RelatedSoftwareSection'
 import SoftwareHeaderSection from '~/components/software/SoftwareHeaderSection'
 import TestimonialSection from '~/components/software/TestimonialsSection'
+import {createMetadata} from '~/components/seo/apiMetadata'
 
 /**
  * Next.js app builtin function to dynamically create page metadata
@@ -49,9 +52,10 @@ export async function generateMetadata(
   {params}:Readonly<{params: Promise<{slug: string}>}>
 ): Promise<Metadata> {
   // read route params and token
-  const [{slug},{token}] = await Promise.all([
+  const [{slug},{token},headersList] = await Promise.all([
     params,
-    getUserSettings()
+    getUserSettings(),
+    headers()
   ])
   // find project by slug
   const software = await getSoftwareItem({
@@ -74,22 +78,26 @@ export async function generateMetadata(
 
   // if organisation exists we create metadata
   if (software?.brand_name && software?.description){
-    return {
-      title: `${software?.brand_name} | ${app.title}`,
+    // extract domain to use in url
+    const domain = headersList.get('host') || ''
+    // build metadata
+    const metadata = createMetadata({
+      domain,
+      page_title: software?.brand_name,
       description: software.description,
-      openGraph:{
-        title: software?.brand_name,
-        description: software?.description,
-        url: `/software/${slug}`,
-        siteName: app.title
-      },
+      url: `https://${domain}/software/${slug}`,
+      // if image present return array with image else []
+      image_url: software.image_id ? [
+        `https://${domain}${getImageUrl(software.image_id)}`
+      ]:[],
       other:{
         citation_title: software?.brand_name,
         citation_author: author ?? 'Author name',
         citation_publication_date: software.created_at,
         citation_doi: software.concept_doi ?? ''
       }
-    }
+    })
+    return metadata
   }
 
   return {
