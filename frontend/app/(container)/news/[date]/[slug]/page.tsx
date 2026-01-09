@@ -1,8 +1,11 @@
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
+import {headers} from 'next/headers'
 
 import {app} from '~/config/app'
 import {getUserFromToken} from '~/auth/getSessionServerSide'
+import {getImageUrl} from '~/utils/editImage'
+import {createMetadata} from '~/components/seo/apiMetadata'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {getNewsItemBySlug} from '~/components/news/apiNews'
 import NewsItemHeader from '~/components/news/item/NewsItemHeader'
@@ -20,9 +23,10 @@ export async function generateMetadata(
   {params}:{params: Promise<{slug: string, date:string}>}
 ): Promise<Metadata> {
   // read route params
-  const [{slug,date},{token}] = await Promise.all([
+  const [{slug,date},{token},headersList] = await Promise.all([
     params,
-    getUserSettings()
+    getUserSettings(),
+    headers()
   ])
 
   // find organisation by slug
@@ -36,18 +40,21 @@ export async function generateMetadata(
 
   // if info exists
   if (newsItem?.title && newsItem?.summary){
-    const title = `${newsItem?.title} | ${app.title}`
-    const description = newsItem?.summary
-    return {
-      title,
-      description,
-      openGraph:{
-        title: newsItem?.title,
-        description,
-        siteName: app.title,
-        url:`/news/${date}/${slug}`
-      }
-    }
+    // extract domain to use in url
+    const domain = headersList.get('host') || ''
+
+    // build metadata
+    const metadata = createMetadata({
+      domain,
+      page_title: newsItem?.title,
+      description: newsItem?.summary,
+      url: `https://${domain}/news/${date}/${slug}`,
+      // if image present return array with image else []
+      image_url: newsItem.image_for_news[0]?.image_id ? [
+        `https://${domain}${getImageUrl(newsItem.image_for_news[0].image_id)}`
+      ]:[]
+    })
+    return metadata
   }
 
   return {
