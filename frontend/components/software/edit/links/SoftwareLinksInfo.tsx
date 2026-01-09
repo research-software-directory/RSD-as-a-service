@@ -1,11 +1,11 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,9 +29,8 @@ export default function SoftwareLinksInfo({reorderedCategories}: SoftwareLinksIn
     >
       On this page you can provide links and metadata to better describe your software. Some of this metadata can be imported automatically.
 
-      <p className="py-2"><strong>Software URLs</strong></p>
-      <p>Providing the URL of the source code repository of the software allows the RSD show a link to the source code on the software page, and automatically harvest information about the development activity. The RSD supports https URLs pointing to the git repository, or to the website of the repository.</p>
-      <p className="py-2">The getting started URL can be used to link to a webpage describing how to install and use the software. This link will be prominently shown on the top of the software page.</p>
+      <p className="py-2"><strong>Getting started URL</strong></p>
+      <p >The getting started URL can be used to link to a webpage describing how to install and use the software. This link will be prominently shown on the top of the software page.</p>
 
       <p className="py-2"><strong>Software DOI</strong></p>
       <p>The Software DOI is a unique identifier for your software, similar to DOIs for publications or datasets. Using the Software DOI, the RSD can import metadata about the software such as contributors, keywords, and licenses. It also enables the RSD to find new versions of your software, provide citation data to visitors (in various formats such as BibTex, CodeMeta, JATS, RIS and CSL), and track who cites your software.</p>

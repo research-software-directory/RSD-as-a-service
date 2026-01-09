@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -56,7 +57,7 @@ public class MainBasicData {
 							"repository_url",
 							"basic_data_last_error",
 							basicData.software().toString(),
-							"software",
+							"id",
 							scrapedAt,
 							"basic_data_scraped_at"
 						);
@@ -79,7 +80,7 @@ public class MainBasicData {
 						"repository_url",
 						"basic_data_last_error",
 						basicData.software().toString(),
-						"software",
+						"id",
 						null,
 						null
 					);
@@ -95,7 +96,7 @@ public class MainBasicData {
 						"repository_url",
 						"basic_data_last_error",
 						basicData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"basic_data_scraped_at"
 					);
@@ -111,7 +112,7 @@ public class MainBasicData {
 						"repository_url",
 						"basic_data_last_error",
 						basicData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"basic_data_scraped_at"
 					);
@@ -156,7 +157,7 @@ public class MainBasicData {
 						"repository_url",
 						"basic_data_last_error",
 						basicData.software().toString(),
-						"software",
+						"id",
 						null,
 						null
 					);
@@ -172,7 +173,7 @@ public class MainBasicData {
 						"repository_url",
 						"basic_data_last_error",
 						basicData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"basic_data_scraped_at"
 					);
@@ -188,7 +189,7 @@ public class MainBasicData {
 						"repository_url",
 						"basic_data_last_error",
 						basicData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"basic_data_scraped_at"
 					);
@@ -221,7 +222,7 @@ public class MainBasicData {
 							"repository_url",
 							"basic_data_last_error",
 							basicData.software().toString(),
-							"software",
+							"id",
 							scrapedAt,
 							"basic_data_scraped_at"
 						);
@@ -244,7 +245,7 @@ public class MainBasicData {
 						"repository_url",
 						"basic_data_last_error",
 						basicData.software().toString(),
-						"software",
+						"id",
 						null,
 						null
 					);
@@ -260,7 +261,7 @@ public class MainBasicData {
 						"repository_url",
 						"basic_data_last_error",
 						basicData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"basic_data_scraped_at"
 					);
@@ -276,7 +277,7 @@ public class MainBasicData {
 						"repository_url",
 						"basic_data_last_error",
 						basicData.software().toString(),
-						"software",
+						"id",
 						scrapedAt,
 						"basic_data_scraped_at"
 					);

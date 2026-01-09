@@ -22,10 +22,9 @@ export default function SortableProjectLinksList({links,onEdit,onDelete,onSorted
   function onRenderItem(item:ProjectLink,index:number) {
     return <SortableProjectLinksItem
       key={item.id ?? index}
-      pos={index ?? 0}
       item={item}
-      onEdit={onEdit}
-      onDelete={onDelete}
+      onEdit={()=>onEdit(index)}
+      onDelete={()=>onDelete(index)}
     />
   }
 

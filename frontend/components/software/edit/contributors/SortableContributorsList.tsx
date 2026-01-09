@@ -37,10 +37,9 @@ export default function SortableContributorsList({contributors, onEdit, onDelete
   function onRenderItem(item:Contributor,index:number) {
     return <SortableContributorItem
       key={item.id ?? index}
-      pos={index}
       item={item}
-      onEdit={onEdit}
-      onDelete={onDelete}
+      onEdit={()=>onEdit(index)}
+      onDelete={()=>onDelete(index)}
     />
   }
 
