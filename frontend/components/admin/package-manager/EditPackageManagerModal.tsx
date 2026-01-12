@@ -79,7 +79,7 @@ export default function EditPackageManagerModal({onCancel, onSubmit, package_man
       // extract manager type from url
       const pm_key = await getPackageManagerTypeFromUrl(bouncedUrl)
       // save value
-      setValue('package_manager', pm_key as PackageManagerTypes, {
+      setValue('package_manager', pm_key, {
         shouldValidate: true,
         shouldDirty: true
       })
@@ -253,7 +253,7 @@ export default function EditPackageManagerModal({onCancel, onSubmit, package_man
           borderColor: 'divider'
         }}>
           <Button
-            tabIndex={1}
+            tabIndex={1} //NOSONAR
             onClick={handleCancel}
             color="secondary"
             sx={{marginRight:'2rem'}}

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,7 +14,7 @@ import OverviewListItem from '~/components/software/overview/list/OverviewListIt
 import OverviewListItemLink from '~/components/software/overview/list/OverviewListItemLink'
 import {PersonsOverview} from './apiPersonsOverview'
 
-export default function PersonListItem({person}:{person:PersonsOverview}) {
+export default function PersonListItem({person}:Readonly<{person:PersonsOverview}>) {
   const given_names = person.display_name.split(' ')[0] ?? ''
   const family_names = person.display_name.split(' ')[1] ?? ''
   const initials = getDisplayInitials({given_names,family_names})

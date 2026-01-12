@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,10 +15,10 @@ import {patchRepositoryUrl, RepositoryForSoftware} from './apiRepositories'
 import BackgroundServiceModal from './BackgroundServiceModal'
 import {ClearServiceDataProps} from './BackgroundServiceContent'
 
-export type SoftwareRepositoryListItemProps = {
+export type SoftwareRepositoryListItemProps = Readonly<{
   item: RepositoryForSoftware
   onDelete:()=>void
-}
+}>
 export default function SoftwareRepositoryListItem({item,onDelete}:SoftwareRepositoryListItemProps){
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()

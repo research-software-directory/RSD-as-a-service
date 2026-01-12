@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,12 +15,12 @@ import {getImageUrl} from '~/utils/editImage'
 import SortableListItemActions from '~/components/layout/SortableListItemActions'
 import SortableListItem from '~/components/layout/SortableListItem'
 
-type OrganisationsListItemProps = {
+type OrganisationsListItemProps = Readonly<{
   organisation: EditOrganisation
   onEdit: ()=>void
   onDelete: ()=>void
   onCategory: ()=>void
-}
+}>
 
 export default function SortableOrganisationsItem({organisation, onEdit, onDelete, onCategory}: OrganisationsListItemProps) {
 

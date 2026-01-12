@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,17 +17,17 @@ import PacManSvcModal from './PacManSvcModal'
 import {useSession} from '~/auth/AuthProvider'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 
-type PackageManagerItemProps = {
+type PackageManagerItemProps = Readonly<{
   item: PackageManager,
   onDelete: () => void
-}
+}>
 
 export default function PackageManagerItem({item, onDelete}: PackageManagerItemProps) {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   // manage modal state
   const [modal, setModal] = useState(false)
-  const [pacman, setPacMan] = useState(item)
+  const [pacman, setPacman] = useState(item)
 
   /**
    * Clear service data in repository_url table.
@@ -42,7 +42,7 @@ export default function PackageManagerItem({item, onDelete}: PackageManagerItemP
         ...pacman,
         ...data
       }
-      setPacMan(updated)
+      setPacman(updated)
     }else{
       showErrorMessage(`Operation failed: ${resp.message}`)
     }

@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 'use client'
 import {useEffect, useState} from 'react'
-import Alert from '@mui/material/Alert'
+
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -19,6 +19,7 @@ import {useDebounce} from '~/utils/useDebounce'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ControlledSelect from '~/components/form/ControlledSelect'
+import AutodetectPlatformInfo from '~/components/software/edit/package-managers/AutodetectPlatformInfo'
 import {cfg} from './config'
 import {
   CodePlatform, EditRepositoryProps,
@@ -175,19 +176,7 @@ export default function SoftwareRepositoryModal({onCancel, onSubmit, item}: Edit
             }}
           />
           {/* info about code platform */}
-          <Alert
-            severity="info"
-            sx={{
-              marginTop:'0.5rem'
-            }}
-          >
-            <p>
-              The platform is, in most cases, based on the domain name in the provided url.
-              Our background services depend on platform a definition for the communication with the platform API.
-              If the RSD cannot detect the platform automatically you will need to select one from the options.
-              If your platform is not listed please select &quot;Other&quot;.
-            </p>
-          </Alert>
+          <AutodetectPlatformInfo />
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',
@@ -195,7 +184,7 @@ export default function SoftwareRepositoryModal({onCancel, onSubmit, item}: Edit
           borderColor: 'divider'
         }}>
           <Button
-            tabIndex={1}
+            tabIndex={1} //NOSONAR
             onClick={handleCancel}
             color="secondary"
             sx={{marginRight:'2rem'}}

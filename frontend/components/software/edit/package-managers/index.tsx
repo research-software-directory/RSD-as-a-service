@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -42,16 +42,6 @@ export default function EditPackageManagers() {
   // console.log('token...', token)
   // console.groupEnd()
 
-  function getSubtitle() {
-    if (managers.length === 0) {
-      return software.brand_name
-    }
-    if (managers.length === 1) {
-      return `${software.brand_name} has ${managers.length} download location`
-    }
-    return `${software.brand_name} has ${managers.length} download locations`
-  }
-
   function onAdd() {
     // create new PM item
     const newPM: NewPackageManager = {
@@ -73,7 +63,7 @@ export default function EditPackageManagers() {
       <EditSection className="py-4">
         <EditSectionTitle
           title="Package managers"
-          subtitle={getSubtitle()}
+          subtitle="From which package managers can your software be downloaded?"
         >
           <Button
             variant='contained'

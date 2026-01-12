@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,11 +17,11 @@ import SortableListItem from '~/components/layout/SortableListItem'
 import SortableListItemActions from '~/components/layout/SortableListItemActions'
 import ContributorAvatar from '~/components/software/ContributorAvatar'
 
-type SortableContributorItemProps = {
+type SortableContributorItemProps = Readonly<{
   item: Contributor | TeamMember,
   onEdit: () => void,
   onDelete: () => void,
-}
+}>
 
 export default function SortableContributorItem({item, onEdit, onDelete}: SortableContributorItemProps) {
   const smallScreen = useSmallScreen()

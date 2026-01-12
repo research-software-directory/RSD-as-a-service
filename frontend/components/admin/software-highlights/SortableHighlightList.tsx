@@ -78,7 +78,6 @@ export default function SortableHighlightsList({highlights, loading, onSorted, o
     return (
       <SortableHighlightItem
         key={item.id}
-        pos={index ?? 0}
         item={item}
         inCarousel={inCarousel}
         onEdit={()=>onEdit(index)}

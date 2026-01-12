@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,11 +13,11 @@ import {DeleteModalProps} from '~/components/software/edit/editSoftwareTypes'
 import SoftwareRepositoryListItem from './SoftwareRepositoryListItem'
 import {RepositoryForSoftware} from './apiRepositories'
 
-type SortableRepositoriesProps={
+type SortableRepositoriesProps=Readonly<{
   items: RepositoryForSoftware[],
   onDelete:(id:string)=>void,
   onSorted:(items: RepositoryForSoftware[])=>void
-}
+}>
 
 export default function SoftwareRepositoriesList({items, onDelete, onSorted}:SortableRepositoriesProps) {
   // Manage modal state
