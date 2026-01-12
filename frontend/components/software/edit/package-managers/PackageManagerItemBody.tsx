@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -44,7 +44,7 @@ function RsdScraperStatus({item}:ServiceStatusProps){
   return html
 }
 
-export default function PackageManagerItemBody({item}:{item:PackageManager}) {
+export default function PackageManagerItemBody({item}:Readonly<{item:PackageManager}>) {
 
   return (
     <>

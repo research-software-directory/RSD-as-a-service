@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -61,11 +61,11 @@ export default function useRepositoryEdit(software_id:string) {
     // debugger
     if (resp.status===409){
       showWarningMessage('This repository is already added to this software')
-    } else if (resp.status!==200){
-      showErrorMessage(`Failed to add repository: ${resp.message}`)
-    }else{
+    } else if (resp.status==200){
       // reload list
       getRepositories(software_id,token)
+    }else{
+      showErrorMessage(`Failed to add repository: ${resp.message}`)
     }
   }
 
@@ -80,11 +80,11 @@ export default function useRepositoryEdit(software_id:string) {
       token
     })
     // debugger
-    if (resp.status!==200){
-      showErrorMessage(`Failed to delete repository: ${resp.message}`)
-    }else{
+    if (resp.status==200){
       // reload list
       getRepositories(software_id,token)
+    }else{
+      showErrorMessage(`Failed to delete repository: ${resp.message}`)
     }
   }
 

@@ -27,15 +27,12 @@ export default function PackageManagersInfo() {
         marginTop:'0.5rem'
       }}
     >
-      <AlertTitle>Where can I find software?</AlertTitle>
-      Use Add button to provide <strong>download locations</strong> of your software.
-      RSD will try to extract information about the downloads and/or dependencies from the
-      package manager api. Collecting additional information by RSD scraper
-      might take up to 1 day.
+      <AlertTitle>From which package managers is your software available?</AlertTitle>
+      Use <strong>Add</strong> button to provide package manager locations for your software. This information is shown on the software page and used to retrieve additional information about you software, such as the number of downloads. Collecting additional information by RSD might take up to 1 day.
       {
         managers.length > 0 ?
           <p className="py-2">
-            Supported package managers<br/> <strong>{managers.join(', ')}</strong>.
+            Supported package managers:<br/> <strong>{managers.join(', ')}</strong>.
           </p>
           :null
       }

@@ -3,8 +3,8 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -16,7 +16,6 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import {useForm} from 'react-hook-form'
 
@@ -29,6 +28,7 @@ import {
   getPackageManagerTypeFromUrl, NewPackageManager,
 } from '~/components/software/edit/package-managers/apiPackageManager'
 import {cfg,packageManagerSettings, PackageManagerTypes} from '~/components/software/edit/package-managers/config'
+import AutodetectPlatformInfo from './AutodetectPlatformInfo'
 
 
 type PackageManagerModalProps = Readonly<{
@@ -74,7 +74,7 @@ export default function PackageManagerModal({package_manager, onCancel, onSubmit
       // extract manager type from url
       const pm_key = await getPackageManagerTypeFromUrl(bouncedUrl)
       // save value
-      setValue('package_manager', pm_key as PackageManagerTypes, {
+      setValue('package_manager', pm_key, {
         shouldValidate: true,
         shouldDirty: true
       })
@@ -180,19 +180,7 @@ export default function PackageManagerModal({package_manager, onCancel, onSubmit
             }}
           />
           {/* info about code platform */}
-          <Alert
-            severity="info"
-            sx={{
-              marginTop:'1.5rem'
-            }}
-          >
-            <p>
-              The platform is, in most cases, based on the domain name in the provided url.
-              Our background services depend on platform a definition for the communication with the platform API.
-              If the RSD cannot detect the platform automatically you will need to select one from the options.
-              If your platform is not listed please select &quot;Other&quot;.
-            </p>
-          </Alert>
+          <AutodetectPlatformInfo />
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',
@@ -200,7 +188,7 @@ export default function PackageManagerModal({package_manager, onCancel, onSubmit
           borderColor: 'divider'
         }}>
           <Button
-            tabIndex={1}
+            tabIndex={1} //NOSONAR
             onClick={handleCancel}
             color="secondary"
             sx={{marginRight:'2rem'}}

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,11 +8,11 @@ import {BackgroundServiceListItem} from '../repositories/BackgroundServiceListIt
 import {PackageManagerServiceKey, PackageManagerSettings, pacManServiceList, PacManSvcProps} from './config'
 import {PackageManager} from './apiPackageManager'
 
-type PacManSvcReportProps={
+type PacManSvcReportProps=Readonly<{
   item: PackageManager,
   settings: PackageManagerSettings
   onClear: ({id,data}:{id:string,data:Partial<PackageManager>})=>void
-}
+}>
 
 export default function PacManSvcReport({item,settings,onClear}:PacManSvcReportProps) {
   if (settings.services.length===0){

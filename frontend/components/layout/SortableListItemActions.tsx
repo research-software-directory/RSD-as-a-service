@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,12 +11,12 @@ import IconButton from '@mui/material/IconButton'
 import CategoryIcon from '@mui/icons-material/Category'
 import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices'
 
-type SortableListItemActionsProps = {
+type SortableListItemActionsProps = Readonly<{
   onService?:()=>void
   onCategory?:()=>void
   onEdit?:()=>void,
   onDelete?:()=>void,
-}
+}>
 
 export default function SortableListItemActions({onService,onCategory,onEdit,onDelete}:SortableListItemActionsProps){
   function serviceAction() {

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,18 +15,18 @@ import SortableList from '~/components/layout/SortableList'
 import {PackageManager} from './apiPackageManager'
 import PackageManagerItem from './PackageManagerItem'
 
-type PackageManagersListProps = {
+type PackageManagersListProps = Readonly<{
   loading: boolean
   managers: PackageManager[]
   onDelete: (id: string) => void
   onSorted: (newList:PackageManager[])=>void
-}
+}>
 
-type DeletePackManModal = {
+type DeletePackManModal = Readonly<{
   open: boolean,
   id: string
   location: string
-}
+}>
 
 export default function PackageManagersList({loading,managers,onSorted,onDelete}:PackageManagersListProps) {
   const [modal, setModal] = useState<DeletePackManModal>()

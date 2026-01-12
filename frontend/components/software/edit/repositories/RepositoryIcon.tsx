@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,10 +11,10 @@ import BitbucketIcon from '~/assets/logos/bitbucket_blue.svg'
 import CodebergIcon from '~/assets/logos/codeberg_blue.svg'
 import {CodePlatform} from './apiRepositories'
 
-type RepositoryIconProps = {
+type RepositoryIconProps = Readonly<{
   platform?: CodePlatform|null,
   size?: string
-}
+}>
 
 export default function RepositoryIcon({platform,size='3rem'}:RepositoryIconProps) {
   // do not show if no platform

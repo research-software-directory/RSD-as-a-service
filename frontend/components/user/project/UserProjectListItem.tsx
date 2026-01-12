@@ -3,10 +3,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
-
 import IconBtnMenuOnAction from '~/components/menu/IconBtnMenuOnAction'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
+import OverviewListItemLink from '~/components/software/overview/list/OverviewListItemLink'
 import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
 import StatusBanner from '~/components/cards/StatusBanner'
 import {ProjectByMaintainer} from './useUserProjects'
@@ -25,11 +24,8 @@ export default function UserProjectListItem({item}:Readonly<{item:ProjectByMaint
   return (
     <OverviewListItem>
       {/* standard project list item with link */}
-      <Link
-        data-testid="admin-project-list-item"
-        key={project.id}
+      <OverviewListItemLink
         href={`/projects/${project.slug}`}
-        className='flex-1 flex hover:text-inherit'
       >
         <ProjectListItemContent
           statusBanner={
@@ -43,7 +39,7 @@ export default function UserProjectListItem({item}:Readonly<{item:ProjectByMaint
           }
           {...project}
         />
-      </Link>
+      </OverviewListItemLink>
       {/* admin menu */}
       <div className="flex mx-2">
         <IconBtnMenuOnAction

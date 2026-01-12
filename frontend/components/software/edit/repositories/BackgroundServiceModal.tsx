@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,11 +22,11 @@ import {RepoPlatform, RepositorySettings, repositorySettings} from './config'
 import RepositoryIcon from './RepositoryIcon'
 import BackgroundServiceContent, {ClearServiceDataProps} from './BackgroundServiceContent'
 
-type BackgroundServiceModalProps = {
+type BackgroundServiceModalProps = Readonly<{
   repository: RepositoryForSoftware
   onClose: () => void
   onClear: ({id,data}:ClearServiceDataProps)=>void
-}
+}>
 
 export default function BackgroundServiceModal({
   repository, onClose, onClear

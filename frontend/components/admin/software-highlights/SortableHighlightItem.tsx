@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -15,13 +15,12 @@ import SortableListItemActions from '~/components/layout/SortableListItemActions
 import SortableListItem from '~/components/layout/SortableListItem'
 import {SoftwareHighlight} from './apiSoftwareHighlights'
 
-type HighlightProps = {
-  pos: number,
+type HighlightProps = Readonly<{
   item: SoftwareHighlight,
   inCarousel: boolean,
   onEdit: () => void,
   onDelete: () => void,
-}
+}>
 
 export default function SortableHighlightItem({item,inCarousel,onEdit,onDelete}: HighlightProps) {
   const smallScreen = useSmallScreen()

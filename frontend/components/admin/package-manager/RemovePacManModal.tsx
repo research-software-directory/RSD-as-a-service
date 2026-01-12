@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,11 +9,11 @@ import TextField from '@mui/material/TextField'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import {PackageManager} from '~/components/software/edit/package-managers/apiPackageManager'
 
-type RemovePacManModalProps={
+type RemovePacManModalProps=Readonly<{
   item?: PackageManager
   onCancel: ()=>void
   onDelete: ()=>void
-}
+}>
 
 export default function RemovePacManModal({item,onCancel,onDelete}:RemovePacManModalProps) {
   const [confirmation,setConfirmation] = useState<string>('')

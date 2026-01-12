@@ -3,10 +3,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
-
 import IconBtnMenuOnAction from '~/components/menu/IconBtnMenuOnAction'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
+import OverviewListItemLink from '~/components/software/overview/list/OverviewListItemLink'
 import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
 import StatusBanner from '~/components/communities/software/card/StatusBanner'
 import useUserSoftwareActions from './useUserSoftwareActions'
@@ -25,10 +24,8 @@ export default function UserSoftwareListItem({item}:UserSoftwareGridCard) {
   return (
     <OverviewListItem>
       {/* standard software list item with link */}
-      <Link
-        data-testid="software-grid-card"
+      <OverviewListItemLink
         href={`/software/${software.slug}`}
-        className="flex-1 flex hover:text-inherit"
       >
         <SoftwareListItemContent
           statusBanner={
@@ -41,7 +38,7 @@ export default function UserSoftwareListItem({item}:UserSoftwareGridCard) {
           }
           {...software}
         />
-      </Link>
+      </OverviewListItemLink>
       {/* admin menu */}
       <div className="flex mx-2">
         <div className="flex items-center gap-2 mx-1">

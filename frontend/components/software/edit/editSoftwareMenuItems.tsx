@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -44,15 +44,15 @@ export const editSoftwareMenuItems:EditSoftwareMenuItemsProps[] = [{
   active: () => true,
   status: ''
 },{
-  id: 'links',
-  label: 'Links & metadata',
-  icon: <AppShortcutIcon />,
-  active: () => true,
-  status: ''
-},{
   id: 'repositories',
   label: 'Source code',
   icon: <CodeIcon />,
+  active: () => true,
+  status: ''
+},{
+  id: 'links',
+  label: 'Links & metadata',
+  icon: <AppShortcutIcon />,
   active: () => true,
   status: ''
 },{

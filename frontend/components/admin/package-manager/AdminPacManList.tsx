@@ -93,7 +93,7 @@ export default function AdminPacManList() {
             onSubmit={(data)=>{
               // console.log('Update...',data)
               updateManager({
-                id: data?.id as string,
+                id: data?.id,
                 data:{
                   package_manager: data.package_manager,
                   download_count_scraping_disabled_reason: data.download_count_scraping_disabled_reason,

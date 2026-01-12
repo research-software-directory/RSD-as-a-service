@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-type ListTitleSubtitleProps={
+type ListTitleSubtitleProps=Readonly<{
   title: string | null
   subtitle: string | null
-}
+}>
 
 /**
  * Title and subtitle area of the list item.
