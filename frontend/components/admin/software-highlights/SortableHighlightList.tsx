@@ -11,12 +11,12 @@ import {useRouter} from 'next/navigation'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 
+import useRsdSettings from '~/config/useRsdSettings'
 import ContentLoader from '~/components/layout/ContentLoader'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import SortableList from '~/components/layout/SortableList'
 import SortableHighlightItem from './SortableHighlightItem'
 import {SoftwareHighlight} from './apiSoftwareHighlights'
-import useRsdSettings from '~/config/useRsdSettings'
 
 type DeleteOrganisationModal = {
   open: boolean,
@@ -69,7 +69,7 @@ export default function SortableHighlightsList({highlights, loading, onSorted, o
     }
   }
 
-  function onRenderItem(item: SoftwareHighlight, index?: number) {
+  function onRenderItem(item: SoftwareHighlight, index: number) {
     // increase published items count (only published items are included in carousel)
 
     if (item.is_published===true) publishedCnt += 1
@@ -78,11 +78,10 @@ export default function SortableHighlightsList({highlights, loading, onSorted, o
     return (
       <SortableHighlightItem
         key={item.id}
-        pos={index ?? 0}
         item={item}
         inCarousel={inCarousel}
-        onEdit={onEdit}
-        onDelete={confirmDelete}
+        onEdit={()=>onEdit(index)}
+        onDelete={()=>confirmDelete(index)}
       />
     )
   }

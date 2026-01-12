@@ -68,13 +68,13 @@ export async function editSoftwareMetadata(page: Page, mockSoftware: MockedSoftw
     value: mockSoftware.repoUrl
   })
   // add repository url
-  const repoUrl = page.getByLabel('Repository URL')
-  await repoUrl.fill(mockSoftware.repoUrl)
-  await Promise.all([
-    repoUrl.blur(),
-    // wait for POST
-    page.waitForResponse(/\/repository_url/),
-  ])
+  // const repoUrl = page.getByLabel('Repository URL')
+  // await repoUrl.fill(mockSoftware.repoUrl)
+  // await Promise.all([
+  //   repoUrl.blur(),
+  //   // wait for POST
+  //   page.waitForResponse(/\/repository_url/),
+  // ])
   // add Concept DOI
   const doi = await page.getByLabel('Software DOI')
   await fillAutosaveInput({
@@ -82,6 +82,39 @@ export async function editSoftwareMetadata(page: Page, mockSoftware: MockedSoftw
     element: doi,
     value: mockSoftware.doi
   })
+}
+
+export async function addRepository(page: Page, mockSoftware: MockedSoftware){
+  const addBtn = page.getByTestId('add-btn')
+  // set breakpoint
+  // await page.pause()
+  // ensure button is visible
+  expect(addBtn).toBeVisible()
+  // click add button and wait for modal
+  await Promise.all([
+    page.waitForSelector('#edit-software-repository-modal'),
+    addBtn.click()
+  ])
+
+  // add repository
+  await page.getByLabel('Repository URL').fill(mockSoftware.repoUrl)
+  // await page.getByLabel('Source').fill(item.source)
+
+  // save testimonial
+  const saveBtn = page.getByRole('button', {
+    name: 'Save'
+  })
+  await Promise.all([
+    // save item
+    // page.waitForResponse(/testimonial/),
+    // wait for list to appear
+    page.waitForSelector('[data-testid="software-repository-list-item"]'),
+    saveBtn.click()
+  ])
+  // validate list has at least one item
+  const repositories = page.getByTestId('software-repository-list-item')
+  const count = await repositories.count()
+  expect(count).toBe(1)
 }
 
 export async function conceptDoiFeatures(page: Page, conceptDOI: string, doiApi:string) {
@@ -302,8 +335,7 @@ export async function createContact(page:Page, contact: Person) {
 }
 
 export async function addTestimonial(page:Page, item: Testimonial) {
-  // await page.getByRole('button', {name: 'Testimonials Optional information'}).click()
-  const addBtn = page.getByTestId('add-testimonial-btn')
+  const addBtn = page.getByTestId('add-btn')
   // set breakpoint
   // await page.pause()
   // ensure button is visible

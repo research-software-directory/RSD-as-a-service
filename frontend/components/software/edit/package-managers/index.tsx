@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -12,51 +12,35 @@ import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
 
 import {useSession} from '~/auth/AuthProvider'
-import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {NewPackageManager, PackageManager} from './apiPackageManager'
+import {NewPackageManager} from './apiPackageManager'
 import PackageManagersList from './PackageManagersList'
-import EditPackageManagerModal from './EditPackageManagerModal'
 import useSoftwareContext from '../context/useSoftwareContext'
 import PackageManagersInfo from './PackageManagersInfo'
 import usePackageManagers from './usePackageManagers'
+import PackageManagerModal from './PackageManagerModal'
 
-type EditPackManModal = {
+type PackManModal = {
   open: boolean,
-  manager: NewPackageManager | PackageManager
-  pos?: number
-  edit: boolean
+  manager: NewPackageManager
 }
 
 export default function EditPackageManagers() {
-  const {token,user} = useSession()
-  const {showErrorMessage} = useSnackbar()
+  const {token} = useSession()
   const {software} = useSoftwareContext()
-  const {loading, managers, saveManager,updateManager,sortManagers,deleteManager} = usePackageManagers({
+  const {loading, managers, addManager,sortManagers,deleteManager} = usePackageManagers({
     software: software.id,
     token
   })
-  const [modal, setModal] = useState<EditPackManModal>()
-  // only admin can edit PM item
-  const isAdmin = user?.role === 'rsd_admin'
+  const [modal, setModal] = useState<PackManModal>()
 
-  // console.group('PackageManagers')
+  // console.group('EditPackageManagers')
   // console.log('loading...', loading)
   // console.log('software...', software)
   // console.log('managers...', managers)
   // console.log('token...', token)
   // console.groupEnd()
-
-  function getSubtitle() {
-    if (managers.length === 0) {
-      return software.brand_name
-    }
-    if (managers.length === 1) {
-      return `${software.brand_name} has ${managers.length} download location`
-    }
-    return `${software.brand_name} has ${managers.length} download locations`
-  }
 
   function onAdd() {
     // create new PM item
@@ -64,62 +48,14 @@ export default function EditPackageManagers() {
       id: null,
       software: software.id,
       url: '',
-      package_manager: null,
+      // package_manager: null,
       position: managers.length + 1
     }
 
     setModal({
       open: true,
-      manager: newPM,
-      edit: false
+      manager: newPM
     })
-  }
-
-  async function onEdit(pos:number){
-    const item = managers[pos]
-    if (item) {
-      setModal({
-        open: true,
-        pos,
-        manager: item,
-        edit: true
-      })
-    }
-  }
-
-  async function onSorted(newList:PackageManager[]) {
-    const resp = await sortManagers(newList)
-    if (resp.status !== 200) {
-      showErrorMessage(`Failed to sort items. ${resp.message}`)
-    }
-  }
-
-  async function onDelete(pos: number) {
-    const item = managers[pos]
-    if (item) {
-      const resp = await deleteManager(item.id)
-      if (resp.status !== 200) {
-        showErrorMessage(`Failed to remove item. ${resp.message}`)
-      }
-    } else {
-      showErrorMessage('Failed to remove item. Internal app error. The item is missing!')
-    }
-  }
-
-  async function savePackageManager(data: NewPackageManager | PackageManager) {
-    let resp
-    if (data.id){
-      // update if id present
-      resp = await updateManager(data as PackageManager)
-    }else{
-      // create new
-      resp = await saveManager(data)
-    }
-    if (resp.status !== 200) {
-      showErrorMessage(`Failed to save ${data.url}. ${resp.message}`)
-    } else {
-      setModal(undefined)
-    }
   }
 
   return (
@@ -127,7 +63,7 @@ export default function EditPackageManagers() {
       <EditSection className="py-4">
         <EditSectionTitle
           title="Package managers"
-          subtitle={getSubtitle()}
+          subtitle="From which package managers can your software be downloaded?"
         >
           <Button
             variant='contained'
@@ -143,9 +79,8 @@ export default function EditPackageManagers() {
             <PackageManagersList
               loading={loading}
               managers={managers}
-              onSorted={onSorted}
-              onDelete={onDelete}
-              onEdit={isAdmin ? onEdit : undefined}
+              onSorted={sortManagers}
+              onDelete={deleteManager}
             />
           </div>
           <PackageManagersInfo />
@@ -153,14 +88,15 @@ export default function EditPackageManagers() {
       </EditSection>
       {
         modal &&
-        <EditPackageManagerModal
-          open={modal.open}
-          isAdmin={isAdmin}
+        <PackageManagerModal
           package_manager={modal.manager}
           onCancel={() => {
             setModal(undefined)
           }}
-          onSubmit={savePackageManager}
+          onSubmit={(data)=>{
+            addManager(data)
+            setModal(undefined)
+          }}
         />
       }
     </>

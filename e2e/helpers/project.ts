@@ -282,7 +282,7 @@ export async function createTeamMember(page:Page, contact: Person) {
     saveBtn.click()
   ])
   // validate last item - the one we just created
-  const members = page.getByTestId('team-member-item')
+  const members = page.getByTestId('contributor-item')
   // validate contact person flag
   const member = await members.last().textContent()
   // validate name
@@ -326,7 +326,7 @@ export async function importTeamMemberByOrcid(page: Page, contact: Person) {
   ])
   // await page.pause()
   // validate last item - the one we just created
-  const members = page.getByTestId('team-member-item')
+  const members = page.getByTestId('contributor-item')
   // validate contact person primary text
   const member = await members.last()
     .locator('.MuiListItemText-primary')
