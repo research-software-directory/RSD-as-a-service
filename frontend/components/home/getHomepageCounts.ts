@@ -2,22 +2,28 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 'use server'
-import {createJsonHeaders} from '~/utils/fetchHelpers'
+import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 
-export async function getHomepageCounts(frontend?:boolean) {
+export type HomepageCounts={
+  software_cnt: number | null,
+  open_software_cnt: number | null,
+  project_cnt: number | null,
+  organisation_cnt: number | null,
+  contributor_cnt: number | null,
+  software_mention_cnt: number | null,
+}
+
+export async function getHomepageCounts() {
   try {
     const query = 'rpc/homepage_counts'
-    let url = `${process.env.POSTGREST_URL}/${query}`
-    if (frontend) {
-      url = `/api/v1/${query}`
-    }
+    const url = `${getBaseUrl()}/${query}`
     // console.log('getHomepageCounts...url...',url)
     const resp = await fetch(url, {
       method: 'GET',
@@ -27,7 +33,7 @@ export async function getHomepageCounts(frontend?:boolean) {
     })
 
     if (resp.status === 200) {
-      const data = await resp.json()
+      const data:HomepageCounts = await resp.json()
       return data
     }
     logger(`getHomepageCounts ${resp.status} ${resp.statusText}`, 'warn')

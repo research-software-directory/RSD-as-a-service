@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,23 +7,16 @@
 // required when AppHeader component is used
 // NOTE! if default mocks are defined the mock imports need to be above "normal" imports
 jest.mock('~/auth/api/useLoginProviders')
-// use DEFAULT MOCK for organisation list used by Helmholtz homepage
-// NOTE! if default is defined in __mock__ folder you cannot overwrite it here
-jest.mock('~/components/home/helmholtz/useOrganisations')
 // MOCK getHomepageCounts
 jest.mock('~/components/home/getHomepageCounts')
 // MOCK getTopNews
 jest.mock('~/components/news/apiNews')
 // MOCK getRsdSettings
 jest.mock('~/config/getSettingsServerSide')
-// MOCK useOrganisations for Helmholtz page
-jest.mock('~/components/home/helmholtz/useOrganisations')
-
-// const mockRsdSettings = jest.mock('~/config/getSettingsServerSide')
 
 import {render, screen} from '@testing-library/react'
 
-import Home from '../app/page'
+import Home from './page'
 
 import {defaultRsdSettings} from '~/config/rsdSettingsReducer'
 import {WithAppContext} from '~/utils/jest/WithAppContext'
@@ -34,8 +27,8 @@ import {getRsdSettings} from '~/config/getSettingsServerSide'
 const mockRsdSettings = getRsdSettings as jest.Mock
 import {getHomepageCounts} from '~/components/home/getHomepageCounts'
 const mockHomepageCounts = getHomepageCounts as jest.Mock
-import useOrganisations from '~/components/home/helmholtz/useOrganisations'
-const mockUseOrganisations = useOrganisations as jest.Mock
+// import useOrganisations from '~/components/home/helmholtz/useOrganisations'
+// const mockUseOrganisations = useOrganisations as jest.Mock
 
 const props = {
   host: {
@@ -59,6 +52,7 @@ describe('app/page.tsx', () => {
     // mock responses
     mockTopNews.mockResolvedValue([])
     mockRsdSettings.mockResolvedValue(defaultRsdSettings)
+    mockHomepageCounts.mockResolvedValue(props.counts)
 
     // we need to resolve async component before wrapping it?!?
     // this might not work when in all situations
@@ -81,6 +75,7 @@ describe('app/page.tsx', () => {
     // mock responses
     mockTopNews.mockResolvedValue([])
     mockRsdSettings.mockResolvedValue(defaultRsdSettings)
+    mockHomepageCounts.mockResolvedValue(props.counts)
 
     // we need to resolve async component before wrapping it?!?
     // this might not work when in all situations
@@ -150,10 +145,6 @@ describe('app/page.tsx', () => {
     mockTopNews.mockResolvedValue([])
     mockRsdSettings.mockResolvedValue(defaultRsdSettings)
     mockHomepageCounts.mockResolvedValue(props.counts)
-    mockUseOrganisations.mockReturnValueOnce({
-      loading: false,
-      organisations: []
-    })
 
     // we need to resolve async component before wrapping it?!?
     // this might not work when in all situations

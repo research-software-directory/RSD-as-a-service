@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,35 +10,22 @@
 import {useEffect} from 'react'
 import AOS from 'aos'
 
-import {TopNewsProps} from '~/components/news/apiNews'
+import {HomeProps} from '~/app/page'
 import Arc from './arc.svg'
 import AboutUsSection from './AboutUsSection'
 import LogoSection from './LogoSection'
 import LearnMoreSection from './LearnMoreSection'
 import OurGoalsSection from './OurGoalsSection'
 import GetStartedSection from './GetStartedSection'
-import StarsSection from './StatsSection'
+import StatsSection from './StatsSection'
 import JumboBanner from './JumboBanner'
 import TopNewsSection from './TopNewsSection'
+import HomepageDivider from './HomepageDivider'
 
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
-import HomepageDivider from './HomepageDivider'
 
-export type RsdHomeProps = {
-  software_cnt: number,
-  open_software_cnt: number,
-  project_cnt: number,
-  organisation_cnt: number,
-  contributor_cnt: number,
-  software_mention_cnt: number,
-  news: TopNewsProps[]
-}
-
-export default function RsdHome({
-  software_cnt, project_cnt, organisation_cnt,
-  contributor_cnt, software_mention_cnt,news
-}: RsdHomeProps) {
+export default function RsdHome({counts,news}: HomeProps) {
   // Initialize AOS library
   useEffect(() => {
     AOS.init({offset: 16})
@@ -50,12 +37,12 @@ export default function RsdHome({
       <JumboBanner />
 
       {/* stats  */}
-      <StarsSection
-        software_cnt={software_cnt}
-        project_cnt={project_cnt}
-        organisation_cnt={organisation_cnt}
-        contributor_cnt={contributor_cnt}
-        software_mention_cnt={software_mention_cnt}
+      <StatsSection
+        software_cnt={counts?.software_cnt ?? null}
+        project_cnt={counts?.project_cnt ?? null}
+        organisation_cnt={counts?.organisation_cnt ?? null}
+        contributor_cnt={counts?.contributor_cnt ?? null}
+        software_mention_cnt={counts?.software_mention_cnt ?? null}
       />
 
       <div className="bg-base-800">
