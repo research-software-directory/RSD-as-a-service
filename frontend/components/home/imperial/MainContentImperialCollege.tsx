@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Image from 'next/legacy/image'
+import Image from 'next/image'
 
 import {HomeProps} from 'app/page'
 import {useSession} from '~/auth/AuthProvider'
@@ -45,11 +45,11 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
       <div className="max-w-(--breakpoint-xl) mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
         <CounterBox
           label="Software Submissions"
-          value={counts.software_cnt.toString()}
+          value={counts.software_cnt?.toString() ?? ''}
         />
         <CounterBox
           label="Software Mentions"
-          value={counts.software_mention_cnt.toString()}
+          value={counts.software_mention_cnt?.toString() ?? ''}
         />
       </div>
 
