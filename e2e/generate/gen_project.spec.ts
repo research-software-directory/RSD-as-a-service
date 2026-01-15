@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -41,7 +41,13 @@ test.describe.serial('Project', async () => {
       ...mockProjectOrganisation['chrome'].map(item=>item.name),
       ...fundingOrganisation['chrome'],
       ...mockProjectOrganisation['chromium'].map(item=>item.name),
-      ...fundingOrganisation['chromium']
+      ...fundingOrganisation['chromium'],
+      ...mockProjectOrganisation['firefox'].map(item=>item.name),
+      ...fundingOrganisation['firefox'],
+      ...mockProjectOrganisation['msedge'].map(item=>item.name),
+      ...fundingOrganisation['msedge'],
+      ...mockProjectOrganisation['webkit'].map(item=>item.name),
+      ...fundingOrganisation['webkit']
     ]
 
     // directly open edit page

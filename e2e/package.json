@@ -21,7 +21,6 @@
     "e2e:ubuntu": "playwright test --project=chrome --project=firefox",
     "e2e:ubuntu:show": "playwright test --project=chrome --project=firefox --headed",
     "e2e:macos": "playwright test --project=chromium --project=webkit",
-    "e2e:windows": "playwright test --project=chrome --project=msedge",
     "e2e:generate": "playwright test --project=generate --headed",
     "e2e:report": "playwright show-report",
     "e2e:record": "playwright codegen http://localhost/",
@@ -35,10 +34,10 @@
   "author": "Dusan Mijatovic",
   "license": "Apache 2.0",
   "devDependencies": {
-    "@playwright/test": "1.56.1",
-    "@types/node": "24.0.13",
-    "@typescript-eslint/eslint-plugin": "8.36.0",
-    "@typescript-eslint/parser": "8.36.0",
-    "eslint": "9.31.0"
+    "@playwright/test": "1.57.0",
+    "@types/node": "25.0.8",
+    "@typescript-eslint/eslint-plugin": "8.53.0",
+    "@typescript-eslint/parser": "8.53.0",
+    "eslint": "9.39.2"
   }
 }
