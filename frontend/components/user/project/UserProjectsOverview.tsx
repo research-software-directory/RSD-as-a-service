@@ -1,19 +1,16 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
-
-import Link from 'next/link'
 
 import NoContent from '~/components/layout/NoContent'
 import GridOverview from '~/components/layout/GridOverview'
 import CardSkeleton from '~/components/cards/CardSkeleton'
 import {ProjectLayoutType} from '~/components/search/ToggleViewGroup'
-import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
-import ProjectCardContent from '~/components/projects/overview/cards/ProjectCardContent'
 import ProjectOverviewList from '~/components/projects/overview/list/ProjectOverviewList'
-import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
 import {ProjectByMaintainer} from './useUserProjects'
+import UserProjectGridCard from './UserProjectGridCard'
+import UserProjectListItem from './UserProjectListItem'
 
 type UserProjectsOverviewProps=Readonly<{
   layout: ProjectLayoutType
@@ -37,19 +34,7 @@ export default function UserProjectsOverview({loading,skeleton_items,layout,proj
     return (
       <ProjectOverviewList>
         {projects.map(item => {
-          return (
-            <Link
-              data-testid="project-list-item"
-              key={item.id}
-              href={`/projects/${item.slug}`}
-              className='flex-1 hover:text-inherit'
-              title={item.title}
-            >
-              <OverviewListItem className='pr-4'>
-                <ProjectListItemContent key={item.id} {...item as any} />
-              </OverviewListItem>
-            </Link>
-          )
+          return <UserProjectListItem key={item.id} item={item} />
         })}
       </ProjectOverviewList>
     )
@@ -60,19 +45,7 @@ export default function UserProjectsOverview({loading,skeleton_items,layout,proj
   return (
     <GridOverview fullWidth={true}>
       {projects.map((item) => {
-        return (
-          <Link
-            key={item.id}
-            data-testid="project-grid-card"
-            href={`/projects/${item.slug}`}
-            className="h-full hover:text-inherit"
-          >
-            <ProjectCardContent
-              visibleKeywords={3}
-              {...item as any}
-            />
-          </Link>
-        )
+        return <UserProjectGridCard key={item.id} item={item} />
       })}
     </GridOverview>
   )

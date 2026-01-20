@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,8 +17,8 @@ type SoftwareCardContentProps = {
   brand_name: string
   short_statement: string
   image_id: string | null
-  keywords: string[],
-  prog_lang: string[],
+  keywords: string[] | null,
+  prog_lang: string[] | null,
   contributor_cnt: number | null
   mention_cnt: number | null
   downloads?: number
@@ -62,7 +62,7 @@ export default function SoftwareCardContent(item:SoftwareCardContentProps) {
         <div className="flex gap-2 justify-between mt-4">
           {/* Languages */}
           <ProgrammingLanguageList
-            prog_lang={item.prog_lang}
+            prog_lang={item.prog_lang ?? undefined}
             visibleNumberOfProgLang={item.visibleProgLang ?? 3}
           />
           {/* Metrics */}

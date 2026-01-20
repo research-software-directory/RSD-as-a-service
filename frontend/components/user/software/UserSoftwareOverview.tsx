@@ -1,19 +1,16 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
-
-import Link from 'next/link'
 
 import NoContent from '~/components/layout/NoContent'
 import GridOverview from '~/components/layout/GridOverview'
 import CardSkeleton from '~/components/cards/CardSkeleton'
 import {ProjectLayoutType} from '~/components/search/ToggleViewGroup'
 import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
-import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
-import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
-import SoftwareGridCard from '~/components/software/overview/cards/SoftwareGridCard'
+import UserSoftwareGridCard from './UserSoftwareGridCard'
 import {SoftwareByMaintainer} from './useUserSoftware'
+import UserSoftwareListItem from './UserSoftwareListItem'
 
 type UserSoftwareOverviewProps=Readonly<{
   layout: ProjectLayoutType
@@ -45,19 +42,7 @@ export default function UserSoftwareOverview({loading,skeleton_items,layout,soft
     return (
       <SoftwareOverviewList>
         {software.map(item => {
-          return (
-            <Link
-              data-testid="software-list-item"
-              key={item.id}
-              href={`/software/${item.slug}`}
-              className='hover:text-inherit'
-              title={item.brand_name}
-            >
-              <OverviewListItem className='pr-4'>
-                <SoftwareListItemContent key={item.id} {...item} />
-              </OverviewListItem>
-            </Link>
-          )
+          return <UserSoftwareListItem key={item.id} item={item}/>
         })}
       </SoftwareOverviewList>
     )
@@ -67,7 +52,7 @@ export default function UserSoftwareOverview({loading,skeleton_items,layout,soft
   return (
     <GridOverview fullWidth={true}>
       {software.map((item) => {
-        return <SoftwareGridCard key={item.id} {...item as any}/>
+        return <UserSoftwareGridCard key={item.id} item={item} />
       })}
     </GridOverview>
   )
