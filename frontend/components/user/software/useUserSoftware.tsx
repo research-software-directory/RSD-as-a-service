@@ -20,11 +20,14 @@ export type SoftwareByMaintainer={
   slug:string,
   brand_name:string,
   short_statement:string,
-  is_published:boolean,
   image_id:string|null
+  is_published:boolean,
   updated_at:string,
   contributor_cnt:number,
-  mention_cnt:number
+  mention_cnt:number,
+  keywords: string[] | null,
+  prog_lang: string[] | null,
+  licenses: string[] | null
 }
 
 export type UserSoftwareProp = {
@@ -40,11 +43,15 @@ export async function getSoftwareForMaintainer({
 ) {
   try {
     // baseUrl
-    let url =`/api/v1/rpc/software_by_maintainer?maintainer_id=${account}&order=brand_name`
+    let url =`/api/v1/rpc/software_by_maintainer?maintainer_id=${account}`
+
     // search
     if (searchFor) {
       const encodedSearch = encodeURIComponent(searchFor)
       url+=`&or=(brand_name.ilike."*${encodedSearch}*", short_statement.ilike."*${encodedSearch}*")`
+    }else{
+      // default order by is_published
+      url+='&order=is_published,brand_name'
     }
     // pagination
     url += paginationUrlParams({rows, page})

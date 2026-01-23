@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -10,14 +10,14 @@ import {getPageUrl,visibleNumberOfKeywords,visibleNumberOfProgLang} from '../use
 import SoftwareCardContent from './SoftwareCardContent'
 import ExternalLinkIcon from './ExternalLinkIcon'
 
-type SoftwareCardProps = {
+export type SoftwareCardProps = {
   id: string
   slug: string
   brand_name: string
   short_statement: string
   image_id: string | null
-  keywords: string[],
-  prog_lang: string[],
+  keywords: string[] | null,
+  prog_lang: string[] | null,
   contributor_cnt: number | null
   mention_cnt: number | null
   downloads?: number

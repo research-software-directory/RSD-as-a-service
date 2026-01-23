@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -15,7 +15,7 @@ export default function KeywordList({keywords=[], visibleNumberOfKeywords = 3}: 
   if (!keywords || keywords.length===0) return null
 
   return (
-    <ul className="flex flex-wrap items-start gap-2 text-base-content text-xs">
+    <ul className="flex flex-wrap items-start gap-1 text-base-content text-xs">
       {// limits the keywords to 'visibleNumberOfKeywords' per software.
         keywords?.slice(0, visibleNumberOfKeywords)
           .map((keyword:string) => (

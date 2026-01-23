@@ -10,6 +10,7 @@
 import {useEffect,useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
+import {ProjectStatusKey} from '~/types/Project'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
@@ -19,16 +20,18 @@ export type ProjectByMaintainer={
   id: string
   slug: string,
   title: string,
-  subtitle: string | null
-  current_state: string
+  subtitle: string,
   date_start: string
   date_end: string
   updated_at: string
   is_published: boolean
   image_contain: boolean,
-  image_id: string | null
-  impact_cnt: number
-  output_cnt: number
+  image_id: string | null,
+  keywords: string[] | null,
+  research_domain: string[] | null,
+  impact_cnt: number | null,
+  output_cnt: number | null,
+  project_status: ProjectStatusKey
 }
 
 type UserProjectsProp = {
@@ -44,12 +47,15 @@ export async function getProjectsForMaintainer(
 ) {
   try {
     // baseUrl
-    let url = `/api/v1/rpc/projects_by_maintainer?maintainer_id=${account}&order=is_published.desc,title`
+    let url = `/api/v1/rpc/projects_by_maintainer?maintainer_id=${account}`
 
     // search
     if (searchFor) {
       const encodedSearch = encodeURIComponent(searchFor)
       url += `&or=(title.ilike."*${encodedSearch}*", subtitle.ilike."*${encodedSearch}*")`
+    }else{
+      // default order by is_published
+      url += '&order=is_published,title'
     }
 
     // pagination

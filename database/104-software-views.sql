@@ -1,6 +1,6 @@
--- SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2023 dv4all
 -- SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -796,38 +796,40 @@ $$
 $$;
 
 -- SOFTWARE BY MAINTAINER
--- NOTE! one software is shown multiple times in this view
--- we filter this view at least by organisation uuid
+-- NOTE! depends on software_overview RPC
 CREATE FUNCTION software_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	brand_name VARCHAR,
 	short_statement VARCHAR,
-	is_published BOOLEAN,
 	image_id VARCHAR,
+	is_published BOOLEAN,
 	updated_at TIMESTAMPTZ,
 	contributor_cnt BIGINT,
-	mention_cnt BIGINT
+	mention_cnt BIGINT,
+	keywords CITEXT[],
+	prog_lang TEXT[],
+	licenses VARCHAR[]
 ) LANGUAGE sql STABLE AS
 $$
 	SELECT
-		software.id,
-		software.slug,
-		software.brand_name,
-		software.short_statement,
-		software.is_published,
-		software.image_id,
-		software.updated_at,
-		count_software_contributors.contributor_cnt,
-		count_software_mentions.mention_cnt
+		software_overview.id,
+		software_overview.slug,
+		software_overview.brand_name,
+		software_overview.short_statement,
+		software_overview.image_id,
+		software_overview.is_published,
+		software_overview.updated_at,
+		software_overview.contributor_cnt,
+		software_overview.mention_cnt,
+		software_overview.keywords,
+		software_overview.prog_lang,
+		software_overview.licenses
 	FROM
-		software
-	LEFT JOIN
-		count_software_contributors() ON software.id=count_software_contributors.software
-	LEFT JOIN
-		count_software_mentions() ON software.id=count_software_mentions.software
+		software_overview()
 	INNER JOIN
-		maintainer_for_software ON software.id=maintainer_for_software.software
+		maintainer_for_software ON software_overview.id=maintainer_for_software.software
 	WHERE
 		maintainer_for_software.maintainer=maintainer_id;
 $$;
+

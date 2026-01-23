@@ -1,6 +1,6 @@
--- SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2023 dv4all
 --
@@ -922,48 +922,45 @@ $$
 $$;
 
 -- PROJECTS BY MAINTAINER
--- NOTE! updated by Dusan on 2025-04-07
--- we filter this view at least by user account (uuid)
+-- NOTE! depends on project_overview RPC
 CREATE FUNCTION projects_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	title VARCHAR,
 	subtitle VARCHAR,
-	current_state VARCHAR,
 	date_start DATE,
 	date_end DATE,
 	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
 	image_contain BOOLEAN,
 	image_id VARCHAR,
+	keywords citext[],
+	research_domain VARCHAR[],
 	impact_cnt INTEGER,
-	output_cnt INTEGER
+	output_cnt INTEGER,
+	project_status VARCHAR(20)
 ) LANGUAGE sql STABLE AS
 $$
 	SELECT
-		project.id,
-		project.slug,
-		project.title,
-		project.subtitle,
-		project_status.status AS current_state,
-		project.date_start,
-		project.date_end,
-		project.updated_at,
-		project.is_published,
-		project.image_contain,
-		project.image_id,
-		COALESCE(count_project_impact.impact_cnt, 0),
-		COALESCE(count_project_output.output_cnt, 0)
+		project_overview.id,
+		project_overview.slug,
+		project_overview.title,
+		project_overview.subtitle,
+		project_overview.date_start,
+		project_overview.date_end,
+		project_overview.updated_at,
+		project_overview.is_published,
+		project_overview.image_contain,
+		project_overview.image_id,
+		project_overview.keywords,
+		project_overview.research_domain,
+		project_overview.impact_cnt,
+		project_overview.output_cnt,
+		project_overview.project_status
 	FROM
-		project
+		project_overview()
 	INNER JOIN
-		maintainer_for_project ON project.id = maintainer_for_project.project
-	LEFT JOIN
-		count_project_impact() ON count_project_impact.project = project.id
-	LEFT JOIN
-		count_project_output() ON count_project_output.project = project.id
-	LEFT JOIN
-		project_status() ON project.id=project_status.project
+		maintainer_for_project ON project_overview.id = maintainer_for_project.project
 	WHERE
 		maintainer_for_project.maintainer = maintainer_id;
 $$;
