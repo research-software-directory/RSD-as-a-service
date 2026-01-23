@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2026 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2024 dv4all
 -- SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -21,7 +21,7 @@ CREATE TYPE platform_type AS ENUM (
 
 
 CREATE TABLE repository_url (
-	id UUID PRIMARY KEY,
+	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://\S+$') UNIQUE,
 	code_platform platform_type NOT NULL DEFAULT 'other',
 	archived BOOLEAN,
