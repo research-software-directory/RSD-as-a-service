@@ -39,7 +39,8 @@ export default function GlobalSearchAutocomplete(props: Props) {
   const {showErrorMessage} = useSnackbar()
   const [isOpen, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
-  const [selected, setSelected] = useState(0)
+  const [selected, setSelected] = useState(-1)
+  const [isItemSelected, setIsItemSelected] = useState(false)
   const [hasResults, setHasResults] = useState(false)
   const [searchResults, setSearchResults] = useState<GlobalSearchResults[]>([])
   const [searchCombo, setSearchCombo] = useState('Ctrl K')
@@ -60,8 +61,13 @@ export default function GlobalSearchAutocomplete(props: Props) {
   useEffect(() => {
     if (inputValue === '') {
       setOpen(false)
-      setSelected(0)
+      setSelected(-1)
+      setIsItemSelected(false)
       setSearchResults([])
+    } else {
+      // Reset selection when user types
+      setIsItemSelected(false)
+      setSelected(-1)
     }
   }, [inputValue])
 
@@ -118,26 +124,67 @@ export default function GlobalSearchAutocomplete(props: Props) {
   }
 
   function handleClick() {
-    const selectedItem = searchResults[selected] ?? null
-    if (selectedItem){
-      // build url
+    // If user explicitly selected an item from dropdown, navigate to it
+    if (isItemSelected && selected >= 0) {
+      const selectedItem = searchResults[selected] ?? null
+      if (selectedItem){
+        // build url
+        const url = composeUrl({
+          domain: selectedItem.domain,
+          route: selectedItem.source,
+          slug: selectedItem.slug
+        })
+        // remote RSD
+        if (selectedItem.domain){
+          // open page in new tab
+          window.open(url,'_blank')?.focus()
+        }else{
+          // local page use next router
+          router.push(url)
+        }
+        setSelected(-1)
+        setIsItemSelected(false)
+        setOpen(false)
+        setInputValue('')
+      }
+    } else {
+      // User pressed Enter without selecting from dropdown
+      handleEnterWithoutSelection()
+    }
+  }
+
+  function handleEnterWithoutSelection() {
+    // Check result count and navigate accordingly
+    const resultCount = searchResults.length
+
+    if (resultCount === 0) {
+      // No results - navigate to search page
+      router.push(`/search?q=${encodeURIComponent(inputValue)}`)
+      setOpen(false)
+      setInputValue('')
+    } else if (resultCount === 1) {
+      // Single result - navigate directly to it
+      const selectedItem = searchResults[0]
       const url = composeUrl({
         domain: selectedItem.domain,
         route: selectedItem.source,
         slug: selectedItem.slug
       })
-      // remote RSD
       if (selectedItem.domain){
-        // open page in new tab
         window.open(url,'_blank')?.focus()
       }else{
-        // local page use next router
         router.push(url)
       }
-      setSelected(0)
+      setOpen(false)
+      setInputValue('')
+    } else {
+      // Multiple results - navigate to search results page
+      router.push(`/search?q=${encodeURIComponent(inputValue)}`)
       setOpen(false)
       setInputValue('')
     }
+    // remove focus from input
+    inputRef.current?.blur()
   }
 
   // Handle keyup
@@ -151,17 +198,28 @@ export default function GlobalSearchAutocomplete(props: Props) {
         break
       // Backspace - Remove selection
       case 'Backspace':
-        setSelected(0)
+        setSelected(-1)
+        setIsItemSelected(false)
         break
       // Up arrow
       case 'ArrowUp':
         e.preventDefault() // Disallows the cursor to move to the end of the input
-        if (selected > 0) setSelected(selected - 1)
+        if (selected > 0) {
+          setSelected(selected - 1)
+          setIsItemSelected(true)
+        } else if (selected === 0) {
+          // Move back to no selection
+          setSelected(-1)
+          setIsItemSelected(false)
+        }
         break
       // Down arrow
       case 'ArrowDown':
         e.preventDefault() // Disallows the cursor to move to the end of the input
-        if (searchResults.length - 1 > selected) setSelected(selected + 1)
+        if (selected < searchResults.length - 1) {
+          setSelected(selected + 1)
+          setIsItemSelected(true)
+        }
         break
       // Enter
       case 'Enter':
@@ -268,8 +326,14 @@ export default function GlobalSearchAutocomplete(props: Props) {
                   data-testid="global-search-list-item"
                   className={`${selected === index ? 'bg-base-200' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
                   onClick={handleClick}
-                  onMouseEnter={() => setSelected(index)}
-                  onTouchStart={() => setSelected(index)}
+                  onMouseEnter={() => {
+                    setSelected(index)
+                    setIsItemSelected(true)
+                  }}
+                  onTouchStart={() => {
+                    setSelected(index)
+                    setIsItemSelected(true)
+                  }}
                 >
                   <div className="flex gap-3 w-full">
                     {/*icon*/}
