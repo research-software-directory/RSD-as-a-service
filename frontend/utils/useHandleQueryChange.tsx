@@ -11,10 +11,11 @@ import {useRouter,usePathname,useSearchParams} from 'next/navigation'
 import {encodeQueryValue} from './extractQueryParam'
 
 /**
- * Generic hook to handle change in url params using next/navigation and URLSearchParams
+ * Generic hook to handle change in url params using next/navigation and URLSearchParams.
+ * If you do not use pagination initialize hook with false value to omit page parameter.
  * @returns
  */
-export default function useHandleQueryChange() {
+export default function useHandleQueryChange(resetPage:boolean=true) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -39,7 +40,7 @@ export default function useHandleQueryChange() {
     }
 
     // on each param change we reset page
-    if (key !== 'page') {
+    if (key !== 'page' && resetPage) {
       urlParams.set('page','1')
     }
     // construct url from pathname and urlParams
@@ -49,7 +50,7 @@ export default function useHandleQueryChange() {
     // on page change we scroll to top otherwise not
     router.push(url,{scroll: key === 'page'})
 
-  }, [router,searchParams,pathname])
+  }, [router,searchParams,pathname,resetPage])
 
   return {
     handleQueryChange

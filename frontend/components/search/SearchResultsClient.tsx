@@ -30,7 +30,7 @@ export default function SearchResultsClient({
   view: initialView,
   activeModules
 }: SearchResultsClientProps) {
-  const {handleQueryChange} = useHandleQueryChange()
+  const {handleQueryChange} = useHandleQueryChange(false)
   const {rsd_page_layout, setPageLayout} = useUserSettings()
 
   // Use URL view param if present, otherwise fall back to user settings
