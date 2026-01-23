@@ -1,9 +1,12 @@
 
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
+import {headers} from 'next/headers'
 
 import {app} from '~/config/app'
 import {getUserFromToken} from '~/auth/getSessionServerSide'
+import {getImageUrl} from '~/utils/editImage'
+import {createMetadata} from '~/components/seo/apiMetadata'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import PageBreadcrumbs from '~/components/layout/PageBreadcrumbs'
 import {CommunityProvider} from '~/components/communities/context'
@@ -22,8 +25,11 @@ export async function generateMetadata(
   {params}:{params: Promise<{slug: string}>}
 ): Promise<Metadata> {
   // read route params
-  const {slug} = await params
-  const {token} = await getUserSettings()
+  const [{slug},{token},headersList] = await Promise.all([
+    params,
+    getUserSettings(),
+    headers()
+  ])
 
   // find community by slug
   const {community} = await getCommunityBySlug({
@@ -32,15 +38,35 @@ export async function generateMetadata(
     user: null
   })
 
+  const title = `${community?.name ?? 'Community'} | ${app.title}`
+  const description = community?.short_description ?? `${community?.name ?? 'The RSD community'} with ${community?.software_cnt ?? 0} software packages.`
+
   // console.group('CommunityPageLayout.generateMetadata')
   // console.log('slug...', slug)
   // console.log('token...', token)
   // console.log('community...', community)
   // console.groupEnd()
 
+  if (community?.name){
+    // extract domain to use in url
+    const domain = headersList.get('host') || ''
+    // build metadata
+    const metadata = createMetadata({
+      domain,
+      page_title: title,
+      description,
+      url: `https://${domain}/communities/${slug}`,
+      // if image present return array with url else []
+      image_url: community.logo_id ? [
+        `https://${domain}${getImageUrl(community.logo_id)}`
+      ] : []
+    })
+    return metadata
+  }
+
   return {
-    title: `${community?.name ?? 'Community'} | ${app.title}`,
-    description: community?.short_description ?? `${community?.name ?? 'The RSD community'} with ${community?.software_cnt ?? 0} software packages.`
+    title,
+    description
   }
 }
 

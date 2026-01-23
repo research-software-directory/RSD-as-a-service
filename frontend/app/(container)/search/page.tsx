@@ -35,7 +35,7 @@ function groupResultsBySource(results: GlobalSearchResults[]) {
 export default async function SearchResultsPage({
   searchParams
 }:Readonly<{
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+  searchParams: Promise<{[key: string]: string | string[] | undefined}>
 }>) {
   // extract params and user settings
   const [params, {token}] = await Promise.all([
