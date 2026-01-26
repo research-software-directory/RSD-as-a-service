@@ -15,9 +15,7 @@ export default function PackageManagersInfo() {
   const keys = Object.keys(packageManagerSettings)
   const managers:string[]=[]
   keys.forEach((key) => {
-    if (packageManagerSettings[key as PackageManagerTypes].services?.length > 0){
-      managers.push(packageManagerSettings[key as PackageManagerTypes].name)
-    }
+    managers.push(packageManagerSettings[key as PackageManagerTypes].name)
   })
 
   return (
@@ -32,7 +30,7 @@ export default function PackageManagersInfo() {
       {
         managers.length > 0 ?
           <p className="py-2">
-            Supported package managers:<br/> <strong>{managers.join(', ')}</strong>.
+            <strong>Supported package managers</strong><br/>{managers.join(', ')}.
           </p>
           :null
       }
