@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2025 - 2026 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 - 2026 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,10 +12,10 @@ import {ProjectListItem} from '~/types/Project'
 import NoContent from '~/components/layout/NoContent'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import {ProjectLayoutType} from './search/ViewToggleGroup'
-import ProjectOverviewList from './list/ProjectOverviewList'
 import ProjectCardContent from './cards/ProjectCardContent'
-import ProjectOverviewGrid from './cards/ProjectOverviewGrid'
 import ProjectListItemContent from './list/ProjectListItemContent'
+import RsdOverviewList from 'app/(overviews)/components/layouts/RsdOverviewList'
+import RsdOverviewGrid from 'app/(overviews)/components/layouts/RsdOverviewGrid'
 
 type ProjectOverviewContentProps = {
   layout: ProjectLayoutType
@@ -28,7 +30,7 @@ export default function ProjectOverviewContent({layout, projects}: ProjectOvervi
 
   if (layout === 'list') {
     return (
-      <ProjectOverviewList>
+      <RsdOverviewList>
         {projects.map(item => {
           return (
             <OverviewListItem
@@ -45,12 +47,12 @@ export default function ProjectOverviewContent({layout, projects}: ProjectOvervi
             </OverviewListItem>
           )
         })}
-      </ProjectOverviewList>
+      </RsdOverviewList>
     )
   }
   // GRID as default
   return (
-    <ProjectOverviewGrid>
+    <RsdOverviewGrid>
       {projects.map(item => {
         return (
           <Link
@@ -66,6 +68,6 @@ export default function ProjectOverviewContent({layout, projects}: ProjectOvervi
           </Link>
         )
       })}
-    </ProjectOverviewGrid>
+    </RsdOverviewGrid>
   )
 }

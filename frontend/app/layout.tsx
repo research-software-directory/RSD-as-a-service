@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2025 - 2026 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 - 2026 Paula Stock (GFZ) <paula.stock@gfz.de>
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
@@ -29,6 +31,9 @@ import Announcement from '~/components/Announcement/Announcement'
 import ProgressProviderApp from '~/components/bprogress/ProgressProviderApp'
 
 import '~/styles/global.css'
+import PageBackground from '~/components/layout/PageBackground'
+import AppHeader from '~/components/AppHeader'
+import AppFooter from '~/components/AppFooter'
 
 export const metadata: Metadata = {
   title: 'Home',
@@ -115,7 +120,11 @@ export default async function RootLayout({
                       <UserSettingsProvider user={userSettings}>
                         {/* Login providers list */}
                         <LoginProvidersProvider providers = {providers}>
-                          {children}
+                          <PageBackground>
+                            <AppHeader />
+                            {children}
+                            <AppFooter />
+                          </PageBackground>
                         </LoginProvidersProvider>
                       </UserSettingsProvider>
                     </ProgressProviderApp>

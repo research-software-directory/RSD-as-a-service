@@ -2,9 +2,10 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 - 2026 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 - 2026 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -38,6 +39,7 @@ import {
 } from '~/components/admin/software-highlights/apiSoftwareHighlights'
 import SoftwareHighlights from '~/components/software/overview/SoftwareHighlights'
 import SoftwareSearchSection from '~/components/software/overview/search/SoftwareSearchSection'
+import RsdSearchSection from 'app/(overviews)/components/RsdSearchSection'
 import useSoftwareOverviewParams from '~/components/software/overview/useSoftwareOverviewParams'
 import SoftwareOverviewContent from '~/components/software/overview/SoftwareOverviewContent'
 import SoftwareFilters from '~/components/software/overview/filters/index'
@@ -91,7 +93,7 @@ export default function SoftwareOverviewPage({
   software, highlights, hasRemotes
 }: SoftwareOverviewProps) {
   const smallScreen = useMediaQuery('(max-width:640px)')
-  const {createUrl} = useSoftwareOverviewParams()
+  const {createUrl, handleQueryChange} = useSoftwareOverviewParams()
   const {rsd_page_layout,setPageLayout} = useUserSettings()
   const [modal,setModal] = useState(false)
   const numPages = Math.ceil(count / rows)
@@ -178,7 +180,7 @@ export default function SoftwareOverviewPage({
             }
             {/* Search & main content section */}
             <div className="flex-1 flex flex-col">
-              <SoftwareSearchSection
+              <RsdSearchSection
                 page={page}
                 rows={rows}
                 count={count}
@@ -187,6 +189,7 @@ export default function SoftwareOverviewPage({
                 layout={rsd_page_layout}
                 setView={setPageLayout}
                 setModal={setModal}
+                handleQueryChange={handleQueryChange}
               />
               {/* Software content: masonry, cards or list */}
               <SoftwareOverviewContent

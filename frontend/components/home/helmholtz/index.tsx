@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 - 2026 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -279,8 +281,6 @@ export default function HelmholtzHome() {
   return (
     <div className="bg-base-100" data-testid="rsd-helmholtz-home">
 
-      <AppHeader/>
-
       {/* Head and claim */}
       <div className="bg-secondary bg-landing-page mb-10">
         <div className="flex flex-row flex-wrap container mx-auto px-6 md:px-10 pt-16 pb-12 max-w-(--breakpoint-xl) text-base-100">
@@ -398,7 +398,6 @@ export default function HelmholtzHome() {
             </div>
           </div>
         </div> */}
-      <AppFooter/>
     </div>
   )
 }

@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2025 - 2026 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2025 - 2026 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,9 +12,9 @@ import Link from 'next/link'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import NoContent from '~/components/layout/NoContent'
 import {LayoutType} from './search/ViewToggleGroup'
-import SoftwareOverviewList from './list/SoftwareOverviewList'
-import SoftwareOverviewMasonry from './cards/SoftwareOverviewMasonry'
-import SoftwareOverviewGrid from './cards/SoftwareOverviewGrid'
+import RsdOverviewList from 'app/(overviews)/components/layouts/RsdOverviewList'
+import RsdOverviewGrid from 'app/(overviews)/components/layouts/RsdOverviewGrid'
+import RsdOverviewMasonry from 'app/(overviews)/components/layouts/RsdOverviewMasonry'
 import SoftwareGridCard from './cards/SoftwareGridCard'
 
 import SoftwareMasonryCard from './cards/SoftwareMasonryCard'
@@ -37,7 +39,7 @@ export default function SoftwareOverviewContent({layout, software, hasRemotes}: 
   if (layout === 'masonry') {
     // Masonry layout (software only)
     return (
-      <SoftwareOverviewMasonry>
+      <RsdOverviewMasonry>
         {software.map((item) => {
           const cardKey = getItemKey({id:item.id,domain:item.domain})
           // remove rsd_host if remotes are not present
@@ -48,13 +50,13 @@ export default function SoftwareOverviewContent({layout, software, hasRemotes}: 
             </div>
           )
         })}
-      </SoftwareOverviewMasonry>
+      </RsdOverviewMasonry>
     )
   }
 
   if (layout === 'list') {
     return (
-      <SoftwareOverviewList>
+      <RsdOverviewList>
         {software.map(item => {
           const listKey = getItemKey({id:item.id,domain:item.domain})
           const pageUrl = getPageUrl({domain:item.domain,slug:item.slug})
@@ -81,13 +83,13 @@ export default function SoftwareOverviewContent({layout, software, hasRemotes}: 
             </OverviewListItem>
           )
         })}
-      </SoftwareOverviewList>
+      </RsdOverviewList>
     )
   }
 
   // GRID as default
   return (
-    <SoftwareOverviewGrid>
+    <RsdOverviewGrid>
       {software.map((item) => {
         const cardKey = getItemKey({id:item.id,domain:item.domain})
         // remove rsd_host if remotes are not present
@@ -95,6 +97,6 @@ export default function SoftwareOverviewContent({layout, software, hasRemotes}: 
 
         return <SoftwareGridCard key={cardKey} {...item}/>
       })}
-    </SoftwareOverviewGrid>
+    </RsdOverviewGrid>
   )
 }

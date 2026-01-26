@@ -1,20 +1,54 @@
-// SPDX-FileCopyrightText: 2022 - 2026 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2026 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect,useState} from 'react'
-
-import {useSession} from '~/auth/AuthProvider'
+import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
-import {createJsonHeaders} from '~/utils/fetchHelpers'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
+
+export type UserProfile = {
+  account: string
+  given_names: string
+  family_names: string
+  email_address: string
+  role: string
+  affiliation: string
+  is_public: boolean
+  avatar_id: string
+  description: string
+  created_at: string
+  updated_at: string
+}
+
+export type getPublicProfileProps = {
+  account: string
+  token?: string
+}
+
+export async function getPublicProfileData({account, token}: getPublicProfileProps) {
+  try {
+    console.log('Calling getPublicProfileData')
+    const url = getBaseUrl() + `/user_profile?account=eq.${account}`
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data: UserProfile[] = await resp.json()
+      console.log(`getPublicProfileData request successful: ${data}`)
+      return data[0]
+    }
+    console.log(`getPublicProfileData not 200: ${resp.status} - ${resp.body}`)
+    logger(`getPublicProfileData not 200: ${resp.status} - ${resp.body}`, 'error')
+    return null
+  } catch (e: any) {
+    console.log(`getPublicProfileData: ${e?.message}`)
+    logger(`getPublicProfileData: ${e?.message}`, 'error')
+    return null
+  }
+}
 
 export type SoftwareByMaintainer={
   id:string ,
@@ -41,7 +75,7 @@ export async function getSoftwareForMaintainer({
 ) {
   try {
     // baseUrl
-    let url =`/api/v1/rpc/software_by_maintainer?maintainer_id=${account}&order=brand_name`
+    let url = getBaseUrl() +`/rpc/software_by_maintainer?maintainer_id=${account}&order=brand_name`
     // search
     if (searchFor) {
       url+=`&or=(brand_name.ilike."*${searchFor}*", short_statement.ilike."*${searchFor}*")`
@@ -83,56 +117,17 @@ export async function getSoftwareForMaintainer({
   }
 }
 
-type UseUserSoftwareProps={
-  searchFor?: string
-  page: number
-  rows: number
-}
+export async function getProfileData(userId: string, token: string | undefined, searchFor?: string) {
+  const [profileData, profileSoftware] = await Promise.all([
+    getPublicProfileData({account: userId, token: token}),
+    getSoftwareForMaintainer({
+      searchFor,
+      page: 0,
+      rows: 0,
+      token,
+      account: userId
+    })
+  ])
 
-type UserSoftware = {
-  count: number,
-  software: SoftwareByMaintainer[]
-}
-
-export default function useUserSoftware({searchFor,page,rows}:UseUserSoftwareProps) {
-  const {user,token} = useSession()
-  const [state, setState] = useState<UserSoftware>({
-    count: 0,
-    software: []
-  })
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    let abort = false
-
-    async function getSoftware() {
-      // set loading done
-      // setLoading(true)
-      const state:UserSoftware = await getSoftwareForMaintainer({
-        searchFor,
-        page,
-        rows,
-        token,
-        account: user?.account ?? ''
-      })
-      // abort
-      if (abort) return
-      // set state
-      setState(state)
-      // set loading done
-      setLoading(false)
-    }
-
-    if (token && user?.account) {
-      getSoftware()
-    }
-
-    return ()=>{abort = true}
-
-  },[searchFor,page,rows,token,user?.account])
-
-  return {
-    ...state,
-    loading
-  }
+  return {profileData, profileSoftware}
 }

@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2026 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,17 +14,18 @@ import OverviewListItem from '~/components/software/overview/list/OverviewListIt
 import SoftwareListItemContent from '~/components/software/overview/list/SoftwareListItemContent'
 import SoftwareOverviewGrid from '~/components/software/overview/cards/SoftwareOverviewGrid'
 import SoftwareGridCard from '~/components/software/overview/cards/SoftwareGridCard'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import {LayoutType} from 'app/(overviews)/components/ViewToggleGroup'
 import {SoftwareByMaintainer} from './useUserSoftware'
 
 type UserSoftwareOverviewProps=Readonly<{
-  layout: ProjectLayoutType
+  layout: LayoutType
   skeleton_items: number
   loading: boolean
   software: SoftwareByMaintainer[]
+  fullWidth?: boolean
 }>
 
-export default function UserSoftwareOverview({loading,skeleton_items,layout,software}:UserSoftwareOverviewProps) {
+export default function UserSoftwareOverview({loading,skeleton_items,layout,software, fullWidth = true}:UserSoftwareOverviewProps) {
 
   // console.group('UserSoftwareOverview')
   // console.log('loading...', loading)
@@ -65,7 +68,7 @@ export default function UserSoftwareOverview({loading,skeleton_items,layout,soft
 
   // GRID as default
   return (
-    <SoftwareOverviewGrid fullWidth={true}>
+    <SoftwareOverviewGrid fullWidth={fullWidth}>
       {software.map((item) => {
         return <SoftwareGridCard key={item.id} {...item as any}/>
       })}
