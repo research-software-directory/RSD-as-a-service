@@ -104,14 +104,12 @@ CREATE FUNCTION prog_lang_filter_for_software() RETURNS TABLE (
 ) LANGUAGE sql STABLE AS
 $$
 	SELECT
-		repository_url.software,
-		(SELECT
-			ARRAY_AGG(p_lang ORDER BY repository_url.languages -> p_lang DESC)
-		FROM
-			JSONB_OBJECT_KEYS(repository_url.languages) p_lang
-		) AS "prog_lang"
+		repository_url_for_software.software,
+		ARRAY_AGG(DISTINCT p_lang)
 	FROM
-		repository_url;
+		repository_url_for_software,
+		LATERAL (SELECT JSONB_OBJECT_KEYS(repository_url.languages) FROM repository_url WHERE repository_url.id = repository_url_for_software.repository_url) AS p_lang
+	GROUP BY repository_url_for_software.software;
 $$;
 
 -- license filter for software
@@ -923,4 +921,46 @@ ORDER BY
 DESC LIMIT
 	1;
 ;
+$$;
+
+-- GET repositories of software (multiple entries supported)
+CREATE FUNCTION repository_by_software(software_id UUID) RETURNS TABLE (
+	id UUID,
+	software UUID,
+	url VARCHAR(200),
+	code_platform platform_type,
+	"position" INTEGER,
+	archived BOOLEAN,
+	license VARCHAR(200),
+	star_count BIGINT,
+	fork_count INTEGER,
+	open_issue_count INTEGER,
+	basic_data_last_error VARCHAR(500),
+	basic_data_scraped_at TIMESTAMPTZ,
+	languages JSONB,
+	languages_last_error VARCHAR(500),
+	languages_scraped_at TIMESTAMPTZ,
+	commit_history JSONB,
+	commit_history_last_error VARCHAR(500),
+	commit_history_scraped_at TIMESTAMPTZ,
+	contributor_count INTEGER,
+	contributor_count_last_error VARCHAR(500),
+	contributor_count_scraped_at TIMESTAMPTZ,
+	scraping_disabled_reason VARCHAR(200)
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	id,software,url,code_platform,"position",
+	archived,license,star_count,fork_count,open_issue_count,
+	basic_data_last_error,basic_data_scraped_at,
+	languages,languages_last_error,languages_scraped_at,
+	commit_history,commit_history_last_error,commit_history_scraped_at,
+	contributor_count,contributor_count_last_error,contributor_count_scraped_at,
+	scraping_disabled_reason
+FROM
+	repository_url_for_software
+LEFT JOIN
+	repository_url ON repository_url.id = repository_url_for_software.repository_url
+WHERE
+	repository_url_for_software.software = software_id
 $$;

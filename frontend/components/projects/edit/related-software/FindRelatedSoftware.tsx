@@ -104,8 +104,9 @@ export default function FindRelatedSoftware({software,config,token,onAdd, onCrea
     return (
       <li
         data-testid="related-software-option"
+        {...props}
         key={option.key}
-        {...props}>
+      >
         {/* if new option (has input) show label and count  */}
         {option.label}
       </li>

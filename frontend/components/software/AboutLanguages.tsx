@@ -13,7 +13,7 @@ import Code from '@mui/icons-material/Code'
 
 import {sortOnNumProp} from '~/utils/sortFn'
 import logger from '~/utils/logger'
-import {CodePlatform, ProgramingLanguages} from '~/types/SoftwareTypes'
+import {CodePlatform, ProgrammingLanguages} from './edit/repositories/apiRepositories'
 import AboutLanguageItem from './AboutLanguageItem'
 
 /**
@@ -23,7 +23,7 @@ import AboutLanguageItem from './AboutLanguageItem'
  * @param languages
  * @returns
  */
-function calculateStats(languages: ProgramingLanguages) {
+function calculateStats(languages: ProgrammingLanguages) {
   try {
     // extract language keys
     const keys = Object.keys(languages)
@@ -63,7 +63,7 @@ function calculateStats(languages: ProgramingLanguages) {
 }
 
 export default function AboutLanguages({languages, platform}:
-{languages?: ProgramingLanguages, platform?: CodePlatform}) {
+{languages?: ProgrammingLanguages, platform?: CodePlatform}) {
   let label = 'Programming language'
 
   // don't render section if no languages

@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2026 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2024 dv4all
 -- SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -19,9 +19,10 @@ CREATE TYPE platform_type AS ENUM (
 	'other'
 );
 
+
 CREATE TABLE repository_url (
-	software UUID REFERENCES software (id) PRIMARY KEY,
-	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://\S+$'),
+	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://\S+$') UNIQUE,
 	code_platform platform_type NOT NULL DEFAULT 'other',
 	archived BOOLEAN,
 	license VARCHAR(200),
@@ -41,6 +42,36 @@ CREATE TABLE repository_url (
 	contributor_count_scraped_at TIMESTAMPTZ,
 	scraping_disabled_reason VARCHAR(200)
 );
+
+CREATE FUNCTION sanitise_insert_repository_url() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.id = gen_random_uuid();
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_insert_repository_url BEFORE INSERT ON repository_url FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_repository_url();
+
+
+CREATE FUNCTION sanitise_update_repository_url() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.id = OLD.id;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_update_repository_url BEFORE UPDATE ON repository_url FOR EACH ROW EXECUTE PROCEDURE sanitise_update_repository_url();
+
+
+CREATE TABLE repository_url_for_software (
+	repository_url UUID REFERENCES repository_url (id),
+	software UUID REFERENCES software (id),
+	position INTEGER,
+	PRIMARY KEY (repository_url, software)
+);
+
 
 -- NOTE! When changing package_manager_type
 -- please update packageManagerSettings const

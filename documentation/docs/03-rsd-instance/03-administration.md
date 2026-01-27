@@ -7,20 +7,42 @@ To be able to log in as an RSD administrator, you first need to grant an existin
 See [Log in as rsd administrator in the getting started section](/rsd-instance/getting-started/#log-in-as-rsd-administrator).
 :::
 
-## Public pages
+## RSD invites
 
-Here you can define custom public pages for you RSD instance. The links to custom public pages are shown in the footer of the RSD.
+Here, you can create, view and delete RSD invites. These invites allow users to create an account when using auth providers that require them.
 
-- The title is used as link label
-- The slug is used as link
-- The content of the page is in Markdown
-- The page position can be changed using drag-drop handle (see animation below)
+An invite can be configured to have a fixed amount of uses, or to have unlimited uses (by leaving the "How many users" field empty). Existing invites can also be deleted, rendering them useless, which is useful when an invite has leaked out.
 
-![animation](img/admin-public-page-add.gif)
+Each invite also has an expiration date, after which the invite cannot be used any more.
 
-:::tip
-You need to activate "Publish" switch and reload the page in order to see changes in the page footer.
+:::danger
+
+We recommend to use short-lived, single-use invites whenever possible, as these cause the least damage when leaked out.
+
 :::
+
+![image](img/admin-rsd-invite.webp)
+
+## RSD users
+
+This section shows all RSD users who logged in to RSD at least once. You can search for users, assign the administrator role (`rsd_admin`) or delete user accounts.
+
+It is also possible to lock (and unlock) accounts by clicking on the lock symbol. You can provide a reason that the user can see and a reason that only admins can see. Locked accounts cannot use the API with their access tokens and will get an error message when they try to sign in.
+
+:::danger
+
+- Removing account will remove all its maintainer roles.
+- You cannot delete account you are currently using.
+
+:::
+
+![animation](img/admin-rsd-users.gif)
+
+## RSD contributors
+
+The page shows the list of all contributors and team members. You can search by name, email or ORCID. You can change the values in the table by clicking on the value. The values are automatically saved after you navigate out of the edit box. The link in the last column will open the software or project item where this contributor/team member is used.
+
+![animation](img/admin-rsd-contributor.gif)
 
 ## Software highlights
 
@@ -51,42 +73,6 @@ You can customise the software highlights section in the `settings.json` by chan
 
 ![animation](img/admin-software-highlights.gif)
 
-
-## RSD invites
-
-Here, you can create, view and delete RSD invites. These invites allow users to create an account when using auth providers that require them.
-
-An invite can be configured to have a fixed amount of uses, or to have unlimited uses (by leaving the "How many users" field empty). Existing invites can also be deleted, rendering them useless, which is useful when an invite has leaked out.
-
-Each invite also has an expiration date, after which the invite cannot be used any more.
-
-:::danger
-
-We recommend to use short-lived, single-use invites whenever possible, as these cause the least damage when leaked out.
-
-:::
-
-## RSD users
-
-This section shows all RSD users who logged in to RSD at least once. You can search for users, assign the administrator role (`rsd_admin`) or delete user accounts.
-
-It is also possible to lock (and unlock) accounts by clicking on the lock symbol. You can provide a reason that the user can see and a reason that only admins can see. Locked accounts cannot use the API with their access tokens and will get an error message when they try to sign in.
-
-:::danger
-
-- Removing account will remove all its maintainer roles.
-- You cannot delete account you are currently using.
-
-:::
-
-![animation](img/admin-rsd-users.gif)
-
-## RSD contributors
-
-The page shows the list of all contributors and team members. You can search by name, email or ORCID. You can change the values in the table by clicking on the value. The values are automatically saved after you navigate out of the edit box. The link in the last column will open the software or project item where this contributor/team member is used.
-
-![animation](img/admin-rsd-contributor.gif)
-
 ## Software
 
 The page shows list of all software entries, unpublished first. You can search by title or short description. From this overview, you have the option to remove a software entry from the RSD completely, including all related data. In order to prevent accidental deletion, you need to type the software name in the delete modal.
@@ -97,6 +83,12 @@ The software entry and all related information will be removed from the RSD.
 
 ![delete-software](img/admin-delete-software.webp)
 
+### Software Slug
+
+When editing a software page, the **slug** of the page (called **RSD path**) can be changed by admins under the **Description** tab.
+
+![slug-software](img/admin-software-slug.webp)
+
 ## Projects
 
 The page shows list of all project entries, unpublished first. You can search by title or short description. From this overview, you have the option to remove a project entry from the RSD completely, including all related data. In order to prevent accidental deletion, you need to type project title in the delete modal.
@@ -105,7 +97,13 @@ The page shows list of all project entries, unpublished first. You can search by
 The project entry and all related information will be removed from the RSD.
 :::
 
-![delete-software](img/admin-delete-project.webp)
+![delete-project](img/admin-delete-project.webp)
+
+### Project Slug
+
+When editing a project page, the **slug** of the page (called **RSD path**) can be changed by admins under the **Project details** tab.
+
+![project-slug](img/admin-project-slug.webp)
 
 ## Organisations
 
@@ -180,6 +178,21 @@ Use the "delete" button to delete a community.
 The community will be permanently removed, including all its references in software items.
 :::
 
+## Public pages
+
+Here you can define custom public pages for you RSD instance. The links to custom public pages are shown in the footer of the RSD.
+
+- The title is used as link label
+- The slug is used as link
+- The content of the page is in Markdown
+- The page position can be changed using drag-drop handle (see animation below)
+
+![animation](img/admin-public-page-add.gif)
+
+:::tip
+You need to activate "Publish" switch and reload the page in order to see changes in the page footer.
+:::
+
 ## Keywords
 
 RSD comes with a predefined list of keywords. You can change the list by adding new keywords or deleting the existing entries.
@@ -213,6 +226,34 @@ In this section, admins can search for mentions and edit them. If you enter a DO
 :::warning
 Edit mentions with care: they might be referenced to in multiple places. If you want to fully change a mention attached to e.g. a software page, you should delete it there and create a new one instead of editing it.
 :::
+
+## Repositories
+
+In this section admins can manage software repository entries. The background services use repository url and the platform information to "scrape" additional information about the software. When background service fails it logs the error. The error message is shown to software maintainers. However the background services will continue trying to retrieve additional information from the platform API.
+
+:::tip
+The admins can exclude/disable background services for the specific repository by providing the reason for exclusion. The reason is shown to maintainers of the software. In short, if the 'Reason why scraping is disabled' has an value the repository will be excluded from background services.
+:::
+
+:::warning
+Deleting the repository entry will remove it from all software entries including all scraped statistics like star count, programming languages etc.
+:::
+
+![image](img/admin-repositories.webp)
+
+## Package Managers
+
+Similar to repositories this section shows all package managers entries in the RSD. The background services try to extract additional information from the url the maintainers added to their software.
+
+Admin can disable background services for specific package manager entry by providing the explanation / reason in the 'Reason to disable [service name]' input. This reason will be shown to software maintainers.
+
+:::info
+The package manager entries are currently not normalized in the RSD, so there could be multiple entries of the same package manager url in the RSD.
+
+If you need to disable background services for specific url you should first search for all entries and change them all in the same way. In the future we expect to "normalize" package manager url.
+:::
+
+![image](img/admin-package-managers.webp)
 
 ## RSD info
 
@@ -252,29 +293,13 @@ This section is used to show public announcements to all users of the RSD. It is
 
 ![animation](img/admin-announcement.gif)
 
-## Software
-
-### Software Slug
-
-When editing a software page, the **slug** of the page (called **RSD path**) can be changed by admins under the **Description** tab.
-
-### Disable Git harvesting
-
-If you want to disable the harvesting of a Git repo, you can do so by providing a reason under the **Links & metadata** tab. Page maintainers will be able to see if and why the harvesting is disabled under the **Background services** tab.
-
-### Disable package manager harvesting
-
-If you want to disable the harvesting of a package manager, you can do so by providing a reason under the **Package managers** tab. Page maintainers will be able to see if and why the harvesting is disabled under the **Background services** tab.
-
-## Project
-
-### Project Slug
-
-When editing a project page, the **slug** of the page (called **RSD path**) can be changed by admins under the **Project details** tab.
-
 ## News
 
 RSD administrators are able to create news items. The additional option "Add news" will appear in the "+" menu at the top right of the page header.
+
+:::info
+News section is separate module defined in the settings.json. When enabled the News will be shown on homepage and if defined in settings the main menu entry will appear.
+:::
 
 ### Add news item
 
@@ -287,7 +312,7 @@ Using the "Add news" option in the "+" menu will open add news item page where y
 
 :::
 
-![image](img/news-add-item.webp)
+![image](img/admin-add-news.webp)
 
 ### Edit news item
 
@@ -309,7 +334,7 @@ After news item is created you will be redirected to edit news item page. Here y
 
 The latest news selection is shown on the homepage after "Our Goals" section. It consists of the 3 most recent items, based on the publication date, and "More news" button that links to the news overview page.
 
-:::warning
+:::info
 If there are no published news items the "Latest news" section is omitted from the homepage.
 :::
 

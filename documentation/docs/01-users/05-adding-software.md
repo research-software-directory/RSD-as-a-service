@@ -82,16 +82,9 @@ The software logo is shown on the software page and in the software card (see ex
 
 ![video](img/software-links-metadata.gif)
 
-### Software URLs
+### Get started
 
-- A **Source code repository URL** of the software. This link will show up as a repository icon on the software page and will be used to harvest information about the software development activity, which will be shown as a graph. At the moment we support [GitHub](https://github.com/), [GitLab](https://about.gitlab.com/) and have limited support for [Bitbucket](https://bitbucket.org/product/). The platform is automatically detected from the http domain, but can be changed manually.
-
-  The RSD supports URLs starting with https that point to the repository website, or to the actual git repository, for example:
-
-  - `https://github.com/research-software-directory/RSD-as-a-service` (website)
-  - `https://github.com/research-software-directory/RSD-as-a-service.git` (git repository)
-
-- A **Getting started URL** which refers to webpage with more information about the software. This is shown as the "Get started" button on the software page.
+**Getting started URL** refers to webpage with more information about the software. This is shown as the "Get started" button on the software page.
 
 ### Software DOI
 
@@ -103,7 +96,7 @@ After providing a DOI, use the "Validate" button to confirm that provided DOI is
 After providing a valid software DOI, you will have the option to import keywords, software license and contributors provided in the DOI metadata.
 :::
 
-### License
+### Licenses
 
 The **License** of the software. This will be shown in the sidebar of the software page. If you have provided a software DOI you can import the license info from DOI metadata.
 
@@ -122,6 +115,31 @@ When you start typing the keyword you will see a list of suggestions based on th
 ### Categories
 
 **Categories** are a set of curated keywords defined by RSD admins. If they exist, you can add them to (and delete them from) your software page here.
+
+## Source code
+
+![video](img/software-source-code.gif)
+
+Provide **source code repository URL** of the software. The link will show up as a repository icon on the software page and will be used to harvest information about the software development activity.
+
+:::tip
+The RSD supports adding multiple repository URLs. Currently **only first repository entry** is used for activity graph and other repository statistics shown on the software page.
+:::
+
+At the moment we support [GitHub](https://github.com/), [GitLab](https://about.gitlab.com/), [4TU](https://www.4tu.nl/en/), [Codeberg](https://codeberg.org/) and [Bitbucket](https://bitbucket.org/product/). The platform is automatically detected from the web domain. If the platform cannot be detected you can select one from the dropdown list.
+
+:::tip
+The platform indication need to be accurate in order for background services to be able to obtain additional information about the repository. Each platform has its own specific API endpoint(s) and the statistics.
+:::
+
+The RSD supports adding multiple repository URLs starting with https that point to the repository website, or to the actual git repository, for example:
+
+- `https://github.com/research-software-directory/RSD-as-a-service` (website)
+- `https://github.com/research-software-directory/RSD-as-a-service.git` (git repository)
+
+### Background services
+
+By clicking on the service icon in the repository list you can see the the current status of each of the background services. See animation at the beginning of source code section for more information.
 
 ## Contributors
 
@@ -210,6 +228,10 @@ If your package manager is not listed above, you can still add it, but we will c
 
 ![video](img/software-package-managers.gif)
 
+### Background services status
+
+By clicking on the service icon in the repository list you can see the the current status of each of the background services. See animation at the beginning of source code section for more information. You can clear the data that the scrapers collected by clicking on the delete icons next to the individual services. This is useful for example if you changed your default branch or rebased your git commit history.
+
 ## Software Heritage
 
 Software Heritage preserves software in source code form. If your software is archived on Software Heritage you can use this section to add the badge by providing SoftWare Hash Identifiers (SWHID's). Use Permalink tab on Software Heritage page to extract required info.
@@ -252,16 +274,6 @@ Here, you can see all the people who can maintain this software page. You can al
 - Each invitation link can be used only once.
 - Each invitation expires after 31 day and can be removed before the expiry date as well.
 
-:::
-
-## Background services
-
-Here you can find the information about the background services that RSD offers and their last status.
-
-You can clear the data that the scrapers collected by clicking on the delete icons next to the individual services. This is useful for example if you changed your default branch or rebased your git commit history.
-
-:::tip
-Please check this section from time to time to confirm that information you provided is correct and that RSD background services are able to use provided information in the proper way.
 :::
 
 ## The finished page

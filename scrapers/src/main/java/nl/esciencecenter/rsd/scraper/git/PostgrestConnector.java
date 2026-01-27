@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -47,7 +48,7 @@ public class PostgrestConnector {
 			backendUrl +
 			"?" +
 			filter +
-			"&select=software,url&order=languages_scraped_at.asc.nullsfirst&limit=" +
+			"&select=id,url&order=languages_scraped_at.asc.nullsfirst&limit=" +
 			limit +
 			"&" +
 			Utils.atLeastOneHourAgoFilter("languages_scraped_at")
@@ -55,10 +56,10 @@ public class PostgrestConnector {
 		return parseBasicJsonData(data);
 	}
 
-	public void saveCommitHistoryScrapedAt(UUID softwareId, ZonedDateTime scrapedAt) {
+	public void saveCommitHistoryScrapedAt(UUID id, ZonedDateTime scrapedAt) {
 		JsonObject root = new JsonObject();
 		root.addProperty("commit_history_scraped_at", scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		Utils.patchAsAdmin(backendUrl + "?software=eq." + softwareId, root.toString());
+		Utils.patchAsAdmin(backendUrl + "?id=eq." + id, root.toString());
 	}
 
 	/**
@@ -72,7 +73,7 @@ public class PostgrestConnector {
 			backendUrl +
 			"?" +
 			filter +
-			"&select=software,url&order=commit_history_scraped_at.asc.nullsfirst&limit=" +
+			"&select=id,url&order=commit_history_scraped_at.asc.nullsfirst&limit=" +
 			limit +
 			"&" +
 			Utils.atLeastOneHourAgoFilter("commit_history_scraped_at")
@@ -85,7 +86,7 @@ public class PostgrestConnector {
 			backendUrl +
 			"?" +
 			filter +
-			"&select=software,url,commit_history_scraped_at,commit_history&order=commit_history_scraped_at.asc.nullsfirst&limit=" +
+			"&select=id,url,commit_history_scraped_at,commit_history&order=commit_history_scraped_at.asc.nullsfirst&limit=" +
 			limit +
 			"&" +
 			Utils.atLeastOneHourAgoFilter("commit_history_scraped_at")
@@ -104,7 +105,7 @@ public class PostgrestConnector {
 			backendUrl +
 			"?" +
 			filter +
-			"&select=software,url&order=basic_data_scraped_at.asc.nullsfirst&limit=" +
+			"&select=id,url&order=basic_data_scraped_at.asc.nullsfirst&limit=" +
 			limit +
 			"&" +
 			Utils.atLeastOneHourAgoFilter("basic_data_scraped_at")
@@ -117,7 +118,7 @@ public class PostgrestConnector {
 			backendUrl +
 			"?" +
 			filter +
-			"&select=software,url&order=contributor_count_scraped_at.asc.nullsfirst&limit=" +
+			"&select=id,url&order=contributor_count_scraped_at.asc.nullsfirst&limit=" +
 			limit +
 			"&" +
 			Utils.atLeastOneHourAgoFilter("contributor_count_scraped_at")
@@ -130,7 +131,9 @@ public class PostgrestConnector {
 		Collection<BasicRepositoryDataWithHistory> result = new ArrayList<>();
 		for (JsonElement element : dataInArray) {
 			JsonObject jsonObject = element.getAsJsonObject();
-			String softwareUuid = jsonObject.getAsJsonPrimitive("software").getAsString();
+			// TODO! replace software with id prop in BasicRepositoryData
+			// the software column is removed from repository_url table, use id or url instead
+			String softwareUuid = jsonObject.getAsJsonPrimitive("id").getAsString();
 			UUID software = UUID.fromString(softwareUuid);
 			String url = jsonObject.getAsJsonPrimitive("url").getAsString();
 			String commitHistoryScrapedAtString = Utils.stringOrNull(jsonObject.get("commit_history_scraped_at"));
@@ -157,7 +160,9 @@ public class PostgrestConnector {
 		Collection<BasicRepositoryData> result = new ArrayList<>();
 		for (JsonElement element : dataInArray) {
 			JsonObject jsonObject = element.getAsJsonObject();
-			String softwareUuid = jsonObject.getAsJsonPrimitive("software").getAsString();
+			// TODO! replace software with id prop in BasicRepositoryData
+			// the software column is removed from repository_url table, use id or url instead
+			String softwareUuid = jsonObject.getAsJsonPrimitive("id").getAsString();
 			UUID software = UUID.fromString(softwareUuid);
 			String url = jsonObject.getAsJsonPrimitive("url").getAsString();
 
@@ -172,7 +177,7 @@ public class PostgrestConnector {
 			languagesData.languages(),
 			languagesData.languagesScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 		);
-		Utils.patchAsAdmin(backendUrl + "?software=eq." + languagesData.basicData().software().toString(), json);
+		Utils.patchAsAdmin(backendUrl + "?id=eq." + languagesData.basicData().software().toString(), json);
 	}
 
 	public void saveCommitData(CommitData commitData) {
@@ -190,7 +195,7 @@ public class PostgrestConnector {
 				commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 			);
 		}
-		Utils.patchAsAdmin(backendUrl + "?software=eq." + commitData.basicData().software().toString(), json);
+		Utils.patchAsAdmin(backendUrl + "?id=eq." + commitData.basicData().software().toString(), json);
 	}
 
 	public void saveBasicData(BasicGitDatabaseData basicData) {
@@ -206,10 +211,7 @@ public class PostgrestConnector {
 		jsonObject.addProperty("fork_count", basicData.statsData().forkCount());
 		jsonObject.addProperty("open_issue_count", basicData.statsData().openIssueCount());
 
-		Utils.patchAsAdmin(
-			backendUrl + "?software=eq." + basicData.basicData().software().toString(),
-			jsonObject.toString()
-		);
+		Utils.patchAsAdmin(backendUrl + "?id=eq." + basicData.basicData().software().toString(), jsonObject.toString());
 	}
 
 	public void saveContributorCount(ContributorDatabaseData contributorData) {
@@ -224,7 +226,7 @@ public class PostgrestConnector {
 		}
 
 		Utils.patchAsAdmin(
-			backendUrl + "?software=eq." + contributorData.basicData().software().toString(),
+			backendUrl + "?id=eq." + contributorData.basicData().software().toString(),
 			jsonObject.toString()
 		);
 	}

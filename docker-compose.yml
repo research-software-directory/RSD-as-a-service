@@ -162,7 +162,7 @@ services:
 
   scrapers:
     build: ./scrapers
-    image: rsd/scrapers:1.9.0
+    image: rsd/scrapers:2.0.1
     environment:
       # it uses values from .env file
       - POSTGRES_DB

@@ -6,20 +6,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
 'use client'
-import Link from 'next/link'
 
 import {useUserSettings} from '~/config/UserSettingsContext'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import NoContent from '~/components/layout/NoContent'
 import GridOverview from '~/components/layout/GridOverview'
-
-import SoftwareOverviewList from './list/SoftwareOverviewList'
+import ListOverviewSection from '~/components/layout/ListOverviewSection'
 import SoftwareOverviewMasonry from './cards/SoftwareOverviewMasonry'
 import SoftwareGridCard from './cards/SoftwareGridCard'
 import SoftwareMasonryCard from './cards/SoftwareMasonryCard'
 import SoftwareListItemContent from './list/SoftwareListItemContent'
 import RsdHostBanner from './list/RsdHostBanner'
 import OverviewListItem from './list/OverviewListItem'
+import OverviewListItemLink from './list/OverviewListItemLink'
 import {getItemKey, getPageUrl, getRsdHost} from './useSoftwareOverviewProps'
 
 type SoftwareOverviewContentProps = Readonly<{
@@ -53,7 +52,7 @@ export default function SoftwareOverviewContent({software, hasRemotes}: Software
       )
     case 'list':
       return (
-        <SoftwareOverviewList>
+        <ListOverviewSection>
           {software.map(item => {
             const listKey = getItemKey({id:item.id,domain:item.domain})
             const pageUrl = getPageUrl({domain:item.domain,slug:item.slug})
@@ -62,13 +61,11 @@ export default function SoftwareOverviewContent({software, hasRemotes}: Software
             return (
               <OverviewListItem
                 key={listKey}
-                className="pr-4">
-                <Link
-                  data-testid="software-list-item"
+              >
+                <OverviewListItemLink
                   href={pageUrl}
-                  className='flex-1 flex hover:text-inherit group'
-                  title={item.brand_name}
                   target={item.domain ? '_blank' : '_self'}
+                  title={item.brand_name}
                 >
                   <SoftwareListItemContent
                     statusBanner={
@@ -76,11 +73,11 @@ export default function SoftwareOverviewContent({software, hasRemotes}: Software
                     }
                     {...item}
                   />
-                </Link>
+                </OverviewListItemLink>
               </OverviewListItem>
             )
           })}
-        </SoftwareOverviewList>
+        </ListOverviewSection>
       )
     default:
       // GRID as default

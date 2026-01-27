@@ -26,6 +26,8 @@ import ListAltIcon from '@mui/icons-material/ListAlt'
 import HubIcon from '@mui/icons-material/Hub'
 import InfoIcon from '@mui/icons-material/Info'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import CodeIcon from '@mui/icons-material/Code'
+import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
 
 import {RsdModuleName} from '~/config/rsdSettingsReducer'
 
@@ -121,6 +123,20 @@ export const adminPages = {
     icon: <ReceiptLongIcon />,
     path: '/admin/mentions',
     active: () => true,
+  },
+  repositories:{
+    title: 'Repositories',
+    subtitle: '',
+    icon: <CodeIcon />,
+    path: '/admin/repositories',
+    active: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('software'),
+  },
+  'package-managers':{
+    title: 'Package Managers',
+    subtitle: '',
+    icon: <HomeRepairServiceIcon />,
+    path: '/admin/package-managers',
+    active: ({modules}:{modules:RsdModuleName[]}) => modules?.includes('software'),
   },
   'rsd-info':{
     title: 'RSD info',

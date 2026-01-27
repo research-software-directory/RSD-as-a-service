@@ -18,9 +18,8 @@ import {
   CategoryForSoftwareIds,
   KeywordForSoftware,
   LicenseForSoftware,
-  RepositoryInfo,
-  SoftwareItem,
-  SoftwareOverviewItemProps
+  SoftwareOverviewItemProps,
+  SoftwareTableItem
 } from '~/types/SoftwareTypes'
 import {CommunitiesOfSoftware} from '~/components/software/edit/communities/apiSoftwareCommunities'
 
@@ -66,62 +65,19 @@ export async function getSoftwareItem({slug,token}:{slug:string|undefined, token
   try {
     // console.log('token...', token)
     // this request is always performed from backend
-    const url = `${getBaseUrl()}/software?select=*,repository_url!left(url)&slug=eq.${slug}`
-    let resp
-    if (token) {
-      resp = await fetch(url, {
-        method: 'GET',
-        headers: createJsonHeaders(token)
-      })
-    } else {
-      resp = await fetch(url,{method:'GET'})
-    }
-    if (resp.status===200){
-      const data:SoftwareItem[] = await resp.json()
+    const url = `${getBaseUrl()}/software?slug=eq.${slug}`
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token),
+    })
+    if (resp.status === 200) {
+      const data: SoftwareTableItem[] = await resp.json()
       return data[0]
     }
   }catch(e:any){
     logger(`getSoftwareItem: ${e?.message}`,'error')
   }
 }
-
-// query for software item page based on software id
-export async function getRepositoryInfoForSoftware(software: string | undefined, token?: string) {
-  try {
-    // console.log('token...', token)
-    // this request is always performed from backend
-    const url = `${getBaseUrl()}/repository_url?software=eq.${software}`
-    let resp
-    if (token) {
-      resp = await fetch(url, {
-        method: 'GET',
-        headers: createJsonHeaders(token)
-      })
-    } else {
-      resp = await fetch(url, {method: 'GET'})
-    }
-
-    if (resp.status === 200) {
-      const data:any = await resp.json()
-      if (data?.length === 1) {
-        const info: RepositoryInfo = {
-          ...data[0],
-          // parse JSONB
-          // languages: JSON.parse(data[0].languages),
-          languages: data[0].languages,
-          // commit_history: JSON.parse(data[0].commit_history)
-          commit_history: data[0].commit_history
-        }
-        return info
-      }
-      return null
-    }
-  } catch (e: any) {
-    logger(`getRepositoryInfoForSoftware: ${e?.message}`, 'error')
-    return null
-  }
-}
-
 
 /**
  * CITATIONS

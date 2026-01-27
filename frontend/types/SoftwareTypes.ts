@@ -18,34 +18,6 @@ import {AutocompleteOption} from './AutocompleteOptions'
 import {CategoryPath} from './Category'
 import {OrganisationStatus} from './Organisation'
 
-export type CodePlatform = 'github' | 'gitlab' | 'bitbucket' | '4tu' | 'codeberg' | 'other'
-
-export type RepositoryUrl = {
-  software: string,
-  url: string,
-  // enum based on db enum defined as
-  // platform_type in 005-create-relations-for-software.sql
-  code_platform: CodePlatform,
-  // options fields used to reset values on update
-  // these are filled by scrapers
-  license?: string | null,
-  star_count?: number | null,
-  fork_count?: number | null,
-  open_issue_count?: number | null,
-  basic_data_last_error?: string | null,
-  basic_data_scraped_at?: string | null,
-  languages?: string | null,
-  languages_last_error?: string | null,
-  languages_scraped_at?: string | null,
-  commit_history?: string | null,
-  commit_history_last_error?: string | null,
-  commit_history_scraped_at?: string | null,
-  contributor_count?: number | null,
-  contributor_count_last_error?: string | null,
-  contributor_count_scraped_at?: string | null,
-  scraping_disabled_reason: string | null
-}
-
 export type NewSoftwareItem = {
   slug: string,
   brand_name: string,
@@ -63,16 +35,6 @@ export type SoftwareTableItem = NewSoftwareItem & {
   id: string,
   created_at: string,
   updated_at: string | null,
-}
-
-export type SoftwareItem = SoftwareTableItem & {
-  repository_url: string | null,
-  repository_platform: CodePlatform | null
-  scraping_disabled_reason: string | null
-}
-
-export type SoftwareItemFromDB = SoftwareTableItem & {
-  repository_url: RepositoryUrl
 }
 
 export type SoftwareOverviewItemProps = {
@@ -118,7 +80,7 @@ export type EditSoftwareImage = {
   image_mime_type: string | null
 }
 
-export type EditSoftwareItem = SoftwareItem & EditSoftwareImage & {
+export type EditSoftwareItem = SoftwareTableItem & EditSoftwareImage & {
   keywords: KeywordForSoftware[]
   categories: CategoriesForSoftware
   categoryForSoftwareIds: CategoryForSoftwareIds
@@ -159,33 +121,6 @@ export type LicenseForSoftware = {
 export type License = LicenseForSoftware & {
   id?: string,
   deprecated?: boolean,
-}
-
-
-export type ProgramingLanguages = {
-  [key: string]: number
-}
-
-export type CommitHistory = {
-  [key: string]: number
-}
-
-/**
- * REPOSITORY METRICS
- */
-export type RepositoryInfo = {
-  software: string,
-  url: string,
-  languages: ProgramingLanguages,
-  license: string,
-  commit_history: CommitHistory,
-  commit_history_scraped_at: string,
-  code_platform: CodePlatform
-  archived: boolean | null
-  fork_count: number | null
-  star_count: number | null
-  open_issue_count: number | null
-  contributor_count: number | null
 }
 
 /**

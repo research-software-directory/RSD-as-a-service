@@ -8,8 +8,6 @@
 
 'use client'
 import {useState} from 'react'
-import AddIcon from '@mui/icons-material/Add'
-import Button from '@mui/material/Button'
 
 import {NewTestimonial, Testimonial} from '~/types/Testimonial'
 import ContentLoader from '~/components/layout/ContentLoader'
@@ -21,6 +19,7 @@ import {ModalProps,ModalStates} from '../editSoftwareTypes'
 import EditTestimonialModal from './EditTestimonialModal'
 import SortableTestimonialList from './SortableTestimonialList'
 import useTestimonals from './useSoftwareTestimonials'
+import AddButton from '~/components/layout/AddButton'
 
 type EditTestimonialModal = ModalProps & {
   testimonial?: NewTestimonial | Testimonial
@@ -136,14 +135,15 @@ export default function SoftwareTestimonials() {
             title="Testimonials"
             subtitle={getTestimonialSubtitle()}
           >
-            <Button
+            <AddButton onAdd={onAdd} />
+            {/* <Button
               variant='contained'
               data-testid="add-testimonial-btn"
               startIcon={<AddIcon />}
               onClick={onAdd}
             >
               Add
-            </Button>
+            </Button> */}
           </EditSectionTitle>
           <SortableTestimonialList
             items={testimonials}

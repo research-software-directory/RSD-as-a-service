@@ -76,8 +76,8 @@ export default function AutosaveConceptDoi() {
           label: config.concept_doi.label,
           useNull: true,
           defaultValue: concept_doi,
-          helperTextMessage: config.concept_doi.help,
-          helperTextCnt: `${concept_doi?.length || 0}/${config.concept_doi.validation.maxLength.value}`,
+          // helperTextMessage: config.concept_doi.help,
+          // helperTextCnt: `${concept_doi?.length || 0}/${config.concept_doi.validation.maxLength.value}`,
           // add validate button as part of the input at the end
           muiProps:{
             slotProps:{

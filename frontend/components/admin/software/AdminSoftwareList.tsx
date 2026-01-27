@@ -8,7 +8,7 @@ import {useState} from 'react'
 import Alert from '@mui/material/Alert'
 
 import ContentLoader from '~/components/layout/ContentLoader'
-import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
+import ListOverviewSection from '~/components/layout/ListOverviewSection'
 import AdminSoftwareListItem from './AdminSoftwareListItem'
 import {useAdminSoftware} from './useAdminSoftware'
 import RemoveSoftwareModal, {SoftwareModalProps} from './RemoveSoftwareModal'
@@ -29,7 +29,7 @@ export default function AdminSoftwareList() {
 
   return (
     <>
-      <SoftwareOverviewList>
+      <ListOverviewSection>
         {software.map(item=>{
           return (
             <AdminSoftwareListItem
@@ -44,7 +44,7 @@ export default function AdminSoftwareList() {
             />
           )
         })}
-      </SoftwareOverviewList>
+      </ListOverviewSection>
       {
         modal.open ?
           <RemoveSoftwareModal

@@ -1,15 +1,16 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
+
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
 
 import {Testimonial} from '~/types/Testimonial'
 import SortableList from '~/components/layout/SortableList'
 import SortableTestimonialListItem from './SortableTestimonialListItem'
-import Alert from '@mui/material/Alert'
-import AlertTitle from '@mui/material/AlertTitle'
 
 type SortableTestimonialProps={
   items: Testimonial[],
@@ -34,14 +35,13 @@ export default function SortableTestimonialList({items, onEdit, onDelete, onSort
    * @param index
    * @returns React.JSX.Element
    */
-  function renderListItem(item:Testimonial,index?:number) {
+  function renderListItem(item:Testimonial,index:number) {
     return (
       <SortableTestimonialListItem
         key={JSON.stringify(item)}
         item={item}
-        pos={index ?? 0}
-        onEdit={onEdit}
-        onDelete={onDelete}
+        onEdit={()=>onEdit(index)}
+        onDelete={()=>onDelete(index)}
       />
     )
   }

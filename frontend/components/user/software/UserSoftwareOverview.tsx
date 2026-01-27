@@ -5,9 +5,9 @@
 
 import NoContent from '~/components/layout/NoContent'
 import GridOverview from '~/components/layout/GridOverview'
+import ListOverviewSection from '~/components/layout/ListOverviewSection'
 import CardSkeleton from '~/components/cards/CardSkeleton'
 import {ProjectLayoutType} from '~/components/search/ToggleViewGroup'
-import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
 import UserSoftwareGridCard from './UserSoftwareGridCard'
 import {SoftwareByMaintainer} from './useUserSoftware'
 import UserSoftwareListItem from './UserSoftwareListItem'
@@ -40,11 +40,11 @@ export default function UserSoftwareOverview({loading,skeleton_items,layout,soft
 
   if (layout === 'list') {
     return (
-      <SoftwareOverviewList>
+      <ListOverviewSection>
         {software.map(item => {
           return <UserSoftwareListItem key={item.id} item={item}/>
         })}
-      </SoftwareOverviewList>
+      </ListOverviewSection>
     )
   }
 

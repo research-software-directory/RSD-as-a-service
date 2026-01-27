@@ -73,7 +73,7 @@ export default function ControlledTextField<T>({options, control, rules}:Control
             disabled={options?.disabled ?? false}
             autoComplete={options?.autoComplete ?? 'off'}
             multiline={options?.multiline ?? false}
-            minRows={options?.maxRows ?? undefined}
+            minRows={options?.minRows ?? undefined}
             maxRows={options?.maxRows ?? undefined}
             rows={options?.rows ?? undefined}
             error={error ? true : false}

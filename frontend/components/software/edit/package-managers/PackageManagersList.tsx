@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,21 +15,20 @@ import SortableList from '~/components/layout/SortableList'
 import {PackageManager} from './apiPackageManager'
 import PackageManagerItem from './PackageManagerItem'
 
-type PackageManagersListProps = {
+type PackageManagersListProps = Readonly<{
   loading: boolean
   managers: PackageManager[]
-  onEdit?: (pos:number) => void
-  onDelete: (pos: number) => void
+  onDelete: (id: string) => void
   onSorted: (newList:PackageManager[])=>void
-}
+}>
 
-type DeletePackManModal = {
+type DeletePackManModal = Readonly<{
   open: boolean,
-  pos: number
+  id: string
   location: string
-}
+}>
 
-export default function PackageManagersList({loading,managers,onSorted,onEdit,onDelete}:PackageManagersListProps) {
+export default function PackageManagersList({loading,managers,onSorted,onDelete}:PackageManagersListProps) {
   const [modal, setModal] = useState<DeletePackManModal>()
 
   if (loading) return <ContentLoader />
@@ -48,10 +49,10 @@ export default function PackageManagersList({loading,managers,onSorted,onEdit,on
 
   function confirmDelete(pos: number) {
     const item = managers[pos]
-    if (item && item.url) {
+    if (item.id && item.url) {
       setModal({
         open: true,
-        pos,
+        id: item.id,
         location: item.url
       })
     }
@@ -61,10 +62,8 @@ export default function PackageManagersList({loading,managers,onSorted,onEdit,on
     return (
       <PackageManagerItem
         key={item.id}
-        pos={index}
         item={item}
-        onEdit={onEdit}
-        onDelete={confirmDelete}
+        onDelete={()=> confirmDelete(index)}
       />
     )
   }
@@ -87,7 +86,7 @@ export default function PackageManagersList({loading,managers,onSorted,onEdit,on
             setModal(undefined)
           }}
           onDelete={() => {
-            onDelete(modal.pos)
+            onDelete(modal.id)
             setModal(undefined)
           }}
         />

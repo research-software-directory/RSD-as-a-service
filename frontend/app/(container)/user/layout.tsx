@@ -4,6 +4,7 @@ import {notFound} from 'next/navigation'
 import {app} from '~/config/app'
 import {getUserFromToken} from '~/auth/getSessionServerSide'
 import ProtectedContent from '~/auth/ProtectedContent'
+import PageErrorMessage from '~/components/layout/PageErrorMessage'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {UserContextProvider} from '~/components/user/context/UserContext'
 import {getUserCounts} from '~/components/user/getUserCounts'
@@ -53,8 +54,13 @@ export default async function UserPageLayout({
   const user = await getUserFromToken(token ?? null)
 
   if (user === null) {
-    // 404 if no section parameter
-    return notFound()
+    // 401 if no user
+    return (
+      <PageErrorMessage
+        status={401}
+        message='UNAUTHORIZED'
+      />
+    )
   }
 
   const [
@@ -95,7 +101,7 @@ export default async function UserPageLayout({
         {/* TABS */}
         <UserTabs counts={counts} />
         {/* TAB CONTENT */}
-        <section className="flex md:min-h-[45rem] mb-12">
+        <section className="flex md:min-h-[45rem]">
           {children}
         </section>
       </UserContextProvider>

@@ -5,9 +5,9 @@
 
 import NoContent from '~/components/layout/NoContent'
 import GridOverview from '~/components/layout/GridOverview'
+import ListOverviewSection from '~/components/layout/ListOverviewSection'
 import CardSkeleton from '~/components/cards/CardSkeleton'
 import {ProjectLayoutType} from '~/components/search/ToggleViewGroup'
-import ProjectOverviewList from '~/components/projects/overview/list/ProjectOverviewList'
 import {ProjectByMaintainer} from './useUserProjects'
 import UserProjectGridCard from './UserProjectGridCard'
 import UserProjectListItem from './UserProjectListItem'
@@ -32,11 +32,11 @@ export default function UserProjectsOverview({loading,skeleton_items,layout,proj
 
   if (layout === 'list') {
     return (
-      <ProjectOverviewList>
+      <ListOverviewSection>
         {projects.map(item => {
           return <UserProjectListItem key={item.id} item={item} />
         })}
-      </ProjectOverviewList>
+      </ListOverviewSection>
     )
   }
 

@@ -12,7 +12,7 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import SortableListItemActions from '~/components/layout/SortableListItemActions'
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
 import {RsdLink} from '~/config/rsdSettingsReducer'
 
 export type DraggableListItemProps = {
@@ -29,30 +29,38 @@ export default function SortableNavItem({item, selected, index, onSelect}: Dragg
   } = useSortable({id: item.id ?? ''})
 
   return (
-    <ListItemButton
-      selected={item.slug === selected}
+    <ListItem
+      data-testid="sortable-nav-item"
       // draggable
       ref={setNodeRef}
       {...attributes}
-      onClick={() => onSelect(item)}
       sx={{
+        padding:'0',
         transform: CSS.Translate.toString(transform),
         transition,
         opacity: isDragging ? 0.5 : 1,
         zIndex: isDragging ? 9:0,
-        cursor: isDragging ? 'move' : 'default'
+        cursor: isDragging ? 'move' : 'default',
       }}
     >
-      <ListItem
-        data-testid="sortable-nav-item"
-        secondaryAction={
-          <SortableListItemActions
-            pos={index}
-            listeners={listeners}
-          />
-        }
+      <ListItemButton
+        selected={item.slug === selected}
+        onClick={() => onSelect(item)}
+        disableGutters={true}
+        sx={{
+          gap: '0.5rem'
+        }}
       >
-        <ListItemIcon>
+        {/* drag-n-drop icon/button */}
+        <div
+          title="Drag to change position"
+          aria-label="drag to change position"
+          className="hover:cursor-move text-base-content-disabled"
+          {...listeners}
+        >
+          <DragIndicatorIcon />
+        </div>
+        <ListItemIcon sx={{minWidth:'auto'}}>
           <span className='text-[2rem]'>{item?.position ?? index+1}</span>
         </ListItemIcon>
         <ListItemText
@@ -62,7 +70,7 @@ export default function SortableNavItem({item, selected, index, onSelect}: Dragg
             </span>
           }
         />
-      </ListItem>
-    </ListItemButton>
+      </ListItemButton>
+    </ListItem>
   )
 }
