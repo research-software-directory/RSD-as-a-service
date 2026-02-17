@@ -100,8 +100,8 @@ export default function FindOrganisation({onAdd, onCreate}:
     return (
       <li
         data-testid="find-organisation-option"
-        key={option.key}
         {...props}
+        key={option.key}
       >
         <FindOrganisationItem {...option.data} />
       </li>

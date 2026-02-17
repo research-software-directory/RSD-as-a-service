@@ -21,7 +21,6 @@ export default function MarkdownPages({pages=[]}: {pages: RsdLink[]}) {
           <Link
             key={page.slug}
             href={`/page/${page.slug}`}
-            className="hover:text-primary"
             passHref>
             {page.title}
           </Link>
