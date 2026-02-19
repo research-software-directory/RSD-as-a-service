@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -189,7 +189,7 @@ public class GitlabScraper implements GitScraper {
 		}
 	}
 
-	private Boolean checkIfArchived() throws IOException, InterruptedException, RsdResponseException {
+	private Boolean checkIfArchived() {
 		String graphqlQuery = String.format(
 			"""
 			{
@@ -204,12 +204,28 @@ public class GitlabScraper implements GitScraper {
 		JsonObject body = new JsonObject();
 		body.addProperty("query", graphqlQuery);
 		String response = Utils.post(graphqlUri, body.toString(), "Content-Type", "application/json");
+		return parseArchivedResponse(response);
+	}
+
+	static Boolean parseArchivedResponse(String response) {
 		JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
-		return jsonObject
-			.getAsJsonObject("data")
-			.getAsJsonObject("project")
-			.getAsJsonPrimitive("archived")
-			.getAsBoolean();
+
+		JsonElement dataElement = jsonObject.get("data");
+		if (dataElement == null || !dataElement.isJsonObject()) {
+			return null;
+		}
+
+		JsonElement projectElement = dataElement.getAsJsonObject().get("project");
+		if (projectElement == null || !projectElement.isJsonObject()) {
+			return null;
+		}
+
+		JsonElement archivedElement = projectElement.getAsJsonObject().get("archived");
+		if (archivedElement == null || !archivedElement.isJsonPrimitive()) {
+			return null;
+		}
+
+		return archivedElement.getAsJsonPrimitive().isBoolean() ? archivedElement.getAsBoolean() : null;
 	}
 
 	static BasicGitData parseBasicData(String json, Boolean archived) {
