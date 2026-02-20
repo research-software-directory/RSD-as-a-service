@@ -6,10 +6,10 @@
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
-
+'use client'
+import Link from 'next/link'
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
 import Button from '@mui/material/Button'
-import Link from 'next/link'
 
 type ViewButtonProps = {
   title: string,

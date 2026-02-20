@@ -6,7 +6,8 @@
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
-
+'use client'
+import Link from 'next/link'
 import EditIcon from '@mui/icons-material/Edit'
 import Button from '@mui/material/Button'
 import EditFab from './EditFab'
@@ -66,8 +67,7 @@ export default function EditPageButton({title, url, isMaintainer, variant}: Edit
             // minWidth: '6rem'
           }}
           href={url}
-          // this causes unexpected error after upgrade to v16
-          // LinkComponent={Link}
+          LinkComponent={Link}
         >
           {/* Edit page */}
           {title}
