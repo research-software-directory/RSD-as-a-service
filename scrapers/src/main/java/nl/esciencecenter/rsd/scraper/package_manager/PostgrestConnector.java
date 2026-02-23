@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
@@ -51,12 +51,12 @@ public class PostgrestConnector {
 		String filter = "download_count_scraping_disabled_reason=is.null&" + packageManagerFilter;
 		String data = Utils.getAsAdmin(
 			backendUrl +
-			"?" +
-			filter +
-			"&select=id,url,package_manager&order=download_count_scraped_at.asc.nullsfirst&limit=" +
-			limit +
-			"&" +
-			Utils.atLeastOneHourAgoFilter("download_count_scraped_at")
+				"?" +
+				filter +
+				"&select=id,url,package_manager&order=download_count_scraped_at.asc.nullsfirst&limit=" +
+				limit +
+				"&" +
+				Utils.atLeastOneHourAgoFilter("download_count_scraped_at")
 		);
 		return parseBasicJsonData(data);
 	}
@@ -69,12 +69,12 @@ public class PostgrestConnector {
 		String filter = "reverse_dependency_count_scraping_disabled_reason=is.null&" + packageManagerFilter;
 		String data = Utils.getAsAdmin(
 			backendUrl +
-			"?" +
-			filter +
-			"&select=id,url,package_manager&order=reverse_dependency_count_scraped_at.asc.nullsfirst&limit=" +
-			limit +
-			"&" +
-			Utils.atLeastOneHourAgoFilter("reverse_dependency_count_scraped_at")
+				"?" +
+				filter +
+				"&select=id,url,package_manager&order=reverse_dependency_count_scraped_at.asc.nullsfirst&limit=" +
+				limit +
+				"&" +
+				Utils.atLeastOneHourAgoFilter("reverse_dependency_count_scraped_at")
 		);
 		return parseBasicJsonData(data);
 	}

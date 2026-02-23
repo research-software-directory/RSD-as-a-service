@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -45,9 +45,10 @@ class OpenAlexConnector {
 		String email = Config.crossrefContactEmail().orElse(null);
 
 		apiThrottler.awaitPermission();
-		HttpResponse<String> response = email == null
-			? Utils.getAsHttpResponse(url)
-			: Utils.getAsHttpResponse(url, "User-Agent", "mailto:" + email);
+		HttpResponse<String> response =
+			email == null
+				? Utils.getAsHttpResponse(url)
+				: Utils.getAsHttpResponse(url, "User-Agent", "mailto:" + email);
 
 		if (response.statusCode() == 200) {
 			return response.body();
