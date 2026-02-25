@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -689,7 +689,7 @@ func saveLicensesForSoftware(id string, software terms.SoftwareApplication, admi
 }
 
 func saveRepositoryUrlForSoftware(id string, software terms.SoftwareApplication, adminJwt string, backendUrl string) error {
-	if software.CodeRepository == nil {
+	if software.CodeRepository.Single == nil && (software.CodeRepository.Array == nil || len(software.CodeRepository.Array) == 0) {
 		request, err := http.NewRequest("DELETE", backendUrl+"/repository_url_for_software?software=eq."+id, nil)
 		if err != nil {
 			return err
@@ -705,64 +705,77 @@ func saveRepositoryUrlForSoftware(id string, software terms.SoftwareApplication,
 		CodePlatform string `json:"code_platform"`
 	}
 
-	repositoryUrl := rsdRepositoryUrl{
-		Url:          *software.CodeRepository,
-		CodePlatform: "4tu",
+	var repos = []rsdRepositoryUrl{}
+
+	if software.CodeRepository.Single != nil {
+		repos = append(repos, rsdRepositoryUrl{
+			Url:          *software.CodeRepository.Single,
+			CodePlatform: "4tu",
+		})
+	} else {
+		for _, repoUrl := range software.CodeRepository.Array {
+			repos = append(repos, rsdRepositoryUrl{
+				Url:          repoUrl,
+				CodePlatform: "4tu",
+			})
+		}
 	}
 
-	body, err := json.Marshal(&repositoryUrl)
-	if err != nil {
-		return err
-	}
+	for _, repoUrlEntry := range repos {
+		body, err := json.Marshal(&repoUrlEntry)
+		if err != nil {
+			return err
+		}
 
-	request, err := http.NewRequest("POST", backendUrl+"/repository_url?select=id&on_conflict=url", bytes.NewReader(body))
-	if err != nil {
-		return err
-	}
+		request, err := http.NewRequest("POST", backendUrl+"/repository_url?select=id&on_conflict=url", bytes.NewReader(body))
+		if err != nil {
+			return err
+		}
 
-	request.Header.Add("Authorization", "Bearer "+adminJwt)
-	request.Header.Add("Prefer", "resolution=merge-duplicates")
-	request.Header.Add("Prefer", "return=representation")
-	resp, err := defaultClient.Do(request)
-	if err != nil {
-		return err
-	}
+		request.Header.Add("Authorization", "Bearer "+adminJwt)
+		request.Header.Add("Prefer", "resolution=merge-duplicates")
+		request.Header.Add("Prefer", "return=representation")
+		resp, err := defaultClient.Do(request)
+		if err != nil {
+			return err
+		}
 
-	bodyBytes, err := utils.ReadBody(resp)
-	type repoUrlIdResponse struct {
-		Id string `json:"id"`
-	}
-	var responseContainer []repoUrlIdResponse
-	err = json.Unmarshal(bodyBytes, &responseContainer)
-	if err != nil {
-		return err
-	}
+		bodyBytes, err := utils.ReadBody(resp)
+		type repoUrlIdResponse struct {
+			Id string `json:"id"`
+		}
+		var responseContainer []repoUrlIdResponse
+		err = json.Unmarshal(bodyBytes, &responseContainer)
+		if err != nil {
+			return err
+		}
 
-	type rsdRepositoryForSoftware struct {
-		RepoId     string `json:"repository_url"`
-		SoftwareId string `json:"software"`
-	}
+		type rsdRepositoryForSoftware struct {
+			RepoId     string `json:"repository_url"`
+			SoftwareId string `json:"software"`
+		}
 
-	repositoryUrlForSoftware := rsdRepositoryForSoftware{
-		RepoId:     responseContainer[0].Id,
-		SoftwareId: id,
-	}
+		repositoryUrlForSoftware := rsdRepositoryForSoftware{
+			RepoId:     responseContainer[0].Id,
+			SoftwareId: id,
+		}
 
-	body, err = json.Marshal(&repositoryUrlForSoftware)
-	if err != nil {
-		return err
-	}
+		body, err = json.Marshal(&repositoryUrlForSoftware)
+		if err != nil {
+			return err
+		}
 
-	request, err = http.NewRequest("POST", backendUrl+"/repository_url_for_software", bytes.NewReader(body))
-	if err != nil {
-		return err
-	}
+		request, err = http.NewRequest("POST", backendUrl+"/repository_url_for_software", bytes.NewReader(body))
+		if err != nil {
+			return err
+		}
 
-	request.Header.Add("Authorization", "Bearer "+adminJwt)
-	request.Header.Add("Prefer", "resolution=ignore-duplicates")
-	_, err = defaultClient.Do(request)
-	if err != nil {
-		return err
+		request.Header.Add("Authorization", "Bearer "+adminJwt)
+		request.Header.Add("Prefer", "resolution=ignore-duplicates")
+		_, err = defaultClient.Do(request)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
