@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -46,12 +46,12 @@ public class PostgrestConnector {
 	public Collection<BasicRepositoryData> languagesData(int limit) {
 		String data = Utils.getAsAdmin(
 			backendUrl +
-			"?" +
-			filter +
-			"&select=id,url&order=languages_scraped_at.asc.nullsfirst&limit=" +
-			limit +
-			"&" +
-			Utils.atLeastOneHourAgoFilter("languages_scraped_at")
+				"?" +
+				filter +
+				"&select=id,url&order=languages_scraped_at.asc.nullsfirst&limit=" +
+				limit +
+				"&" +
+				Utils.atLeastOneHourAgoFilter("languages_scraped_at")
 		);
 		return parseBasicJsonData(data);
 	}
@@ -71,12 +71,12 @@ public class PostgrestConnector {
 	public Collection<BasicRepositoryData> commitData(int limit) {
 		String data = Utils.getAsAdmin(
 			backendUrl +
-			"?" +
-			filter +
-			"&select=id,url&order=commit_history_scraped_at.asc.nullsfirst&limit=" +
-			limit +
-			"&" +
-			Utils.atLeastOneHourAgoFilter("commit_history_scraped_at")
+				"?" +
+				filter +
+				"&select=id,url&order=commit_history_scraped_at.asc.nullsfirst&limit=" +
+				limit +
+				"&" +
+				Utils.atLeastOneHourAgoFilter("commit_history_scraped_at")
 		);
 		return parseBasicJsonData(data);
 	}
@@ -84,12 +84,12 @@ public class PostgrestConnector {
 	public Collection<BasicRepositoryDataWithHistory> commitDataWithHistory(int limit) {
 		String data = Utils.getAsAdmin(
 			backendUrl +
-			"?" +
-			filter +
-			"&select=id,url,commit_history_scraped_at,commit_history&order=commit_history_scraped_at.asc.nullsfirst&limit=" +
-			limit +
-			"&" +
-			Utils.atLeastOneHourAgoFilter("commit_history_scraped_at")
+				"?" +
+				filter +
+				"&select=id,url,commit_history_scraped_at,commit_history&order=commit_history_scraped_at.asc.nullsfirst&limit=" +
+				limit +
+				"&" +
+				Utils.atLeastOneHourAgoFilter("commit_history_scraped_at")
 		);
 		return parseBasicJsonDataWithHistory(data);
 	}
@@ -103,12 +103,12 @@ public class PostgrestConnector {
 	public Collection<BasicRepositoryData> statsData(int limit) {
 		String data = Utils.getAsAdmin(
 			backendUrl +
-			"?" +
-			filter +
-			"&select=id,url&order=basic_data_scraped_at.asc.nullsfirst&limit=" +
-			limit +
-			"&" +
-			Utils.atLeastOneHourAgoFilter("basic_data_scraped_at")
+				"?" +
+				filter +
+				"&select=id,url&order=basic_data_scraped_at.asc.nullsfirst&limit=" +
+				limit +
+				"&" +
+				Utils.atLeastOneHourAgoFilter("basic_data_scraped_at")
 		);
 		return parseBasicJsonData(data);
 	}
@@ -116,12 +116,12 @@ public class PostgrestConnector {
 	public Collection<BasicRepositoryData> contributorData(int limit) {
 		String data = Utils.getAsAdmin(
 			backendUrl +
-			"?" +
-			filter +
-			"&select=id,url&order=contributor_count_scraped_at.asc.nullsfirst&limit=" +
-			limit +
-			"&" +
-			Utils.atLeastOneHourAgoFilter("contributor_count_scraped_at")
+				"?" +
+				filter +
+				"&select=id,url&order=contributor_count_scraped_at.asc.nullsfirst&limit=" +
+				limit +
+				"&" +
+				Utils.atLeastOneHourAgoFilter("contributor_count_scraped_at")
 		);
 		return parseBasicJsonData(data);
 	}
@@ -137,9 +137,8 @@ public class PostgrestConnector {
 			UUID software = UUID.fromString(softwareUuid);
 			String url = jsonObject.getAsJsonPrimitive("url").getAsString();
 			String commitHistoryScrapedAtString = Utils.stringOrNull(jsonObject.get("commit_history_scraped_at"));
-			ZonedDateTime commitHistoryScrapedAt = commitHistoryScrapedAtString == null
-				? null
-				: ZonedDateTime.parse(commitHistoryScrapedAtString);
+			ZonedDateTime commitHistoryScrapedAt =
+				commitHistoryScrapedAtString == null ? null : ZonedDateTime.parse(commitHistoryScrapedAtString);
 			CommitsPerWeek commitsPerWeek = new CommitsPerWeek();
 			if (!jsonObject.get("commit_history").isJsonNull()) {
 				JsonObject commitHistoryJsonObject = jsonObject.getAsJsonObject("commit_history");

@@ -1,6 +1,6 @@
 <!--
-SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -16,7 +16,7 @@ This folder contains backend tests for the RSD. It is intended to mainly:
 
 This module is written in Java as a Maven project.
 To help with testing REST endpoints, we make use of [REST Assured](https://rest-assured.io/), which has its documentation [here](https://github.com/rest-assured/rest-assured/wiki/Usage).
-As a testing framework we use [JUnit 5](https://junit.org/junit5/).
+As a testing framework we use [JUnit 6](https://junit.org/).
 
 ## Principles
 
@@ -56,7 +56,7 @@ docker compose --file backend-tests/docker-compose.yml down --volumes
 ```
 
 ### From an IDE
-If you use an IDE that supports [JUnit](https://junit.org/junit5/), you can run each test manually against a running RSD instance (that you started with e.g. `make start`).
+If you use an IDE that supports [JUnit](https://junit.org/), you can run each test manually against a running RSD instance (that you started with e.g. `make start`).
 Make sure to have set the following environment variables:
 - `POSTGREST_URL`
 - `PGRST_JWT_SECRET`

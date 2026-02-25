@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -33,8 +33,8 @@ public class PostgrestReleaseRepository {
 	public Collection<ReleaseData> leastRecentlyScrapedReleases(int limit) {
 		String data = Utils.getAsAdmin(
 			backendUrl +
-			"/rpc/software_join_release?concept_doi=not.is.null&order=releases_scraped_at.asc.nullsfirst&limit=" +
-			limit
+				"/rpc/software_join_release?concept_doi=not.is.null&order=releases_scraped_at.asc.nullsfirst&limit=" +
+				limit
 		);
 		return parseJson(data);
 	}

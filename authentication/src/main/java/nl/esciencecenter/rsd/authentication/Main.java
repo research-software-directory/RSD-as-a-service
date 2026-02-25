@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2021 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2021 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
@@ -353,9 +353,9 @@ public class Main {
 		ctx.header(
 			"Set-Cookie",
 			"rsd_token=" +
-			token +
-			"; Secure; HttpOnly; Path=/; SameSite=Lax; Max-Age=" +
-			AUTH_COOKIE_DURATION.toSeconds()
+				token +
+				"; Secure; HttpOnly; Path=/; SameSite=Lax; Max-Age=" +
+				AUTH_COOKIE_DURATION.toSeconds()
 		);
 	}
 
@@ -363,9 +363,9 @@ public class Main {
 		ctx.header(
 			"Set-Cookie",
 			"rsd_login_failure_message=" +
-			message +
-			"; Secure; Path=/login/failed; SameSite=Lax; Max-Age=" +
-			FAILURE_COOKIE_DURATION.toSeconds()
+				message +
+				"; Secure; Path=/login/failed; SameSite=Lax; Max-Age=" +
+				FAILURE_COOKIE_DURATION.toSeconds()
 		);
 
 		ctx.redirect(LOGIN_FAILED_PATH, HttpStatus.SEE_OTHER);

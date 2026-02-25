@@ -117,11 +117,11 @@ public class GitlabScraper implements GitScraper {
 				.uri(
 					URI.create(
 						apiUri +
-						"/projects/" +
-						Utils.urlEncode(projectPath) +
-						"/repository/commits?per_page=100&order=default&page=" +
-						page +
-						since
+							"/projects/" +
+							Utils.urlEncode(projectPath) +
+							"/repository/commits?per_page=100&order=default&page=" +
+							page +
+							since
 					)
 				)
 				.timeout(Duration.ofSeconds(30))

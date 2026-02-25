@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -85,8 +85,8 @@ public class PostgrestMentionRepository {
 	public Collection<RsdMentionIds> leastRecentlyScrapedMentions(int limit) {
 		String data = Utils.getAsAdmin(
 			backendUrl +
-			"/mention?or=(doi.not.is.null,openalex_id.not.is.null)&order=scraped_at.asc.nullsfirst&select=id,doi,openalex_id&limit=" +
-			limit
+				"/mention?or=(doi.not.is.null,openalex_id.not.is.null)&order=scraped_at.asc.nullsfirst&select=id,doi,openalex_id&limit=" +
+				limit
 		);
 		return parseMultipleRsdIds(data);
 	}
