@@ -17,7 +17,6 @@ export default function CustomLinks({links=[]}:{links:CustomLink[]}) {
           <a
             key={link.url}
             href={link.url}
-            className="hover:text-primary"
             target={link.target}
             rel="noreferrer">
             {link.label}

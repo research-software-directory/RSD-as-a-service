@@ -91,7 +91,6 @@ export default function AutosaveProjectPeriod({date_start, date_end}:
         options={{
           name: 'date_start',
           label: '',
-          helperTextMessage: 'Month / Day / Year',
           defaultValue: date_start,
           useNull: true,
           muiProps:{
@@ -114,7 +113,6 @@ export default function AutosaveProjectPeriod({date_start, date_end}:
         options={{
           name: 'date_end',
           label: '',
-          helperTextMessage: 'Month / Day / Year',
           defaultValue: date_end,
           useNull: true,
           muiProps:{
