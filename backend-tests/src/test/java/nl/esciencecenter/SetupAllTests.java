@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -70,8 +70,7 @@ public class SetupAllTests implements BeforeAllCallback {
 	}
 
 	public static void setupRestAssured() {
-		String backendUri = System.getenv("POSTGREST_URL");
-		RestAssured.baseURI = backendUri;
+		RestAssured.baseURI = System.getenv("POSTGREST_URL");
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
 		String secret = System.getenv("PGRST_JWT_SECRET");

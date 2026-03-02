@@ -38,21 +38,22 @@ Each class containing tests should be annotated with `@ExtendWith({SetupAllTests
 
 This section assumes that you are in the root directory of the project.
 
-The easiest way to run the tests is with `make`. Make sure no other RSD containers are running.
+The easiest way to run the tests is with `make` from the _parent directory_. Make sure no other RSD containers are running.
 
 ```shell
 make run-backend-tests
 ```
 
-You can also run the tests directly with `docker compose`.
+You can also run the tests directly with `docker compose` from _this directory_.
 ```shell
-docker compose --file backend-tests/docker-compose.yml down --volumes && \
-docker compose --file backend-tests/docker-compose.yml build --parallel && \
-docker compose --file backend-tests/docker-compose.yml up
+docker compose down --volumes && \
+docker compose build --parallel && \
+docker compose up
 ```
-This leaves the containers running, so you can inspect the database if necessary. To clean up run
+
+_This leaves the containers running_, so you can inspect the database if necessary. To clean up run
 ```shell
-docker compose --file backend-tests/docker-compose.yml down --volumes
+docker compose down --volumes
 ```
 
 ### From an IDE
@@ -60,5 +61,6 @@ If you use an IDE that supports [JUnit](https://junit.org/), you can run each te
 Make sure to have set the following environment variables:
 - `POSTGREST_URL`
 - `PGRST_JWT_SECRET`
+- `CODEMETA_URL=http://localhost:80/metadata/codemeta`
 
 Check your `.env` file for the values, but you should **EXPLICITELY** add the port number to `POSTGREST_URL` (which is most likely `80`).
