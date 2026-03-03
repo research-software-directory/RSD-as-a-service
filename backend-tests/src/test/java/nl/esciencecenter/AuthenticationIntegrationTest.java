@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -214,7 +214,7 @@ public class AuthenticationIntegrationTest {
 		String categoryId = createUniqueCategory("long name", "short name", null);
 
 		User user = User.create();
-		String softwareId = user.createSoftware("Software 1");
+		String softwareId = user.createSoftware("Software 1").id();
 		requestAddCategoryForSoftware(user, softwareId, categoryId).then().statusCode(201);
 	}
 
@@ -223,7 +223,7 @@ public class AuthenticationIntegrationTest {
 		String categoryId = createUniqueCategory("long name", "short name", null);
 
 		User user1 = User.create();
-		String softwareId = user1.createSoftware("Software 1");
+		String softwareId = user1.createSoftware("Software 1").id();
 
 		User user2 = User.create();
 		requestAddCategoryForSoftware(user2, softwareId, categoryId).then().statusCode(403);
@@ -234,7 +234,7 @@ public class AuthenticationIntegrationTest {
 		String[] catIds = createCategoryTreeExample1();
 
 		User user = User.create();
-		String softwareId = user.createSoftware("Software 1");
+		String softwareId = user.createSoftware("Software 1").id();
 
 		addCategoryForSoftware(user, softwareId, catIds[0]);
 		addCategoryForSoftware(user, softwareId, catIds[1]);

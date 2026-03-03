@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -39,6 +39,10 @@ public class User {
 		return new User(accountId, hasAgreedTerms);
 	}
 
+	/**
+	 *
+	 * @return a user that has accepted the terms and conditions
+	 */
 	static User create() {
 		return create(true);
 	}
@@ -59,14 +63,16 @@ public class User {
 		return this;
 	}
 
-	String createSoftware(String brand_name) {
+	SoftwareMetadata createSoftware(String brand_name) {
 		JsonObject obj = new JsonObject();
-		obj.addProperty("slug", "slug-" + Commons.createUUID());
+		String slug = "slug-" + Commons.createUUID();
+		obj.addProperty("slug", slug);
 		obj.addProperty("brand_name", brand_name);
 		obj.addProperty("is_published", true);
-		obj.addProperty("short_statement", "Test software for testing");
+		String shortStatement = "Test software for testing";
+		obj.addProperty("short_statement", shortStatement);
 
-		return RestAssured.given()
+		String softwareId = RestAssured.given()
 			.header(authHeader)
 			.header(Commons.requestEntry)
 			.contentType(ContentType.JSON)
@@ -77,10 +83,12 @@ public class User {
 			.statusCode(201)
 			.extract()
 			.path("[0].id");
+
+		return new SoftwareMetadata(softwareId, slug, brand_name, shortStatement);
 	}
 
 	// To create User objects use create() instead.
-	User(String accountId, boolean hasAgreedTerms) {
+	private User(String accountId, boolean hasAgreedTerms) {
 		this.accountId = accountId;
 		token = createJwtToken(accountId);
 		authHeader = new Header("Authorization", "bearer " + token);
