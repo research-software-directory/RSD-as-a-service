@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,25 +23,35 @@ public class ProxyWithAccessTokenBeforeHandler implements Handler {
 
 	@Override
 	public void handle(@NotNull Context ctx) throws IOException, InterruptedException {
-		String authHeader = ctx.header("Authorization");
+		String authHeaderValue = ctx.header("Authorization");
 
-		if (authHeader == null) {
+		if (authHeaderValue == null) {
 			// the request is from the frontend, skip access token validation
 			return;
 		}
 
-		if (!authHeader.startsWith("Bearer ")) {
+		String[] authHeaderValueSplit = authHeaderValue.split(" ");
+		if (authHeaderValueSplit.length != 2) {
 			String jsonError = JsonErrorMessageCreator.createErrorJson(
 				INVALID_ACCESS_TOKEN_MESSAGE,
-				List.of("The Authorization header must start with \"Bearer \"")
+				List.of("The Authorization header value has to contain exactly one space")
 			);
 
 			ctx.status(HttpStatus.UNAUTHORIZED).json(jsonError).skipRemainingHandlers();
 			return;
 		}
 
-		// length of "Bearer "
-		String authToken = authHeader.substring(7);
+		if (!"bearer".equalsIgnoreCase(authHeaderValueSplit[0])) {
+			String jsonError = JsonErrorMessageCreator.createErrorJson(
+				INVALID_ACCESS_TOKEN_MESSAGE,
+				List.of("The Authorization header value must start with \"Bearer \" (case insensitive)")
+			);
+
+			ctx.status(HttpStatus.UNAUTHORIZED).json(jsonError).skipRemainingHandlers();
+			return;
+		}
+
+		String authToken = authHeaderValueSplit[1];
 
 		String[] tokenParts = authToken.split("\\.", 2);
 		if (tokenParts.length < 2) {
