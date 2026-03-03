@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,6 +16,7 @@ import (
 	"os"
 	"regexp"
 	"slices"
+	"sort"
 )
 
 type RsdSoftware struct {
@@ -39,7 +40,7 @@ type RsdSoftware struct {
 	License []struct {
 		License string `json:"license"`
 	} `json:"license_for_software"`
-	RepositoryURL *struct {
+	RepositoryURL []struct {
 		URL       string             `json:"url"`
 		Languages map[string]float64 `json:"languages"`
 	} `json:"repository_url"`
@@ -195,16 +196,13 @@ func convertRsdToCodeMeta(bytes []byte) ([]byte, error) {
 		Type:                 "SoftwareApplication",
 		Name:                 rsdResponse.BrandName,
 		Description:          extractDescription(rsdResponse),
+		CodeRepository:       extractRepositoryUrls(rsdResponse),
 		Author:               extractContributors(rsdResponse),
 		Keywords:             extractKeywords(rsdResponse),
 		ProgrammingLanguage:  extractProgrammingLanguages(rsdResponse),
 		License:              extractLicenses(rsdResponse),
 		ReferencePublication: extractReferencePublications(rsdResponse),
 		DownloadUrl:          []string{},
-	}
-
-	if rsdResponse.RepositoryURL != nil {
-		codemetaData.CodeRepository = &rsdResponse.RepositoryURL.URL
 	}
 
 	jsonBytes, err := json.Marshal(codemetaData)
@@ -249,30 +247,20 @@ func extractKeywords(rsdSoftware RsdSoftware) []string {
 }
 
 func extractProgrammingLanguages(rsdSoftware RsdSoftware) []string {
-	result := []string{}
+	languagesSorted := []string{}
 
 	if rsdSoftware.RepositoryURL == nil {
-		return result
+		return languagesSorted
 	}
 
-	for k := range rsdSoftware.RepositoryURL.Languages {
-		result = append(result, k)
-	}
-
-	slices.SortFunc(result, func(a, b string) int {
-		valA := rsdSoftware.RepositoryURL.Languages[a]
-		valB := rsdSoftware.RepositoryURL.Languages[b]
-
-		if valA > valB {
-			return -1
-		} else if valA < valB {
-			return 1
-		} else {
-			return 0
+	for _, repoUrlEntry := range rsdSoftware.RepositoryURL {
+		for lang := range repoUrlEntry.Languages {
+			languagesSorted = append(languagesSorted, lang)
 		}
-	})
+	}
 
-	return result
+	sort.Strings(languagesSorted)
+	return slices.Compact(languagesSorted)
 }
 
 func extractLicenses(rsdSoftware RsdSoftware) terms.SingleOrArray[terms.CreativeWorkOrUrl] {
@@ -313,6 +301,16 @@ func extractReferencePublications(rsdSoftware RsdSoftware) []terms.ScholarlyArti
 	}
 
 	return result
+}
+
+func extractRepositoryUrls(rsdSoftware RsdSoftware) terms.SingleOrArray[string] {
+	result := []string{}
+
+	for _, repoUrlEntry := range rsdSoftware.RepositoryURL {
+		result = append(result, repoUrlEntry.URL)
+	}
+
+	return terms.SingleOrArray[string]{nil, result}
 }
 
 func extractContributors(rsdSoftware RsdSoftware) []terms.Person {

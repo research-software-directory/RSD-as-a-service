@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -107,7 +107,7 @@ type SoftwareApplication struct {
 	Id                   *string                          `json:"identifier"`
 	Name                 string                           `json:"name"`
 	Description          SingleOrArray[string]            `json:"description"`
-	CodeRepository       *string                          `json:"codeRepository"`
+	CodeRepository       SingleOrArray[string]            `json:"codeRepository"`
 	Author               []Person                         `json:"author"`
 	Keywords             []string                         `json:"keywords"`
 	ProgrammingLanguage  []string                         `json:"programmingLanguage"`
