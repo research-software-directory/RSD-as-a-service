@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -52,19 +52,24 @@ public class ProxyWithAccessTokenHandler implements Handler {
 			});
 
 		HandlerType method = ctx.method();
-		HttpRequest request = switch (method) {
-			case HandlerType.GET, HandlerType.DELETE, HandlerType.HEAD, HandlerType.OPTIONS -> requestBuilder
-				.method(method.toString(), HttpRequest.BodyPublishers.noBody())
-				.build();
-			case HandlerType.POST, HandlerType.PUT, HandlerType.PATCH -> {
-				String body = ctx.body();
-				String contentType = ctx.contentType() != null ? ctx.contentType() : "application/json";
-				requestBuilder.header("Content-Type", contentType);
-				yield requestBuilder.method(method.toString(), HttpRequest.BodyPublishers.ofString(body)).build();
-			}
-			// should never happen, as this handler would not have been matched in the first place
-			default -> throw new AssertionError("Unsupported HTTP method: " + method);
-		};
+		HttpRequest request;
+		if (
+			method.equals(HandlerType.GET) ||
+			method.equals(HandlerType.DELETE) ||
+			method.equals(HandlerType.HEAD) ||
+			method.equals(HandlerType.OPTIONS)
+		) {
+			request = requestBuilder.method(method.toString(), HttpRequest.BodyPublishers.noBody()).build();
+		} else if (
+			method.equals(HandlerType.POST) || method.equals(HandlerType.PUT) || method.equals(HandlerType.PATCH)
+		) {
+			String body = ctx.body();
+			String contentType = ctx.contentType() != null ? ctx.contentType() : "application/json";
+			requestBuilder.header("Content-Type", contentType);
+			request = requestBuilder.method(method.toString(), HttpRequest.BodyPublishers.ofString(body)).build();
+		} else {
+			throw new AssertionError("Unsupported HTTP method: " + method);
+		}
 
 		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
