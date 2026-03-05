@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,7 +24,7 @@ export default function AdminRepositories() {
   return (
     <SearchProvider>
       <PaginationProvider pagination={pagination}>
-        <section className="flex-1">
+        <section className="flex-1 overflow-hidden">
           <div className="flex flex-wrap items-center justify-end">
             <Searchbox />
             <Pagination />

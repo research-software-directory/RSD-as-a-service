@@ -1,13 +1,14 @@
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import IconButton from '@mui/material/IconButton'
-import ListItem from '@mui/material/ListItem'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 
+import ListItemWithAction from '~/components/layout/ListItemWithAction'
 import {RepositoryUrl} from '~/components/software/edit/repositories/apiRepositories'
 import RepositoryItemContent from '~/components/software/edit/repositories/RepositoryItemContent'
 
@@ -19,7 +20,7 @@ type AdminRepoListItemProps=Readonly<{
 
 export default function AdminRepoListItem({item,onEdit,onDelete}:AdminRepoListItemProps) {
   return (
-    <ListItem
+    <ListItemWithAction
       secondaryAction={
         <>
           <IconButton
@@ -46,6 +47,6 @@ export default function AdminRepoListItem({item,onEdit,onDelete}:AdminRepoListIt
       }
     >
       <RepositoryItemContent item={item}/>
-    </ListItem>
+    </ListItemWithAction>
   )
 }
