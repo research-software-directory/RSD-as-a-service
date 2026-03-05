@@ -108,6 +108,11 @@ html {
 
 body {
   font-size: 1rem;
+  /* minimal with to have logo,
+  add button, mobile menu and profile.
+  NOTE ! when changing this value we need to update
+  useDisableScrollLock hook in utils folder too.
+  */
   min-width: 30rem;
   /* fix jumping scrollbar */
   overflow: overlay;
