@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -31,6 +32,13 @@ import Announcement from '~/components/Announcement/Announcement'
 import ProgressProviderApp from '~/components/bprogress/ProgressProviderApp'
 
 import '~/styles/global.css'
+
+export const viewport = {
+  // Matches 30rem defined in global.css
+  width: 480,
+  // Do not use initialScale to allow smartphone to scale it properly
+  initialScale: -1,
+}
 
 export const metadata: Metadata = {
   title: 'Home',

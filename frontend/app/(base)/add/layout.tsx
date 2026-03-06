@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2026 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
 
 // force to be dynamic route
 export const dynamic = 'force-dynamic'
@@ -16,7 +20,7 @@ export default function AddLayout({
 }>) {
 
   return (
-    <article className="flex-1 pt-12">
+    <article className="flex-1 p-4 lg:pt-12">
       {children}
     </article>
   )

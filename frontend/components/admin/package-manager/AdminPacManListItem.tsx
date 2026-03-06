@@ -1,13 +1,14 @@
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import IconButton from '@mui/material/IconButton'
-import ListItem from '@mui/material/ListItem'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 
+import ListItemWithAction from '~/components/layout/ListItemWithAction'
 import {PackageManager} from '~/components/software/edit/package-managers/apiPackageManager'
 import PackageManagerItemBody from '~/components/software/edit/package-managers/PackageManagerItemBody'
 
@@ -19,7 +20,7 @@ type AdminPacManListItemProps=Readonly<{
 
 export default function AdminPacManListItem({item,onEdit,onDelete}:AdminPacManListItemProps) {
   return (
-    <ListItem
+    <ListItemWithAction
       secondaryAction={
         <>
           <IconButton
@@ -46,6 +47,6 @@ export default function AdminPacManListItem({item,onEdit,onDelete}:AdminPacManLi
       }
     >
       <PackageManagerItemBody item={item} />
-    </ListItem>
+    </ListItemWithAction>
   )
 }
