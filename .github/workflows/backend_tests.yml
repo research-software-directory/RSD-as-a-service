@@ -13,12 +13,14 @@ on:
     branches:
       - main
     paths:
+      - "authentication/**"
       - "backend-postgrest/**"
       - "codemeta/**"
       - "database/**"
       - "backend-tests/**"
   pull_request:
     paths:
+      - "authentication/**"
       - "backend-postgrest/**"
       - "codemeta/**"
       - "database/**"

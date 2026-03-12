@@ -25,7 +25,7 @@ public class CodemetaIntegrationTest {
 	@Test
 	void givenPublishedSoftwarePage_whenCodemetaApiCalled_thenCorrectResponseReturned() {
 		User user = User.create();
-		SoftwareMetadata softwareMetadata = user.createSoftware("CodeMeta software");
+		SoftwareMetadata softwareMetadata = user.createSoftwareV1("CodeMeta software");
 		String slug = softwareMetadata.slug();
 
 		RestAssured.get(createCodemetaEntryUrl(slug))
