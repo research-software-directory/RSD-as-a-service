@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -47,6 +47,15 @@ public class CreateAccessTokenHandler implements Handler {
 			String jsonError = JsonErrorMessageCreator.createErrorJson(
 				INVALID_ACCESS_TOKEN_REQUEST_MESSAGE,
 				List.of("The expiry date should be in the future")
+			);
+
+			ctx.status(HttpStatus.BAD_REQUEST).json(jsonError);
+			return;
+		}
+		if (LocalDate.now().plusDays(365).isBefore(expiresAt)) {
+			String jsonError = JsonErrorMessageCreator.createErrorJson(
+				INVALID_ACCESS_TOKEN_REQUEST_MESSAGE,
+				List.of("The expiry date should not be more than one year in the future")
 			);
 
 			ctx.status(HttpStatus.BAD_REQUEST).json(jsonError);

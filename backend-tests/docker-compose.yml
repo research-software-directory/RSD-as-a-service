@@ -61,6 +61,23 @@ services:
     networks:
       - net-test
 
+  auth:
+    build: ../authentication
+    image: rsd/auth-tests:1.0.0
+    ports:
+      - "7000:7000"
+    environment:
+      # it uses values from .env file
+      - RSD_ENVIRONMENT=test
+      - POSTGREST_URL=http://backend:3500
+      - PGRST_JWT_SECRET=normally_this_is_a_secret_string_that_none_knows_BUT_this_is_just_a_test
+      - RSD_API_ACCESS_TOKEN_ENABLED=true
+    depends_on:
+      - "database"
+      - "backend"
+    networks:
+      - net-test
+
   postgrest-tests:
     container_name: postgrest-tests
     build:
@@ -72,6 +89,8 @@ services:
       - PGRST_JWT_SECRET=normally_this_is_a_secret_string_that_none_knows_BUT_this_is_just_a_test
       - POSTGREST_URL=http://backend:3500
       - CODEMETA_URL=http://codemeta:8000
+      - AUTH_URL=http://auth:7000/auth
+      - API_V2_URL=http://auth:7000/api/v2
     depends_on:
       - "database"
       - "backend"
