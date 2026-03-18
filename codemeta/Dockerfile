@@ -1,9 +1,9 @@
-# SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-# SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM golang:1.24.4-bookworm AS builder
+FROM golang:1.26.1-trixie AS builder
 
 WORKDIR /usr/src/app
 COPY src .
@@ -12,7 +12,7 @@ RUN go build -v -o /usr/local/bin/app
 RUN go build -v -o /usr/local/bin/scraper-4tu codemeta/scrapers
 
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 # ca-certificates is needed for HTTPS requests to the 4TU API to work
 RUN apt-get update && apt-get install --yes ca-certificates cron nano
