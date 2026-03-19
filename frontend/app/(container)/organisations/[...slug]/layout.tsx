@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -58,7 +59,7 @@ export async function generateMetadata(
     // build metadata
     const metadata = createMetadata({
       domain,
-      page_title: title,
+      page_title: resp?.organisation?.name,
       description,
       url: `https://${domain}/organisations/${slug}`,
       // if image present return array with url else []
