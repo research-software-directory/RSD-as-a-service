@@ -43,153 +43,163 @@ public class Main {
 
 	public static void main(String[] args) {
 		RsdProviders rsdProviders = new RsdProviders();
-		Javalin app = Javalin.create(c -> c.useVirtualThreads = false).start(7000);
+		Javalin app = Javalin.create(c -> {
+			c.concurrency.useVirtualThreads = false;
 
-		app.afterMatched("/auth/login/*", ctx -> ctx.removeCookie(INVITE_COOKIE_NAME, "/auth"));
+			c.routes.afterMatched("/auth/login/*", ctx -> ctx.removeCookie(INVITE_COOKIE_NAME, "/auth"));
 
-		app.get("/auth/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
+			c.routes.get("/auth/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
 
-		app.get("/auth/providers", ctx -> ctx.json(rsdProviders.activeProvidersAsJson()));
+			c.routes.get("/auth/providers", ctx -> ctx.json(rsdProviders.activeProvidersAsJson()));
 
-		app.post(RsdProviders.obtainLoginPath(OpenidProvider.local), ctx ->
-			handleLoginRequest(ctx, OpenidProvider.local, rsdProviders)
-		);
+			c.routes.post(RsdProviders.obtainLoginPath(OpenidProvider.local), ctx ->
+				handleLoginRequest(ctx, OpenidProvider.local, rsdProviders)
+			);
 
-		app.post(RsdProviders.obtainCouplingPath(OpenidProvider.local), ctx ->
-			handleCoupleRequest(ctx, OpenidProvider.local, rsdProviders)
-		);
+			c.routes.post(RsdProviders.obtainCouplingPath(OpenidProvider.local), ctx ->
+				handleCoupleRequest(ctx, OpenidProvider.local, rsdProviders)
+			);
 
-		app.get(RsdProviders.obtainLoginPath(OpenidProvider.surfconext), ctx ->
-			handleLoginRequest(ctx, OpenidProvider.surfconext, rsdProviders)
-		);
+			c.routes.get(RsdProviders.obtainLoginPath(OpenidProvider.surfconext), ctx ->
+				handleLoginRequest(ctx, OpenidProvider.surfconext, rsdProviders)
+			);
 
-		app.get(RsdProviders.obtainCouplingPath(OpenidProvider.surfconext), ctx ->
-			handleCoupleRequest(ctx, OpenidProvider.surfconext, rsdProviders)
-		);
+			c.routes.get(RsdProviders.obtainCouplingPath(OpenidProvider.surfconext), ctx ->
+				handleCoupleRequest(ctx, OpenidProvider.surfconext, rsdProviders)
+			);
 
-		app.get(RsdProviders.obtainLoginPath(OpenidProvider.helmholtz), ctx -> {
-			OpenidProvider helmholtzProvider = OpenidProvider.helmholtz;
-			switch (rsdProviders.accessMethodOfProvider(helmholtzProvider)) {
-				case MISCONFIGURED -> handleMisconfiguredProvider(ctx, helmholtzProvider);
-				case DISABLED -> handleDisabledProvider(ctx, helmholtzProvider);
-				case INVITE_ONLY -> {
-					OpenIdInfo helmholtzInfo = obtainOpenIdInfo(ctx, helmholtzProvider, false);
+			c.routes.get(RsdProviders.obtainLoginPath(OpenidProvider.helmholtz), ctx -> {
+				OpenidProvider helmholtzProvider = OpenidProvider.helmholtz;
+				switch (rsdProviders.accessMethodOfProvider(helmholtzProvider)) {
+					case MISCONFIGURED -> handleMisconfiguredProvider(ctx, helmholtzProvider);
+					case DISABLED -> handleDisabledProvider(ctx, helmholtzProvider);
+					case INVITE_ONLY -> {
+						OpenIdInfo helmholtzInfo = obtainOpenIdInfo(ctx, helmholtzProvider, false);
 
-					handleAccountInviteOnly(helmholtzInfo, helmholtzProvider, ctx);
-				}
-				case EVERYONE -> {
-					OpenIdInfo helmholtzInfo = obtainOpenIdInfo(ctx, helmholtzProvider, false);
-
-					boolean idUserIsHelmholtzMember = helmholtzInfo.organisation() != null;
-					if (!idUserIsHelmholtzMember && !Config.helmholtzIdAllowExternalUsers()) {
-						// If no external members can login by default, access can be granted via invites
 						handleAccountInviteOnly(helmholtzInfo, helmholtzProvider, ctx);
-					} else {
-						handleAccountEveryoneAllowed(helmholtzInfo, helmholtzProvider, ctx);
+					}
+					case EVERYONE -> {
+						OpenIdInfo helmholtzInfo = obtainOpenIdInfo(ctx, helmholtzProvider, false);
+
+						boolean idUserIsHelmholtzMember = helmholtzInfo.organisation() != null;
+						if (!idUserIsHelmholtzMember && !Config.helmholtzIdAllowExternalUsers()) {
+							// If no external members can login by default, access can be granted via invites
+							handleAccountInviteOnly(helmholtzInfo, helmholtzProvider, ctx);
+						} else {
+							handleAccountEveryoneAllowed(helmholtzInfo, helmholtzProvider, ctx);
+						}
 					}
 				}
+			});
+
+			c.routes.get(RsdProviders.obtainCouplingPath(OpenidProvider.helmholtz), ctx ->
+				handleCoupleRequest(ctx, OpenidProvider.helmholtz, rsdProviders)
+			);
+
+			c.routes.get(RsdProviders.obtainLoginPath(OpenidProvider.orcid), ctx ->
+				handleLoginRequest(ctx, OpenidProvider.orcid, rsdProviders)
+			);
+
+			c.routes.get(RsdProviders.obtainCouplingPath(OpenidProvider.orcid), ctx ->
+				handleCoupleRequest(ctx, OpenidProvider.orcid, rsdProviders)
+			);
+
+			c.routes.get(RsdProviders.obtainLoginPath(OpenidProvider.azure), ctx ->
+				handleLoginRequest(ctx, OpenidProvider.azure, rsdProviders)
+			);
+
+			c.routes.get(RsdProviders.obtainCouplingPath(OpenidProvider.azure), ctx ->
+				handleCoupleRequest(ctx, OpenidProvider.azure, rsdProviders)
+			);
+
+			c.routes.get(RsdProviders.obtainLoginPath(OpenidProvider.linkedin), ctx ->
+				handleLoginRequest(ctx, OpenidProvider.linkedin, rsdProviders)
+			);
+
+			c.routes.get(RsdProviders.obtainCouplingPath(OpenidProvider.linkedin), ctx ->
+				handleCoupleRequest(ctx, OpenidProvider.linkedin, rsdProviders)
+			);
+
+			c.routes.get(RsdProviders.obtainLoginPath(OpenidProvider.github), ctx ->
+				handleLoginRequest(ctx, OpenidProvider.github, rsdProviders)
+			);
+
+			c.routes.get(RsdProviders.obtainCouplingPath(OpenidProvider.github), ctx ->
+				handleCoupleRequest(ctx, OpenidProvider.github, rsdProviders)
+			);
+
+			if (Config.isApiAccessTokenEnabled()) {
+				// endpoint for generating new API access token
+				c.routes.post("/auth/accesstoken", new CreateAccessTokenHandler());
+
+				final String accessTokenApiPath = "/api/v2/*";
+				c.routes.beforeMatched(accessTokenApiPath, new ProxyWithAccessTokenBeforeHandler());
+
+				// If an HTTP method get added or removed here, also adapt the switch statement in the ProxyWithAccessTokenHandler
+				c.routes.get(accessTokenApiPath, new ProxyWithAccessTokenHandler());
+				c.routes.post(accessTokenApiPath, new ProxyWithAccessTokenHandler());
+				c.routes.put(accessTokenApiPath, new ProxyWithAccessTokenHandler());
+				c.routes.patch(accessTokenApiPath, new ProxyWithAccessTokenHandler());
+				c.routes.delete(accessTokenApiPath, new ProxyWithAccessTokenHandler());
+				c.routes.head(accessTokenApiPath, new ProxyWithAccessTokenHandler());
+				c.routes.options(accessTokenApiPath, new ProxyWithAccessTokenHandler());
 			}
-		});
 
-		app.get(RsdProviders.obtainCouplingPath(OpenidProvider.helmholtz), ctx ->
-			handleCoupleRequest(ctx, OpenidProvider.helmholtz, rsdProviders)
-		);
+			c.routes.get("/auth/refresh", ctx -> {
+				try {
+					String tokenToVerify = ctx.cookie("rsd_token");
+					String signingSecret = Config.jwtSigningSecret();
+					JwtVerifier verifier = new JwtVerifier(signingSecret);
+					verifier.verify(tokenToVerify);
 
-		app.get(RsdProviders.obtainLoginPath(OpenidProvider.orcid), ctx ->
-			handleLoginRequest(ctx, OpenidProvider.orcid, rsdProviders)
-		);
+					JwtCreator jwtCreator = new JwtCreator(signingSecret);
+					String token = jwtCreator.refreshToken(tokenToVerify);
+					setJwtCookie(ctx, token);
+				} catch (RuntimeException ex) {
+					LOGGER.error("RuntimeException", ex);
+					ctx.status(400);
+					ctx.json("{\"message\": \"failed to refresh token\"}");
+				}
+			});
 
-		app.get(RsdProviders.obtainCouplingPath(OpenidProvider.orcid), ctx ->
-			handleCoupleRequest(ctx, OpenidProvider.orcid, rsdProviders)
-		);
-
-		app.get(RsdProviders.obtainLoginPath(OpenidProvider.azure), ctx ->
-			handleLoginRequest(ctx, OpenidProvider.azure, rsdProviders)
-		);
-
-		app.get(RsdProviders.obtainCouplingPath(OpenidProvider.azure), ctx ->
-			handleCoupleRequest(ctx, OpenidProvider.azure, rsdProviders)
-		);
-
-		app.get(RsdProviders.obtainLoginPath(OpenidProvider.linkedin), ctx ->
-			handleLoginRequest(ctx, OpenidProvider.linkedin, rsdProviders)
-		);
-
-		app.get(RsdProviders.obtainCouplingPath(OpenidProvider.linkedin), ctx ->
-			handleCoupleRequest(ctx, OpenidProvider.linkedin, rsdProviders)
-		);
-
-		app.get(RsdProviders.obtainLoginPath(OpenidProvider.github), ctx ->
-			handleLoginRequest(ctx, OpenidProvider.github, rsdProviders)
-		);
-
-		app.get(RsdProviders.obtainCouplingPath(OpenidProvider.github), ctx ->
-			handleCoupleRequest(ctx, OpenidProvider.github, rsdProviders)
-		);
-
-		if (Config.isApiAccessTokenEnabled()) {
-			// endpoint for generating new API access token
-			app.post("/auth/accesstoken", new CreateAccessTokenHandler());
-
-			final String accessTokenApiPath = "/api/v2/*";
-			app.beforeMatched(accessTokenApiPath, new ProxyWithAccessTokenBeforeHandler());
-
-			// If an HTTP method get added or removed here, also adapt the switch statement in the ProxyWithAccessTokenHandler
-			app.get(accessTokenApiPath, new ProxyWithAccessTokenHandler());
-			app.post(accessTokenApiPath, new ProxyWithAccessTokenHandler());
-			app.put(accessTokenApiPath, new ProxyWithAccessTokenHandler());
-			app.patch(accessTokenApiPath, new ProxyWithAccessTokenHandler());
-			app.delete(accessTokenApiPath, new ProxyWithAccessTokenHandler());
-			app.head(accessTokenApiPath, new ProxyWithAccessTokenHandler());
-			app.options(accessTokenApiPath, new ProxyWithAccessTokenHandler());
-		}
-
-		app.get("/auth/refresh", ctx -> {
-			try {
-				String tokenToVerify = ctx.cookie("rsd_token");
-				String signingSecret = Config.jwtSigningSecret();
-				JwtVerifier verifier = new JwtVerifier(signingSecret);
-				verifier.verify(tokenToVerify);
-
-				JwtCreator jwtCreator = new JwtCreator(signingSecret);
-				String token = jwtCreator.refreshToken(tokenToVerify);
-				setJwtCookie(ctx, token);
-			} catch (RuntimeException ex) {
-				LOGGER.error("RuntimeException", ex);
+			c.routes.exception(JWTVerificationException.class, (ex, ctx) -> {
+				LOGGER.error("JWTVerificationException", ex);
 				ctx.status(400);
-				ctx.json("{\"message\": \"failed to refresh token\"}");
-			}
+				ctx.json("{\"message\": \"invalid JWT\"}");
+			});
+
+			c.routes.exception(RsdAuthenticationException.class, (ex, ctx) -> {
+				setLoginFailureCookieAndRedirect(ctx, ex.getMessage());
+			});
+
+			c.routes.exception(RsdAccessTokenException.class, (ex, ctx) -> {
+				LOGGER.error("RsdAccessTokenException", ex);
+				ctx.status(400);
+				ctx.json("{\"message\": \"Error when creating access token\"}");
+			});
+
+			c.routes.exception(RsdAccountInviteException.class, (ex, ctx) -> {
+				setLoginFailureCookieAndRedirect(ctx, ex.getMessage());
+			});
+
+			c.routes.exception(RuntimeException.class, (ex, ctx) -> {
+				LOGGER.error("RuntimeException", ex);
+				setLoginFailureCookieAndRedirect(
+					ctx,
+					"Something unexpected went wrong, please try again or contact us."
+				);
+			});
+
+			c.routes.exception(Exception.class, (ex, ctx) -> {
+				LOGGER.error("Exception", ex);
+				setLoginFailureCookieAndRedirect(
+					ctx,
+					"Something unexpected went wrong, please try again or contact us."
+				);
+			});
 		});
 
-		app.exception(JWTVerificationException.class, (ex, ctx) -> {
-			LOGGER.error("JWTVerificationException", ex);
-			ctx.status(400);
-			ctx.json("{\"message\": \"invalid JWT\"}");
-		});
-
-		app.exception(RsdAuthenticationException.class, (ex, ctx) -> {
-			setLoginFailureCookieAndRedirect(ctx, ex.getMessage());
-		});
-
-		app.exception(RsdAccessTokenException.class, (ex, ctx) -> {
-			LOGGER.error("RsdAccessTokenException", ex);
-			ctx.status(400);
-			ctx.json("{\"message\": \"Error when creating access token\"}");
-		});
-
-		app.exception(RsdAccountInviteException.class, (ex, ctx) -> {
-			setLoginFailureCookieAndRedirect(ctx, ex.getMessage());
-		});
-
-		app.exception(RuntimeException.class, (ex, ctx) -> {
-			LOGGER.error("RuntimeException", ex);
-			setLoginFailureCookieAndRedirect(ctx, "Something unexpected went wrong, please try again or contact us.");
-		});
-
-		app.exception(Exception.class, (ex, ctx) -> {
-			LOGGER.error("Exception", ex);
-			setLoginFailureCookieAndRedirect(ctx, "Something unexpected went wrong, please try again or contact us.");
-		});
+		app.start(7000);
 	}
 
 	static void handleLoginRequest(Context ctx, OpenidProvider openidProvider, RsdProviders rsdProviders)

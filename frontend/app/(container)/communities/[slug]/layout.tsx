@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2026 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
 
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
@@ -53,7 +57,7 @@ export async function generateMetadata(
     // build metadata
     const metadata = createMetadata({
       domain,
-      page_title: title,
+      page_title: community?.name,
       description,
       url: `https://${domain}/communities/${slug}`,
       // if image present return array with url else []
