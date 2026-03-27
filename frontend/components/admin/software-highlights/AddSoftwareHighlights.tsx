@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +12,7 @@ import {HTMLAttributes, useState} from 'react'
 
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {getBaseUrl} from '~/utils/fetchHelpers'
-import {softwareListUrl} from '~/utils/postgrestUrl'
+import {localSoftwareListUrl} from '~/utils/postgrestUrl'
 import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
 import {getSoftwareList} from '~/components/software/apiSoftware'
 import AsyncAutocompleteSC, {AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
@@ -37,15 +38,14 @@ export default function AddSoftwareHighlights({onAddSoftware,highlights}:AddSoft
   async function searchSoftware(searchFor: string) {
     setStatus({loading: true, foundFor: undefined})
 
-    const url = softwareListUrl({
+    const url = localSoftwareListUrl({
       baseUrl: getBaseUrl(),
       search: searchFor,
-      order: 'mention_cnt.desc.nullslast,contributor_cnt.desc.nullslast,updated_at.desc.nullslast',
       limit: 50,
       offset: 0,
     })
-    // get software list, we do not pass the token
-    // when token is passed it will return not published items too
+    // get software list, we do not pass the token;
+    // when token is passed, it will return non-published items too
     const resp= await getSoftwareList({url})
     // remove items already in highlights
     const software = itemsNotInReferenceList({

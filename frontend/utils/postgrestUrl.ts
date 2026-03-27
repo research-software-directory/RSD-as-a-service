@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -343,6 +343,35 @@ export function baseQueryString(props: BaseQueryStringProps) { // NOSONAR - avoi
   // console.log('query...', query)
   // console.groupEnd()
   return query
+}
+
+export function localSoftwareListUrl(props: PostgrestParams) {
+  const {baseUrl, search} = props
+  let query = baseQueryString(props)
+  let url = ''
+
+  if (search) {
+    // console.log('localSoftwareListUrl...keywords...', props.keywords)
+    const encodedSearch = encodeURIComponent(search)
+    // search query is performed in aggregated_software_search RPC
+    // we search in title,subtitle,slug,keywords_text and prog_lang
+    // check rpc in 104-software-views.sql.sql for exact filtering
+    query += `&search=${encodedSearch}`
+
+    url = `${baseUrl}/rpc/software_search`
+    // console.log('localSoftwareListUrl...', url)
+  } else {
+    url = `${baseUrl}/rpc/software_overview`
+  }
+
+  if (!props.categories) {
+    const selectList = 'id,slug,brand_name,short_statement,image_id,updated_at,contributor_cnt,mention_cnt,is_published,keywords,keywords_text,prog_lang,licenses'
+    query += `&select=${selectList}`
+  }
+
+  url += `?${query}`
+  // console.log('localSoftwareListUrl...', url)
+  return url
 }
 
 export function softwareListUrl(props: PostgrestParams) {
