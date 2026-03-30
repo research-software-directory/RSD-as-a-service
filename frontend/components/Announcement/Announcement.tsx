@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023, 2026 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023, 2026 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023-2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023-2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,7 +20,7 @@ export default function Announcement({announcement}: {announcement: string | nul
 
   return (
     <div
-      className="flex justify-center items-center fixed bottom-0 right-0 w-full bg-warning text-warning-content text-xl px-4"
+      className="flex justify-center items-center fixed bottom-0 right-0 w-full bg-warning text-warning-content text-xl px-4 z-50"
     >
       <ErrorIcon/>
       <span className='flex-1 py-8 ml-2'>{announcement}</span>
