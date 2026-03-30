@@ -3,8 +3,8 @@
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 dv4all
 # SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-# SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-# SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -16,7 +16,7 @@ on:
 jobs:
   release_tag:
     name: conventional changelog
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       changelog: ${{steps.changelog.outputs.clean_changelog}}
       tag: ${{steps.changelog.outputs.tag}}
@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: checkout all history
         # https://github.com/actions/checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # checkout whole history
           fetch-depth: 0
@@ -50,7 +50,7 @@ jobs:
   log_release_tag:
     needs: release_tag
     name: log version output
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: info
         run: |
@@ -196,11 +196,11 @@ jobs:
     if: needs.release_tag.outputs.skipped == 'false'
     needs: [ release_tag,auth,database,backend,frontend,nginx,scrapers,documentation,codemeta,background-services ]
     name: create deployment.zip
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: checkout branch
         # https://github.com/actions/checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: update docker-compose.yml
         run: |
@@ -228,14 +228,14 @@ jobs:
 
       - name: Upload deployment.zip
         # https://github.com/actions/upload-artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: deployment
           path: deployment.zip
 
       - name: Upload CITATION.cff
         # https://github.com/actions/upload-artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: citation
           path: CITATION.cff
@@ -245,10 +245,10 @@ jobs:
     if: needs.release_tag.outputs.skipped == 'false'
     needs: [ release_tag, deployment_files ]
     name: create release draft
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: get deployment.zip
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: deployment
 

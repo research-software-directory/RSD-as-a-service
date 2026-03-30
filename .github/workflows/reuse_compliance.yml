@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre for Environmental Research (UFZ)
 # SPDX-FileCopyrightText: 2022 dv4all
+# SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2026 Netherlands eScience Center
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -12,8 +14,8 @@ on:
   workflow_dispatch:
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-    - uses: "actions/checkout@v2"
+    - uses: "actions/checkout@v6"
     - name: "REUSE Compliance Check"
-      uses: "fsfe/reuse-action@v1.1.1"
+      uses: "fsfe/reuse-action@v6"

@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 dv4all
-# SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-# SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -45,14 +45,14 @@ on:
 jobs:
   build_and_push:
     name: build and push image
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       image_build: ${{steps.build_image.outputs.image_build}}
       image_pushed: ${{steps.build_image.outputs.image_pushed}}
     steps:
       - name: checkout
         # https://github.com/actions/checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: build
         id: build_image
         run: |
