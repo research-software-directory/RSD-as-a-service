@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 - 2023 dv4all
-# SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 # SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
@@ -32,10 +32,10 @@ on:
 jobs:
   ubuntu-v22:
     timeout-minutes: 30
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 24.10
           cache: 'npm'
@@ -71,13 +71,13 @@ jobs:
       - name: run e2e tests in chrome
         working-directory: e2e
         run: npm run e2e:chrome:action
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-report
           path: e2e/playwright-report/
           retention-days: 30
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: browser state and .env file

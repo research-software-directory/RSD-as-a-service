@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 dv4all
+# SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-# SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-# SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -33,18 +33,18 @@ on:
 jobs:
   commit_cff:
     name: commit cff
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: checkout ${{inputs.branch}}
         # https://github.com/actions/checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{inputs.branch}}
           # use PAT secret to be able to commit to protected master branch
           token: ${{secrets.token}}
 
       - name: download ${{inputs.artifact}}
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: ${{inputs.artifact}}
 
