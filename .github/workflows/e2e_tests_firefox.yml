@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
-          node-version: 24.10
+          node-version: 24.14
           cache: 'npm'
           cache-dependency-path: e2e/package-lock.json
       - name: get playwright version
