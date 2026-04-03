@@ -18,34 +18,33 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
-    "baseUrl": ".",
     "paths": {
       "~/app/*": [
-        "app/*"
+        "./app/*"
       ],
       "~/assets/*": [
-        "assets/*"
+        "./assets/*"
       ],
       "~/auth": [
-        "auth"
+        "./auth"
       ],
       "~/auth/*": [
-        "auth/*"
+        "./auth/*"
       ],
       "~/components/*": [
-        "components/*"
+        "./components/*"
       ],
       "~/config/*": [
-        "config/*"
+        "./config/*"
       ],
       "~/types/*": [
-        "types/*"
+        "./types/*"
       ],
       "~/styles/*": [
-        "styles/*"
+        "./styles/*"
       ],
       "~/utils/*": [
-        "utils/*"
+        "./utils/*"
       ]
     },
     "plugins": [

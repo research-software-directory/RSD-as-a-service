@@ -131,9 +131,9 @@ services:
       # rsd version passed into image
       # for release the tag is passed in GH action _ghcr.yml
       args:
-        APP_VERSION: "6.0.1"
+        APP_VERSION: "6.0.2"
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend:6.0.1
+    image: rsd/frontend:6.0.2
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -215,7 +215,7 @@ services:
       context: ./documentation
       # dockerfile to use for build
       dockerfile: Dockerfile
-    image: rsd/documentation:5.3.1
+    image: rsd/documentation:5.3.2
     expose:
       - "80"
     networks:
@@ -318,7 +318,7 @@ services:
 
   data-generation:
     build: ./data-generation
-    image: rsd/generation:1.6.0
+    image: rsd/generation:1.6.1
     environment:
       # it needs to be here to use values from .env file
       - PGRST_JWT_SECRET

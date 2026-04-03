@@ -2,12 +2,13 @@
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Image from 'next/image'
 
-import {HomeProps} from 'app/page'
+import {HomeProps} from '~/app/page'
 import {useSession} from '~/auth/AuthProvider'
 import MainContent from '~/components/layout/MainContent'
 import ContentLoader from '~/components/layout/ContentLoader'
