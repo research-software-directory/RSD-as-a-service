@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -86,7 +86,7 @@ export default function ReleaseItem({release}: {release: SoftwareReleaseInfo}) {
 
         <div className='flex-1 flex flex-col'>
           {/* name and version */}
-          <div className="flex-1 grid grid-cols-[1fr_5rem] gap-4">
+          <div className="flex-1 grid grid-cols-2 justify-between gap-4">
 
             <Link
               title="Link to RSD page"
@@ -102,10 +102,12 @@ export default function ReleaseItem({release}: {release: SoftwareReleaseInfo}) {
               }} />
             </Link>
 
-            <LinkToVersionDoi
-              tag={release.release_tag}
-              doi={release.release_doi}
-            />
+            <div className="justify-self-end">
+              <LinkToVersionDoi
+                tag={release.release_tag}
+                doi={release.release_doi}
+              />
+            </div>
           </div>
           {/* authors, contributors */}
           {release.release_authors?.length > 0 ?

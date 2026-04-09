@@ -6,7 +6,10 @@
  * SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
  * SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
  * SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+ * SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (ICL) <d.alonso-alvarez@imperial.ac.uk>
  * SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
+ * SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+ * SPDX-FileCopyrightText: 2026 Imperial College London
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -115,7 +118,7 @@ body {
   */
   min-width: 30rem;
   /* fix jumping scrollbar */
-  overflow: overlay;
+  overflow: auto;
   --scrollbar-thumb: #e4e4e7;
 }
 
@@ -198,3 +201,13 @@ body {
   }
 }
 
+/* Visually hidden class for accessibility, used for screen readers
+https://www.accessibility-developer-guide.com/examples/headings/visually-hidden-headings/
+*/
+.visually-hidden {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
