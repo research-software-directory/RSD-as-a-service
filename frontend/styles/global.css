@@ -7,6 +7,7 @@
  * SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
  * SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
  * SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
+ * SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -115,7 +116,7 @@ body {
   */
   min-width: 30rem;
   /* fix jumping scrollbar */
-  overflow: overlay;
+  overflow: auto;
   --scrollbar-thumb: #e4e4e7;
 }
 

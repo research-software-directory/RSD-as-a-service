@@ -131,9 +131,9 @@ services:
       # rsd version passed into image
       # for release the tag is passed in GH action _ghcr.yml
       args:
-        APP_VERSION: "6.0.2"
+        APP_VERSION: "6.0.3"
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend:6.0.2
+    image: rsd/frontend:6.0.3
     environment:
       # it uses values from .env file
       - POSTGREST_URL
