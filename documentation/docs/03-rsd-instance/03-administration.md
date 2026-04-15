@@ -221,7 +221,7 @@ fill the `provenance_iri` column. Further read [Linked Data](https://en.wikipedi
 
 ## Mentions
 
-In this section, admins can search for mentions and edit them. If you enter a DOI or UUID, we search on that field only. Otherwise, we search on title, authors, journal, URL, note and OpenAlex ID.
+In this section, admins can search for mentions and edit them. You an also see where the mention is used. If you enter a DOI or UUID, we search on that field only. Otherwise, we search on title, authors, journal, URL, note and OpenAlex ID.
 
 :::warning
 Edit mentions with care: they might be referenced to in multiple places. If you want to fully change a mention attached to e.g. a software page, you should delete it there and create a new one instead of editing it.
@@ -229,7 +229,7 @@ Edit mentions with care: they might be referenced to in multiple places. If you 
 
 ## Repositories
 
-In this section admins can manage software repository entries. The background services use repository url and the platform information to "scrape" additional information about the software. When background service fails it logs the error. The error message is shown to software maintainers. However the background services will continue trying to retrieve additional information from the platform API.
+In this section admins can manage software repository entries. The background services use repository URL and the platform information to "scrape" additional information about the software. When background service fails it logs the error. The error message is shown to software maintainers. However the background services will continue trying to retrieve additional information from the platform API.
 
 :::tip
 The admins can exclude/disable background services for the specific repository by providing the reason for exclusion. The reason is shown to maintainers of the software. In short, if the 'Reason why scraping is disabled' has an value the repository will be excluded from background services.
@@ -243,14 +243,14 @@ Deleting the repository entry will remove it from all software entries including
 
 ## Package Managers
 
-Similar to repositories this section shows all package managers entries in the RSD. The background services try to extract additional information from the url the maintainers added to their software.
+Similar to repositories this section shows all package managers entries in the RSD. The background services try to extract additional information from the URL the maintainers added to their software.
 
 Admin can disable background services for specific package manager entry by providing the explanation / reason in the 'Reason to disable [service name]' input. This reason will be shown to software maintainers.
 
 :::info
-The package manager entries are currently not normalized in the RSD, so there could be multiple entries of the same package manager url in the RSD.
+The package manager entries are currently not normalised in the RSD, so there could be multiple entries of the same package manager URL in the RSD.
 
-If you need to disable background services for specific url you should first search for all entries and change them all in the same way. In the future we expect to "normalize" package manager url.
+If you need to disable background services for specific URL you should first search for all entries and change them all in the same way. In the future we expect to "normalise" package manager URL.
 :::
 
 ![image](img/admin-package-managers.webp)
@@ -298,7 +298,7 @@ This section is used to show public announcements to all users of the RSD. It is
 RSD administrators are able to create news items. The additional option "Add news" will appear in the "+" menu at the top right of the page header.
 
 :::info
-News section is separate module defined in the settings.json. When enabled the News will be shown on homepage and if defined in settings the main menu entry will appear.
+News section is a separate module defined in the settings.json. When enabled, the News will be shown on the homepage, and if defined in settings, the main menu entry will appear.
 :::
 
 ### Add news item
@@ -307,8 +307,8 @@ Using the "Add news" option in the "+" menu will open add news item page where y
 
 :::info
 
-- The news item url (slug) is generated using publication date and title.
-- In case the slug is already taken the warning will appear below the url. You can manually change the url part created from the title or change the publication date if possible.
+- The news item URL (slug) is generated using publication date and title.
+- In case the slug is already taken the warning will appear below the URL. You can manually change the URL part created from the title or change the publication date if possible.
 
 :::
 
@@ -321,7 +321,7 @@ After news item is created you will be redirected to edit news item page. Here y
 :::info
 
 - Summary is used in the latest news section of the homepage and in the news card on the news overview.
-- Publication date is shown in the header of the news title. It can be changed at any time. Note that changing the publication title also changes public url of the news item.
+- Publication date is shown in the header of the news title. It can be changed at any time. Note that changing the publication title also changes public URL of the news item.
 - First uploaded image is used in the news card.
 - Using "Copy link" button you can copy the Markdown syntax to the clipboard and the paste the link at the desired location of the body.
 - Using "Delete" button will delete the image and the Markdown link syntax from the news body.

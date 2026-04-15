@@ -53,6 +53,8 @@ services:
       - PGRST_DB_SCHEMA
       - PGRST_SERVER_PORT
       - PGRST_JWT_SECRET
+      - PGRST_DB_POOL=30
+      - PGRST_DB_POOL_ACQUISITION_TIMEOUT=30
     depends_on:
       - database
     networks:
@@ -133,7 +135,7 @@ services:
       args:
         APP_VERSION: "6.0.3"
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend:6.0.3
+    image: rsd/frontend:6.1.0
     environment:
       # it uses values from .env file
       - POSTGREST_URL
