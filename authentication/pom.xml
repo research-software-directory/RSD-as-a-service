@@ -180,7 +180,7 @@ SPDX-License-Identifier: Apache-2.0
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-crypto</artifactId>
-			<version>7.0.3</version>
+			<version>7.0.5</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
@@ -194,7 +194,7 @@ SPDX-License-Identifier: Apache-2.0
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15to18</artifactId>
-			<version>1.83</version>
+			<version>1.84</version>
 		</dependency>
 	</dependencies>
 
