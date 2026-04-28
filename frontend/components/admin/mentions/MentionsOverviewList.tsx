@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,7 +20,6 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import MentionLocations from '~/components/admin/mentions/MentionLocations'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
-import Paper from '@mui/material/Paper'
 
 function leaveOutSomeFieldsReplacer(key: string, value: any) {
   if (key === 'id' || key === 'doi_registration_date' || key === 'created_at' || key === 'updated_at') {
@@ -59,14 +59,15 @@ function AdminMention({mention, idx, onUpdate}: Readonly<{mention: MentionItemPr
         <IconButton onClick={() => setModalOpen(true)} ><EditIcon></EditIcon></IconButton>
         <IconButton
           aria-label={isOpenMentionLocations ? `Hide usages of ${mention.title}` : `Show usages of ${mention.title}`}
-          onClick={() => setIsOpenMentionLocations(!isOpenMentionLocations)}>
+          onClick={() => setIsOpenMentionLocations(!isOpenMentionLocations)}
+        >
           <HubIcon />
         </IconButton>
       </div>
-      {isOpenMentionLocations &&
-        <Paper variant="outlined" sx={{padding: '1em', margin: '1em', backgroundColor: 'var(--rsd-base-300)'}}>
-          <MentionLocations mentionId={mention.id as string}/>
-        </Paper>}
+      {isOpenMentionLocations ?
+        <MentionLocations mentionId={mention.id as string}/>
+        : null
+      }
       {modalOpen ?
         <EditMentionModal
           title={mention.id as string ?? 'undefined'}

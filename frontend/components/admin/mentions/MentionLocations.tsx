@@ -1,13 +1,15 @@
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useEffect, useState} from 'react'
+import Paper from '@mui/material/Paper'
 import CircularProgress from '@mui/material/CircularProgress'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import Link from 'next/link'
-import {useEffect, useState} from 'react'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
@@ -131,13 +133,20 @@ export default function MentionLocations({mentionId}: Readonly<{mentionId: strin
 
   return (
     <>
-      {mentionLocations.entries().map(entry => {
+      {Array.from(mentionLocations.entries()).map(entry => {
         if (entry[1].length === 0) {
           return null
         }
 
         return (
-          <>
+          <Paper
+            key={typeToHeader.get(entry[0])}
+            variant="outlined"
+            sx={{
+              padding: '1em',
+              margin: '1em',
+              backgroundColor: 'var(--rsd-base-200)'
+            }}>
             <h3>{typeToHeader.get(entry[0])}:</h3>
             <List>
               {entry[1].map((item) => {
@@ -149,7 +158,7 @@ export default function MentionLocations({mentionId}: Readonly<{mentionId: strin
                 )
               })}
             </List>
-          </>
+          </Paper>
         )
       })}
     </>
