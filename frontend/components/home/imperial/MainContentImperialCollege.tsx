@@ -2,7 +2,9 @@
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (ICL) <d.alonso-alvarez@imperial.ac.uk>
 // SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,6 +24,7 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
 
   return (
     <MainContent>
+      <h1 className="visually-hidden">Body</h1>
       <div className="w-10/12 mx-auto p-5 md:p-10 grid lg:grid-cols-[1fr_1fr] gap-[2rem]">
         <div className="flex flex-col justify-left">
           <Image
@@ -44,6 +47,7 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
       </div>
 
       <div className="max-w-(--breakpoint-xl) mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
+        <h2 className="visually-hidden">Statistics</h2>
         <CounterBox
           label="Software Submissions"
           value={counts.software_cnt?.toString() ?? ''}
