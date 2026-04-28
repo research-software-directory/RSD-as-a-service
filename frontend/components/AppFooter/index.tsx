@@ -5,6 +5,8 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (ICL) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,6 +23,7 @@ export default function AppFooter () {
 
   return (
     <footer className="flex flex-wrap text-primary-content border-t bg-secondary border-base-300">
+      <h1 className="visually-hidden">Footer</h1>
       <div className="grid grid-cols-1 gap-8 px-4 md:grid-cols-[2fr_1fr] lg:container lg:mx-auto">
         <div className="pt-8 md:py-8">
           <p className="text-lg">
