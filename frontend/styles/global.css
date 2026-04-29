@@ -200,14 +200,3 @@ body {
     display: none;
   }
 }
-
-/* Visually hidden class for accessibility, used for screen readers
-https://www.accessibility-developer-guide.com/examples/headings/visually-hidden-headings/
-*/
-.visually-hidden {
-  position: absolute;
-  left: -10000px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}

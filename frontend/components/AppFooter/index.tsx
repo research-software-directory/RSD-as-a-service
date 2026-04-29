@@ -22,8 +22,9 @@ export default function AppFooter () {
   const {pages,links,host} = useRsdSettings()
 
   return (
-    <footer className="flex flex-wrap text-primary-content border-t bg-secondary border-base-300">
-      <h1 className="visually-hidden">Footer</h1>
+    <footer 
+      aria-label="Site Footer"
+      className="flex flex-wrap text-primary-content border-t bg-secondary border-base-300">
       <div className="grid grid-cols-1 gap-8 px-4 md:grid-cols-[2fr_1fr] lg:container lg:mx-auto">
         <div className="pt-8 md:py-8">
           <p className="text-lg">
@@ -34,10 +35,12 @@ export default function AppFooter () {
           <div className="py-4"></div>
           <OrganisationLogo host={host} />
         </div>
-        <div className="pb-8 md:py-8 flex flex-col gap-2">
-          <MarkdownPages pages={pages ?? []} />
-          <CustomLinks links={links ?? []} />
-        </div>
+        <nav aria-label="Footer Navigation">
+          <div className="pb-8 md:py-8 flex flex-col gap-2">
+            <MarkdownPages pages={pages ?? []} />
+            <CustomLinks links={links ?? []} />
+          </div>
+        </nav>
       </div>
     </footer>
   )

@@ -39,10 +39,10 @@ export default function AppHeader() {
   return (
     <header
       data-testid="app-header"
+      aria-label="Site Header"
       className="z-12 py-4 min-h-[88px] bg-secondary text-primary-content flex items-center flex-wrap"
     >
       {/* keep these styles in sync with main in MainContent.tsx */}
-      <h1 className="visually-hidden">Navigation</h1>
       <div
         className="flex-1 flex flex-col px-4 xl:flex-row items-start lg:container lg:mx-auto">
         <div className="w-full flex-1 flex items-center justify-between">
