@@ -15,7 +15,9 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,6 +39,31 @@ class OpenAlexConnector {
 	// The docs and empirical experiments indicate 10 requests per second.
 	// We make it slightly lower to be safe.
 	private static final Throttler apiThrottler = new Throttler(9, 1050, TimeUnit.MILLISECONDS);
+
+	private static final Map<String, MentionType> openalexTypeMap = new HashMap<>();
+
+	static {
+		// https://developers.openalex.org/api-reference/work-types
+		openalexTypeMap.put("article", MentionType.journalArticle);
+		openalexTypeMap.put("book", MentionType.book);
+		openalexTypeMap.put("book-chapter", MentionType.bookSection);
+		openalexTypeMap.put("dataset", MentionType.dataset);
+		openalexTypeMap.put("dissertation", MentionType.thesis);
+		openalexTypeMap.put("editorial", MentionType.journalArticle);
+		openalexTypeMap.put("erratum", MentionType.other);
+		openalexTypeMap.put("letter", MentionType.other);
+		openalexTypeMap.put("libguides", MentionType.other);
+		openalexTypeMap.put("other", MentionType.other);
+		openalexTypeMap.put("paratext", MentionType.other);
+		openalexTypeMap.put("peer-review", MentionType.other);
+		openalexTypeMap.put("preprint", MentionType.other);
+		openalexTypeMap.put("reference-entry", MentionType.other);
+		openalexTypeMap.put("report", MentionType.report);
+		openalexTypeMap.put("retraction", MentionType.other);
+		openalexTypeMap.put("review", MentionType.other);
+		openalexTypeMap.put("standard", MentionType.other);
+		openalexTypeMap.put("supplementary-materials", MentionType.other);
+	}
 
 	private static String doOpenAlexGetRequest(String url)
 		throws IOException, InterruptedException, RsdResponseException {
@@ -231,8 +258,8 @@ class OpenAlexConnector {
 
 		Integer publicationYear = Utils.integerOrNull(citationObject.get("publication_year"));
 
-		String crossrefType = Utils.stringOrNull(citationObject.get("type_crossref"));
-		MentionType mentionType = CrossrefMention.crossrefTypeMap.getOrDefault(crossrefType, MentionType.other);
+		String type = Utils.stringOrNull(citationObject.get("type"));
+		MentionType mentionType = openalexTypeMap.getOrDefault(type, MentionType.other);
 
 		String openalexIdString = citationObject.getAsJsonObject("ids").getAsJsonPrimitive("openalex").getAsString();
 		OpenalexId openalexId = OpenalexId.fromString(openalexIdString);

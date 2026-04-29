@@ -141,7 +141,7 @@ export async function getCrossrefItemsByTitle(title: string) {
   }
 }
 
-export function crossrefToRsdType(type: string): MentionTypeKeys {
+function crossrefToRsdType(type: string): MentionTypeKeys {
   if (!type) return 'other'
   switch (type.trim().toLowerCase()) {
     case 'book':
