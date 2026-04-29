@@ -2,7 +2,7 @@
 	"dependencies": {
 		"@faker-js/faker": "10.3.0",
 		"jsonwebtoken": "9.0.3",
-		"wait-on": "9.0.4"
+		"wait-on": "9.0.5"
 	},
 	"name": "data-generator",
 	"version": "1.0.0",
