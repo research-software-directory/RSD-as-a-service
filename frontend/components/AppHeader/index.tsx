@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -67,10 +68,10 @@ export default function AppHeader() {
           <GlobalSearchAutocomplete className="hidden xl:block ml-12 mr-6"/>
 
           {/* Large menu*/}
-          <nav aria-label="Main Navigation" className="flex items-center">
+          <nav aria-label="Main Navigation" className="flex-1 flex items-center">
             <DesktopMenu activePath={pathname ?? '/'}/>
 
-            <div className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
+            <div className="flex-1 flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4 text-primary-content">
               {/* FEEDBACK panel */}
               {host.feedback?.enabled
                 ? <FeedbackPanelButton
