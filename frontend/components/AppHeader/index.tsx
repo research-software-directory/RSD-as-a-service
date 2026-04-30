@@ -64,16 +64,14 @@ export default function AppHeader() {
           </Link>
 
           {/* Global search for desktop */}
-          <search aria-label='Search RSD website'>
+          <search aria-label="Search RSD website">
             <GlobalSearchAutocomplete className="hidden xl:block ml-12 mr-6"/>
           </search>
 
           {/* Large menu*/}
-          <nav aria-label="Section Navigation">
+          <nav aria-label="Main Navigation" className="flex items-center">
             <DesktopMenu activePath={pathname ?? '/'}/>
-          </nav>
 
-          <nav aria-label="User Management">
             <div className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
               {/* FEEDBACK panel */}
               {host.feedback?.enabled
