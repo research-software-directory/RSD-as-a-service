@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
@@ -162,35 +162,24 @@ function crossrefToRsdType(type: string): MentionTypeKeys {
       return 'conferencePaper'
     case 'dissertation':
       return 'thesis'
+    case 'database':
     case 'dataset':
       return 'dataset'
-    // n/a
-    // case 'interview':
-    //   return 'interview'
     case 'journal':
     case 'journal-article':
     case 'journal-volume':
     case 'journal-issue':
     case 'journal article':
       return 'journalArticle'
-    // n/a
-    // case 'magazine-article':
-    //   return 'magazineArticle'
-    // case 'newspaper-article':
-    //   return 'newspaperArticle'
     case 'presentation':
       return 'presentation'
     case 'report-series':
     case 'report':
+    case 'report-component':
       return 'report'
     case 'software':
     case 'computer-program':
       return 'computerProgram'
-    // n/a
-    // case 'video-recording':
-    //   return 'videoRecording'
-    // case 'webpage':
-    //   return 'webpage'
     default:
       return 'other'
   }
