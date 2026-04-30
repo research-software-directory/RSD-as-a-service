@@ -64,9 +64,7 @@ export default function AppHeader() {
           </Link>
 
           {/* Global search for desktop */}
-          <search aria-label="Search RSD website">
-            <GlobalSearchAutocomplete className="hidden xl:block ml-12 mr-6"/>
-          </search>
+          <GlobalSearchAutocomplete className="hidden xl:block ml-12 mr-6"/>
 
           {/* Large menu*/}
           <nav aria-label="Main Navigation" className="flex items-center">
