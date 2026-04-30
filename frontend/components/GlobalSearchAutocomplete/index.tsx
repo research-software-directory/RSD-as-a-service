@@ -5,6 +5,8 @@
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -292,7 +294,8 @@ export default function GlobalSearchAutocomplete(props: Props) {
           onKeyDown={handleKeyDown}
           type="text"
           onFocus={focusSearch}
-          aria-label="Search for software"
+          aria-label="Search RSD website"
+          role="search"
         />
         <span
           className="absolute top-[9px] right-2 text-base-600"

@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -37,6 +39,7 @@ export default function AppHeader() {
   return (
     <header
       data-testid="app-header"
+      aria-label="Site Header"
       className="z-12 py-4 min-h-[88px] bg-secondary text-primary-content flex items-center flex-wrap"
     >
       {/* keep these styles in sync with main in MainContent.tsx */}
@@ -64,25 +67,27 @@ export default function AppHeader() {
           <GlobalSearchAutocomplete className="hidden xl:block ml-12 mr-6"/>
 
           {/* Large menu*/}
-          <DesktopMenu activePath={pathname ?? '/'}/>
+          <nav aria-label="Main Navigation" className="flex items-center">
+            <DesktopMenu activePath={pathname ?? '/'}/>
 
-          <div className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
-            {/* FEEDBACK panel */}
-            {host.feedback?.enabled
-              ? <FeedbackPanelButton
-                feedback_email={host.feedback.url}
-                issues_page_url={host.feedback.issues_page_url}
-                host_label={host.feedback.host_label}
-              />
-              : null
-            }
-            {/* ADD menu button */}
-            {status === 'authenticated' ? <AddMenu/> : null}
-            {/* Responsive menu */}
-            <ResponsiveMenu activePath={pathname ?? '/'} />
-            {/* LOGIN / USER MENU */}
-            <LoginButton/>
-          </div>
+            <div className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
+              {/* FEEDBACK panel */}
+              {host.feedback?.enabled
+                ? <FeedbackPanelButton
+                  feedback_email={host.feedback.url}
+                  issues_page_url={host.feedback.issues_page_url}
+                  host_label={host.feedback.host_label}
+                />
+                : null
+              }
+              {/* ADD menu button */}
+              {status === 'authenticated' ? <AddMenu/> : null}
+              {/* Responsive menu */}
+              <ResponsiveMenu activePath={pathname ?? '/'} />
+              {/* LOGIN / USER MENU */}
+              <LoginButton/>
+            </div>
+          </nav>
         </div>
 
         {/* Global search for tablet & mobile */}
