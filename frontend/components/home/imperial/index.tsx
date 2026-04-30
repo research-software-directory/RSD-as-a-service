@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez () <d.alonso-alvarez@imperial.ac.uk>
 // SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (ICL) <d.alonso-alvarez@imperial.ac.uk>
 // SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2026 Imperial College London
@@ -19,7 +20,7 @@ import useImperialData from './useImperialData'
 import CounterBox from './CounterBox'
 import Keywords from './Keywords'
 
-export default function ImperialCollegeHome({counts,news}: HomeProps) {
+export default function ImperialCollegeHome({counts}: HomeProps) {
   const {token} = useSession()
   const {loading, keywords} = useImperialData(token)
 
@@ -48,7 +49,7 @@ export default function ImperialCollegeHome({counts,news}: HomeProps) {
             </div>
           </div>
         </div>
-  
+
         {/* Counters */}
         <div className="max-w-(--breakpoint-xl) mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
           <h2 className="sr-only">Statistics</h2>
@@ -61,7 +62,7 @@ export default function ImperialCollegeHome({counts,news}: HomeProps) {
             value={counts.software_mention_cnt?.toString() ?? ''}
           />
         </div>
-  
+
         {/* Keywords */}
         {
           loading ?

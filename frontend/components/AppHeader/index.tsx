@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (ICL) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
 // SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -69,27 +69,29 @@ export default function AppHeader() {
           </search>
 
           {/* Large menu*/}
-          <nav aria-label="Primary Navigation">
+          <nav aria-label="Section Navigation">
             <DesktopMenu activePath={pathname ?? '/'}/>
           </nav>
 
-          <div className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
-            {/* FEEDBACK panel */}
-            {host.feedback?.enabled
-              ? <FeedbackPanelButton
-                feedback_email={host.feedback.url}
-                issues_page_url={host.feedback.issues_page_url}
-                host_label={host.feedback.host_label}
-              />
-              : null
-            }
-            {/* ADD menu button */}
-            {status === 'authenticated' ? <AddMenu/> : null}
-            {/* Responsive menu */}
-            <ResponsiveMenu activePath={pathname ?? '/'} />
-            {/* LOGIN / USER MENU */}
-            <LoginButton/>
-          </div>
+          <nav aria-label="User Management">
+            <div className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
+              {/* FEEDBACK panel */}
+              {host.feedback?.enabled
+                ? <FeedbackPanelButton
+                  feedback_email={host.feedback.url}
+                  issues_page_url={host.feedback.issues_page_url}
+                  host_label={host.feedback.host_label}
+                />
+                : null
+              }
+              {/* ADD menu button */}
+              {status === 'authenticated' ? <AddMenu/> : null}
+              {/* Responsive menu */}
+              <ResponsiveMenu activePath={pathname ?? '/'} />
+              {/* LOGIN / USER MENU */}
+              <LoginButton/>
+            </div>
+          </nav>
         </div>
 
         {/* Global search for tablet & mobile */}
