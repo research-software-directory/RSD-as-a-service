@@ -33,13 +33,6 @@ import ProgressProviderApp from '~/components/bprogress/ProgressProviderApp'
 
 import '~/styles/global.css'
 
-export const viewport = {
-  // Matches 30rem defined in global.css
-  width: 480,
-  // Do not use initialScale to allow smartphone to scale it properly
-  initialScale: -1,
-}
-
 export const metadata: Metadata = {
   title: 'Home',
   description: 'Welcome to RSD',
