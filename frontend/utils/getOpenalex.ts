@@ -1,11 +1,10 @@
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
-import {MentionItemProps} from '~/types/Mention'
-import {crossrefToRsdType} from '~/utils/getCrossref'
+import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 
 export async function getMentionByOpenalexId(id: string) {
   try {
@@ -161,7 +160,7 @@ export function openalexItemToMentionItem(json: any): MentionItemProps {
     // url to external image
     image_url: null,
     // is_featured?: boolean
-    mention_type: crossrefToRsdType(json.type_crossref),
+    mention_type: openalexToRsdType(json.type),
     source: 'OpenAlex',
     note: null
   })
@@ -169,4 +168,29 @@ export function openalexItemToMentionItem(json: any): MentionItemProps {
 
 function extractAuthors(json: any): string {
   return json.authorships.map((authorship: any) => authorship.raw_author_name as string).join(', ')
+}
+
+function openalexToRsdType(type: string): MentionTypeKeys {
+  switch (type) {
+    case 'article': return 'journalArticle'
+    case 'book': return 'book'
+    case 'book-chapter': return 'bookSection'
+    case 'dataset': return 'dataset'
+    case 'dissertation': return 'thesis'
+    case 'editorial': return 'journalArticle'
+    case 'erratum': return 'other'
+    case 'letter': return 'other'
+    case 'libguides': return 'other'
+    case 'other': return 'other'
+    case 'paratext': return 'other'
+    case 'peer-review': return 'other'
+    case 'preprint': return 'other'
+    case 'reference-entry': return 'other'
+    case 'report': return 'report'
+    case 'retraction': return 'other'
+    case 'review': return 'other'
+    case 'standard': return 'other'
+    case 'supplementary-materials': return 'other'
+    default: return 'other'
+  }
 }

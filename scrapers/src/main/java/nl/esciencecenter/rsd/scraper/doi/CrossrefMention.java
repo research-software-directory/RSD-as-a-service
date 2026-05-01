@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -23,14 +23,15 @@ import nl.esciencecenter.rsd.scraper.Utils;
 
 public class CrossrefMention {
 
-	static final Map<String, MentionType> crossrefTypeMap;
+	private static final Map<String, MentionType> crossrefTypeMap;
 
 	static {
-		//		https://api.crossref.org/types
+		// https://api.crossref.org/types
 		crossrefTypeMap = new HashMap<>();
 
 		crossrefTypeMap.put("book-section", MentionType.bookSection);
 		crossrefTypeMap.put("monograph", MentionType.other);
+		crossrefTypeMap.put("report-component", MentionType.report);
 		crossrefTypeMap.put("report", MentionType.report);
 		crossrefTypeMap.put("peer-review", MentionType.other);
 		crossrefTypeMap.put("book-track", MentionType.book);
@@ -48,6 +49,7 @@ public class CrossrefMention {
 		crossrefTypeMap.put("proceedings-series", MentionType.conferencePaper);
 		crossrefTypeMap.put("report-series", MentionType.report);
 		crossrefTypeMap.put("proceedings", MentionType.conferencePaper);
+		crossrefTypeMap.put("database", MentionType.dataset);
 		crossrefTypeMap.put("standard", MentionType.other);
 		crossrefTypeMap.put("reference-book", MentionType.book);
 		crossrefTypeMap.put("posted-content", MentionType.other);
@@ -57,7 +59,6 @@ public class CrossrefMention {
 		crossrefTypeMap.put("dataset", MentionType.dataset);
 		crossrefTypeMap.put("book-series", MentionType.book);
 		crossrefTypeMap.put("edited-book", MentionType.book);
-		crossrefTypeMap.put("standard-series", MentionType.other);
 	}
 
 	private final Doi doi;

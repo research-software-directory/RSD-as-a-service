@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -70,9 +70,10 @@ public class DataciteMentionRepository {
 	private static final Pattern URL_TREE_TAG_PATTERN = Pattern.compile("/tree/([^/]+)$");
 
 	static {
-		// https://schema.datacite.org/meta/kernel-4.4/
+		// https://schema.datacite.org/meta/kernel-4.7/
 		dataciteTypeMap = new HashMap<>();
 		dataciteTypeMap.put("Audiovisual", MentionType.presentation);
+		dataciteTypeMap.put("Award", MentionType.other);
 		dataciteTypeMap.put("Book", MentionType.book);
 		dataciteTypeMap.put("BookChapter", MentionType.bookSection);
 		dataciteTypeMap.put("Collection", MentionType.other);
@@ -84,19 +85,24 @@ public class DataciteMentionRepository {
 		dataciteTypeMap.put("Dissertation", MentionType.thesis);
 		dataciteTypeMap.put("Event", MentionType.workshop);
 		dataciteTypeMap.put("Image", MentionType.other);
+		dataciteTypeMap.put("Instrument", MentionType.other);
 		dataciteTypeMap.put("InteractiveResource", MentionType.other);
 		dataciteTypeMap.put("Journal", MentionType.journalArticle);
 		dataciteTypeMap.put("JournalArticle", MentionType.journalArticle);
 		dataciteTypeMap.put("Model", MentionType.other);
 		dataciteTypeMap.put("OutputManagementPlan", MentionType.other);
 		dataciteTypeMap.put("PeerReview", MentionType.other);
+		dataciteTypeMap.put("Poster", MentionType.poster);
 		dataciteTypeMap.put("Preprint", MentionType.other);
+		dataciteTypeMap.put("Presentation", MentionType.presentation);
+		dataciteTypeMap.put("Project", MentionType.other);
 		dataciteTypeMap.put("PhysicalObject", MentionType.other);
 		dataciteTypeMap.put("Report", MentionType.report);
 		dataciteTypeMap.put("Service", MentionType.other);
 		dataciteTypeMap.put("Software", MentionType.computerProgram);
 		dataciteTypeMap.put("Sound", MentionType.other);
 		dataciteTypeMap.put("Standard", MentionType.other);
+		dataciteTypeMap.put("StudyRegistration", MentionType.thesis);
 		// dataciteTypeMap.put("Text", MentionType.other);
 		dataciteTypeMap.put("Workflow", MentionType.other);
 		dataciteTypeMap.put("Other", MentionType.other);
