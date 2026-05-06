@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -36,9 +37,7 @@ export default function PaginationLinkApp({count,page,className}:PaginationLinkP
             urlParams.set('page',item.page.toString())
             const url = `${pathname}?${urlParams.toString()}`
             return (
-              <Link href={url}>
-                <PaginationItem {...item}/>
-              </Link>
+              <PaginationItem {...item} component={Link} href={url} />
             )
           } else {
             return (
