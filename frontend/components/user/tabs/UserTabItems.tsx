@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,6 +26,16 @@ export type UserPageTabItemProps = {
 
 export type UserTabProps = {
   [key in UserPageId]: UserPageTabItemProps
+}
+
+export const userPageTitles: Record<string, string> = {
+  software: 'My Software',
+  projects: 'My Projects',
+  organisations: 'My Organisations',
+  communities: 'My Communities',
+  'project-quality': 'Project metadata',
+  settings: 'Settings',
+  about: 'About',
 }
 
 /**
