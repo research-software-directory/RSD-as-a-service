@@ -24,7 +24,7 @@ export async function generateMetadata({params }: {params: Promise<{tab: UserPag
   const {token} = await getUserSettings()
   const user = await getUserFromToken(token)
   const {tab} = await params
-  const tabLabel = userPageTitles[tab] ?? ''
+  const tabLabel = userPageTitles[tab] ?? 'User'
 
   // if user exists we create metadata
   return {
