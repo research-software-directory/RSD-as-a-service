@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 import EditSoftwareCommunities from '~/components/software/edit/communities'
@@ -17,9 +22,34 @@ import SoftwareRepositories from '~/components/software/edit/repositories'
 
 import {app} from '~/config/app'
 
-export const metadata: Metadata = {
-  title: `Edit software | ${app.title}`,
-  description: 'Edit software page',
+const editSoftwarePageTitle: Record<EditSoftwarePageId, string> = {
+  information: 'Information',
+  links: 'Links',
+  repositories: 'Repositories',
+  contributors: 'Contributors',
+  organisations: 'Organisations',
+  mentions: 'Mentions',
+  testimonials: 'Testimonials',
+  'package-managers': 'Package managers',
+  'software-heritage': 'Software Heritage',
+  communities: 'Communities',
+  'related-software': 'Related software',
+  'related-projects': 'Related projects',
+  maintainers: 'Maintainers',
+  services: ''
+}
+
+export async function generateMetadata({
+  params
+}:Readonly<{
+  params: Promise<{slug: string, page: EditSoftwarePageId}>
+}>): Promise<Metadata> {
+  const {page} = await params
+  const pageTitle = editSoftwarePageTitle[page]
+  return {
+    title: pageTitle ? `${pageTitle} | Edit software | ${app.title}` : `Edit software | ${app.title}`,
+    description: 'Edit software page',
+  }
 }
 
 export default async function EditSoftwarePageRouter({
