@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 import {headers} from 'next/headers'
@@ -77,15 +82,15 @@ export async function generateMetadata(
   // console.log('resp...', resp)
   // console.groupEnd()
 
-  // if organisation exists we create metadata
-  if (software?.brand_name && software?.description){
+  // if brand_name and short_statement are present
+  if (software?.brand_name && software?.short_statement){
     // extract domain to use in url
     const domain = headersList.get('host') || ''
     // build metadata
     const metadata = createMetadata({
       domain,
       page_title: software?.brand_name,
-      description: software.description,
+      description: software?.short_statement,
       url: `https://${domain}/software/${slug}`,
       // if image present return array with image else []
       image_url: software.image_id ? [
