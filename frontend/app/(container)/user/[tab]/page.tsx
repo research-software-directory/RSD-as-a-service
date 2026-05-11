@@ -18,15 +18,38 @@ import ProjectQuality from '~/components/user/project-quality'
 import UserSettings from '~/components/user/settings'
 import UserSoftware from '~/components/user/software'
 import {UserPageId, userPageTitles} from '~/components/user/tabs/UserTabItems'
+import {UserSettingsTab, settingsMenu} from '~/components/user/settings/nav/UserSettingsNavItems'
 
-export async function generateMetadata({params }: {params: Promise<{tab: UserPageId}>}): Promise<Metadata> {
+export async function generateMetadata({params,searchParams}: {
+  params: Promise<{tab: UserPageId}>
+  searchParams: Promise<{settings?: UserSettingsTab}>
+}): Promise<Metadata> {
   // read route params
   const {token} = await getUserSettings()
   const user = await getUserFromToken(token)
-  const {tab} = await params
+  const [{tab},{settings}] = await Promise.all([
+    params,
+    searchParams
+  ])
   const tabLabel = userPageTitles[tab] ?? 'User'
 
-  // if user exists we create metadata
+  // console.group('UserPageRouter.generateMetadata')
+  // console.log('tab...', tab)
+  // console.log('settings...', settings)
+  // console.groupEnd()
+
+  // when settings page we also need to extract settings tab
+  if (tab==='settings'){
+    // find settings tab
+    const settingsTab = settingsMenu.find(item=>item.id===settings)
+    const settingTitle = settingsTab?.label() ?? 'Profile'
+    return {
+      title: `${settingTitle} | ${user?.name ?? 'User'} | ${app.title}`,
+      description: `${tabLabel} pages for ${user?.name ?? 'User'}`
+    }
+  }
+
+  // other user pages without additional settings tab
   return {
     title: `${tabLabel} | ${user?.name ?? 'User'} | ${app.title}`,
     description: `${tabLabel} pages for ${user?.name ?? 'User'}`

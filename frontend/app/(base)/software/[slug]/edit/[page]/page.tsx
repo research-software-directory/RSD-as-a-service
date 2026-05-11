@@ -7,7 +7,7 @@ import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 import EditSoftwareCommunities from '~/components/software/edit/communities'
 import EditSoftwareContributors from '~/components/software/edit/contributors'
-import {EditSoftwarePageId} from '~/components/software/edit/editSoftwareMenuItems'
+import {editSoftwareMenuItems, EditSoftwarePageId} from '~/components/software/edit/editSoftwareMenuItems'
 import EditSoftwareDescriptionPage from '~/components/software/edit/information'
 import EditSoftwareLinksPage from '~/components/software/edit/links'
 import EditSoftwareMaintainers from '~/components/software/edit/maintainers'
@@ -22,32 +22,16 @@ import SoftwareRepositories from '~/components/software/edit/repositories'
 
 import {app} from '~/config/app'
 
-const editSoftwarePageTitle: Record<EditSoftwarePageId, string> = {
-  information: 'Information',
-  links: 'Links',
-  repositories: 'Repositories',
-  contributors: 'Contributors',
-  organisations: 'Organisations',
-  mentions: 'Mentions',
-  testimonials: 'Testimonials',
-  'package-managers': 'Package managers',
-  'software-heritage': 'Software Heritage',
-  communities: 'Communities',
-  'related-software': 'Related software',
-  'related-projects': 'Related projects',
-  maintainers: 'Maintainers',
-  services: ''
-}
-
 export async function generateMetadata({
   params
 }:Readonly<{
   params: Promise<{slug: string, page: EditSoftwarePageId}>
 }>): Promise<Metadata> {
   const {page} = await params
-  const pageTitle = editSoftwarePageTitle[page]
+  const menuItem = editSoftwareMenuItems.find(item => item.id === page)
   return {
-    title: pageTitle ? `${pageTitle} | Edit software | ${app.title}` : `Edit software | ${app.title}`,
+    // use label of the menu item to added to page title
+    title: menuItem ? `${menuItem.label} | Edit software | ${app.title}` : `Edit software | ${app.title}`,
     description: 'Edit software page',
   }
 }

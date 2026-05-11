@@ -8,7 +8,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 'use client'
-import {useEffect} from 'react'
 import {useSearchParams} from 'next/navigation'
 
 import {UserSettingsTab} from './nav/UserSettingsNavItems'
@@ -17,21 +16,10 @@ import UserProfilePage from './profile'
 import UserAgreementsPage from './agreements'
 import UserAccessTokensPage from './accesstokens'
 
-export const settingsSubpageTitles: Record<UserSettingsTab, string> = {
-  profile: 'Profile',
-  about: 'About Me',
-  agreements: 'User Agreements',
-  accesstokens: 'API Access Tokens',
-}
 
 export default function UserSettingsContent() {
   const searchParams = useSearchParams()
   const settings = searchParams?.get('settings') as UserSettingsTab ?? 'profile' as UserSettingsTab
-
-  useEffect(() => {
-    const subpageLabel = settingsSubpageTitles[settings] ?? 'Profile'
-    document.title = `${subpageLabel} | ${document.title}`
-  }, [settings])
 
   switch (settings) {
     case 'about':
