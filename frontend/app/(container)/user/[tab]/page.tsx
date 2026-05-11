@@ -17,7 +17,7 @@ import UserProjects from '~/components/user/project'
 import ProjectQuality from '~/components/user/project-quality'
 import UserSettings from '~/components/user/settings'
 import UserSoftware from '~/components/user/software'
-import {UserPageId, userPageTitles} from '~/components/user/tabs/UserTabItems'
+import {UserPageId, userTabItems} from '~/components/user/tabs/UserTabItems'
 import {UserSettingsTab, settingsMenu} from '~/components/user/settings/nav/UserSettingsNavItems'
 
 export async function generateMetadata({params,searchParams}: {
@@ -31,7 +31,7 @@ export async function generateMetadata({params,searchParams}: {
     params,
     searchParams
   ])
-  const tabLabel = userPageTitles[tab] ?? 'User'
+  const tabInfo = userTabItems[tab] ?? 'User'
 
   // console.group('UserPageRouter.generateMetadata')
   // console.log('tab...', tab)
@@ -45,14 +45,14 @@ export async function generateMetadata({params,searchParams}: {
     const settingTitle = settingsTab?.label() ?? 'Profile'
     return {
       title: `${settingTitle} | ${user?.name ?? 'User'} | ${app.title}`,
-      description: `${tabLabel} pages for ${user?.name ?? 'User'}`
+      description: `${tabInfo?.pageTitle} pages for ${user?.name ?? 'User'}`
     }
   }
 
   // other user pages without additional settings tab
   return {
-    title: `${tabLabel} | ${user?.name ?? 'User'} | ${app.title}`,
-    description: `${tabLabel} pages for ${user?.name ?? 'User'}`
+    title: `${tabInfo?.pageTitle} | ${user?.name ?? 'User'} | ${app.title}`,
+    description: `${tabInfo?.pageTitle} pages for ${user?.name ?? 'User'}`
   }
 }
 

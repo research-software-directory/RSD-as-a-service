@@ -22,20 +22,11 @@ export type UserPageTabItemProps = {
   label: (props:any)=>string,
   icon: JSX.Element,
   isVisible: (props: any) => boolean
+  pageTitle: string
 }
 
 export type UserTabProps = {
   [key in UserPageId]: UserPageTabItemProps
-}
-
-export const userPageTitles: Record<string, string> = {
-  software: 'My Software',
-  projects: 'My Projects',
-  organisations: 'My Organisations',
-  communities: 'My Communities',
-  'project-quality': 'Project metadata',
-  settings: 'Settings',
-  about: 'About',
 }
 
 /**
@@ -51,6 +42,7 @@ export const userTabItems:UserTabProps = {
     isVisible: ({modules}) => {
       return modules?.includes('software')
     },
+    pageTitle: 'My software'
   },
   projects:{
     id:'projects',
@@ -59,6 +51,7 @@ export const userTabItems:UserTabProps = {
     isVisible: ({modules}) => {
       return modules?.includes('projects')
     },
+    pageTitle: 'My projects'
   },
   organisations: {
     id:'organisations',
@@ -67,6 +60,7 @@ export const userTabItems:UserTabProps = {
     isVisible: ({modules}) => {
       return modules?.includes('organisations')
     },
+    pageTitle: 'My organisations'
   },
   communities:{
     id:'communities',
@@ -75,20 +69,23 @@ export const userTabItems:UserTabProps = {
     isVisible: ({modules}) => {
       return modules?.includes('communities') && modules?.includes('software')
     },
+    pageTitle: 'My communities'
   },
   'project-quality':{
     id:'project-quality',
     label: () => 'Project metadata',
     icon: <TableViewIcon />,
     // we do not show this option if not a maintainer and project
-    isVisible: ({isMaintainer,modules}) => isMaintainer && modules?.includes('projects')
+    isVisible: ({isMaintainer,modules}) => isMaintainer && modules?.includes('projects'),
+    pageTitle: 'Project metadata'
   },
   settings:{
     id:'settings',
     label:()=>'Settings',
     icon: <SettingsIcon />,
     // we do not show this option if not a maintainer
-    isVisible: ({isMaintainer}) => isMaintainer
+    isVisible: ({isMaintainer}) => isMaintainer,
+    pageTitle: 'Settings'
   },
   about: {
     id:'about',
@@ -104,5 +101,6 @@ export const userTabItems:UserTabProps = {
       // else the description is present and we show about section
       else return true
     },
+    pageTitle: 'About'
   }
 }
