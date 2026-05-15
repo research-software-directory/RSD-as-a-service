@@ -7,19 +7,19 @@
 // SPDX-FileCopyrightText: 2024 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 PERFACCT GmbH
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
 'use client'
 import {useRouter, useParams} from 'next/navigation'
-import Link from 'next/link'
 
 import List from '@mui/material/List'
-import ListItemButton from '@mui/material/ListItemButton'
+import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 
-import {editMenuItemButtonSx} from '~/config/menuItems'
 import useRsdSettings from '~/config/useRsdSettings'
 import {usePluginSlots} from '~/config/RsdPluginContext'
 import SvgFromString from '~/components/icons/SvgFromString'
@@ -44,20 +44,35 @@ export default function EditSoftwareNav({slug}:Readonly<{slug:string}>) {
       }}>
         {editSoftwareMenuItems.map(item => {
           if (item.active({modules:activeModules})===true){
+            const isSelected = item.id === pageId
             return (
-              <ListItemButton
+              <ListItem
                 data-testid="edit-software-nav-item"
                 key={item.id}
-                selected={item.id === pageId}
-                href={`/software/${slug}/edit/${item.id}`}
-                LinkComponent={Link}
-                sx={editMenuItemButtonSx}
+                tabIndex={0}
+                onClick={() => {
+                  router.push(`/software/${slug}/edit/${item.id}`)
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    router.push(`/software/${slug}/edit/${item.id}`)
+                  }
+                }}
+                sx={{
+                  cursor: 'pointer',
+                  ...(isSelected && {
+                    backgroundColor: 'action.selected',
+                    '& > div > span': {
+                      fontWeight: 500
+                    }
+                  })
+                }}
               >
                 <ListItemIcon>
                   {item.icon}
                 </ListItemIcon>
                 <ListItemText primary={item.label} secondary={item.status} />
-              </ListItemButton>
+              </ListItem>
             )
           }
         })}
@@ -65,20 +80,27 @@ export default function EditSoftwareNav({slug}:Readonly<{slug:string}>) {
           pluginSlots.map((pluginSlot) => {
             const url = pluginSlot.href ? pluginSlot.href.replace('{slug}', slug) : '#'
             return (
-              <ListItemButton
+              <ListItem
                 data-testid="edit-software-plugin-item"
                 key={pluginSlot.title}
-                selected={false}
+                tabIndex={0}
                 onClick={() => {
                   router.push(url)
                 }}
-                sx={editMenuItemButtonSx}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    router.push(url)
+                  }
+                }}
+                sx={{
+                  cursor: 'pointer'
+                }}
               >
                 <ListItemIcon>
                   <SvgFromString svg={pluginSlot.icon}/>
                 </ListItemIcon>
                 <ListItemText primary={pluginSlot.title} secondary={''} />
-              </ListItemButton>
+              </ListItem>
             )
           })
         }
