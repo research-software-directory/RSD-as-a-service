@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -88,14 +90,14 @@ User Agent: ${navigator.userAgent}`
         fullScreen={fullScreen}
         open={open}
         onClose={handleClose}
-        aria-labelledby="responsive-dialog-title"
+        aria-labelledby="feedback-dialog-title"
         disableScrollLock={disable}
       >
         <div className="h-full w-full bg-base-700 p-5 ">
           <div className="mx-auto max-w-[500px]">
-            <div className="text-base-100 text-xl mb-4">
+            <h2 className="text-base-100 mb-4" id="feedback-dialog-title">
               Send Feedback
-            </div>
+            </h2>
             <textarea
               autoFocus
               className="placeholder:text-base-500 outline-0 p-2 w-full h-28 text-sm bg-base-700 text-base-100 border border-base-600 rounded-sm"
