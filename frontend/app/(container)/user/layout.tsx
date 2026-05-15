@@ -1,7 +1,10 @@
-import {Metadata} from 'next'
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {notFound} from 'next/navigation'
 
-import {app} from '~/config/app'
 import {getUserFromToken} from '~/auth/getSessionServerSide'
 import ProtectedContent from '~/auth/ProtectedContent'
 import PageErrorMessage from '~/components/layout/PageErrorMessage'
@@ -12,29 +15,6 @@ import UserMetadata from '~/components/user/metadata'
 import UserAgreementModal from '~/components/user/settings/agreements/UserAgreementModal'
 import {loadUserProfile} from '~/components/user/settings/profile/apiUserProfile'
 import UserTabs from '~/components/user/tabs/UserTabs'
-
-/**
- * Next.js app builtin function to dynamically create page metadata
- * @param param0
- * @returns
- */
-export async function generateMetadata(): Promise<Metadata> {
-  // read route params
-  const {token} = await getUserSettings()
-  const user = await getUserFromToken(token)
-
-  // console.group('UserPageLayout.generateMetadata')
-  // console.log('token...', token)
-  // console.log('user...', user)
-  // console.groupEnd()
-
-  // if user exists we create metadata
-  return {
-    title: `${user?.name ?? 'User'} | ${app.title}`,
-    description: `${user?.name ?? 'User'} pages`
-  }
-
-}
 
 /**
  * (Partial) Layout of organisation page content.
