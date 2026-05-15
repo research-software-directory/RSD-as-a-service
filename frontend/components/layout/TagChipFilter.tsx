@@ -1,11 +1,15 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
+'use client'
+
+import NextLink from 'next/link'
+import MuiLink from '@mui/material/Link'
 import Chip from '@mui/material/Chip'
 import SearchIcon from '@mui/icons-material/Search'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -63,15 +67,11 @@ export default function TagChipFilter({
   )
 
   return (
-    <Link
-      href={url}
-      passHref
-    >
+    <MuiLink component={NextLink} href={url}>
       <Chip
         title={`Click to filter for ${title ? title : label}`}
         label={label}
         icon={<SearchIcon />}
-        clickable
         sx={{
           maxWidth: '19rem',
           borderRadius: '0.125rem',
@@ -84,6 +84,6 @@ export default function TagChipFilter({
           }
         }}
       />
-    </Link>
+    </MuiLink>
   )
 }
