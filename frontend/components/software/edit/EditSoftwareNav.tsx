@@ -2,19 +2,21 @@
 // SPDX-FileCopyrightText: 2022 - 2024 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 - 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 PERFACCT GmbH
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 'use client'
-import {useRouter, useParams} from 'next/navigation'
+import {useParams} from 'next/navigation'
 import Link from 'next/link'
 
 import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
@@ -26,7 +28,6 @@ import SvgFromString from '~/components/icons/SvgFromString'
 import {editSoftwareMenuItems} from './editSoftwareMenuItems'
 
 export default function EditSoftwareNav({slug}:Readonly<{slug:string}>) {
-  const router = useRouter()
   const params = useParams()
   const pageId = params?.page
   const {activeModules} = useRsdSettings()
@@ -38,26 +39,36 @@ export default function EditSoftwareNav({slug}:Readonly<{slug:string}>) {
   // console.groupEnd()
 
   return (
-    <nav>
+    // 1. Label the nav so screen readers know its purpose
+    <nav aria-label="Edit software navigation">
       <List sx={{
         width:['100%','100%','15rem']
       }}>
         {editSoftwareMenuItems.map(item => {
           if (item.active({modules:activeModules})===true){
+            const isSelected = item.id === pageId
             return (
-              <ListItemButton
-                data-testid="edit-software-nav-item"
+              // 2. Wrap button in a semantic ListItem (<li>)
+              <ListItem
                 key={item.id}
-                selected={item.id === pageId}
-                href={`/software/${slug}/edit/${item.id}`}
-                LinkComponent={Link}
-                sx={editMenuItemButtonSx}
+                disablePadding
               >
-                <ListItemIcon>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.label} secondary={item.status} />
-              </ListItemButton>
+                <ListItemButton
+                  data-testid="edit-software-nav-item"
+                  selected={isSelected}
+                  href={`/software/${slug}/edit/${item.id}`}
+                  LinkComponent={Link}
+                  // 3. Inform screen readers which page is active
+                  aria-current={isSelected ? 'page' : undefined}
+                  sx={editMenuItemButtonSx}
+                >
+                  {/* 4. Hide icons from screen readers if they are purely decorative */}
+                  <ListItemIcon aria-hidden="true">
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={item.label} secondary={item.status} />
+                </ListItemButton>
+              </ListItem>
             )
           }
         })}
@@ -65,20 +76,27 @@ export default function EditSoftwareNav({slug}:Readonly<{slug:string}>) {
           pluginSlots.map((pluginSlot) => {
             const url = pluginSlot.href ? pluginSlot.href.replace('{slug}', slug) : '#'
             return (
-              <ListItemButton
-                data-testid="edit-software-plugin-item"
+              // 2. Wrap button in a semantic ListItem (<li>)
+              <ListItem
                 key={pluginSlot.title}
-                selected={false}
-                onClick={() => {
-                  router.push(url)
-                }}
-                sx={editMenuItemButtonSx}
+                disablePadding
               >
-                <ListItemIcon>
-                  <SvgFromString svg={pluginSlot.icon}/>
-                </ListItemIcon>
-                <ListItemText primary={pluginSlot.title} secondary={''} />
-              </ListItemButton>
+                <ListItemButton
+                  data-testid="edit-software-plugin-item"
+                  selected={false}
+                  href={url}
+                  LinkComponent={Link}
+                  // 3. Inform screen readers which page is active
+                  aria-current={undefined}
+                  sx={editMenuItemButtonSx}
+                >
+                  {/* 4. Hide icons from screen readers if they are purely decorative */}
+                  <ListItemIcon aria-hidden="true">
+                    <SvgFromString svg={pluginSlot.icon}/>
+                  </ListItemIcon>
+                  <ListItemText primary={pluginSlot.title} secondary={''} />
+                </ListItemButton>
+              </ListItem>
             )
           })
         }
@@ -86,4 +104,3 @@ export default function EditSoftwareNav({slug}:Readonly<{slug:string}>) {
     </nav>
   )
 }
-
