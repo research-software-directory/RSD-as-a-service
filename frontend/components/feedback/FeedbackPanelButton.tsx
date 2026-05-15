@@ -95,9 +95,9 @@ User Agent: ${navigator.userAgent}`
       >
         <div className="h-full w-full bg-base-700 p-5 ">
           <div className="mx-auto max-w-[500px]">
-            <h1 className="text-base-100 mb-4" id="feedback-dialog-title">
+            <h2 className="text-base-100 mb-4" id="feedback-dialog-title">
               Send Feedback
-            </h1>
+            </h2>
             <textarea
               autoFocus
               className="placeholder:text-base-500 outline-0 p-2 w-full h-28 text-sm bg-base-700 text-base-100 border border-base-600 rounded-sm"
