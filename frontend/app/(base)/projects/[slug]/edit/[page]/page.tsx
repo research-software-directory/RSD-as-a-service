@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2026 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 
@@ -10,10 +15,20 @@ import RelatedProjectsForProject from '~/components/projects/edit/related-projec
 import RelatedSoftwareForProject from '~/components/projects/edit/related-software'
 import ProjectTeam from '~/components/projects/edit/team'
 import ProjectTestimonials from '~/components/projects/edit/testimonials'
+import {editProjectMenuItems, EditProjectPageId} from '~/components/projects/edit/editProjectMenuItems'
 
-export const metadata: Metadata = {
-  title: `Edit project | ${app.title}`,
-  description: 'Edit project page',
+export async function generateMetadata({
+  params
+}:Readonly<{
+  params: Promise<{slug: string, page: EditProjectPageId}>
+}>): Promise<Metadata> {
+  const {page} = await params
+  const menuItem = editProjectMenuItems.find(item => item.id === page)
+  return {
+    // use label of the menu item to added to page title
+    title: menuItem ? `${menuItem.label} | Edit project | ${app.title}` : `Edit project | ${app.title}`,
+    description: 'Edit project page',
+  }
 }
 
 export default async function EditProjectPageRouter({
