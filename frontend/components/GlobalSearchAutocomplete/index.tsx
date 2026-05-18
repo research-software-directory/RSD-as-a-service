@@ -6,7 +6,7 @@
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
-// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center) <d.mijatovic@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -235,7 +235,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
     }
   }
 
-  function handleChange(e: React.FormEvent<HTMLInputElement>) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const search = e.currentTarget.value
     // Update state
     setInputValue(search)
@@ -309,15 +309,18 @@ export default function GlobalSearchAutocomplete(props: Props) {
             onKeyDown={handleKeyDown}
             type="text"
             onFocus={focusSearch}
-            // Tells AT this input controls a dynamic dropdown panel
+            // AI-assisted suggestion using Google search AI-Mode
             role="combobox"
+            // AI-assisted suggestion using Google search AI-Mode
             // Notifies user that typing populates a list below
             aria-autocomplete="list"
             // Dynamic state: true when dropdown opens, false when closed
             aria-expanded={isOpen}
+            // AI-assisted suggestion Google seach AI-Mode
             // Direct semantic link to the list wrapper element id
             aria-controls="global-search-results"
-            // Tells AT which item is highlighted via your arrow keys
+            // AI-assisted suggestion Google seach AI-Mode
+            // Tells which item is highlighted via arrow keys
             aria-activedescendant={selected !== -1 && isOpen ? `search-item-${selected}` : undefined}
           />
         </label>
@@ -327,11 +330,14 @@ export default function GlobalSearchAutocomplete(props: Props) {
         >{searchCombo}</span>
 
         {isOpen &&
-          <ul
+          <ul // NOSONAR
+            // AI-assisted suggestion Google seach AI-Mode
             // Matches the aria-controls tag on the input element
             id="global-search-results"
-            // Tells AT that this div wrapper contains listbox options
+            // AI-assisted suggestion Google seach AI-Mode
+            // Tells that this ul wrapper contains listbox options
             role="listbox"
+            // AI-assisted suggestion Google seach AI-Mode
             aria-label="Search results"
             data-testid="global-search-list"
             className="list-none m-0 shadow-xl absolute top-[50px] w-full left-0 bg-base-100 text-base-900 py-2 rounded-xs"
@@ -354,11 +360,13 @@ export default function GlobalSearchAutocomplete(props: Props) {
 
               return (
                 <li // NOSONAR
-                  key={index}
+                  key={item.slug}
                   // Distinct ID mapped to aria-activedescendant
                   id={`search-item-${index}`}
+                  // AI-assisted suggestion Google seach AI-Mode
                   // Explicitly states this element is a selectable list option
                   role="option"
+                  // AI-assisted suggestion Google seach AI-Mode
                   // Dynamic flag tracking current keyboard focus
                   aria-selected={selected === index}
                   data-testid="global-search-list-item"
