@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -48,7 +48,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
   const [searchCombo, setSearchCombo] = useState('Ctrl K')
   const {hasRemotes} = useHasRemotes()
 
-  const lastValue = useDebounce(inputValue, 150)
+  const lastValue = useDebounce(inputValue, 300)
   const inputRef = useRef<HTMLInputElement>(null)
   const defaultValues: GlobalSearchResults[] = []
 
@@ -234,7 +234,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
     }
   }
 
-  function handleChange(e: React.FormEvent<HTMLInputElement>) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const search = e.currentTarget.value
     // Update state
     setInputValue(search)
@@ -277,35 +277,69 @@ export default function GlobalSearchAutocomplete(props: Props) {
         className={`${props.className} relative flex w-full xl:w-[14.5rem] xl:max-w-[20rem] focus-within:w-full duration-700`}>
         <div className="absolute top-[14px] left-3 pointer-events-none">
           {/* Search Icon */}
-          <svg width="16" height="16" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            // Hide icon from screen reader announcements
+            aria-hidden="true"
+            // Prevent browser focus on the vector asset
+            focusable="false"
+            width="16"
+            height="16"
+            viewBox="0 0 14 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <path
               d="M5.72217 0.34082C2.86783 0.34082 0.559204 2.64944 0.559204 5.50378C0.559204 8.35812 2.86783 10.6667 5.72217 10.6667C6.74123 10.6667 7.68438 10.3678 8.48397 9.86003L12.2138 13.5899L13.5046 12.2992L9.82216 8.62624C10.4841 7.75783 10.8851 6.68182 10.8851 5.50378C10.8851 2.64944 8.57651 0.34082 5.72217 0.34082ZM5.72217 1.55564C7.90859 1.55564 9.67031 3.31735 9.67031 5.50378C9.67031 7.69021 7.90859 9.45193 5.72217 9.45193C3.53574 9.45193 1.77402 7.69021 1.77402 5.50378C1.77402 3.31735 3.53574 1.55564 5.72217 1.55564Z"
               fill="#707070"/>
           </svg>
         </div>
-        <input className="px-2 pl-8 py-2 bg-transparent rounded-xs border border-base-600 focus:outline-0 w-full focus:bg-base-100 focus:text-base-900 duration-200"
-          ref={inputRef}
-          data-testid="global-search"
-          name="global-search"
-          placeholder="Search or jump to..."
-          autoComplete="off"
-          value={inputValue}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          type="text"
-          onFocus={focusSearch}
-          aria-label="Search RSD website"
+        <section
           role="search"
-        />
+          aria-label="Search RSD website"
+        >
+          <input className="px-2 pl-8 py-2 bg-transparent rounded-xs border border-base-600 focus:outline-0 w-full focus:bg-base-100 focus:text-base-900 duration-200"
+            ref={inputRef}
+            data-testid="global-search"
+            name="global-search"
+            placeholder="Search or jump to..."
+            autoComplete="off"
+            value={inputValue}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            type="text"
+            onFocus={focusSearch}
+            // AI-assisted suggestion using Google search AI-Mode
+            role="combobox"
+            // AI-assisted suggestion using Google search AI-Mode
+            // Notifies user that typing populates a list below
+            aria-autocomplete="list"
+            // Dynamic state: true when dropdown opens, false when closed
+            aria-expanded={isOpen}
+            // AI-assisted suggestion Google seach AI-Mode
+            // Direct semantic link to the list wrapper element id
+            aria-controls="global-search-results"
+            // AI-assisted suggestion Google seach AI-Mode
+            // Tells which item is highlighted via arrow keys
+            aria-activedescendant={selected !== -1 && isOpen ? `search-item-${selected}` : undefined}
+          />
+        </section>
         <span
           className="absolute top-[9px] right-2 text-base-600"
           hidden={isOpen}
         >{searchCombo}</span>
 
         {isOpen &&
-          <div
+          <ul //NOSONAR
+            // AI-assisted suggestion Google seach AI-Mode
+            // Matches the aria-controls tag on the input element
+            id="global-search-results"
+            // AI-assisted suggestion Google seach AI-Mode
+            // Tells that this ul wrapper contains listbox options
+            role="listbox"
+            // AI-assisted suggestion Google seach AI-Mode
+            aria-label="Search results"
             data-testid="global-search-list"
-            className="shadow-xl absolute top-[50px] w-full left-0 bg-base-100 text-base-900 py-2 rounded-xs"
+            className="list-none m-0 shadow-xl absolute top-[50px] w-full left-0 bg-base-100 text-base-900 py-2 rounded-xs"
             style={{
               maxHeight: '50vh',
               overflow: 'auto',
@@ -323,9 +357,17 @@ export default function GlobalSearchAutocomplete(props: Props) {
                 slug: item?.slug ?? '/'
               })
 
-              // debugger
               return (
-                <div key={index}
+                <li //NOSONAR
+                  key={url}
+                  // Distinct ID mapped to aria-activedescendant
+                  id={`search-item-${index}`}
+                  // AI-assisted suggestion Google search AI-Mode
+                  // Explicitly states this element is a selectable list option
+                  role="option"
+                  // AI-assisted suggestion Google search AI-Mode
+                  // Dynamic flag tracking current keyboard focus
+                  aria-selected={selected === index}
                   data-testid="global-search-list-item"
                   className={`${selected === index ? 'bg-base-200' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
                   onClick={handleClick}
@@ -340,7 +382,10 @@ export default function GlobalSearchAutocomplete(props: Props) {
                 >
                   <div className="flex gap-3 w-full">
                     {/*icon*/}
-                    <div className={selected === index ? 'text-content' : 'opacity-40'}>
+                    <div
+                      // Hide icon from screen reader announcements
+                      aria-hidden="true"
+                      className={selected === index ? 'text-content' : 'opacity-40'}>
                       <SearchItemIcon source={item.source} />
                     </div>
 
@@ -359,16 +404,22 @@ export default function GlobalSearchAutocomplete(props: Props) {
                         domain={item.domain}
                         rsd_host={item.rsd_host}
                       />
-                      <UnpublishedLabel is_published={item?.is_published} />
+                      <UnpublishedLabel
+                        is_published={item?.is_published}
+                      />
                     </div>
-                    {selected === index && <div>
+                    {selected === index &&
+                    <div
+                      // Hide icon from screen reader announcements
+                      aria-hidden="true"
+                    >
                       <EnterkeyIcon/>
                     </div>}
                   </div>
-                </div>
+                </li>
               )
             })}
-          </div>
+          </ul>
         }
       </div>
     </ClickAwayListener>
