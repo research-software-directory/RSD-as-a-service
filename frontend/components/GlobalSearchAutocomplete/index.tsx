@@ -294,7 +294,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
               fill="#707070"/>
           </svg>
         </div>
-        <label
+        <section
           role="search"
           aria-label="Search RSD website"
         >
@@ -323,14 +323,14 @@ export default function GlobalSearchAutocomplete(props: Props) {
             // Tells which item is highlighted via arrow keys
             aria-activedescendant={selected !== -1 && isOpen ? `search-item-${selected}` : undefined}
           />
-        </label>
+        </section>
         <span
           className="absolute top-[9px] right-2 text-base-600"
           hidden={isOpen}
         >{searchCombo}</span>
 
         {isOpen &&
-          <ul // NOSONAR
+          <ul
             // AI-assisted suggestion Google seach AI-Mode
             // Matches the aria-controls tag on the input element
             id="global-search-results"
@@ -359,14 +359,14 @@ export default function GlobalSearchAutocomplete(props: Props) {
               })
 
               return (
-                <li // NOSONAR
-                  key={item.slug}
+                <li
+                  key={url}
                   // Distinct ID mapped to aria-activedescendant
                   id={`search-item-${index}`}
-                  // AI-assisted suggestion Google seach AI-Mode
+                  // AI-assisted suggestion Google search AI-Mode
                   // Explicitly states this element is a selectable list option
                   role="option"
-                  // AI-assisted suggestion Google seach AI-Mode
+                  // AI-assisted suggestion Google search AI-Mode
                   // Dynamic flag tracking current keyboard focus
                   aria-selected={selected === index}
                   data-testid="global-search-list-item"
