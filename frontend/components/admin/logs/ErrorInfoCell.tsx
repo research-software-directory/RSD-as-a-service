@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center) <d.mijatovic@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 

@@ -4,7 +4,6 @@
 // SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
-// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center) <d.mijatovic@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 

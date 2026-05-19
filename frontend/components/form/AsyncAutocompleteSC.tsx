@@ -6,7 +6,6 @@
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center) <d.mijatovic@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
