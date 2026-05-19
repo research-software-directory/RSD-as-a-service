@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2024 dv4all
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -39,7 +39,15 @@ export default function EditSectionTitle({title, subtitle = '', children, hlevel
     return (
       <>
         <div className="flex">
-          <HeadingTag className={`flex-1 ${className ?? ''}`}>{title} {infoLink && <Link href={infoLink} target="_blank" rel="noreferrer"><InfoOutlinedIcon fontSize="small"/></Link>}</HeadingTag>
+          <HeadingTag className={`flex-1 ${className ?? ''}`}>{title} {
+            infoLink &&
+            <Link
+              aria-label="Link to info page"
+              href={infoLink} target="_blank" rel="noreferrer">
+              <InfoOutlinedIcon fontSize="small"/>
+            </Link>
+          }
+          </HeadingTag>
           {children}
         </div>
         {getSubtitle()}
@@ -49,7 +57,15 @@ export default function EditSectionTitle({title, subtitle = '', children, hlevel
 
   return (
     <>
-      <HeadingTag className={`${className ?? ''}`}>{title} {infoLink && <Link href={infoLink} target="_blank" rel="noreferrer"><InfoOutlinedIcon fontSize="small"/></Link>}</HeadingTag>
+      <HeadingTag className={`${className ?? ''}`}>{title} {
+        infoLink &&
+          <Link
+            aria-label="Link to info page"
+            href={infoLink} target="_blank" rel="noreferrer">
+            <InfoOutlinedIcon fontSize="small"/>
+          </Link>
+      }
+      </HeadingTag>
       {getSubtitle()}
     </>
   )

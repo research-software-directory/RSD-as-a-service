@@ -20,7 +20,10 @@ export default function ReactMarkdownWithSettings({markdown, className, breaks=t
   if (breaks===true) remarkPlugins.push(remarkBreaks)
 
   return (
-    <div className={`prose max-w-none prose-h1:text-3xl prose-headings:font-normal prose-code:before:hidden prose-code:after:hidden ${className ?? ''}`}>
+    <div
+      className={`prose max-w-none prose-h1:text-3xl prose-headings:font-normal prose-code:before:hidden prose-code:after:hidden ${className ?? ''}`}
+      aria-label="Markdown preview"
+    >
       <ReactMarkdown
         data-testid="react-markdown-with-settings"
         skipHtml={true}

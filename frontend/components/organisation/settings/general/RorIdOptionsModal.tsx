@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -39,7 +39,7 @@ export default function RorIdOptionsModal({open,options,onSelect}:RorIdOptionsMo
   }
 
   function handleClose(event: React.SyntheticEvent<unknown>, reason?: string) {
-    if (reason !== 'backdropClick') {
+    if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
       if (ror_id) {
         onSelect(ror_id)
       }
@@ -63,7 +63,6 @@ export default function RorIdOptionsModal({open,options,onSelect}:RorIdOptionsMo
 
   return (
     <Dialog
-      disableEscapeKeyDown
       open={open}
       onClose={handleClose}
     >
