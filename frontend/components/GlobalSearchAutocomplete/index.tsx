@@ -1,12 +1,11 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
-// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center) <d.mijatovic@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -330,7 +329,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
         >{searchCombo}</span>
 
         {isOpen &&
-          <ul
+          <ul //NOSONAR
             // AI-assisted suggestion Google seach AI-Mode
             // Matches the aria-controls tag on the input element
             id="global-search-results"
@@ -359,7 +358,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
               })
 
               return (
-                <li
+                <li //NOSONAR
                   key={url}
                   // Distinct ID mapped to aria-activedescendant
                   id={`search-item-${index}`}
