@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,16 +28,15 @@ public class DataCiteReleaseRepository {
 		  works(ids: [%s], first: 10000) {
 		    nodes {
 		      doi
-		      versionOfCount
-		      relatedIdentifiers {
-		        relationType
-		        relatedIdentifierType
-		        relatedIdentifier
+		      versions(first: 10000) {
+		        totalCount
+		        nodes {
+		          doi
+		        }
 		      }
 		    }
 		  }
-		}
-		""";
+		}""";
 
 	// editorconfig-checker-enable
 
@@ -69,28 +68,29 @@ public class DataCiteReleaseRepository {
 				JsonObject workObject = work.getAsJsonObject();
 				String conceptDoiString = workObject.getAsJsonPrimitive("doi").getAsString();
 				Doi conceptDoi = Doi.fromString(conceptDoiString);
-				Integer versionOfCount = Utils.integerOrNull(workObject.get("versionOfCount"));
-				if (versionOfCount == null || versionOfCount.intValue() != 0) {
-					LOGGER.debug("{} is not a concept DOI", conceptDoiString);
-					continue;
-				}
 
 				Collection<Doi> versionDois = new ArrayList<>();
-				JsonArray relatedIdentifiers = workObject.getAsJsonArray("relatedIdentifiers");
-				for (JsonElement relatedIdentifier : relatedIdentifiers) {
-					JsonObject relatedIdentifierObject = relatedIdentifier.getAsJsonObject();
-					String relationType = relatedIdentifierObject.getAsJsonPrimitive("relationType").getAsString();
-					if (relationType == null || !relationType.equals("HasVersion")) continue;
+				JsonObject versionsObject = workObject.getAsJsonObject("versions");
+				int versionCount = versionsObject.getAsJsonPrimitive("totalCount").getAsInt();
+				if (versionCount > 10000) {
+					LOGGER.warn(
+						"There are {} versions for {}, while we can only harvest 10000",
+						versionCount,
+						conceptDoi
+					);
+				}
 
-					String relatedIdentifierType = relatedIdentifierObject
-						.getAsJsonPrimitive("relatedIdentifierType")
-						.getAsString();
-					if (relatedIdentifierType == null || !relatedIdentifierType.equals("DOI")) continue;
-
-					String relatedIdentifierDoi = relatedIdentifierObject
-						.getAsJsonPrimitive("relatedIdentifier")
-						.getAsString();
-					versionDois.add(Doi.fromString(relatedIdentifierDoi));
+				JsonArray versionsDoiArray = versionsObject.getAsJsonArray("nodes");
+				for (JsonElement versionElement : versionsDoiArray) {
+					JsonObject relatedIdentifierObject = versionElement.getAsJsonObject();
+					Doi versionDoi;
+					try {
+						versionDoi = Doi.fromString(relatedIdentifierObject.getAsJsonPrimitive("doi").getAsString());
+					} catch (RuntimeException e) {
+						LOGGER.warn("Could not read a version DOI for {}", conceptDoi, e);
+						continue;
+					}
+					versionDois.add(versionDoi);
 				}
 				Collection<ExternalMentionRecord> versionedMentions = dataciteMentionRepository.mentionData(
 					versionDois

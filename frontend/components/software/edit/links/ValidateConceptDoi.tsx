@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -39,7 +39,7 @@ export default function ValidateConceptDoi({doi, onUpdate, disabled}: ValidateCo
     if (info?.status === 200) {
       const {software} = info.data
       const conceptDoi = extractConceptDoi(software)
-      if (conceptDoi === null) {
+      if (conceptDoi === null || conceptDoi === doi) {
         showSuccessMessage(`The DOI ${doi} is a valid Concept DOI`)
       } else {
         // update version DOI with concept DOI
