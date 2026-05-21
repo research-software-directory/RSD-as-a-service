@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -182,19 +182,18 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
         <FormControl
           variant="standard"
           fullWidth
-          // sx={{
-          //   width: '100%',
-          //   // maxWidth: '30rem'
-          // }}
         >
           <InputLabel
             shrink={true}
+            // a11y input label connection for select
+            id="l1-domain-select-label"
           >
             Level 1
           </InputLabel>
           <Select
             data-testid="l1-domain-select"
-            // variant='filled'
+            // a11y input label connection for select
+            labelId="l1-domain-select-label"
             value={l1Selected?.key ?? ''}
             onChange={({target}:{target:any}) => {
               selectDomain({
@@ -222,13 +221,11 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
         <FormControl
           variant="standard"
           fullWidth
-          // sx={{
-          //   width: '100%',
-          //   // maxWidth: '30rem'
-          // }}
         >
           <InputLabel
             shrink={true}
+            // a11y input label connection for select
+            id="l2-domain-select-label"
           >
             Level 2
           </InputLabel>
@@ -236,6 +233,8 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
           <Select
             data-testid="l2-domain-select"
             value={l2Selected?.key ?? ''}
+            // a11y input label connection for select
+            labelId="l2-domain-select-label"
             onChange={({target}:{target:any}) => {
               selectDomain({
                 key: target.value,
@@ -270,12 +269,17 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
           fullWidth
         >
           <InputLabel
-            shrink={true}>
+            shrink={true}
+            // a11y input label connection for select
+            id="l3-domain-select-label"
+          >
             Level 3
           </InputLabel>
 
           <Select
             data-testid="l3-domain-select"
+            // a11y input label connection for select
+            labelId="l3-domain-select-label"
             value={l3Selected?.key ?? ''}
             onChange={({target}:{target:any}) => {
               selectDomain({

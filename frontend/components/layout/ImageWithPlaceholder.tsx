@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
@@ -39,7 +39,7 @@ export default function ImageWithPlaceholder({
     }
     return (
       <div
-        className={`flex flex-col justify-center items-center text-base-500 rounded-xs ${className ?? ''}`}
+        className={`flex flex-col justify-center items-center text-base-600 rounded-xs ${className ?? ''}`}
       >
         <PhotoSizeSelectActualOutlinedIcon
           sx={{
