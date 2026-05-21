@@ -5,6 +5,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -70,10 +72,20 @@ export default function CommitsChart({
   if (commit_history && Object.keys(commit_history).length > 0) {
     // format commits data for chart and calculate other stats
     const {lineData, lastCommitDate, totalCountY} = prepareDataForSoftwarePage(commit_history)
+
+    // Get the date range of the commits to build a meaningful description
+    let date = new Date(lineData[0].x)
+    const fist_date = date.getDate() + '/' + (date.getMonth() + 1) + '/' +
+    date.getFullYear()
+    date = new Date(lineData[lineData.length - 1].x)
+    const last_date = date.getDate() + '/' + (date.getMonth() + 1) + '/' +
+    date.getFullYear()
+    const description = `Curve showing the daily commits during the history of the software, from ${fist_date} to ${last_date}.`
+
     // render
     return (
       <div className={`flex-1 w-full ${className ?? ''}`}>
-        <SingleLineChart data={lineData} />
+        <SingleLineChart data={lineData} description={description} />
         <div className="flex pt-4 px-2 *:border-l *:border-base-700 *:px-2 *:text-center" id="commitsStat">
           <ArchivedRepo archived={archived} />
           <Commits commits={totalCountY} lastCommitDate={lastCommitDate}/>

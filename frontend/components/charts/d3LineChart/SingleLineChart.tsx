@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,7 +20,7 @@ export type Point = {
   y: number
 }
 
-export default function SingleLineChart({data = []}: {data: Point[]}) {
+export default function SingleLineChart({data = [], description=''}: {data: Point[], description: string}) {
   const theme = useTheme()
   const svgRef: any = useRef(undefined)
   const divRef: any = useRef(undefined)
@@ -59,6 +61,8 @@ export default function SingleLineChart({data = []}: {data: Point[]}) {
         style={{
           display: 'block'
         }}
+        role="img"
+        aria-label={description}
       ></svg>
     </div>
   )
