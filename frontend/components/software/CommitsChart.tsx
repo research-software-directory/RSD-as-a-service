@@ -75,9 +75,8 @@ export default function CommitsChart({
 
     // Get the date range of the commits to build a meaningful description
     // define date formatting using locale: default = user specific, en_GB = if user local fails etc.
-    const locale = ['default','en-GB','en-US']
-    const fist_date = new Date(lineData[0].x).toLocaleDateString(locale)
-    const last_date = new Date(lineData[lineData.length - 1].x).toLocaleDateString(locale)
+    const fist_date = new Date(lineData[0].x).toLocaleDateString()
+    const last_date = new Date(lineData[lineData.length - 1].x).toLocaleDateString()
     const description = `Curve showing the daily commits during the history of the software, from ${fist_date} to ${last_date}.`
 
     // render
