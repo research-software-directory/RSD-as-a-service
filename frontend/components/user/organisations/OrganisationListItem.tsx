@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -30,7 +32,6 @@ export default function OrganisationListItem({organisation}:Readonly<{organisati
       >
         <ListImageWithGradientPlaceholder
           imgSrc={imgSrc}
-          alt = {`Cover image for ${organisation.name}`}
         />
         <div className="flex-1 flex flex-col md:flex-row gap-3 py-2">
           {/* basic info */}

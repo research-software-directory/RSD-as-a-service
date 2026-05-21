@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -27,7 +29,6 @@ export default function ProjectListItemContent(item: ProjectListItemProps) {
     <>
       <ListImageWithGradientPlaceholder
         imgSrc={imgSrc}
-        alt = {`Cover image for ${item.title}`}
       />
       <div className="flex flex-col md:flex-row gap-3 flex-1 py-2">
         <div className="flex-1">
