@@ -1,11 +1,13 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import useValidateImageSrc from '~/utils/useValidateImageSrc'
 
-export default function ListImageWithGradientPlaceholder({imgSrc,alt}:{imgSrc:string|null, alt:string|null}) {
+export default function ListImageWithGradientPlaceholder({imgSrc}:{imgSrc:string|null}) {
   const validImg = useValidateImageSrc(imgSrc)
 
   // console.group('ListItemImageWithGradientPlaceholder')
@@ -25,7 +27,7 @@ export default function ListImageWithGradientPlaceholder({imgSrc,alt}:{imgSrc:st
   return (
     <img
       src={`${imgSrc ?? ''}`}
-      alt={alt ?? 'Image'}
+      alt=""
       className="w-[6rem] max-h-[4rem] self-center text-base-content-disabled p-2 object-contain object-center"
       // lighthouse audit requires explicit width and height
       height="2.5rem"

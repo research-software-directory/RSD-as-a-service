@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -42,8 +44,10 @@ it('renders image with default positioning', async() => {
 
   //expect image src attribute
   expect(img).toHaveAttribute('src', mockProps.src)
-  // expect alt attribute
-  expect(img).toHaveAttribute('alt', mockProps.alt)
+  // expect aria-label attribute
+  expect(img).toHaveAttribute('aria-label', mockProps.alt)
+  // but not alt attribute
+  expect(img).toHaveAttribute('alt', '')
   // expect title attribute
   expect(img).toHaveAttribute('title', mockProps.placeholder)
   // expect default positioning
