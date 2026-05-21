@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2025 Jesse Gonzalez (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -44,7 +46,6 @@ function SearchResultCard({item, view}: {item: GlobalSearchResults, view: string
       >
         {/* Image */}
         <ListImageWithGradientPlaceholder
-          alt={`Cover image for ${item.name}`}
           imgSrc={imageUrl}
         />
         <div className="flex-1 min-w-0 p-2">

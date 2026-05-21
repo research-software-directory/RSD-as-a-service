@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Imperial College London
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -44,7 +46,7 @@ export default function SoftwareMasonryCard({item}:SoftwareCardProps){
           <img
             className="object-cover w-full rounded-tr-lg rounded-tl-lg"
             src={imgUrl ?? undefined}
-            alt={`Cover image for ${item.brand_name}`}
+            alt=""
             // loading = "lazy"
             // lighthouse audit requires explicit with and height
             height="100%"
