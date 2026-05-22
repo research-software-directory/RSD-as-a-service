@@ -296,6 +296,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
         <section
           role="search"
           aria-label="Search RSD website"
+          className='flex-1'
         >
           <input className="px-2 pl-8 py-2 bg-transparent rounded-xs border border-base-600 focus:outline-0 w-full focus:bg-base-100 focus:text-base-900 duration-200"
             ref={inputRef}
