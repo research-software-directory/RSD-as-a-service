@@ -56,6 +56,7 @@ export default function ImageWithPlaceholder({
 
   return (
     <img
+      data-testid="image-with-placeholder"
       title={placeholder ?? alt}
       src={src}
       style={{
