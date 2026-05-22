@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -116,7 +116,6 @@ export default function CommunityLogo({id,name,logo_id,isMaintainer}:CommunityLo
       canEdit={isMaintainer}
       src={getImageUrl(logo) ?? undefined}
       sx={{
-        backgroundColor: logo ? 'inherit' : 'text.disabled',
         height: '10rem',
         'img': {
           objectFit: 'contain',
