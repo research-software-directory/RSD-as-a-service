@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -113,7 +113,6 @@ export default function UserAvatar() {
       initials={initials}
       src={getImageUrl(avatar) ?? undefined}
       sx={{
-        backgroundColor: avatar ? 'inherit' : 'text.disabled',
         width: '10rem',
         height: '10rem',
         'img': {
