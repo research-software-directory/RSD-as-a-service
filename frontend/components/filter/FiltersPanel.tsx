@@ -23,10 +23,11 @@ export default function FiltersPanel({children}: {children: any}) {
   if (smallScreen) return null
 
   return (
-    <div
+    <section
       data-testid="filters-panel"
+      aria-label="Filters"
       className="flex bg-base-100 p-4 shadow-sm rounded-md flex-col gap-8 min-w-[18rem]">
       {children}
-    </div>
+    </section>
   )
 }

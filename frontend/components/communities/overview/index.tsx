@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -40,7 +40,10 @@ export default function CommunitiesOverview({
         <h1 className="mr-4 lg:flex-1">
           Communities
         </h1>
-        <div className="flex-2 flex min-w-[20rem]">
+        <section
+          // define a11y region
+          aria-label="Search community by name or short description"
+          className="flex-2 flex min-w-[20rem]">
           <SearchInput
             placeholder="Search community by name or short description"
             onSearch={(search: string) => handleQueryChange('search', search)}
@@ -60,7 +63,7 @@ export default function CommunitiesOverview({
               handleQueryChange('rows', items.toString())
             }}
           />
-        </div>
+        </section>
       </div>
 
       {/* community cards, grid is default */}

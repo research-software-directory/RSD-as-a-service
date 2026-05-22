@@ -13,6 +13,7 @@ type ListOverviewSectionProps=Readonly<{
 export default function ListOverviewSection({children, className='mt-2'}:ListOverviewSectionProps) {
   return (
     <section
+      aria-label="List overview"
       data-testid="list-overview"
       className={`flex-1 flex flex-col gap-2 ${className}`}
     >

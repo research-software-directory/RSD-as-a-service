@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,6 +24,7 @@ export default function GridOverview({children,fullWidth=false,className='mt-2 a
   if (fullWidth){
     return (
       <section
+        aria-label="Grid overview"
         data-testid="grid-overview-4"
         className={`flex-1 grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${className}`}
       >
@@ -34,6 +35,7 @@ export default function GridOverview({children,fullWidth=false,className='mt-2 a
   // default is for grid with 3 cols next to filter panel
   return (
     <section
+      aria-label="Grid overview"
       data-testid="grid-overview-3"
       className={`flex-1 grid gap-8 md:grid-cols-2 lg:grid-cols-3 ${className}`}
     >

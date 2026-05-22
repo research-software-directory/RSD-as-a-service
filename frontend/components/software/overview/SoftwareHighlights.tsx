@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -35,9 +35,11 @@ export default function SoftwareHighlights({title,page,highlights}:SoftwareHighl
   if (page > 1) return null
 
   return (
-    <section className="mt-8 hide-on-no-script">
+    <section
+      aria-label={title}
+      className="mt-8 hide-on-no-script">
       {/* title should be in the container */}
-      <div className="text-3xl px-4 lg:container lg:mx-auto">
+      <div className="text-3xl text-secondary px-4 lg:container lg:mx-auto">
         {title}
       </div>
 
