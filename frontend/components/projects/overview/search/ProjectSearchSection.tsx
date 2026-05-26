@@ -44,7 +44,7 @@ export default function ProjectSearchSection({
   // console.groupEnd()
 
   return (
-    <section 
+    <section
       aria-label="Find project"
       data-testid="search-section">
       <div className="flex border rounded-md shadow-xs bg-base-100 p-2">
