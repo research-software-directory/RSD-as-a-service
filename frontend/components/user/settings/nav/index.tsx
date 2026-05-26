@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -31,7 +31,6 @@ export default function UserSettingsNav() {
     >
       {settingsMenu.map((item, pos) => {
         const selected = settings === settingsMenu[pos].id
-        // const selected = router.query['id'] ?? organisationMenu[0].id
         return (
           <ListItemButton
             data-testid="user-settings-nav-item"
@@ -39,6 +38,8 @@ export default function UserSettingsNav() {
             selected={selected}
             href={`${pathname}?settings=${item.id}`}
             LinkComponent={Link}
+            // 3. Inform screen readers which page is active
+            aria-current={selected ? 'page' : undefined}
             sx={editMenuItemButtonSx}
           >
             <ListItemIcon>

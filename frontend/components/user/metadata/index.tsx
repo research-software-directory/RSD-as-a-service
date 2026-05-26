@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,7 +10,9 @@ import UserInfo from './UserInfo'
 
 export default function UserMetadata() {
   return (
-    <section className="grid md:grid-cols-[1fr_3fr] xl:grid-cols-[1fr_5fr] gap-4 mt-8">
+    <section
+      aria-label="User metadata"
+      className="grid md:grid-cols-[1fr_3fr] xl:grid-cols-[1fr_5fr] gap-4 mt-8">
       <BaseSurfaceRounded className="flex justify-center p-4 overflow-hidden relative">
         <UserAvatar />
       </BaseSurfaceRounded>

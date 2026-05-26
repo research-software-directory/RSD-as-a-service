@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2026 Imperial College London
+// SPDX-FileCopyrightText: 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -81,7 +83,9 @@ export default async function UserPageLayout({
         {/* TABS */}
         <UserTabs counts={counts} />
         {/* TAB CONTENT */}
-        <section className="flex md:min-h-[45rem]">
+        <section
+          aria-label="User specific content"
+          className="flex md:min-h-[45rem]">
           {children}
         </section>
       </UserContextProvider>

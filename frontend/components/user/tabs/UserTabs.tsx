@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -52,12 +52,12 @@ export default function UserTabs({counts}:UserTabsProps) {
     <BaseSurfaceRounded
       className="my-4 p-2"
       type="section"
+      aria-label="User specific pages"
     >
       <Tabs
         variant="scrollable"
         allowScrollButtonsMobile
         value={select_tab}
-        aria-label="User profile tabs"
       >
         {tabItems.map(key => {
           const item = userTabItems[key]
