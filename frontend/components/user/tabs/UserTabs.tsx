@@ -65,14 +65,24 @@ export default function UserTabs({counts}:UserTabsProps) {
             modules: activeModules,
             isMaintainer
           })) {
-            return <TabAsLink
-              icon={item.icon}
-              key={key}
-              label={item.label(counts)}
-              value={key}
-              href={key}
-              scroll={false}
-            />
+            // construct label with counts and aria-label
+            const label = item.label(counts)
+            let ariaLabel = label
+            if (label.includes('(')){
+              // remove parenthesis for aria and add word items
+              ariaLabel = `${label.replaceAll('(','').replaceAll(')','')} items`
+            }
+            return (
+              <TabAsLink
+                icon={item.icon}
+                key={key}
+                label={label}
+                value={key}
+                href={key}
+                scroll={false}
+                aria-label={ariaLabel}
+              />
+            )
           }})}
       </Tabs>
     </BaseSurfaceRounded>
