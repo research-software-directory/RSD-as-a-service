@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +24,7 @@ export default function AutosaveSoftwarePageStatus() {
   // console.groupEnd()
 
   return (
-    <>
+    <section aria-label="Software RSD status">
       <EditSectionTitle
         title={config.pageStatus.title}
         subtitle={config.pageStatus.subtitle}
@@ -49,6 +49,6 @@ export default function AutosaveSoftwarePageStatus() {
           <Link href="/user/software">your profile</Link>
         </strong> page.
       </Alert>
-    </>
+    </section>
   )
 }

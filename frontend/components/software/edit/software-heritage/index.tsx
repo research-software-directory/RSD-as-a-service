@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -112,7 +112,9 @@ export default function SoftwareHeritagePage() {
 
   return (
     <>
-      <EditSection className="py-4">
+      <EditSection
+        aria-label={cfg.title}
+        className="py-4">
         <EditSectionTitle
           title={cfg.title}
           subtitle={cfg.subtitle}
