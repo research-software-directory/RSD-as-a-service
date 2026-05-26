@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -64,7 +64,7 @@ export async function acceptUserAgreement(page:Page,baseURL?:string){
   await page.waitForSelector("#user-agreements-form",{state:"attached"})
 
   // get terms switch
-  const termsCheckbox = await page.getByRole('switch', { name: 'I agree to the Terms of' })
+  const termsCheckbox = await page.getByRole('switch', { name: 'I agree to the' })
   if (await termsCheckbox.isVisible()){
     // accept if not accepted
     if (await termsCheckbox.isChecked()===false){
@@ -73,7 +73,7 @@ export async function acceptUserAgreement(page:Page,baseURL?:string){
   }
 
   // get privacy checkbox
-  const privacyCheckbox = await page.getByRole('switch', { name: 'I have read the Privacy' })
+  const privacyCheckbox = await page.getByRole('switch', { name: 'I have read the' })
   if (await privacyCheckbox.isVisible()){
     // accept if not accepted
     if (await privacyCheckbox.isChecked()===false){
