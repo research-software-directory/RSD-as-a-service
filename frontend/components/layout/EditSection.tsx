@@ -5,7 +5,17 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export default function EditSection({children,className='',...props}:{children:any,className?:string,props?:any}) {
+import {ComponentPropsWithoutRef, ReactNode} from 'react'
+
+type EditSectionProps = ComponentPropsWithoutRef<'section'> & {
+  children: ReactNode;
+}
+
+export default function EditSection({
+  children,
+  className='',
+  ...props
+}:EditSectionProps) {
   return (
     <section className={`flex-1 ${className}`} {...props}>
       {children}
