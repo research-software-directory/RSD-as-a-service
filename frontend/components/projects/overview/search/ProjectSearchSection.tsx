@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -44,7 +44,9 @@ export default function ProjectSearchSection({
   // console.groupEnd()
 
   return (
-    <section data-testid="search-section">
+    <section
+      aria-label="Find project"
+      data-testid="search-section">
       <div className="flex border rounded-md shadow-xs bg-base-100 p-2">
         <SearchInput
           placeholder={placeholder}

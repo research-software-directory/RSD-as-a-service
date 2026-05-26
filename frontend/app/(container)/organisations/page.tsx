@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,7 @@ import {ssrBasicParams} from '~/utils/extractQueryParam'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import {getActiveModuleNames} from '~/config/getSettingsServerSide'
 import {getOrganisationsList} from '~/components/organisation/apiOrganisations'
-import OrganisationOverviewClient from '~/components/organisation/overview/OrganisationOverviewClient'
+import OrganisationOverviewClient from '~/components/organisation/overview'
 
 export const metadata: Metadata = {
   title: `Organisations | ${app.title}`,

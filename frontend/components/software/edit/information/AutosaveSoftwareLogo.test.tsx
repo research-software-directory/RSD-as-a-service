@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -64,7 +64,7 @@ it('renders image with proper src value', () => {
     </WithAppContext>
   )
 
-  const img = screen.getByRole('img')
+  const img = screen.getByTestId('image-with-placeholder')
   expect(img).toHaveAttribute('src',`/image/rpc/get_image?uid=${formValues.image_id}`)
 })
 

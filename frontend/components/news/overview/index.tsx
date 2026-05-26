@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -36,7 +36,10 @@ export default function NewsOverview({pages,page,rows,search,news}:NewsOverviewP
         <h1 className="mr-4 lg:flex-1">
           News
         </h1>
-        <div className="flex-2 flex min-w-[20rem]">
+        <section
+          // define a11y region
+          aria-label="Search news items by title, summary or author"
+          className="flex-2 flex min-w-[20rem]">
           <SearchInput
             placeholder="Search news items by title, summary or author"
             onSearch={(search: string) => handleQueryChange('search', search)}
@@ -56,7 +59,7 @@ export default function NewsOverview({pages,page,rows,search,news}:NewsOverviewP
               handleQueryChange('rows', items.toString())
             }}
           />
-        </div>
+        </section>
       </div>
 
       {/* news cards, grid is default */}

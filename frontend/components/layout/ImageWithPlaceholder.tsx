@@ -56,14 +56,13 @@ export default function ImageWithPlaceholder({
 
   return (
     <img
+      data-testid="image-with-placeholder"
       title={placeholder ?? alt}
-      role="img"
       src={src}
       style={{
         objectFit: bgSize,
         objectPosition: bgPosition
       }}
-      aria-label={alt}
       alt=""
       className={`rounded-xs ${className ?? ''}`}
     ></img>

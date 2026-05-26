@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2026 Imperial College London
+// SPDX-FileCopyrightText: 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -63,7 +65,7 @@ export async function generateMetadata(
     getUserSettings(),
     headers()
   ])
-  // find project by slug
+  // find software by slug
   const software = await getSoftwareItem({
     slug: slug,
     token: token

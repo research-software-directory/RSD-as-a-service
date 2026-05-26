@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -40,7 +40,10 @@ export default function OrganisationsOverviewClient({
         <h1 className="mr-4 lg:flex-1">
           Organisations
         </h1>
-        <div className="flex-2 flex min-w-[20rem]">
+        <section
+          // define a11y region
+          aria-label="Search organisation by name, ROR name or website"
+          className="flex-2 flex min-w-[20rem]">
           <SearchInput
             placeholder="Search organisation by name, ROR name or website"
             onSearch={(search: string) => handleQueryChange('search', search)}
@@ -60,7 +63,7 @@ export default function OrganisationsOverviewClient({
               handleQueryChange('rows', items.toString())
             }}
           />
-        </div>
+        </section>
       </div>
       {/* Organizations cards */}
       {view === 'list' ?

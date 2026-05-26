@@ -1,7 +1,9 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2026 Imperial College London
+// SPDX-FileCopyrightText: 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -39,13 +41,13 @@ it('renders image with default positioning', async() => {
   const icon = screen.queryByTestId('PhotoSizeSelectActualOutlinedIcon')
   expect(icon).not.toBeInTheDocument()
 
-  const img = screen.getByRole('img')
+  const img = screen.getByTestId('image-with-placeholder')
   expect(img).toBeInTheDocument()
 
   //expect image src attribute
   expect(img).toHaveAttribute('src', mockProps.src)
   // expect aria-label attribute
-  expect(img).toHaveAttribute('aria-label', mockProps.alt)
+  // expect(img).toHaveAttribute('aria-label', mockProps.alt)
   // but not alt attribute
   expect(img).toHaveAttribute('alt', '')
   // expect title attribute

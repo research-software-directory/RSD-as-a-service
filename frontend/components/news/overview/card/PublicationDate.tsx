@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +14,7 @@ export default function PublicationDate({publication_date, className}:Publicatio
   if (publication_date){
     return (
       <span
-        className={`line-clamp-1 text-sm text-base-content-disabled tracking-widest uppercase ${className ?? ''}`}
+        className={`line-clamp-1 text-sm text-base-content-secondary tracking-widest uppercase ${className ?? ''}`}
       >
         {isoStrToLocalDateStr(publication_date)}
       </span>

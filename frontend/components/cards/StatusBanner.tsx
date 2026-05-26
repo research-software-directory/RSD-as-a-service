@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -42,7 +42,7 @@ export default function StatusBanner({
       }
       {is_published === false &&
         <div
-          className="bg-base-700 text-base-100 px-2 py-1 uppercase font-medium"
+          className="bg-base-300 text-base-900 px-2 py-1 uppercase font-medium"
           style={{width, borderRadius, letterSpacing}}
         >
           Not published

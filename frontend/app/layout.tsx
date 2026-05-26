@@ -30,6 +30,7 @@ import {appUserSettings} from '~/components/cookies/appUserSettings'
 import CookieConsentMatomo from '~/components/cookies/CookieConsentMatomo'
 import Announcement from '~/components/Announcement/Announcement'
 import ProgressProviderApp from '~/components/bprogress/ProgressProviderApp'
+import SkipToMainContent from '~/components/a11y/SkipToMainContent'
 
 import '~/styles/global.css'
 
@@ -118,6 +119,7 @@ export default async function RootLayout({
                       <UserSettingsProvider user={userSettings}>
                         {/* Login providers list */}
                         <LoginProvidersProvider providers = {providers}>
+                          <SkipToMainContent />
                           <AppHeader />
                           {children}
                           <AppFooter/>

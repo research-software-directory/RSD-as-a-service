@@ -1,17 +1,17 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {FocusEventHandler} from 'react'
+import {useController, useFormContext} from 'react-hook-form'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import {useController, useFormContext} from 'react-hook-form'
 
 import {useSession} from '~/auth/AuthProvider'
 import MarkdownInputWithPreview from '~/components/form/MarkdownInputWithPreview'
@@ -20,6 +20,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import {softwareInformation as config} from '../editSoftwareConfig'
 import {patchSoftwareTable} from './patchSoftwareTable'
 import AutosaveRemoteMarkdown from './AutosaveRemoteMarkdown'
+
 
 type SaveInfo = {
   name: string,
@@ -125,7 +126,7 @@ export default function AutosaveSoftwareMarkdown() {
       return (
         <AutosaveRemoteMarkdown
           options={{
-            autofocus: true,
+            // autofocus: true,
             type: 'url',
             name: 'description_url',
             label: config.description_url.label,
@@ -156,15 +157,22 @@ export default function AutosaveSoftwareMarkdown() {
     )
   }
 
+  // Generate unique ID for screen reader bindings
+  const radioGroupId = 'software-description-type-group'
+
   return (
     <>
       <EditSectionTitle
         title={config.description.label}
         infoLink={config.description.help}
       />
+      {/* Visual title for screen readers to bind with the choices */}
+      <label id={radioGroupId} className="sr-only">
+        {config.description.label} Type
+      </label>
       <RadioGroup
         row
-        aria-labelledby="radio-group"
+        aria-labelledby={radioGroupId}
         value={description_type ?? 'markdown'}
         defaultValue={description_type ?? 'markdown'}
         onChange={(e, value) => {
@@ -177,20 +185,18 @@ export default function AutosaveSoftwareMarkdown() {
           })
         }}
         sx={{
-          margin:'0.75rem 0rem'
+          margin:'0.75rem 0rem',
+          gap: '1rem'
         }}
       >
         <FormControlLabel
           label="Custom markdown"
           value="markdown"
-          defaultValue={'markdown'}
           control={<Radio />}
         />
-        <div className="py-2"></div>
         <FormControlLabel
           label="Markdown URL"
           value="link"
-          defaultValue={'link'}
           control={<Radio />}
         />
       </RadioGroup>
