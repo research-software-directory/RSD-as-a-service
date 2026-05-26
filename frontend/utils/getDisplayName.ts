@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -42,13 +43,25 @@ export function getDisplayInitials({given_names, family_names}:
  * @param name
  * @returns
  */
-export function splitName(name: string) {
-  if (!name || name === null || name === '') {
+export function splitName(name: string): {given_names: string; family_names: string} {
+  if (!name) {
     return {
       given_names: '',
       family_names: ''
     }
   }
+
+  name = name.trim()
+
+  if (name.includes(', ')) {
+    const names = name.split(', ')
+
+    return {
+      given_names: names.slice(1).join(' '),
+      family_names: names[0]
+    }
+  }
+
   const names = name.split(' ')
   return {
     given_names: names[0],
