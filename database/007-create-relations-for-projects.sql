@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 dv4all
 -- SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
@@ -47,10 +47,13 @@ BEGIN
 	NEW.id = OLD.id;
 	NEW.created_at = OLD.created_at;
 	NEW.updated_at = LOCALTIMESTAMP;
-	IF OLD.account IS NOT NULL AND (CURRENT_USER = 'rsd_admin' OR (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER)) IS DISTINCT FROM TRUE THEN
-		NEW.family_names = OLD.family_names;
-		NEW.given_names = OLD.given_names;
-		NEW.orcid = OLD.orcid;
+	IF (CURRENT_USER = 'rsd_admin' OR (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER)) IS DISTINCT FROM TRUE THEN
+		NEW.account = OLD.account;
+		IF OLD.account IS NOT NULL THEN
+			NEW.family_names = OLD.family_names;
+			NEW.given_names = OLD.given_names;
+			NEW.orcid = OLD.orcid;
+		END IF;
 	END IF;
 	return NEW;
 END
