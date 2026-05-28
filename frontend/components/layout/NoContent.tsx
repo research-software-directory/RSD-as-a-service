@@ -28,7 +28,7 @@ const NoContentBody = styled('div')({
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  opacity: 0.50
+  opacity: 0.5
 })
 
 export default function NoContent({message='nothing to show'}:{message?:string}) {
