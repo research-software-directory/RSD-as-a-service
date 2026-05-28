@@ -13,7 +13,7 @@ import {ElementType} from 'react'
 import Link from '@mui/material/Link'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 
-type EditSectionTitleProps = {
+type EditSectionTitleProps = Readonly<{
   title: string,
   subtitle?: string,
   children?: any,
@@ -23,7 +23,7 @@ type EditSectionTitleProps = {
     ariaLabel: string
   },
   className?: string
-}
+}>
 
 function InfoLink({infoLink}:Readonly<{infoLink:EditSectionTitleProps['infoLink']}>){
 
