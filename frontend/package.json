@@ -9,7 +9,7 @@
     "build": "next build",
     "build:turbo": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "lint:fix": "eslint --fix .",
     "test": "jest",
     "test:watch": "jest --watch --detectOpenHandles",
