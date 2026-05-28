@@ -4,8 +4,8 @@
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -183,8 +183,13 @@ export default function EditSoftwareContributors() {
 
   return (
     <>
-      <EditSection className='md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]'>
-        <section className="py-4">
+      <EditSection
+        className='md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]'
+      >
+        <section
+          aria-label={`${contributors?.length ?? 0} contributors`}
+          className="py-4"
+        >
           <h2 className="flex pr-4 pb-4 justify-between">
             <span>Contributors</span>
             <span>{contributors?.length}</span>
@@ -196,7 +201,9 @@ export default function EditSoftwareContributors() {
             onSorted={sortedContributors}
           />
         </section>
-        <section className="py-4">
+        <section
+          aria-label="Add contributor"
+          className="py-4">
           <EditSectionTitle
             title={config.findContributor.title}
             subtitle={config.findContributor.subtitle(host?.orcid_search)}

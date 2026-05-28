@@ -59,7 +59,7 @@ export default function SoftwareCardContent(item:SoftwareCardContentProps) {
           />
         </div>
 
-        <div className="flex gap-2 justify-between mt-4">
+        <div className="flex gap-2 justify-end mt-4">
           {/* Languages */}
           <ProgrammingLanguageList
             prog_lang={item.prog_lang ?? undefined}

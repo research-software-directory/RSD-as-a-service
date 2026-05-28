@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -87,7 +87,7 @@ export default function RemoveAccount() {
 
   if (user?.account) {
     return (
-      <>
+      <section aria-label="Remove account">
         <h2 className="pt-8">Remove account</h2>
 
         <RemoveAccountAlert disabled={disabled} />
@@ -118,7 +118,7 @@ export default function RemoveAccount() {
           }}
           onDelete={deleteAccount}
         />
-      </>
+      </section>
     )
   }
   // do not show if no account

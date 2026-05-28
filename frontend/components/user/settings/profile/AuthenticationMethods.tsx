@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,7 +23,9 @@ export default function AuthenticationMethods() {
   })
 
   return (
-    <div>
+    <section
+      aria-label="Authentication methods"
+    >
       <h3>Authentication methods</h3>
       <List dense={true}>
         {logins.map(account=>{
@@ -68,6 +70,6 @@ export default function AuthenticationMethods() {
           }
         }}
       />
-    </div>
+    </section>
   )
 }

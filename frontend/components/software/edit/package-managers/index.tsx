@@ -60,7 +60,9 @@ export default function EditPackageManagers() {
 
   return (
     <>
-      <EditSection className="py-4">
+      <EditSection
+        aria-label="Package managers"
+        className="py-4">
         <EditSectionTitle
           title="Package managers"
           subtitle="From which package managers can your software be downloaded?"

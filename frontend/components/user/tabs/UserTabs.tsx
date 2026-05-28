@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -52,12 +52,12 @@ export default function UserTabs({counts}:UserTabsProps) {
     <BaseSurfaceRounded
       className="my-4 p-2"
       type="section"
+      aria-label="User specific pages"
     >
       <Tabs
         variant="scrollable"
         allowScrollButtonsMobile
         value={select_tab}
-        aria-label="User profile tabs"
       >
         {tabItems.map(key => {
           const item = userTabItems[key]
@@ -65,14 +65,24 @@ export default function UserTabs({counts}:UserTabsProps) {
             modules: activeModules,
             isMaintainer
           })) {
-            return <TabAsLink
-              icon={item.icon}
-              key={key}
-              label={item.label(counts)}
-              value={key}
-              href={key}
-              scroll={false}
-            />
+            // construct label with counts and aria-label
+            const label = item.label(counts)
+            let ariaLabel = label
+            if (label.includes('(')){
+              // remove parenthesis for aria and add word items
+              ariaLabel = `${label.replaceAll('(','').replaceAll(')','')} items`
+            }
+            return (
+              <TabAsLink
+                icon={item.icon}
+                key={key}
+                label={label}
+                value={key}
+                href={key}
+                scroll={false}
+                aria-label={ariaLabel}
+              />
+            )
           }})}
       </Tabs>
     </BaseSurfaceRounded>

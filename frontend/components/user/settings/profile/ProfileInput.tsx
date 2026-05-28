@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 // SPDX-FileCopyrightText: 2025 dv4all
 //
@@ -25,7 +25,10 @@ export default function ProfileInput() {
   ])
 
   return (
-    <div className="flex flex-col gap-4">
+    <section
+      aria-label="Profile information"
+      className="flex flex-col gap-4"
+    >
       <div className="grid lg:grid-cols-2 gap-8">
         <AutosaveProfileTextField
           options={{
@@ -102,6 +105,6 @@ export default function ProfileInput() {
           }
         </div>
       </div>
-    </div>
+    </section>
   )
 }

@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -58,7 +58,9 @@ export default function EditSoftwareMaintainers() {
 
   return (
     <>
-      <EditSection className='xl:grid xl:grid-cols-[1fr_1fr] xl:px-0 xl:gap-[3rem]'>
+      <EditSection
+        aria-label={config.title}
+        className='xl:grid xl:grid-cols-[1fr_1fr] xl:px-0 xl:gap-[3rem]'>
         <div className="py-4">
           <EditSectionTitle
             title={config.title}
@@ -68,13 +70,15 @@ export default function EditSoftwareMaintainers() {
             maintainers={maintainers}
           />
         </div>
-        <div className="py-4 min-w-[21rem] xl:my-0">
+        <section
+          aria-label={config.inviteLink.title}
+          className="py-4 min-w-[21rem] xl:my-0">
           <EditSectionTitle
             title={config.inviteLink.title}
             subtitle={config.inviteLink.subtitle}
           />
           <SoftwareMaintainerLinks />
-        </div>
+        </section>
       </EditSection>
       <ConfirmDeleteModal
         open={modal.open}

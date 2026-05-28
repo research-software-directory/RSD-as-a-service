@@ -15,7 +15,9 @@ export default function KeywordList({keywords=[], visibleNumberOfKeywords = 3}: 
   if (!keywords || keywords.length===0) return null
 
   return (
-    <ul className="flex flex-wrap items-start gap-1 text-base-content text-xs">
+    <ul
+      aria-label={`${keywords?.length} keywords`}
+      className="flex flex-wrap items-start gap-1 text-base-content text-xs">
       {// limits the keywords to 'visibleNumberOfKeywords' per software.
         keywords?.slice(0, visibleNumberOfKeywords)
           .map((keyword:string) => (
@@ -30,7 +32,15 @@ export default function KeywordList({keywords=[], visibleNumberOfKeywords = 3}: 
         (keywords?.length > 0)
         && (keywords?.length > visibleNumberOfKeywords)
         && (keywords?.length - visibleNumberOfKeywords > 0)
-        && <li>{`+ ${keywords?.length - visibleNumberOfKeywords}`}</li>
+          ?
+          // Added a meaningful aria-label to the overflow count so it reads out clearly
+          <li
+            aria-label={`${keywords.length - visibleNumberOfKeywords} more keywords`}
+            title={`${keywords.length - visibleNumberOfKeywords} more keywords`}
+          >
+            {`+ ${keywords?.length - visibleNumberOfKeywords}`}
+          </li>
+          : null
       }
     </ul>
   )

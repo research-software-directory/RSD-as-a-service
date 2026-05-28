@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -46,6 +46,7 @@ export default function UserAgreementsPage() {
       </p>
       <FormProvider {...methods}>
         <form
+          aria-label="User agreements"
           id="user-agreements-form"
           className='flex-1 flex flex-col gap-2 my-8'
         >
@@ -55,7 +56,17 @@ export default function UserAgreementsPage() {
             control={methods.control}
             onSave={setAgreeTerms}
             label={
-              <span>I agree to the <Link className="underline" target='_blank' href={host?.terms_of_service_url ?? ''}>Terms of Service</Link>.</span>
+              <span>
+                I agree to the
+                <Link
+                  className="underline ml-2"
+                  target='_blank'
+                  href={host?.terms_of_service_url ?? ''}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Terms of Service
+                </Link>.
+              </span>
             }
           />
 
@@ -65,7 +76,17 @@ export default function UserAgreementsPage() {
             control={methods.control}
             onSave={setPrivacyStatement}
             label={
-              <span>I have read the <Link className='underline' target='_blank' href={host?.privacy_statement_url ?? ''}>Privacy Statement</Link>.</span>
+              <span>
+                I have read the
+                <Link
+                  className="underline ml-2"
+                  target='_blank'
+                  href={host?.privacy_statement_url ?? ''}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Privacy Statement
+                </Link>.
+              </span>
             }
           />
           {/* use FormProvider to check for user agreement values */}

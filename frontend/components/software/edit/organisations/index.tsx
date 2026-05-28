@@ -378,7 +378,9 @@ export default function SoftwareOrganisations() {
   return (
     <>
       <EditSection className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]">
-        <section className="py-4">
+        <section
+          aria-label={`${organisations?.length ?? 0} ${config.title}`}
+          className="py-4">
           <h2 className="flex pr-4 pb-4 justify-between">
             <span>{config.title}</span>
             <span>{organisations?.length}</span>
@@ -391,7 +393,9 @@ export default function SoftwareOrganisations() {
             onCategory={onCategoryEdit}
           />
         </section>
-        <section className="py-4">
+        <section
+          aria-label={config.findOrganisation.title}
+          className="py-4">
           <EditSectionTitle
             title={config.findOrganisation.title}
             subtitle={config.findOrganisation.subtitle}

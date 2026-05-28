@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -96,7 +96,9 @@ export default function EditSoftwareCommunities() {
 
   return (
     <>
-      <EditSection className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]">
+      <EditSection
+        aria-label={config.title}
+        className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]">
         <section className="py-4">
           <h2 className="flex pr-4 pb-4 justify-between">
             <span>{config.title}</span>
@@ -108,7 +110,9 @@ export default function EditSoftwareCommunities() {
             onEdit={onOpenEditCategories}
           />
         </section>
-        <section className="py-4">
+        <section
+          aria-label={config.findCommunity.title}
+          className="py-4">
           <EditSectionTitle
             title={config.findCommunity.title}
             subtitle={config.findCommunity.subtitle}

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -41,7 +41,10 @@ export default function SoftwareRepositories() {
 
   return (
     <>
-      <EditSection className="py-4">
+      <EditSection
+        aria-label="Source code repositories"
+        className="py-4"
+      >
         <EditSectionTitle
           title="Source code repositories"
           subtitle="Where can the source code of this software be found?"
