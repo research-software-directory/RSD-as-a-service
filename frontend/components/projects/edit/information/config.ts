@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2024 dv4all
 // SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
@@ -85,7 +85,10 @@ export const projectInformation = {
   research_domain: {
     title: 'Research domains',
     subtitle: 'ERC classification.',
-    infoLink: 'https://erc.europa.eu/news/new-erc-panel-structure-2021-and-2022',
+    infoLink: {
+      url:'https://erc.europa.eu/news/new-erc-panel-structure-2021-and-2022',
+      ariaLabel: 'ERC classification, link to page opens in new tab'
+    },
     label: 'Select main research domain and field'
   },
   keywords: {
