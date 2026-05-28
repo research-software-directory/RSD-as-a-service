@@ -100,23 +100,23 @@ User Agent: ${navigator.userAgent}`
             </h2>
             <textarea
               autoFocus
-              className="placeholder:text-base-500 outline-0 p-2 w-full h-28 text-sm bg-base-700 text-base-100 border border-base-600 rounded-sm"
+              className="placeholder:text-base-200 outline-0 p-2 w-full h-28 text-sm bg-base-700 text-base-200 border border-base-600 rounded-sm"
               placeholder="Ideas on how to improve this page or report an issue?" value={text}
               onChange={e => setText(e.target.value)}>
             </textarea>
 
             {/* Location URL */}
-            <div className="text-[#888] text-sm break-all">
+            <div className="text-base-100 text-sm break-all">
               <LinkIcon className="-rotate-45"/> {typeof location !== 'undefined' && location.href}
             </div>
             {/* Browser user agent detection */}
-            <div className="text-[#888] text-sm mb-8">
+            <div className="text-base-100 text-sm mb-8">
               <WebIcon/> {browserNameAndVersion()}
             </div>
 
             <div className="flex justify-end gap-4 w-full my-2">
               <button
-                className="text-sm text-base-200 border border-base-400 opacity-60 rounded-sm px-3 py-1 hover:opacity-90 active:opacity-95"
+                className="text-sm text-base-100 border border-base-400 opacity-60 rounded-sm px-3 py-1 hover:opacity-90 active:opacity-95"
                 onClick={closeAndClean}>
                 Cancel
               </button>
@@ -131,10 +131,9 @@ User Agent: ${navigator.userAgent}`
               </a>
 
             </div>
-            <div className="text-sm mt-8 mb-6 text-[#B7B7B7]">
+            <div className="text-sm mt-8 mb-6 text-base-100">
               We will send your feedback using your default email application,
-              or you can open a new <a className="text-primary" href={issues_page_url} target="_blank" rel="noreferrer">
-                issue</a>
+              or you can <a className="text-primary" href={issues_page_url} target="_blank" rel="noreferrer"><u>open a new issue</u></a>
             </div>
           </div>
         </div>
