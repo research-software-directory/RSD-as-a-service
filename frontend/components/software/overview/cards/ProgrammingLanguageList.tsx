@@ -13,14 +13,25 @@ type ProgrammingLanguageListProps = {
 export default function ProgrammingLanguageList({
   prog_lang = [], visibleNumberOfProgLang = 3}: ProgrammingLanguageListProps
 ) {
+
+  if (!prog_lang || prog_lang?.length ===0) return null
+
+  // console.group('ProgrammingLanguageList')
+  // console.log('prog_lang...', prog_lang)
+  // console.groupEnd()
+
   return (
     <ul
       aria-label={`${prog_lang?.length} programming languages`}
-      className="text-base-content-secondary text-sm flex flex-wrap gap-1">
+      className="flex-1 flex flex-wrap text-base-content-secondary text-sm">
       {// limits the prog lang to 'visibleNumberOfProgLang' per software.
         prog_lang?.slice(0, visibleNumberOfProgLang)
-          .map((lang:string, index: number) => (
-            <li className="px-1 m-0" key={lang ?? index}>{lang}</li>
+          .map((lang:string) => (
+            <li
+              title={lang}
+              key={lang}
+              className="pr-1 m-0"
+            >{lang}</li>
           ))}
       { //  Show the number of keywords that are not visible.
         (prog_lang?.length > 0)
