@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -87,6 +88,18 @@ export function createColumns(token: string) {
   }, {
     key: 'orcid',
     label: 'ORCID',
+    type: 'string',
+    sx: {
+      width: '11rem',
+      padding: '0.5rem'
+    },
+    patchFn: async (props) => patchPerson({
+      ...props,
+      token
+    })
+  }, {
+    key: 'account',
+    label: 'Account',
     type: 'string',
     sx: {
       width: '11rem',
