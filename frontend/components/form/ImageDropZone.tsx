@@ -1,24 +1,40 @@
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 
-export type ImageDropZoneProps = {
+export type ImageDropZoneProps = Readonly<{
   children: React.ReactNode,
-  onImageDrop: (targetLike: {target: {files: FileList | Blob[]}}) => void
-}
+  ariaLabel: string,
+  onImageDrop: (targetLike: {target: {files: FileList | Blob[]}}) => void,
+  onClick: () => void
+}>
 
-export default function ImageDropZone(props: Readonly<ImageDropZoneProps>) {
+/**
+ * This component should be used in the areas where no additional menu is required.
+ * The component enables upload for everyone. If you need image upload component
+ * which dynamically shows upload menu use <Logo> component!
+ * @param props
+ * @returns
+ */
+export default function ImageDropZone(props:ImageDropZoneProps) {
   const {showErrorMessage} = useSnackbar()
 
   return (
-    <div
+    <button
+      // Critical for focus and button functionality
+      type="button"
+      aria-label={props.ariaLabel}
+      // Tailwind utility resets default button styles and handles focus
+      className="text-left block bg-transparent border-0 p-0.5 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary transition-all cursor-pointer"
+      onClick={props.onClick}
       onDragOver={(e: any) => {
         e.preventDefault()
-        e.currentTarget.style.border = '3px dashed grey'
+        e.currentTarget.style.border = '2px dashed grey'
       }}
       onDragLeave={(e: any) => {
         e.currentTarget.style.border = 'inherit'
@@ -39,6 +55,6 @@ export default function ImageDropZone(props: Readonly<ImageDropZoneProps>) {
         }
       }}>
       {props.children}
-    </div>
+    </button>
   )
 }

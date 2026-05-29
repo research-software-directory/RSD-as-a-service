@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ChangeEvent} from 'react'
+import {ChangeEvent, useRef} from 'react'
 
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
@@ -16,8 +16,8 @@ import {useSession} from '~/auth/AuthProvider'
 import {deleteImage, getImageUrl} from '~/utils/editImage'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {handleFileUpload} from '~/utils/handleFileUpload'
-import ImageInput from './ImageInput'
 import ImageDropZone from '~/components/form/ImageDropZone'
+import ImageInput from './ImageInput'
 
 export type FormInputsForImage={
   logo_id: string|null
@@ -35,6 +35,7 @@ type ImageInputProps={
 export default function ControlledImageInput({name,logo_b64,logo_id,setValue}:ImageInputProps) {
   const {token} = useSession()
   const {showWarningMessage,showErrorMessage} = useSnackbar()
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   async function onFileUpload(e: ChangeEvent<HTMLInputElement> | {target: {files: FileList | Blob[]}} | undefined): Promise<void> {
     if (e === undefined) {
@@ -83,32 +84,32 @@ export default function ControlledImageInput({name,logo_b64,logo_id,setValue}:Im
 
   return (
     <div>
-      <ImageDropZone onImageDrop={onFileUpload}>
-        <label htmlFor="upload-avatar-image"
-          style={{cursor:'pointer'}}
-          title="Click or drop to upload an image"
+      <ImageDropZone
+        ariaLabel = "Upload avatar, press enter or space to choose a file"
+        onImageDrop={onFileUpload}
+        onClick={()=>fileInputRef.current?.click()}
+      >
+        <Avatar
+          alt={name ?? ''}
+          src={logo_b64 ?? getImageUrl(logo_id ?? null) ?? undefined}
+          sx={{
+            width: '8rem',
+            height: '8rem',
+            fontSize: '3rem',
+            marginRight: '0rem',
+            '& img': {
+              height:'auto'
+            }
+          }}
+          variant="square"
         >
-          <Avatar
-            alt={name ?? ''}
-            src={logo_b64 ?? getImageUrl(logo_id ?? null) ?? undefined}
-            sx={{
-              width: '8rem',
-              height: '8rem',
-              fontSize: '3rem',
-              marginRight: '0rem',
-              '& img': {
-                height:'auto'
-              }
-            }}
-            variant="square"
-          >
-            {name ? name.slice(0,3) : ''}
-          </Avatar>
-        </label>
+          {name ? name.slice(0,3) : ''}
+        </Avatar>
       </ImageDropZone>
       <ImageInput
         id="upload-avatar-image"
         onChange={onFileUpload}
+        inputRef={fileInputRef}
       />
       <div className="flex pt-4">
         <Button

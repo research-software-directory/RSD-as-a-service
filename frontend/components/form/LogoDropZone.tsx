@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,6 +13,11 @@ export type ImageDropZoneProps = {
   onImageDrop: (image: ImageDataProps) => any
 }
 
+/**
+ * This component is used with Logo component
+ * @param props
+ * @returns
+ */
 export default function LogoDropZone(props: Readonly<ImageDropZoneProps>) {
   const {showErrorMessage} = useSnackbar()
 
