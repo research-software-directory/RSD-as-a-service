@@ -1,0 +1,76 @@
+# SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+# SPDX-FileCopyrightText: 2026 Netherlands eScience Center
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Run SonarCloud Safely using workflow_run
+# The workflow_run event executes within the security context of your main branch,
+# granting it access to ${{ secrets.SONAR_TOKEN }} even when processing contributions from a fork.
+
+name: frontend sonar
+
+on:
+  workflow_run:
+    # Must match the exact 'name' string of frontend_tests.yml
+    workflows: ["frontend tests"]
+    types:
+      - completed
+
+jobs:
+  fe-sonar:
+    name: "fe-sonar"
+    # Ensure it only runs if the primary frontend testing pipeline succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+    steps:
+      # 1. Checkout the code branch safely using isolated environment variables
+      - name: Checkout target branch
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          # Use the safe string variable below
+          ref: ${{ env.HEAD_BRANCH }}
+          fetch-depth: 0
+        env:
+          # Isolates the code string inside a hard token context to block injection tricks
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+
+      # 2. Re-create the folder structure
+      - name: "install node and cache npm"
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.14
+          cache: 'npm'
+
+      - name: "install dependencies"
+        run: |
+          cd frontend
+          npm ci
+
+      # 3. DOWNLOAD ARTIFACT CROSS-WORKFLOW (test-coverage)
+      - name: "download coverage artifact"
+        uses: actions/download-artifact@v7
+        with:
+          name: frontend-coverage
+          path: frontend/coverage/
+          # Explicitly targets the parent workflow run to fetch its files
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 4. Cache Sonar packages natively
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      # 5. Run the Scan
+      - name: SonarCloud Scan frontend
+        uses: SonarSource/sonarqube-scan-action@v8
+        with:
+          projectBaseDir: frontend
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # This secret is now safely accessible!
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
