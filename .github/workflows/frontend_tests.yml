@@ -19,41 +19,109 @@ on:
     paths:
       - "frontend/**"
 
+defaults:
+  run:
+    working-directory: frontend
+
 jobs:
-  fe-tests:
+  # CHECK 1: Linter
+  fe-lint:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: "install node v22.13 and cache npm"
+      - name: "install node and cache npm"
         uses: actions/setup-node@v6
         with:
           node-version: 24.14
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
       - name: "install dependencies"
-        working-directory: frontend
         run: npm ci
       - name: "run eslint check"
-        working-directory: frontend
         run: npm run lint
+
+  # CHECK 2: Unit Tests
+  fe-test:
+    name: "fe-test"
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: "install node and cache npm"
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.14
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - name: "install dependencies"
+        run: npm ci
       - name: "run unit test"
-        working-directory: frontend
         run: npm run test:coverage
+
+       # Upload the coverage folder for SonarCloud (fe-sonar) to use
+      - name: "upload coverage artifact"
+        uses: actions/upload-artifact@v7
+        with:
+          name: frontend-coverage
+          path: frontend/coverage/
+          # Automatically clean up after 24 hours
+          retention-days: 1
+
+  # CHECK 3: Build Verification
+  fe-build:
+    name: "fe-build"
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: "install node and cache npm"
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.14
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - name: "install dependencies"
+        run: npm ci
+      - name: "run build test"
+        run: npm run build
+
+  # CHECK 4: SonarCloud Scan
+  fe-sonar:
+    name: "fe-sonar"
+    needs: [fe-test]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: "install node and cache npm"
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.14
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - name: "install dependencies"
+        run: npm ci
+
+       # Download the coverage folder back into frontend/coverage/
+      - name: "download coverage artifact"
+        uses: actions/download-artifact@v7
+        with:
+          name: frontend-coverage
+          path: frontend/coverage/
+
+      # UPGRADED v4 -> v5 (Provides full Node.js 24 compatibility)
       - name: Cache SonarCloud packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+
+      # UPGRADED v6 -> v8 (Official SonarSource security & scanning updates)
       - name: SonarCloud Scan frontend
-        uses: SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@v8
         with:
           projectBaseDir: frontend
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: "run build test"
-        working-directory: frontend
-        run: npm run build
