@@ -17,16 +17,17 @@ export default function OrcidLink({orcid}:{orcid?:string|null}) {
       target="_blank"
       rel="noreferrer"
       style={{whiteSpace:'nowrap'}}
+      className="flex gap-1 items-end"
       // 1. a11y link explanation MUST start with same value as in visible text
       aria-label={`${orcid}, Personal ORCID page, opens in a new tab`}
     >
       {/* 2. SVG hidden from screen readers since it's decorative */}
       <LogoOrcid
         aria-hidden="true"
-        className="inline max-w-[1.125rem] mr-1"
+        className="max-w-[1.5rem]"
       />
       {/* 3. Visible text for everyone */}
-      <span className="text-sm align-bottom">{orcid}</span>
+      <span className="text-sm">{orcid}</span>
     </a>
   )
 }

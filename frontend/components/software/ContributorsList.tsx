@@ -89,13 +89,15 @@ export default function ContributorsList({contributors,section='software'}: {con
 
   return (
     <>
-      <div className="gap-4 mt-12 md:grid md:grid-cols-2 hd:grid-cols-3 2xl:mt-0">
+      <section
+        aria-label="Contributors list"
+        className="gap-4 mt-12 md:grid md:grid-cols-2 hd:grid-cols-3 2xl:mt-0">
         {persons.map(item => {
           const displayName = getDisplayName(item)
           const avatarUrl = getImageUrl(item.avatar_id) ?? ''
           if (displayName) {
             return (
-              <div key={displayName} className="flex py-4 pr-4 md:pr-8 2xl:pr-12 2xl:pb-8">
+              <div key={displayName} className="flex gap-4 py-4 pr-4 md:pr-8 2xl:pr-12 2xl:pb-8">
                 <ContributorAvatar
                   avatarUrl={avatarUrl}
                   displayName={displayName}
@@ -119,7 +121,7 @@ export default function ContributorsList({contributors,section='software'}: {con
           return null
         })
         }
-      </div>
+      </section>
       <ShowButton
         showAll={hasMore}
         showLess={contributors.length > topItems}
