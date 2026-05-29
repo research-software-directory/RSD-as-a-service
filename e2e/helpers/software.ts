@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -67,16 +67,9 @@ export async function editSoftwareMetadata(page: Page, mockSoftware: MockedSoftw
     element: getStarted,
     value: mockSoftware.repoUrl
   })
-  // add repository url
-  // const repoUrl = page.getByLabel('Repository URL')
-  // await repoUrl.fill(mockSoftware.repoUrl)
-  // await Promise.all([
-  //   repoUrl.blur(),
-  //   // wait for POST
-  //   page.waitForResponse(/\/repository_url/),
-  // ])
   // add Concept DOI
-  const doi = await page.getByLabel('Software DOI')
+  const doi = await page.getByRole('textbox',{name:'Software DOI'})
+  // getByLabel('Software DOI')
   await fillAutosaveInput({
     page,
     element: doi,

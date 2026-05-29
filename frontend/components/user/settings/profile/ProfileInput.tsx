@@ -35,7 +35,8 @@ export default function ProfileInput() {
             name: 'given_names',
             label: modalConfig.given_names.label,
             useNull: true,
-            // defaultValue: profile.given_names,
+            // enable autocomplete context
+            autoComplete: 'given-name',
             helperTextMessage: modalConfig.given_names.help,
             helperTextCnt: `${given_names?.length ?? 0}/${modalConfig.given_names.validation.maxLength.value}`,
           }}
@@ -46,7 +47,8 @@ export default function ProfileInput() {
             name: 'family_names',
             label: modalConfig.family_names.label,
             useNull: true,
-            // defaultValue: profile.family_names,
+            // enable autocomplete context
+            autoComplete: 'family-name',
             helperTextMessage: modalConfig.family_names.help,
             helperTextCnt: `${family_names?.length ?? 0}/${modalConfig.family_names.validation.maxLength.value}`,
           }}
@@ -59,7 +61,8 @@ export default function ProfileInput() {
             name: 'role',
             label: modalConfig.role.label,
             useNull: true,
-            // defaultValue: profile.role,
+            // enable autocomplete context
+            autoComplete: 'organization-title',
             helperTextMessage: 'Type in your current role',
             helperTextCnt: `${role?.length ?? 0}/${modalConfig.role.validation.maxLength.value}`,
           }}
@@ -70,7 +73,8 @@ export default function ProfileInput() {
             name: 'affiliation',
             label: modalConfig.affiliation.label,
             useNull: true,
-            // defaultValue: profile.affiliation,
+            // enable autocomplete context
+            autoComplete: 'organization',
             helperTextMessage: 'Type in your current affiliation',
             helperTextCnt: `${affiliation?.length ?? 0}/${modalConfig.affiliation.validation.maxLength.value}`,
           }}
@@ -83,7 +87,8 @@ export default function ProfileInput() {
             name: 'email_address',
             label: modalConfig.email_address.label,
             useNull: true,
-            // defaultValue: profile.email_address,
+            // enable autocomplete context
+            autoComplete: 'email',
             helperTextMessage: 'Type in your contact email',
             helperTextCnt: `${email_address?.length ?? 0}/${modalConfig.email_address.validation(false).maxLength.value}`,
           }}

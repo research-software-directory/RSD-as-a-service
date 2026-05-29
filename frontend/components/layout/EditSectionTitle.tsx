@@ -9,65 +9,78 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {ElementType} from 'react'
 import Link from '@mui/material/Link'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 
-type EditSectionTitleProps = {
+type EditSectionTitleProps = Readonly<{
   title: string,
   subtitle?: string,
   children?: any,
   hlevel?: number,
-  infoLink?: string,
+  infoLink?: {
+    url: string,
+    ariaLabel: string
+  },
   className?: string
+}>
+
+function InfoLink({infoLink}:Readonly<{infoLink:EditSectionTitleProps['infoLink']}>){
+
+  if (!infoLink) return null
+
+  return (
+    <Link
+      aria-label={infoLink.ariaLabel}
+      href={infoLink.url}
+      target="_blank"
+      rel="noreferrer"
+      className="flex"
+    >
+      <InfoOutlinedIcon fontSize="small"/>
+    </Link>
+  )
 }
 
-export default function EditSectionTitle({title, subtitle = '', children, hlevel = 2, infoLink, className='font-medium'}:EditSectionTitleProps) {
+function SubTitle({subtitle}:Readonly<{subtitle:EditSectionTitleProps['subtitle']}>){
+  if (!subtitle) return null
 
-  const HeadingTag: any = `h${hlevel}`
+  return(
+    <p className="mb-4"
+      dangerouslySetInnerHTML={{__html: subtitle}}>
+    </p>
+  )
+}
 
-  function getSubtitle() {
-    if (subtitle) {
-      return (
-        <p className="mb-4"
-          dangerouslySetInnerHTML={{__html: subtitle}}>
-        </p>
-      )
-    }
-  }
 
-  if (children) {
+export default function EditSectionTitle({
+  title, subtitle = '', children, hlevel = 2, infoLink, className='font-medium'
+}:EditSectionTitleProps) {
+
+  const HeadingTag = `h${hlevel}` as ElementType
+
+  if (children){
     return (
       <>
         <div className="flex">
-          <HeadingTag className={`flex-1 ${className ?? ''}`}>{title} {
-            infoLink &&
-            <Link
-              aria-label="Link to info page"
-              href={infoLink} target="_blank" rel="noreferrer">
-              <InfoOutlinedIcon fontSize="small"/>
-            </Link>
-          }
+          <HeadingTag className={`flex-1 flex ${className ?? ''}`}>
+            {title}
+            <InfoLink infoLink={infoLink}/>
           </HeadingTag>
           {children}
         </div>
-        {getSubtitle()}
+        <SubTitle subtitle={subtitle} />
       </>
     )
   }
 
   return (
     <>
-      <HeadingTag className={`${className ?? ''}`}>{title} {
-        infoLink &&
-          <Link
-            aria-label="Link to info page"
-            href={infoLink} target="_blank" rel="noreferrer">
-            <InfoOutlinedIcon fontSize="small"/>
-          </Link>
-      }
+      <HeadingTag className={`flex-1 flex ${className ?? ''}`}>
+        {title}
+        <InfoLink infoLink={infoLink}/>
       </HeadingTag>
-      {getSubtitle()}
+      <SubTitle subtitle={subtitle} />
     </>
   )
-
 }
