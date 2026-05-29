@@ -58,6 +58,15 @@ jobs:
       - name: "run unit test"
         run: npm run test:coverage
 
+       # Upload the coverage folder for SonarCloud (fe-sonar) to use
+      - name: "upload coverage artifact"
+        uses: actions/upload-artifact@v7
+        with:
+          name: frontend-coverage
+          path: frontend/coverage/
+          # Automatically clean up after 24 hours
+          retention-days: 1
+
   # CHECK 3: Build Verification
   fe-build:
     name: "fe-build"
@@ -78,6 +87,7 @@ jobs:
   # CHECK 4: SonarCloud Scan
   fe-sonar:
     name: "fe-sonar"
+    needs: [fe-test]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
@@ -91,6 +101,13 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - name: "install dependencies"
         run: npm ci
+
+       # Download the coverage folder back into frontend/coverage/
+      - name: "download coverage artifact"
+        uses: actions/download-artifact@v7
+        with:
+          name: frontend-coverage
+          path: frontend/coverage/
 
       # UPGRADED v4 -> v5 (Provides full Node.js 24 compatibility)
       - name: Cache SonarCloud packages
