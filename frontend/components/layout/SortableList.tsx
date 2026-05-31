@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -9,10 +9,16 @@
 import {JSX} from 'react'
 import {
   DndContext, DragEndEvent, useSensor,
-  useSensors, TouchSensor, MouseSensor
+  useSensors, TouchSensor, MouseSensor,
+  KeyboardSensor
 } from '@dnd-kit/core'
 import {restrictToParentElement, restrictToVerticalAxis} from '@dnd-kit/modifiers'
-import {arrayMove, SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+  sortableKeyboardCoordinates
+} from '@dnd-kit/sortable'
 import List from '@mui/material/List'
 
 
@@ -31,12 +37,9 @@ export default function SortableList<T extends RequiredListProps>({
   items, onSorted, onRenderItem}: SortableListProps<T>) {
   const sensors = useSensors(
     useSensor(TouchSensor),
-    useSensor(MouseSensor,{
-      // required to enable click events
-      // on draggable items with buttons
-      // activationConstraint: {
-      //   distance: 8,
-      // }
+    useSensor(MouseSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
     })
   )
 
