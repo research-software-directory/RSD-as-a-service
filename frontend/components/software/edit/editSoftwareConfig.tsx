@@ -104,7 +104,7 @@ export const contributorInformation = {
       return 'We search by name or ORCID in RSD database'
     },
     label: 'Find or add contributor',
-    help: 'At least 2 letters, use pattern {First name} {Last name} or 0000-0000-0000-0000',
+    help: 'Type at least 2 letters, use first name, last name or ORCID iD',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,
@@ -130,7 +130,7 @@ export const organisationInformation = {
     title: 'Add organisation',
     subtitle: 'We search by name in the RSD and the ROR databases',
     label: 'Find or add organisation',
-    help: 'At least the first 2 letters of the organisation name',
+    help: 'Type at least first 2 letters of the organisation name',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,
