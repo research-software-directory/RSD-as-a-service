@@ -55,7 +55,9 @@ export default function ProjectInformationForm({editProject}: {editProject: Edit
         <input type="hidden"
           {...register('id',{required:'id is required'})}
         />
-        <EditSection className='xl:grid xl:grid-cols-[3fr_1fr] xl:px-0 xl:gap-[3rem]'>
+        <EditSection
+          aria-label="Project description items"
+          className='xl:grid xl:grid-cols-[3fr_1fr] xl:px-0 xl:gap-[3rem]'>
           {/* middle panel */}
           <div className="py-2 overflow-hidden">
             <EditSectionTitle

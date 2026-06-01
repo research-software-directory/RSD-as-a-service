@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -27,7 +27,9 @@ export default function SoftwareOutputTab() {
           <div className="py-2" />
           <MentionEditSection />
         </div>
-        <div className="pt-4 pb-8">
+        <section
+          aria-label={config.findMention.title}
+          className="pt-4 pb-8">
           <FindMentionSection
             id={software.id}
             config={{
@@ -40,7 +42,7 @@ export default function SoftwareOutputTab() {
           />
           <ImportRelatedOutput/>
           <AddRelatedOutput />
-        </div>
+        </section>
       </EditSection>
     </EditRelatedOutputProvider>
   )

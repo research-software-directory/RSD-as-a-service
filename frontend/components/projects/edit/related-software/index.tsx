@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -108,7 +108,9 @@ export default function RelatedSoftwareForProject() {
 
   return (
     <EditSection className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]">
-      <section className="py-4">
+      <section
+        aria-label={`${relatedSoftware?.length ?? 0} ${config.title}`}
+        className="py-4">
         <EditSectionTitle
           title={config.title}
           // subtitle={config.subtitle}
@@ -124,7 +126,9 @@ export default function RelatedSoftwareForProject() {
           onRemove={onRemove}
         />
       </section>
-      <section className="py-4">
+      <section
+        aria-label={config.findTitle}
+        className="py-4">
         <EditSectionTitle
           title={config.findTitle}
           subtitle={config.findSubTitle}

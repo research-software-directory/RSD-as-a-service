@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,7 +23,9 @@ export default function ReferencePapersTab() {
           <div className="py-2" />
           <MentionEditSection />
         </div>
-        <div className="pt-4 pb-8">
+        <section
+          aria-label={config.findMention.title}
+          className="pt-4 pb-8">
           <FindMentionSection
             id={software.id}
             config={{
@@ -35,7 +37,7 @@ export default function ReferencePapersTab() {
             findPublicationByTitle={findPublicationByTitle}
           />
           <ScrapersInfo />
-        </div>
+        </section>
       </EditSection>
     </EditReferencePapersProvider>
   )
