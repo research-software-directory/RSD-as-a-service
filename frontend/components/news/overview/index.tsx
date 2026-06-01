@@ -39,7 +39,7 @@ export default function NewsOverview({pages,page,rows,search,news}:NewsOverviewP
         <section
           // define a11y region
           aria-label="Search news items by title, summary or author"
-          className="flex-2 flex min-w-[20rem]">
+          className="flex-2 flex">
           <SearchInput
             placeholder="Search news items by title, summary or author"
             onSearch={(search: string) => handleQueryChange('search', search)}

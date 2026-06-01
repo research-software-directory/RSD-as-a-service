@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -8,6 +8,7 @@
 import {ReactNode} from 'react'
 import {SxProps, Theme} from '@mui/material/styles'
 import ListItem from '@mui/material/ListItem'
+import IconButton from '@mui/material/IconButton'
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
 import {useSortable} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
@@ -24,15 +25,20 @@ export default function SortableListItem<T extends RequiredListProps>({
   item, children, sx, secondaryAction, ...props}: SortableListItemProps<T>) {
   const {
     attributes,listeners,setNodeRef,
+    setActivatorNodeRef,
     transform,transition,isDragging
   } = useSortable({id: item.id ?? ''})
+
+  //a11y FIX: Destructure "role" out of attributes so it doesn't apply to the <li> element
+  const {role, ...cleanedAttributes} = attributes
 
   return (
     <ListItem
       data-testid="sortable-list-item"
       // draggable
       ref={setNodeRef}
-      {...attributes}
+      // Apply all other ARIA tags (like aria-describedby) without breaking semantic HTML structure
+      {...cleanedAttributes}
       secondaryAction={secondaryAction}
       disablePadding={true}
       disableGutters={true}
@@ -66,15 +72,25 @@ export default function SortableListItem<T extends RequiredListProps>({
       {...props}
     >
       <div className="flex-1 flex gap-2 items-center justify-center overflow-hidden">
-        {/* drag-n-drop icon/button */}
-        <div
+        {/* drag-n-drop button a11y compatible */}
+        <IconButton
+          // add ref for keyboard activation
+          ref={setActivatorNodeRef}
+          // pass the destructured role directly to your interactive handle button
+          role={role}
           title="Drag to change position"
-          aria-label="drag to change position"
+          aria-label="Drag handle, press Space to reorder"
+          edge="start"
           className="hover:cursor-move text-base-content-disabled"
+          sx={{
+            marginLeft:0,
+            cursor: isDragging ? 'move' : 'inherit'
+          }}
+          // Keep listeners attached specifically here
           {...listeners}
         >
           <DragIndicatorIcon />
-        </div>
+        </IconButton>
         {children}
       </div>
     </ListItem>

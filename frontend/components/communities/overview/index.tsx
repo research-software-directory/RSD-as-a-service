@@ -43,7 +43,7 @@ export default function CommunitiesOverview({
         <section
           // define a11y region
           aria-label="Search community by name or short description"
-          className="flex-2 flex min-w-[20rem]">
+          className="flex-2 flex">
           <SearchInput
             placeholder="Search community by name or short description"
             onSearch={(search: string) => handleQueryChange('search', search)}
