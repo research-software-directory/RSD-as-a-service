@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ChangeEvent} from 'react'
+import {ChangeEvent, useRef} from 'react'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
@@ -31,6 +31,7 @@ type AvatarOptionsProps = {
 export default function AvatarOptions(props: AvatarOptionsProps) {
   const {given_names, family_names, avatar_id, avatar_options, loading} = props
   const {onFileUpload, onNoAvatar, onSelectAvatar} = props
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   let avatar:string|undefined
   if (avatar_id){
@@ -50,35 +51,29 @@ export default function AvatarOptions(props: AvatarOptionsProps) {
   return (
     <div className="grid grid-cols-[1fr_3fr] gap-4">
       <div>
-        <ImageDropZone onImageDrop={onFileUpload}>
-          <label htmlFor="upload-avatar-image"
-            title="Click or drop to upload new image"
-            style={{
-              display: 'flex',
-              cursor: 'pointer',
-              padding: '0.5rem',
-              justifyContent: 'center',
-              alignItems: 'center'
+        <ImageDropZone
+          ariaLabel = "Upload avatar image, press enter or space to choose a file"
+          onImageDrop={onFileUpload}
+          onClick={()=>fileInputRef.current?.click()}
+        >
+          <Avatar
+            alt={getDisplayName({given_names, family_names}) ?? 'Unknown'}
+            src={avatar}
+            sx={{
+              width: '8rem',
+              height: '8rem',
+              fontSize: '3rem',
+              margin: '1rem'
             }}
           >
-            <Avatar
-              alt={getDisplayName({given_names, family_names}) ?? 'Unknown'}
-              src={avatar}
-              sx={{
-                width: '8rem',
-                height: '8rem',
-                fontSize: '3rem',
-                margin: '1rem'
-              }}
-            >
-              {getDisplayInitials({given_names, family_names}) ?? ''}
-            </Avatar>
-          </label>
+            {getDisplayInitials({given_names, family_names}) ?? ''}
+          </Avatar>
         </ImageDropZone>
         <ImageInput
           data-testid="upload-avatar-input"
           id="upload-avatar-image"
           onChange={onFileUpload}
+          inputRef={fileInputRef}
         />
       </div>
       <div>

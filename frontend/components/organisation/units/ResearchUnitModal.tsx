@@ -8,7 +8,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ChangeEvent, useEffect, useState} from 'react'
+import {ChangeEvent, useEffect, useRef, useState} from 'react'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -22,17 +22,16 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import {useForm} from 'react-hook-form'
 
 import {useSession} from '~/auth/AuthProvider'
-import useSnackbar from '../../snackbar/useSnackbar'
-import ControlledTextField from '../../form/ControlledTextField'
-import {EditOrganisation} from '~/types/Organisation'
-import config from '../settings/general/generalSettingsConfig'
 import {deleteImage, getImageUrl} from '~/utils/editImage'
 import {handleFileUpload} from '~/utils/handleFileUpload'
 import {getSlugFromString} from '~/utils/getSlugFromString'
-import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import {EditOrganisation} from '~/types/Organisation'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import ControlledTextField from '~/components/form/ControlledTextField'
 import ImageInput from '~/components/form/ImageInput'
 import ImageDropZone from '~/components/form/ImageDropZone'
-
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import config from '~/components/organisation/settings/general/generalSettingsConfig'
 
 type EditOrganisationModalProps = {
   open: boolean,
@@ -54,6 +53,7 @@ export default function ResearchUnitModal({
   const {showWarningMessage,showErrorMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [baseUrl, setBaseUrl] = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const {
     handleSubmit, watch, formState, reset, control, register, setValue
   } = useForm<EditOrganisation>({
@@ -185,32 +185,32 @@ export default function ResearchUnitModal({
         }}>
           <section className="grid grid-cols-[1fr_3fr] gap-8">
             <div>
-              <ImageDropZone onImageDrop={onFileUpload}>
-                <label htmlFor="upload-avatar-image-modal"
-                  style={{cursor:'pointer'}}
-                  title="Click or drop to upload an image"
+              <ImageDropZone
+                ariaLabel = "Upload image, press enter or space to choose a file"
+                onImageDrop={onFileUpload}
+                onClick={()=>fileInputRef.current?.click()}
+              >
+                <Avatar
+                  alt={formData.name ?? ''}
+                  src={formData.logo_b64 ?? getImageUrl(formData?.logo_id) ?? undefined}
+                  sx={{
+                    width: '8rem',
+                    height: '8rem',
+                    fontSize: '3rem',
+                    marginRight: '0rem',
+                    '& img': {
+                      height:'auto'
+                    }
+                  }}
+                  variant="square"
                 >
-                  <Avatar
-                    alt={formData.name ?? ''}
-                    src={formData.logo_b64 ?? getImageUrl(formData?.logo_id) ?? undefined}
-                    sx={{
-                      width: '8rem',
-                      height: '8rem',
-                      fontSize: '3rem',
-                      marginRight: '0rem',
-                      '& img': {
-                        height:'auto'
-                      }
-                    }}
-                    variant="square"
-                  >
-                    {formData.name ? formData.name.slice(0,3) : ''}
-                  </Avatar>
-                </label>
+                  {formData.name ? formData.name.slice(0,3) : ''}
+                </Avatar>
               </ImageDropZone>
               <ImageInput
                 id="upload-avatar-image-modal"
                 onChange={onFileUpload}
+                inputRef={fileInputRef}
               />
               <div className="flex pt-4">
                 <Button

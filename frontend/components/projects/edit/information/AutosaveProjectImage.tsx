@@ -1,14 +1,14 @@
 // SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {ChangeEvent, useRef} from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
-
 import {useFormContext} from 'react-hook-form'
 
 import {useSession} from '~/auth/AuthProvider'
@@ -16,20 +16,20 @@ import ImageAsBackground from '~/components/layout/ImageAsBackground'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {EditProject} from '~/types/Project'
 import {getImageUrl} from '~/utils/editImage'
+import {upsertImage,deleteImage} from '~/utils/editImage'
+import {handleFileUpload} from '~/utils/handleFileUpload'
+import ImageInput from '~/components/form/ImageInput'
+import ImageDropZone from '~/components/form/ImageDropZone'
 import AutosaveProjectTextField from './AutosaveProjectTextField'
 import AutosaveProjectSwitch from './AutosaveProjectSwitch'
 import {projectInformation as config} from './config'
 import {patchProjectTable} from './patchProjectInfo'
-import {upsertImage,deleteImage} from '~/utils/editImage'
-import {ChangeEvent} from 'react'
-import {handleFileUpload} from '~/utils/handleFileUpload'
-import ImageInput from '~/components/form/ImageInput'
-import ImageDropZone from '~/components/form/ImageDropZone'
 
 export default function AutosaveProjectImage() {
   const {token} = useSession()
   const {showWarningMessage, showErrorMessage} = useSnackbar()
   const {watch, setValue, resetField} = useFormContext<EditProject>()
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [
     form_id, form_image_id, form_image_b64, form_image_mime_type, form_image_caption, form_image_contain
@@ -152,7 +152,7 @@ export default function AutosaveProjectImage() {
     }
     return (
       <>
-        <div className="flex pt-4">
+        <div className="flex gap-4">
           <AutosaveProjectTextField
             project_id={form_id}
             options={{
@@ -173,7 +173,7 @@ export default function AutosaveProjectImage() {
             }}
           />
 
-          <div className="flex items-center pl-4">
+          <div className="flex items-center">
             <IconButton
               color="primary"
               aria-label="remove picture"
@@ -186,39 +186,37 @@ export default function AutosaveProjectImage() {
           </div>
         </div>
 
-        <div className="flex pb-3">
-          <AutosaveProjectSwitch
-            project_id={form_id}
-            name='image_contain'
-            label={config.image_contain.label}
-            defaultValue={form_image_contain}
-          />
-        </div>
+        <AutosaveProjectSwitch
+          project_id={form_id}
+          name='image_contain'
+          label={config.image_contain.label}
+          defaultValue={form_image_contain}
+        />
       </>
     )
   }
 
   return (
-    <div>
-      <ImageDropZone onImageDrop={onFileUpload}>
-        <label htmlFor="upload-avatar-image"
-          style={{cursor: 'pointer'}}
-          title="Click or drop to upload an image"
-        >
-          <ImageAsBackground
-            src={imageUrl()}
-            alt={form_image_caption ?? 'image'}
-            bgSize={form_image_contain ? 'contain' : 'cover'}
-            bgPosition={form_image_contain ? 'center' : 'center center'}
-            className="w-full h-[23rem]"
-            noImgMsg="Click or drop to upload image < 2MB"
-          />
-        </label>
+    <div className="grid gap-2 mb-4">
+      <ImageDropZone
+        ariaLabel = "Upload project image, press enter or space to choose a file"
+        onImageDrop={onFileUpload}
+        onClick={()=>fileInputRef.current?.click()}
+      >
+        <ImageAsBackground
+          src={imageUrl()}
+          alt={form_image_caption ?? 'image'}
+          bgSize={form_image_contain ? 'contain' : 'cover'}
+          bgPosition={form_image_contain ? 'center' : 'center center'}
+          className="h-[23rem]"
+          noImgMsg="Click or drop to upload image < 2MB"
+        />
       </ImageDropZone>
 
       <ImageInput
         id="upload-avatar-image"
         onChange={onFileUpload}
+        inputRef={fileInputRef}
       />
 
       {renderImageAttributes()}

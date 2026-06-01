@@ -9,7 +9,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ChangeEvent} from 'react'
+import {ChangeEvent,useRef} from 'react'
 import Button from '@mui/material/Button'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useFormContext} from 'react-hook-form'
@@ -30,6 +30,7 @@ export default function AutosaveSoftwareLogo() {
   const {token} = useSession()
   const {showWarningMessage, showErrorMessage} = useSnackbar()
   const {watch, setValue} = useFormContext<EditSoftwareItem>()
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [
     form_id, form_image_id, form_image_b64, form_image_mime_type
@@ -159,25 +160,25 @@ export default function AutosaveSoftwareLogo() {
         subtitle={config.logo.help}
       />
 
-      <ImageDropZone onImageDrop={onFileUpload}>
-        <label htmlFor='upload-software-logo'
-          style={{cursor: 'pointer'}}
-          title="Click or drop to upload a logo"
-        >
-          <ImageWithPlaceholder
-            placeholder="Click or drop to upload a logo < 2MB"
-            src={imageUrl()}
-            alt={'logo'}
-            bgSize={'contain'}
-            bgPosition={'left center'}
-            className="w-full h-[9rem]"
-          />
-        </label>
+      <ImageDropZone
+        ariaLabel = "Upload software logo, press enter or space to choose a file"
+        onImageDrop={onFileUpload}
+        onClick={()=>fileInputRef.current?.click()}
+      >
+        <ImageWithPlaceholder
+          placeholder="Click or drop to upload a logo < 2MB"
+          src={imageUrl()}
+          alt={'logo'}
+          bgSize={'contain'}
+          bgPosition={'left center'}
+          className="h-[9rem]"
+        />
       </ImageDropZone>
 
       <ImageInput
         id="upload-software-logo"
         onChange={onFileUpload}
+        inputRef={fileInputRef}
       />
 
       {renderImageAttributes()}

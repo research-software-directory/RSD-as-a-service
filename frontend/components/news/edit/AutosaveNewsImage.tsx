@@ -5,11 +5,11 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ChangeEvent} from 'react'
+import {ChangeEvent, useRef} from 'react'
 import Button from '@mui/material/Button'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useFormContext} from 'react-hook-form'
@@ -21,10 +21,10 @@ import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import CopyToClipboard from '~/components/layout/CopyToClipboard'
-import {NewsImageProps,NewsItem,addNewsImage,deleteNewsImage} from '../apiNews'
-import {newsConfig as config} from './config'
 import ImageInput from '~/components/form/ImageInput'
 import ImageDropZone from '~/components/form/ImageDropZone'
+import {NewsImageProps,NewsItem,addNewsImage,deleteNewsImage} from '../apiNews'
+import {newsConfig as config} from './config'
 
 type UploadedImageProps={
   imgUrl: string|null,
@@ -75,6 +75,7 @@ export default function AutosaveNewsImage() {
   const {token} = useSession()
   const {showWarningMessage, showErrorMessage, showInfoMessage} = useSnackbar()
   const {watch, setValue} = useFormContext<NewsItem>()
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [
     form_id, image_for_news, description
@@ -184,25 +185,25 @@ export default function AutosaveNewsImage() {
         })
       }
 
-      <ImageDropZone onImageDrop={onFileUpload}>
-        <label htmlFor='upload-article-image'
-          style={{cursor: 'pointer'}}
-          title="Click or drop to upload an image"
-        >
-          <ImageWithPlaceholder
-            placeholder="Click or drop to upload image < 2MB"
-            src={null}
-            alt={'image'}
-            bgSize={'scale-down'}
-            bgPosition={'left center'}
-            className="w-full h-[9rem]"
-          />
-        </label>
+      <ImageDropZone
+        ariaLabel = "Upload news image, press enter or space to choose a file"
+        onImageDrop={onFileUpload}
+        onClick={()=>fileInputRef.current?.click()}
+      >
+        <ImageWithPlaceholder
+          placeholder="Click or drop to upload image < 2MB"
+          src={null}
+          alt={'image'}
+          bgSize={'scale-down'}
+          bgPosition={'left center'}
+          className="h-[9rem]"
+        />
       </ImageDropZone>
 
       <ImageInput
         id="upload-article-image"
         onChange={onFileUpload}
+        inputRef={fileInputRef}
       />
     </>
   )

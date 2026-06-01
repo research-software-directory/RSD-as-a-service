@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -26,6 +26,12 @@ type LogoProps = Readonly<{
   props?: any
 }>
 
+/**
+ * This component is used for images where admin should be able to edit image.
+ * Interactively the menu option for editing image/logo/avatar is shown.
+ * @param param0
+ * @returns
+ */
 export default function Logo({
   name,logo,onAddLogo,onRemoveLogo,
   canEdit=false,src,sx,
