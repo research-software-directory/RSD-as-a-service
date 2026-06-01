@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: 2021 - 2023 dv4all
  * SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
  * SPDX-FileCopyrightText: 2022 Marc Hanisch (GFZ) <marc.hanisch@gfz-potsdam.de>
- * SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+ * SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
  * SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
  * SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
  * SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (ICL) <d.alonso-alvarez@imperial.ac.uk>
@@ -111,12 +111,6 @@ html {
 
 body {
   font-size: 1rem;
-  /* minimal with to have logo,
-  add button, mobile menu and profile.
-  NOTE ! when changing this value we need to update
-  useDisableScrollLock hook in utils folder too.
-  */
-  min-width: 30rem;
   /* fix jumping scrollbar */
   overflow: auto;
   --scrollbar-thumb: #e4e4e7;

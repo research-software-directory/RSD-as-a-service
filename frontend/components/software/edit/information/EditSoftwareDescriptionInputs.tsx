@@ -94,7 +94,7 @@ export default function EditSoftwareDescriptionInputs() {
         {/* add white space at the bottom */}
         {/* <div className="xl:py-3"></div> */}
       </div>
-      <div className="py-2 min-w-[21rem]">
+      <div className="py-2">
         <AutosaveSoftwarePageStatus />
         <div className="py-6"></div>
         <AutosaveSoftwareLogo />

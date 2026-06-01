@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -36,7 +36,7 @@ export default function PersonsOverviewClient({pages,page,rows,search,persons}:P
         <h1 className="mr-4 lg:flex-1">
           Persons
         </h1>
-        <div className="flex-2 flex min-w-[20rem]">
+        <div className="flex-2 flex">
           <SearchInput
             placeholder="Search person by name or affiliation"
             onSearch={(search: string) => handleQueryChange('search', search)}

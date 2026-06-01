@@ -43,7 +43,7 @@ export default function OrganisationsOverviewClient({
         <section
           // define a11y region
           aria-label="Search organisation by name, ROR name or website"
-          className="flex-2 flex min-w-[20rem]">
+          className="flex-2 flex">
           <SearchInput
             placeholder="Search organisation by name, ROR name or website"
             onSearch={(search: string) => handleQueryChange('search', search)}

@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
 // SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2026 Imperial College London
@@ -44,9 +44,8 @@ export default function AppHeader() {
       className="z-12 py-4 min-h-[88px] bg-secondary text-primary-content flex items-center flex-wrap"
     >
       {/* keep these styles in sync with main in MainContent.tsx */}
-      <div
-        className="flex-1 flex flex-col px-4 xl:flex-row items-start lg:container lg:mx-auto">
-        <div className="w-full flex-1 flex items-center justify-between">
+      <div className="flex-1 flex flex-col px-4 xl:flex-row items-start lg:container lg:mx-auto">
+        <div className="flex-1 w-full flex flex-col flex-wrap items-center justify-between sm:flex-row">
           <Link href="/" passHref className="hover:text-inherit" aria-label="Link to home page">
             <LogoApp
               className="hidden 2xl:block"
@@ -68,10 +67,13 @@ export default function AppHeader() {
           <GlobalSearchAutocomplete className="hidden xl:block ml-12 mr-6"/>
 
           {/* Large menu*/}
-          <nav aria-label="Main Navigation" className="flex-1 flex items-center">
+          <nav
+            aria-label="Main Navigation"
+            className="flex-1 flex items-center"
+          >
             <DesktopMenu activePath={pathname ?? '/'}/>
 
-            <div className="flex-1 flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4 text-primary-content">
+            <div className="flex-1 flex flex-wrap gap-2 justify-end items-center min-w-[8rem] text-right xl:ml-4 text-primary-content">
               {/* FEEDBACK panel */}
               {host.feedback?.enabled
                 ? <FeedbackPanelButton
