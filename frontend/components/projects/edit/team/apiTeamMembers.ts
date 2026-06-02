@@ -2,11 +2,12 @@
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {PatchPerson} from '~/types/Contributor'
-import {SaveTeamMember, TeamMember} from '~/types/Project'
+import {PatchPerson, Person} from '~/types/Contributor'
+import {SaveTeamMember} from '~/types/Project'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 
@@ -99,7 +100,7 @@ export async function deleteTeamMemberById({ids, token}: {ids: string[], token: 
 }
 
 export async function patchTeamMemberPositions({members, token}:
-{members: TeamMember[], token: string}) {
+{members: Person[], token: string}) {
   try {
     // create all requests
     const requests = members.map(member => {

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -15,7 +15,7 @@ import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetch
 import {Contributor, NewContributor, PatchContributor, Person} from '~/types/Contributor'
 
 export async function getContributorsForSoftware({software, token}:
-{software: string, token?: string}) {
+{software: string, token?: string}): Promise<Person[]> {
   try {
     // build url
     const query = `software_id=${software}&order=position.asc,given_names.asc`
@@ -38,6 +38,33 @@ export async function getContributorsForSoftware({software, token}:
 
   } catch (e: any) {
     logger(`getContributorsForSoftware: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+export async function getRawContributorsForSoftware({software, token}: {software: string, token?: string}): Promise<Person[]> {
+  try {
+    // build url
+    const selectList = 'id,is_contact_person,email_address,family_names,given_names,affiliation,role,orcid,position,avatar_id,account'
+    const query = `select=${selectList}&software=eq.${software}&order=position.asc,given_names.asc`
+    const url = `${getBaseUrl()}/contributor?${query}`
+
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token),
+      }
+    })
+
+    if (resp.status === 200) {
+      return await resp.json()
+    }
+    logger(`getRawContributorsForSoftware: ${resp.status} - ${resp.statusText}: [${url}]`, 'warn')
+    // query not found
+    return []
+
+  } catch (e: any) {
+    logger(`getRawContributorsForSoftware: ${e?.message}`, 'error')
     return []
   }
 }

@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,8 +11,8 @@ import {useCallback, useEffect, useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
 import {TeamMember} from '~/types/Project'
-import {PatchPerson, PersonProps} from '~/types/Contributor'
-import {getTeamForProject} from '~/components/projects/apiProjects'
+import {PatchPerson, Person, PersonProps} from '~/types/Contributor'
+import {getRawTeamMembers} from '~/components/projects/apiProjects'
 import {deleteImage, saveBase64Image} from '~/utils/editImage'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import {sortOnNumProp} from '~/utils/sortFn'
@@ -31,7 +32,7 @@ import {
  * @param members
  * @returns members (updated)
  */
-function resetContactPersons(member:TeamMember,members:TeamMember[],token:string){
+function resetContactPersons(member:TeamMember,members:Person[],token:string){
   // const resetContactPersons:Contributor[] = []
   const newList = members.map(item=>{
     // if current member
@@ -62,7 +63,7 @@ export default function useTeamMembers() {
   const {token} = useSession()
   const {project} = useProjectContext()
   const {showErrorMessage} = useSnackbar()
-  const [members, setMembers] = useState<TeamMember[]>([])
+  const [members, setMembers] = useState<Person[]>([])
   const [loadedSlug, setLoadedSlug] = useState('')
   const [loading, setLoading] = useState(true)
 
@@ -166,7 +167,7 @@ export default function useTeamMembers() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[project.id,members,token])
 
-  const sortedMembers = useCallback(async(newList:TeamMember[])=>{
+  const sortedMembers = useCallback(async(newList:Person[])=>{
     if (newList.length > 0) {
       const oldList = [...members]
       // update ui first
@@ -190,7 +191,7 @@ export default function useTeamMembers() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[project.id,members,token])
 
-  const deleteMember = useCallback(async(member:TeamMember)=>{
+  const deleteMember = useCallback(async(member:Person)=>{
     if (member.id){
       // remove from database
       const ids = [member.id]
@@ -231,7 +232,7 @@ export default function useTeamMembers() {
     let abort = false
     async function getMembers() {
       setLoading(true)
-      const members = await getTeamForProject({
+      const members = await getRawTeamMembers({
         project: project.id,
         token
       })

@@ -3,6 +3,7 @@
 // SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +18,7 @@ import {ScreenReaderMessage} from '~/components/a11y/StatusForReaders'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import useSoftwareContext from '../context/useSoftwareContext'
 import {
-  getContributorsForSoftware, postContributor,
+  getRawContributorsForSoftware, postContributor,
   patchContributor, patchContributorPositions,
   deleteContributorsById
 } from './apiContributors'
@@ -69,7 +70,7 @@ export default function useSoftwareContributors() {
   const addContributor = useCallback(async(person:FormPerson)=>{
     if (software.id){
       // new base64 image to upload
-      if (person.avatar_id && person.avatar_id.startsWith('data:')===true){
+      if (person?.avatar_id?.startsWith('data:')){
         const upload = await saveBase64Image({
           base64: person.avatar_id,
           token
@@ -130,7 +131,7 @@ export default function useSoftwareContributors() {
   const updateContributor = useCallback(async(person:FormPerson)=>{
     if (software.id){
       // new base64 image to upload
-      if (person.avatar_id && person.avatar_id.startsWith('data:')===true){
+      if (person?.avatar_id?.startsWith('data:')){
         const upload = await saveBase64Image({
           base64: person.avatar_id,
           token
@@ -247,7 +248,7 @@ export default function useSoftwareContributors() {
     let abort = false
     const getContributors = async (software: string, token: string) => {
       setLoading(true)
-      const data = await getContributorsForSoftware({
+      const data = await getRawContributorsForSoftware({
         software,
         token
       }) as Contributor[]

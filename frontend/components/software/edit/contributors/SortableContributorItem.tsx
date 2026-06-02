@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +10,7 @@ import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 
 import {combineRoleAndAffiliation, getDisplayInitials, getDisplayName} from '~/utils/getDisplayName'
-import {Contributor} from '~/types/Contributor'
+import {Contributor, Person} from '~/types/Contributor'
 import {TeamMember} from '~/types/Project'
 import {getImageUrl} from '~/utils/editImage'
 import useSmallScreen from '~/config/useSmallScreen'
@@ -18,7 +19,7 @@ import SortableListItemActions from '~/components/layout/SortableListItemActions
 import ContributorAvatar from '~/components/software/ContributorAvatar'
 
 type SortableContributorItemProps = Readonly<{
-  item: Contributor | TeamMember,
+  item: Contributor | TeamMember | Person,
   onEdit: () => void,
   onDelete: () => void,
 }>

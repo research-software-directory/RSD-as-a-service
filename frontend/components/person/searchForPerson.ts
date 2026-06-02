@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2025 dv4all
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (dv4all) (dv4all)
 //
@@ -11,7 +11,7 @@ import {sortBySearchFor} from '~/utils/sortFn'
 import logger from '~/utils/logger'
 import {searchORCID} from '~/utils/getORCID'
 import {TeamMember} from '~/types/Project'
-import {Contributor} from '~/types/Contributor'
+import {Contributor, Person} from '~/types/Contributor'
 import {rsdPublicProfiles, rsdUniquePersonEntries, UniqueRsdPerson} from './findRSDPerson'
 import {AggregatedPerson, groupByOrcid, personsToAutocompleteOptions} from './groupByOrcid'
 
@@ -99,7 +99,7 @@ function joinPublicProfiles({aggPersons,profiles}:{
   return persons
 }
 
-export function personAlreadyPresent(collection:TeamMember[]|Contributor[],person:AggregatedPerson){
+export function personAlreadyPresent(collection:TeamMember[]|Contributor[]|Person[],person:AggregatedPerson){
   const found = collection.find(item=>{
     if (item.account && person.account){
       return item.account === person.account

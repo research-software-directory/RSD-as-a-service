@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,6 +23,7 @@ import ControlledAutocomplete from '~/components/form/ControlledAutocomplete'
 import AvatarOptionsPerson, {RequiredAvatarProps} from '~/components/person/AvatarOptionsPerson'
 import useAggregatedPerson from './useAggregatedPerson'
 import {modalConfig} from './config'
+import {useSession} from '~/auth/AuthProvider'
 
 type InputProps={
   label:string
@@ -30,6 +32,7 @@ type InputProps={
 }
 
 type AggregatedPersonModalConfig={
+  account: InputProps,
   is_contact_person: Omit<InputProps,'validation'>,
   given_names: InputProps,
   family_names: InputProps,
@@ -61,6 +64,8 @@ export default function AggregatedPersonModal({
   title='Profile',config=modalConfig
 }: AggregatedPersonModalProps) {
   const {loading, options} = useAggregatedPerson(person?.orcid)
+  const session = useSession()
+  const isAdmin = session?.user?.role === 'rsd_admin'
   const smallScreen = useMediaQuery('(max-width:640px)')
   const {handleSubmit, watch, formState, control, register, setValue, trigger} = useForm<FormPerson>({
     mode: 'onChange',
@@ -89,6 +94,7 @@ export default function AggregatedPersonModal({
   // console.log('formData...', formData)
   // console.log('loading...', loading)
   // console.log('options...', options)
+  // console.log('person...', person)
   // console.groupEnd()
 
   function handleCancel(e?:any, reason?:'backdropClick' | 'escapeKeyDown') {
@@ -122,9 +128,11 @@ export default function AggregatedPersonModal({
         <input type="hidden"
           {...register('id')}
         />
-        <input type="hidden"
-          {...register('account')}
-        />
+        {!isAdmin &&
+          <input type="hidden"
+            {...register('account')}
+          />
+        }
         <input type="hidden"
           {...register('position')}
         />
@@ -149,7 +157,7 @@ export default function AggregatedPersonModal({
               control={control}
               options={{
                 // user cannot edit specific public profile information (account!==null)
-                disabled: formData.account!==null,
+                disabled: formData.account!==null && !isAdmin,
                 name: 'given_names',
                 label: config.given_names.label,
                 useNull: true,
@@ -163,7 +171,7 @@ export default function AggregatedPersonModal({
               control={control}
               options={{
                 // user cannot edit specific public profile information (account!==null)
-                disabled: formData.account!==null,
+                disabled: formData.account!==null && !isAdmin,
                 name: 'family_names',
                 label: config.family_names.label,
                 useNull: true,
@@ -189,7 +197,7 @@ export default function AggregatedPersonModal({
             <ControlledTextField
               options={{
                 // user cannot edit specific public profile information (account!==null)
-                disabled: formData.account!==null,
+                disabled: formData.account!==null && !isAdmin,
                 name: 'orcid',
                 label: config.orcid.label,
                 useNull: true,
@@ -216,14 +224,25 @@ export default function AggregatedPersonModal({
               helperTextMessage={config.affiliation.help}
               rules={config.affiliation.validation}
             />
-          </section>
-          <section>
             <ControlledSwitch
               name="is_contact_person"
               label={config.is_contact_person.label}
               control={control}
               defaultValue={false}
             />
+            {isAdmin &&
+              <ControlledTextField
+                control={control}
+                options={{
+                  name: 'account',
+                  label: config.account.label,
+                  useNull: true,
+                  defaultValue: person?.account,
+                  helperTextMessage: config.account.help,
+                }}
+                rules={config?.account.validation}
+              />
+            }
           </section>
         </DialogContent>
         <DialogActions sx={{

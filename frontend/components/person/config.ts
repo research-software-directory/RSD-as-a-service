@@ -1,10 +1,20 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 export const modalConfig = {
+  account: {
+    label: 'Account ID',
+    help: 'Connect an account to this person',
+    validation: {
+      pattern: {
+        value: /^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/,
+        message: 'Should be a UUID'
+      }
+    }
+  },
   is_contact_person: {
     label: 'Contact person',
     help: 'Is this the main contact person?'
