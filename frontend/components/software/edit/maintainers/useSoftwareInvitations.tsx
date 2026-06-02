@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,7 +15,8 @@ export function useSoftwareInvitations({software}:{software?:string}) {
   const {token,user} = useSession()
   const {showErrorMessage} = useSnackbar()
   const [unusedInvitations,setUnusedInvitations] = useState<Invitation[]>([])
-  // const [magicLink, setMagicLink] = useState(null)
+  // a11y feedback notifier state for dynamic list actions
+  const [notification, setNotification] = useState('')
 
   const loadUnusedInvitations = useCallback(()=>{
     // get unused invitation
@@ -48,10 +49,13 @@ export function useSoftwareInvitations({software}:{software?:string}) {
         token
       })
       if (resp.status===201){
+        // update notification
+        setNotification('New invitation link successfully generated and added to the list.')
         // reload unused invitation list
         loadUnusedInvitations()
       }else{
         showErrorMessage(`Failed to create invitation. ${resp.message}`)
+        setNotification('Failed to generate invitation link. Please try again.')
       }
     }
   // IGNORE showErrorMessage dependency
@@ -64,15 +68,18 @@ export function useSoftwareInvitations({software}:{software?:string}) {
       token
     })
     if (resp.status===200){
+      setNotification('Invitation link successfully deleted.')
       loadUnusedInvitations()
     }else{
       showErrorMessage(`Failed to delete invitation. ${resp.message}`)
+      setNotification('Failed to delete invitation link.')
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[token,loadUnusedInvitations])
 
   return {
     unusedInvitations,
+    notification,
     deleteInvitation,
     createInvitation
   }

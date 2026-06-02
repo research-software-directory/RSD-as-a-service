@@ -9,19 +9,15 @@
 import {useEffect, useState} from 'react'
 
 import {useSession} from '~/auth/AuthProvider'
-import {getRelatedProjectsForProject} from '~/components/projects/apiProjects'
-import {addRelatedProject, deleteRelatedProject} from '~/components/projects/edit/apiEditProject'
 import {sortOnStrProp} from '~/utils/sortFn'
 import {extractErrorMessages} from '~/utils/fetchHelpers'
 import {ProjectStatusKey, RelatedProjectForProject, SearchProject} from '~/types/Project'
 import {OrganisationStatus} from '~/types/Organisation'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import EditSection from '~/components/layout/EditSection'
-import {relatedProject as config} from './config'
-import FindRelatedProject from './FindRelatedProject'
+import {getRelatedProjectsForProject} from '~/components/projects/apiProjects'
+import {addRelatedProject, deleteRelatedProject} from '~/components/projects/edit/apiEditProject'
 import useProjectContext from '../context/useProjectContext'
-import RelatedProjectList from './RelatedProjectList'
+import RelatedProjectSection from './RelatedProjectSection'
 
 export default function RelatedProjectsForProject() {
   const {token} = useSession()
@@ -125,45 +121,13 @@ export default function RelatedProjectsForProject() {
   }
 
   return (
-    <EditSection className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]">
-      <section
-        aria-label={`${relatedProject?.length ?? 0} ${config.title}`}
-        className="py-4">
-        <EditSectionTitle
-          title={config.title}
-          // subtitle={config.subtitle}
-        >
-          {/* add count to title */}
-          {relatedProject && relatedProject.length > 0 ?
-            <div className="pl-4 text-2xl">{relatedProject.length}</div>
-            : null
-          }
-        </EditSectionTitle>
-        <RelatedProjectList
-          projects={relatedProject}
-          onRemove={onRemove}
-        />
-      </section>
-      <section
-        aria-label={config.findTitle}
-        className="py-4">
-        <EditSectionTitle
-          title={config.findTitle}
-          subtitle={config.findSubtitle}
-        />
-        <FindRelatedProject
-          project={project.id}
-          token={token}
-          config={{
-            freeSolo: false,
-            minLength: config.validation.minLength,
-            label: config.label,
-            help: config.help,
-            reset: true
-          }}
-          onAdd={onAdd}
-        />
-      </section>
-    </EditSection>
+    <RelatedProjectSection
+      projectId={project.id}
+      token={token}
+      relatedProject={relatedProject}
+      onRemove={onRemove}
+      onAdd={onAdd}
+    />
   )
+
 }

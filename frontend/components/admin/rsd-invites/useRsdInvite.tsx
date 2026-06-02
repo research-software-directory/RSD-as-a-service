@@ -16,6 +16,8 @@ export function useRsdInvite(){
   const {showErrorMessage} = useSnackbar()
   const [loading, setLoading] = useState(true)
   const [activeInvites, setActiveInvites] = useState<Invitation[]>([])
+  // a11y feedback notifier state for dynamic list actions
+  const [notification, setNotification] = useState('')
 
   const getInvites = useCallback(()=>{
     setLoading(true)
@@ -39,39 +41,40 @@ export function useRsdInvite(){
 
   },[token])
 
-  const createInvite = useCallback((invite:NewAccountInvite)=>{
-    createRsdInvite({invite,token})
-      .then((resp)=>{
-        if (resp.status===201){
-          getInvites()
-        }else{
-          showErrorMessage(`Failed to create invite. ${resp.message}`)
-        }
-      })
-      .catch(e=>{
-        showErrorMessage(`Failed to create invite. ${e.message}`)
-      })
+  const createInvite = useCallback(async(invite:NewAccountInvite)=>{
+    const resp = await createRsdInvite({invite,token})
+
+    if (resp.status===201){
+      setNotification('New invitation link successfully generated and added to the list.')
+      getInvites()
+    }else{
+      showErrorMessage(`Failed to create invite. ${resp.message}`)
+      setNotification('Failed to generate invitation link. Please try again.')
+    }
+
   },[token,getInvites,showErrorMessage])
 
   const deleteInvite = useCallback(async({id}:{id:string})=>{
     const resp = await deleteRsdInvite({id,token})
 
     if (resp.status!==200){
+      setNotification('Failed to delete invitation link.')
       showErrorMessage(`Failed to delete invite. ${resp.message}`)
     }else{
+      setNotification('Invitation link successfully deleted.')
       getInvites()
     }
 
   },[token,getInvites,showErrorMessage])
 
   useEffect(()=>{
-
     if (token) getInvites()
   },[token,getInvites])
 
   return {
     loading,
     activeInvites,
+    notification,
     getInvites,
     createInvite,
     deleteInvite,

@@ -14,13 +14,8 @@ import {addRelatedSoftware, deleteRelatedSoftware, getRelatedSoftwareForSoftware
 import {RelatedSoftwareOfSoftware, SearchSoftware} from '~/types/SoftwareTypes'
 import {OrganisationStatus} from '~/types/Organisation'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import FindRelatedSoftware from '~/components/projects/edit/related-software/FindRelatedSoftware'
-import RelatedSoftwareList from '~/components/projects/edit/related-software/RelatedSoftwareList'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import EditSection from '~/components/layout/EditSection'
+import RelatedSoftwareSection from '~/components/projects/edit/related-software/RelatedSoftwareSection'
 import useSoftwareContext from '../context/useSoftwareContext'
-import {relatedSoftware as config} from './config'
-
 
 export default function RelatedSoftwareForSoftware() {
   const {token} = useSession()
@@ -110,45 +105,13 @@ export default function RelatedSoftwareForSoftware() {
   }
 
   return (
-    <EditSection
-      aria-label={config.title}
-      className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]">
-      <section className="py-4">
-        <EditSectionTitle
-          title={config.title}
-        // subtitle={config.subtitle}
-        >
-          {/* add count to title */}
-          {relatedSoftware && relatedSoftware.length > 0 ?
-            <div className="pl-4 text-2xl">{relatedSoftware.length}</div>
-            : null
-          }
-        </EditSectionTitle>
-        <RelatedSoftwareList
-          software={relatedSoftware}
-          onRemove={onRemove}
-        />
-      </section>
-      <section
-        aria-label={config.findTitle}
-        className="py-4">
-        <EditSectionTitle
-          title={config.findTitle}
-          subtitle={config.findSubTitle}
-        />
-        <FindRelatedSoftware
-          software={software.id ?? ''}
-          token={token}
-          config={{
-            freeSolo: false,
-            minLength: config.validation.minLength,
-            label: config.label,
-            help: config.help,
-            reset: true
-          }}
-          onAdd={onAdd}
-        />
-      </section>
-    </EditSection>
+    <RelatedSoftwareSection
+      softwareId={software.id}
+      token={token}
+      relatedSoftware={relatedSoftware}
+      onAdd={onAdd}
+      onRemove={onRemove}
+    />
   )
+
 }

@@ -5,7 +5,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 'use client'
-import {useState} from 'react'
 import Alert from '@mui/material/Alert'
 
 import InvitationList, {Invitation} from '~/components/maintainers/InvitationList'
@@ -13,15 +12,11 @@ import ContentLoader from '~/components/layout/ContentLoader'
 import StatusForReaders from '~/components/a11y/StatusForReaders'
 import CreateRsdInvite from './CreateRsdInvite'
 import {useRsdInvite} from './useRsdInvite'
-import {NewAccountInvite} from './apiRsdInvite'
 
 const extraLineGenerators: ((inv: Invitation) => string)[] = [inv => inv.id, inv => inv.comment ?? '']
 
 export default function AdminRsdInvites() {
-  const {loading,activeInvites,createInvite,deleteInvite} = useRsdInvite()
-  // a11y feedback notifier state for dynamic list actions
-  const [notification, setNotification] = useState('')
-
+  const {loading,activeInvites,notification,createInvite,deleteInvite} = useRsdInvite()
 
   if (loading) {
     return (
@@ -29,26 +24,6 @@ export default function AdminRsdInvites() {
         <ContentLoader />
       </section>
     )
-  }
-
-  async function handleCreateInvitation(inv:NewAccountInvite) {
-    try {
-      setNotification('Generating new invitation link...')
-      await createInvite(inv)
-      setNotification('New invitation link successfully generated and added to the list below.')
-    } catch {
-      setNotification('Failed to generate invitation link. Please try again.')
-    }
-  }
-
-  async function handleDeleteInvitation(inv: Invitation) {
-    try {
-      setNotification('Deleting invitation link...')
-      await deleteInvite(inv)
-      setNotification('Invitation link successfully deleted.')
-    } catch {
-      setNotification('Failed to delete invitation link.')
-    }
   }
 
   return (
@@ -71,7 +46,7 @@ export default function AdminRsdInvites() {
               subject="Invite to register with RSD"
               body="You are welcome to join RSD! Click on the link below and login with your credentials to complete your registration."
               invitations={activeInvites}
-              onDelete={handleDeleteInvitation}
+              onDelete={deleteInvite}
               showTitle={false}
               extraLineGenerators={extraLineGenerators}
             />
@@ -84,7 +59,7 @@ export default function AdminRsdInvites() {
         <StatusForReaders
           message={notification}
         />
-        <CreateRsdInvite createInvite={handleCreateInvitation} />
+        <CreateRsdInvite createInvite={createInvite} />
       </section>
     </div>
   )
