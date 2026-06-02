@@ -7,6 +7,7 @@ import {useState} from 'react'
 import Button from '@mui/material/Button'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 
+import StatusForReaders from '~/components/a11y/StatusForReaders'
 import InvitationList, {Invitation} from '~/components/maintainers/InvitationList'
 import useSoftwareContext from '~/components/software/edit/context/useSoftwareContext'
 import {useSoftwareInvitations} from './useSoftwareInvitations'
@@ -50,14 +51,11 @@ export default function SoftwareMaintainerLinks() {
 
   return (
     <>
-      {/* Visually hidden live region to catch both generation and deletion states */}
-      <div
-        role="status"
-        aria-live="polite"
-        className="sr-only absolute w-px h-px p-0 -m-px overflow-hidden clip whitespace-nowrap border-0"
-      >
-        {notification}
-      </div>
+      {/* a11y screen reader announcer */}
+      <StatusForReaders
+        message={notification}
+        className="absolute w-px h-px p-0 -m-px overflow-hidden clip whitespace-nowrap border-0"
+      />
       <Button
         variant='contained'
         sx={{

@@ -7,10 +7,12 @@
 
 import {useUserSettings} from '~/config/UserSettingsContext'
 import useHandleQueryChange from '~/utils/useHandleQueryChange'
+import StatusForReaders from '~/components/a11y/StatusForReaders'
 import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
 import SearchInput from '~/components/search/SearchInput'
 import ToggleViewGroup from '~/components/search/ToggleViewGroup'
 import ShowItemsSelect from '~/components/search/ShowItemsSelect'
+import {searchOverviewMsg} from '~/components/search/searchOverviewMsg'
 import {CommunityListProps} from '../apiCommunities'
 import CommunitiesList from './CommunitiesList'
 import CommunitiesGrid from './CommunitiesGrid'
@@ -33,6 +35,15 @@ export default function CommunitiesOverview({
   // if masonry we change to grid
   const view = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
 
+  const {announcement} = searchOverviewMsg({
+    name: 'organisations',
+    count,
+    page,
+    rows,
+    filterCnt:0,
+    search
+  })
+
   return (
     <>
       {/* Page title with search and pagination */}
@@ -44,6 +55,8 @@ export default function CommunitiesOverview({
           // define a11y region
           aria-label="Search community by name or short description"
           className="flex-2 flex">
+          {/* a11y screen reader announcer */}
+          <StatusForReaders message={announcement} />
           <SearchInput
             placeholder="Search community by name or short description"
             onSearch={(search: string) => handleQueryChange('search', search)}

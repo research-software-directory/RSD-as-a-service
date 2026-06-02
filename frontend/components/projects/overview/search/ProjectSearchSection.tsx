@@ -15,10 +15,12 @@ import {useUserSettings} from '~/config/UserSettingsContext'
 import {getPageRange} from '~/utils/pagination'
 import useSmallScreen from '~/config/useSmallScreen'
 import useHandleQueryChange from '~/utils/useHandleQueryChange'
-import SearchInput from '~/components/search/SearchInput'
+import StatusForReaders from '~/components/a11y/StatusForReaders'
 import FiltersModal from '~/components/filter/FiltersModal'
+import SearchInput from '~/components/search/SearchInput'
 import ToggleViewGroup from '~/components/search/ToggleViewGroup'
 import ShowItemsSelect from '~/components/search/ShowItemsSelect'
+import {searchOverviewMsg} from '~/components/search/searchOverviewMsg'
 import useProjectParams from '~/components/projects/overview/useProjectParams'
 
 type SearchSectionProps = {
@@ -35,7 +37,14 @@ export default function ProjectSearchSection({
   const {handleQueryChange} = useHandleQueryChange()
   const [modal, setModal] = useState(false)
 
-  const placeholder = filterCnt > 0 ? 'Find within selection' : 'Find project'
+  const {placeholder,announcement} = searchOverviewMsg({
+    name: 'project items',
+    count,
+    page,
+    rows,
+    filterCnt,
+    search
+  })
 
   // console.group('ProjectSearchSection')
   // console.log('page...', page)
@@ -47,6 +56,8 @@ export default function ProjectSearchSection({
     <section
       aria-label="Find project"
       data-testid="search-section">
+      {/* a11y screen reader announcer */}
+      <StatusForReaders message={announcement} />
       <div className="flex border rounded-md shadow-xs bg-base-100 p-2">
         <SearchInput
           placeholder={placeholder}

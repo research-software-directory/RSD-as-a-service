@@ -17,6 +17,7 @@ import {FilterOptionsState} from '@mui/material/useAutocomplete'
 import TextField from '@mui/material/TextField'
 
 import {useDebounce} from '~/utils/useDebounce'
+import StatusForReaders from '~/components/a11y/StatusForReaders'
 
 export type AutocompleteOption<T> = {
   key: string
@@ -247,15 +248,10 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
 
   return (
     <div className="w-full relative">
-      {/* Visually Hidden Live Announcement Box */}
-      <div
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        className="sr-only absolute w-px h-px p-0 -m-px overflow-hidden clip whitespace-nowrap border-0"
-      >
-        {srAnnouncement}
-      </div>
+      {/* a11y screen reader announcer */}
+      <StatusForReaders
+        message={srAnnouncement}
+      />
       <Autocomplete
         freeSolo={config.freeSolo}
         id="async-autocomplete"

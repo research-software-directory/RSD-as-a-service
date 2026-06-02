@@ -6,29 +6,40 @@
 'use client'
 
 import useHandleQueryChange from '~/utils/useHandleQueryChange'
+import StatusForReaders from '~/components/a11y/StatusForReaders'
 import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import SearchInput from '~/components/search/SearchInput'
 import ToggleViewGroup from '~/components/search/ToggleViewGroup'
 import ShowItemsSelect from '~/components/search/ShowItemsSelect'
+import {searchOverviewMsg} from '~/components/search/searchOverviewMsg'
 import {NewsListItemProps} from '~/components/news/apiNews'
 import NewsList from './list'
 import NewsGrid from './NewsGrid'
 
 type NewsOverviewProps = Readonly<{
   page: number,
-  pages: number,
+  count: number,
   rows: number,
   news: NewsListItemProps[],
   search?: string|null,
 }>
 
-export default function NewsOverview({pages,page,rows,search,news}:NewsOverviewProps) {
+export default function NewsOverview({count,page,rows,search,news}:NewsOverviewProps) {
   const {handleQueryChange} = useHandleQueryChange()
   const {rsd_page_layout,setPageLayout,setPageRows} = useUserSettings()
-
+  const numPages = Math.ceil(count / rows)
   // if masonry we change to grid
   const view = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
+
+  const {announcement} = searchOverviewMsg({
+    name: 'news items',
+    count: rows,
+    page,
+    rows,
+    filterCnt:0,
+    search
+  })
 
   return (
     <>
@@ -40,6 +51,8 @@ export default function NewsOverview({pages,page,rows,search,news}:NewsOverviewP
           // define a11y region
           aria-label="Search news items by title, summary or author"
           className="flex-2 flex">
+          {/* a11y screen reader announcer */}
+          <StatusForReaders message={announcement} />
           <SearchInput
             placeholder="Search news items by title, summary or author"
             onSearch={(search: string) => handleQueryChange('search', search)}
@@ -71,7 +84,7 @@ export default function NewsOverview({pages,page,rows,search,news}:NewsOverviewP
 
       {/* Pagination */}
       <PaginationLinkApp
-        count={pages}
+        count={numPages}
         page={page}
       />
     </>

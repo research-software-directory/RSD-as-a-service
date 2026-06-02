@@ -10,6 +10,7 @@ import Alert from '@mui/material/Alert'
 
 import InvitationList, {Invitation} from '~/components/maintainers/InvitationList'
 import ContentLoader from '~/components/layout/ContentLoader'
+import StatusForReaders from '~/components/a11y/StatusForReaders'
 import CreateRsdInvite from './CreateRsdInvite'
 import {useRsdInvite} from './useRsdInvite'
 import {NewAccountInvite} from './apiRsdInvite'
@@ -79,14 +80,10 @@ export default function AdminRsdInvites() {
       <section
         aria-label="Create new invitation"
         className="order-1 xl:order-2">
-        {/* Visually hidden live region to catch both generation and deletion states */}
-        <div
-          role="status"
-          aria-live="polite"
-          className="sr-only absolute w-px h-px p-0 -m-px overflow-hidden clip whitespace-nowrap border-0"
-        >
-          {notification}
-        </div>
+        {/* a11y screen reader announcer */}
+        <StatusForReaders
+          message={notification}
+        />
         <CreateRsdInvite createInvite={handleCreateInvitation} />
       </section>
     </div>

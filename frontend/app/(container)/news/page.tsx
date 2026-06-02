@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2026 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 
@@ -44,8 +49,6 @@ export default async function NewsOverviewPage({
     token
   })
 
-  const numPages = Math.ceil(count / page_rows)
-
   // console.group('NewsOverviewPage')
   // console.log('count...', count)
   // console.log('page...', page)
@@ -56,7 +59,7 @@ export default async function NewsOverviewPage({
 
   return (
     <NewsOverview
-      pages={numPages}
+      count={count}
       page={page}
       rows={page_rows}
       search={search}
