@@ -51,7 +51,9 @@ services:
       - PGRST_DB_URI=postgres://rsd_authenticator:${POSTGRES_AUTHENTICATOR_PASSWORD}@${POSTGRES_DB_HOST}:${POSTGRES_DB_HOST_PORT}/${POSTGRES_DB}
       - PGRST_DB_ANON_ROLE
       - PGRST_DB_SCHEMA
+      - PGRST_SERVER_HOST=backend
       - PGRST_SERVER_PORT
+      - PGRST_ADMIN_SERVER_PORT
       - PGRST_JWT_SECRET
       - PGRST_DB_POOL=30
       - PGRST_DB_POOL_ACQUISITION_TIMEOUT=30
@@ -59,6 +61,13 @@ services:
       - database
     networks:
       - net
+    healthcheck:
+      test: [ "CMD", "postgrest", "--ready" ]
+      interval: 5s
+      retries: 2
+      timeout: 5s
+      start_period: 60s
+      start_interval: 1s
 
   auth:
     build: ./authentication
@@ -326,7 +335,8 @@ services:
       - PGRST_JWT_SECRET
       - POSTGREST_URL
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - net
     deploy:

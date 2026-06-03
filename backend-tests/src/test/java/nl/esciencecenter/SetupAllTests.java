@@ -9,11 +9,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import io.restassured.RestAssured;
 import io.restassured.http.Header;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.Date;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -21,53 +16,11 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 public class SetupAllTests implements BeforeAllCallback {
 
 	@Override
-	public void beforeAll(ExtensionContext extensionContext) throws Exception {
-		checkBackendAvailable();
+	public void beforeAll(ExtensionContext extensionContext) {
 		setupRestAssured();
 	}
 
 	public static Header adminAuthHeader;
-
-	public static void checkBackendAvailable() throws InterruptedException {
-		URI backendUri = URI.create(System.getenv("POSTGREST_URL"));
-		HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
-		HttpRequest request = HttpRequest.newBuilder(backendUri).build();
-		int maxTries = 30;
-		for (int i = 1; i <= maxTries; i++) {
-			try {
-				HttpResponse<Void> response = client.send(request, HttpResponse.BodyHandlers.discarding());
-				if (response.statusCode() == 200) {
-					System.out.println(
-						"Attempt %d/%d to connect to the backend on %s succeeded, continuing with the tests".formatted(
-							i,
-							maxTries,
-							backendUri
-						)
-					);
-					client.close();
-					return;
-				}
-				System.out.println(
-					"Attempt %d/%d to connect to the backend on %s failed, trying again in 1 second".formatted(
-						i,
-						maxTries,
-						backendUri
-					)
-				);
-				Thread.sleep(1000);
-			} catch (IOException e) {
-				System.out.println(
-					"Attempt %d/%d to connect to the backend on %s failed, trying again in 1 second".formatted(
-						i,
-						maxTries,
-						backendUri
-					)
-				);
-				Thread.sleep(1000);
-			}
-		}
-		throw new RuntimeException("Unable to make connection to the backend with URI: " + backendUri);
-	}
 
 	public static void setupRestAssured() {
 		RestAssured.baseURI = System.getenv("POSTGREST_URL");
