@@ -22,7 +22,7 @@ CREATE FUNCTION unique_person_entries() RETURNS TABLE (
 ) LANGUAGE sql STABLE AS
 $$
 SELECT DISTINCT
-	(CONCAT(contributor.given_names,' ',contributor.family_names)) AS display_name,
+	CONCAT(contributor.given_names, ' ', contributor.family_names) AS display_name,
 	contributor.given_names,
 	contributor.family_names,
 	contributor.email_address,
@@ -35,7 +35,7 @@ FROM
 	contributor
 UNION
 SELECT DISTINCT
-	(CONCAT(team_member.given_names,' ',team_member.family_names)) AS display_name,
+	CONCAT(team_member.given_names, ' ', team_member.family_names) AS display_name,
 	team_member.given_names,
 	team_member.family_names,
 	team_member.email_address,
@@ -98,6 +98,7 @@ CREATE FUNCTION person_mentions() RETURNS TABLE (
 	id UUID,
 	given_names VARCHAR,
 	family_names VARCHAR,
+	display_name VARCHAR,
 	email_address VARCHAR,
 	affiliation VARCHAR,
 	"role" VARCHAR,
@@ -115,6 +116,7 @@ SELECT
 	contributor.id,
 	contributor.given_names,
 	contributor.family_names,
+	CONCAT(contributor.given_names, ' ', contributor.family_names) AS display_name,
 	contributor.email_address,
 	contributor.affiliation,
 	contributor.role,
@@ -141,6 +143,7 @@ SELECT
 	team_member.id,
 	team_member.given_names,
 	team_member.family_names,
+	CONCAT(team_member.given_names, ' ', team_member.family_names) AS display_name,
 	team_member.email_address,
 	team_member.affiliation,
 	team_member.role,

@@ -22,7 +22,7 @@ export async function getContributors({page, rows, token, searchFor, orderBy}: A
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
       const encodedSearch = encodeURIComponent(searchFor)
-      query+=`&or=(given_names.ilike."*${encodedSearch}*",family_names.ilike."*${encodedSearch}*",email_address.ilike."*${encodedSearch}*",orcid.ilike."*${encodedSearch}*",account.ilike."*${encodedSearch}*")`
+      query+=`&or=(display_name.ilike."*${encodedSearch}*",email_address.ilike."*${encodedSearch}*",orcid.ilike."*${encodedSearch}*",account.ilike."*${encodedSearch}*")`
     }
     if (orderBy) {
       query+=`&order=${orderBy.column}.${orderBy.direction}`
