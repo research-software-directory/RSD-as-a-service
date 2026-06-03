@@ -2,7 +2,8 @@
 // SPDX-FileCopyrightText: 2023 - 2025 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,9 +22,8 @@ import SoftwareContributors from '.'
 import mockContributors from './__mocks__/softwareContributors.json'
 import mockSearchOptions from '~/components/person/__mocks__/searchForPersonOptions.json'
 
-// MOCK getContributorsForSoftware
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockGetContributorsForSoftware = jest.fn(props => Promise.resolve([] as any))
+const mockGetRawContributorsForSoftware = jest.fn(props => Promise.resolve([] as any))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockPostContributor = jest.fn(props => Promise.resolve([] as any))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -40,7 +40,7 @@ const mockPatchContributorPositions = jest.fn(props => Promise.resolve({
 }))
 jest.mock('./apiContributors', () => ({
   ...jest.requireActual('./apiContributors'),
-  getContributorsForSoftware: jest.fn(props => mockGetContributorsForSoftware(props)),
+  getRawContributorsForSoftware: jest.fn(props => mockGetRawContributorsForSoftware(props)),
   postContributor: jest.fn(props => mockPostContributor(props)),
   patchContributor: jest.fn(props => mockPatchContributor(props)),
   deleteContributorsById: jest.fn(props => mockDeleteContributorsById(props)),
@@ -111,7 +111,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     editSoftwareState.brand_name= 'Test software title'
     editSoftwareState.concept_doi= ''
     // resolve no contributors
-    mockGetContributorsForSoftware.mockResolvedValueOnce([])
+    mockGetRawContributorsForSoftware.mockResolvedValueOnce([])
 
     render(
       <WithAppContext options={{session: mockSession}}>
@@ -136,7 +136,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     editSoftwareState.brand_name= 'Test software title'
     editSoftwareState.concept_doi= ''
     // resolve list of contributors
-    mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)
+    mockGetRawContributorsForSoftware.mockResolvedValueOnce(mockContributors)
 
     render(
       <WithAppContext options={{session: mockSession}}>
@@ -168,7 +168,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     editSoftwareState.brand_name= 'Test software title'
     editSoftwareState.concept_doi= ''
     // resolve no contributors
-    mockGetContributorsForSoftware.mockResolvedValueOnce([])
+    mockGetRawContributorsForSoftware.mockResolvedValueOnce([])
     // mock search options returned
     mockSearchForPerson.mockResolvedValueOnce(mockSearchOptions)
     // mock post response
@@ -293,7 +293,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     editSoftwareState.concept_doi= '10.5281/zenodo.6379973'
 
     // resolve no contributors
-    mockGetContributorsForSoftware.mockResolvedValueOnce([])
+    mockGetRawContributorsForSoftware.mockResolvedValueOnce([])
     // resolve import request
     mockGetContributorsFromDoi.mockResolvedValueOnce(mockContributors)
 
@@ -330,7 +330,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     editSoftwareState.concept_doi= ''
 
     // resolve contributors
-    mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)
+    mockGetRawContributorsForSoftware.mockResolvedValueOnce(mockContributors)
 
     render(
       <WithAppContext options={{session: mockSession}}>
@@ -402,7 +402,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
       software: editSoftwareState.id
     }
     // mock return list of contributors
-    mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)
+    mockGetRawContributorsForSoftware.mockResolvedValueOnce(mockContributors)
     // mock patch contributor response
     mockPatchContributor.mockResolvedValueOnce({
       status: 200,
@@ -464,7 +464,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     editSoftwareState.brand_name= 'Test software title'
     editSoftwareState.concept_doi= ''
     // mock no members
-    mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)
+    mockGetRawContributorsForSoftware.mockResolvedValueOnce(mockContributors)
     // mock patch contributor response
     mockPatchContributor.mockResolvedValueOnce({
       status: 200,
@@ -537,7 +537,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
       software: editSoftwareState.id,
     }
     // mock no members
-    mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)
+    mockGetRawContributorsForSoftware.mockResolvedValueOnce(mockContributors)
     // mock patch
     mockPatchContributor.mockResolvedValueOnce({
       status: 200,
