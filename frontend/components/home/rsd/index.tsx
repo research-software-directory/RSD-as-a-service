@@ -35,7 +35,6 @@ export default function RsdHome({counts,news}: HomeProps) {
     <main
       // a11y id to be used to skip to main content link
       id="main-content"
-      tabIndex={-1}
       className="bg-base-100 dark:bg-base-900 dark:text-base-100 outline-none"
       data-testid="rsd-home-page"
     >
