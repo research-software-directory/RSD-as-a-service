@@ -35,19 +35,7 @@ jobs:
           # Isolates the code string inside a hard token context to block injection tricks
           HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
 
-      # 2. Re-create the folder structure
-      - name: "install node and cache npm"
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24.14
-          cache: 'npm'
-
-      - name: "install dependencies"
-        run: |
-          cd frontend
-          npm ci
-
-      # 3. DOWNLOAD ARTIFACT CROSS-WORKFLOW (test-coverage)
+      # 2. DOWNLOAD ARTIFACT CROSS-WORKFLOW (test-coverage)
       - name: "download coverage artifact"
         uses: actions/download-artifact@v7
         with:
@@ -57,7 +45,7 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 4. Cache Sonar packages natively
+      # 3. Cache Sonar packages natively
       - name: Cache SonarCloud packages
         uses: actions/cache@v5
         with:
@@ -65,7 +53,7 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      # 5. Run the Scan
+      # 4. Run the Scan
       - name: SonarCloud Scan frontend
         uses: SonarSource/sonarqube-scan-action@v8
         with:
