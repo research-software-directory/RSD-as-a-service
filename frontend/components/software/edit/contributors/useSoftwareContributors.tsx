@@ -12,6 +12,8 @@ import {Contributor, PatchContributor, PersonProps} from '~/types/Contributor'
 import {deleteImage, saveBase64Image} from '~/utils/editImage'
 import {getDisplayName} from '~/utils/getDisplayName'
 import {sortOnNumProp} from '~/utils/sortFn'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
+import {ScreenReaderMessage} from '~/components/a11y/StatusForReaders'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import useSoftwareContext from '../context/useSoftwareContext'
 import {
@@ -20,7 +22,6 @@ import {
   deleteContributorsById
 } from './apiContributors'
 import {FormPerson} from '~/components/person/AggregatedPersonModal'
-import {getPropsFromObject} from '~/utils/getPropsFromObject'
 
 /**
  * Replace contributor item and reset contact person flag on other items in the list
@@ -63,7 +64,7 @@ export default function useSoftwareContributors() {
   const [contributors, setContributors] = useState<Contributor[]>([])
   const [loading, setLoading] = useState(true)
   const [loadedSoftware, setLoadedSoftware] = useState<string>('')
-  const [notification, setNotification] = useState<string>('')
+  const [notification, setNotification] = useState<ScreenReaderMessage>('')
 
   const addContributor = useCallback(async(person:FormPerson)=>{
     if (software.id){
@@ -110,10 +111,16 @@ export default function useSoftwareContributors() {
           ]
           setContributors(newList)
         }
-        setNotification(`${contributor.given_names} added to contributors list.`)
+        setNotification({
+          prio: 'assertive',
+          text: `${contributor.given_names} added to contributors list.`
+        })
       } else {
         showErrorMessage(`Failed to add contributor. ${resp.message}`)
-        setNotification('Failed to add contributor. Try again later.')
+        setNotification({
+          prio: 'assertive',
+          text: 'Failed to add contributor. Try again later.'
+        })
       }
     }
   // ignore showErrorMessage as dependency
@@ -187,9 +194,9 @@ export default function useSoftwareContributors() {
         showErrorMessage(`Failed to update contributor positions. ${resp.message}`)
         setNotification('Failed to update contributor positions. Try again later.')
       }
+      setNotification('Contributor position in the list successfully changed.')
     } else {
       setContributors([])
-      setNotification('Contributor position in the list successfully changed.')
     }
   // ignore showErrorMessage as dependency
   // eslint-disable-next-line react-hooks/exhaustive-deps

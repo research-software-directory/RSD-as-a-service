@@ -5,13 +5,23 @@
 
 import {ComponentPropsWithoutRef} from 'react'
 
+export type ScreenReaderMessage=string | {
+  // prio controls when message is read:
+  // polite -> after all other messages in the queue
+  // assertive -> interrupts and reads message immediately
+  prio: 'polite' | 'assertive',
+  text: string
+}
+
 type StatusForReadersProps = {
-  message: string
+  message: ScreenReaderMessage
 } & ComponentPropsWithoutRef<'div'>
 
 /**
- * a11y status announcer
- * provides polite status update to screen readers
+ * a11y status announcer.
+ * Provides status update to screen readers.
+ * Default priority is polite and you can use text only.
+ * To interrupt use object {prio:'assertive',text:'your important message'}
  * @param param0
  * @returns
  */
@@ -19,15 +29,23 @@ export default function StatusForReaders({message, ...props}:StatusForReadersPro
 
   if (!message) return null
 
+  // normalize whether message is a string or an object
+  const isObject = typeof message === 'object' && message !== null
+  const notification = isObject ? message.text : message
+  const priority = isObject ? message.prio : 'polite'
+
+  // Skip rendering if the message text inside the object happens to be empty
+  if (!notification) return null
+
   return (
     <div
       role="status"
-      aria-live="polite"
+      aria-live={priority}
       aria-atomic="true"
       className="sr-only"
       {...props}
     >
-      {message}
+      {notification}
     </div>
   )
 }
