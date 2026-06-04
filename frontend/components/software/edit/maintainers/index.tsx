@@ -61,7 +61,9 @@ export default function EditSoftwareMaintainers() {
       <EditSection
         aria-label={config.title}
         className='xl:grid xl:grid-cols-[1fr_1fr] xl:px-0 xl:gap-[3rem]'>
-        <div className="py-4">
+        <section
+          aria-label={`${maintainers?.length} ${config.title}`}
+          className="py-4">
           <EditSectionTitle
             title={config.title}
           />
@@ -69,10 +71,10 @@ export default function EditSoftwareMaintainers() {
             onDelete={onDeleteMaintainer}
             maintainers={maintainers}
           />
-        </div>
+        </section>
         <section
           aria-label={config.inviteLink.title}
-          className="py-4 min-w-[21rem] xl:my-0">
+          className="py-4 xl:my-0">
           <EditSectionTitle
             title={config.inviteLink.title}
             subtitle={config.inviteLink.subtitle}

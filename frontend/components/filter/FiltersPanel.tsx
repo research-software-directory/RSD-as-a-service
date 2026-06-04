@@ -16,18 +16,18 @@ import useSmallScreen from '~/config/useSmallScreen'
  * @param param0
  * @returns
  */
-export default function FiltersPanel({children}: {children: any}) {
+export default function FiltersPanel({children}: {children: React.ReactNode}) {
   const smallScreen = useSmallScreen()
 
   // hide filter panel on mobile
   if (smallScreen) return null
 
   return (
-    <section
+    <aside
       data-testid="filters-panel"
       aria-label="Filters"
       className="flex bg-base-100 p-4 shadow-sm rounded-md flex-col gap-8 min-w-[18rem]">
       {children}
-    </section>
+    </aside>
   )
 }

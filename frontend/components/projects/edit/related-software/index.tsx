@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,12 +15,8 @@ import {sortOnStrProp} from '~/utils/sortFn'
 import {RelatedSoftwareOfProject, SearchSoftware} from '~/types/SoftwareTypes'
 import {OrganisationStatus} from '~/types/Organisation'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import EditSection from '~/components/layout/EditSection'
-import FindRelatedSoftware from './FindRelatedSoftware'
-import {relatedSoftware as config} from '~/components/software/edit/related-software/config'
 import useProjectContext from '../context/useProjectContext'
-import RelatedSoftwareList from './RelatedSoftwareList'
+import RelatedSoftwareSection from './RelatedSoftwareSection'
 
 export default function RelatedSoftwareForProject() {
   const {token} = useSession()
@@ -107,41 +103,13 @@ export default function RelatedSoftwareForProject() {
   }
 
   return (
-    <EditSection className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]">
-      <section className="py-4">
-        <EditSectionTitle
-          title={config.title}
-          // subtitle={config.subtitle}
-        >
-          {/* add count to title */}
-          {relatedSoftware && relatedSoftware.length > 0 ?
-            <div className="pl-4 text-2xl">{relatedSoftware.length}</div>
-            : null
-          }
-        </EditSectionTitle>
-        <RelatedSoftwareList
-          software={relatedSoftware}
-          onRemove={onRemove}
-        />
-      </section>
-      <section className="py-4">
-        <EditSectionTitle
-          title={config.findTitle}
-          subtitle={config.findSubTitle}
-        />
-        <FindRelatedSoftware
-          software={''}
-          token={token}
-          config={{
-            freeSolo: false,
-            minLength: config.validation.minLength,
-            label: config.label,
-            help: config.help,
-            reset: true
-          }}
-          onAdd={onAdd}
-        />
-      </section>
-    </EditSection>
+    <RelatedSoftwareSection
+      softwareId=''
+      token={token}
+      relatedSoftware={relatedSoftware}
+      onAdd={onAdd}
+      onRemove={onRemove}
+    />
   )
+
 }

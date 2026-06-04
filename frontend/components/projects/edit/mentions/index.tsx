@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,9 @@ import ProjectMentionTabs from './ProjectMentionTabs'
 export default function ProjectMentions() {
 
   return (
-    <section className="flex-1">
+    <section
+      aria-label="Project output, citations and impact"
+      className="flex-1">
       <ProjectMentionProvider>
         <ProjectMentionTabs />
       </ProjectMentionProvider>

@@ -17,6 +17,7 @@ import {FilterOptionsState} from '@mui/material/useAutocomplete'
 import TextField from '@mui/material/TextField'
 
 import {useDebounce} from '~/utils/useDebounce'
+import StatusForReaders from '~/components/a11y/StatusForReaders'
 
 export type AutocompleteOption<T> = {
   key: string
@@ -74,6 +75,8 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
   const [selected, setSelected] = useState<AutocompleteOption<T>|null>(null)
   const searchFor = useDebounce(newInputValue, 700)
   const [processing, setProcessing] = useState('')
+  //a11y screen reader live announcement management
+  const [announcement, setAnnouncement] = useState('')
   const {loading, foundFor} = status
 
   useEffect(() => {
@@ -87,12 +90,27 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
       newInputValue!==''
     ) {
       // debugger
+      // announce search initiation politely
+      setAnnouncement(`Searching for ${searchFor} ...`)
       // issue search request using trimmed value
       onSearch(searchFor)
       // set raw value as processing
       setProcessing(searchFor)
     }
   }, [searchFor, foundFor, processing, newInputValue, config.minLength, onSearch])
+
+  // a11y monitor results array changes to announce results length updates
+  useEffect(() => {
+    if (!loading && foundFor) {
+      if (options.length === 0) {
+        setAnnouncement(`No results found for ${foundFor}.`)
+      } else {
+        setAnnouncement(
+          `${options.length} suggestion${options.length === 1 ? '' : 's'} found for ${foundFor}. Use up and down arrow keys to navigate.`
+        )
+      }
+    }
+  }, [options, loading, foundFor])
 
   // console.group('AsyncAutocompleteSC')
   // console.log('loading...', loading)
@@ -112,6 +130,8 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
       loading === false && onCreate) {
       // we send trimmed value
       onCreate(value)
+      // announce creation confirmation - too early
+      // setAnnouncement(`Created and added new entry: ${value}`)
       if (config?.reset) {
         // reset selected value to nothing
         setSelected(null)
@@ -123,6 +143,8 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
   function requestAdd(item: AutocompleteOption<T>) {
     // console.log('requestAdd...', item)
     onAdd(item)
+    // announce selection addition confirmation - too early
+    // setAnnouncement(`Added ${item.label}`)
     if (config?.reset) {
       // reset selected value to nothing
       setSelected(null)
@@ -226,7 +248,11 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
   }
 
   return (
-    <>
+    <div className="w-full relative">
+      {/* a11y screen reader announcer */}
+      <StatusForReaders
+        message={announcement}
+      />
       <Autocomplete
         freeSolo={config.freeSolo}
         id="async-autocomplete"
@@ -334,6 +360,6 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
           )}}
         renderOption={onRenderOption}
       />
-    </>
+    </div>
   )
 }

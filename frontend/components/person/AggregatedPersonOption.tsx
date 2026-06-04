@@ -23,7 +23,11 @@ export default function AggregatedPersonOption({option}: {option: AutocompleteOp
       return (
         <div className="grid grid-cols-[3fr_2fr] gap-2">
           {affiliation_options.join('; ')}
-          <div className="pl-4 text-right">{orcid}</div>
+          <div
+            className="pl-4 text-right"
+            aria-label={`ORCID ID ${orcid}`}>
+            {orcid}
+          </div>
         </div>
       )
     }
@@ -31,37 +35,44 @@ export default function AggregatedPersonOption({option}: {option: AutocompleteOp
       return (
         <div className="grid grid-cols-[3fr_2fr] gap-2">
           <div className="flex-1"></div>
-          <div className="pl-4 text-right">{option.data?.orcid}</div>
+          <div
+            className="pl-4 text-right"
+            aria-label={`ORCID ID ${orcid}`}>
+            {orcid}
+          </div>
         </div>
       )
     }
     if (affiliation_options) {
       return (
         <div className="flex-1">
-          {option.data?.affiliation_options.join('; ')}
+          {affiliation_options.join('; ')}
         </div>
       )
     }
   }
 
   return (
-    <article className="flex-1 flex">
+    <div className="flex-1 flex gap-2">
       <ContributorAvatar
         avatarUrl={getImageUrl(option.data?.avatar_options[0] ?? null) ?? ''}
         displayName={displayName ?? ''}
         displayInitials={displayInitials}
       />
-      <section className="flex-1">
+      <div className="flex-1">
         <div className="grid grid-cols-[3fr_1fr] gap-2">
           <div className="flex items-center">
             <strong><span className="flex-1">{option.label}</span></strong>
           </div>
-          <span className="text-right">{option.data?.sources.join(', ')}</span>
+          <span
+            className="text-right"
+            aria-label={`Source ${option.data?.sources.join(', ')}`}
+          >{option.data?.sources.join(', ')}</span>
         </div>
         <div className="py-1 text-[0.75rem]">
           {renderSecondRow()}
         </div>
-      </section>
-    </article>
+      </div>
+    </div>
   )
 }

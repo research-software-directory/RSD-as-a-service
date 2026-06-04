@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,7 +23,7 @@ export default function FindOrganisationItem({...org}:FindOrganisationItemProps)
   }
 
   return (
-    <article
+    <div
       // information used by e2e tests
       data-testid="organisation-list-item"
       // information used by e2e tests
@@ -40,13 +41,13 @@ export default function FindOrganisationItem({...org}:FindOrganisationItemProps)
         }
         {
           org.website &&
-          <div>{org.website}</div>
+          <div aria-label={`website ${org.website}`}>{org.website}</div>
         }
         {
           org.ror_id &&
-          <div>{org.ror_id}</div>
+          <div aria-label={'ror id ${org.ror_id}'}>{org.ror_id}</div>
         }
       </div>
-    </article>
+    </div>
   )
 }

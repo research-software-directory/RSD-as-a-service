@@ -8,9 +8,11 @@
 import {useUserSettings} from '~/config/UserSettingsContext'
 import {OrganisationListProps} from '~/types/Organisation'
 import useHandleQueryChange from '~/utils/useHandleQueryChange'
+import StatusForReaders from '~/components/a11y/StatusForReaders'
 import SearchInput from '~/components/search/SearchInput'
 import ToggleViewGroup from '~/components/search/ToggleViewGroup'
 import ShowItemsSelect from '~/components/search/ShowItemsSelect'
+import {searchOverviewMsg} from '~/components/search/searchOverviewMsg'
 import OrganisationListView from '~/components/organisation/overview/OrganisationList'
 import OrganisationGrid from '~/components/organisation/overview/OrganisationGrid'
 import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
@@ -34,6 +36,15 @@ export default function OrganisationsOverviewClient({
   // if masonry we change to grid
   const view = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
 
+  const {announcement} = searchOverviewMsg({
+    name: 'organisations',
+    count,
+    page,
+    rows,
+    filterCnt:0,
+    search
+  })
+
   return (
     <>
       <div className="flex flex-wrap mt-4 py-8 px-4 rounded-lg bg-base-100 lg:sticky top-0 border border-base-200 z-11">
@@ -44,6 +55,8 @@ export default function OrganisationsOverviewClient({
           // define a11y region
           aria-label="Search organisation by name, ROR name or website"
           className="flex-2 flex">
+          {/* a11y screen reader announcer */}
+          <StatusForReaders message={announcement} />
           <SearchInput
             placeholder="Search organisation by name, ROR name or website"
             onSearch={(search: string) => handleQueryChange('search', search)}

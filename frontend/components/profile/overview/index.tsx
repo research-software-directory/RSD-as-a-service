@@ -6,28 +6,41 @@
 'use client'
 
 import useHandleQueryChange from '~/utils/useHandleQueryChange'
+import StatusForReaders from '~/components/a11y/StatusForReaders'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import SearchInput from '~/components/search/SearchInput'
 import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
 import ShowItemsSelect from '~/components/search/ShowItemsSelect'
 import ToggleViewGroup from '~/components/search/ToggleViewGroup'
+import {searchOverviewMsg} from '~/components/search/searchOverviewMsg'
 import {PersonsOverview} from './apiPersonsOverview'
 import PersonsList from './PersonsList'
 import PersonsGrid from './PersonsGrid'
 
 type PersonsOverviewProps = Readonly<{
   page: number,
-  pages: number,
+  count: number,
   rows: number,
   persons: PersonsOverview[],
   search?: string|null,
 }>
 
-export default function PersonsOverviewClient({pages,page,rows,search,persons}:PersonsOverviewProps) {
+export default function PersonsOverviewClient({count,page,rows,search,persons}:PersonsOverviewProps) {
   const {handleQueryChange} = useHandleQueryChange()
   const {rsd_page_layout,setPageLayout,setPageRows} = useUserSettings()
+  const numPages = Math.ceil(count / rows)
+
   // if masonry we change to grid
   const view = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
+
+  const {announcement} = searchOverviewMsg({
+    name: 'organisations',
+    count,
+    page,
+    rows,
+    filterCnt:0,
+    search
+  })
 
   return (
     <>
@@ -37,6 +50,8 @@ export default function PersonsOverviewClient({pages,page,rows,search,persons}:P
           Persons
         </h1>
         <div className="flex-2 flex">
+          {/* a11y screen reader announcer */}
+          <StatusForReaders message={announcement} />
           <SearchInput
             placeholder="Search person by name or affiliation"
             onSearch={(search: string) => handleQueryChange('search', search)}
@@ -66,7 +81,7 @@ export default function PersonsOverviewClient({pages,page,rows,search,persons}:P
       }
       {/* Pagination */}
       <PaginationLinkApp
-        count={pages}
+        count={numPages}
         page={page}
       />
     </>

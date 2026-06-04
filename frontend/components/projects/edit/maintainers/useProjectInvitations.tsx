@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,6 +16,8 @@ export function useProjectInvitations({project}:{project?:string}) {
   const {showErrorMessage} = useSnackbar()
   const [unusedInvitations,setUnusedInvitations] = useState<Invitation[]>([])
   const [magicLink, setMagicLink] = useState(null)
+  // a11y feedback notifier state for dynamic list actions
+  const [notification, setNotification] = useState('')
 
   const loadUnusedInvitations = useCallback(()=>{
     // get unused invitation
@@ -42,6 +44,7 @@ export function useProjectInvitations({project}:{project?:string}) {
 
   const createInvitation = useCallback(async()=>{
     if (project && user?.account){
+      setNotification('Generating new invitation link...')
       const resp = await createMaintainerLink({
         project,
         account:user?.account,
@@ -50,10 +53,13 @@ export function useProjectInvitations({project}:{project?:string}) {
       if (resp.status===201){
         // set magic link prop to new link
         setMagicLink(resp.message)
+        // update notification
+        setNotification('New invitation link successfully generated and added to the list.')
         // reload unused invitations
         loadUnusedInvitations()
       }else{
         showErrorMessage(`Failed to create invitation. ${resp.message}`)
+        setNotification('Failed to generate invitation link. Please try again.')
       }
     }
   // IGNORE showErrorMessage dependency
@@ -61,14 +67,17 @@ export function useProjectInvitations({project}:{project?:string}) {
   },[project,user?.account,token,loadUnusedInvitations])
 
   const deleteInvitation = useCallback(async(invitation:Invitation)=>{
+    setNotification('Deleting invitation link...')
     const resp = await deleteMaintainerLink({
       invitation,
       token
     })
     if (resp.status===200){
+      setNotification('Invitation link successfully deleted.')
       loadUnusedInvitations()
     }else{
       showErrorMessage(`Failed to delete invitation. ${resp.message}`)
+      setNotification('Failed to delete invitation link.')
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[token,loadUnusedInvitations])
@@ -76,6 +85,7 @@ export function useProjectInvitations({project}:{project?:string}) {
   return {
     magicLink,
     unusedInvitations,
+    notification,
     deleteInvitation,
     createInvitation
   }

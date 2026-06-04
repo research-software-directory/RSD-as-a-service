@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,13 +9,14 @@ import Alert from '@mui/material/Alert'
 
 import InvitationList, {Invitation} from '~/components/maintainers/InvitationList'
 import ContentLoader from '~/components/layout/ContentLoader'
+import StatusForReaders from '~/components/a11y/StatusForReaders'
 import CreateRsdInvite from './CreateRsdInvite'
 import {useRsdInvite} from './useRsdInvite'
 
 const extraLineGenerators: ((inv: Invitation) => string)[] = [inv => inv.id, inv => inv.comment ?? '']
 
 export default function AdminRsdInvites() {
-  const {loading,activeInvites,createInvite,deleteInvite} = useRsdInvite()
+  const {loading,activeInvites,notification,createInvite,deleteInvite} = useRsdInvite()
 
   if (loading) {
     return (
@@ -26,7 +27,7 @@ export default function AdminRsdInvites() {
   }
 
   return (
-    <section className="flex-1 flex flex-col gap-8 xl:grid xl:grid-cols-[3fr_2fr]">
+    <div className="flex-1 flex flex-col gap-8 xl:grid xl:grid-cols-[3fr_2fr]">
       <div className="order-2 xl:order-1">
         <h2 className="flex pr-4 pb-4 justify-between font-medium">
           <span>Invitations</span>
@@ -51,9 +52,15 @@ export default function AdminRsdInvites() {
             />
         }
       </div>
-      <div className="order-1 xl:order-2">
+      <section
+        aria-label="Create new invitation"
+        className="order-1 xl:order-2">
+        {/* a11y screen reader announcer */}
+        <StatusForReaders
+          message={notification}
+        />
         <CreateRsdInvite createInvite={createInvite} />
-      </div>
-    </section>
+      </section>
+    </div>
   )
 }

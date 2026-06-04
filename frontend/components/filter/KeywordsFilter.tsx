@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -11,6 +11,8 @@ import TextField from '@mui/material/TextField'
 
 import FilterTitle from '~/components/filter/FilterTitle'
 import FilterOption from '~/components/filter/FilterOption'
+import StatusForReaders from '~/components/a11y/StatusForReaders'
+import {screenReaderFilterMsg, ariaOptionLabel} from './screenReaderFilterMsg'
 
 export type KeywordFilterOption = {
   keyword: string
@@ -33,13 +35,6 @@ export default function KeywordsFilter({keywords, keywordsList, handleQueryChang
   const [selected, setSelected] = useState<KeywordFilterOption[]>([])
   const [options, setOptions] = useState<KeywordFilterOption[]>(keywordsList)
 
-  // console.group('KeywordsFilter')
-  // console.log('keywords...', keywords)
-  // console.log('keywordsList...', keywordsList)
-  // console.log('options...', options)
-  // console.log('selected...', selected)
-  // console.groupEnd()
-
   useEffect(() => {
     if (keywords && keywordsList &&
       keywords.length > 0 && keywordsList.length > 0) {
@@ -59,14 +54,31 @@ export default function KeywordsFilter({keywords, keywordsList, handleQueryChang
     setOptions(keywordsList)
   },[keywords,keywordsList])
 
+  const message = screenReaderFilterMsg({
+    name: title,
+    selected: selected.map(item => item.keyword),
+    optionCnt: options?.length
+  })
+
+  // console.group('KeywordsFilter')
+  // console.log('keywords...', keywords)
+  // console.log('keywordsList...', keywordsList)
+  // console.log('options...', options)
+  // console.log('selected...', selected)
+  // console.log('selectionContext...', selectionContext)
+  // console.groupEnd()
+
   return (
     <>
       <FilterTitle
         title={title}
-        count={keywordsList.length ?? ''}
+        count={keywordsList.length ?? 0}
       />
+      {/* a11y screen reader announcer */}
+      <StatusForReaders message={message}/>
       <Autocomplete
         className="mt-4"
+        disabled={options?.length===0}
         value={selected}
         size="small"
         multiple
@@ -78,16 +90,29 @@ export default function KeywordsFilter({keywords, keywordsList, handleQueryChang
         }}
         defaultValue={[]}
         filterSelectedOptions
-        renderOption={({key,...props}, option) => (
-          <FilterOption
-            key={key ?? option.keyword}
-            props={props}
-            label={option.keyword}
-            count={option.keyword_cnt}
-          />
-        )}
+        renderOption={({key,...props}, option) => {
+          // a11y provide descriptive audio fallback for menu lines
+          const accessibleOptionLabel = ariaOptionLabel({
+            name: option.keyword,
+            count: option.keyword_cnt
+          })
+          return (
+            <FilterOption
+              key={key ?? option.keyword}
+              props={{
+                ...props,
+                'aria-label': accessibleOptionLabel
+              }}
+              label={option.keyword}
+              count={option.keyword_cnt}
+            />
+          )
+        }}
         renderInput={(params) => (
-          <TextField {...params} placeholder={title} />
+          <TextField
+            {...params}
+            placeholder={title}
+          />
         )}
         onChange={(event, newValue) => {
           // extract values into string[] for url query

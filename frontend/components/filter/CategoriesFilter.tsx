@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -11,6 +11,9 @@ import TextField from '@mui/material/TextField'
 
 import FilterTitle from '~/components/filter/FilterTitle'
 import FilterOption from '~/components/filter/FilterOption'
+import StatusForReaders from '~/components/a11y/StatusForReaders'
+import {screenReaderFilterMsg, ariaOptionLabel} from './screenReaderFilterMsg'
+
 
 export type CategoryOption = {
   category: string,
@@ -46,14 +49,23 @@ export default function CategoriesFilter({categories,categoryList,handleQueryCha
     setOptions(categoryList)
   },[categories,categoryList])
 
+  const message = screenReaderFilterMsg({
+    name: title,
+    selected: selected.map(item => item.category),
+    optionCnt: options?.length
+  })
+
   return (
     <>
       <FilterTitle
         title={title}
         count={categoryList.length ?? ''}
       />
+      {/* a11y screen reader announcer */}
+      <StatusForReaders message={message}/>
       <Autocomplete
         className="mt-4"
+        disabled={options?.length===0}
         value={selected}
         size="small"
         multiple
@@ -66,15 +78,25 @@ export default function CategoriesFilter({categories,categoryList,handleQueryCha
         defaultValue={[]}
         filterSelectedOptions
         // remove key from other props
-        renderOption={({key,...props}, option) => (
-          <FilterOption
-            key={key ?? option.category}
-            props={props}
-            label={option.category}
-            count={option.category_cnt}
-            capitalize={false}
-          />
-        )}
+        renderOption={({key,...props}, option) => {
+          // a11y provide descriptive audio fallback for menu lines
+          const accessibleOptionLabel = ariaOptionLabel({
+            name: option.category,
+            count: option.category_cnt
+          })
+          return (
+            <FilterOption
+              key={key ?? option.category}
+              props={{
+                ...props,
+                'aria-label': accessibleOptionLabel
+              }}
+              label={option.category}
+              count={option.category_cnt}
+              capitalize={false}
+            />
+          )
+        }}
         renderInput={(params) => (
           <TextField {...params} placeholder={title} />
         )}

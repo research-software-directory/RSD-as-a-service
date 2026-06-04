@@ -179,8 +179,11 @@ export default function ProjectTeam() {
 
   return (
     <>
-      <EditSection className='md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]'>
-        <div className="py-4">
+      <EditSection
+        className='md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]'>
+        <section
+          aria-label={`${members?.length} ${cfgTeamMembers.title}`}
+          className="py-4">
           <h2 className="flex pr-4 pb-4 justify-between">
             <span>{cfgTeamMembers.title}</span>
             <span>{members?.length}</span>
@@ -191,8 +194,10 @@ export default function ProjectTeam() {
             onDelete={onDeleteMember}
             onSorted={sortedMembers}
           />
-        </div>
-        <div className="py-4 min-w-[21rem] xl:my-0">
+        </section>
+        <section
+          aria-label={cfgTeamMembers.find.title}
+          className="py-4 min-w-[21rem] xl:my-0">
           <EditSectionTitle
             title={cfgTeamMembers.find.title}
             subtitle={cfgTeamMembers.find.subtitle(host?.orcid_search)}
@@ -211,7 +216,7 @@ export default function ProjectTeam() {
             }}
           />
           <ContributorPrivacyHint />
-        </div>
+        </section>
       </EditSection>
 
       {modal.edit.open && modal.edit.member ?

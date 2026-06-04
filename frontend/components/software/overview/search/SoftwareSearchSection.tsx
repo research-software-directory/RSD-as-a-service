@@ -14,10 +14,12 @@ import {getPageRange} from '~/utils/pagination'
 import useHandleQueryChange from '~/utils/useHandleQueryChange'
 import useSmallScreen from '~/config/useSmallScreen'
 import {useUserSettings} from '~/config/UserSettingsContext'
+import StatusForReaders from '~/components/a11y/StatusForReaders'
+import FiltersModal from '~/components/filter/FiltersModal'
 import SearchInput from '~/components/search/SearchInput'
 import ToggleViewGroup from '~/components/search/ToggleViewGroup'
 import ShowItemsSelect from '~/components/search/ShowItemsSelect'
-import FiltersModal from '~/components/filter/FiltersModal'
+import {searchOverviewMsg} from '~/components/search/searchOverviewMsg'
 import useSoftwareParams from '~/components/software/overview/useSoftwareParams'
 
 type SearchSectionProps = {
@@ -34,12 +36,22 @@ export default function SoftwareSearchSection({
   const {search,page,rows,view,filterCnt} = useSoftwareParams()
   const [modal, setModal] = useState(false)
 
-  const placeholder = filterCnt > 0 ? 'Find within selection' : 'Find software'
+  // a11y screen reader announcements and placeholder
+  const {announcement,placeholder} = searchOverviewMsg({
+    name: 'software items',
+    count,
+    page,
+    rows,
+    filterCnt,
+    search
+  })
 
   return (
     <section
       aria-label="Find software"
       data-testid="search-section">
+      {/* a11y screen reader announcer */}
+      <StatusForReaders message={announcement} />
       <div className="flex border rounded-md shadow-xs bg-base-100 p-2">
         <SearchInput
           placeholder={placeholder}

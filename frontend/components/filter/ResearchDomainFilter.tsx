@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -9,8 +9,11 @@ import {useEffect, useState} from 'react'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 
+import StatusForReaders from '~/components/a11y/StatusForReaders'
+import {screenReaderFilterMsg, ariaOptionLabel} from './screenReaderFilterMsg'
 import FilterTitle from '~/components/filter/FilterTitle'
 import FilterOption from '~/components/filter/FilterOption'
+
 
 export type ResearchDomainOption = {
   key: string
@@ -47,14 +50,23 @@ export default function ResearchDomainFilter({domains, domainsList,handleQueryCh
     setOptions(domainsList)
   },[domains,domainsList])
 
+  const message = screenReaderFilterMsg({
+    name: title,
+    selected: selected.map(item => item.domain),
+    optionCnt: options?.length
+  })
+
   return (
     <>
       <FilterTitle
         title={title}
         count={domainsList.length ?? ''}
       />
+      {/* a11y screen reader announcer */}
+      <StatusForReaders message={message}/>
       <Autocomplete
         className="mt-4"
+        disabled={options?.length===0}
         value={selected}
         size="small"
         multiple
@@ -66,14 +78,24 @@ export default function ResearchDomainFilter({domains, domainsList,handleQueryCh
         }}
         defaultValue={[]}
         filterSelectedOptions
-        renderOption={({key, ...props}, option) => (
-          <FilterOption
-            key={key ?? option.domain}
-            props={props}
-            label={option.domain}
-            count={option.domain_cnt}
-          />
-        )}
+        renderOption={({key, ...props}, option) => {
+          // a11y provide descriptive audio fallback for menu lines
+          const accessibleOptionLabel = ariaOptionLabel({
+            name: option.domain,
+            count: option.domain_cnt
+          })
+          return (
+            <FilterOption
+              key={key ?? option.domain}
+              props={{
+                ...props,
+                'aria-label': accessibleOptionLabel
+              }}
+              label={option.domain}
+              count={option.domain_cnt}
+            />
+          )
+        }}
         renderInput={(params) => (
           <TextField {...params} placeholder={title} />
         )}

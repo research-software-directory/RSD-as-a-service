@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -60,8 +60,11 @@ export default function ProjectMaintainers() {
 
   return (
     <>
-      <EditSection className='xl:grid xl:grid-cols-[1fr_1fr] xl:px-0 xl:gap-[3rem]'>
-        <div className="py-4">
+      <EditSection
+        className='xl:grid xl:grid-cols-[1fr_1fr] xl:px-0 xl:gap-[3rem]'>
+        <section
+          aria-label={`${maintainers?.length} ${config.title}`}
+          className="py-4">
           <EditSectionTitle
             title={config.title}
           />
@@ -69,14 +72,16 @@ export default function ProjectMaintainers() {
             onDelete={onDeleteMaintainer}
             maintainers={maintainers}
           />
-        </div>
-        <div className="py-4 min-w-[21rem] xl:my-0">
+        </section>
+        <section
+          aria-label={config.inviteLink.title}
+          className="py-4 xl:my-0">
           <EditSectionTitle
             title={config.inviteLink.title}
             subtitle={config.inviteLink.subtitle}
           />
           <ProjectMaintainerLinks />
-        </div>
+        </section>
       </EditSection>
       <ConfirmDeleteModal
         open={modal.open}

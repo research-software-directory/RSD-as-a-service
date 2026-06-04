@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -9,8 +9,13 @@ import {useEffect, useState} from 'react'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 
+import StatusForReaders from '~/components/a11y/StatusForReaders'
 import FilterTitle from './FilterTitle'
 import FilterOption from './FilterOption'
+import {
+  screenReaderFilterMsg,
+  ariaOptionLabel
+} from './screenReaderFilterMsg'
 
 export type LanguagesFilterOption = {
   prog_language: string
@@ -40,14 +45,23 @@ export default function ProgrammingLanguagesFilter({prog_lang,languagesList,hand
     setOptions(languagesList)
   },[prog_lang,languagesList])
 
+  const message = screenReaderFilterMsg({
+    name: title,
+    selected: selected.map(item => item.prog_language),
+    optionCnt: options?.length
+  })
+
   return (
     <>
       <FilterTitle
         title={title}
         count={languagesList.length ?? ''}
       />
+      {/* a11y screen reader announcer */}
+      <StatusForReaders message={message}/>
       <Autocomplete
         className="mt-4"
+        disabled={options?.length===0}
         value={selected}
         size="small"
         multiple
@@ -59,14 +73,24 @@ export default function ProgrammingLanguagesFilter({prog_lang,languagesList,hand
         }}
         defaultValue={[]}
         filterSelectedOptions
-        renderOption={({key, ...props}, option) => (
-          <FilterOption
-            key={key ?? option.prog_language}
-            props={props}
-            label={option.prog_language}
-            count={option.prog_language_cnt}
-          />
-        )}
+        renderOption={({key, ...props}, option) => {
+          // a11y provide descriptive audio fallback for menu lines
+          const accessibleOptionLabel = ariaOptionLabel({
+            name: option.prog_language,
+            count: option.prog_language_cnt
+          })
+          return (
+            <FilterOption
+              key={key ?? option.prog_language}
+              props={{
+                ...props,
+                'aria-label': accessibleOptionLabel
+              }}
+              label={option.prog_language}
+              count={option.prog_language_cnt}
+            />
+          )
+        }}
         renderInput={(params) => (
           <TextField {...params} placeholder={title} />
         )}

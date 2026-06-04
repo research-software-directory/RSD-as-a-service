@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -9,6 +9,8 @@ import {useEffect, useState} from 'react'
 
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
+import StatusForReaders from '~/components/a11y/StatusForReaders'
+import {screenReaderFilterMsg, ariaOptionLabel} from './screenReaderFilterMsg'
 import FilterTitle from './FilterTitle'
 import FilterOption from './FilterOption'
 
@@ -40,14 +42,23 @@ export default function LicensesFilter({licenses, licensesList,handleQueryChange
     setOptions(licensesList)
   },[licenses,licensesList])
 
+  const message = screenReaderFilterMsg({
+    name: title,
+    selected: selected.map(item => item.license),
+    optionCnt: options?.length
+  })
+
   return (
     <>
       <FilterTitle
         title={title}
         count={licensesList.length ?? ''}
       />
+      {/* a11y screen reader announcer */}
+      <StatusForReaders message={message}/>
       <Autocomplete
         className="mt-4"
+        disabled={options?.length===0}
         value={selected}
         size="small"
         multiple
@@ -59,14 +70,24 @@ export default function LicensesFilter({licenses, licensesList,handleQueryChange
         }}
         defaultValue={[]}
         filterSelectedOptions
-        renderOption={({key,...props}, option) => (
-          <FilterOption
-            key={key ?? option.license}
-            props={props}
-            label={option.license}
-            count={option.license_cnt}
-          />
-        )}
+        renderOption={({key,...props}, option) => {
+          // a11y provide descriptive audio fallback for menu lines
+          const accessibleOptionLabel = ariaOptionLabel({
+            name: option.license,
+            count: option.license_cnt
+          })
+          return (
+            <FilterOption
+              key={key ?? option.license}
+              props={{
+                ...props,
+                'aria-label': accessibleOptionLabel
+              }}
+              label={option.license}
+              count={option.license_cnt}
+            />
+          )
+        }}
         renderInput={(params) => (
           <TextField {...params} placeholder={title} />
         )}

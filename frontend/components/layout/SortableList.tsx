@@ -74,6 +74,42 @@ export default function SortableList<T extends RequiredListProps>({
       onDragEnd={onDragEnd}
       sensors={sensors}
       modifiers={[restrictToVerticalAxis,restrictToParentElement]}
+      // a11y improved screen reader communication during d-n-d
+      accessibility={{
+        announcements: {
+          onDragStart({active}) {
+            const index = items.findIndex(item => item.id === active.id)
+            return `Picked up item at position ${index + 1} of ${items.length}. Use up and down arrow keys to reorder.`
+          },
+          onDragMove({active, over}) {
+            if (over) {
+              const activeIndex = items.findIndex(item => item.id === active.id)
+              const overIndex = items.findIndex(item => item.id === over.id)
+              return `Item moved from position ${activeIndex + 1} to position ${overIndex + 1} of ${items.length}.`
+            }
+            return 'Item is being dragged.'
+          },
+          onDragOver({over}) {
+            if (over) {
+              // const activeIndex = items.findIndex(item => item.id === active.id)
+              const overIndex = items.findIndex(item => item.id === over.id)
+              return `Item is hovering over position ${overIndex + 1} of ${items.length}.`
+            }
+            return 'Item is over a non-droppable area.'
+          },
+          onDragEnd({active, over}) {
+            if (over) {
+              const activeIndex = items.findIndex(item => item.id === active.id)
+              const overIndex = items.findIndex(item => item.id === over.id)
+              return `Dropped item. Reordered from position ${activeIndex + 1} to final position ${overIndex + 1}.`
+            }
+            return 'Dropped item.'
+          },
+          onDragCancel() {
+            return 'Dragging cancelled. Item returned to its original position.'
+          }
+        }
+      }}
     >
       <SortableContext
         items={items.map(item=>({id: item.id ?? ''}))}

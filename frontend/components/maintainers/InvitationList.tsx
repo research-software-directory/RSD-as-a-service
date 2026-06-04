@@ -116,11 +116,13 @@ export default function InvitationList({
   if(invitations.length === 0) return null
 
   return (
-    <>
+    <section
+      aria-label={`${invitations?.length} unused invitations`}
+    >
       {showTitle ?
         <EditSectionTitle
-          title={'Unused invitations'}
-          subtitle={'These invitations are not used yet'}
+          title="Unused invitations"
+          subtitle="These invitations are not used yet"
         />
         : null
       }
@@ -179,6 +181,6 @@ export default function InvitationList({
           )
         })}
       </List>
-    </>
+    </section>
   )
 }
