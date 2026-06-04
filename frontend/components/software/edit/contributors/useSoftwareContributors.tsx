@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -63,6 +63,7 @@ export default function useSoftwareContributors() {
   const [contributors, setContributors] = useState<Contributor[]>([])
   const [loading, setLoading] = useState(true)
   const [loadedSoftware, setLoadedSoftware] = useState<string>('')
+  const [notification, setNotification] = useState<string>('')
 
   const addContributor = useCallback(async(person:FormPerson)=>{
     if (software.id){
@@ -85,7 +86,7 @@ export default function useSoftwareContributors() {
       const contributor = {
         ...getPropsFromObject(person,PersonProps,true),
         software: software.id
-      }
+      } as Contributor
       // new contributor to add
       const resp = await postContributor({
         contributor,
@@ -109,8 +110,10 @@ export default function useSoftwareContributors() {
           ]
           setContributors(newList)
         }
+        setNotification(`${contributor.given_names} added to contributors list.`)
       } else {
         showErrorMessage(`Failed to add contributor. ${resp.message}`)
+        setNotification('Failed to add contributor. Try again later.')
       }
     }
   // ignore showErrorMessage as dependency
@@ -156,8 +159,10 @@ export default function useSoftwareContributors() {
       if (resp.status === 200) {
         const newList = resetContactPersons(contributor,contributors,token)
         setContributors(newList)
+        setNotification(`${contributor.given_names} successfully updated.`)
       } else {
         showErrorMessage(`Failed to update contributor. ${resp.message}`)
+        setNotification('Failed to update contributor. Try again later.')
       }
     }
   // ignore showErrorMessage as dependency
@@ -180,9 +185,11 @@ export default function useSoftwareContributors() {
         setContributors(oldList)
         // show error message
         showErrorMessage(`Failed to update contributor positions. ${resp.message}`)
+        setNotification('Failed to update contributor positions. Try again later.')
       }
     } else {
       setContributors([])
+      setNotification('Contributor position in the list successfully changed.')
     }
   // ignore showErrorMessage as dependency
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -208,8 +215,10 @@ export default function useSoftwareContributors() {
           .sort((a,b)=>sortOnNumProp(a,b,'position'))
         // now patch the positions
         sortedContributors(newList)
+        setNotification(`${contributor.given_names} removed from contributors`)
       } else {
         showErrorMessage(`Failed to remove ${getDisplayName(contributor)}. Error: ${resp.message}`)
+        setNotification(`Failed to remove ${contributor.given_names}. Try again later.`)
       }
       // try to remove member avatar
       // without waiting for result
@@ -221,6 +230,7 @@ export default function useSoftwareContributors() {
       }
     } else {
       showErrorMessage(`Failed to remove ${getDisplayName(contributor)}. Error: contributor id missing`)
+      setNotification(`Failed to remove ${contributor.given_names}. Try again later.`)
     }
   // ignore showErrorMessage as dependency
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -239,6 +249,7 @@ export default function useSoftwareContributors() {
       setContributors(data ?? [])
       setLoadedSoftware(software)
       setLoading(false)
+      setNotification(`Contributors list loaded. List contains ${data?.length} items.`)
     }
     if (software?.id && token &&
       software.id !== loadedSoftware) {
@@ -250,6 +261,7 @@ export default function useSoftwareContributors() {
   return {
     loading,
     contributors,
+    notification,
     addContributor,
     updateContributor,
     deleteContributor,

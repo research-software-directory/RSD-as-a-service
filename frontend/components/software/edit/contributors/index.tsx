@@ -33,6 +33,7 @@ import useSoftwareContext from '../context/useSoftwareContext'
 import GetContributorsFromDoi from './GetContributorsFromDoi'
 import useSoftwareContributors from './useSoftwareContributors'
 import SortableContributorsList from './SortableContributorsList'
+import StatusForReaders from '~/components/a11y/StatusForReaders'
 
 type EditContributorModal = ModalProps & {
   contributor?: Person
@@ -43,8 +44,8 @@ export default function EditSoftwareContributors() {
   const {software} = useSoftwareContext()
   const {showInfoMessage} = useSnackbar()
   const {
-    loading,contributors,addContributor,
-    updateContributor,deleteContributor,
+    loading,contributors,notification,
+    addContributor,updateContributor,deleteContributor,
     sortedContributors, setContributors
   } = useSoftwareContributors()
   const [modal, setModal] = useState<ModalStates<EditContributorModal>>({
@@ -62,6 +63,7 @@ export default function EditSoftwareContributors() {
   // console.log('loading...', loading)
   // console.log('orcid...', orcid)
   // console.log('options...', options)
+  // console.log('notification...', notification)
   // console.groupEnd()
 
   function hideModals() {
@@ -186,6 +188,7 @@ export default function EditSoftwareContributors() {
       <EditSection
         className='md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr_2fr] xl:px-0 xl:gap-[3rem]'
       >
+        <StatusForReaders message={notification}/>
         <section
           aria-label={`${contributors?.length ?? 0} contributors`}
           className="py-4"

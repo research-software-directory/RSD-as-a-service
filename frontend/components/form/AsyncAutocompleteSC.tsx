@@ -76,7 +76,7 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
   const searchFor = useDebounce(newInputValue, 700)
   const [processing, setProcessing] = useState('')
   //a11y screen reader live announcement management
-  const [srAnnouncement, setSrAnnouncement] = useState('')
+  const [announcement, setAnnouncement] = useState('')
   const {loading, foundFor} = status
 
   useEffect(() => {
@@ -90,12 +90,12 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
       newInputValue!==''
     ) {
       // debugger
+      // announce search initiation politely
+      setAnnouncement(`Searching for ${searchFor} ...`)
       // issue search request using trimmed value
       onSearch(searchFor)
       // set raw value as processing
       setProcessing(searchFor)
-      // announce search initiation politely
-      setSrAnnouncement(`Searching for ${searchFor}...`)
     }
   }, [searchFor, foundFor, processing, newInputValue, config.minLength, onSearch])
 
@@ -103,14 +103,15 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
   useEffect(() => {
     if (!loading && foundFor) {
       if (options.length === 0) {
-        setSrAnnouncement(`No results found for ${foundFor}.`)
+        setAnnouncement(`No results found for ${foundFor}.`)
       } else {
-        setSrAnnouncement(
+        setAnnouncement(
           `${options.length} suggestion${options.length === 1 ? '' : 's'} found for ${foundFor}. Use up and down arrow keys to navigate.`
         )
       }
     }
   }, [options, loading, foundFor])
+
   // console.group('AsyncAutocompleteSC')
   // console.log('loading...', loading)
   // console.log('options...', options)
@@ -129,8 +130,8 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
       loading === false && onCreate) {
       // we send trimmed value
       onCreate(value)
-      // announce creation confirmation
-      setSrAnnouncement(`Created and added new entry: ${value}`)
+      // announce creation confirmation - too early
+      // setAnnouncement(`Created and added new entry: ${value}`)
       if (config?.reset) {
         // reset selected value to nothing
         setSelected(null)
@@ -142,8 +143,8 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
   function requestAdd(item: AutocompleteOption<T>) {
     // console.log('requestAdd...', item)
     onAdd(item)
-    // announce selection addition confirmation
-    setSrAnnouncement(`Added ${item.label}`)
+    // announce selection addition confirmation - too early
+    // setAnnouncement(`Added ${item.label}`)
     if (config?.reset) {
       // reset selected value to nothing
       setSelected(null)
@@ -250,7 +251,7 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
     <div className="w-full relative">
       {/* a11y screen reader announcer */}
       <StatusForReaders
-        message={srAnnouncement}
+        message={announcement}
       />
       <Autocomplete
         freeSolo={config.freeSolo}
