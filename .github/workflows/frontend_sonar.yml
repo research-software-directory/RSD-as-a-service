@@ -40,7 +40,8 @@ jobs:
         id: pr_info
         run: |
           PR_NUMBER=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://github.com{{ github.repository }}/commits/${{ github.event.workflow_run.head_sha }}/pulls" \
+            "https://://github.com${{ github.repository }}/commits/${{ github.event.workflow_run.head_sha }}/pulls" \
+
             | jq '.[0].number')
           
           # If a PR is found, save it to the environment pipeline
