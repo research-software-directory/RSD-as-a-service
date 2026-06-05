@@ -66,7 +66,8 @@ services:
     environment:
       - POSTGREST_URL
     depends_on:
-      - "database"
+      backend:
+        condition: service_healthy
     networks:
       - net-test
 
@@ -82,8 +83,8 @@ services:
       - PGRST_JWT_SECRET=normally_this_is_a_secret_string_that_none_knows_BUT_this_is_just_a_test
       - RSD_API_ACCESS_TOKEN_ENABLED=true
     depends_on:
-      - "database"
-      - "backend"
+      backend:
+        condition: service_healthy
     networks:
       - net-test
 
@@ -103,6 +104,10 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+      auth:
+        condition: service_started
+      codemeta:
+        condition: service_started
     networks:
       - net-test
 

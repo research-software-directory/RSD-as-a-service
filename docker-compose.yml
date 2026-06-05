@@ -58,7 +58,8 @@ services:
       - PGRST_DB_POOL=30
       - PGRST_DB_POOL_ACQUISITION_TIMEOUT=30
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     networks:
       - net
     healthcheck:
@@ -108,8 +109,8 @@ services:
       - RSD_API_ACCESS_TOKEN_ENABLED
       - HOST_URL
     depends_on:
-      - database
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - net
     entrypoint:
@@ -130,7 +131,8 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     networks:
       - net
 
@@ -161,9 +163,8 @@ services:
     expose:
       - 3000
     depends_on:
-      - database
-      - backend
-      - auth
+      backend:
+        condition: service_healthy
     volumes:
       - ./frontend/public:/app/public
     #   - ./deployment/hmz/styles:/app/public/styles
@@ -192,8 +193,8 @@ services:
       - CROSSREF_CONTACT_EMAIL
       - LIBRARIES_IO_ACCESS_TOKEN
     depends_on:
-      - database
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - net
 
@@ -207,7 +208,8 @@ services:
       - POSTGREST_URL
       - PGRST_JWT_SECRET
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - net
 
@@ -218,6 +220,9 @@ services:
     environment:
       - API_URL=${POSTGREST_URL_EXTERNAL}
       - SUPPORTED_SUBMIT_METHODS=[]
+    depends_on:
+      backend:
+        condition: service_healthy
     networks:
       - net
 
