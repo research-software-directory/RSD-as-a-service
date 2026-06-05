@@ -1,12 +1,11 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import InputLabel from '@mui/material/InputLabel'
 
 import {rowsPerPageOptions} from '~/config/pagination'
 
@@ -32,17 +31,21 @@ export default function ShowItemsSelect({items, onItemsChange}: SelectRowsProps)
       }}
       title={`Show ${items} items on page`}
     >
-      {/* need to add it for accessibility - Lighthouse audit */}
-      <InputLabel id="select-items" className="opacity-0">Items</InputLabel>
       <Select
         id="select-rows"
-        labelId="select-items"
         variant="outlined"
         value={items}
-        // label="Items"
         onChange={({target}) =>{
           // console.log('items...', target.value)
           onItemsChange(target.value)
+        }}
+        inputProps={{
+          // a11y fix for voice control
+          'aria-label': items.toString()
+        }}
+        MenuProps={{
+          // a11y CRITICAL VOICE CONTROL FIX FOR CUSTOM MENUS
+          disablePortal: true
         }}
         sx={{
           border: '1px solid #fff'
