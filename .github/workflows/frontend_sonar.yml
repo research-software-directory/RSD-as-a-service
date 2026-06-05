@@ -35,7 +35,23 @@ jobs:
           # Isolates the code string inside a hard token context to block injection tricks
           HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
 
-      # 2. DOWNLOAD ARTIFACT CROSS-WORKFLOW (test-coverage)
+      # 2. AI suggested: dynamically discover the PR number using the Commit SHA (Works for Forks + Local PRs)
+      - name: "get pull request number"
+        id: pr_info
+        run: |
+          PR_NUMBER=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://github.com{{ github.repository }}/commits/${{ github.event.workflow_run.head_sha }}/pulls" \
+            | jq '.[0].number')
+          
+          # If a PR is found, save it to the environment pipeline
+          if [ "$PR_NUMBER" != "null" ] && [ -n "$PR_NUMBER" ]; then
+            echo "PR_NUM=$PR_NUMBER" >> $GITHUB_ENV
+            echo "Found Pull Request #$PR_NUMBER"
+          else
+            echo "No active Pull Request found for this commit."
+          fi
+
+      # 3. DOWNLOAD ARTIFACT CROSS-WORKFLOW (test-coverage)
       - name: "download coverage artifact"
         uses: actions/download-artifact@v7
         with:
@@ -58,6 +74,12 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v8
         with:
           projectBaseDir: frontend
+          # AI suggested: use verified PR number from our API query if it exists
+          args: >
+            -Dsonar.pullrequest.key=${{ env.PR_NUM }}
+            -Dsonar.pullrequest.branch=${{ github.event.workflow_run.head_branch }}
+            -Dsonar.pullrequest.base=${{ github.event.workflow_run.base_ref }}
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # This secret is now safely accessible!
