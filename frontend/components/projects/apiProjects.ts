@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,9 +10,15 @@ import {OrganisationRole} from '~/types/Organisation'
 import {mentionColumns, MentionItemProps} from '~/types/Mention'
 import {
   KeywordForProject,
-  OrganisationsOfProject, Project,
-  ProjectLink, ProjectListItem, ProjectStatusKey, RelatedProjectForProject,
-  ResearchDomain, SearchProject, TeamMember
+  OrganisationsOfProject,
+  Project,
+  ProjectLink,
+  ProjectListItem,
+  ProjectStatusKey,
+  RelatedProjectForProject,
+  ResearchDomain,
+  SearchProject,
+  TeamMember
 } from '~/types/Project'
 import {RelatedSoftwareOfProject} from '~/types/SoftwareTypes'
 import {CategoryPath} from '~/types/Category'
@@ -21,6 +27,7 @@ import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {ProjectStatusLabels} from '~/components/projects/overview/filters/ProjectStatusFilter'
+import {Person} from '~/types/Contributor'
 
 export async function getProjectList({url, token}: {url: string, token?: string}) {
   try {
@@ -293,7 +300,7 @@ export async function getImpactByProject({project, token}:
 }
 
 export async function getTeamForProject({project, token}:
-{project: string, token?: string}) {
+{project: string, token?: string}): Promise<TeamMember[]> {
   try {
     // build url
     const query = `project_id=${project}&order=position.asc,given_names.asc`
@@ -315,6 +322,34 @@ export async function getTeamForProject({project, token}:
     return []
   } catch (e: any) {
     logger(`getTeamForProject: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+export async function getRawTeamMembers({project, token}:
+{project: string, token?: string}): Promise<Person[]> {
+  try {
+    // build url
+    const selectList = 'id,is_contact_person,email_address,family_names,given_names,affiliation,role,orcid,position,avatar_id,account'
+    const query = `select=${selectList}&project=eq.${project}&order=position.asc,given_names.asc`
+    const url = `${getBaseUrl()}/team_member?${query}`
+
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token),
+      }
+    })
+
+    if (resp.status === 200) {
+      const data: TeamMember[] = await resp.json()
+      return data
+    }
+    logger(`getRawTeamMembers: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
+    // / query not found
+    return []
+  } catch (e: any) {
+    logger(`getRawTeamMembers: ${e?.message}`, 'error')
     return []
   }
 }

@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 - 2025 dv4all
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,11 +19,11 @@ import {modalConfig} from '~/components/person/config'
 import {cfgTeamMembers} from './config'
 import ProjectTeam from './index'
 
-// MOCK getTeamForProject
+// MOCK getRawTeamMembers
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockGetTeamForProject = jest.fn(props => Promise.resolve([] as any))
+const mockGetRawTeamMembers = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/components/projects/apiProjects', () => ({
-  getTeamForProject: jest.fn(props=>mockGetTeamForProject(props))
+  getRawTeamMembers: jest.fn(props=>mockGetRawTeamMembers(props))
 }))
 
 // MOCK searchForPerson
@@ -104,7 +105,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
 
   it('renders no team members message', async () => {
     // mock no members
-    mockGetTeamForProject.mockResolvedValueOnce([])
+    mockGetRawTeamMembers.mockResolvedValueOnce([])
     // render component
     render(
       <WithAppContext options={{session: mockSession}}>
@@ -123,7 +124,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
 
   it('renders members list', async() => {
     // mock no members
-    mockGetTeamForProject.mockResolvedValueOnce(mockTeamMembers)
+    mockGetRawTeamMembers.mockResolvedValueOnce(mockTeamMembers)
 
     // render component
     render(
@@ -151,7 +152,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     const memberId='new-team-member-id'
     const searchMember = `${newPerson.given_names} ${newPerson.family_names}`
     // mock no members
-    mockGetTeamForProject.mockResolvedValueOnce([])
+    mockGetRawTeamMembers.mockResolvedValueOnce([])
     // mock searchForPerson response
     mockSearchForPerson.mockResolvedValueOnce(mockSearchOptions)
     // mock post response
@@ -273,7 +274,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
 
   it('can remove team member', async() => {
     // mock no members
-    mockGetTeamForProject.mockResolvedValueOnce(mockTeamMembers)
+    mockGetRawTeamMembers.mockResolvedValueOnce(mockTeamMembers)
 
     // render component
     render(
@@ -337,7 +338,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
       project: editProjectState.id
     }
     // mock no members
-    mockGetTeamForProject.mockResolvedValueOnce(mockTeamMembers)
+    mockGetRawTeamMembers.mockResolvedValueOnce(mockTeamMembers)
     // mock patch
     mockPatchTeamMember.mockResolvedValueOnce({
       status: 200,
@@ -393,7 +394,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
   })
   it('can CANCEL modal changes', async () => {
     // mock no members
-    mockGetTeamForProject.mockResolvedValueOnce(mockTeamMembers)
+    mockGetRawTeamMembers.mockResolvedValueOnce(mockTeamMembers)
     // mock patch
     mockPatchTeamMember.mockResolvedValueOnce({
       status: 200,
@@ -461,7 +462,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
       avatar_id: newAvatarId
     }
     // mock no members
-    mockGetTeamForProject.mockResolvedValueOnce(mockTeamMembers)
+    mockGetRawTeamMembers.mockResolvedValueOnce(mockTeamMembers)
     // mock patch
     mockPatchTeamMember.mockResolvedValueOnce({
       status: 200,
