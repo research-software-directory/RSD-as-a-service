@@ -19,7 +19,6 @@ export default function MainContent({className, children, ...props}: MainContain
     <main
       // a11y id to be used to skip to main content link
       id="main-content"
-      tabIndex={-1}
       className={`flex-1 flex flex-col py-4 lg:pb-12 outline-none ${className ?? ''}`}
       {...props}
     >
