@@ -39,14 +39,19 @@ jobs:
       - name: "get pull request number"
         id: pr_info
         run: |
-          PR_NUMBER=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://github.com{{ github.repository }}/commits/${{ github.event.workflow_run.head_sha }}/pulls" | jq '.[0].number')
+          # Fetch the raw JSON array from GitHub REST API
+          API_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${{ github.api_url }}/repos/${{ github.repository }}/commits/${{ github.event.workflow_run.head_sha }}/pulls")
           
-          # If a PR is found, save it to the environment pipeline
+          # Extract the PR ID cleanly from the first item of the array
+          PR_NUMBER=$(echo "$API_RESPONSE" | jq '.[0].number')
+          
           if [ "$PR_NUMBER" != "null" ] && [ -n "$PR_NUMBER" ]; then
             echo "PR_NUM=$PR_NUMBER" >> $GITHUB_ENV
-            echo "Found Pull Request #$PR_NUMBER"
+            echo "SUCCESS: Found Pull Request ID #$PR_NUMBER"
           else
-            echo "No active Pull Request found for this commit."
+            echo "API Diagnostics: Here is the raw response returned by GitHub:"
+            echo "$API_RESPONSE"
+            echo "ERROR: No active Pull Request found for this commit SHA."
           fi
 
       # 3. DOWNLOAD ARTIFACT CROSS-WORKFLOW (test-coverage)
