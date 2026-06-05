@@ -288,6 +288,35 @@ function applyThemeConfig({colors, action, typography}: ThemeConfig) {
           component: 'h3',
         },
       },
+      MuiButtonBase: {
+        styleOverrides: {
+          root: {
+            // a11y native CSS focus-visible fallback + MUI's keyboard-only focus class
+            '&:focus-visible, &.Mui-focusVisible': {
+              outline: `3px solid ${colors['base-900']}`,
+              // outline inside button
+              outlineOffset: '1px',
+              // high-contrast double ring
+              boxShadow: `0 0 0 4px ${colors['base-100']}`,
+              // ensure focus ring sits on top of adjacent elements
+              zIndex: 1,
+            },
+          },
+        },
+      },
+      MuiTab: {
+        styleOverrides: {
+          root: {
+            // a11y native CSS focus-visible fallback + MUI's keyboard-only focus class
+            '&:focus-visible, &.Mui-focusVisible': {
+              outline: `3px solid ${colors['base-900']}`,
+              // keep outline inside the tab container
+              outlineOffset: '-3px',
+              boxShadow: `inset 0 0 0 2px ${colors['base-100']}`,
+            },
+          },
+        },
+      },
     },
   })
 }
