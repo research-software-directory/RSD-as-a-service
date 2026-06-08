@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,14 +13,12 @@ import org.junit.jupiter.params.provider.NullSource;
 class GoScraperTest {
 
 	@ParameterizedTest
-	@CsvSource(
-		{
-			"https://pkg.go.dev/github.com/gin-gonic/gin,github.com/gin-gonic/gin",
-			"https://pkg.go.dev/github.com/gin-gonic/gin/,github.com/gin-gonic/gin",
-			"https://pkg.go.dev/google.golang.org/grpc,google.golang.org/grpc",
-			"https://pkg.go.dev/google.golang.org/grpc/,google.golang.org/grpc",
-		}
-	)
+	@CsvSource({
+		"https://pkg.go.dev/github.com/gin-gonic/gin,github.com/gin-gonic/gin",
+		"https://pkg.go.dev/github.com/gin-gonic/gin/,github.com/gin-gonic/gin",
+		"https://pkg.go.dev/google.golang.org/grpc,google.golang.org/grpc",
+		"https://pkg.go.dev/google.golang.org/grpc/,google.golang.org/grpc",
+	})
 	void givenValidGoUrl_whenCallingConstructor_thenNoExceptionThrownAndPackageNameCorrect(
 		String url,
 		String expectedPackageName

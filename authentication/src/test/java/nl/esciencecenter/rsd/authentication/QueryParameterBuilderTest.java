@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,15 +20,13 @@ class QueryParameterBuilderTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource(
-		{
-			"key,value,?key=value",
-			"123,456,?123=456",
-			"scope,openid profile email,?scope=openid+profile+email",
-			"url,https://www.example.com,?url=https%3A%2F%2Fwww.example.com",
-			"a?b&c,d&e?f=g,?a%3Fb%26c=d%26e%3Ff%3Dg",
-		}
-	)
+	@CsvSource({
+		"key,value,?key=value",
+		"123,456,?123=456",
+		"scope,openid profile email,?scope=openid+profile+email",
+		"url,https://www.example.com,?url=https%3A%2F%2Fwww.example.com",
+		"a?b&c,d&e?f=g,?a%3Fb%26c=d%26e%3Ff%3Dg",
+	})
 	void givenKeyValuePairs_whenBuildingAndCallingToString_thenCorrectOutputProduced(
 		String key,
 		String value,

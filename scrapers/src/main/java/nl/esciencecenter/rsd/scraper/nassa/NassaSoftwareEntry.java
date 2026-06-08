@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -263,23 +263,19 @@ public class NassaSoftwareEntry {
 
 		Collection<ExternalMentionRecord> regularMentions = new ArrayList<>();
 		if (references != null && references.get("moduleReferences") != null) {
-			references
-				.get("moduleReferences")
-				.forEach(citekey -> {
-					if (mentions.get(citekey) != null) {
-						regularMentions.add(mentions.get(citekey));
-					}
-				});
+			references.get("moduleReferences").forEach(citekey -> {
+				if (mentions.get(citekey) != null) {
+					regularMentions.add(mentions.get(citekey));
+				}
+			});
 		}
 
 		if (references != null && references.get("useExampleReferences") != null) {
-			references
-				.get("useExampleReferences")
-				.forEach(citekey -> {
-					if (mentions.get(citekey) != null) {
-						regularMentions.add(mentions.get(citekey));
-					}
-				});
+			references.get("useExampleReferences").forEach(citekey -> {
+				if (mentions.get(citekey) != null) {
+					regularMentions.add(mentions.get(citekey));
+				}
+			});
 		}
 		root.add("regular_mentions", PostgrestMentionRepository.toRsdJsonArray(regularMentions));
 

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,17 +14,15 @@ import org.junit.jupiter.params.provider.ValueSource;
 class CranScraperTest {
 
 	@ParameterizedTest
-	@CsvSource(
-		{
-			"https://CRAN.R-project.org/package=TIMP,TIMP",
-			"https://CRAN.R-project.org/package=TIMP/,TIMP",
-			"https://cran.r-project.org/package=splithalfr,splithalfr",
-			"https://cran.r-project.org/web/packages/GGIR,GGIR",
-			"https://cran.r-project.org/web/packages/GGIR/,GGIR",
-			"https://cran.r-project.org/web/packages/GGIR/index.html,GGIR",
-			"https://cran.r-project.org/web/packages/GGIR/index.html/,GGIR",
-		}
-	)
+	@CsvSource({
+		"https://CRAN.R-project.org/package=TIMP,TIMP",
+		"https://CRAN.R-project.org/package=TIMP/,TIMP",
+		"https://cran.r-project.org/package=splithalfr,splithalfr",
+		"https://cran.r-project.org/web/packages/GGIR,GGIR",
+		"https://cran.r-project.org/web/packages/GGIR/,GGIR",
+		"https://cran.r-project.org/web/packages/GGIR/index.html,GGIR",
+		"https://cran.r-project.org/web/packages/GGIR/index.html/,GGIR",
+	})
 	void givenValidCranUrl_whenCallingConstructor_thenNoExceptionThrownAndPackageNamesCorrect(
 		String url,
 		String expectedPackageName
