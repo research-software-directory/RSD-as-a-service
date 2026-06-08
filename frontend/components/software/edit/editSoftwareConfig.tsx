@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2025 dv4all
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
@@ -47,7 +47,7 @@ export const softwareInformation = {
       maxLength: {value: 300, message: 'Maximum length is 300'},
     }
   },
-  // field for markdown
+  // field for Markdown
   description: {
     label: 'Description',
     help: {
@@ -76,7 +76,7 @@ export const softwareInformation = {
       // custom validation function for correct url syntax
       validate: (url:string)=>{
         // return error message if not correct url syntax
-        if (isProperUrl(url)===false){
+        if (!isProperUrl(url)){
           return 'Invalid url. Please improve your input'
         }
         // has correct url syntax
@@ -104,7 +104,7 @@ export const contributorInformation = {
       return 'We search by name or ORCID in RSD database'
     },
     label: 'Find or add contributor',
-    help: 'Type at least 2 letters, use first name, last name or ORCID iD',
+    help: 'Type at least 2 letters, use first name, last name or ORCID',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,
@@ -112,7 +112,7 @@ export const contributorInformation = {
   },
   importContributors: {
     title: 'Import contributors',
-    subtitle: 'We use your Software DOI and DataCite.org API',
+    subtitle: 'We use your software DOI to retrieve information about the contributors',
     infoLink: {
       url:'/documentation/users/adding-software/#contributors',
       ariaLabel: 'Import contributors, link to documentation page opens in new tab'
@@ -192,81 +192,4 @@ export const testimonialInformation = {
       maxLength: {value: 200, message: 'Maximum length is 200'},
     }
   }
-}
-
-export const mentionInformation = {
-  sectionTitle: 'Mentions',
-  mentionType: {
-    label: 'Type',
-    help: 'Select mention type',
-    validation: {
-      required: 'Mention type is required'
-    }
-  },
-  date: {
-    label: 'Date',
-    help: 'Article date',
-    validation: {
-      required: false
-    }
-  },
-  title: {
-    label: 'Title',
-    help: 'Article title',
-    validation: {
-      required: 'The title is required',
-    }
-  },
-  author: {
-    label: 'Author',
-    help: 'List all authors',
-    validation: {
-      required: false
-    }
-  },
-  url: {
-    label: 'Link',
-    help: 'Provide URL to publication',
-    validation: {
-      pattern: {
-        value: /^https?:\/\/\S+$/,
-        message: 'URL should start with http(s):// and cannot include white spaces'
-      }
-    }
-  },
-  is_featured: {
-    label: 'Featured',
-    validation: {
-      required: false
-    }
-  },
-  image_url: {
-    label: 'Image',
-    help: 'Provide URL to image',
-    validation: {
-      pattern: {
-        value: /^https?:\/\/\S+$/,
-        message: 'URL must start with http(s):// and cannot include white spaces'
-      }
-    }
-  },
-  findMention: {
-    title: 'Find mention',
-    subtitle: 'Search mentions scraped from Zotero',
-    label: 'Search for mentions',
-    help: 'Type the title or the URL of scraped mention (at least first 2 letters)',
-    // reset value after selected
-    reset: true,
-    validation: {
-      // minlength to trigger api search
-      minLength: 2
-    }
-  }
-}
-
-
-export const relatedSoftwareInformation = {
-  title: 'Related software',
-  subtitle: (brand_name: string) => `Mention software often used together with ${brand_name}`,
-  help: 'Select related RSD software'
 }
