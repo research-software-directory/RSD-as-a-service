@@ -288,6 +288,75 @@ function applyThemeConfig({colors, action, typography}: ThemeConfig) {
           component: 'h3',
         },
       },
+      MuiButtonBase: {
+        styleOverrides: {
+          root: {
+            // a11y native CSS focus-visible fallback + MUI's keyboard-only focus class
+            '&:focus-visible, &.Mui-focusVisible': {
+              outline: `3px solid ${colors['base-900']}`,
+              // outline inside button
+              outlineOffset: '1px',
+              // high-contrast double ring
+              boxShadow: `0 0 0 4px ${colors['base-100']}`,
+              // ensure focus ring sits on top of adjacent elements
+              zIndex: 1,
+            },
+          },
+        },
+      },
+      MuiTab: {
+        styleOverrides: {
+          root: {
+            // a11y native CSS focus-visible fallback + MUI's keyboard-only focus class
+            '&:focus-visible, &.Mui-focusVisible': {
+              outline: `3px solid ${colors['base-900']}`,
+              // keep outline inside the tab container
+              outlineOffset: '-3px',
+              boxShadow: `inset 0 0 0 2px ${colors['base-100']}`,
+            },
+          },
+        },
+      },
+      MuiSwitch: {
+        styleOverrides: {
+          // Target the switchBase element directly using the classes from your HTML
+          switchBase: {
+            '&:focus-visible, &.Mui-focusVisible': {
+              // REMOVE the large global rectangular outline from the button base wrapper
+              outline: 'none',
+              boxShadow: 'none',
+              // a11y native CSS focus-visible high-contrast circular outline directly onto the thumb child (.MuiSwitch-thumb)
+              '& .MuiSwitch-thumb': {
+                outline: `3px solid ${colors['base-900']}`,
+                outlineOffset: '2px',
+                boxShadow: `0 0 0 4px ${colors['base-100']}`,
+                borderRadius: '50%',
+              },
+            },
+          },
+        },
+      },
+      // 3. New Specialized override for Radio buttons
+      MuiRadio: {
+        styleOverrides: {
+          root: {
+            '&:focus-visible, &.Mui-focusVisible': {
+            // REMOVE the massive global rectangular focus outline from the outer span base
+              outline: 'none',
+              boxShadow: 'none',
+
+              // APPLY a tight, high-contrast circular outline directly to the radio circle icons
+              '& .MuiSvgIcon-root': {
+                outline: `3px solid ${colors['base-900']}`,
+                // Snug fit around the circular boundary
+                outlineOffset: '2px',
+                boxShadow: `0 0 0 4px ${colors['base-100']}`,
+                borderRadius: '50%',
+              },
+            },
+          },
+        },
+      },
     },
   })
 }

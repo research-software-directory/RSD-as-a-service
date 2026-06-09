@@ -16,7 +16,6 @@ import LinkIcon from '@mui/icons-material/Link'
 import WebIcon from '@mui/icons-material/Web'
 
 import getBrowser from '~/utils/getBrowser'
-import useDisableScrollLock from '~/utils/useDisableScrollLock'
 import CaretIcon from '~/components/icons/caret.svg'
 
 export type FeedbackPanelButtonProps=Readonly<{
@@ -30,7 +29,6 @@ export default function FeedbackPanelButton({
   feedback_email, issues_page_url,
   host_label='RSD', closeFeedbackPanel
 }:FeedbackPanelButtonProps) {
-  const disable = useDisableScrollLock()
   const [text, setText] = useState('')
   const [open, setOpen] = useState(false)
   const theme = useTheme()
@@ -91,7 +89,7 @@ User Agent: ${navigator.userAgent}`
         open={open}
         onClose={handleClose}
         aria-labelledby="feedback-dialog-title"
-        disableScrollLock={disable}
+        disableScrollLock={true}
       >
         <div className="h-full w-full bg-base-700 p-5 ">
           <div className="mx-auto max-w-[500px]">

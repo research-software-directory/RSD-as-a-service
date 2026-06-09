@@ -71,7 +71,7 @@ export default function SortableListItem<T extends RequiredListProps>({
       }}
       {...props}
     >
-      <div className="flex-1 flex gap-2 items-center justify-center overflow-hidden">
+      <div className="flex-1 flex gap-2 items-center justify-center">
         {/* drag-n-drop button a11y compatible */}
         <IconButton
           // add ref for keyboard activation

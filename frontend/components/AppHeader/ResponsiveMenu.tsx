@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,13 +10,11 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import MenuIcon from '@mui/icons-material/Menu'
 
-import useDisableScrollLock from '~/utils/useDisableScrollLock'
 import useMenuItems from '~/config/useMenuItems'
 import isActiveMenuItem from './isActiveMenuItem'
 
 export default function ResponsiveMenu({activePath}:{activePath:string}) {
   const menuItems = useMenuItems()
-  const disable = useDisableScrollLock()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
@@ -59,7 +57,7 @@ export default function ResponsiveMenu({activePath}:{activePath:string}) {
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
         // disable adding styles to body (overflow:hidden & padding-right)
-        disableScrollLock = {disable}
+        disableScrollLock = {true}
       >
         {menuItems.map(item => {
           const isActive = isActiveMenuItem({item, activePath})
