@@ -41,11 +41,10 @@ public class AccessTokenIntegrationTest {
 
 		user.createAccessToken("My access token", LocalDate.now().minusDays(1)).then().statusCode(400);
 
-		user
-			.createAccessToken(
-				"My access token",
-				LocalDate.now().minusDays(RandomGenerator.getDefault().nextInt(2, Integer.MAX_VALUE))
-			)
+		user.createAccessToken(
+			"My access token",
+			LocalDate.now().minusDays(RandomGenerator.getDefault().nextInt(2, Integer.MAX_VALUE))
+		)
 			.then()
 			.statusCode(400);
 	}
@@ -56,11 +55,10 @@ public class AccessTokenIntegrationTest {
 
 		user.createAccessToken("My access token", LocalDate.now().plusDays(366)).then().statusCode(400);
 
-		user
-			.createAccessToken(
-				"My access token",
-				LocalDate.now().plusDays(RandomGenerator.getDefault().nextInt(367, Integer.MAX_VALUE))
-			)
+		user.createAccessToken(
+			"My access token",
+			LocalDate.now().plusDays(RandomGenerator.getDefault().nextInt(367, Integer.MAX_VALUE))
+		)
 			.then()
 			.statusCode(400);
 	}

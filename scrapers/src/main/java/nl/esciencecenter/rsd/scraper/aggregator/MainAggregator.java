@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -63,14 +63,11 @@ public class MainAggregator {
 		ConcurrentMap<UUID, JsonArray> softwarePerId = new ConcurrentHashMap<>(remoteEntriesToScrape.size());
 		Collection<Callable<Void>> tasks = remoteEntriesToScrape
 			.stream()
-			.<Callable<Void>>map(
-				entry ->
-					() -> {
-						JsonArray scrapedSoftware = RemoteRsdConnector.getAllSoftware(entry.domain());
-						softwarePerId.put(entry.id(), scrapedSoftware);
-						return null;
-					}
-			)
+			.<Callable<Void>>map(entry -> () -> {
+				JsonArray scrapedSoftware = RemoteRsdConnector.getAllSoftware(entry.domain());
+				softwarePerId.put(entry.id(), scrapedSoftware);
+				return null;
+			})
 			.toList();
 
 		try (ExecutorService executorService = Executors.newFixedThreadPool(8)) {

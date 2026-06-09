@@ -118,7 +118,10 @@ public class DataciteMentionRepository {
 
 	// "10.5281/zenodo.1408128","10.1186/s12859-018-2165-7"
 	static String joinDoisForGraphqlQuery(Collection<Doi> dois) {
-		return dois.stream().map(Doi::toString).collect(Collectors.joining("\",\"", "\"", "\""));
+		return dois
+			.stream()
+			.map(Doi::toString)
+			.collect(Collectors.joining("\",\"", "\"", "\""));
 	}
 
 	static Collection<ExternalMentionRecord> jsonStringToUniqueMentions(String json) {

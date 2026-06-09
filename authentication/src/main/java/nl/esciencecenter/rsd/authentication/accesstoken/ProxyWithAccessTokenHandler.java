@@ -39,17 +39,15 @@ public class ProxyWithAccessTokenHandler implements Handler {
 			requestBuilder.header("Authorization", ctx.attribute("X-API-Authorization-Header"));
 		}
 
-		ctx
-			.headerMap()
-			.forEach((k, v) -> {
-				if (!Utils.isForbiddenHeader(k) && !k.equalsIgnoreCase("authorization") && v != null) {
-					try {
-						requestBuilder.header(k, v);
-					} catch (IllegalArgumentException e) {
-						LOGGER.warn("Invalid or forbidden header: {}", k);
-					}
+		ctx.headerMap().forEach((k, v) -> {
+			if (!Utils.isForbiddenHeader(k) && !k.equalsIgnoreCase("authorization") && v != null) {
+				try {
+					requestBuilder.header(k, v);
+				} catch (IllegalArgumentException e) {
+					LOGGER.warn("Invalid or forbidden header: {}", k);
 				}
-			});
+			}
+		});
 
 		HandlerType method = ctx.method();
 		HttpRequest request;
