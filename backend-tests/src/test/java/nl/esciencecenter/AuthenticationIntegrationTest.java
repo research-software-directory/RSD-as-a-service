@@ -188,6 +188,81 @@ public class AuthenticationIntegrationTest {
 			.statusCode(401);
 	}
 
+	@Test
+	void givenUnauthenticatedUser_whenDeletingMentionThroughRpc_thenNotAllowed() {
+		User user = User.create();
+		Mention mentionToDelete = Mention.createMention(user);
+		String bodyJson = "{\"mention_id\": \"%s\"}".formatted(mentionToDelete.id);
+
+		RestAssured.given()
+			.contentType(ContentType.JSON)
+			.body(bodyJson)
+			.when()
+			.post("rpc/delete_mention")
+			.then()
+			.statusCode(400);
+
+		List<?> responseArray = RestAssured.when()
+			.get("mention?id=eq." + mentionToDelete.id)
+			.then()
+			.statusCode(200)
+			.extract()
+			.as(List.class);
+		Assertions.assertEquals(1, responseArray.size());
+	}
+
+	@Test
+	void givenAuthenticatedUser_whenDeletingMentionThroughRpc_thenNotAllowed() {
+		User user = User.create();
+		Mention mentionToDelete = Mention.createMention(user);
+		String bodyJson = "{\"mention_id\": \"%s\"}".formatted(mentionToDelete.id);
+
+		RestAssured.given()
+			.header(user.authHeader)
+			.contentType(ContentType.JSON)
+			.body(bodyJson)
+			.when()
+			.post("rpc/delete_mention")
+			.then()
+			.statusCode(400);
+
+		List<?> responseArray = RestAssured.when()
+			.get("mention?id=eq." + mentionToDelete.id)
+			.then()
+			.statusCode(200)
+			.extract()
+			.as(List.class);
+		Assertions.assertEquals(1, responseArray.size());
+	}
+
+	@Test
+	void givenAdmin_whenDeletingMentionThroughRpc_thenAllowed() {
+		String bodyJson;
+		Mention mentionToDelete;
+		{
+			User user = User.create();
+			mentionToDelete = Mention.createMention(user);
+			bodyJson = "{\"mention_id\": \"%s\"}".formatted(mentionToDelete.id);
+		}
+
+		RestAssured.given()
+			.header(User.adminAuthHeader)
+			.contentType(ContentType.JSON)
+			.body(bodyJson)
+			.when()
+			.post("rpc/delete_mention")
+			.then()
+			.statusCode(204);
+
+		List<?> responseArray = RestAssured.when()
+			.get("mention?id=eq." + mentionToDelete.id)
+			.then()
+			.statusCode(200)
+			.extract()
+			.as(List.class);
+		Assertions.assertTrue(responseArray.isEmpty());
+	}
+
 	/*
 	 * ============================
 	 * === Tests for categories ===
