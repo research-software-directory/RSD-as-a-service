@@ -1,6 +1,6 @@
 <!--
-SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -34,3 +34,17 @@ docker compose exec scrapers java -cp /usr/myjava/scrapers.jar nl.esciencecenter
 ## Running locally
 
 To run a scraper locally, e.g. from an IDE, you need to make sure the values in `.env` are loaded and that the value for the env variable `POSTGREST_URL` is overwritten with an address that is reachable from outside of the Docker network (usually `http://localhost/api/v1`).
+
+### NASSA harvester
+
+**This harvester is only for the production instance of the Netherlands eScience Center.**
+
+This harvester harvests and stores the [NASSA modules](https://github.com/Archaeology-ABM/NASSA-modules). For it to run, it is required that there is a community with slug `nassa`.
+
+It is scheduled to run once per day (see `jobs.cron`).
+
+It can manually be activated with:
+
+```shell
+docker compose exec scrapers java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.nassa.MainNassa
+```

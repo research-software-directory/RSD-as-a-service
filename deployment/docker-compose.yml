@@ -197,7 +197,7 @@ services:
 
   swagger:
     container_name: swagger
-    image: swaggerapi/swagger-ui:v5.32.1
+    image: swaggerapi/swagger-ui:v5.32.6
     expose:
       - "8080"
     environment:

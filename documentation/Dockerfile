@@ -37,7 +37,7 @@ RUN npm run build
 # ----------------------------------------
 # 3. Production image (standalone mode)
 # ----------------------------------------
-FROM nginx:1.28.2-alpine-slim AS runner
+FROM nginx:1.30.2-alpine-slim AS runner
 
 # copy content from build folder into nginx html location
 COPY --from=builder /app/build /usr/share/nginx/html

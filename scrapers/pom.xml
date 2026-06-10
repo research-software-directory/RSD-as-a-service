@@ -65,7 +65,7 @@ SPDX-License-Identifier: Apache-2.0
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.5.4</version>
+				<version>3.5.6</version>
 			</plugin>
 
 			<!-- https://docs.sonarcloud.io/enriching/test-coverage/java-test-coverage/ -->
@@ -73,7 +73,7 @@ SPDX-License-Identifier: Apache-2.0
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.14</version>
+				<version>0.8.15</version>
 				<executions>
 					<execution>
 						<id>prepare-agent</id>
@@ -99,10 +99,11 @@ SPDX-License-Identifier: Apache-2.0
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- https://mvnrepository.com/artifact/org.junit/junit-bom -->
 			<dependency>
 				<groupId>org.junit</groupId>
 				<artifactId>junit-bom</artifactId>
-				<version>6.0.3</version>
+				<version>6.1.0</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -114,35 +115,35 @@ SPDX-License-Identifier: Apache-2.0
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>2.0.17</version>
+			<version>2.0.18</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.5.32</version>
+			<version>1.5.34</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
 		<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
-			<version>4.5.1</version>
+			<version>4.5.2</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.13.2</version>
+			<version>2.14.0</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
-			<version>2.5</version>
+			<version>2.6</version>
 		</dependency>
 
 
@@ -164,7 +165,7 @@ SPDX-License-Identifier: Apache-2.0
 		<dependency>
 			<groupId>org.apache.maven.surefire</groupId>
 			<artifactId>surefire-junit-platform</artifactId>
-			<version>3.5.4</version>
+			<version>3.5.6</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
