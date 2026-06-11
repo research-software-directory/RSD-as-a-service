@@ -9,6 +9,7 @@ import {useState} from 'react'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import HubIcon from '@mui/icons-material/Hub'
+import DeleteIcon from '@mui/icons-material/Delete'
 import Alert from '@mui/material/Alert'
 import {useSession} from '~/auth/AuthProvider'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
@@ -20,6 +21,9 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import MentionLocations from '~/components/admin/mentions/MentionLocations'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
+import TextField from '@mui/material/TextField'
+import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
+import Tooltip from '@mui/material/Tooltip'
 
 function leaveOutSomeFieldsReplacer(key: string, value: any) {
   if (key === 'id' || key === 'doi_registration_date' || key === 'created_at' || key === 'updated_at') {
@@ -34,7 +38,9 @@ function AdminMention({mention, idx, onUpdate}: Readonly<{mention: MentionItemPr
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {page, rows} = usePaginationWithSearch('Find mentions')
-  const [modalOpen, setModalOpen] = useState<boolean>(false)
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
+  const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false)
+  const [confirmation, setConfirmation] = useState<string>('')
 
   async function updateMention(data: MentionItemProps) {
     const id = data.id as string
@@ -45,7 +51,22 @@ function AdminMention({mention, idx, onUpdate}: Readonly<{mention: MentionItemPr
       headers: createJsonHeaders(token)
     })
     if (resp.ok) {
-      setModalOpen(false)
+      setEditModalOpen(false)
+      onUpdate()
+    } else {
+      showErrorMessage(`got status ${resp.status}:${await resp.text()}`)
+    }
+  }
+
+  async function deleteMention(mentionId: string) {
+    const body = JSON.stringify({mention_id: mentionId})
+    const resp = await fetch('/api/v1/rpc/delete_mention', {
+      method: 'POST',
+      body: body,
+      headers: createJsonHeaders(token)
+    })
+    if (resp.ok) {
+      setDeleteModalOpen(false)
       onUpdate()
     } else {
       showErrorMessage(`got status ${resp.status}:${await resp.text()}`)
@@ -54,28 +75,74 @@ function AdminMention({mention, idx, onUpdate}: Readonly<{mention: MentionItemPr
 
   return(
     <ListItem sx={{display: 'list-item'}}>
-      <div className="grid grid-cols-[1fr_auto_auto] items-center hover:bg-base-200">
+      <div className="grid grid-cols-[1fr_auto_auto_auto] gap-4 items-center hover:bg-base-200">
         <MentionViewItem item={mention} pos={page * rows + idx + 1} />
-        <IconButton onClick={() => setModalOpen(true)} ><EditIcon></EditIcon></IconButton>
-        <IconButton
-          aria-label={isOpenMentionLocations ? `Hide usages of ${mention.title}` : `Show usages of ${mention.title}`}
-          onClick={() => setIsOpenMentionLocations(!isOpenMentionLocations)}
-        >
-          <HubIcon />
-        </IconButton>
+        <Tooltip title={'Edit'} placement={'top'} >
+          <IconButton
+            onClick={() => setEditModalOpen(true)}
+            aria-label={`Edit the mention ${mention.title}`}
+          >
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={'View usages'} placement={'top'} >
+          <IconButton
+            aria-label={isOpenMentionLocations ? `Hide usages of ${mention.title}` : `Show usages of ${mention.title}`}
+            onClick={() => setIsOpenMentionLocations(!isOpenMentionLocations)}
+          >
+            <HubIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={'Delete'} placement={'top'} >
+          <IconButton
+            aria-label={`Delete the mention ${mention.title}; (you will be asked to confirm this before we delete it)`}
+            onClick={() => setDeleteModalOpen(!deleteModalOpen)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
       </div>
       {isOpenMentionLocations ?
         <MentionLocations mentionId={mention.id as string}/>
         : null
       }
-      {modalOpen ?
+      {editModalOpen ?
         <EditMentionModal
-          title={mention.id as string ?? 'undefined'}
-          open={modalOpen}
+          title={mention.id as string}
+          open={editModalOpen}
           pos={undefined} //why does this exist?
           item={mention}
-          onCancel={() => setModalOpen(false)}
+          onCancel={() => setEditModalOpen(false)}
           onSubmit={({data}) => {updateMention(data)}}
+        />
+        : null
+      }
+      {deleteModalOpen ?
+        <ConfirmDeleteModal
+          open={deleteModalOpen}
+          title='Delete mention'
+          onCancel={() => setDeleteModalOpen(false)}
+          onDelete={() => deleteMention(mention.id!)}
+          removeDisabled={confirmation !== mention.id}
+          body={
+            <>
+              <p>
+                Are you sure you want to remove <strong>{mention.title}</strong> with ID <strong>{mention.id}</strong>?
+              </p>
+              <TextField
+                label="ID of the mention to delete"
+                helperText={
+                  <span>Type the mention ID exactly as shown above.</span>
+                }
+                value = {confirmation}
+                onChange={({target})=>setConfirmation(target.value)}
+                sx={{
+                  width: '100%',
+                  margin: '1rem 0rem'
+                }}
+              />
+            </>
+          }
         />
         : null
       }
@@ -87,7 +154,7 @@ export default function MentionsOverviewList({list, onUpdate}: {list: MentionIte
   if (list.length === 0) {
     return (
       <Alert severity="info" sx={{margin:'1rem 0rem'}}>
-        No mentions to show
+        No mentions found
       </Alert>
     )
   }
