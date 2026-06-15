@@ -72,15 +72,15 @@ export default function LoginProviders({providers,login_info_url,onClick}:LoginP
                 },
                 position:'relative'
               }}
-              onClick={()=>{
-                // close modal for local account
-                if (provider.openidProvider==='local' && onClick) onClick()
-              }}
               disablePadding
             >
               <ListItemButton
                 component={Link}
                 href={provider.signInUrl}
+                onClick={()=>{
+                  // close modal for local account
+                  if (provider.openidProvider==='local' && onClick) onClick()
+                }}
               >
                 {
                   provider?.accessType==='INVITE_ONLY' ?

@@ -38,6 +38,7 @@ export default function CategoryTree({onRemove,items,showLongNames,selectedList}
               </Link>
               { onRemove && selectedList?.has(category.id) ?
                 <IconButton
+                  title="Delete"
                   size='small'
                   onClick={()=>onRemove(category.id)}>
                   <CancelIcon fontSize='small'/>

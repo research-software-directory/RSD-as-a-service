@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -27,6 +27,7 @@ export default function MentionEditButtons({item}: {item:MentionItemProps}) {
       <IconButton
         data-testid="edit-mention-btn"
         key="edit-button"
+        title="Edit"
         onClick={()=>setEditModal(item)}>
         <EditIcon />
       </IconButton>
@@ -37,6 +38,7 @@ export default function MentionEditButtons({item}: {item:MentionItemProps}) {
     <IconButton
       data-testid="delete-mention-btn"
       key="delete-button"
+      title="Delete"
       sx={{
         marginLeft:'1rem'
       }}
