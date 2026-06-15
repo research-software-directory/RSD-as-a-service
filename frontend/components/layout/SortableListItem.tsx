@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,8 +30,9 @@ export default function SortableListItem<T extends RequiredListProps>({
     transform,transition,isDragging
   } = useSortable({id: item.id ?? ''})
 
-  //a11y FIX: Destructure "role" out of attributes so it doesn't apply to the <li> element
-  const {role, ...cleanedAttributes} = attributes
+  //a11y FIX: Destructure "role" and "tabIndex" out of attributes so it doesn't apply to the <li> element
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const {role, tabIndex, ...cleanedAttributes} = attributes
 
   return (
     <ListItem
