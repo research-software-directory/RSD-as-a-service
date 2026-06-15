@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2025 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -30,17 +30,17 @@ export default function ImageDropZone(props:ImageDropZoneProps) {
       type="button"
       aria-label={props.ariaLabel}
       // Tailwind utility resets default button styles and handles focus
-      className="text-left block bg-transparent border-0 p-0.5 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary transition-all cursor-pointer"
+      className="text-left block bg-transparent border-0 p-0.5 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
       onClick={props.onClick}
       onDragOver={(e: any) => {
         e.preventDefault()
-        e.currentTarget.style.border = '2px dashed grey'
+        e.currentTarget.style.outline = '2px dashed var(--rsd-base-content, grey)'
       }}
       onDragLeave={(e: any) => {
-        e.currentTarget.style.border = 'inherit'
+        e.currentTarget.style.outline = 'inherit'
       }}
       onDrop={(e: any) => {
-        e.currentTarget.style.border = 'inherit'
+        e.currentTarget.style.outline = 'inherit'
         e.preventDefault()
         if (e.dataTransfer.files.length) {
           props.onImageDrop({target: {files: e.dataTransfer.files}})
