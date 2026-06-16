@@ -56,8 +56,6 @@ export default function ResponsiveMenu({activePath}:{activePath:string}) {
         onClose={handleCloseResponsiveMenu}
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-        // disable adding styles to body (overflow:hidden & padding-right)
-        disableScrollLock = {true}
       >
         {menuItems.map(item => {
           const isActive = isActiveMenuItem({item, activePath})

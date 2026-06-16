@@ -89,7 +89,6 @@ User Agent: ${navigator.userAgent}`
         open={open}
         onClose={handleClose}
         aria-labelledby="feedback-dialog-title"
-        disableScrollLock={true}
       >
         <div className="h-full w-full bg-base-700 p-5 ">
           <div className="mx-auto max-w-[500px]">
