@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2025 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -25,13 +25,13 @@ export default function LogoDropZone(props: Readonly<ImageDropZoneProps>) {
     <div
       onDragOver={(e: any) => {
         e.preventDefault()
-        e.currentTarget.style.border = '3px dashed grey'
+        e.currentTarget.style.outline = '2px dashed var(--rsd-base-content, grey)'
       }}
       onDragLeave={(e: any) => {
-        e.currentTarget.style.border = 'inherit'
+        e.currentTarget.style.outline = 'inherit'
       }}
       onDrop={(e: any) => {
-        e.currentTarget.style.border = 'inherit'
+        e.currentTarget.style.outline = 'inherit'
         e.preventDefault()
         const reader = new FileReader()
 

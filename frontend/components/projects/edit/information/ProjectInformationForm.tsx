@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -59,7 +60,7 @@ export default function ProjectInformationForm({editProject}: {editProject: Edit
           aria-label="Project description items"
           className='xl:grid xl:grid-cols-[3fr_1fr] xl:px-0 xl:gap-[3rem]'>
           {/* middle panel */}
-          <div className="py-2 overflow-hidden">
+          <div className="py-2">
             <EditSectionTitle
               title={config.sectionTitle}
             />
