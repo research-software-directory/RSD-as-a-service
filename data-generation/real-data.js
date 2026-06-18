@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -99,4 +99,32 @@ const packageManagerLinks = [
 	{url: 'https://pkg.go.dev/google.golang.org/grpc', type: 'golang'},
 ];
 
-export {conceptDois, dois, packageManagerLinks};
+const badges = [
+	{
+		badgeUrl: 'https://img.shields.io/badge/License-Apache_2.0-blue.svg',
+		linkUrl: 'https://opensource.org/licenses/Apache-2.0',
+	},
+	{
+		badgeUrl: 'https://img.shields.io/badge/github-repo-000.svg?logo=github&labelColor=gray&color=blue',
+		linkUrl: 'https://github.com/research-software-directory/RSD-as-a-service',
+	},
+	{
+		badgeUrl: 'https://zenodo.org/badge/413814951.svg',
+		linkUrl: 'https://zenodo.org/badge/latestdoi/413814951',
+	},
+	{
+		badgeUrl: 'https://bestpractices.coreinfrastructure.org/projects/6336/badge',
+		linkUrl: 'https://bestpractices.coreinfrastructure.org/projects/6336',
+	},
+	{
+		badgeUrl:
+			'https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/cff_validate.yml/badge.svg',
+		linkUrl: 'https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/cff_validate.yml',
+	},
+	{
+		badgeUrl: 'https://github.com/NLeSC/guide/actions/workflows/link-checker.yml/badge.svg',
+		linkUrl: 'https://github.com/NLeSC/guide/actions/workflows/link-checker.yml',
+	},
+];
+
+export {conceptDois, dois, packageManagerLinks, badges};

@@ -11,7 +11,7 @@
 import {faker} from '@faker-js/faker';
 import jwt from 'jsonwebtoken';
 import {images, organisationLogos, softwareLogos} from './images.js';
-import {conceptDois, dois, packageManagerLinks} from './real-data.js';
+import {badges, conceptDois, dois, packageManagerLinks} from './real-data.js';
 import fs from 'fs/promises';
 
 const usedLowerCaseStrings = new Set();
@@ -279,6 +279,28 @@ function generateLicensesForSoftware(ids) {
 				license: item.license,
 				name: item.name,
 				reference: item.reference,
+			});
+		}
+	}
+
+	return result;
+}
+
+function generateBadges(softwareIds) {
+	const result = [];
+
+	for (const softwareId of softwareIds) {
+		const randomBadges = faker.helpers.arrayElements(badges, {min: 0, max: 3});
+		if (randomBadges.length === 0) {
+			continue;
+		}
+
+		for (let index = 0; index < randomBadges.length; index++) {
+			result.push({
+				badge_url: randomBadges[index].badgeUrl,
+				link_url: faker.helpers.maybe(() => randomBadges[index].linkUrl, {probability: 0.5}) ?? null,
+				software: softwareId,
+				position: index + 1,
 			});
 		}
 	}
@@ -1171,6 +1193,7 @@ const relatedSoftwareItemsPromise = Promise.all([
 		postToBackend('/contributor', generateContributors(idsSoftware, peopleWithOrcid, imageIds)),
 		postToBackend('/testimonial', generateTestimonials(idsSoftware)),
 		postToBackend('/package_manager', generatePackageManagers(idsRealSoftware)),
+		postToBackend('/badge', generateBadges(idsSoftware)),
 		postToBackend('/license_for_software', generateLicensesForSoftware(idsSoftware)),
 		postToBackend('/keyword_for_software', generateKeywordsForEntity(idsSoftware, keywordIds, 'software')),
 		postToBackend('/mention_for_software', generateMentionsForEntity(idsSoftware, mentionIds, 'software')),

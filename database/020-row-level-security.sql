@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2021 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2025 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2026 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 - 2023 dv4all
@@ -290,6 +290,32 @@ CREATE POLICY maintainer_all_rights ON swhid_for_software TO rsd_user
 	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON swhid_for_software TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+-- software highlights
+ALTER TABLE software_highlight ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON software_highlight FOR SELECT TO rsd_web_anon, rsd_user
+	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY admin_all_rights ON software_highlight TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+-- software badges
+ALTER TABLE badge ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON badge FOR SELECT TO rsd_web_anon, rsd_user
+	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON badge TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()))
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON badge TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 
@@ -799,16 +825,5 @@ CREATE POLICY admin_all_rights ON project_for_organisation TO rsd_admin
 ALTER TABLE backend_log ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY admin_all_rights ON backend_log TO rsd_admin
-	USING (TRUE)
-	WITH CHECK (TRUE);
-
-
--- software_highlights
-ALTER TABLE software_highlight ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY anyone_can_read ON software_highlight FOR SELECT TO rsd_web_anon, rsd_user
-	USING (software IN (SELECT id FROM software));
-
-CREATE POLICY admin_all_rights ON software_highlight TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);

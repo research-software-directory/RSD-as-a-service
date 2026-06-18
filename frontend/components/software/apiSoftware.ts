@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
@@ -14,10 +14,12 @@ import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {RelatedProjectForSoftware} from '~/types/Project'
 import {
+  BadgeForSoftware,
   CategoriesForSoftware,
   CategoryForSoftwareIds,
   KeywordForSoftware,
   LicenseForSoftware,
+  NewBadgeForSoftware,
   SoftwareOverviewItemProps,
   SoftwareTableItem
 } from '~/types/SoftwareTypes'
@@ -252,6 +254,156 @@ export async function getLicenseForSoftware(uuid:string,token?:string){
   }catch(e:any){
     logger(`getLicenseForSoftware: ${e?.message}`,'error')
     return []
+  }
+}
+
+/*
+badges
+ */
+
+export async function getBadgesForSoftware(softwareId: string, token?:string): Promise<BadgeForSoftware[]>{
+  try{
+    // this request is always performed from backend
+    const url = `${getBaseUrl()}/badge?&software=eq.${softwareId}&order=position.asc`
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+
+    if (resp.ok){
+      return await resp.json()
+    } else if (resp.status === 404){
+      logger(`getBadgesForSoftware: 404 [${url}]`,'error')
+      // query not found
+      return []
+    } else {
+      logger(`getBadgesForSoftware: ${resp.status} [${url}]`,'error')
+      // unexpected status code
+      return []
+    }
+  } catch(e: any){
+    logger(`getBadgesForSoftware: ${e?.message}`,'error')
+    return []
+  }
+}
+
+export async function addBadgeForSoftware(token: string, newBadge: NewBadgeForSoftware): Promise<void>{
+  let error: Error | null = null
+
+  if (newBadge.link_url === '') {
+    newBadge.link_url = null
+  }
+
+  try{
+    const url = `${getBaseUrl()}/badge`
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: createJsonHeaders(token),
+      body: JSON.stringify(newBadge)
+    })
+
+    if (resp.ok){
+      return
+    } else {
+      logger(`addBadgeForSoftware: ${resp.status} [${url}]`,'error')
+      // unexpected status code
+      error = new Error(`Could not add badge, status code: ${resp.status}, body: ${await resp.text()}`)
+    }
+  } catch(e: any){
+    error = e
+  }
+
+  if (error) {
+    logger(`getBadgesForSoftware: ${error.message}`,'error')
+    throw error
+  }
+}
+
+export async function updateBadgePosition(token: string, badgeId: string, position: number): Promise<void>{
+  let error: Error | null = null
+
+  try{
+    const url = `${getBaseUrl()}/badge?id=eq.${badgeId}`
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: createJsonHeaders(token),
+      body: JSON.stringify({position: position})
+    })
+
+    if (resp.ok){
+      return
+    } else {
+      logger(`updateBadgePosition: ${resp.status} [${url}]`,'error')
+      // unexpected status code
+      error = new Error(`Could not update badge position, status code: ${resp.status}, body: ${await resp.text()}`)
+    }
+  } catch(e: any){
+    error = e
+  }
+
+  if (error) {
+    logger(`updateBadgePosition: ${error.message}`,'error')
+    throw error
+  }
+}
+
+export async function updateBadgeContent(token: string, badgeId: string, badgeUrl: string, badgeLink: string | null): Promise<void>{
+  let error: Error | null = null
+
+  try{
+    const body = JSON.stringify({
+      badge_url: badgeUrl,
+      link_url: badgeLink === null || badgeLink === '' ? null : badgeLink,
+    })
+
+    const url = `${getBaseUrl()}/badge?id=eq.${badgeId}`
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: createJsonHeaders(token),
+      body: body
+    })
+
+    if (resp.ok){
+      return
+    } else {
+      logger(`updateBadgeLink: ${resp.status} [${url}]`,'error')
+      // unexpected status code
+      error = new Error(`Could not update badge link, status code: ${resp.status}, body: ${await resp.text()}`)
+    }
+  } catch(e: any){
+    error = e
+  }
+
+  if (error) {
+    logger(`updateBadgePosition: ${error.message}`,'error')
+    throw error
+  }
+}
+
+export async function deleteBadge(token: string, badgeId: string): Promise<void>{
+  let error: Error | null = null
+
+  try{
+    const url = `${getBaseUrl()}/badge?id=eq.${badgeId}`
+    const resp = await fetch(url, {
+      method: 'DELETE',
+      headers: createJsonHeaders(token),
+    })
+
+    if (resp.ok){
+      return
+    } else {
+      logger(`deleteBadge: ${resp.status} [${url}]`,'error')
+      // unexpected status code
+      error = new Error(`Could not update badge position, status code: ${resp.status}, body: ${await resp.text()}`)
+    }
+  } catch(e: any){
+    error = e
+  }
+
+  if (error) {
+    logger(`deleteBadge: ${error.message}`,'error')
+    throw error
   }
 }
 
