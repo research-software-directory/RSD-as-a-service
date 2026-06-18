@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -113,5 +113,27 @@ export const config={
   importLicenses: {
     label: 'Import licenses',
     message: (doi: string) => `Import licenses from datacite.org using DOI ${doi}`
+  },
+  badges: {
+    title: 'Badges',
+    subtitle: 'Add software badges to the page.',
+    validation: {
+      badgeUrl: {
+        required: true,
+        maxLength: {value: 200, message: 'Maximum length is 200'},
+        pattern: {
+          value: /^https?:\/\/\S+$/,
+          message: 'Provide a URL of the badge.'
+        }
+      },
+      badgeLink: {
+        required: false,
+        maxLength: {value: 200, message: 'Maximum length is 200'},
+        pattern: {
+          value: /^https?:\/\/\S+$/,
+          message: 'Provide a URL of the badge.'
+        }
+      }
+    }
   }
 }

@@ -5,8 +5,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,6 +15,7 @@ import {useEffect, useState} from 'react'
 import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import {EditSoftwareItem, KeywordForSoftware, License, LicenseForSoftware} from '~/types/SoftwareTypes'
 import {
+  getBadgesForSoftware,
   getCategoriesForSoftware,
   getCategoryForSoftwareIds,
   getKeywordsForSoftware,
@@ -42,9 +43,10 @@ export async function getSoftwareInfoForEdit({slug, token}: {slug: string, token
       getCategoriesForSoftware(software.id, token),
       getCategoryForSoftwareIds(software.id, token),
       getLicenseForSoftware(software.id, token),
+      getBadgesForSoftware(software.id, token),
     ] as const
     // other api requests
-    const [keywords, categories, categoryForSoftwareIds, respLicense] = await Promise.all(requests)
+    const [keywords, categories, categoryForSoftwareIds, respLicense, badges] = await Promise.all(requests)
     const data:EditSoftwareItem = {
       ...software,
       keywords: keywords as KeywordForSoftware[],
@@ -53,6 +55,7 @@ export async function getSoftwareInfoForEdit({slug, token}: {slug: string, token
       licenses: prepareLicenses(respLicense),
       image_b64: null,
       image_mime_type: null,
+      badges: badges,
     }
 
     return data

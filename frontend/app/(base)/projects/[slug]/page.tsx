@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2026 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 import {headers} from 'next/headers'
@@ -87,7 +92,7 @@ export async function generateMetadata(
 
   return {
     title: `Project | ${app.title}`,
-    description: 'This project is in Research Software Directory',
+    description: 'This project is in the Research Software Directory',
   }
 }
 
