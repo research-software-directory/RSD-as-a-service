@@ -81,8 +81,6 @@ export default function AddMenu() {
         onClose={() => handleClose()}
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-        // disable adding styles to body (overflow:hidden & padding-right)
-        disableScrollLock={true}
         slotProps={{
           list: {'aria-labelledby': 'menu-button'}
         }}
