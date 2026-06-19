@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -83,7 +83,9 @@ export default function CategoryEditTreeNode({node, community, organisation, lab
   function getExpandIcon() {
     if (node.childrenCount() === 0) {
       return (
-        <IconButton disabled>
+        <IconButton
+          title="Disabled"
+          disabled>
           <Icon />
         </IconButton>
       )
@@ -91,6 +93,7 @@ export default function CategoryEditTreeNode({node, community, organisation, lab
     else if (expandChildren) {
       return (
         <IconButton
+          title="Close"
           disabled={showItem!=='none'}
           onClick={() => setExpandChildren(false)}
         >
@@ -100,6 +103,7 @@ export default function CategoryEditTreeNode({node, community, organisation, lab
     } else {
       return (
         <IconButton
+          title="Open"
           disabled={showItem!=='none'}
           onClick={() => setExpandChildren(true)}
         >

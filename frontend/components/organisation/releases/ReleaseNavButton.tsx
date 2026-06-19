@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -27,7 +27,13 @@ export default function ReleaseNavButton({year, selected, release_cnt, link}: Re
   }
 
   return (
-    <Link role="release-year-button" scroll={false} href={link} style={{opacity: 0.6}}>
+    <Link
+      data-testId="release-year-button"
+      role="button"
+      scroll={false}
+      href={link}
+      style={{opacity: 0.7}}
+    >
       <div className="border rounded-md">
         <div className="bg-primary py-1 px-2 text-primary-content">{year}</div>
         <div className="text-center p-2 font-medium text-primary">{release_cnt}</div>

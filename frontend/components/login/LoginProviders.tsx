@@ -8,6 +8,7 @@
 import Link from 'next/link'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import Chip from '@mui/material/Chip'
 
@@ -59,25 +60,26 @@ export default function LoginProviders({providers,login_info_url,onClick}:LoginP
           if (provider?.accessType==='EVERYONE') color='success'
           if (provider?.accessType==='INVITE_ONLY') color='warning'
           return (
-            <Link
+            <ListItem
               key={provider.signInUrl}
-              href={provider.signInUrl}
-              onClick={()=>{
-                // close modal for local account
-                if (provider.openidProvider==='local' && onClick) onClick()
+              alignItems="flex-start"
+              className="rounded-[0.25rem] border my-2"
+              sx={{
+                opacity: 0.75,
+                '&:hover': {
+                  opacity: 1,
+                  backgroundColor:'background.default'
+                },
+                position:'relative'
               }}
-              passHref
+              disablePadding
             >
-              <ListItem
-                alignItems="flex-start"
-                className="rounded-[0.25rem] border my-2"
-                sx={{
-                  opacity: 0.75,
-                  '&:hover': {
-                    opacity: 1,
-                    backgroundColor:'background.default'
-                  },
-                  position:'relative'
+              <ListItemButton
+                component={Link}
+                href={provider.signInUrl}
+                onClick={()=>{
+                  // close modal for local account
+                  if (provider.openidProvider==='local' && onClick) onClick()
                 }}
               >
                 {
@@ -108,8 +110,8 @@ export default function LoginProviders({providers,login_info_url,onClick}:LoginP
                     }
                   }}
                 />
-              </ListItem>
-            </Link>
+              </ListItemButton>
+            </ListItem>
           )
         })}
       </List>
