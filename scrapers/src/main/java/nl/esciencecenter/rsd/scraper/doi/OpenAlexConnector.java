@@ -35,10 +35,10 @@ class OpenAlexConnector {
 	private static final String DOI_FILTER_URL_UNFORMATTED = "https://api.openalex.org/works?filter=doi:%s";
 	private static final String OPENALEX_ID_URL_UNFORMATTED = "https://api.openalex.org/works?filter=ids.openalex:%s";
 	private static final String OPENALEX_CITES_URL_UNFORMATTED = "https://api.openalex.org/works?filter=cites:%s";
-	// https://docs.openalex.org/how-to-use-the-api/rate-limits-and-authentication
-	// The docs and empirical experiments indicate 10 requests per second.
+	// https://developers.openalex.org/api-reference/authentication#exceeding-limits
+	// The docs state the rate limit is 100 requests per second in addition to the pricing model.
 	// We make it slightly lower to be safe.
-	private static final Throttler apiThrottler = new Throttler(9, 1050, TimeUnit.MILLISECONDS);
+	private static final Throttler apiThrottler = new Throttler(90, 1050, TimeUnit.MILLISECONDS);
 
 	private static final Map<String, MentionType> openalexTypeMap = new HashMap<>();
 
@@ -69,13 +69,13 @@ class OpenAlexConnector {
 		throws IOException, InterruptedException, RsdResponseException {
 		Objects.requireNonNull(url);
 
-		String email = Config.crossrefContactEmail().orElse(null);
+		String apiKey = Config.openalexApiKey().orElse(null);
 
 		apiThrottler.awaitPermission();
 		HttpResponse<String> response =
-			email == null
+			apiKey == null || apiKey.isBlank()
 				? Utils.getAsHttpResponse(url)
-				: Utils.getAsHttpResponse(url, "User-Agent", "mailto:" + email);
+				: Utils.getAsHttpResponse(url + "&api_key=" + apiKey);
 
 		if (response.statusCode() == 200) {
 			return response.body();

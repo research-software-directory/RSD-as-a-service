@@ -191,6 +191,7 @@ services:
       - API_CREDENTIALS_GITHUB
       - ZENODO_ACCESS_TOKEN
       - CROSSREF_CONTACT_EMAIL
+      - OPENALEX_API_KEY
       - LIBRARIES_IO_ACCESS_TOKEN
     depends_on:
       backend:
