@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -28,7 +28,7 @@ export default function OrgSoftwareFilters() {
   const {keywordsList} = useOrgSoftwareKeywordsList()
   const {languagesList} = useOrgSoftwareLanguagesList()
   const {licensesList} = useOrgSoftwareLicensesList()
-  const {hasCategories,categoryList} = useOrgSoftwareCategoriesList()
+  const {categoryFilters} = useOrgSoftwareCategoriesList()
 
   const keywords = decodeJsonParam(keywords_json, [])
   const prog_lang = decodeJsonParam(prog_lang_json, [])
@@ -36,8 +36,8 @@ export default function OrgSoftwareFilters() {
   const categories = decodeJsonParam(categories_json,[])
 
   // console.group('OrgSoftwareFilters')
-  // console.log('hasCategories...', hasCategories)
-  // console.log('categoryList...', categoryList)
+  // console.log('categories...', categories)
+  // console.log('categoryFilters...', categoryFilters)
   // console.groupEnd()
 
   // debugger
@@ -80,17 +80,16 @@ export default function OrgSoftwareFilters() {
         />
       </div>
       {/* Custom organisation categories */}
-      {hasCategories ?
-        <div>
+      {categoryFilters.map(filter=>
+        <div key={filter?.short_name}>
           <CategoriesFilter
-            title="Categories"
+            title={filter?.short_name}
             categories={categories}
-            categoryList={categoryList}
+            categoryList={filter.options}
             handleQueryChange={handleQueryChange}
           />
         </div>
-        : null
-      }
+      )}
     </>
   )
 }

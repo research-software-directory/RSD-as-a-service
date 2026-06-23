@@ -5,7 +5,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 
@@ -13,7 +12,6 @@ import FilterTitle from '~/components/filter/FilterTitle'
 import FilterOption from '~/components/filter/FilterOption'
 import StatusForReaders from '~/components/a11y/StatusForReaders'
 import {screenReaderFilterMsg, ariaOptionLabel} from './screenReaderFilterMsg'
-
 
 export type CategoryOption = {
   category: string,
@@ -28,31 +26,30 @@ type CategoryFilterProps = Readonly<{
 }>
 
 export default function CategoriesFilter({categories,categoryList,handleQueryChange,title='Categories'}: CategoryFilterProps) {
+  const include:string[] = []
+  const selected:CategoryOption[] = []
 
-  const [selected, setSelected] = useState<CategoryOption[]>([])
-  const [options, setOptions] = useState<CategoryOption[]>(categoryList)
-
-  // console.group('CategoryFilter')
-  // console.log('categoryList...', categoryList)
-  // console.log('options...', options)
-  // console.groupEnd()
-
-  useEffect(() => {
-    if (categories.length > 0 && categoryList.length) {
-      const selectedCategories = categoryList.filter(option => {
-        return categories.includes(option.category)
-      })
-      setSelected(selectedCategories)
-    } else {
-      setSelected([])
+  // split all categories to selected and to include (from other category filters)
+  categories.forEach(item=>{
+    const option = categoryList.find(option=>option.category===item)
+    if (option){
+      selected.push(option)
+    }else{
+      include.push(item)
     }
-    setOptions(categoryList)
-  },[categories,categoryList])
+  })
+
+  // console.group('CategoriesFilter')
+  // console.log('categories...', categories)
+  // console.log('categoryList...', categoryList)
+  // console.log('selected...', selected)
+  // console.log('include...', include)
+  // console.groupEnd()
 
   const message = screenReaderFilterMsg({
     name: title,
     selected: selected.map(item => item.category),
-    optionCnt: options?.length
+    optionCnt: categoryList?.length
   })
 
   return (
@@ -65,12 +62,12 @@ export default function CategoriesFilter({categories,categoryList,handleQueryCha
       <StatusForReaders message={message}/>
       <Autocomplete
         className="mt-4"
-        disabled={options?.length===0}
+        disabled={categoryList?.length===0}
         value={selected}
         size="small"
         multiple
         clearOnEscape
-        options={options}
+        options={categoryList}
         getOptionLabel={(option) => (option.category)}
         isOptionEqualToValue={(option, value) => {
           return option.category === value.category
@@ -100,9 +97,14 @@ export default function CategoriesFilter({categories,categoryList,handleQueryCha
         renderInput={(params) => (
           <TextField {...params} placeholder={title} />
         )}
-        onChange={(event, newValue) => {
+        onChange={(_, newValue) => {
           // extract values into string[] for url query
-          const queryFilter = newValue.map(item => item.category)
+          const queryFilter = [
+            // integrate categories from other filters
+            ...include,
+            // add categories from this filter
+            ...newValue.map(item => item.category)
+          ]
           handleQueryChange('categories', queryFilter)
         }}
       />

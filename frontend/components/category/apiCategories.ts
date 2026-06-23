@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -16,7 +16,7 @@ type LoadCategoryProps={
   allow_projects?: boolean
 }
 
-export async function loadCategoryRoots({community, organisation, allow_software, allow_projects}:LoadCategoryProps){
+export async function loadCategoryEntry({community, organisation, allow_software, allow_projects}:LoadCategoryProps){
   // global categories is default
   let categoryFilter = 'community=is.null&organisation=is.null'
   // community filter
@@ -39,13 +39,21 @@ export async function loadCategoryRoots({community, organisation, allow_software
   const resp = await fetch(`${getBaseUrl()}/category?${categoryFilter}`)
 
   if (!resp.ok) {
-    throw new Error(`${await resp.text()}`)
+    logger(`loadCategoryEntry: ${await resp.text()}`,'error')
+    return []
   }
 
   const categoriesArr: CategoryEntry[] = await resp.json()
+  return categoriesArr
+}
+
+
+export async function loadCategoryRoots({community, organisation, allow_software, allow_projects}:LoadCategoryProps){
+  const categoriesArr = await loadCategoryEntry({
+    community, organisation, allow_software, allow_projects
+  })
 
   return categoryEntriesToRoots(categoriesArr)
-
 }
 
 export function categoryEntriesToRoots(categoriesArr: CategoryEntry[]): TreeNode<CategoryEntry>[] {

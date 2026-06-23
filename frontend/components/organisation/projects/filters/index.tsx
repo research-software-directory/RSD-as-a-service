@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -31,7 +31,7 @@ export default function OrgProjectFilters() {
   const {domainsList} = useOrgProjectDomainsFilter()
   const {organisationList} = useOrgProjectOrganisationList()
   const {statusList} = useOrgProjectStatusList()
-  const {hasCategories, categoryList} = useOrgProjectCategoriesList()
+  const {categoryFilters} = useOrgProjectCategoriesList()
 
   const keywords = decodeJsonParam(keywords_json, [])
   const domains = decodeJsonParam(domains_json, [])
@@ -39,8 +39,8 @@ export default function OrgProjectFilters() {
   const categories = decodeJsonParam(categories_json,[])
 
   // console.group('OrgProjectFilters')
-  // console.log('hasCategories...', hasCategories)
-  // console.log('categoryList...', categoryList)
+  // console.log('categories...', categories)
+  // console.log('categoryFilters...', categoryFilters)
   // console.groupEnd()
 
   // debugger
@@ -88,18 +88,17 @@ export default function OrgProjectFilters() {
           handleQueryChange={handleQueryChange}
         />
       </div>
-      {/* Custom organisation categories */}
-      {hasCategories ?
-        <div>
+      {/* Custom organisation category filters */}
+      {categoryFilters.map(filter=>
+        <div key={filter?.short_name}>
           <CategoriesFilter
-            title="Categories"
+            title={filter?.short_name}
             categories={categories}
-            categoryList={categoryList}
+            categoryList={filter.options}
             handleQueryChange={handleQueryChange}
           />
         </div>
-        : null
-      }
+      )}
     </>
   )
 }
