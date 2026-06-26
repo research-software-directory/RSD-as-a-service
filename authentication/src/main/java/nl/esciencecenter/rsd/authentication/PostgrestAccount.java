@@ -21,6 +21,8 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -146,6 +148,7 @@ public class PostgrestAccount implements Account {
 
 			UUID accountId = UUID.fromString(newAccountId);
 			createLoginForAccount(accountId, openIdInfo, provider, backendUri, token);
+			createUserProfileForLogin(accountId, openIdInfo, backendUri, token);
 
 			boolean isAdmin = createAdminIfDevAndNoAdminsExist(backendUri, token, accountId);
 
@@ -290,6 +293,62 @@ public class PostgrestAccount implements Account {
 				response.body(),
 				"Could not create login for account"
 			);
+		}
+	}
+
+	static List<String> splitName(String fullName) {
+		String givenNames = "";
+		String familyNames = "";
+
+		if (fullName != null && fullName.length() > 0) {
+			List<String> parts;
+
+			fullName = fullName.trim();
+			if (fullName.contains(", ")) {
+				parts = Arrays.asList(fullName.split(", ")).reversed();
+			} else {
+				parts = Arrays.asList(fullName.split(" "));
+			}
+
+			givenNames = parts.get(0);
+			familyNames = String.join(" ", parts.subList(1, parts.size()));
+		}
+
+		return Arrays.asList(givenNames, familyNames);
+	}
+
+	private void createUserProfileForLogin(
+			UUID accountId,
+			OpenIdInfo openIdInfo,
+			String backendUri,
+			String adminJwt)
+			throws IOException, InterruptedException, RsdResponseException, RsdAuthenticationException {
+
+		List<String> nameParts = splitName(openIdInfo.name());
+
+		JsonObject userProfileData = new JsonObject();
+		userProfileData.addProperty("account", accountId.toString());
+		userProfileData.addProperty("given_names", nameParts.get(0));
+		userProfileData.addProperty("family_names", nameParts.get(1));
+		userProfileData.addProperty("email_address", openIdInfo.email());
+		userProfileData.addProperty("affiliation", openIdInfo.organisation());
+		userProfileData.addProperty("is_public", false);
+
+		URI createLoginUri = URI.create(backendUri + "/user_profile");
+
+		HttpResponse<String> response = postJsonAsAdminWithResponse(
+				createLoginUri,
+				userProfileData.toString(),
+				adminJwt);
+
+		if (response.statusCode() == 409) {
+			throw new RsdAuthenticationException("A user profile already exists for this account");
+		} else if (response.statusCode() >= 300) {
+			throw new RsdResponseException(
+					response.statusCode(),
+					response.uri(),
+					response.body(),
+					"Could not create user profile login for login.");
 		}
 	}
 

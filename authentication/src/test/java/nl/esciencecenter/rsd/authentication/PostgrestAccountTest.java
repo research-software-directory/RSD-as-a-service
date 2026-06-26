@@ -6,6 +6,7 @@
 package nl.esciencecenter.rsd.authentication;
 
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -114,5 +115,37 @@ class PostgrestAccountTest {
 		Assertions.assertThrowsExactly(RsdAccountInviteException.class, () ->
 			PostgrestAccount.checkInviteResponseGetUsesLeft(UUID.randomUUID(), json)
 		);
+	}
+
+	@Test
+	void givenSpaceSeparatedFullName_whenSplit_thenPartsAreReturned() {
+		String fullName = "first middle last   ";
+		Assertions.assertEquals(
+				Arrays.asList("first", "middle last"),
+				PostgrestAccount.splitName(fullName));
+	}
+
+	@Test
+	void givenCommaSeparatedFullName_whenSplit_thenPartsAreReturned() {
+		String fullName = "last, first middle";
+		Assertions.assertEquals(
+				Arrays.asList("first middle", "last"),
+				PostgrestAccount.splitName(fullName));
+	}
+
+	@Test
+	void givenNull_whenSplit_thenEmptyStringsAreReturned() {
+		String fullName = null;
+		Assertions.assertEquals(
+				Arrays.asList("", ""),
+				PostgrestAccount.splitName(fullName));
+	}
+
+	@Test
+	void givenEmptyString_whenSplit_thenEmptyStringsAreReturned() {
+		String fullName = "";
+		Assertions.assertEquals(
+				Arrays.asList("", ""),
+				PostgrestAccount.splitName(fullName));
 	}
 }
