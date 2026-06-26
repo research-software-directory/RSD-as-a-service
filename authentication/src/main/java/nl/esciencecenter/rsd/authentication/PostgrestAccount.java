@@ -318,13 +318,8 @@ public class PostgrestAccount implements Account {
 		return Arrays.asList(givenNames, familyNames);
 	}
 
-	private void createUserProfileForLogin(
-			UUID accountId,
-			OpenIdInfo openIdInfo,
-			String backendUri,
-			String adminJwt)
-			throws IOException, InterruptedException, RsdResponseException, RsdAuthenticationException {
-
+	private void createUserProfileForLogin(UUID accountId, OpenIdInfo openIdInfo, String backendUri, String adminJwt)
+		throws IOException, InterruptedException, RsdResponseException, RsdAuthenticationException {
 		List<String> nameParts = splitName(openIdInfo.name());
 
 		JsonObject userProfileData = new JsonObject();
@@ -338,18 +333,20 @@ public class PostgrestAccount implements Account {
 		URI createLoginUri = URI.create(backendUri + "/user_profile");
 
 		HttpResponse<String> response = postJsonAsAdminWithResponse(
-				createLoginUri,
-				userProfileData.toString(),
-				adminJwt);
+			createLoginUri,
+			userProfileData.toString(),
+			adminJwt
+		);
 
 		if (response.statusCode() == 409) {
 			throw new RsdAuthenticationException("A user profile already exists for this account");
 		} else if (response.statusCode() >= 300) {
 			throw new RsdResponseException(
-					response.statusCode(),
-					response.uri(),
-					response.body(),
-					"Could not create user profile login for login.");
+				response.statusCode(),
+				response.uri(),
+				response.body(),
+				"Could not create user profile login for login."
+			);
 		}
 	}
 
