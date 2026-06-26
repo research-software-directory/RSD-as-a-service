@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Matthias Volk (GFZ) <matthias.volk@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
