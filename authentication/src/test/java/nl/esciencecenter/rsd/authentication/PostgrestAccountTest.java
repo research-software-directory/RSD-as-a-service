@@ -121,32 +121,24 @@ class PostgrestAccountTest {
 	@Test
 	void givenSpaceSeparatedFullName_whenSplit_thenPartsAreReturned() {
 		String fullName = "first middle last   ";
-		Assertions.assertEquals(
-				Arrays.asList("first", "middle last"),
-				PostgrestAccount.splitName(fullName));
+		Assertions.assertEquals(Arrays.asList("first", "middle last"), PostgrestAccount.splitName(fullName));
 	}
 
 	@Test
 	void givenCommaSeparatedFullName_whenSplit_thenPartsAreReturned() {
 		String fullName = "last, first middle";
-		Assertions.assertEquals(
-				Arrays.asList("first middle", "last"),
-				PostgrestAccount.splitName(fullName));
+		Assertions.assertEquals(Arrays.asList("first middle", "last"), PostgrestAccount.splitName(fullName));
 	}
 
 	@Test
 	void givenNull_whenSplit_thenEmptyStringsAreReturned() {
 		String fullName = null;
-		Assertions.assertEquals(
-				Arrays.asList("", ""),
-				PostgrestAccount.splitName(fullName));
+		Assertions.assertEquals(Arrays.asList("", ""), PostgrestAccount.splitName(fullName));
 	}
 
 	@Test
 	void givenEmptyString_whenSplit_thenEmptyStringsAreReturned() {
 		String fullName = "";
-		Assertions.assertEquals(
-				Arrays.asList("", ""),
-				PostgrestAccount.splitName(fullName));
+		Assertions.assertEquals(Arrays.asList("", ""), PostgrestAccount.splitName(fullName));
 	}
 }
