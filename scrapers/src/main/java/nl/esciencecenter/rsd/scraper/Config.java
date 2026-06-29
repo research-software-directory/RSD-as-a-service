@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -185,12 +185,21 @@ public class Config {
 	}
 
 	/**
-	 * Get the email contact address for crossref.
+	 * Get the email contact address for Crossref.
 	 *
-	 * @return the Get the email contact address for crossref (default unset).
+	 * @return the email contact address for Crossref (default unset).
 	 */
 	public static Optional<String> crossrefContactEmail() {
 		return getOptionalEnv("CROSSREF_CONTACT_EMAIL");
+	}
+
+	/**
+	 * Get the API key for OpenAlex.
+	 *
+	 * @return the API key for OpenAlex (default unset).
+	 */
+	public static Optional<String> openalexApiKey() {
+		return getOptionalEnv("OPENALEX_API_KEY");
 	}
 
 	/**
