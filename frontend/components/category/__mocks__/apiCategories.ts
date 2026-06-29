@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,6 +14,12 @@ type LoadCategoryProps={
   allow_projects?: boolean
 }
 
+// DEFAULT mock return empty array of categories
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const loadCategoryEntry=jest.fn(async({community, organisation, allow_software, allow_projects}:LoadCategoryProps)=>{
+  const categoriesArr: CategoryEntry[] = []
+  return categoriesArr
+})
 
 // DEFAULT mock return empty array of categories
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

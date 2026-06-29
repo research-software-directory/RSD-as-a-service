@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,8 +9,9 @@ import {useSession} from '~/auth/AuthProvider'
 import logger from '~/utils/logger'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {decodeJsonParam} from '~/utils/extractQueryParam'
-import {loadCategoryRoots} from '~/components/category/apiCategories'
+import {categoryEntriesToRoots, loadCategoryEntry} from '~/components/category/apiCategories'
 import {CategoryOption} from '~/components/filter/CategoriesFilter'
+import {addCountToEntryProps, CategoryFilter, categoryFiltersFromTree, sortFiltersAndOptionsByName} from '~/components/filter/createCategoryFilters'
 import useOrganisationContext from '~/components/organisation/context/useOrganisationContext'
 import useSoftwareParams from './useSoftwareParams'
 import {buildOrgSoftwareFilter, OrgSoftwareFilterProps} from './useOrgSoftwareKeywordsList'
@@ -42,37 +43,13 @@ async function orgSoftwareCategoriesFilter({token,...params}:OrgSoftwareFilterPr
   }
 }
 
-
-function useOrgHasCategoriesFilter(id?:string){
-  const [hasCategories, setHasCategories] = useState(false)
-
-  useEffect(()=>{
-    let abort = false
-
-    if (id){
-      loadCategoryRoots({organisation:id})
-        .then(roots=>{
-          const categories = roots.filter(item=>item.getValue().allow_software)
-          if (abort) return
-          setHasCategories(categories.length > 0)
-        })
-    }
-
-    return ()=>{abort=true}
-  },[id])
-
-  return hasCategories
-}
-
-
 export default function useOrgSoftwareCategoriesList(){
   const {token} = useSession()
   const {id} = useOrganisationContext()
-  const hasCategories = useOrgHasCategoriesFilter(id)
   const {
     search,keywords_json,prog_lang_json,licenses_json,categories_json
   } = useSoftwareParams()
-  const [categoryList, setCategoryList] = useState<CategoryOption[]>([])
+  const [categoryFilters, setCategoryFilters] = useState<CategoryFilter[]>([])
 
   useEffect(()=>{
     let abort = false
@@ -84,18 +61,40 @@ export default function useOrgSoftwareCategoriesList(){
       const categories = decodeJsonParam(categories_json, null)
 
       // get filter options
-      orgSoftwareCategoriesFilter({
-        id,
-        search,
-        keywords,
-        prog_lang,
-        licenses,
-        categories,
-        token
-      }).then(resp => {
-        // abort
+      Promise.all([
+        orgSoftwareCategoriesFilter({
+          id,
+          search,
+          keywords,
+          prog_lang,
+          licenses,
+          categories,
+          token
+        }),
+        loadCategoryEntry({
+          organisation: id,
+          allow_software: true
+        })
+      ]).then(([list,entries])=>{
+        // add category count to entry properties
+        addCountToEntryProps({
+          categoryList: list,
+          categoryEntry: entries
+        })
+        // convert list to tree
+        const categoryTree = categoryEntriesToRoots(entries)
+        // convert tree to category filters
+        const categoryFilters = categoryFiltersFromTree({
+          nodes: categoryTree,
+          level: 0
+        }) as CategoryFilter[]
+        // sort filter options by name
+        sortFiltersAndOptionsByName(categoryFilters)
         if (abort) return
-        setCategoryList(resp)
+        setCategoryFilters(categoryFilters)
+      }).catch(err=>{
+        setCategoryFilters([])
+        logger(`useOrgSoftwareCategoriesList: ${err}`,'error')
       })
     }
 
@@ -108,8 +107,7 @@ export default function useOrgSoftwareCategoriesList(){
   ])
 
   return {
-    hasCategories,
-    categoryList
+    categoryFilters
   }
 
 }

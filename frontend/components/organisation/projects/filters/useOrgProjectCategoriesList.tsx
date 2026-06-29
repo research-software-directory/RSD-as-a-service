@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,10 +9,11 @@ import {useSession} from '~/auth/AuthProvider'
 import logger from '~/utils/logger'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {decodeJsonParam} from '~/utils/extractQueryParam'
-import {loadCategoryRoots} from '~/components/category/apiCategories'
+import {categoryEntriesToRoots, loadCategoryEntry} from '~/components/category/apiCategories'
 import {CategoryOption} from '~/components/filter/CategoriesFilter'
+import {addCountToEntryProps, CategoryFilter, categoryFiltersFromTree, sortFiltersAndOptionsByName} from '~/components/filter/createCategoryFilters'
+import useProjectParams from '~/components/projects/overview/useProjectParams'
 import useOrganisationContext from '~/components/organisation/context/useOrganisationContext'
-import useProjectParams from '../../../projects/overview/useProjectParams'
 import {buildOrgProjectFilter, OrgProjectFilterProps} from './useOrgProjectKeywordsList'
 
 async function orgProjectCategoriesFilter({token,...params}:OrgProjectFilterProps){
@@ -42,38 +43,14 @@ async function orgProjectCategoriesFilter({token,...params}:OrgProjectFilterProp
   }
 }
 
-
-function useOrgHasCategoriesFilter(id?:string){
-  const [hasCategories, setHasCategories] = useState(false)
-
-  useEffect(()=>{
-    let abort = false
-
-    if (id){
-      loadCategoryRoots({organisation:id})
-        .then(roots=>{
-          const categories = roots.filter(item=>item.getValue().allow_projects)
-          if (abort) return
-          setHasCategories(categories.length > 0)
-        })
-    }
-
-    return ()=>{abort=true}
-  },[id])
-
-  return hasCategories
-}
-
-
 export default function useOrgProjectCategoriesList(){
   const {token} = useSession()
   const {id} = useOrganisationContext()
-  const hasCategories = useOrgHasCategoriesFilter(id)
   const {
     search,project_status,keywords_json,
     domains_json,organisations_json,categories_json
   } = useProjectParams()
-  const [categoryList, setCategoryList] = useState<CategoryOption[]>([])
+  const [categoryFilters, setCategoryFilters] = useState<CategoryFilter[]>([])
 
   useEffect(()=>{
     let abort = false
@@ -85,19 +62,41 @@ export default function useOrgProjectCategoriesList(){
       const categories = decodeJsonParam(categories_json, null)
 
       // get filter options
-      orgProjectCategoriesFilter({
-        id,
-        search,
-        keywords,
-        domains,
-        organisations,
-        project_status,
-        categories,
-        token
-      }).then(resp => {
-        // abort
+      Promise.all([
+        orgProjectCategoriesFilter({
+          id,
+          search,
+          keywords,
+          domains,
+          organisations,
+          project_status,
+          categories,
+          token
+        }),
+        loadCategoryEntry({
+          organisation: id,
+          allow_projects: true
+        })
+      ]).then(([list,entries])=>{
+        // add category count to entry properties
+        addCountToEntryProps({
+          categoryList: list,
+          categoryEntry: entries
+        })
+        // convert list to tree
+        const categoryTree = categoryEntriesToRoots(entries)
+        // convert tree to category filters
+        const categoryFilters = categoryFiltersFromTree({
+          nodes: categoryTree,
+          level: 0
+        }) as CategoryFilter[]
+        // sort filter options by name
+        sortFiltersAndOptionsByName(categoryFilters)
         if (abort) return
-        setCategoryList(resp)
+        setCategoryFilters(categoryFilters as CategoryFilter[])
+      }).catch(err=>{
+        setCategoryFilters([])
+        logger(`useOrgProjectCategoriesList: ${err}`,'error')
       })
     }
 
@@ -110,8 +109,6 @@ export default function useOrgProjectCategoriesList(){
   ])
 
   return {
-    hasCategories,
-    categoryList
+    categoryFilters
   }
-
 }
