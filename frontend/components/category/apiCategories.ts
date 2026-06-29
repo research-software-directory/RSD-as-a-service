@@ -36,7 +36,7 @@ export async function loadCategoryEntry({community, organisation, allow_software
     categoryFilter+='&allow_projects=eq.true'
   }
 
-  const resp = await fetch(`${getBaseUrl()}/category?${categoryFilter}`)
+  const resp = await fetch(`${getBaseUrl()}/rpc/categories?${categoryFilter}`)
 
   if (!resp.ok) {
     logger(`loadCategoryEntry: ${await resp.text()}`,'error')

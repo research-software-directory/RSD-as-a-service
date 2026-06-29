@@ -76,3 +76,19 @@ export function addCountToEntryProps({
   })
 }
 
+/**
+ * Sort filters and all its options by category name ASCENDING
+ * Sorts an array in place. This method mutates the array and returns a reference to the same array.
+ * @param filters
+ */
+export function sortFiltersAndOptionsByName(filters:CategoryFilter[]){
+  // sort filters by short name
+  filters.sort((a,b)=>a.short_name.localeCompare(b.short_name))
+  // sort filter options by category (name)
+  filters.forEach(filter=>{
+    filter.options.sort((a,b)=> {
+      // order by category name
+      return a.category.localeCompare(b.category)
+    })
+  })
+}

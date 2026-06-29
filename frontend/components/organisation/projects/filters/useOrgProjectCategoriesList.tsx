@@ -11,7 +11,7 @@ import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {decodeJsonParam} from '~/utils/extractQueryParam'
 import {categoryEntriesToRoots, loadCategoryEntry} from '~/components/category/apiCategories'
 import {CategoryOption} from '~/components/filter/CategoriesFilter'
-import {addCountToEntryProps, CategoryFilter, categoryFiltersFromTree} from '~/components/filter/createCategoryFilters'
+import {addCountToEntryProps, CategoryFilter, categoryFiltersFromTree, sortFiltersAndOptionsByName} from '~/components/filter/createCategoryFilters'
 import useProjectParams from '~/components/projects/overview/useProjectParams'
 import useOrganisationContext from '~/components/organisation/context/useOrganisationContext'
 import {buildOrgProjectFilter, OrgProjectFilterProps} from './useOrgProjectKeywordsList'
@@ -89,7 +89,9 @@ export default function useOrgProjectCategoriesList(){
         const categoryFilters = categoryFiltersFromTree({
           nodes: categoryTree,
           level: 0
-        })
+        }) as CategoryFilter[]
+        // sort filter options by name
+        sortFiltersAndOptionsByName(categoryFilters)
         if (abort) return
         setCategoryFilters(categoryFilters as CategoryFilter[])
       }).catch(err=>{

@@ -11,7 +11,7 @@ import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {decodeJsonParam} from '~/utils/extractQueryParam'
 import {categoryEntriesToRoots, loadCategoryEntry} from '~/components/category/apiCategories'
 import {CategoryOption} from '~/components/filter/CategoriesFilter'
-import {addCountToEntryProps, CategoryFilter, categoryFiltersFromTree} from '~/components/filter/createCategoryFilters'
+import {addCountToEntryProps, CategoryFilter, categoryFiltersFromTree, sortFiltersAndOptionsByName} from '~/components/filter/createCategoryFilters'
 import useOrganisationContext from '~/components/organisation/context/useOrganisationContext'
 import useSoftwareParams from './useSoftwareParams'
 import {buildOrgSoftwareFilter, OrgSoftwareFilterProps} from './useOrgSoftwareKeywordsList'
@@ -87,9 +87,11 @@ export default function useOrgSoftwareCategoriesList(){
         const categoryFilters = categoryFiltersFromTree({
           nodes: categoryTree,
           level: 0
-        })
+        }) as CategoryFilter[]
+        // sort filter options by name
+        sortFiltersAndOptionsByName(categoryFilters)
         if (abort) return
-        setCategoryFilters(categoryFilters as CategoryFilter[])
+        setCategoryFilters(categoryFilters)
       }).catch(err=>{
         setCategoryFilters([])
         logger(`useOrgSoftwareCategoriesList: ${err}`,'error')
