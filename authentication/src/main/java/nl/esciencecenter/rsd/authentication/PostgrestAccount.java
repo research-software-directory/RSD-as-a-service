@@ -3,6 +3,7 @@
 // SPDX-FileCopyrightText: 2024 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
+// SPDX-FileCopyrightText: 2026 Matthias Volk (GFZ) <matthias.volk@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,6 +22,8 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -127,14 +130,16 @@ public class PostgrestAccount implements Account {
 		throws IOException, InterruptedException, RsdResponseException {
 		Optional<AccountInfo> maybeExistingAccount = getAccountIfExists(openIdInfo, provider);
 
+		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
+		String token = jwtCreator.createAdminJwt();
+		AccountInfo accountInfo;
+
 		if (maybeExistingAccount.isPresent()) {
-			return maybeExistingAccount.get();
+			accountInfo = maybeExistingAccount.get();
 		}
 		// The login credentials do no exist yet, create a new account and return it.
 		else {
 			// create account
-			JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-			String token = jwtCreator.createAdminJwt();
 			URI createAccountEndpoint = URI.create(backendUri + "/account");
 			String newAccountJson = postJsonAsAdmin(createAccountEndpoint, "{}", token);
 			String newAccountId = JsonParser.parseString(newAccountJson)
@@ -150,8 +155,19 @@ public class PostgrestAccount implements Account {
 			boolean isAdmin = createAdminIfDevAndNoAdminsExist(backendUri, token, accountId);
 
 			// a new account cannot be locked
-			return new AccountInfo(accountId, openIdInfo.name(), isAdmin, openIdInfo.data(), false, Optional.empty());
+			accountInfo = new AccountInfo(
+				accountId,
+				openIdInfo.name(),
+				isAdmin,
+				openIdInfo.data(),
+				false,
+				Optional.empty()
+			);
 		}
+
+		createUserProfileForLogin(accountInfo.account(), openIdInfo, backendUri, token);
+
+		return accountInfo;
 	}
 
 	public AccountInfo useInviteToCreateAccount(UUID inviteId, OpenIdInfo openIdInfo, OpenidProvider provider)
@@ -289,6 +305,59 @@ public class PostgrestAccount implements Account {
 				response.uri(),
 				response.body(),
 				"Could not create login for account"
+			);
+		}
+	}
+
+	static List<String> splitName(String fullName) {
+		String givenNames = "";
+		String familyNames = "";
+
+		if (fullName != null && fullName.length() > 0) {
+			List<String> parts;
+
+			fullName = fullName.trim();
+			if (fullName.contains(", ")) {
+				parts = Arrays.asList(fullName.split(", ")).reversed();
+			} else {
+				parts = Arrays.asList(fullName.split(" "));
+			}
+
+			givenNames = parts.get(0);
+			familyNames = String.join(" ", parts.subList(1, parts.size()));
+		}
+
+		return Arrays.asList(givenNames, familyNames);
+	}
+
+	private void createUserProfileForLogin(UUID accountId, OpenIdInfo openIdInfo, String backendUri, String adminJwt)
+		throws IOException, InterruptedException, RsdResponseException, RsdAuthenticationException {
+		List<String> nameParts = splitName(openIdInfo.name());
+
+		JsonObject userProfileData = new JsonObject();
+		userProfileData.addProperty("account", accountId.toString());
+		userProfileData.addProperty("given_names", nameParts.get(0));
+		userProfileData.addProperty("family_names", nameParts.get(1));
+		userProfileData.addProperty("email_address", openIdInfo.email());
+		userProfileData.addProperty("affiliation", openIdInfo.organisation());
+		userProfileData.addProperty("is_public", false);
+
+		URI createLoginUri = URI.create(backendUri + "/user_profile");
+
+		HttpResponse<String> response = postJsonAsAdminWithResponse(
+			createLoginUri,
+			userProfileData.toString(),
+			adminJwt,
+			"Prefer",
+			"resolution=ignore-duplicates"
+		);
+
+		if (response.statusCode() >= 300) {
+			throw new RsdResponseException(
+				response.statusCode(),
+				response.uri(),
+				response.body(),
+				"Could not create user profile login for login."
 			);
 		}
 	}
