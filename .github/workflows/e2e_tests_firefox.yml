@@ -67,4 +67,3 @@ jobs:
             e2e/state/
             .env
           retention-days: 30
-

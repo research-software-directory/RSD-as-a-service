@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+# SPDX-FileCopyrightText: 2022 dv4all
+# SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: scrapers sonar
+
+on:
+  workflow_run:
+    workflows: ["scrapers tests"]
+    types:
+      - completed
+
+jobs:
+  scrapers-sonar:
+    name: scrapers sonar
+    uses: ./.github/workflows/_java_sonar.yml
+    with:
+      head_sha: ${{ github.event.workflow_run.head_sha }}
+      head_branch: ${{ github.event.workflow_run.head_branch }}
+      working_directory: "scrapers"
+      # get artifacts saved in background_services_tests action (use same name)
+      artifact_name: "scrapers-target-dir"
+      sonar_project_key: "nl.esciencecenter:scrapers"
+      workflow_run_id: ${{ github.event.workflow_run.id }}
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 dv4all
+# SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -20,34 +21,8 @@ on:
 
 jobs:
   scrapers-tests:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - uses: actions/setup-java@v5
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: "Maven JUnit tests and JaCoCo test report"
-        working-directory: scrapers
-        run: |
-          mvn -X verify
-      - name: SonarCloud Scan scrapers
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        working-directory: scrapers
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=nl.research-software:scrapers -Pcoverage
+    name: scrapers tests
+    uses: ./.github/workflows/_java_tests.yml
+    with:
+      working_directory: "scrapers"
+      artifact_name: "scrapers-target-dir"

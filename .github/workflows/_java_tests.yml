@@ -1,0 +1,46 @@
+# SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+# SPDX-FileCopyrightText: 2026 Netherlands eScience Center
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: reusable JUnit & JaCoCo test runner
+
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        required: true
+        type: string
+      artifact_name:
+        required: true
+        type: string
+
+jobs:
+  java-tests:
+    name: Maven JUnit tests and JaCoCo test report
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+        with:
+          # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          # new cache feature directly available in java-setup action
+          cache: 'maven'
+
+      - name: Execute Tests and Generate Reports
+        working-directory: ${{ inputs.working_directory }}
+        run: mvn -B clean verify
+
+      - name: Upload Target Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ inputs.working_directory }}/target/
+          retention-days: 1
