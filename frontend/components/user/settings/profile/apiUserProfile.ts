@@ -2,13 +2,13 @@
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 dv4all
+// SPDX-FileCopyrightText: 2026 Matthias Volk (GFZ) <matthias.volk@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
-import {splitName} from '~/utils/getDisplayName'
+import { createJsonHeaders, extractReturnMessage, getBaseUrl } from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
-import {getLoginForAccount, LoginForAccount} from './apiLoginForAccount'
+import { getLoginForAccount } from './apiLoginForAccount'
 
 export type UserProfile = {
   account: string,
@@ -36,38 +36,6 @@ export async function loadUserProfile({account,token}:{account?:string,token?:st
       getUserProfile({account,token}),
       getLoginForAccount({account,token})
     ])
-    // const profile = await
-    // console.log('loadUserProfile...profile...', profile)
-    // return profile if found
-    if (profile!==null) return {
-      profile,
-      logins
-    }
-    // get logins
-    // const logins = await getLoginForAccount({account,token})
-    // console.log('getLoginForAccount...logins...', logins)
-    if (logins.length>0){
-      const profile = convertLoginToProfile(logins)
-      // console.log('convertLoginToProfile...profile...', profile)
-      if (profile){
-        const resp = await insertUserProfile({profile,token})
-        if (resp?.status===200){
-          return {
-            profile,
-            logins
-          }
-        }
-        logger(`loadUserProfile.insertUserProfile: ${resp?.status}: ${resp?.message}`,'error')
-        return {
-          profile,
-          logins
-        }
-      }
-      return {
-        profile,
-        logins
-      }
-    }
     return {
       profile,
       logins
@@ -136,43 +104,6 @@ export async function patchUserProfile({account,data,token}:UpdateUserProfilePro
       status: 500,
       message: e?.message
     }
-  }
-}
-
-export function convertLoginToProfile(logins:LoginForAccount[]){
-  try{
-    const login = logins[0]
-    const profile: UserProfile = {
-      account: login.account,
-      ...splitName(login.name),
-      email_address: login.email,
-      affiliation: login.home_organisation,
-      role: null,
-      is_public: false,
-      avatar_id: null,
-      description: null
-    }
-    return profile
-  }catch(e:any){
-    logger(`convertLoginToProfile: ${e.message}`,'error')
-    return null
-  }
-}
-
-export async function insertUserProfile({profile,token}:{profile:UserProfile,token:string}){
-  try{
-    const url = `${getBaseUrl()}/user_profile`
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: {
-        ...createJsonHeaders(token)
-      },
-      body: JSON.stringify(profile)
-    })
-    return extractReturnMessage(resp)
-  }catch(e:any){
-    logger(`insertUserProfile: ${e.message}`,'error')
-    return null
   }
 }
 
