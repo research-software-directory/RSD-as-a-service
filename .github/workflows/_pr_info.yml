@@ -1,0 +1,53 @@
+# SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+# SPDX-FileCopyrightText: 2026 Netherlands eScience Center
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: reusable pr info module
+
+on:
+  workflow_call:
+    inputs:
+      head_sha:
+        required: true
+        type: string
+    outputs:
+      is_pr:
+        description: "Returns true if an active PR is found"
+        value: ${{ jobs.lookup.outputs.is_pr }}
+      pr_number:
+        description: "The discovered Pull Request Number"
+        value: ${{ jobs.lookup.outputs.pr_number }}
+      pr_base:
+        description: "The target base branch of the PR"
+        value: ${{ jobs.lookup.outputs.pr_base }}
+
+jobs:
+  lookup:
+    runs-on: ubuntu-24.04
+    outputs:
+      is_pr: ${{ steps.process.outputs.is_pr }}
+      pr_number: ${{ steps.process.outputs.pr_number }}
+      pr_base: ${{ steps.process.outputs.pr_base }}
+    steps:
+      # AI suggested: dynamically discover the PR number using the Commit SHA (Works for Forks + Local PRs)
+      - name: Fetch PR Info via Commit SHA
+        id: process
+        run: |
+          # Fetch the raw JSON array from GitHub REST API using the input SHA
+          API_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "${{ github.api_url }}/repos/${{ github.repository }}/commits/${{ inputs.head_sha }}/pulls")
+
+          # Isolate the first item cleanly to extract both variables safely
+          PR_NUMBER=$(echo "$API_RESPONSE" | jq -r '.[0].number // empty')
+          PR_BASE=$(echo "$API_RESPONSE" | jq -r '.[0].base.ref // empty')
+
+          if [ -n "$PR_NUMBER" ] && [ "$PR_NUMBER" != "null" ]; then
+            echo "is_pr=true" >> $GITHUB_OUTPUT
+            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+            echo "pr_base=$PR_BASE" >> $GITHUB_OUTPUT
+            echo "SUCCESS: Found Pull Request #$PR_NUMBER linking to base branch $PR_BASE"
+          else
+            echo "is_pr=false" >> $GITHUB_OUTPUT
+            echo "No active Pull Request found for commit ${{ inputs.head_sha }}"
+          fi

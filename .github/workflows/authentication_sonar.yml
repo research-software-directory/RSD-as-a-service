@@ -1,0 +1,28 @@
+# SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+# SPDX-FileCopyrightText: 2026 Netherlands eScience Center
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: authentication sonar
+
+on:
+  workflow_run:
+    workflows: ["authentication tests"]
+    types:
+      - completed
+
+jobs:
+  auth-sonar:
+    name: authentication sonar
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    uses: ./.github/workflows/_java_sonar.yml
+    with:
+      head_sha: ${{ github.event.workflow_run.head_sha }}
+      head_branch: ${{ github.event.workflow_run.head_branch }}
+      working_directory: "authentication"
+      # get artifacts saved in authentication_tests action (use same name)
+      artifact_name: "authentication-target-dir"
+      sonar_project_key: "nl.research-software:authentication"
+      workflow_run_id: ${{ github.event.workflow_run.id }}
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
