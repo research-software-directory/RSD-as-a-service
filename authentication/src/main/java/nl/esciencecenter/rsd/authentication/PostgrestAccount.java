@@ -130,14 +130,16 @@ public class PostgrestAccount implements Account {
 		throws IOException, InterruptedException, RsdResponseException {
 		Optional<AccountInfo> maybeExistingAccount = getAccountIfExists(openIdInfo, provider);
 
+		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
+		String token = jwtCreator.createAdminJwt();
+		AccountInfo accountInfo;
+
 		if (maybeExistingAccount.isPresent()) {
-			return maybeExistingAccount.get();
+			accountInfo = maybeExistingAccount.get();
 		}
 		// The login credentials do no exist yet, create a new account and return it.
 		else {
 			// create account
-			JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-			String token = jwtCreator.createAdminJwt();
 			URI createAccountEndpoint = URI.create(backendUri + "/account");
 			String newAccountJson = postJsonAsAdmin(createAccountEndpoint, "{}", token);
 			String newAccountId = JsonParser.parseString(newAccountJson)
@@ -149,13 +151,23 @@ public class PostgrestAccount implements Account {
 
 			UUID accountId = UUID.fromString(newAccountId);
 			createLoginForAccount(accountId, openIdInfo, provider, backendUri, token);
-			createUserProfileForLogin(accountId, openIdInfo, backendUri, token);
 
 			boolean isAdmin = createAdminIfDevAndNoAdminsExist(backendUri, token, accountId);
 
 			// a new account cannot be locked
-			return new AccountInfo(accountId, openIdInfo.name(), isAdmin, openIdInfo.data(), false, Optional.empty());
+			accountInfo = new AccountInfo(
+				accountId,
+				openIdInfo.name(),
+				isAdmin,
+				openIdInfo.data(),
+				false,
+				Optional.empty()
+			);
 		}
+
+		createUserProfileForLogin(accountInfo.account(), openIdInfo, backendUri, token);
+
+		return accountInfo;
 	}
 
 	public AccountInfo useInviteToCreateAccount(UUID inviteId, OpenIdInfo openIdInfo, OpenidProvider provider)
@@ -335,12 +347,12 @@ public class PostgrestAccount implements Account {
 		HttpResponse<String> response = postJsonAsAdminWithResponse(
 			createLoginUri,
 			userProfileData.toString(),
-			adminJwt
+			adminJwt,
+			"Prefer",
+			"resolution=ignore-duplicates"
 		);
 
-		if (response.statusCode() == 409) {
-			throw new RsdAuthenticationException("A user profile already exists for this account");
-		} else if (response.statusCode() >= 300) {
+		if (response.statusCode() >= 300) {
 			throw new RsdResponseException(
 				response.statusCode(),
 				response.uri(),
