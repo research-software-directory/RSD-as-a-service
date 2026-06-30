@@ -17,8 +17,17 @@ on:
       - completed
 
 jobs:
+  # 1. Reuse the exact same PR lookup engine
+  resolve-pr:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    uses: ./.github/workflows/_pr_info.yml
+    with:
+      head_sha: ${{ github.event.workflow_run.head_sha }}
+
+  # 2. Run your frontend analysis using the shared outputs
   fe-sonar:
     name: "fe-sonar"
+    needs: resolve-pr
     # Ensure it only runs if the primary frontend testing pipeline succeeded
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-24.04
@@ -26,35 +35,16 @@ jobs:
       # 1. Checkout the code branch safely using isolated environment variables
       - name: Checkout target branch
         uses: actions/checkout@v6
+        env:
+          # Isolates the code string inside a hard token context to block injection tricks
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
         with:
           repository: ${{ github.event.workflow_run.head_repository.full_name }}
           # Use the safe string variable below
           ref: ${{ env.HEAD_BRANCH }}
           fetch-depth: 0
-        env:
-          # Isolates the code string inside a hard token context to block injection tricks
-          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
 
-      # 2. AI suggested: dynamically discover the PR number using the Commit SHA (Works for Forks + Local PRs)
-      - name: "get pull request number"
-        id: pr_info
-        run: |
-          # Fetch the raw JSON array from GitHub REST API
-          API_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${{ github.api_url }}/repos/${{ github.repository }}/commits/${{ github.event.workflow_run.head_sha }}/pulls")
-          
-          # Extract the PR ID cleanly from the first item of the array
-          PR_NUMBER=$(echo "$API_RESPONSE" | jq '.[0].number')
-          
-          if [ "$PR_NUMBER" != "null" ] && [ -n "$PR_NUMBER" ]; then
-            echo "PR_NUM=$PR_NUMBER" >> $GITHUB_ENV
-            echo "SUCCESS: Found Pull Request ID #$PR_NUMBER"
-          else
-            echo "API Diagnostics: Here is the raw response returned by GitHub:"
-            echo "$API_RESPONSE"
-            echo "ERROR: No active Pull Request found for this commit SHA."
-          fi
-
-      # 3. DOWNLOAD ARTIFACT CROSS-WORKFLOW (test-coverage)
+      # 2. DOWNLOAD ARTIFACT CROSS-WORKFLOW (test-coverage)
       - name: "download coverage artifact"
         uses: actions/download-artifact@v7
         with:
@@ -75,15 +65,15 @@ jobs:
       # 4. Run the Scan
       - name: SonarCloud Scan frontend
         uses: SonarSource/sonarqube-scan-action@v8
-        with:
-          projectBaseDir: frontend
-          # AI suggested: use verified PR number from our API query if it exists
-          args: >
-            -Dsonar.pullrequest.key=${{ env.PR_NUM }}
-            -Dsonar.pullrequest.branch=${{ github.event.workflow_run.head_branch }}
-            -Dsonar.pullrequest.base=${{ github.event.workflow_run.base_ref }}
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # This secret is now safely accessible!
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: frontend
+          # AI suggested: use verified PR number from our API query if it exists
+          args: >
+            -Dsonar.pullrequest.key=${{ needs.resolve-pr.outputs.pr_number }}
+            -Dsonar.pullrequest.branch=${{ github.event.workflow_run.head_branch }}
+            -Dsonar.pullrequest.base=${{ needs.resolve-pr.outputs.pr_base }}
+
