@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2023 dv4all
@@ -28,6 +28,7 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'You are not allowed to delete this software';
 	END IF;
 
+	DELETE FROM badge WHERE badge.software = delete_software.id;
 	DELETE FROM category_for_software WHERE category_for_software.software_id = delete_software.id;
 	DELETE FROM contributor WHERE contributor.software = delete_software.id;
 	DELETE FROM invite_maintainer_for_software WHERE invite_maintainer_for_software.software = delete_software.id;
