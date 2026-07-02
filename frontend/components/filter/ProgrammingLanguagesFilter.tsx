@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,7 +30,7 @@ type ProgrammingLanguagesFilterProps = {
   title?: string
 }
 
-export default function ProgrammingLanguagesFilter({prog_lang,languagesList,handleQueryChange,title='Program languages'}: ProgrammingLanguagesFilterProps) {
+export default function ProgrammingLanguagesFilter({prog_lang,languagesList,handleQueryChange,title='Programming languages'}: Readonly<ProgrammingLanguagesFilterProps>) {
   const [selected, setSelected] = useState<LanguagesFilterOption[]>([])
   const [options, setOptions] = useState<LanguagesFilterOption[]>(languagesList)
 
