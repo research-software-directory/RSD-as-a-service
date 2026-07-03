@@ -117,16 +117,22 @@ export const config={
   badges: {
     title: 'Badges',
     subtitle: 'Add software badges to the page.',
-    validation: {
-      badgeUrl: {
+    badgeUrl:{
+      label: 'Badge Url',
+      help: 'Required information',
+      validation:{
         required: true,
         maxLength: {value: 200, message: 'Maximum length is 200'},
-        pattern: {
-          value: /^https?:\/\/\S+$/,
-          message: 'Provide a URL of the badge.'
-        }
-      },
-      badgeLink: {
+        // pattern: {
+        //   value: /^https?:\/\/\S+$/,
+        //   message: 'Provide a URL of the badge.'
+        // }
+      }
+    },
+    badgeLink:{
+      label:'Badge link',
+      help: 'Optional information',
+      validation:{
         required: false,
         maxLength: {value: 200, message: 'Maximum length is 200'},
         pattern: {
@@ -135,5 +141,24 @@ export const config={
         }
       }
     }
+    // }
+    // validation: {
+    //   badgeUrl: {
+    //     required: true,
+    //     maxLength: {value: 200, message: 'Maximum length is 200'},
+    //     pattern: {
+    //       value: /^https?:\/\/\S+$/,
+    //       message: 'Provide a URL of the badge.'
+    //     }
+    //   },
+    //   badgeLink: {
+    //     required: false,
+    //     maxLength: {value: 200, message: 'Maximum length is 200'},
+    //     pattern: {
+    //       value: /^https?:\/\/\S+$/,
+    //       message: 'Provide a URL of the badge.'
+    //     }
+    //   }
+    // }
   }
 }
