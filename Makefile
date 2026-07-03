@@ -3,9 +3,9 @@
 # SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 # SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-# SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-# SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+# SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -30,7 +30,7 @@ export DGID
 # ----------------------------------------------------------------
 start: clean
 	docker compose build # build all services
-	docker compose up --scale data-generation=1 --scale scrapers=0 --detach
+	docker compose --profile data up --scale data-generation=1 --detach
 	# open http://localhost to see the application running
 
 install: clean
@@ -44,7 +44,7 @@ install: clean
 	# All dependencies are installed. The data generation module is running in the background. You can now run `make dev' to start the application
 
 clean:
-	docker compose down --volumes
+	docker compose --profile mail --profile data down --volumes
 
 stop:
 	docker compose down

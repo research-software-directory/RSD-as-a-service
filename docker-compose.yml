@@ -6,7 +6,7 @@
 # SPDX-FileCopyrightText: 2022 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre for Environmental Research (UFZ)
 # SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-# SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
+# SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 # SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 # SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 # SPDX-FileCopyrightText: 2026 Dusan Mijatovic (NLEsc) <d.mijatovic@esciencecenter.nl>
@@ -261,11 +261,14 @@ services:
 
   #----------------------------------------------
   # DISABLED BY DEFAULT IN DEVELOPMENT
+  # to start: docker compose --profile mail up
   #----------------------------------------------
 
   rabbitmq:
     image: rabbitmq:4.0
     hostname: rabbitmq
+    # for docker compose v2.23.1+
+    profiles: ["mail"]
     expose:
       - "5672"
     networks:
@@ -278,12 +281,12 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
-    deploy:
-      replicas: 0
 
   mail:
     build: ./mail
     image: rsd/mail:1.0.0
+    # for docker compose v2.23.1+
+    profiles: ["mail"]
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -298,13 +301,13 @@ services:
       - MAIL_QUEUE
     networks:
       - net
-    deploy:
-      replicas: 0
     restart: on-failure
 
   publisher:
     build: ./publisher
     image: rsd/publisher:1.0.0
+    # for docker compose v2.23.1+
+    profiles: ["mail"]
     expose:
       - "5000"
     depends_on:
@@ -325,8 +328,6 @@ services:
       - PGRST_JWT_SECRET
     networks:
       - net
-    deploy:
-      replicas: 0
     restart: on-failure
 
   #----------------------------------------------
@@ -336,6 +337,8 @@ services:
   data-generation:
     build: ./data-generation
     image: rsd/generation:1.6.1
+    # for docker compose v2.23.1+
+    profiles: ["data"]
     environment:
       # it needs to be here to use values from .env file
       - PGRST_JWT_SECRET
@@ -345,8 +348,6 @@ services:
         condition: service_healthy
     networks:
       - net
-    deploy:
-      replicas: 0
 
 # define name for docker network
 # it should have name: rsd-as-a-service_net
