@@ -11,7 +11,6 @@ import {useSession} from '~/auth/AuthProvider'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {useFormContext} from 'react-hook-form'
 import {BadgeForSoftware, EditSoftwareItem} from '~/types/SoftwareTypes'
-import Button from '@mui/material/Button'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import LinkIcon from '@mui/icons-material/Link'
@@ -25,32 +24,34 @@ import ListItemText from '@mui/material/ListItemText'
 import Link from 'next/link'
 import {useState} from 'react'
 import EditSoftwareBadgeModal from '~/components/software/edit/links/EditSoftwareBadgeModal'
-import Tooltip from '@mui/material/Tooltip'
+import AddButton from '~/components/layout/AddButton'
 
 export default function EditSoftwareBadges() {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {setValue, watch} = useFormContext<EditSoftwareItem>()
 
-  const [isAddBadgeModalOpen, setIsAddBadgeModalOpen] = useState<boolean>(false)
-  const [badgeToEdit, setBadgeToEdit] = useState<BadgeForSoftware | null>(null)
+  const [modal, setModal] = useState<{
+    open: boolean,
+    data?: BadgeForSoftware
+  }> ({
+    open: false
+  })
 
-  const softwareId = watch('id')
-  const badges: BadgeForSoftware[] = watch('badges')
+  const [softwareId, badges] = watch(['id', 'badges'])
 
   const urlsPresent = new Set<string>()
   badges.forEach(badge => urlsPresent.add(badge.badge_url))
 
-  function openEditBadgeModal(badge: BadgeForSoftware | null) {
-    setBadgeToEdit(badge)
-    setIsAddBadgeModalOpen(true)
+  function openEditBadgeModal(badge?: BadgeForSoftware) {
+    setModal({open: true, data: badge})
   }
 
   function handleNewBadgeAdded() {
     getBadgesForSoftware(softwareId, token)
       .then(updatedBadges => setValue('badges', updatedBadges))
       .catch(e => showErrorMessage(e.message))
-      .finally(() => setIsAddBadgeModalOpen(false))
+      .finally(() => setModal({open: false}))
   }
 
   function handleSortedBadges(sortedBadges: BadgeForSoftware[]) {
@@ -60,15 +61,14 @@ export default function EditSoftwareBadges() {
       promises.push(updateBadgePosition(token, badge.id, badge.position))
     }
 
-    Promise.allSettled(promises)
+    Promise.all(promises)
       .catch(e => showErrorMessage(e.message))
   }
 
   function handleDeleteBadge(badgeId: string) {
     deleteBadge(token, badgeId)
       .then(() => {
-        const deletedBadgeIndex = badges.findIndex(badge => badge.id === badgeId)
-        const newBadgesArray = badges.toSpliced(deletedBadgeIndex, 1)
+        const newBadgesArray = badges.filter(badge => badge.id !== badgeId)
 
         for (let i = 0; i < newBadgesArray.length; i++) {
           newBadgesArray[i].position = i + 1
@@ -80,13 +80,20 @@ export default function EditSoftwareBadges() {
   }
 
   function renderBadge(badge: BadgeForSoftware) {
-    const badgeContent = <img src={badge.badge_url} alt={badge.badge_url} className="max-h-[20px]" />
+    const badgeContent = <img src={badge.badge_url} alt={badge.alt_text ?? ''} className="max-h-[20px]" />
 
     const secondaryAction = (
       <>
-        {badge.link_url && <Tooltip placement="top" title={`Go to ${badge.link_url}`}><IconButton LinkComponent={Link} href={badge.link_url}><LinkIcon /></IconButton></Tooltip>}
-        <Tooltip placement="top" title="Edit badge"><IconButton onClick={() => {openEditBadgeModal(badge)}}><EditIcon /></IconButton></Tooltip>
-        <Tooltip placement="top" title="Delete badge"><IconButton onClick={() => handleDeleteBadge(badge.id)}><DeleteIcon /></IconButton></Tooltip>
+        {badge.link_url &&
+          <IconButton LinkComponent={Link} href={badge.link_url}>
+            <LinkIcon />
+          </IconButton>}
+        <IconButton onClick={() => {openEditBadgeModal(badge)}} title="Edit badge">
+          <EditIcon />
+        </IconButton>
+        <IconButton onClick={() => handleDeleteBadge(badge.id)} title="Delete badge">
+          <DeleteIcon />
+        </IconButton>
       </>
     )
 
@@ -109,22 +116,23 @@ export default function EditSoftwareBadges() {
         title={config.badges.title}
         subtitle={config.badges.subtitle}
       >
-        <Button
-          variant='contained'
-          onClick={() => openEditBadgeModal(null)}>
-          Add badge
-        </Button>
+        <AddButton onAdd={() => openEditBadgeModal()} />
       </EditSectionTitle>
-      {isAddBadgeModalOpen && <EditSoftwareBadgeModal
+      {modal.open && <EditSoftwareBadgeModal
         softwareId={softwareId}
         existingBadgeUrls={urlsPresent}
         onSave={() => handleNewBadgeAdded()}
-        onCancel={() => setIsAddBadgeModalOpen(false)}
-        badgeToEdit={badgeToEdit === null ? null : {badgeId: badgeToEdit.id, badgeUrl: badgeToEdit.badge_url, badgeLink: badgeToEdit.link_url}}
+        onCancel={() => setModal({open: false})}
+        badgeToEdit={modal.data === undefined ? null : {
+          badgeId: modal.data.id,
+          badgeUrl: modal.data.badge_url,
+          badgeLink: modal.data.link_url,
+          altText: modal.data.alt_text,
+        }}
       />}
       <SortableList
         items={badges}
-        onSorted={(sortedBadges) => handleSortedBadges(sortedBadges)}
+        onSorted={handleSortedBadges}
         onRenderItem={renderBadge}
       />
     </>

@@ -16,7 +16,7 @@ export default function SoftwareBadges({badges = []}: Readonly<{badges: BadgeFor
     return (
       <div className="flex flex-wrap gap-2 py-1">
         {badges.map(badge => {
-          const badgeImg = <img key={badge.id} src={badge.badge_url} alt={badge.badge_url} className="max-h-[20px]" />
+          const badgeImg = <img key={badge.id} src={badge.badge_url} alt={badge.alt_text ?? ''} className="max-h-[20px]" />
           if (badge.link_url) {
             return <a key={badge.id} href={badge.link_url}>{badgeImg}</a>
           } else {

@@ -6,7 +6,6 @@
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
-import TextField from '@mui/material/TextField'
 import {config} from '~/components/software/edit/links/config'
 import {useForm} from 'react-hook-form'
 import {addBadgeForSoftware, updateBadgeContent} from '~/components/software/apiSoftware'
@@ -14,6 +13,9 @@ import {useSession} from '~/auth/AuthProvider'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import useSnackbar from '~/components/snackbar/useSnackbar'
+import useSmallScreen from '~/config/useSmallScreen'
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import ControlledTextField from '~/components/form/ControlledTextField'
 
 
 export type EditSoftwareBadgeModalProps = {
@@ -27,19 +29,27 @@ export type EditSoftwareBadgeModalProps = {
 type NewBadgeFields = {
   badgeUrl: string,
   badgeLink: string | null,
+  altText: string | null,
 }
 
-type EditBadgeFields = NewBadgeFields & {
+export type EditBadgeFields = NewBadgeFields & {
   badgeId: string,
 }
 
 export default function EditSoftwareBadgeModal({softwareId, existingBadgeUrls, onSave, onCancel, badgeToEdit}: Readonly<EditSoftwareBadgeModalProps>) {
+  const smallScreen = useSmallScreen()
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {register, getValues, handleSubmit, formState: {errors, isValid, isSubmitting, isSubmitted}} = useForm<NewBadgeFields>({
+  const {watch, getValues, handleSubmit, control, formState: {errors, isValid, isDirty, isSubmitting, isSubmitted}} = useForm<NewBadgeFields>({
     mode: 'onChange',
+    defaultValues: {
+      badgeUrl: badgeToEdit?.badgeUrl ?? '',
+      altText: badgeToEdit?.altText ?? '',
+      badgeLink: badgeToEdit?.badgeLink ?? '',
+    }
   })
   const enteringNewBadge: boolean = badgeToEdit === null
+  const formId = 'badge-form'
 
   function validateNewUrlNotExistsYet() {
     const badgeUrl = getValues('badgeUrl')
@@ -58,14 +68,20 @@ export default function EditSoftwareBadgeModal({softwareId, existingBadgeUrls, o
         software: softwareId,
         badge_url: getValues('badgeUrl')!,
         link_url: getValues('badgeLink'),
-        position: existingBadgeUrls.size,
+        position: existingBadgeUrls.size + 1,
+        alt_text: getValues('altText'),
       })
         .catch((e) => {
           showErrorMessage((e.message))
         })
         .finally(() => onSave())
     } else {
-      updateBadgeContent(token, badgeToEdit!.badgeId, getValues('badgeUrl'), getValues('badgeLink'))
+      updateBadgeContent(token, {
+        badgeId: badgeToEdit!.badgeId,
+        badgeUrl: getValues('badgeUrl')!,
+        badgeLink: getValues('badgeLink'),
+        altText: getValues('altText'),
+      })
         .catch((e) => {
           showErrorMessage((e.message))
         })
@@ -73,53 +89,73 @@ export default function EditSoftwareBadgeModal({softwareId, existingBadgeUrls, o
     }
   }
 
-  function renderAddButtonText(): string {
-    if (isSubmitting) {
-      return 'Saving'
-    } else {
-      return enteringNewBadge ? 'Add badge' : 'Update badge'
-    }
+  function renderDialogTitleText(): string {
+    return enteringNewBadge ? 'Add new badge' : 'Update badge'
   }
 
   return (
-    <Dialog open={true}>
-      <DialogTitle>
-        Add new badge
+    <Dialog open={true} fullScreen={smallScreen}>
+      <DialogTitle sx={{
+        fontSize: '1.5rem',
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+        color: 'primary.main',
+        fontWeight: 500
+      }}>
+        {renderDialogTitleText()}
       </DialogTitle>
-      <form onSubmit={handleSubmit(handleUpdateOrAddBadge)} autoComplete='off'>
-        <DialogContent>
-          <TextField
-            autoFocus={true}
-            {...register('badgeUrl', {...config.badges.validation.badgeUrl, validate: validateNewUrlNotExistsYet})}
-            defaultValue={enteringNewBadge ? '' : badgeToEdit!.badgeUrl}
-            fullWidth
-            margin='normal'
-            label={'URL of the image of the badge'}
-            error={!!errors.badgeUrl}
-            helperText={errors.badgeUrl?.message}
-            required={true}
-          >
-          </TextField>
-          <TextField
-            {...register('badgeLink', {...config.badges.validation.badgeLink})}
-            defaultValue={enteringNewBadge ? null : badgeToEdit!.badgeLink}
-            fullWidth
-            margin='normal'
-            label={'Optional link of the badge'}
-            error={!!errors.badgeLink}
-            helperText={errors.badgeLink?.message}
-            required={false}
-          >
-          </TextField>
+      <form id={formId} onSubmit={handleSubmit(handleUpdateOrAddBadge)} autoComplete='off'>
+        <DialogContent sx={{
+          width: ['100%', '37rem'],
+          padding: '2rem 1.5rem 2.5rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2rem'
+        }}>
+          <ControlledTextField
+            control={control}
+            rules={{...config.badges.badgeUrl.validation, validate: validateNewUrlNotExistsYet}}
+            options={{
+              name: 'badgeUrl',
+              label: config.badges.badgeUrl.label,
+              autofocus: true,
+              helperTextMessage: errors['badgeUrl']?.message ?? config.badges.badgeUrl.help,
+              helperTextCnt: `${watch('badgeUrl')?.length ?? 0}/${config.badges.badgeUrl.validation.maxLength.value}`
+            }}
+          />
+          <ControlledTextField
+            control={control}
+            rules={{...config.badges.altText.validation, validate: validateNewUrlNotExistsYet}}
+            options={{
+              name: 'altText',
+              label: config.badges.altText.label,
+              helperTextMessage: errors['altText']?.message ?? config.badges.altText.help,
+              helperTextCnt: `${watch('altText')?.length ?? 0}/${config.badges.altText.validation.maxLength.value}`
+            }}
+          />
+          <ControlledTextField
+            control={control}
+            rules={{...config.badges.badgeLink.validation, validate: validateNewUrlNotExistsYet}}
+            options={{
+              name: 'badgeLink',
+              label: config.badges.badgeLink.label,
+              helperTextMessage: errors['badgeLink']?.message ?? config.badges.badgeLink.help,
+              helperTextCnt: `${watch('badgeLink')?.length ?? 0}/${config.badges.badgeLink.validation.maxLength.value}`
+            }}
+          />
         </DialogContent>
-        <DialogActions>
-          <Button
-            variant='contained'
-            disabled={!isValid || isSubmitting || isSubmitted}
-            type='submit'
-          >
-            {renderAddButtonText()}
-          </Button>
+        <DialogActions sx={{
+          padding: '1rem 1.5rem',
+          borderTop: '1px solid',
+          borderColor: 'divider',
+          flexDirection: 'row-reverse',
+          justifyContent: 'flex-start',
+          gap:'1rem',
+        }}>
+          <SubmitButtonWithListener
+            formId={formId}
+            disabled={!isValid || isSubmitting || isSubmitted || !isDirty}
+          />
           <Button
             variant='outlined'
             onClick={() => onCancel()}>

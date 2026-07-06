@@ -91,6 +91,7 @@ export type BadgeForSoftware = {
   id: string,
   software: string,
   badge_url: string,
+  alt_text: string | null,
   link_url: string | null,
   position: number,
 }

@@ -102,27 +102,33 @@ const packageManagerLinks = [
 const badges = [
 	{
 		badgeUrl: 'https://img.shields.io/badge/License-Apache_2.0-blue.svg',
+		altText: 'Apache 2.0 license',
 		linkUrl: 'https://opensource.org/licenses/Apache-2.0',
 	},
 	{
 		badgeUrl: 'https://img.shields.io/badge/github-repo-000.svg?logo=github&labelColor=gray&color=blue',
+		altText: 'GitHub repo',
 		linkUrl: 'https://github.com/research-software-directory/RSD-as-a-service',
 	},
 	{
 		badgeUrl: 'https://zenodo.org/badge/413814951.svg',
+		altText: 'Zenodo',
 		linkUrl: 'https://zenodo.org/badge/latestdoi/413814951',
 	},
 	{
 		badgeUrl: 'https://bestpractices.coreinfrastructure.org/projects/6336/badge',
+		altText: 'OpenSSF best practices',
 		linkUrl: 'https://bestpractices.coreinfrastructure.org/projects/6336',
 	},
 	{
 		badgeUrl:
 			'https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/cff_validate.yml/badge.svg',
+		altText: 'validate CITATION.cff',
 		linkUrl: 'https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/cff_validate.yml',
 	},
 	{
 		badgeUrl: 'https://github.com/NLeSC/guide/actions/workflows/link-checker.yml/badge.svg',
+		altText: 'link checker',
 		linkUrl: 'https://github.com/NLeSC/guide/actions/workflows/link-checker.yml',
 	},
 ];

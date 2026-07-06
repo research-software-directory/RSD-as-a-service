@@ -351,6 +351,7 @@ CREATE TABLE badge (
 	software UUID NOT NULL REFERENCES software (id),
 	badge_url VARCHAR(200) NOT NULL CHECK (badge_url ~ '^https?://\S+$'),
 	UNIQUE(software, badge_url),
+	alt_text VARCHAR(100),
 	link_url VARCHAR(200) CHECK (link_url ~ '^https?://\S+$'),
 	position INTEGER NOT NULL,
 	created_at TIMESTAMPTZ NOT NULL,

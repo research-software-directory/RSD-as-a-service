@@ -298,6 +298,7 @@ function generateBadges(softwareIds) {
 		for (let index = 0; index < randomBadges.length; index++) {
 			result.push({
 				badge_url: randomBadges[index].badgeUrl,
+				alt_text: faker.helpers.maybe(() => randomBadges[index].altText, {probability: 0.5}) ?? null,
 				link_url: faker.helpers.maybe(() => randomBadges[index].linkUrl, {probability: 0.5}) ?? null,
 				software: softwareId,
 				position: index + 1,
