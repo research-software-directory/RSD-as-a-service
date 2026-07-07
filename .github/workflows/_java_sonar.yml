@@ -1,0 +1,99 @@
+# SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+# SPDX-FileCopyrightText: 2026 Netherlands eScience Center
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: reusable java sonar
+
+on:
+  workflow_call:
+    inputs:
+      head_sha:
+        required: true
+        type: string
+      head_branch:
+        required: true
+        type: string
+      working_directory:
+        required: true
+        type: string
+      artifact_name:
+        required: true
+        type: string
+      sonar_project_key:
+        required: true
+        type: string
+      workflow_run_id:
+        required: true
+        type: string
+    secrets:
+      SONAR_TOKEN:
+        required: true
+
+jobs:
+  # 1. Fetch PR info in order to determine where Sonar check should run
+  resolve-pr:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    uses: ./.github/workflows/_pr_info.yml
+    with:
+      head_sha: ${{ inputs.head_sha }}
+
+  # 2. Run Sonar analysis using inputs and reslove-pr step
+  scan:
+    name: Java Sonar Scanner
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+    needs: resolve-pr
+    steps:
+      - name: Checkout Code Securely
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ inputs.head_sha }}
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Download Target Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ inputs.working_directory }}/target/
+          run-id: ${{ inputs.workflow_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Run Sonar Analysis (PR Mode)
+        if: ${{ needs.resolve-pr.outputs.is_pr == 'true' }}
+        working-directory: ${{ inputs.working_directory }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=${{ inputs.sonar_project_key }} \
+            -Dsonar.pullrequest.key=${{ needs.resolve-pr.outputs.pr_number }} \
+            -Dsonar.pullrequest.base=${{ needs.resolve-pr.outputs.pr_base }} \
+            -Dsonar.pullrequest.branch=${{ inputs.head_branch }}
+
+      - name: Run Sonar Analysis (Branch Mode)
+        if: ${{ needs.resolve-pr.outputs.is_pr == 'false' }}
+        working-directory: ${{ inputs.working_directory }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=${{ inputs.sonar_project_key }} \
+            -Dsonar.branch.name=${{ inputs.head_branch }}
