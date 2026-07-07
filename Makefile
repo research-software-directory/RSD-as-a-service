@@ -48,6 +48,7 @@ install: clean
 	docker compose build database backend auth codemeta scrapers nginx
 	cd frontend && npm install
 	cd documentation && npm install
+	cd e2e && npm install
 	docker compose --profile data up --detach
 	# all dependencies are installed. The data generation module is running in the background. You can now run `make dev' to start the application
 
@@ -79,15 +80,11 @@ dev: frontend/.env.local
 	cd frontend && npm run dev
 
 # run end-to-end test locally
-e2e-tests:
-	clean
-	docker compose build --parallel database backend auth frontend nginx
+e2e-tests: clean
+	docker compose build
 	docker compose up --detach
-	sleep 10
-	docker compose --file e2e/docker-compose.yml build
-	docker compose --file e2e/docker-compose.yml up
-	docker compose down
-	docker compose --file e2e/docker-compose.yml down --volumes
+	# assumes all dependencies installed including chrome browser (npm install && npx playwright install chromium)
+	cd e2e && npm run e2e:chrome
 
 run-backend-tests:
 	docker compose --file backend-tests/docker-compose.yml down --volumes
