@@ -122,7 +122,7 @@ RSD_AUTH_URL=http://fqdn.yourdomain.com:7000
 Now start the instance with
 
 ```env
-docker compose up --detach --scale data-generation=0
+docker compose up --detach
 ```
 
 You can then prepare the SSL certificates for the user cookies

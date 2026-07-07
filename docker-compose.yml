@@ -335,7 +335,6 @@ services:
   data-generation:
     build: ./data-generation
     image: rsd/generation:1.6.1
-    # for docker compose v2.23.1+
     profiles: ["data"]
     environment:
       # it needs to be here to use values from .env file
