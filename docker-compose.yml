@@ -176,6 +176,7 @@ services:
   scrapers:
     build: ./scrapers
     image: rsd/scrapers:2.0.1
+    profiles: ["scrapers"]
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -267,7 +268,6 @@ services:
   rabbitmq:
     image: rabbitmq:4.0
     hostname: rabbitmq
-    # for docker compose v2.23.1+
     profiles: ["mail"]
     expose:
       - "5672"
@@ -285,7 +285,6 @@ services:
   mail:
     build: ./mail
     image: rsd/mail:1.0.0
-    # for docker compose v2.23.1+
     profiles: ["mail"]
     depends_on:
       rabbitmq:
@@ -306,7 +305,6 @@ services:
   publisher:
     build: ./publisher
     image: rsd/publisher:1.0.0
-    # for docker compose v2.23.1+
     profiles: ["mail"]
     expose:
       - "5000"

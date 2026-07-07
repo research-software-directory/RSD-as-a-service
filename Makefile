@@ -29,34 +29,37 @@ export DGID
 # Main commands
 # ----------------------------------------------------------------
 start: clean
-	docker compose build # build all services
-	docker compose --profile data up --scale data-generation=1 --detach
+	docker compose --profile data build
+	docker compose --profile data up --detach
+	# open http://localhost to see the application running
+
+scrapers:	clean
+	docker compose --profile scrapers build
+	docker compose --profile scrapers up --detach
+	# open http://localhost to see the application running
+
+mail: clean
+	docker compose --profile mail build
+	docker compose --profile mail up --detach
 	# open http://localhost to see the application running
 
 install: clean
-	docker compose build database backend auth codemeta scrapers nginx   # exclude frontend and wait for the build to finish
-	docker compose up --scale scrapers=0 --detach
+	# exclude frontend and wait for the build to finish
+	docker compose build database backend auth codemeta scrapers nginx
 	cd frontend && npm install
 	cd documentation && npm install
-	# Sleep 10 seconds to be sure that docker compose up is running
-	sleep 10
-	docker compose up --scale data-generation=1 --detach
-	# All dependencies are installed. The data generation module is running in the background. You can now run `make dev' to start the application
+	docker compose --profile data up --detach
+	# all dependencies are installed. The data generation module is running in the background. You can now run `make dev' to start the application
 
 clean:
-	docker compose --profile mail --profile data down --volumes
+	docker compose --profile "*" down --volumes
 
 stop:
-	docker compose down
+	docker compose --profile "*" down
 
 frontend-dev: frontend/.env.local
 	docker compose -f docker-compose.yml -f docker-compose.dev.yml build frontend
-	docker compose -f docker-compose.yml -f docker-compose.dev.yml up --scale scrapers=0
-
-data:
-	docker compose up --scale data-generation=1 --scale scrapers=0
-	sleep 60
-	docker compose down
+	docker compose -f docker-compose.yml -f docker-compose.dev.yml --profile data up
 
 # Helper commands
 # -
@@ -70,16 +73,16 @@ frontend/.env.local: .env
 	sed -i 's/RSD_AUTH_URL=http:\/\/auth:7000/RSD_AUTH_URL=http:\/\/localhost\/auth/g' frontend/.env.local
 
 dev: frontend/.env.local
-	docker compose build # build all services
-	docker compose up --scale data-generation=1 --scale scrapers=0 --scale frontend=0 --detach
+	docker compose --profile data build
+	docker compose --profile data up --scale frontend=0 --detach
 	# open http://localhost:3000 to see the application running
 	cd frontend && npm run dev
 
 # run end-to-end test locally
 e2e-tests:
-	docker compose down --volumes
+	clean
 	docker compose build --parallel database backend auth frontend nginx
-	docker compose up --detach --scale scrapers=0
+	docker compose up --detach
 	sleep 10
 	docker compose --file e2e/docker-compose.yml build
 	docker compose --file e2e/docker-compose.yml up
