@@ -6,9 +6,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { createJsonHeaders, extractReturnMessage, getBaseUrl } from '~/utils/fetchHelpers'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
-import { getLoginForAccount } from './apiLoginForAccount'
+import {getLoginForAccount} from './apiLoginForAccount'
 
 export type UserProfile = {
   account: string,
