@@ -58,6 +58,19 @@ jobs:
       - name: "run unit test"
         run: npm run test:coverage
 
+      # Save PR info inside the coverage directory for frontend_sonar.yml to use
+      - name: Save PR info
+        run: |
+          mkdir -p coverage
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "${{ github.event.pull_request.number }}" > coverage/pr_number.txt
+            echo "${{ github.event.pull_request.base.ref }}" > coverage/pr_base.txt
+            echo "PR_NUMBER: ${{ github.event.pull_request.number }}"
+          else
+            echo "false" > coverage/pr_number.txt
+            echo "false" > coverage/pr_base.txt
+            echo "Not a pull_request. Event: ${{ github.event_name }}"
+          fi
       # Upload the coverage folder for SonarCloud (fe-sonar) to use
       - name: "upload coverage artifact"
         uses: actions/upload-artifact@v7
