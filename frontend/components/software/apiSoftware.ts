@@ -19,12 +19,11 @@ import {
   CategoryForSoftwareIds,
   KeywordForSoftware,
   LicenseForSoftware,
-  NewBadgeForSoftware,
   SoftwareOverviewItemProps,
   SoftwareTableItem
 } from '~/types/SoftwareTypes'
 import {CommunitiesOfSoftware} from '~/components/software/edit/communities/apiSoftwareCommunities'
-import {EditBadgeFields} from '~/components/software/edit/links/EditSoftwareBadgeModal'
+import {EditBadgeFields, NewBadgeFields} from '~/components/software/edit/links/EditSoftwareBadgeModal'
 
 /*
  * Software list for the software overview page
@@ -288,19 +287,23 @@ export async function getBadgesForSoftware(softwareId: string, token?:string): P
   }
 }
 
-export async function addBadgeForSoftware(token: string, newBadge: NewBadgeForSoftware): Promise<void>{
+export async function addBadgeForSoftware(token: string, {altText, badgeLink, badgeUrl, softwareId, position}: NewBadgeFields): Promise<void>{
   let error: Error | null = null
 
-  if (newBadge.link_url === '') {
-    newBadge.link_url = null
-  }
+  const jsonBody = JSON.stringify({
+    software: softwareId,
+    badge_url: badgeUrl,
+    alt_text: altText === '' ? null : altText,
+    link_url: badgeLink === '' ? null : badgeLink,
+    position: position,
+  })
 
   try{
     const url = `${getBaseUrl()}/badge`
     const resp = await fetch(url, {
       method: 'POST',
       headers: createJsonHeaders(token),
-      body: JSON.stringify(newBadge)
+      body: jsonBody
     })
 
     if (resp.ok){

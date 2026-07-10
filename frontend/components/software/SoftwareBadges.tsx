@@ -8,6 +8,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import Link from 'next/link'
 import MoreIcon from '@mui/icons-material/More'
 import {BadgeForSoftware} from '~/types/SoftwareTypes'
 
@@ -18,7 +19,7 @@ export default function SoftwareBadges({badges = []}: Readonly<{badges: BadgeFor
         {badges.map(badge => {
           const badgeImg = <img key={badge.id} src={badge.badge_url} alt={badge.alt_text ?? ''} className="max-h-[20px]" />
           if (badge.link_url) {
-            return <a key={badge.id} href={badge.link_url}>{badgeImg}</a>
+            return <Link key={badge.id} href={badge.link_url} target="_blank" rel="noreferrer">{badgeImg}</Link>
           } else {
             return badgeImg
           }

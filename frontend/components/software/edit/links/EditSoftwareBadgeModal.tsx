@@ -26,21 +26,26 @@ export type EditSoftwareBadgeModalProps = {
   badgeToEdit: EditBadgeFields | null,
 }
 
-type NewBadgeFields = {
+type BadgeFormFields = {
   badgeUrl: string,
   badgeLink: string | null,
   altText: string | null,
 }
 
-export type EditBadgeFields = NewBadgeFields & {
+export type EditBadgeFields = BadgeFormFields & {
   badgeId: string,
+}
+
+export type NewBadgeFields = BadgeFormFields & {
+  softwareId: string,
+  position: number,
 }
 
 export default function EditSoftwareBadgeModal({softwareId, existingBadgeUrls, onSave, onCancel, badgeToEdit}: Readonly<EditSoftwareBadgeModalProps>) {
   const smallScreen = useSmallScreen()
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {watch, getValues, handleSubmit, control, formState: {errors, isValid, isDirty, isSubmitting, isSubmitted}} = useForm<NewBadgeFields>({
+  const {watch, getValues, handleSubmit, control, formState: {errors, isValid, isDirty, isSubmitting, isSubmitted}} = useForm<BadgeFormFields>({
     mode: 'onChange',
     defaultValues: {
       badgeUrl: badgeToEdit?.badgeUrl ?? '',
@@ -62,14 +67,14 @@ export default function EditSoftwareBadgeModal({softwareId, existingBadgeUrls, o
 
   }
 
-  function handleUpdateOrAddBadge() {
+  function handleUpdateOrAddBadge({badgeUrl, badgeLink, altText}: BadgeFormFields) {
     if (enteringNewBadge) {
       addBadgeForSoftware(token, {
-        software: softwareId,
-        badge_url: getValues('badgeUrl')!,
-        link_url: getValues('badgeLink'),
+        softwareId: softwareId,
+        badgeUrl: badgeUrl,
+        badgeLink: badgeLink,
         position: existingBadgeUrls.size + 1,
-        alt_text: getValues('altText'),
+        altText: altText,
       })
         .catch((e) => {
           showErrorMessage((e.message))
@@ -78,9 +83,9 @@ export default function EditSoftwareBadgeModal({softwareId, existingBadgeUrls, o
     } else {
       updateBadgeContent(token, {
         badgeId: badgeToEdit!.badgeId,
-        badgeUrl: getValues('badgeUrl')!,
-        badgeLink: getValues('badgeLink'),
-        altText: getValues('altText'),
+        badgeUrl: badgeUrl,
+        badgeLink: badgeLink,
+        altText: altText,
       })
         .catch((e) => {
           showErrorMessage((e.message))
@@ -157,7 +162,6 @@ export default function EditSoftwareBadgeModal({softwareId, existingBadgeUrls, o
             disabled={!isValid || isSubmitting || isSubmitted || !isDirty}
           />
           <Button
-            variant='outlined'
             onClick={() => onCancel()}>
             Cancel
           </Button>

@@ -85,7 +85,7 @@ export default function EditSoftwareBadges() {
     const secondaryAction = (
       <>
         {badge.link_url &&
-          <IconButton LinkComponent={Link} href={badge.link_url}>
+          <IconButton LinkComponent={Link} href={badge.link_url} target="_blank" rel="noreferrer">
             <LinkIcon />
           </IconButton>}
         <IconButton onClick={() => {openEditBadgeModal(badge)}} title="Edit badge">
