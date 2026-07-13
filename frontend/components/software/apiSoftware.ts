@@ -357,8 +357,8 @@ export async function updateBadgeContent(token: string, {altText, badgeUrl, badg
   try{
     const body = JSON.stringify({
       badge_url: badgeUrl,
-      alt_text: altText === null || altText === '' ? null : altText,
-      link_url: badgeLink === null || badgeLink === '' ? null : badgeLink,
+      alt_text: altText,
+      link_url: badgeLink
     })
 
     const url = `${getBaseUrl()}/badge?id=eq.${badgeId}`

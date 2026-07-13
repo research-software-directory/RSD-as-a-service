@@ -1,11 +1,12 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
+import validateImageSrc from './validateImageSrc'
 
 
 export default function useValidateImageSrc(src?: string|null) {
@@ -18,20 +19,12 @@ export default function useValidateImageSrc(src?: string|null) {
       if (src===''){
         setValid(false)
       }else{
-        const image = new Image()
-        // listen for events
-        image.onload = () => {
-          // console.log('useValidImageLink...onload...',props)
-          if (abort) return
-          setValid(true)
-        }
-        image.onerror = (() => {
-          // console.log('useValidImageLink...onerror...', props)
-          if (abort) return
-          setValid(false)
-        })
-        // assign value
-        image.src = src
+        // validate if url returns image
+        validateImageSrc(src)
+          .then((val)=>{
+            if (abort) return
+            setValid(val)
+          })
       }
     } else {
       setValid(false)

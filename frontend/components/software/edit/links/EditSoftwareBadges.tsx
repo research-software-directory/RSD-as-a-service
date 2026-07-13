@@ -1,83 +1,32 @@
+// SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {config} from '~/components/software/edit/links/config'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import SortableList from '~/components/layout/SortableList'
-import SortableListItem from '~/components/layout/SortableListItem'
-import {useSession} from '~/auth/AuthProvider'
-import useSnackbar from '~/components/snackbar/useSnackbar'
-import {useFormContext} from 'react-hook-form'
-import {BadgeForSoftware, EditSoftwareItem} from '~/types/SoftwareTypes'
+import Link from 'next/link'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import LinkIcon from '@mui/icons-material/Link'
-import {
-  deleteBadge,
-  getBadgesForSoftware,
-  updateBadgePosition
-} from '~/components/software/apiSoftware'
 import IconButton from '@mui/material/IconButton'
 import ListItemText from '@mui/material/ListItemText'
-import Link from 'next/link'
-import {useState} from 'react'
-import EditSoftwareBadgeModal from '~/components/software/edit/links/EditSoftwareBadgeModal'
+
+import {BadgeForSoftware} from '~/types/SoftwareTypes'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import SortableList from '~/components/layout/SortableList'
 import AddButton from '~/components/layout/AddButton'
+import SortableListItem from '~/components/layout/SortableListItem'
+import EditSoftwareBadgeModal from '~/components/software/edit/links/EditSoftwareBadgeModal'
+import {config} from '~/components/software/edit/links/config'
+import {useEditSoftwareBadges} from './useEditSoftwareBadges'
 
 export default function EditSoftwareBadges() {
-  const {token} = useSession()
-  const {showErrorMessage} = useSnackbar()
-  const {setValue, watch} = useFormContext<EditSoftwareItem>()
-
-  const [modal, setModal] = useState<{
-    open: boolean,
-    data?: BadgeForSoftware
-  }> ({
-    open: false
-  })
-
-  const [softwareId, badges] = watch(['id', 'badges'])
-
-  const urlsPresent = new Set<string>()
-  badges.forEach(badge => urlsPresent.add(badge.badge_url))
-
-  function openEditBadgeModal(badge?: BadgeForSoftware) {
-    setModal({open: true, data: badge})
-  }
-
-  function handleNewBadgeAdded() {
-    getBadgesForSoftware(softwareId, token)
-      .then(updatedBadges => setValue('badges', updatedBadges))
-      .catch(e => showErrorMessage(e.message))
-      .finally(() => setModal({open: false}))
-  }
-
-  function handleSortedBadges(sortedBadges: BadgeForSoftware[]) {
-    setValue('badges', sortedBadges)
-    const promises = []
-    for (const badge of sortedBadges) {
-      promises.push(updateBadgePosition(token, badge.id, badge.position))
-    }
-
-    Promise.all(promises)
-      .catch(e => showErrorMessage(e.message))
-  }
-
-  function handleDeleteBadge(badgeId: string) {
-    deleteBadge(token, badgeId)
-      .then(() => {
-        const newBadgesArray = badges.filter(badge => badge.id !== badgeId)
-
-        for (let i = 0; i < newBadgesArray.length; i++) {
-          newBadgesArray[i].position = i + 1
-        }
-
-        handleSortedBadges(newBadgesArray)
-      })
-      .catch(e => showErrorMessage(e.message))
-  }
+  const {
+    badges,urlsPresent,modal,
+    openEditBadgeModal,closeEditBadgeModal,
+    handleOnSaveBadge, handleDeleteBadge,
+    handleSortedBadges
+  } = useEditSoftwareBadges()
 
   function renderBadge(badge: BadgeForSoftware) {
     const badgeContent = <img src={badge.badge_url} alt={badge.alt_text ?? ''} className="max-h-[20px]" />
@@ -116,18 +65,17 @@ export default function EditSoftwareBadges() {
         title={config.badges.title}
         subtitle={config.badges.subtitle}
       >
-        <AddButton onAdd={() => openEditBadgeModal()} />
+        <AddButton onAdd={openEditBadgeModal} />
       </EditSectionTitle>
       {modal.open && <EditSoftwareBadgeModal
-        softwareId={softwareId}
         existingBadgeUrls={urlsPresent}
-        onSave={() => handleNewBadgeAdded()}
-        onCancel={() => setModal({open: false})}
-        badgeToEdit={modal.data === undefined ? null : {
-          badgeId: modal.data.id,
-          badgeUrl: modal.data.badge_url,
-          badgeLink: modal.data.link_url,
-          altText: modal.data.alt_text,
+        onSave={handleOnSaveBadge}
+        onCancel={closeEditBadgeModal}
+        badgeToEdit={{
+          badgeId: modal?.data?.id ?? null,
+          badgeUrl: modal?.data?.badge_url ?? null,
+          altText: modal?.data?.alt_text ?? null,
+          badgeLink: modal?.data?.link_url ?? null
         }}
       />}
       <SortableList
