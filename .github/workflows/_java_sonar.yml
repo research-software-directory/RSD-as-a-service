@@ -49,21 +49,23 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
-      - name: Download Target Artifacts
+      - name: Download PR Artifacts
         uses: actions/download-artifact@v7
         with:
           name: ${{ inputs.artifact_name }}
-          path: ${{ inputs.working_directory }}/target/
+          # Extracts both pr_info/ and target/ folders
+          path: ${{ inputs.working_directory }}/
           run-id: ${{ inputs.workflow_run_id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       # Read the PR info written by the primary test runner
       - name: Parse Uploaded PR info
         id: pr_info
-        working-directory: ${{ inputs.working_directory }}
+        # scope shell commands to pr_info folder
+        working-directory: ${{ inputs.working_directory }}/pr_info/
         run: |
-          PR_NUM=$(cat target/pr_number.txt)
-          PR_BASE=$(cat target/pr_base.txt)
+          PR_NUM=$(cat pr_number.txt)
+          PR_BASE=$(cat pr_base.txt)
 
           if [ "$PR_NUM" != "false" ] && [ -n "$PR_NUM" ]; then
             echo "is_pr=true" >> $GITHUB_OUTPUT

@@ -3,21 +3,26 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-name: reusable JUnit & JaCoCo test runner
+name: codemeta tests
 
 on:
-  workflow_call:
-    inputs:
-      working_directory:
-        required: true
-        type: string
-      artifact_name:
-        required: true
-        type: string
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "codemeta/**"
+  pull_request:
+    paths:
+      - "codemeta/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  java-tests:
-    name: Maven JUnit tests and JaCoCo test report
+  codemeta-build-test:
+    name: Build Go and Save Context
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout Code
@@ -26,17 +31,23 @@ jobs:
           # Shallow clones should be disabled for a better relevancy of analysis
           fetch-depth: 0
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v5
+      - name: Setup Go Environment
+        uses: actions/setup-go@v6
         with:
-          distribution: 'temurin'
-          java-version: '21'
-          # new cache feature directly available in java-setup action
-          cache: 'maven'
+          go-version: '1.26.1'
+          cache: true
+          cache-dependency-path: codemeta/src/go.sum
 
-      # Save PR info inside the pr_info directory for _java_sonar.yml to use
+      - name: Build Application Binary
+        working-directory: codemeta/src
+        run: go build -v -o ./app
+
+      - name: Build Scraper Binary
+        working-directory: codemeta/src
+        run: go build -v -o ./scraper-4tu codemeta/scrapers
+
+      # Save PR tracking variables safely into a clean folder
       - name: Save PR info
-        working-directory: ${{ inputs.working_directory }}
         run: |
           mkdir -p pr_info
           if [ "${{ github.event_name }}" = "pull_request" ]; then
@@ -48,14 +59,10 @@ jobs:
             echo "false" > pr_info/pr_base.txt
             echo "Not a pull_request. Event: ${{ github.event_name }}"
           fi
-      - name: Execute Tests and Generate Reports
-        working-directory: ${{ inputs.working_directory }}
-        run: mvn -B clean verify
 
-        # Upload the ENTIRE working directory (captures both pr_info/ and target/)
-      - name: Upload All Artifacts
+      - name: Upload Metadata Artifact
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ inputs.artifact_name }}
-          path: ${{ inputs.working_directory }}/
+          name: codemeta-pr-metadata
+          path: pr_info/
           retention-days: 1

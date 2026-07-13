@@ -1,0 +1,46 @@
+# SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+# SPDX-FileCopyrightText: 2026 Netherlands eScience Center
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: database tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "database/**"
+  pull_request:
+    paths:
+      - "database/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  save-context:
+    name: Save PR Context for DB Scan
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Create PR Info Metadata
+        run: |
+          mkdir -p pr_info
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "${{ github.event.pull_request.number }}" > pr_info/pr_number.txt
+            echo "${{ github.event.pull_request.base.ref }}" > pr_info/pr_base.txt
+            echo "PR_NUMBER: ${{ github.event.pull_request.number }}"
+          else
+            echo "false" > pr_info/pr_number.txt
+            echo "false" > pr_info/pr_base.txt
+            echo "Not a pull_request. Event: ${{ github.event_name }}"
+          fi
+
+      - name: Upload Metadata Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: database-pr-metadata
+          path: pr_info/
+          retention-days: 1

@@ -1,0 +1,83 @@
+# SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: database sonar
+
+on:
+  workflow_run:
+    workflows: ["database tests"]
+    types:
+      - completed
+
+jobs:
+  database-sonar:
+    name: database sonar
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Code Securely
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - name: Download Metadata Artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: database-pr-metadata
+          path: database/pr_info/
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Parse Uploaded PR info
+        id: pr_info
+        working-directory: database/pr_info
+        run: |
+          PR_NUM=$(cat pr_number.txt)
+          PR_BASE=$(cat pr_base.txt)
+
+          if [ "$PR_NUM" != "false" ] && [ -n "$PR_NUM" ]; then
+            echo "is_pr=true" >> $GITHUB_OUTPUT
+            echo "pr_number=$PR_NUM" >> $GITHUB_OUTPUT
+            echo "pr_base=$PR_BASE" >> $GITHUB_OUTPUT
+            echo "Read context successfully: PR #$PR_NUM merging into $PR_BASE"
+          else
+            echo "is_pr=false" >> $GITHUB_OUTPUT
+            echo "Read context successfully: No active PR context found."
+          fi
+
+      # Note: Upgraded the action version to v8 to match your working frontend scan script
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: SonarCloud Scan database (PR Mode)
+        if: ${{ steps.pr_info.outputs.is_pr == 'true' }}
+        uses: SonarSource/sonarqube-scan-action@v8
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: database
+          args: >
+            -Dsonar.pullrequest.key=${{ steps.pr_info.outputs.pr_number }}
+            -Dsonar.pullrequest.base=${{ steps.pr_info.outputs.pr_base }}
+            -Dsonar.pullrequest.branch=${{ github.event.workflow_run.head_branch }}
+
+      - name: SonarCloud Scan database (Branch Mode)
+        if: ${{ steps.pr_info.outputs.is_pr == 'false' }}
+        uses: SonarSource/sonarqube-scan-action@v8
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: database
+          args: >
+            -Dsonar.branch.name=${{ github.event.workflow_run.head_branch }}
