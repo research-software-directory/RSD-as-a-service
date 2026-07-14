@@ -313,7 +313,7 @@ public class PostgrestAccount implements Account {
 		String givenNames = "";
 		String familyNames = "";
 
-		if (fullName != null && fullName.length() > 0) {
+		if (fullName != null && !fullName.isEmpty()) {
 			List<String> parts;
 
 			fullName = fullName.trim();
@@ -348,7 +348,7 @@ public class PostgrestAccount implements Account {
 			createLoginUri,
 			userProfileData.toString(),
 			adminJwt,
-			"Prefer",
+			PREFER_HEADER_KEY,
 			"resolution=ignore-duplicates"
 		);
 
