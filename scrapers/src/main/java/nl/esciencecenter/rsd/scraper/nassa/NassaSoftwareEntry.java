@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import nl.esciencecenter.rsd.scraper.doi.ExternalMentionRecord;
 import nl.esciencecenter.rsd.scraper.doi.PostgrestMentionRepository;
+import nl.esciencecenter.rsd.scraper.git.CodePlatformProvider;
 import nl.esciencecenter.rsd.scraper.license.SpdxLicense;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -158,8 +159,10 @@ public class NassaSoftwareEntry {
 
 	public String toRsdJson(Map<String, ExternalMentionRecord> mentions, Map<String, SpdxLicense> licenseMap) {
 		JsonObject root = new JsonObject();
+		root.addProperty("community_slug", "nassa");
 		root.addProperty("slug", id.toLowerCase());
 		root.addProperty("brand_name", title);
+		root.add("concept_doi", JsonNull.INSTANCE);
 		root.addProperty("description", descriptionWithInputsAndOutputs());
 		root.addProperty(
 			"short_statement",
@@ -167,6 +170,8 @@ public class NassaSoftwareEntry {
 		);
 		root.addProperty("get_started_url", gitHtmlUrl + "/" + docsDir);
 		root.addProperty("repository_url", gitHtmlUrl);
+		root.addProperty("code_platform", CodePlatformProvider.GITHUB.toDatabaseString());
+		root.addProperty("scraping_disabled_reason", "This is a NASSA module which is not a repository root");
 
 		if (license != null) {
 			SpdxLicense spdxLicense = licenseMap.get(license);
@@ -177,7 +182,7 @@ public class NassaSoftwareEntry {
 				root.addProperty("license_open_source", true);
 			} else {
 				LOGGER.warn("Unexpected SPDX license: {}", license);
-				// we need to add this so we can call the nassa_import RPC with all parameters
+				// we need to add this so we can call the software_import RPC with all parameters
 				root.add("license_value", JsonNull.INSTANCE);
 				root.add("license_name", JsonNull.INSTANCE);
 				root.add("license_url", JsonNull.INSTANCE);
@@ -193,12 +198,14 @@ public class NassaSoftwareEntry {
 
 		JsonArray familyNamesArray = new JsonArray(contributors.size());
 		JsonArray givenNamesArray = new JsonArray(contributors.size());
+		JsonArray affiliationArray = new JsonArray(contributors.size());
 		JsonArray roleArray = new JsonArray(contributors.size());
 		JsonArray orcidArray = new JsonArray(contributors.size());
 		JsonArray positionArray = new JsonArray(contributors.size());
 		for (NassaContributor contributor : contributors) {
 			familyNamesArray.add(contributor.familyName);
 			givenNamesArray.add(contributor.givenName);
+			affiliationArray.add(JsonNull.INSTANCE);
 			roleArray.add(contributor.roles);
 			orcidArray.add(contributor.orcid);
 			positionArray.add(contributor.position);
@@ -206,6 +213,7 @@ public class NassaSoftwareEntry {
 
 		root.add("family_names_array", familyNamesArray);
 		root.add("given_names_array", givenNamesArray);
+		root.add("affiliation_array", affiliationArray);
 		root.add("role_array", roleArray);
 		root.add("orcid_array", orcidArray);
 		root.add("position_array", positionArray);
@@ -278,6 +286,8 @@ public class NassaSoftwareEntry {
 			});
 		}
 		root.add("regular_mentions", PostgrestMentionRepository.toRsdJsonArray(regularMentions));
+
+		root.add("keywords_array", new JsonArray());
 
 		return root.toString();
 	}

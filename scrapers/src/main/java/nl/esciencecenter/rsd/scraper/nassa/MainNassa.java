@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -174,7 +174,7 @@ public class MainNassa {
 			LOGGER.info("saving module to database: {}", nassaSoftwareEntry.id);
 			try {
 				Utils.postAsAdmin(
-					Config.backendBaseUrl() + "/rpc/nassa_import",
+					Config.backendBaseUrl() + "/rpc/software_import",
 					nassaSoftwareEntry.toRsdJson(mentions, licenseMap)
 				);
 			} catch (Exception e) {

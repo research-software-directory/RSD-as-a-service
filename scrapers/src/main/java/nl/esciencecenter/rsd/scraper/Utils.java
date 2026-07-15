@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -27,6 +28,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,55 @@ public class Utils {
 	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
 
 	private Utils() {}
+
+	/**
+	 * removes all leading, trailing and double white space from a string
+	 *
+	 * @param s the string to sanitise
+	 * @return the sanitised string or null if the input was null
+	 */
+	public static String sanitiseWhitespace(String s) {
+		if (s == null) {
+			return null;
+		}
+
+		return s.replaceAll("\\s+", " ").strip();
+	}
+
+	/**
+	 *
+	 * @param s the string to slugify, cannot be null
+	 * @return the input for which the letters A-Z are converted to lower case,
+	 * the digits 0-9 are unchanged,
+	 * other characters have been converted to a dash,
+	 * leading, trailing and more than one duplicate dashes have been removed
+	 */
+	public static String slugify(String s) {
+		return s.toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9]+", "-").replaceAll("^-+", "").replaceAll("-+$", "");
+	}
+
+	/**
+	 *
+	 * @param s the candidate URL to check
+	 * @return if the input is a valid HTTP(S) URL
+	 */
+	public static boolean isUrl(String s) {
+		if (s == null) {
+			return false;
+		}
+
+		if (!s.startsWith("https://") && !s.startsWith("http://")) {
+			return false;
+		}
+
+		try {
+			new URI(s);
+		} catch (URISyntaxException e) {
+			return false;
+		}
+
+		return true;
+	}
 
 	/**
 	 * Base64encode a string.
@@ -89,18 +140,15 @@ public class Utils {
 	/**
 	 * Performs a GET request with given headers and returns the entire http response.
 	 *
-	 * @param uri     The encoded URI
+	 * @param uri The URI
 	 * @param headers (Optional) Variable amount of headers. Number of arguments must be a multiple of two.
 	 * @return The response as a String.
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException when the underlying HTTP request throws it
+	 * @throws InterruptedException when this operation is interrupted
 	 */
-	public static HttpResponse<String> getAsHttpResponse(String uri, String... headers)
+	public static HttpResponse<String> getAsHttpResponse(URI uri, String... headers)
 		throws IOException, InterruptedException {
-		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
-			.GET()
-			.timeout(DEFAULT_TIMEOUT)
-			.uri(URI.create(uri));
+		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder().GET().timeout(DEFAULT_TIMEOUT).uri(uri);
 		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
 			httpRequestBuilder.headers(headers);
 		}
@@ -109,6 +157,20 @@ public class Utils {
 		try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()) {
 			return client.send(request, HttpResponse.BodyHandlers.ofString());
 		}
+	}
+
+	/**
+	 * Performs a GET request with given headers and returns the entire http response.
+	 *
+	 * @param uri The encoded URI
+	 * @param headers (Optional) Variable amount of headers. Number of arguments must be a multiple of two.
+	 * @return The response as a String.
+	 * @throws IOException when the underlying HTTP request throws it
+	 * @throws InterruptedException when this operation is interrupted
+	 */
+	public static HttpResponse<String> getAsHttpResponse(String uri, String... headers)
+		throws IOException, InterruptedException {
+		return getAsHttpResponse(URI.create(uri), headers);
 	}
 
 	/**
