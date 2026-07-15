@@ -7,6 +7,7 @@
 
 package nl.esciencecenter.rsd.scraper.git;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -90,5 +91,27 @@ class GithubScraperTest {
 	@ValueSource(strings = { "{\"data\": {\"project\": null}}", "{\"data\": null}", "{}" })
 	void givenIncompleteIsArchivedResponse_whenParsing_thenCorrectResultReturned(String response) {
 		Assertions.assertNull(GitlabScraper.parseArchivedResponse(response));
+	}
+
+	@Test
+	void givenCorrectJson_whenParsingReadmeUrl_thenUrlReturned() {
+		String json =
+			"{\"download_url\": \"https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md\"}";
+
+		Optional<URI> parsedUrl = GithubScraper.parseReadmeUrl(json);
+
+		Assertions.assertTrue(parsedUrl.isPresent());
+		Assertions.assertEquals(
+			URI.create("https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md"),
+			parsedUrl.get()
+		);
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "{}", "{\"download_url\": null}", "{\"download_url\": 123}" })
+	void givenMissingOrIncorrectlyStructuredJson_whenParsingReadmeUrl_thenEmptyValueReturned(String json) {
+		Optional<URI> parsedUrl = GithubScraper.parseReadmeUrl(json);
+
+		Assertions.assertTrue(parsedUrl.isEmpty());
 	}
 }

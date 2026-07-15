@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,6 +25,15 @@ public class GitHubSpdxLicenseRepository {
 
 	private GitHubSpdxLicenseRepository() {}
 
+	/**
+	 *
+	 * Download all SPDX licenses and return them as a map
+	 *
+	 * @return a map of SPDX licenses, where the key is the same as the {@link SpdxLicense#licenseId()}
+	 * @throws IOException when the underlying HTTP call throws this exception
+	 * @throws InterruptedException when the current thread is interrupted during the HTTP call
+	 * @throws RsdResponseException when the HTTP response is not successful
+	 */
 	public static Map<String, SpdxLicense> getLicensesByIdMap()
 		throws IOException, InterruptedException, RsdResponseException {
 		String url = "https://raw.githubusercontent.com/spdx/license-list-data/refs/heads/main/json/licenses.json";

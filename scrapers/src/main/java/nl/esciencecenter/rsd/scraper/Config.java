@@ -223,4 +223,8 @@ public class Config {
 	public static boolean isNassaScraperEnabled() {
 		return "true".equals(System.getenv("ENABLE_NASSA_SCRAPER"));
 	}
+
+	public static boolean isEscapeOssrScraperEnabled() {
+		return "true".equals(System.getenv("ENABLE_ESCAPE_OSSR_SCRAPER"));
+	}
 }

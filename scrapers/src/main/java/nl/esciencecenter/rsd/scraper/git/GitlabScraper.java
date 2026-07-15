@@ -19,6 +19,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
@@ -177,6 +178,38 @@ public class GitlabScraper implements GitScraper {
 		return Integer.parseInt(totalItemsHeader);
 	}
 
+	/**
+	 *
+	 * Retrieve the URL of the raw README file.
+	 * Example URL: <a href="https://gitlab.com/api/v4/projects/gitlab-org%2Fgitlab-shell">https://gitlab.com/api/v4/projects/gitlab-org%2Fgitlab-shell</a>.
+	 *
+	 * @return the URL of the raw README of the repo if present
+	 */
+	public Optional<URI> rawReadmeUrl() throws IOException, InterruptedException, RsdResponseException {
+		HttpResponse<String> httpResponse = Utils.getAsHttpResponse(
+			apiUri + "/projects/" + Utils.urlEncode(projectPath)
+		);
+
+		int status = httpResponse.statusCode();
+		if (httpResponse.statusCode() == 429) throw new RsdRateLimitException(
+			429,
+			httpResponse.uri(),
+			httpResponse.body(),
+			"Rate limit reached for GitLab"
+		);
+		if (httpResponse.statusCode() == 404) throw new RsdResponseException(
+			404,
+			httpResponse.uri(),
+			httpResponse.body(),
+			"Not found, is the repository URL correct?"
+		);
+		if (status != 200) {
+			throw new RsdResponseException(status, httpResponse.uri(), httpResponse.body(), "Unexpected response");
+		} else {
+			return parseReadmeUrl(httpResponse.body());
+		}
+	}
+
 	static void parseCommitPage(String json, CommitsPerWeek commitsToFill) {
 		JsonArray thisPageCommits = JsonParser.parseString(json).getAsJsonArray();
 
@@ -237,5 +270,29 @@ public class GitlabScraper implements GitScraper {
 		Integer forkCount = jsonObject.getAsJsonPrimitive("forks_count").getAsInt();
 
 		return new BasicGitData(archived, license, starCount, forkCount, null);
+	}
+
+	/**
+	 *
+	 * This parses the JSON response and transforms the returned "HTML" URL to a "raw" URL.
+	 *
+	 * @param json the response JSON to parse
+	 * @return the raw README URL
+	 */
+	static Optional<URI> parseReadmeUrl(String json) {
+		JsonObject root = JsonParser.parseString(json).getAsJsonObject();
+		JsonElement htmlReadmeJson = root.get("readme_url");
+
+		if (
+			htmlReadmeJson == null ||
+			!htmlReadmeJson.isJsonPrimitive() ||
+			!htmlReadmeJson.getAsJsonPrimitive().isString()
+		) {
+			return Optional.empty();
+		}
+
+		String htmlReadmeUrl = htmlReadmeJson.getAsString();
+		String rawReadmeUrl = htmlReadmeUrl.replace("/-/blob/", "/-/raw/");
+		return Optional.of(URI.create(rawReadmeUrl));
 	}
 }

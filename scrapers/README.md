@@ -29,6 +29,7 @@ docker compose exec scrapers java -cp /usr/myjava/scrapers.jar nl.esciencecenter
 docker compose exec scrapers java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.package_manager.MainPackageManager
 docker compose exec scrapers java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.doi.MainCitations
 docker compose exec scrapers java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.ror.MainRor
+docker compose exec scrapers java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.aggregator.MainAggregator
 ```
 
 ## Running locally
@@ -48,3 +49,19 @@ It can manually be activated with:
 ```shell
 docker compose exec scrapers java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.nassa.MainNassa
 ```
+
+### ESCAPE OSSR harvester
+
+**This harvester is only for the production instance of the Netherlands eScience Center.**
+
+This harvester harvests and stores the [ESCAPE OSSR software](https://zenodo.org/communities/escape2020/records?q=&f=resource_type%3Asoftware&l=list&p=1&s=10&sort=newest). For it to run, it is required that there is a community with slug `escape-ossr`.
+
+It is scheduled to run once per day (see `jobs.cron`).
+
+It can manually be activated with:
+
+```shell
+docker compose exec scrapers java -cp /usr/myjava/scrapers.jar --enable-native-access=ALL-UNNAMED nl.esciencecenter.rsd.scraper.escape_ossr.MainEscapeOssr
+```
+
+The `--enable-native-access=ALL-UNNAMED` flag is to allow the [html-to-markdown](https://docs.html-to-markdown.xberg.io/) to run without warnings.

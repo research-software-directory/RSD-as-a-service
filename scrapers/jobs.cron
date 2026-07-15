@@ -13,3 +13,4 @@
 2-59/6 * * * * /opt/java/openjdk/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.ror.MainRor > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
 * * * * * /opt/java/openjdk/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.aggregator.MainAggregator > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
 15 1 * * * /opt/java/openjdk/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.nassa.MainNassa > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
+25 1 * * * /opt/java/openjdk/bin/java -cp /usr/myjava/scrapers.jar --enable-native-access=ALL-UNNAMED nl.esciencecenter.rsd.scraper.escape_ossr.MainEscapeOssr > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
