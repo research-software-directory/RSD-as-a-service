@@ -28,6 +28,12 @@ export default function EditSoftwareBadges() {
     handleSortedBadges
   } = useEditSoftwareBadges()
 
+  // console.groupCollapsed('EditSoftwareBadges')
+  // console.log('badges...',badges)
+  // console.log('urlsPresent...',urlsPresent)
+  // console.log('modal...',modal)
+  // console.groupEnd()
+
   function renderBadge(badge: BadgeForSoftware) {
     const badgeContent = <img src={badge.badge_url} alt={badge.alt_text ?? ''} className="max-h-[20px]" />
 

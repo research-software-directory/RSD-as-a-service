@@ -118,16 +118,16 @@ export const config={
     title: 'Badges',
     subtitle: 'Add software badges to the page.',
     badgeUrl: {
-      label: 'Badge URL',
+      label: 'Badge image URL',
       help: 'The location of the badge image',
       validation: {
         required: true,
         maxLength: {value: 200, message: 'Maximum length is 200'},
         pattern: {
           value: /^https?:\/\/\S+$/,
-          message: 'Provide a URL of the badge.'
+          message: 'Provide a URL of the badge image.'
         }
-      },
+      }
     },
     altText: {
       label: 'Alt text',
@@ -138,7 +138,7 @@ export const config={
       }
     },
     badgeLink: {
-      label: 'Badge link',
+      label: 'Badge target link',
       help: 'When clicking the badge, go to this URL',
       validation: {
         required: false,
