@@ -4,8 +4,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,14 +26,15 @@ import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import SlugTextField from '~/components/form/SlugTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ControlledImageInput, {FormInputsForImage} from '~/components/form/ControlledImageInput'
+import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
 import config from './config'
 import {Community, validCommunitySlug} from './apiCommunities'
 
-type AddCommunityModalProps = {
+type AddCommunityModalProps = Readonly<{
   open: boolean,
   onCancel: () => void,
   onSubmit: (item:EditCommunityProps) => Promise<void>
-}
+}>
 
 export type EditCommunityProps = Community & {
   logo_b64?: string | null
@@ -43,7 +44,7 @@ export type EditCommunityProps = Community & {
 let lastValidatedSlug = ''
 const formId='add-community-form'
 
-export default function AddPageModal({open,onCancel,onSubmit}:AddCommunityModalProps) {
+export default function AddCommunityModal({open,onCancel,onSubmit}:AddCommunityModalProps) {
   const {token} = useSession()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [baseUrl, setBaseUrl] = useState('')
@@ -62,7 +63,9 @@ export default function AddPageModal({open,onCancel,onSubmit}:AddCommunityModalP
       logo_mime_type: null
     }
   })
-  const {errors, isValid} = formState
+  // use hook to decide if save buttons should be disabled
+  const saveDisabled = useSaveDisabledFormState(formState)
+  const {errors} = formState
   // watch for data change in the form
   const [slug,name,short_description,logo_id,logo_b64] = watch(['slug','name','short_description','logo_id','logo_b64'])
   // construct slug from title
@@ -118,13 +121,6 @@ export default function AddPageModal({open,onCancel,onSubmit}:AddCommunityModalP
     return ()=>{abort=true}
   },[slug,token,setError])
 
-  function isSaveDisabled() {
-    // during async validation we disable button
-    if (validating === true) return true
-    // if isValid is not true
-    return isValid===false
-  }
-
   function handleCancel(e:any,reason: 'backdropClick' | 'escapeKeyDown') {
     // close only on escape, not if user clicks outside of the modal
     if (reason==='escapeKeyDown') onCancel()
@@ -137,13 +133,7 @@ export default function AddPageModal({open,onCancel,onSubmit}:AddCommunityModalP
       open={open}
       onClose={handleCancel}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         {config.modalTitle}
       </DialogTitle>
       <form
@@ -162,10 +152,7 @@ export default function AddPageModal({open,onCancel,onSubmit}:AddCommunityModalP
           {...register('logo_mime_type')}
         />
 
-        <DialogContent sx={{
-          width: ['100%', '37rem'],
-          padding: '2rem 1.5rem 2.5rem'
-        }}>
+        <DialogContent>
           <TextFieldWithCounter
             options={{
               autofocus:true,
@@ -179,7 +166,7 @@ export default function AddPageModal({open,onCancel,onSubmit}:AddCommunityModalP
               ...config.name.validation
             })}
           />
-          <section className="py-8 flex gap-8">
+          <section className="flex gap-8">
             <ControlledImageInput
               name={name}
               logo_id={logo_id}
@@ -214,22 +201,21 @@ export default function AddPageModal({open,onCancel,onSubmit}:AddCommunityModalP
           />
 
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider'
-        }}>
+        <DialogActions>
+          {/*
+            Button order in the default styles is reversed  to achieve following goal:
+            First button in the tab order is first button at right side
+          */}
+          <SubmitButtonWithListener
+            formId={formId}
+            disabled={saveDisabled}
+          />
           <Button
             onClick={onCancel}
             color="secondary"
-            sx={{marginRight:'2rem'}}
           >
             Cancel
           </Button>
-          <SubmitButtonWithListener
-            formId={formId}
-            disabled={isSaveDisabled()}
-          />
         </DialogActions>
       </form>
     </Dialog>

@@ -24,6 +24,7 @@ import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ControlledSelect from '~/components/form/ControlledSelect'
+import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
 import {mentionModal as config, mentionType} from './config'
 
 export type EditMentionModalProps = {
@@ -61,8 +62,9 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
       ...item
     }
   })
-  // extract form states
-  const {isValid, isDirty, errors} = formState
+  // use hook to decide if save buttons should be disabled
+  const saveDisabled = useSaveDisabledFormState(formState)
+  const {errors} = formState
   const formData = watch()
   // need to clear image_url error manually after the type change
   // and dynamic rules change from required to not required
@@ -105,13 +107,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
       onClose={(e, reason) => handleCancel(reason)}
       maxWidth="md"
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         {title ? title : 'Mention'}
       </DialogTitle>
       <form
@@ -144,7 +140,6 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             }}
             rules={config.title.validation}
           />
-          <div className="py-2"></div>
           <ControlledTextField
             control={control}
             options={{
@@ -157,7 +152,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             }}
             rules={config.authors.validation}
           />
-          <div className="grid grid-cols-[2fr_1fr] gap-4 py-4">
+          <div className="grid grid-cols-[2fr_1fr] gap-4">
             <ControlledTextField
               control={control}
               options={{
@@ -183,7 +178,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
               rules={config.publication_year.validation}
             />
           </div>
-          <div className="grid grid-cols-[2fr_1fr] gap-4 py-4">
+          <div className="grid grid-cols-[2fr_1fr] gap-4">
             <ControlledSelect
               name="mention_type"
               label={config.mentionType.label}
@@ -207,7 +202,6 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
               rules={config.publication_year.validation}
             />
           </div>
-          <div className="py-2"></div>
           <ControlledTextField
             control={control}
             options={{
@@ -220,7 +214,6 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             }}
             rules={config.journal.validation}
           />
-          <div className="py-2"></div>
           <ControlledTextField
             control={control}
             options={{
@@ -233,8 +226,6 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             }}
             rules={config.url.validation}
           />
-
-          <div className="py-2"></div>
           <ControlledTextField
             control={control}
             options={{
@@ -255,8 +246,6 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
               }
             }
           />
-
-          <div className="py-2"></div>
           <ControlledTextField
             control={control}
             options={{
@@ -271,7 +260,6 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
           />
           {isAdmin &&
             <>
-              <div className="py-2"></div>
               <ControlledTextField
                 control={control}
                 options={{
@@ -284,7 +272,6 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
                 }}
                 rules={config.doi.validation}
               />
-              <div className="py-2"></div>
               <ControlledTextField
                 control={control}
                 options={{
@@ -296,37 +283,30 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
                 }}
                 rules={config.openalex_id.validation}
               />
-              <div className="py-2"></div>
             </>
           }
           {!isAdmin &&
-            <Alert severity="warning" sx={{marginTop: '1rem'}}>
+            <Alert severity="warning">
               The information can not be edited after creation.
             </Alert>}
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider'
-        }}>
+        <DialogActions>
+          {/*
+            Button order in the default styles is reversed  to achieve following goals:
+            First button in the tab order is first button at right side
+          */}
+          <SubmitButtonWithListener
+            disabled={saveDisabled}
+            formId={formId}
+          />
           <Button
-            tabIndex={1}
             onClick={handleCancel}
             color="secondary"
-            sx={{marginRight: '2rem'}}
           >
             Cancel
           </Button>
-          <SubmitButtonWithListener
-            disabled={isSaveDisabled()}
-            formId={formId}
-          />
         </DialogActions>
       </form>
     </Dialog>
   )
-
-  function isSaveDisabled() {
-    return !isValid || !isDirty
-  }
 }

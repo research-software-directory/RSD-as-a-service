@@ -16,6 +16,7 @@ import useSmallScreen from '~/config/useSmallScreen'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ControlledSelect from '~/components/form/ControlledSelect'
+import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
 import {cfg} from '~/components/software/edit/repositories/config'
 import {RepositoryUrl} from '~/components/software/edit/repositories/apiRepositories'
 
@@ -33,8 +34,10 @@ export default function EditRepositoryModal({onCancel, onSubmit, item}: EditSoft
     mode: 'onChange',
     defaultValues: item
   })
+  // use hook to decide if save buttons should be disabled
+  const saveDisabled = useSaveDisabledFormState(formState)
   // extract form states and possible errors
-  const {isValid, isDirty} = formState
+  // const {isValid, isDirty} = formState
   // watch for value changes in the form
   const [
     url,code_platform,
@@ -74,13 +77,7 @@ export default function EditRepositoryModal({onCancel, onSubmit, item}: EditSoft
       open={true}
       onClose={handleCancel}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         Software repository
       </DialogTitle>
       <form
@@ -92,41 +89,37 @@ export default function EditRepositoryModal({onCancel, onSubmit, item}: EditSoft
         <input type="hidden"
           {...register('id')}
         />
-        <DialogContent sx={{
-          width: ['100%', '37rem'],
-          padding: '2.5rem 1.5rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem'
-        }}>
+        <DialogContent>
           {/* repository url */}
-          <ControlledTextField
-            control={control}
-            options={{
-              name: 'url',
-              label: cfg.repository_url.label,
-              useNull: true,
-              defaultValue: url,
-              helperTextMessage: 'The repository url cannot be changed. The repository can only be removed.',
-              helperTextCnt: `${url?.length ?? 0}/${cfg.repository_url.validation.maxLength.value}`,
-              disabled: true,
-            }}
-            rules={cfg.repository_url.validation}
-          />
-          {/* code platform */}
-          <ControlledSelect
-            control={control}
-            name='code_platform'
-            label={cfg.repository_platform.label}
-            options={cfg.repository_platform.options}
-            disabled={false}
-            defaultValue={code_platform}
-            helperTextMessage={cfg.repository_platform.help}
-            rules={cfg.repository_platform.validation}
-            sx={{
-              width:'9rem'
-            }}
-          />
+          <div className="flex gap-4">
+            <ControlledTextField
+              control={control}
+              options={{
+                name: 'url',
+                label: cfg.repository_url.label,
+                useNull: true,
+                defaultValue: url,
+                helperTextMessage: 'The repository url cannot be changed. The repository can only be removed.',
+                helperTextCnt: `${url?.length ?? 0}/${cfg.repository_url.validation.maxLength.value}`,
+                disabled: true,
+              }}
+              rules={cfg.repository_url.validation}
+            />
+            {/* code platform */}
+            <ControlledSelect
+              control={control}
+              name='code_platform'
+              label={cfg.repository_platform.label}
+              options={cfg.repository_platform.options}
+              disabled={false}
+              defaultValue={code_platform}
+              helperTextMessage={cfg.repository_platform.help}
+              rules={cfg.repository_platform.validation}
+              sx={{
+                width:'10rem'
+              }}
+            />
+          </div>
           <ControlledTextField
             control={control}
             options={{
@@ -190,31 +183,23 @@ export default function EditRepositoryModal({onCancel, onSubmit, item}: EditSoft
           />
 
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider'
-        }}>
+        <DialogActions>
+          {/*
+            Button order in the default styles is reversed  to achieve following goals:
+            First button in the tab order is first button at right side
+          */}
+          <SubmitButtonWithListener
+            formId={formId}
+            disabled={saveDisabled}
+          />
           <Button
-            tabIndex={1} //NOSONAR
             onClick={handleCancel}
             color="secondary"
-            sx={{marginRight:'2rem'}}
           >
             Cancel
           </Button>
-          <SubmitButtonWithListener
-            formId={formId}
-            disabled={isSaveDisabled()}
-          />
         </DialogActions>
       </form>
     </Dialog>
   )
-
-  function isSaveDisabled() {
-    if (isValid === false) return true
-    if (isDirty === false) return true
-    return false
-  }
 }

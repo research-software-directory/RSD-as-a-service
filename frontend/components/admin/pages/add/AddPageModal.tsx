@@ -4,8 +4,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,6 +24,7 @@ import {getSlugFromString} from '~/utils/getSlugFromString'
 import {useDebounce} from '~/utils/useDebounce'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
 import SlugTextField from '~/components/form/SlugTextField'
 import {MarkdownPage, validPageSlug} from '../useMarkdownPages'
 import {addMarkdownPage} from '../saveMarkdownPage'
@@ -63,7 +64,9 @@ export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalP
       title: ''
     }
   })
-  const {errors, isValid} = formState
+  // use hook to decide if save buttons should be disabled
+  const saveDisabled = useSaveDisabledFormState(formState)
+  const {errors} = formState
   // watch for data change in the form
   const [slug,title] = watch(['slug','title'])
   // construct slug from title
@@ -166,15 +169,6 @@ export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalP
     })
   }
 
-
-  function isSaveDisabled() {
-    if (state.loading == true) return true
-    // during async validation we disable button
-    if (validating === true) return true
-    // if isValid is not true
-    return isValid===false
-  }
-
   return (
     <Dialog
       // use fullScreen modal for small screens (< 600px)
@@ -182,13 +176,7 @@ export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalP
       open={open}
       onClose={handleClose}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         {config.page_title}
       </DialogTitle>
       <form
@@ -196,53 +184,46 @@ export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalP
         onSubmit={handleSubmit(onSubmit)}
         className="w-full">
 
-        <DialogContent sx={{
-          width: ['100%', '37rem'],
-          padding: '2rem 1.5rem 2.5rem'
-        }}>
-          <section className="py-8">
-            <TextFieldWithCounter
-              options={{
-                autofocus:true,
-                error: errors.title?.message !== undefined,
-                label: config.title.label,
-                helperTextMessage: errors?.title?.message ?? config.title.help,
-                helperTextCnt: `${title?.length || 0}/${config.title.validation.maxLength.value}`,
-                variant:'outlined'
-              }}
-              register={register('title', {
-                ...config.title.validation
-              })}
-            />
-            <div className="py-4"></div>
-            <SlugTextField
-              baseUrl={baseUrl}
-              loading={validating}
-              options={{
-                label:config.slug.label,
-                error: errors.slug?.message !== undefined,
-                helperText: errors?.slug?.message ?? config.slug.help
-              }}
-              register={register('slug',config.slug.validation)}
-            />
-          </section>
+        <DialogContent>
+          <TextFieldWithCounter
+            options={{
+              autofocus:true,
+              error: errors.title?.message !== undefined,
+              label: config.title.label,
+              helperTextMessage: errors?.title?.message ?? config.title.help,
+              helperTextCnt: `${title?.length || 0}/${config.title.validation.maxLength.value}`,
+              variant:'outlined'
+            }}
+            register={register('title', {
+              ...config.title.validation
+            })}
+          />
+          <SlugTextField
+            baseUrl={baseUrl}
+            loading={validating}
+            options={{
+              label:config.slug.label,
+              error: errors.slug?.message !== undefined,
+              helperText: errors?.slug?.message ?? config.slug.help
+            }}
+            register={register('slug',config.slug.validation)}
+          />
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider'
-        }}>
+        <DialogActions>
+          {/*
+            Button order in the default styles is reversed to achieve following goal:
+            First button in the tab order is first button at right side
+          */}
+          <SubmitButtonWithListener
+            formId={formId}
+            disabled={saveDisabled}
+          />
           <Button
             onClick={handleClose}
             color="secondary"
-            sx={{marginRight:'2rem'}}
           >
             Cancel
           </Button>
-          <SubmitButtonWithListener
-            formId={formId}
-            disabled={isSaveDisabled()}
-          />
         </DialogActions>
       </form>
     </Dialog>

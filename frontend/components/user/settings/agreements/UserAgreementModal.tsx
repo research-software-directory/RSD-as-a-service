@@ -115,11 +115,7 @@ export default function UserAgreementModal() {
         <input type="hidden"
           {...register('account', {required:'account id is required'})}
         />
-        <DialogTitle sx={{
-          fontSize: '1.5rem',
-          color: 'secondary.main',
-          fontWeight: 500
-        }}>
+        <DialogTitle>
           <InfoIcon
             sx={{
               width: '2rem',
@@ -134,7 +130,7 @@ export default function UserAgreementModal() {
         }}>
 
           {/* Render only if userInfo present in order to properly load defaultValues */}
-          <div className="py-4">
+          <div>
             To be able to contribute to the RSD, we need to know that you agree to our Terms of Service, and that you have read the Privacy Statement. Please check all of the points below to proceed:
           </div>
           <div>
@@ -147,8 +143,6 @@ export default function UserAgreementModal() {
                 <span>I agree to the <Link className="underline" target='_blank' href={host?.terms_of_service_url ?? ''}>Terms of Service</Link>.</span>
               }
             />
-          </div>
-          <div>
             <ControlledSwitch
               defaultValue={notice_privacy_statement}
               name='notice_privacy_statement'
@@ -159,22 +153,10 @@ export default function UserAgreementModal() {
               }
             />
           </div>
-          <p className="py-4">You may view or modify your agreement at any time in your profile settings.</p>
+          <p>You may view or modify your agreement at any time in your profile settings.</p>
         </DialogContent>
 
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-        }}>
-          <Button
-            // on cancel go to the homepage
-            onClick={()=>router.push('/')}
-            color="secondary"
-            sx={{
-              marginRight: '1rem',
-            }}
-          >
-            Cancel
-          </Button>
+        <DialogActions>
           <Button
             form="user-agreement-form"
             disabled={!(agreeTerms && privacyStatement)}
@@ -186,6 +168,16 @@ export default function UserAgreementModal() {
             }
           >
             Accept
+          </Button>
+          <Button
+            // on cancel go to the homepage
+            onClick={()=>router.push('/')}
+            color="secondary"
+            sx={{
+              marginRight: '1rem',
+            }}
+          >
+            Cancel
           </Button>
         </DialogActions>
       </form>

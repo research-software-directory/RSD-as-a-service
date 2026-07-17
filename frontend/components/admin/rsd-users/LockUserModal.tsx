@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,6 +15,7 @@ import {useSession} from '~/auth/AuthProvider'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
+import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
 
 export type LockAccountProps={
   id: string
@@ -70,7 +71,9 @@ export default function LockUserModal({account,onCancel,onSubmit}:LockUserModalP
       user_facing_reason: account.user_facing_reason ?? ''
     }
   })
-  const {errors, isValid, isDirty} = formState
+  // use hook to decide if save buttons should be disabled
+  const saveDisabled = useSaveDisabledFormState(formState)
+  const {errors} = formState
   const [admin_facing_reason,user_facing_reason,lock_account] = watch(['admin_facing_reason','user_facing_reason','lock_account'])
 
   function handleCancel(e:any,reason: 'backdropClick' | 'escapeKeyDown') {
@@ -85,13 +88,7 @@ export default function LockUserModal({account,onCancel,onSubmit}:LockUserModalP
       open={true}
       onClose={handleCancel}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         {config.modalTitle}
       </DialogTitle>
       <form
@@ -104,19 +101,13 @@ export default function LockUserModal({account,onCancel,onSubmit}:LockUserModalP
           {...register('id')}
         />
 
-        <DialogContent sx={{
-          width: ['100%', '37rem'],
-          padding: '2rem 1.5rem 2.5rem'
-        }}>
-
-
+        <DialogContent>
           <ControlledSwitch
             label={config.lock.label}
             name="lock_account"
             control={control}
             defaultValue={account.lock_account}
           />
-          <div className="py-4" />
           <TextFieldWithCounter
             options={{
               error: errors.user_facing_reason?.message !== undefined,
@@ -130,7 +121,6 @@ export default function LockUserModal({account,onCancel,onSubmit}:LockUserModalP
               ...config.user_facing_reason.validation
             })}
           />
-          <div className="py-4" />
           <TextFieldWithCounter
             options={{
               error: errors.admin_facing_reason?.message !== undefined,
@@ -145,22 +135,21 @@ export default function LockUserModal({account,onCancel,onSubmit}:LockUserModalP
             })}
           />
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider'
-        }}>
+        <DialogActions>
+          {/*
+            Button order in the default styles is reversed  to achieve following goals:
+            First button in the tab order is first button at right side
+          */}
+          <SubmitButtonWithListener
+            formId={config.formId}
+            disabled={saveDisabled}
+          />
           <Button
             onClick={onCancel}
             color="secondary"
-            sx={{marginRight:'2rem'}}
           >
             Cancel
           </Button>
-          <SubmitButtonWithListener
-            formId={config.formId}
-            disabled={isValid===false || isDirty===false}
-          />
         </DialogActions>
       </form>
     </Dialog>

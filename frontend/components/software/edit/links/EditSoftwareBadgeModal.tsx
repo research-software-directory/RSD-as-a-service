@@ -95,26 +95,20 @@ export default function EditSoftwareBadgeModal({
   })
 
   return (
-    <Dialog open={true} fullScreen={smallScreen}>
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500,
-      }}>
+    <Dialog
+      open={true}
+      fullScreen={smallScreen}
+      onClose={onCancel}
+    >
+      <DialogTitle>
         {modalTitle}
       </DialogTitle>
-      <form id={formId} onSubmit={handleSubmit(onSave)} autoComplete="off">
-        <input type="hidden" {...register('badgeId')} />
-
-        <DialogContent sx={{
-          width: ['100%', '37rem'],
-          padding: '2rem 1.5rem 2.5rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2rem',
-        }}>
+      <form id={formId} onSubmit={handleSubmit(onSave)} autoComplete='off'>
+        {/* hidden input for badgeId, null when new badge */}
+        <input type="hidden"
+          {...register('badgeId')}
+        />
+        <DialogContent>
           <ControlledTextField
             control={control}
             options={{
@@ -152,21 +146,14 @@ export default function EditSoftwareBadgeModal({
             rules={config.badges.badgeLink.validation}
           />
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider',
-          flexDirection: 'row-reverse',
-          justifyContent: 'flex-start',
-          gap:'1rem',
-        }}>
+        <DialogActions>
           <SubmitButtonWithListener
             formId={formId}
             disabled={saveDisabled}
           />
           <Button
             onClick={onCancel}
-            color='secondary'
+            color="secondary"
           >
             Cancel
           </Button>

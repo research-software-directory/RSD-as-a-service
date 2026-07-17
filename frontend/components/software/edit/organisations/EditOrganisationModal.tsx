@@ -66,8 +66,7 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
       // it needs to be at the end of the cycle, so we need to use setTimeout
       trigger('name')
     }, 0)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  },[trigger])
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -90,13 +89,7 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
       open={open}
       onClose={handleCancel}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         {config.modalTitle}
       </DialogTitle>
       <form
@@ -126,10 +119,7 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
         <input type="hidden"
           {...register('logo_mime_type')}
         />
-        <DialogContent sx={{
-          width: ['100%', '37rem'],
-          padding: '2rem 1.5rem 2.5rem'
-        }}>
+        <DialogContent>
           <section className="grid grid-cols-[1fr_3fr] gap-8">
             <ControlledImageInput
               name={formData?.name}
@@ -174,23 +164,17 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
             You are the first to reference this organisation and can add a logo now. After clicking on &quot;Save&quot;, logos can only be added by organisation maintainers.
           </Alert>
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider'
-        }}>
-          <Button
-            tabIndex={1}
-            onClick={handleCancel}
-            color="secondary"
-            sx={{marginRight:'2rem'}}
-          >
-            Cancel
-          </Button>
+        <DialogActions>
           <SubmitButtonWithListener
             formId={formId}
             disabled={isSaveDisabled()}
           />
+          <Button
+            onClick={handleCancel}
+            color="secondary"
+          >
+            Cancel
+          </Button>
         </DialogActions>
       </form>
     </Dialog>

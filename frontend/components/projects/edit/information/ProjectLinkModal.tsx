@@ -8,7 +8,6 @@
 
 import {useEffect} from 'react'
 
-import SaveIcon from '@mui/icons-material/Save'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -22,6 +21,8 @@ import {useSession} from '~/auth/AuthProvider'
 import {ProjectLink} from '~/types/Project'
 import {addProjectLink, updateProjectLink} from '~/components/projects/edit/apiEditProject'
 import ControlledTextField from '~/components/form/ControlledTextField'
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {projectInformation as config} from './config'
 
@@ -45,9 +46,9 @@ export default function ProjectLinkModal({open, url_for_project, onCancel, onSub
       ...url_for_project
     }
   })
-
-  // extract
-  const {isValid, isDirty, errors} = formState
+  // use hook to decide if save buttons should be disabled
+  const saveDisabled = useSaveDisabledFormState(formState)
+  const {errors} = formState
 
   // console.group(`ProjectLinkModal...${pos}`)
   // console.log('errors...', errors)
@@ -111,13 +112,7 @@ export default function ProjectLinkModal({open, url_for_project, onCancel, onSub
       open={open}
       onClose={handleCancel}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         Project link
       </DialogTitle>
       <form
@@ -140,10 +135,7 @@ export default function ProjectLinkModal({open, url_for_project, onCancel, onSub
             required: true
           })}
         />
-        <DialogContent sx={{
-          width: ['100%', '37rem'],
-          padding: '2rem 1.5rem 2.5rem'
-        }}>
+        <DialogContent>
           <ControlledTextField
             control={control}
             rules={config.url_for_project.title.validation}
@@ -164,7 +156,6 @@ export default function ProjectLinkModal({open, url_for_project, onCancel, onSub
               }
             }}
           />
-          <div className="py-4"></div>
           <ControlledTextField
             control={control}
             rules={config.url_for_project.url.validation}
@@ -185,44 +176,23 @@ export default function ProjectLinkModal({open, url_for_project, onCancel, onSub
             }}
           />
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider'
-        }}>
+        <DialogActions>
+          {/*
+            Button order in the default styles is reversed  to achieve following goal:
+            First button in the tab order is first button at right side
+          */}
+          <SubmitButtonWithListener
+            formId={formId}
+            disabled={saveDisabled}
+          />
           <Button
-            tabIndex={1}
             onClick={handleCancel}
             color="secondary"
-            sx={{marginRight:'2rem'}}
           >
             Cancel
-          </Button>
-          <Button
-            id="save-button"
-            variant="contained"
-            tabIndex={0}
-            type="submit"
-            form={formId}
-            sx={{
-              // overwrite tailwind preflight.css for submit type
-              '&[type="submit"]:not(.Mui-disabled)': {
-                backgroundColor: 'primary.main',
-              },
-            }}
-            endIcon={<SaveIcon />}
-            disabled={isSaveDisabled()}
-          >
-            Save
           </Button>
         </DialogActions>
       </form>
     </Dialog>
   )
-
-  function isSaveDisabled() {
-    if (isValid === false) return true
-    if (isDirty === false) return true
-    return false
-  }
 }

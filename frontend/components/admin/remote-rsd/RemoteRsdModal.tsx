@@ -4,8 +4,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,6 +28,7 @@ import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import ControlledTextField from '~/components/form/ControlledTextField'
+import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
 import config from './config'
 import {EditRemoteRsd, getRemoteName, isValidRemoteRsdUrl} from './apiRemoteRsd'
 
@@ -47,7 +48,9 @@ export default function RemoteRsdModal({remoteRsd,onCancel,onSubmit}:RemoteRsdMo
     mode: 'onChange',
     defaultValues: remoteRsd
   })
-  const {errors, isValid, isDirty} = formState
+  // use hook to decide if save buttons should be disabled
+  const saveDisabled = useSaveDisabledFormState(formState)
+  const {errors} = formState
   // watch for data change in the form
   const [label,domain] = watch(['label','domain'])
   // bounce domain value for async validation
@@ -127,13 +130,7 @@ export default function RemoteRsdModal({remoteRsd,onCancel,onSubmit}:RemoteRsdMo
       open={true}
       onClose={handleCancel}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         {config.modalTitle}
       </DialogTitle>
       <form
@@ -146,10 +143,7 @@ export default function RemoteRsdModal({remoteRsd,onCancel,onSubmit}:RemoteRsdMo
           {...register('id')}
         />
 
-        <DialogContent sx={{
-          width: ['100%', '37rem'],
-          padding: '2rem 1.5rem 2.5rem'
-        }}>
+        <DialogContent>
           <TextFieldWithCounter
             options={{
               autofocus:true,
@@ -164,8 +158,6 @@ export default function RemoteRsdModal({remoteRsd,onCancel,onSubmit}:RemoteRsdMo
               ...config.domain.validation
             })}
           />
-
-          <div className="py-4" />
 
           <ControlledTextField
             control={control}
@@ -185,14 +177,13 @@ export default function RemoteRsdModal({remoteRsd,onCancel,onSubmit}:RemoteRsdMo
             }}
           />
 
-          <div className="grid grid-cols-2 gap-20 items-start pt-8">
+          <div className="grid grid-cols-2 gap-20 items-start">
             <ControlledSwitch
               label="Active"
               name="active"
               control={control}
               defaultValue={true}
             />
-
             <TextFieldWithCounter
               options={{
                 type: 'number',
@@ -215,29 +206,22 @@ export default function RemoteRsdModal({remoteRsd,onCancel,onSubmit}:RemoteRsdMo
           borderTop: '1px solid',
           borderColor: 'divider'
         }}>
+          {/*
+            Button order in the default styles is reversed to achieve following goal:
+            First button in the tab order is first button at right side
+          */}
+          <SubmitButtonWithListener
+            formId={formId}
+            disabled={saveDisabled}
+          />
           <Button
             onClick={onCancel}
             color="secondary"
-            sx={{marginRight:'2rem'}}
           >
             Cancel
           </Button>
-          <SubmitButtonWithListener
-            formId={formId}
-            disabled={isSubmitDisabled()}
-          />
         </DialogActions>
       </form>
     </Dialog>
   )
-
-  function isSubmitDisabled(){
-    if (isValid===false) return true
-    // we need additional check on errors object
-    // due to custom validation of domain
-    if (Object.keys(errors).length > 0) return true
-    if (isDirty===false) return true
-    if (validating) return true
-    return false
-  }
 }

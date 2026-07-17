@@ -15,6 +15,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {UseFormSetValue, UseFormWatch, useForm} from 'react-hook-form'
 
+import {useSession} from '~/auth/AuthProvider'
 import {Person} from '~/types/Contributor'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
@@ -23,7 +24,7 @@ import ControlledAutocomplete from '~/components/form/ControlledAutocomplete'
 import AvatarOptionsPerson, {RequiredAvatarProps} from '~/components/person/AvatarOptionsPerson'
 import useAggregatedPerson from './useAggregatedPerson'
 import {modalConfig} from './config'
-import {useSession} from '~/auth/AuthProvider'
+
 
 type InputProps={
   label:string
@@ -109,13 +110,7 @@ export default function AggregatedPersonModal({
       open={true}
       onClose={handleCancel}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         {title}
       </DialogTitle>
       <form
@@ -151,8 +146,7 @@ export default function AggregatedPersonModal({
             avatar_options={options?.avatars ?? []}
             loading={loading}
           />
-          <div className="py-2"/>
-          <section className="py-4 grid grid-cols-[1fr_1fr] gap-4">
+          <section className="grid grid-cols-[1fr_1fr] gap-4">
             <ControlledTextField
               control={control}
               options={{
@@ -245,23 +239,21 @@ export default function AggregatedPersonModal({
             }
           </section>
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider'
-        }}>
-          <Button
-            tabIndex={1}
-            onClick={handleCancel}
-            color="secondary"
-            sx={{marginRight:'2rem'}}
-          >
-            Cancel
-          </Button>
+        <DialogActions>
+          {/*
+            Button order in the default styles is reversed  to achieve following goals:
+            First button in the tab order is first button at right side
+          */}
           <SubmitButtonWithListener
             formId={formId}
             disabled={isSaveDisabled()}
           />
+          <Button
+            onClick={handleCancel}
+            color="secondary"
+          >
+            Cancel
+          </Button>
         </DialogActions>
       </form>
     </Dialog>

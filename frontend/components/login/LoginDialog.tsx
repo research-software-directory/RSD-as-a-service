@@ -44,7 +44,8 @@ export default function LoginDialog({providers,open, onClose}: LoginDialogProps)
           display: 'flex',
           alignItems: 'center',
           justifyContent:'space-between',
-          fontSize: '1.75rem'
+          fontSize: '1.75rem',
+          borderBottom: '0px',
         }}
       >
         Sign in with
@@ -54,7 +55,11 @@ export default function LoginDialog({providers,open, onClose}: LoginDialogProps)
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{
+        '.MuiDialogTitle-root + &': {
+          paddingTop: '0rem',
+        },
+      }}>
         <LoginProviders
           providers={providers}
           login_info_url={host.login_info_url}

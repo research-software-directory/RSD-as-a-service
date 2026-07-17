@@ -20,6 +20,7 @@ import {useForm} from 'react-hook-form'
 import ControlledTextField from '../../../form/ControlledTextField'
 import {NewTestimonial, Testimonial} from '../../../../types/Testimonial'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
 
 type EditTestimonialModalProps = {
   config: any,
@@ -41,9 +42,8 @@ export default function EditTestimonialModal({config,open,onCancel,onSubmit,test
       ...testimonial
     }
   })
-
-  // extract
-  const {isValid, isDirty} = formState
+  // use hook to decide if save buttons should be disabled
+  const saveDisabled = useSaveDisabledFormState(formState)
   const formData = watch()
 
   useEffect(() => {
@@ -67,13 +67,7 @@ export default function EditTestimonialModal({config,open,onCancel,onSubmit,test
       open={open}
       onClose={handleCancel}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         Testimonial
       </DialogTitle>
       <form
@@ -91,15 +85,11 @@ export default function EditTestimonialModal({config,open,onCancel,onSubmit,test
         <input type="hidden"
           {...register('position')}
         />
-        <DialogContent sx={{
-          width: ['100%', '37rem'],
-          padding: '2rem 1.5rem 2.5rem'
-        }}>
+        <DialogContent>
           <ControlledTextField
             control={control}
             options={{
               name: 'message',
-              variant: 'outlined',
               multiline: true,
               rows: 4,
               label: config.message.label,
@@ -110,12 +100,10 @@ export default function EditTestimonialModal({config,open,onCancel,onSubmit,test
             }}
             rules={config.message.validation}
           />
-          <div className="py-4"></div>
           <ControlledTextField
             control={control}
             options={{
               name: 'source',
-              // variant: 'outlined',
               label: config.source.label,
               useNull: true,
               defaultValue: testimonial?.source,
@@ -125,31 +113,19 @@ export default function EditTestimonialModal({config,open,onCancel,onSubmit,test
             rules={config.source.validation}
           />
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider'
-        }}>
+        <DialogActions>
+          <SubmitButtonWithListener
+            formId={formId}
+            disabled={saveDisabled}
+          />
           <Button
-            tabIndex={1}
             onClick={handleCancel}
             color="secondary"
-            sx={{marginRight:'2rem'}}
           >
             Cancel
           </Button>
-          <SubmitButtonWithListener
-            formId={formId}
-            disabled={isSaveDisabled()}
-          />
         </DialogActions>
       </form>
     </Dialog>
   )
-
-  function isSaveDisabled() {
-    if (isValid === false) return true
-    if (isDirty === false) return true
-    return false
-  }
 }

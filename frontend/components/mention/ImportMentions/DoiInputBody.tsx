@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -7,6 +7,8 @@
 
 'use client'
 import {useState} from 'react'
+import DialogActions from '@mui/material/DialogActions'
+import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
@@ -14,8 +16,6 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Box from '@mui/material/Box'
 
 import {useSession} from '~/auth/AuthProvider'
-import ImportDialogTitle from './ImportDialogTitle'
-import ImportDialogActions from './ImportDialogActions'
 import {DoiBulkImportReport} from './apiImportMentions'
 import useValidateInputList from './useValidateInputList'
 import config from './config'
@@ -57,14 +57,16 @@ export default function DoiInputDialogBody({onCancel, onSubmit}: DoiInputDialogB
 
   return (
     <>
-      <ImportDialogTitle
-        title={'Import publications'}
-      />
+      <DialogTitle>
+        Import publications
+      </DialogTitle>
       <DialogContent
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
           padding: '0rem 1rem',
+          // overwrite 0 to 1rem
+          '.MuiDialogTitle-root + &': {
+            paddingTop: '0rem',
+          },
         }}
       >
         <TextField
@@ -86,30 +88,27 @@ export default function DoiInputDialogBody({onCancel, onSubmit}: DoiInputDialogB
         >
         </TextField>
       </DialogContent>
-      <ImportDialogActions>
-        <div className={`flex-1 flex gap-4 text-sm ${error.message ? 'text-error ' : 'text-base-content-disabled'}` }>
-          <span>{error.message ? error.message : config.doiInput.helperText}...{`${error.count}/${config.doiInput.maxRows}`}</span>
-        </div>
+      <DialogActions>
+        <Button
+          variant="contained"
+          endIcon={<NavigateNextIcon />}
+          disabled={value.length===0 || error.message!==''}
+          onClick={onValidateInput}
+        >
+          Next
+        </Button>
+        <Button
+          onClick={onCancel}
+          color="secondary"
+        >
+          Cancel
+        </Button>
         <div>
-          <Button
-            tabIndex={1}
-            onClick={onCancel}
-            color="secondary"
-            sx={{marginRight:'2rem'}}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            endIcon={<NavigateNextIcon />}
-            tabIndex={0}
-            disabled={value.length===0 || error.message!==''}
-            onClick={onValidateInput}
-          >
-            Next
-          </Button>
+          <div className={`flex-1 flex gap-4 text-sm ${error.message ? 'text-error ' : 'text-base-content-disabled'}` }>
+            <span>{error.message ? error.message : config.doiInput.helperText}...{`${error.count}/${config.doiInput.maxRows}`}</span>
+          </div>
         </div>
-      </ImportDialogActions>
+      </DialogActions>
       {validating &&
         <Box sx={{
           position: 'absolute',

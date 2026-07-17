@@ -62,20 +62,8 @@ export default function CategoriesDialog({
     <Dialog
       open = {state !== 'loading'}
       fullScreen={smallScreen}
-      sx={{
-        '.MuiDialog-paper':{
-          height: smallScreen ? '100%' : '70%',
-          width: '100%'
-        }
-      }}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         {title}
       </DialogTitle>
       <div className="border-b flex py-2 px-6">
@@ -88,13 +76,7 @@ export default function CategoriesDialog({
           }}
         />
       </div>
-      <DialogContent
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '1rem 1.5rem 2.5rem !important',
-        }}>
-
+      <DialogContent>
         <CategoriesDialogBody
           categories={categories}
           state={state}
@@ -104,21 +86,8 @@ export default function CategoriesDialog({
           setSelectedCategoryIds={setSelectedCategoryIds}
           searchFor={searchFor}
         />
-
       </DialogContent>
-      <DialogActions sx={{
-        padding: '1rem 1.5rem',
-        borderTop: '1px solid',
-        borderColor: 'divider'
-      }}>
-        <Button
-          tabIndex={1}
-          onClick={onCancel}
-          color="secondary"
-          sx={{marginRight:'2rem'}}
-        >
-          Cancel
-        </Button>
+      <DialogActions>
         <Button
           id="save-button"
           variant="contained"
@@ -131,6 +100,13 @@ export default function CategoriesDialog({
           disabled={isSaveDisabled()}
         >
           Save
+        </Button>
+        <Button
+          tabIndex={1}
+          onClick={onCancel}
+          color="secondary"
+        >
+          Cancel
         </Button>
       </DialogActions>
     </Dialog>
