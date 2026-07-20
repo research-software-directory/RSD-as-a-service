@@ -120,14 +120,27 @@ export const config={
     badgeUrl: {
       label: 'Badge image URL',
       help: 'The location of the badge image',
-      validation: {
+      // pass the info needed for sync validate to run
+      validation:({
+        existingBadgeUrls,
+        ignoreUrl
+      }:{
+        existingBadgeUrls:Set<string>,
+        ignoreUrl:string
+      })=>({
         required: true,
         maxLength: {value: 200, message: 'Maximum length is 200'},
         pattern: {
           value: /^https?:\/\/\S+$/,
           message: 'Provide a URL of the badge image.'
+        },
+        // validate duplicate badge url
+        validate:(value: string) => {
+          if (existingBadgeUrls.has(value) && value !== ignoreUrl) {
+            return 'This badge already exists for this software'
+          }
         }
-      }
+      })
     },
     altText: {
       label: 'Alt text',
