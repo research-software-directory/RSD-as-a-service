@@ -111,12 +111,7 @@ User Agent: ${navigator.userAgent}`
               <WebIcon/> {browserNameAndVersion()}
             </div>
 
-            <div className="flex justify-end gap-4 w-full my-2">
-              <button
-                className="text-sm text-base-100 border border-base-400 opacity-60 rounded-sm px-3 py-1 hover:opacity-90 active:opacity-95"
-                onClick={closeAndClean}>
-                Cancel
-              </button>
+            <div className="flex flex-row-reverse justify-start gap-4 w-full my-2">
               <a
                 onClick={closeAndClean}
                 className="text-sm text-base-100 hover:text-base-100 bg-primary px-3 py-1 rounded-sm hover:opacity-90 active:opacity-95"
@@ -126,7 +121,11 @@ User Agent: ${navigator.userAgent}`
               >
                 <MailOutlineOutlined/> Send feedback
               </a>
-
+              <button
+                className="text-sm text-base-100 border border-base-400 opacity-60 rounded-sm px-3 py-1 hover:opacity-90 active:opacity-95"
+                onClick={closeAndClean}>
+                Cancel
+              </button>
             </div>
             <div className="text-sm mt-8 mb-6 text-base-100">
               We will send your feedback using your default email application,

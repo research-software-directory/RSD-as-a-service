@@ -91,7 +91,6 @@ export default function CategoriesDialog({
         <Button
           id="save-button"
           variant="contained"
-          tabIndex={0}
           onClick={()=>{
             onSave(selectedCategoryIds)
           }}
@@ -102,7 +101,6 @@ export default function CategoriesDialog({
           Save
         </Button>
         <Button
-          tabIndex={1}
           onClick={onCancel}
           color="secondary"
         >
