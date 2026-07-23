@@ -112,6 +112,10 @@ The keywords describing your software. These will be shown in the sidebar of the
 When you start typing the keyword you will see a list of suggestions based on the keywords already present in RSD.
 :::
 
+### Badges
+
+Badges are commonly seen in README files of software. Here, you can add, edit and reorder badges of the software. These will be shown in a dedicated section on the sidebar of the software page.
+
 ### Categories
 
 **Categories** are a set of curated keywords defined by RSD admins. If they exist, you can add them to (and delete them from) your software page here.

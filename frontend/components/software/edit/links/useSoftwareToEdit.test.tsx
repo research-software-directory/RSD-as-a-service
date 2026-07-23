@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,6 +25,8 @@ const mockGetCategoriesForSoftwareIds = jest.fn(props => Promise.resolve(new Set
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetLicenseForSoftware = jest.fn(props => Promise.resolve([] as any))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+const mockGetBadgesForSoftware = jest.fn(props => Promise.resolve([] as any))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockGetSoftwareItem = jest.fn(props => Promise.resolve([]as any))
 jest.mock('~/components/software/apiSoftware', () => ({
   getKeywordsForSoftware: jest.fn(props => mockGetKeywordsForSoftware(props)),
@@ -32,6 +34,7 @@ jest.mock('~/components/software/apiSoftware', () => ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getCategoryForSoftwareIds: jest.fn(props => mockGetCategoriesForSoftwareIds),
   getLicenseForSoftware: jest.fn(props => mockGetLicenseForSoftware(props)),
+  getBadgesForSoftware: jest.fn(props => mockGetBadgesForSoftware(props)),
   getSoftwareItem: jest.fn(props=>mockGetSoftwareItem(props))
 }))
 
@@ -104,4 +107,3 @@ it('renders software returned by api', async() => {
   // validate software id returned
   await screen.findByText(RegExp(copySoftware.id))
 })
-

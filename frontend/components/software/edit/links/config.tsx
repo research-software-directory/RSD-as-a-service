@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -113,5 +113,54 @@ export const config={
   importLicenses: {
     label: 'Import licenses',
     message: (doi: string) => `Import licenses from datacite.org using DOI ${doi}`
+  },
+  badges: {
+    title: 'Badges',
+    subtitle: 'Add software badges to the page.',
+    badgeUrl: {
+      label: 'Badge image URL',
+      help: 'The location of the badge image',
+      // pass the info needed for sync validate to run
+      validation:({
+        existingBadgeUrls,
+        ignoreUrl
+      }:{
+        existingBadgeUrls:Set<string>,
+        ignoreUrl:string
+      })=>({
+        required: true,
+        maxLength: {value: 200, message: 'Maximum length is 200'},
+        pattern: {
+          value: /^https?:\/\/\S+$/,
+          message: 'Provide a URL of the badge image.'
+        },
+        // validate duplicate badge url
+        validate:(value: string) => {
+          if (existingBadgeUrls.has(value) && value !== ignoreUrl) {
+            return 'This badge already exists for this software'
+          }
+        }
+      })
+    },
+    altText: {
+      label: 'Alt text',
+      help: 'An alt text for when the badge image fails to load',
+      validation: {
+        required: false,
+        maxLength: {value: 100, message: 'Maximum length is 100'},
+      }
+    },
+    badgeLink: {
+      label: 'Badge target link',
+      help: 'When clicking the badge, go to this URL',
+      validation: {
+        required: false,
+        maxLength: {value: 200, message: 'Maximum length is 200'},
+        pattern: {
+          value: /^https?:\/\/\S+$/,
+          message: 'Provide a URL of the badge.'
+        }
+      }
+    }
   }
 }

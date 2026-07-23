@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Diego Alonso Alvarez (Imperial College London) <d.alonso-alvarez@imperial.ac.uk>
 // SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2026 Imperial College London
 // SPDX-FileCopyrightText: 2026 Netherlands eScience Center
 //
@@ -29,6 +30,7 @@ import {getParticipatingOrganisations} from '~/components/organisation/apiEditOr
 import RelatedProjectsSection from '~/components/projects/RelatedProjectsSection'
 import AboutSection from '~/components/software/AboutSection'
 import {
+  getBadgesForSoftware,
   getCategoriesForSoftware, getCommunitiesOfSoftware,
   getKeywordsForSoftware, getLicenseForSoftware,
   getRelatedProjectsForSoftware, getReleasesForSoftware,
@@ -110,7 +112,7 @@ export async function generateMetadata(
 
   return {
     title: `Software | ${app.title}`,
-    description: 'This software is in Research Software Directory',
+    description: 'This software is in the Research Software Directory',
   }
 }
 
@@ -168,7 +170,8 @@ export default async function SoftwareViewPage({
     communities,
     softwareMaintainer,
     orgMaintainer,
-    comMaintainer
+    comMaintainer,
+    badges,
   ] = await Promise.all([
     // software versions info
     getReleasesForSoftware(software.id,token),
@@ -205,7 +208,9 @@ export default async function SoftwareViewPage({
     // get list of organisations user maintains
     getMaintainerOrganisations({token}),
     // get list of communities user maintains
-    getCommunitiesOfMaintainer({token})
+    getCommunitiesOfMaintainer({token}),
+    // get badges of software
+    getBadgesForSoftware(software.id, token)
   ])
   // rsd_admin is added as maintainer
   const isMaintainer = userInfo?.role==='rsd_admin' ? true : softwareMaintainer
@@ -277,6 +282,7 @@ export default async function SoftwareViewPage({
         image_id={software.image_id}
         packages={packages}
         swhids={swhids}
+        badges={badges}
       />
       {/* Participating organisations */}
       <OrganisationsSection

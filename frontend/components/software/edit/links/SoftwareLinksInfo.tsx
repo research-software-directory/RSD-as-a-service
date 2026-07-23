@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -39,6 +39,10 @@ export default function SoftwareLinksInfo({reorderedCategories}: SoftwareLinksIn
 
       <p className="py-2"><strong>Licences</strong></p>
       <p>Here you can provide the license of your software, by selecting an existing Open Source license, specifying your own, or importing the license information from the Software DOI.</p>
+
+      <p className="py-2"><strong>Badges</strong></p>
+      <p>Badges are commonly seen in README files of software. Here, you can add, edit and reorder badges of the software. These will be shown in a dedicated section on the sidebar of the software page.</p>
+
 
       <p className="py-2"><strong>Keywords</strong></p>
       <p>Here you can provide keyword that describe your software, by selecting from existing keyword, adding your own, or importing the keywords from the Software DOI.</p>

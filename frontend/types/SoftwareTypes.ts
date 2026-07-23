@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
@@ -55,26 +55,6 @@ export type SoftwareOverviewItemProps = {
   downloads?: number
 }
 
-
-// used in editSoftware.updateSoftwareInfo function
-// to extract the properties needed for PATCH method
-// from larger form object.
-// NOTE! patch method of postgrest fails if you send
-// properties that are not part of the table
-export const SoftwarePropsToSave = [
-  'id',
-  'slug',
-  'brand_name',
-  'concept_doi',
-  'description',
-  'description_type',
-  'description_url',
-  'get_started_url',
-  'image_id',
-  'is_published',
-  'short_statement'
-]
-
 export type EditSoftwareImage = {
   image_b64: string | null
   image_mime_type: string | null
@@ -85,6 +65,7 @@ export type EditSoftwareItem = SoftwareTableItem & EditSoftwareImage & {
   categories: CategoriesForSoftware
   categoryForSoftwareIds: CategoryForSoftwareIds
   licenses: AutocompleteOption<License>[]
+  badges: BadgeForSoftware[]
 }
 
 /**
@@ -106,6 +87,18 @@ export type CategoriesForSoftware = CategoryPath[]
 
 export type CategoryForSoftwareIds = Set<string>
 
+export type BadgeForSoftware = {
+  id: string,
+  software: string,
+  badge_url: string,
+  alt_text: string | null,
+  link_url: string | null,
+  position: number,
+}
+
+export type NewBadgeForSoftware = Omit<BadgeForSoftware, 'id'>
+
+//
 /**
  * LICENSES
  */

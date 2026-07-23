@@ -3,9 +3,9 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,6 +20,7 @@ import AutosaveSoftwareKeywords from './AutosaveSoftwareKeywords'
 import AutosaveSoftwareLicenses from './AutosaveSoftwareLicenses'
 import SoftwareLinksInfo from './SoftwareLinksInfo'
 import GetStartedUrl from './GetStartedUrl'
+import EditSoftwareBadges from '~/components/software/edit/links/EditSoftwareBadges'
 
 export default function EditSoftwareMetadataInputs() {
   // use form context to interact with form data
@@ -40,6 +41,7 @@ export default function EditSoftwareMetadataInputs() {
         <AutosaveConceptDoi />
         <AutosaveSoftwareLicenses />
         <AutosaveSoftwareKeywords />
+        <EditSoftwareBadges />
         {/* dynamically shown if enabled/used */}
         <AutosaveSoftwareCategories
           softwareId={id}
