@@ -103,10 +103,9 @@ export default function DoiInputDialogBody({onCancel, onSubmit}: DoiInputDialogB
         >
           Cancel
         </Button>
-        <div>
-          <div className={`flex-1 flex gap-4 text-sm ${error.message ? 'text-error ' : 'text-base-content-disabled'}` }>
-            <span>{error.message ? error.message : config.doiInput.helperText}...{`${error.count}/${config.doiInput.maxRows}`}</span>
-          </div>
+        {/* status message */}
+        <div className={`flex-1 flex gap-4 text-sm ${error.message ? 'text-error ' : 'text-base-content-disabled'}` }>
+          <span>{error.message ? error.message : config.doiInput.helperText}...{`${error.count}/${config.doiInput.maxRows}`}</span>
         </div>
       </DialogActions>
       {validating &&
