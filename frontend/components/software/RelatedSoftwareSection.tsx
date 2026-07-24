@@ -1,20 +1,19 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 'use client'
 
-import useMediaQuery from '@mui/material/useMediaQuery'
-
+import useSmallScreen from '~/config/useSmallScreen'
 import PageContainer from '~/components/layout/PageContainer'
 import RelatedSoftwareGrid, {SoftwareGridType} from './RelatedSoftwareGrid'
 
 export default function RelatedSoftwareSection({relatedSoftware = []}:Readonly<{relatedSoftware:SoftwareGridType[]}>) {
   // use media query hook for small screen logic
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   // adjust grid min width for mobile
   const minWidth = smallScreen ? '18rem' : '26rem'
   // do not render if no data

@@ -45,7 +45,6 @@ export default function SubmitButtonWithListener({disabled,formId}: SubmitButton
       type="submit"
       id="save-button"
       variant="contained"
-      tabIndex={0}
       form={formId}
       sx={{
         // overwrite tailwind preflight.css for submit type

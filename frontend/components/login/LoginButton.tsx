@@ -62,7 +62,6 @@ export default function LoginButton() {
   return (
     <div className="whitespace-nowrap ml-2">
       <button
-        tabIndex={0}
         onClick={()=>setOpen(true)}
       >
         Sign in

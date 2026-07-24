@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,38 +28,26 @@ export default function FiltersModal({open,setModal,children,title='Filters'}:Fi
       aria-labelledby="filters-panel"
       aria-describedby="filters-panel-responsive"
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         {title}
       </DialogTitle>
       <DialogContent>
-        <div className="flex py-8 flex-col gap-8">
-          {/* the filter content component is added here */}
-          {children}
-        </div>
+        {/* the filter content component is added here */}
+        {children}
       </DialogContent>
-      <DialogActions sx={{
-        padding: '1rem 1.5rem',
-        borderTop: '1px solid',
-        borderColor: 'divider'
-      }}>
-        <Button
-          onClick={()=>setModal(false)}
-          color="secondary"
-          sx={{marginRight:'2rem'}}
-        >
-          Cancel
-        </Button>
+      <DialogActions>
         <Button
           onClick={()=>setModal(false)}
           color="primary"
+          // variant="contained"
         >
           Apply
+        </Button>
+        <Button
+          onClick={()=>setModal(false)}
+          color="secondary"
+        >
+          Cancel
         </Button>
       </DialogActions>
     </Dialog>

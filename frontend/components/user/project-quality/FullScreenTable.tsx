@@ -1,8 +1,8 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,11 +26,7 @@ export default function FullScreenTable({children,onClose}: FullScreenTableProps
       open={true}
       onClose={onClose}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        color: 'secondary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         <div className="flex justify-between">
           <h2>Project metadata overview</h2>
           <IconButton onClick={onClose}>

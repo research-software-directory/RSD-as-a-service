@@ -48,11 +48,7 @@ export default function PacManSvcModal({
       open={true}
       onClose={onClose}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        fontWeight: 500,
-        // color: 'var(--rsd-base-content-secondary,#757575)'
-      }}>
+      <DialogTitle>
         <MiscellaneousServicesIcon
           sx={{
             width: '2rem',
@@ -67,22 +63,17 @@ export default function PacManSvcModal({
         width:['100%','33rem'],
         minHeight:'10rem',
       }}>
-
-        <div className="flex items-center gap-4 py-2 overflow-hidden wrap-anywhere">
+        <div className="flex items-center gap-4 overflow-hidden wrap-anywhere">
           <PackageMangerIcon platform={item.package_manager} />
           {item.url}
         </div>
-
         <PacManSvcReport
           item={item}
           settings={settings}
           onClear={onClear}
         />
-
       </DialogContent>
-      <DialogActions sx={{
-        padding: '1rem 1.5rem',
-      }}>
+      <DialogActions>
         <Button
           type="button"
           variant="contained"
