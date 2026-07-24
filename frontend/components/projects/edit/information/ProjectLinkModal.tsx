@@ -13,12 +13,12 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {useForm} from 'react-hook-form'
 
 import {useSession} from '~/auth/AuthProvider'
 import {ProjectLink} from '~/types/Project'
+import useSmallScreen from '~/config/useSmallScreen'
 import {addProjectLink, updateProjectLink} from '~/components/projects/edit/apiEditProject'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
@@ -39,7 +39,7 @@ const formId='edit-link-modal'
 export default function ProjectLinkModal({open, url_for_project, onCancel, onSubmit, pos}: ProjectProjectLinkModalProps) {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const {formState, reset, control, register, getValues} = useForm<ProjectLink>({
     mode: 'onChange',
     defaultValues: {

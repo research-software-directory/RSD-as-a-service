@@ -14,13 +14,13 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import Alert from '@mui/material/Alert'
 
 import {useForm} from 'react-hook-form'
 
 import {useSession} from '~/auth/AuthProvider'
 import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
+import useSmallScreen from '~/config/useSmallScreen'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ControlledSelect from '~/components/form/ControlledSelect'
@@ -54,8 +54,7 @@ const formId = 'edit-mention-form'
 export default function EditMentionModal({open, onCancel, onSubmit, item, pos, title}: EditMentionModalProps) {
   const {user} = useSession()
   const isAdmin = user?.role === 'rsd_admin'
-
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const {handleSubmit, watch, formState, reset, control, register, clearErrors} = useForm<MentionItemProps>({
     mode: 'onChange',
     defaultValues: {

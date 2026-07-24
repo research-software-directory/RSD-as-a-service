@@ -6,7 +6,6 @@
 import {useState} from 'react'
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -14,6 +13,7 @@ import DialogActions from '@mui/material/DialogActions'
 
 import {useForm} from 'react-hook-form'
 
+import useSmallScreen from '~/config/useSmallScreen'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
@@ -29,7 +29,7 @@ type RsdInfoModalProps=Readonly<{
 const formId='add-remote-rsd-form'
 
 function RsdInfoModal({onCancel,onSubmit}:RsdInfoModalProps){
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const {formState, control, watch, register, handleSubmit} = useForm<RsdInfo>({
     mode: 'onChange',
   })

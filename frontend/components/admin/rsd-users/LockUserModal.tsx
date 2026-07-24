@@ -8,10 +8,10 @@ import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import {useForm} from 'react-hook-form'
 
 import {useSession} from '~/auth/AuthProvider'
+import useSmallScreen from '~/config/useSmallScreen'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
@@ -61,7 +61,7 @@ function addToAdminNotes(account:LockAccountProps,userName?:string){
 
 export default function LockUserModal({account,onCancel,onSubmit}:LockUserModalProps) {
   const {user} = useSession()
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const {register, handleSubmit,formState,watch,control} = useForm<LockAccountProps>({
     mode: 'onChange',
     defaultValues: {

@@ -18,13 +18,13 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import CheckIcon from '@mui/icons-material/Check'
 import InfoIcon from '@mui/icons-material/Info'
 
 import {useForm} from 'react-hook-form'
 import {useSession} from '~/auth/AuthProvider'
 import useRsdSettings from '~/config/useRsdSettings'
+import useSmallScreen from '~/config/useSmallScreen'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import {UserSettingsType, patchAccountTable, useUserAgreements} from './useUserAgreements'
@@ -36,7 +36,7 @@ type UserSettingsModalForm = UserSettingsType & {
 export default function UserAgreementModal() {
   const {host} = useRsdSettings()
   const {token,user} = useSession()
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const router = useRouter()
   const {showErrorMessage} = useSnackbar()
   const {loading, agree_terms,notice_privacy_statement} = useUserAgreements()

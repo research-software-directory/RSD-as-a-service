@@ -13,11 +13,11 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {useForm} from 'react-hook-form'
 
 import {LicenseForSoftware} from '~/types/SoftwareTypes'
+import useSmallScreen from '~/config/useSmallScreen'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
@@ -34,7 +34,7 @@ export type EditLicenseModal = {
 const formId='edit-testimonial-modal'
 
 export default function EditLicenseModal({open, onCancel, onSubmit, data}: EditLicenseModal) {
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const {handleSubmit, watch, formState, reset, control, register} = useForm<LicenseForSoftware>({
     mode: 'onChange',
     defaultValues: {

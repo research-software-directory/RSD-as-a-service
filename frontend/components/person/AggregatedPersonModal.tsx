@@ -11,12 +11,12 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {UseFormSetValue, UseFormWatch, useForm} from 'react-hook-form'
 
 import {useSession} from '~/auth/AuthProvider'
 import {Person} from '~/types/Contributor'
+import useSmallScreen from '~/config/useSmallScreen'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
@@ -67,7 +67,7 @@ export default function AggregatedPersonModal({
   const {loading, options} = useAggregatedPerson(person?.orcid)
   const session = useSession()
   const isAdmin = session?.user?.role === 'rsd_admin'
-  const smallScreen = useMediaQuery('(max-width:640px)')
+  const smallScreen = useSmallScreen()
   const {handleSubmit, watch, formState, control, register, setValue, trigger} = useForm<FormPerson>({
     mode: 'onChange',
     defaultValues: {

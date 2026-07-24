@@ -14,12 +14,12 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import {UseFormSetValue, useForm} from 'react-hook-form'
 
 import {EditOrganisation} from '~/types/Organisation'
+import useSmallScreen from '~/config/useSmallScreen'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {organisationInformation as config} from '../editSoftwareConfig'
@@ -39,7 +39,7 @@ type EditOrganisationModalProps = {
 const formId='edit-organisation-modal'
 
 export default function EditOrganisationModal({open, onCancel, onSubmit, organisation, pos}: EditOrganisationModalProps) {
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const {handleSubmit, watch, formState, reset, control, register, setValue, trigger} = useForm<EditOrganisation>({
     mode: 'onChange',
     defaultValues: {

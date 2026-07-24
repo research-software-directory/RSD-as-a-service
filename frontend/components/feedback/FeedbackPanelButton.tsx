@@ -10,12 +10,16 @@
 import {useState} from 'react'
 import MailOutlineOutlined from '@mui/icons-material/MailOutlineOutlined'
 import Dialog from '@mui/material/Dialog'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import {useTheme} from '@mui/material/styles'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
 import LinkIcon from '@mui/icons-material/Link'
 import WebIcon from '@mui/icons-material/Web'
+import Button from '@mui/material/Button'
+import Alert from '@mui/material/Alert'
 
 import getBrowser from '~/utils/getBrowser'
+import useSmallScreen from '~/config/useSmallScreen'
 import CaretIcon from '~/components/icons/caret.svg'
 
 export type FeedbackPanelButtonProps=Readonly<{
@@ -31,8 +35,7 @@ export default function FeedbackPanelButton({
 }:FeedbackPanelButtonProps) {
   const [text, setText] = useState('')
   const [open, setOpen] = useState(false)
-  const theme = useTheme()
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const smallScreen = useSmallScreen()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -75,7 +78,6 @@ User Agent: ${navigator.userAgent}`
 
   return (
     <div>
-
       <button
         data-testid="feedback-button"
         className="flex gap-2 items-center no-underline"
@@ -83,57 +85,65 @@ User Agent: ${navigator.userAgent}`
       >
         Feedback <CaretIcon/>
       </button>
-
-      <Dialog
-        fullScreen={fullScreen}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="feedback-dialog-title"
-      >
-        <div className="h-full w-full bg-base-700 p-5 ">
-          <div className="mx-auto max-w-[500px]">
-            <h2 className="text-base-100 mb-4" id="feedback-dialog-title">
-              Send Feedback
-            </h2>
-            <textarea
-              autoFocus
-              className="placeholder:text-base-200 outline-0 p-2 w-full h-28 text-sm bg-base-700 text-base-200 border border-base-600 rounded-sm"
-              placeholder="Ideas on how to improve this page or report an issue?" value={text}
-              onChange={e => setText(e.target.value)}>
-            </textarea>
-
-            {/* Location URL */}
-            <div className="text-base-100 text-sm break-all">
-              <LinkIcon className="-rotate-45"/> {typeof location !== 'undefined' && location.href}
+      { open &&
+        <Dialog
+          fullScreen={smallScreen}
+          open={true}
+          onClose={handleClose}
+          aria-labelledby="feedback-dialog-title"
+        >
+          <DialogTitle sx={{border:'0px'}}>
+            Send Feedback
+          </DialogTitle>
+          <DialogContent>
+            <div>
+              <textarea
+                autoFocus
+                className="outline-0 p-2 w-full h-28 text-sm border rounded-sm"
+                placeholder="Ideas on how to improve this page or report an issue?" value={text}
+                onChange={e => setText(e.target.value)}>
+              </textarea>
+              {/* Location URL */}
+              <div className="flex gap-2 text-sm break-all text-base-content-secondary">
+                <LinkIcon className="-rotate-45"/> {typeof location !== 'undefined' && location.href}
+              </div>
+              {/* Browser user agent detection */}
+              <div className="flex gap-2 text-sm text-base-content-secondary mt-2">
+                <WebIcon/> {browserNameAndVersion()}
+              </div>
             </div>
-            {/* Browser user agent detection */}
-            <div className="text-base-100 text-sm mb-8">
-              <WebIcon/> {browserNameAndVersion()}
-            </div>
-
-            <div className="flex flex-row-reverse justify-start gap-4 w-full my-2">
-              <a
-                onClick={closeAndClean}
-                className="text-sm text-base-100 hover:text-base-100 bg-primary px-3 py-1 rounded-sm hover:opacity-90 active:opacity-95"
-                target="_blank"
-                rel="noreferrer"
-                href={`mailto:${feedback_email}?subject=${mailSubject()}&body=${mailBody()}`}
-              >
-                <MailOutlineOutlined/> Send feedback
-              </a>
-              <button
-                className="text-sm text-base-100 border border-base-400 opacity-60 rounded-sm px-3 py-1 hover:opacity-90 active:opacity-95"
-                onClick={closeAndClean}>
-                Cancel
-              </button>
-            </div>
-            <div className="text-sm mt-8 mb-6 text-base-100">
-              We will send your feedback using your default email application,
-              or you can <a className="text-primary" href={issues_page_url} target="_blank" rel="noreferrer"><u>open a new issue</u></a>
-            </div>
-          </div>
-        </div>
-      </Dialog>
+          </DialogContent>
+          <Alert severity='info' sx={{
+            '.MuiAlert-message':{
+              overflow:'visible'
+            }
+          }}>
+            We will send your feedback using your default email application,
+            or you can <a className="text-primary" href={issues_page_url} target="_blank" rel="noreferrer"><u>open a new issue</u></a>
+          </Alert>
+          <DialogActions sx={{border:'0px'}}>
+            {/*
+              Button order in the default styles is reversed  to achieve following goal:
+              First button in the tab order is first button at right side
+              */}
+            <Button
+              color="primary"
+              variant="contained"
+              endIcon={<MailOutlineOutlined/>}
+              disabled={text.length === 0}
+              href={`mailto:${feedback_email}?subject=${mailSubject()}&body=${mailBody()}`}
+            >
+              Send feedback
+            </Button>
+            <Button
+              color="secondary"
+              onClick={closeAndClean}
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+      }
     </div>
   )
 }

@@ -13,7 +13,6 @@ import {useEffect, useRef, useState} from 'react'
 
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -28,6 +27,7 @@ import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import ControlledTextField from '~/components/form/ControlledTextField'
+import useSmallScreen from '~/config/useSmallScreen'
 import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
 import config from './config'
 import {EditRemoteRsd, getRemoteName, isValidRemoteRsdUrl} from './apiRemoteRsd'
@@ -41,7 +41,7 @@ type RemoteRsdModalProps = Readonly<{
 const formId='add-remote-rsd-form'
 
 export default function RemoteRsdModal({remoteRsd,onCancel,onSubmit}:RemoteRsdModalProps) {
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const [validating, setValidating]=useState(false)
   const [remoteName, setRemoteName]=useState<string>()
   const {register, handleSubmit, watch, formState, control, setError, setValue} = useForm<EditRemoteRsd>({

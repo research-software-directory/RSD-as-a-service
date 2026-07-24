@@ -13,9 +13,10 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import DeleteIcon from '@mui/icons-material/Delete'
 import WarningIcon from '@mui/icons-material/Warning'
+
+import useSmallScreen from '~/config/useSmallScreen'
 
 type ConfirmDeleteModalProps = {
   open: boolean,
@@ -35,7 +36,7 @@ export default function ConfirmDeleteModal({
   onCancel, onDelete, removeDisabled = false
 }: ConfirmDeleteModalProps
 ) {
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   // console.group('ConfirmDeleteModal')
   // console.log('open...', open)
   // console.log('actions...', actions)

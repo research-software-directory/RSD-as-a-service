@@ -14,11 +14,11 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import {useForm} from 'react-hook-form'
 
-import ControlledTextField from '../../../form/ControlledTextField'
-import {NewTestimonial, Testimonial} from '../../../../types/Testimonial'
+import {NewTestimonial, Testimonial} from '~/types/Testimonial'
+import useSmallScreen from '~/config/useSmallScreen'
+import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
 
@@ -35,7 +35,7 @@ type EditTestimonialModalProps = {
 const formId='edit-testimonial-modal'
 
 export default function EditTestimonialModal({config,open,onCancel,onSubmit,testimonial,pos}: EditTestimonialModalProps) {
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const {handleSubmit, watch, formState, reset, control, register} = useForm<Testimonial|NewTestimonial>({
     mode: 'onChange',
     defaultValues: {

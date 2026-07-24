@@ -11,7 +11,6 @@
 
 import {useEffect, useState} from 'react'
 import Button from '@mui/material/Button'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -22,6 +21,7 @@ import {useForm} from 'react-hook-form'
 import {useSession} from '~/auth/AuthProvider'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {useDebounce} from '~/utils/useDebounce'
+import useSmallScreen from '~/config/useSmallScreen'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
@@ -52,7 +52,7 @@ const formId='add-page-form'
 
 export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalProps) {
   const {token} = useSession()
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const [baseUrl, setBaseUrl] = useState('')
   const [slugValue, setSlugValue] = useState('')
   const [validating, setValidating]=useState(false)

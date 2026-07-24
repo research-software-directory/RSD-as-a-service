@@ -11,7 +11,6 @@
 
 import {useEffect, useState} from 'react'
 import Button from '@mui/material/Button'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -22,6 +21,7 @@ import {UseFormSetValue, useForm} from 'react-hook-form'
 import {useSession} from '~/auth/AuthProvider'
 import {useDebounce} from '~/utils/useDebounce'
 import {getSlugFromString} from '~/utils/getSlugFromString'
+import useSmallScreen from '~/config/useSmallScreen'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import SlugTextField from '~/components/form/SlugTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
@@ -46,7 +46,7 @@ const formId='add-community-form'
 
 export default function AddCommunityModal({open,onCancel,onSubmit}:AddCommunityModalProps) {
   const {token} = useSession()
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const [baseUrl, setBaseUrl] = useState('')
   const [slugValue, setSlugValue] = useState('')
   const [validating, setValidating]=useState(false)

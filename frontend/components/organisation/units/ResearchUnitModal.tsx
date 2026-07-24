@@ -14,7 +14,6 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import Avatar from '@mui/material/Avatar'
 import TextField from '@mui/material/TextField'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -26,6 +25,7 @@ import {deleteImage, getImageUrl} from '~/utils/editImage'
 import {handleFileUpload} from '~/utils/handleFileUpload'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {EditOrganisation} from '~/types/Organisation'
+import useSmallScreen from '~/config/useSmallScreen'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
@@ -52,7 +52,7 @@ export default function ResearchUnitModal({
 }: EditOrganisationModalProps) {
   const {token} = useSession()
   const {showWarningMessage,showErrorMessage} = useSnackbar()
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const [baseUrl, setBaseUrl] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const {

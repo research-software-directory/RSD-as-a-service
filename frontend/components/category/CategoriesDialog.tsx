@@ -10,13 +10,13 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import SaveIcon from '@mui/icons-material/Save'
 import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 
 import {TreeNode} from '~/types/TreeNode'
 import {CategoryEntry} from '~/types/Category'
+import useSmallScreen from '~/config/useSmallScreen'
 import SearchInput from '../search/SearchInput'
 import CategoriesDialogBody from './CategoriesDialogBody'
 
@@ -36,7 +36,7 @@ export default function CategoriesDialog({
   state,errorMsg,noItemsMsg,
   onCancel,onSave
 }:CategoriesDialogProps) {
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<Set<string>>(new Set())
   const [searchFor, setSearchFor] = useState<string>()
 
