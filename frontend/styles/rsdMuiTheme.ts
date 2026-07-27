@@ -357,6 +357,64 @@ function applyThemeConfig({colors, action, typography}: ThemeConfig) {
           },
         },
       },
+      MuiDialog: {
+        styleOverrides: {
+          // Target the actual container box of the dialog content
+          // paper: ({theme}) => ({
+          //   // Mobile configuration (default / extra-small viewports up)
+          //   width: '100%',
+          //   // Keep small safe-margins on mobile screen edges
+          //   margin: theme.spacing(2)
+          // }),
+        },
+      },
+      // 1. DialogTitle Overrides
+      MuiDialogTitle: {
+        styleOverrides: {
+          root: ({theme}) => ({
+            fontSize: '1.5rem',
+            borderBottom: '1px solid',
+            borderColor: theme.palette.divider,
+            color: theme.palette.primary.main,
+            fontWeight: 500
+          }),
+        },
+      },
+      // 2. DialogContent Overrides
+      MuiDialogContent: {
+        styleOverrides: {
+          root:({theme})=>({
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '2rem 1.5rem',
+            gap: '2rem',
+            minHeight:'10rem',
+            // overwrite 0 to 1rem
+            '.MuiDialogTitle-root + &': {
+              paddingTop: '1rem',
+            },
+            // Desktop configuration (Switches when viewport hits 'sm' breakpoint or higher)
+            [theme.breakpoints.up('sm')]: {
+              minWidth: '37rem',
+              // Blocks MUI's internal maxWidth layout presets
+              // maxWidth: '37rem',
+            },
+          }),
+        },
+      },
+      // 3. DialogActions Overrides
+      MuiDialogActions: {
+        styleOverrides: {
+          root: ({theme}) => ({
+            padding: '1rem 1.5rem',
+            borderTop: '1px solid',
+            borderColor: theme.palette.divider,
+            flexDirection: 'row-reverse',
+            justifyContent: 'flex-start',
+            gap:'1rem',
+          }),
+        },
+      },
     },
   })
 }

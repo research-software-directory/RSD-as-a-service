@@ -111,7 +111,7 @@ export default function ControlledImageInput({name,logo_b64,logo_id,setValue}:Im
         onChange={onFileUpload}
         inputRef={fileInputRef}
       />
-      <div className="flex pt-4">
+      <div className="flex">
         <Button
           title="Remove image"
           // color='primary'

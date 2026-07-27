@@ -249,18 +249,17 @@ export default function AddProjectCard() {
           register={register('slug', config.slug.validation)}
         />
       </section>
-      <section className='flex justify-end'>
+      <section className='flex flex-row-reverse gap-4'>
+        <SubmitButtonWithListener
+          formId={formId}
+          disabled={isSaveDisabled()}
+        />
         <Button
           onClick={handleCancel}
           color="secondary"
-          sx={{marginRight:'2rem'}}
         >
           Cancel
         </Button>
-        <SubmitButtonWithListener
-          disabled={isSaveDisabled()}
-          formId={formId}
-        />
       </section>
     </form>
   )

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -61,19 +61,20 @@ describe('components/mention/ImportMentions/index.tsx', () => {
     // has two buttons
     const btns = within(importDialog).getAllByRole('button')
     expect(btns.length).toBe(2)
+    const nextBtn = screen.getByRole('button', {name: 'Next'})
 
     // Next button is disabled
-    expect(btns[1]).toBeDisabled()
+    expect(nextBtn).toBeDisabled()
 
     // input DOI's
     const input = screen.getByRole('textbox')
     fireEvent.change(input,{target:{value:mockDoiList.join('\n')}})
 
     // check Next in enabled
-    expect(btns[1]).toBeEnabled()
+    expect(nextBtn).toBeEnabled()
 
     // click next
-    fireEvent.click(btns[1])
+    fireEvent.click(nextBtn)
 
     // shows Import button after succefol validation
     await screen.findByRole('button',{name:'Import'})
@@ -113,17 +114,18 @@ describe('components/mention/ImportMentions/index.tsx', () => {
     expect(btns.length).toBe(2)
 
     // Next button is disabled
-    expect(btns[1]).toBeDisabled()
+    const nextBtn = screen.getByRole('button', {name: 'Next'})
+    expect(nextBtn).toBeDisabled()
 
     // input DOI's
     const input = screen.getByRole('textbox')
     fireEvent.change(input,{target:{value:mockDoiList.join('\n')}})
 
     // check Next in enabled
-    expect(btns[1]).toBeEnabled()
+    expect(nextBtn).toBeEnabled()
 
     // click next
-    fireEvent.click(btns[1])
+    fireEvent.click(nextBtn)
 
     // shows Import button after succefol validation
     await screen.findByRole('button',{name:'Import'})

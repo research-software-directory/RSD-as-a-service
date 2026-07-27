@@ -266,19 +266,23 @@ export default function CategoryEditForm({
         :null
       }
 
-      <div className="flex gap-4 justify-end pt-8 pb-4">
+      <div className="flex flex-row-reverse gap-4 justify-start pt-8 pb-4">
+        {/*
+          Button order in the default styles is reversed  to achieve following goals:
+          First button in the tab order is first button at right side
+        */}
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={disableSave || !formState.isValid}>
+          Save
+        </Button>
         <Button
           variant="text"
           color="secondary"
           onClick={onCancel}
         >
           Cancel
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          disabled={disableSave || !formState.isValid}>
-          Save
         </Button>
       </div>
     </form>

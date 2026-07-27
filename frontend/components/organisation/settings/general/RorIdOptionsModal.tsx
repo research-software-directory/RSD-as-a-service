@@ -66,25 +66,15 @@ export default function RorIdOptionsModal({open,options,onSelect}:RorIdOptionsMo
       open={open}
       onClose={handleClose}
     >
-      <DialogTitle
-        color='primary'
-        sx={{
-          fontSize:'2rem'
-        }}
-      >
+      <DialogTitle>
         Find ROR id
       </DialogTitle>
-      <DialogContent
-        sx={{
-          width:'30rem'
-        }}
-      >
-        <p className="pb-8">
+      <DialogContent>
+        <p className="pt-4">
           Failed to find exact match on the organisation name in ROR database.
           Please select an organisation from the alternatives or use
           Cancel button to abort the process.
         </p>
-
         <Select
           labelId="demo-dialog-select-label"
           id="select-organisation"
@@ -97,26 +87,22 @@ export default function RorIdOptionsModal({open,options,onSelect}:RorIdOptionsMo
         >
           {renderOptions()}
         </Select>
-
       </DialogContent>
-      <DialogActions
-        sx={{
-          padding:'1.5rem'
-        }}
-      >
-        <Button
-          onClick={handleClose}
-          color="secondary"
-          sx={{
-            marginRight:'1rem'
-          }}
-        >
-          Cancel
-        </Button>
+      <DialogActions>
+        {/*
+          Button order in the default styles is reversed  to achieve following goals:
+          First button in the tab order is first button at right side
+        */}
         <Button
           variant="contained"
           onClick={handleClose}>
           Select
+        </Button>
+        <Button
+          onClick={handleClose}
+          color="secondary"
+        >
+          Cancel
         </Button>
       </DialogActions>
     </Dialog>

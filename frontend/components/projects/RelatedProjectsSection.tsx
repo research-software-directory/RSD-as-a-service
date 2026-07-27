@@ -7,16 +7,15 @@
 
 'use client'
 
-import useMediaQuery from '@mui/material/useMediaQuery'
-
-import {RelatedProject} from '../../types/Project'
-import PageContainer from '../layout/PageContainer'
+import {RelatedProject} from '~/types/Project'
+import useSmallScreen from '~/config/useSmallScreen'
+import PageContainer from '~/components/layout/PageContainer'
 import RelatedProjectsGrid from './RelatedProjectsGrid'
 
 export default function RelatedProjectsSection({relatedProjects}:
 Readonly<{relatedProjects: RelatedProject[]}>) {
   // use media query hook for small screen logic
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   // adjust grid min width for mobile
   const minWidth = smallScreen ? '18rem' : '26rem'
   // do not show section if no data

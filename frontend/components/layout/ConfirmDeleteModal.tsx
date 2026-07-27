@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,9 +13,10 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import DeleteIcon from '@mui/icons-material/Delete'
 import WarningIcon from '@mui/icons-material/Warning'
+
+import useSmallScreen from '~/config/useSmallScreen'
 
 type ConfirmDeleteModalProps = {
   open: boolean,
@@ -35,7 +36,7 @@ export default function ConfirmDeleteModal({
   onCancel, onDelete, removeDisabled = false
 }: ConfirmDeleteModalProps
 ) {
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   // console.group('ConfirmDeleteModal')
   // console.log('open...', open)
   // console.log('actions...', actions)
@@ -49,9 +50,7 @@ export default function ConfirmDeleteModal({
       onClose={onCancel}
     >
       <DialogTitle sx={{
-        fontSize: '1.5rem',
-        color: 'secondary.main',
-        fontWeight: 500
+        color: 'secondary.main'
       }}>
         <WarningIcon
           color="error"
@@ -70,19 +69,7 @@ export default function ConfirmDeleteModal({
           {body}
         </section>
       </DialogContent>
-      <DialogActions sx={{
-        padding: '1rem 1.5rem',
-      }}>
-
-        <Button
-          onClick={onCancel}
-          color="secondary"
-          sx={{
-            marginRight: '1rem',
-          }}
-        >
-          Cancel
-        </Button>
+      <DialogActions>
         <Button
           disabled={removeDisabled}
           type="button"
@@ -94,6 +81,12 @@ export default function ConfirmDeleteModal({
           onClick={onDelete}
         >
           Remove
+        </Button>
+        <Button
+          onClick={onCancel}
+          color="secondary"
+        >
+          Cancel
         </Button>
       </DialogActions>
     </Dialog>

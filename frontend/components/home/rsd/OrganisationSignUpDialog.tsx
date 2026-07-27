@@ -4,14 +4,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Dialog from '@mui/material/Dialog'
-import {useTheme} from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
-
 import {useForm} from 'react-hook-form'
 
 import {home_config,organisationSignUp} from './home_config'
 import useRsdSettings from '~/config/useRsdSettings'
 import MailOutlineOutlined from '@mui/icons-material/MailOutlineOutlined'
+import useSmallScreen from '~/config/useSmallScreen'
 
 type OrganisationSignUpDialogProps = {
   title: string
@@ -34,8 +32,7 @@ export default function OrganisationSignUpDialog({
   title, open, onClose, initOrg,
   reason='I would like to add my organisation to RSD!'
 }: OrganisationSignUpDialogProps) {
-  const theme = useTheme()
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const smallScreen = useSmallScreen()
   const {host} = useRsdSettings()
 
   const {register, watch, reset} = useForm<SignUpOrganisation>({
@@ -78,7 +75,7 @@ export default function OrganisationSignUpDialog({
 
   return (
     <Dialog
-      fullScreen={fullScreen}
+      fullScreen={smallScreen}
       open={open}
       onClose={(e, reason) => {
         if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {

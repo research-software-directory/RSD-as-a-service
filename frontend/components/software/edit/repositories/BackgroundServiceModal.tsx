@@ -48,11 +48,7 @@ export default function BackgroundServiceModal({
       open={true}
       onClose={onClose}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        fontWeight: 500,
-        // color: 'var(--rsd-base-content-secondary,#757575)'
-      }}>
+      <DialogTitle>
         <MiscellaneousServicesIcon
           sx={{
             width: '2rem',
@@ -64,8 +60,7 @@ export default function BackgroundServiceModal({
       </DialogTitle>
 
       <DialogContent sx={{
-        width:['100%','33rem'],
-        minHeight:'10rem'
+        width:['100%','33rem']
       }}>
 
         <div className="flex items-center gap-4 py-2 pl-2">
@@ -88,9 +83,7 @@ export default function BackgroundServiceModal({
         />
 
       </DialogContent>
-      <DialogActions sx={{
-        padding: '1rem 1.5rem',
-      }}>
+      <DialogActions>
         <Button
           type="button"
           variant="contained"

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -12,16 +12,16 @@ import {useEffect, useState} from 'react'
 import List from '@mui/material/List'
 import Button from '@mui/material/Button'
 import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogActions from '@mui/material/DialogActions'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Switch from '@mui/material/Switch'
 import PostAddIcon from '@mui/icons-material/PostAdd'
 
+import SanitizedMathMLBox from '~/components/layout/SanitizedMathMLBox'
 import {SearchResult} from './index'
 import {DoiBulkImportReport} from './apiImportMentions'
-import ImportDialogTitle from './ImportDialogTitle'
-import ImportDialogActions from './ImportDialogActions'
-import SanitizedMathMLBox from '~/components/layout/SanitizedMathMLBox'
 
 type BulkImportReportBodyProps = {
   initialResults: DoiBulkImportReport
@@ -157,33 +157,30 @@ export default function ImportReportBody({initialResults,onCancel,onImport}: Bul
 
   return (
     <>
-      <ImportDialogTitle
-        title={`Selection report (${validCnt} of ${searchResults?.length ?? 0} items)`}
-      />
+      <DialogTitle>
+        {`Selection report (${validCnt} of ${searchResults?.length ?? 0} items)`}
+      </DialogTitle>
       <DialogContent>
         <List>
           {renderListItems()}
         </List>
       </DialogContent>
-      <ImportDialogActions>
-        <Button
-          tabIndex={1}
-          onClick={onCancel}
-          color="secondary"
-          sx={{marginRight:'2rem'}}
-        >
-          Cancel
-        </Button>
+      <DialogActions>
         <Button
           variant="contained"
           endIcon={<PostAddIcon />}
-          tabIndex={0}
           disabled={validCnt===0}
           onClick={startImport}
         >
           Import
         </Button>
-      </ImportDialogActions>
+        <Button
+          onClick={onCancel}
+          color="secondary"
+        >
+          Cancel
+        </Button>
+      </DialogActions>
     </>
   )
 }

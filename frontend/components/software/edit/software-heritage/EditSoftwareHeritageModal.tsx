@@ -3,8 +3,8 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,15 +14,15 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {useForm} from 'react-hook-form'
 
 import ControlledTextField from '~/components/form/ControlledTextField'
+import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
-
 import {cfg} from './config'
 import {NewSoftwareHeritage, SoftwareHeritageItem} from './apiSoftwareHeritage'
+import useSmallScreen from '~/config/useSmallScreen'
 
 type EditSoftwareHeritageModalProps = Readonly<{
   onCancel: () => void,
@@ -33,13 +33,14 @@ type EditSoftwareHeritageModalProps = Readonly<{
 const formId='edit-software-heritage-modal'
 
 export default function EditSoftwareHeritageModal({onCancel, onSubmit, swhid_item}: EditSoftwareHeritageModalProps) {
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const {handleSubmit, watch, formState, control, register} = useForm<SoftwareHeritageItem|NewSoftwareHeritage>({
     mode: 'onChange',
     defaultValues: swhid_item
   })
-  // extract form states and possible errors
-  const {isValid, isDirty, errors} = formState
+  // use hook to decide if save buttons should be disabled
+  const saveDisabled = useSaveDisabledFormState(formState)
+  const {errors} = formState
   // watch for value changes in the form
   const [swhid] = watch(['swhid'])
 
@@ -49,26 +50,15 @@ export default function EditSoftwareHeritageModal({onCancel, onSubmit, swhid_ite
   // console.log('swhid...', swhid)
   // console.groupEnd()
 
-  function handleCancel() {
-    // hide
-    onCancel()
-  }
-
   return (
     <Dialog
       data-testid="edit-software-heritage-modal"
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
       open={true}
-      onClose={handleCancel}
+      onClose={onCancel}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         Software Heritage ID
       </DialogTitle>
       <form
@@ -86,10 +76,7 @@ export default function EditSoftwareHeritageModal({onCancel, onSubmit, swhid_ite
         <input type="hidden"
           {...register('position')}
         />
-        <DialogContent sx={{
-          width: ['100%', '37rem'],
-          padding: '2rem 1.5rem 2.5rem'
-        }}>
+        <DialogContent>
           <ControlledTextField
             control={control}
             options={{
@@ -102,33 +89,24 @@ export default function EditSoftwareHeritageModal({onCancel, onSubmit, swhid_ite
             }}
             rules={cfg.modal.swhid.validation}
           />
-
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider'
-        }}>
+        <DialogActions>
+          {/*
+            Button order in the default styles is reversed  to achieve following goals:
+            First button in the tab order is first button at right side
+          */}
+          <SubmitButtonWithListener
+            formId={formId}
+            disabled={saveDisabled}
+          />
           <Button
-            tabIndex={1}
-            onClick={handleCancel}
+            onClick={onCancel}
             color="secondary"
-            sx={{marginRight:'2rem'}}
           >
             Cancel
           </Button>
-          <SubmitButtonWithListener
-            formId={formId}
-            disabled={isSaveDisabled()}
-          />
         </DialogActions>
       </form>
     </Dialog>
   )
-
-  function isSaveDisabled() {
-    if (isValid === false) return true
-    if (isDirty === false) return true
-    return false
-  }
 }

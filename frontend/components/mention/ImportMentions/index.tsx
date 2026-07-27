@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -11,12 +11,12 @@ import {useState} from 'react'
 
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import PostAddIcon from '@mui/icons-material/PostAdd'
 
 import {useSession} from '~/auth/AuthProvider'
 import logger from '~/utils/logger'
 import {MentionItemProps} from '~/types/Mention'
+import useSmallScreen from '~/config/useSmallScreen'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ImportReportBody from './ImportReportBody'
 import DoiInputBody from './DoiInputBody'
@@ -39,7 +39,7 @@ type ImportMentionsProps = {
 export default function ImportMentions({table, entityId, onSuccess}:ImportMentionsProps) {
   const {token} = useSession()
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
-  const smallScreen = useMediaQuery('(max-width:768px)')
+  const smallScreen = useSmallScreen()
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
   const [searchResults, setSearchResults] = useState<DoiBulkImportReport>(null)
 

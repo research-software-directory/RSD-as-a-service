@@ -115,13 +115,7 @@ export default function PackageManagerModal({package_manager, onCancel, onSubmit
       open={true}
       onClose={handleCancel}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         Software download location
       </DialogTitle>
       <form
@@ -142,10 +136,7 @@ export default function PackageManagerModal({package_manager, onCancel, onSubmit
         <input type="hidden"
           {...register('position')}
         />
-        <DialogContent sx={{
-          width: ['100%', '37rem'],
-          padding: '2rem 1.5rem 2.5rem'
-        }}>
+        <DialogContent>
           <ControlledTextField
             control={control}
             options={{
@@ -163,7 +154,6 @@ export default function PackageManagerModal({package_manager, onCancel, onSubmit
             }}
             rules={cfg.modal.url.validation}
           />
-          <div className="py-4"/>
           {/* code platform */}
           <ControlledSelect
             name="package_manager"
@@ -182,23 +172,21 @@ export default function PackageManagerModal({package_manager, onCancel, onSubmit
           {/* info about code platform */}
           <AutodetectPlatformInfo />
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider'
-        }}>
-          <Button
-            tabIndex={1} //NOSONAR
-            onClick={handleCancel}
-            color="secondary"
-            sx={{marginRight:'2rem'}}
-          >
-            Cancel
-          </Button>
+        <DialogActions>
+          {/*
+            Button order in the default styles is reversed  to achieve following goals:
+            First button in the tab order is first button at right side
+          */}
           <SubmitButtonWithListener
             formId={formId}
             disabled={isSaveDisabled()}
           />
+          <Button
+            onClick={handleCancel}
+            color="secondary"
+          >
+            Cancel
+          </Button>
         </DialogActions>
       </form>
     </Dialog>

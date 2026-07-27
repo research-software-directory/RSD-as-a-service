@@ -257,18 +257,17 @@ export default function AddSoftwareCard() {
           register={register('slug',config.slug.validation)}
         />
       </section>
-      <section className='flex justify-end'>
-        <Button
-          onClick={handleCancel}
-          color="secondary"
-          sx={{marginRight:'2rem'}}
-        >
-          Cancel
-        </Button>
+      <section className='flex flex-row-reverse gap-4'>
         <SubmitButtonWithListener
           formId={formId}
           disabled={isSaveDisabled()}
         />
+        <Button
+          onClick={handleCancel}
+          color="secondary"
+        >
+          Cancel
+        </Button>
       </section>
     </form>
   )

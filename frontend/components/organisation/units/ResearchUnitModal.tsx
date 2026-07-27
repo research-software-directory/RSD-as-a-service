@@ -14,7 +14,6 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import Avatar from '@mui/material/Avatar'
 import TextField from '@mui/material/TextField'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -26,11 +25,13 @@ import {deleteImage, getImageUrl} from '~/utils/editImage'
 import {handleFileUpload} from '~/utils/handleFileUpload'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {EditOrganisation} from '~/types/Organisation'
+import useSmallScreen from '~/config/useSmallScreen'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ControlledTextField from '~/components/form/ControlledTextField'
+import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ImageInput from '~/components/form/ImageInput'
 import ImageDropZone from '~/components/form/ImageDropZone'
-import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import config from '~/components/organisation/settings/general/generalSettingsConfig'
 
 type EditOrganisationModalProps = {
@@ -51,7 +52,7 @@ export default function ResearchUnitModal({
 }: EditOrganisationModalProps) {
   const {token} = useSession()
   const {showWarningMessage,showErrorMessage} = useSnackbar()
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useSmallScreen()
   const [baseUrl, setBaseUrl] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const {
@@ -62,9 +63,11 @@ export default function ResearchUnitModal({
       ...organisation
     }
   })
-
+  // use hook to decide if save buttons should be disabled
+  const saveDisabled = useSaveDisabledFormState(formState)
+  const {errors} = formState
   // extract
-  const {isValid, isDirty, errors} = formState
+  // const {isValid, isDirty, errors} = formState
   const formData = watch()
 
   // console.group('ResearchUnitModal')
@@ -152,13 +155,7 @@ export default function ResearchUnitModal({
       open={open}
       onClose={handleCancel}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         {title}
       </DialogTitle>
       <form
@@ -179,10 +176,7 @@ export default function ResearchUnitModal({
         <input type="hidden"
           {...register('logo_id')}
         />
-        <DialogContent sx={{
-          width: '100%',
-          padding: '2rem 1.5rem 2.5rem'
-        }}>
+        <DialogContent>
           <section className="grid grid-cols-[1fr_3fr] gap-8">
             <div>
               <ImageDropZone
@@ -254,7 +248,6 @@ export default function ResearchUnitModal({
               />
             </div>
           </section>
-          <div className="py-2"></div>
           <ControlledTextField
             control={control}
             options={{
@@ -269,40 +262,38 @@ export default function ResearchUnitModal({
             rules={config.website.validation}
           />
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider'
-        }}>
+        <DialogActions>
+          {/*
+            Button order in the default styles is reversed  to achieve following goals:
+            First button in the tab order is first button at right side
+          */}
+          <SubmitButtonWithListener
+            disabled={saveDisabled}
+            formId={formId}
+          />
           <Button
-            tabIndex={1}
             onClick={handleCancel}
             color="secondary"
-            sx={{marginRight:'2rem'}}
           >
             Cancel
           </Button>
-          <SubmitButtonWithListener
-            disabled={isSaveDisabled()}
-            formId={formId}
-          />
         </DialogActions>
       </form>
     </Dialog>
   )
 
-  function isSaveDisabled() {
-    // if pos is undefined we are creating
-    // new entry, but we might already have required
-    // information (first name - last name). In this
-    // case we only check if form is valid
-    if (typeof pos == 'undefined') {
-      if (isValid === false) return true
-    } else {
-      if (isValid === false) return true
-      if (isDirty === false) return true
-    }
-    return false
-  }
+  // function isSaveDisabled() {
+  //   // if pos is undefined we are creating
+  //   // new entry, but we might already have required
+  //   // information (first name - last name). In this
+  //   // case we only check if form is valid
+  //   if (typeof pos == 'undefined') {
+  //     if (isValid === false) return true
+  //   } else {
+  //     if (isValid === false) return true
+  //     if (isDirty === false) return true
+  //   }
+  //   return false
+  // }
 }
 

@@ -92,7 +92,7 @@ export default function AvatarOptions(props: AvatarOptionsProps) {
               justifyContent: 'flex-start',
               gap:'0.25rem',
               maxHeight: '10rem',
-              overflow: 'auto'
+              // overflow: 'auto'
             }}
           >
             {avatar_options.map(img => {

@@ -25,6 +25,7 @@ import {
   CodePlatform, EditRepositoryProps,
   getSoftwareRepositoryByUrl, suggestPlatform
 } from './apiRepositories'
+import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
 
 type EditSoftwareHeritageModalProps = Readonly<{
   onCancel: () => void,
@@ -48,8 +49,9 @@ export default function SoftwareRepositoryModal({onCancel, onSubmit, item}: Edit
     mode: 'onChange',
     defaultValues: item
   })
-  // extract form states and possible errors
-  const {isValid, isDirty, errors} = formState
+  // use hook to decide if save buttons should be disabled
+  const saveDisabled = useSaveDisabledFormState(formState)
+  const {errors} = formState
   // watch for value changes in the form
   const [url,code_platform] = watch(['url','code_platform'])
   // take the last slugValue
@@ -117,13 +119,7 @@ export default function SoftwareRepositoryModal({onCancel, onSubmit, item}: Edit
       open={true}
       onClose={handleCancel}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         Software repository
       </DialogTitle>
       <form
@@ -138,13 +134,7 @@ export default function SoftwareRepositoryModal({onCancel, onSubmit, item}: Edit
         <input type="hidden"
           {...register('position')}
         />
-        <DialogContent sx={{
-          width: ['100%', '37rem'],
-          padding: '2.5rem 1.5rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2rem'
-        }}>
+        <DialogContent>
           {/* repository url */}
           <ControlledTextField
             control={control}
@@ -178,31 +168,19 @@ export default function SoftwareRepositoryModal({onCancel, onSubmit, item}: Edit
           {/* info about code platform */}
           <AutodetectPlatformInfo />
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider'
-        }}>
+        <DialogActions>
+          <SubmitButtonWithListener
+            formId={formId}
+            disabled={saveDisabled}
+          />
           <Button
-            tabIndex={1} //NOSONAR
             onClick={handleCancel}
             color="secondary"
-            sx={{marginRight:'2rem'}}
           >
             Cancel
           </Button>
-          <SubmitButtonWithListener
-            formId={formId}
-            disabled={isSaveDisabled()}
-          />
         </DialogActions>
       </form>
     </Dialog>
   )
-
-  function isSaveDisabled() {
-    if (isValid === false) return true
-    if (isDirty === false) return true
-    return false
-  }
 }

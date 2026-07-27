@@ -22,6 +22,7 @@ import useSmallScreen from '~/config/useSmallScreen'
 import {useDebounce} from '~/utils/useDebounce'
 import ControlledSelect from '~/components/form/ControlledSelect'
 import ControlledTextField from '~/components/form/ControlledTextField'
+import {useSaveDisabledFormState} from '~/components/form/useSaveDisabledFormState'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {
   getPackageManagerServices,
@@ -52,8 +53,10 @@ export default function EditPackageManagerModal({onCancel, onSubmit, package_man
     mode: 'onChange',
     defaultValues: package_manager
   })
+  // use hook to decide if save buttons should be disabled
+  const saveDisabled = useSaveDisabledFormState(formState)
   // extract form states and possible errors
-  const {isValid, isDirty, errors} = formState
+  const {errors} = formState
   // watch for value changes in the form
   const [
     url,
@@ -119,13 +122,7 @@ export default function EditPackageManagerModal({onCancel, onSubmit, package_man
       open={true}
       onClose={handleCancel}
     >
-      <DialogTitle sx={{
-        fontSize: '1.5rem',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        color: 'primary.main',
-        fontWeight: 500
-      }}>
+      <DialogTitle>
         Software download location
       </DialogTitle>
       <form
@@ -146,13 +143,7 @@ export default function EditPackageManagerModal({onCancel, onSubmit, package_man
         <input type="hidden"
           {...register('position')}
         />
-        <DialogContent sx={{
-          width: ['100%', '37rem'],
-          padding: '2rem 1.5rem 2.5rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2rem'
-        }}>
+        <DialogContent>
           <ControlledTextField
             control={control}
             options={{
@@ -243,36 +234,27 @@ export default function EditPackageManagerModal({onCancel, onSubmit, package_man
               </>
               : null
           }
-          <div className="pt-4 px-1 text-base-content-disabled text-sm">
+          <div className="px-1 text-base-content-disabled text-sm">
             RSD background services: {packageManagerServices.length}
           </div>
         </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-          borderTop: '1px solid',
-          borderColor: 'divider'
-        }}>
+        <DialogActions>
+          {/*
+            Button order in the default styles is reversed  to achieve following goal:
+            First button in the tab order is first button at right side
+          */}
+          <SubmitButtonWithListener
+            formId={formId}
+            disabled={saveDisabled}
+          />
           <Button
-            tabIndex={1} //NOSONAR
             onClick={handleCancel}
             color="secondary"
-            sx={{marginRight:'2rem'}}
           >
             Cancel
           </Button>
-          <SubmitButtonWithListener
-            formId={formId}
-            disabled={isSaveDisabled()}
-          />
         </DialogActions>
       </form>
     </Dialog>
   )
-
-  function isSaveDisabled() {
-    if (isValid === false) return true
-    if (isDirty === false) return true
-    if (url !== bouncedUrl) return true
-    return false
-  }
 }
