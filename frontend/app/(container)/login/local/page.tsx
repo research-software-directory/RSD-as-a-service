@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2026 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {Metadata} from 'next'
 
 import Button from '@mui/material/Button'
@@ -26,6 +31,7 @@ export default async function LocalLoginPage() {
         >
           <TextField
             required
+            autoFocus={true}
             slotProps={{
               htmlInput: {pattern: '\\w+'}} // NOSONAR
             }
