@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,6 +8,7 @@
 import {useState} from 'react'
 import Button from '@mui/material/Button'
 
+import {CategoryEntry} from '~/types/Category'
 import useSmallScreen from '~/config/useSmallScreen'
 import {useUserSettings} from '~/config/UserSettingsContext'
 import {getPageRange} from '~/utils/pagination'
@@ -28,12 +29,13 @@ type SearchSoftwareSectionProps = {
   keywordsList: KeywordFilterOption[],
   languagesList: LanguagesFilterOption[],
   licensesList: LicensesFilterOption[],
-  categoryList: CategoryOption[]
+  categoryList: CategoryOption[],
+  categoryEntry: CategoryEntry[]
 }
 
 export default function SearchCommunitySoftwareSection({
   count, keywordsList, languagesList,
-  licensesList, categoryList,
+  licensesList, categoryList, categoryEntry
 }: SearchSoftwareSectionProps) {
 
   const smallScreen = useSmallScreen()
@@ -96,6 +98,7 @@ export default function SearchCommunitySoftwareSection({
             languagesList={languagesList}
             licensesList={licensesList}
             categoryList={categoryList}
+            categoryEntry={categoryEntry}
           />
         </FiltersModal>
         : undefined

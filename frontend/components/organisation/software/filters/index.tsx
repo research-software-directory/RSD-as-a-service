@@ -8,6 +8,7 @@
 'use client'
 
 import {decodeJsonParam} from '~/utils/extractQueryParam'
+import useCategoryFilterCnt from '~/components/category/useCategoryFilterCnt'
 import useQueryChange from '~/components/organisation/projects/useQueryChange'
 import KeywordsFilter from '~/components/filter/KeywordsFilter'
 import FilterHeader from '~/components/filter/FilterHeader'
@@ -29,6 +30,13 @@ export default function OrgSoftwareFilters() {
   const {languagesList} = useOrgSoftwareLanguagesList()
   const {licensesList} = useOrgSoftwareLicensesList()
   const {categoryFilters} = useOrgSoftwareCategoriesList()
+  // include separate categories filters to total filter count
+  const {activeCnt:totFilterCnt} = useCategoryFilterCnt({
+    categoryFilters,
+    categories_json,
+    // provide base count without categories_json
+    baseCnt: categories_json ? filterCnt - 1 : filterCnt
+  })
 
   const keywords = decodeJsonParam(keywords_json, [])
   const prog_lang = decodeJsonParam(prog_lang_json, [])
@@ -42,14 +50,14 @@ export default function OrgSoftwareFilters() {
 
   // debugger
   function clearDisabled() {
-    if (filterCnt && filterCnt > 0) return false
+    if (totFilterCnt && totFilterCnt > 0) return false
     return true
   }
 
   return (
     <>
       <FilterHeader
-        filterCnt={filterCnt}
+        filterCnt={totFilterCnt}
         disableClear={clearDisabled()}
         resetFilters={()=>resetFilters('software')}
       />

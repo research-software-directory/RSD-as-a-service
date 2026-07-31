@@ -10,6 +10,7 @@
 import FilterHeader from '~/components/filter/FilterHeader'
 
 import {decodeJsonParam} from '~/utils/extractQueryParam'
+import useCategoryFilterCnt from '~/components/category/useCategoryFilterCnt'
 import KeywordsFilter from '~/components/filter/KeywordsFilter'
 import ResearchDomainFilter from '~/components/filter/ResearchDomainFilter'
 import OrganisationsFilter from '~/components/filter/OrganisationsFilter'
@@ -32,6 +33,13 @@ export default function OrgProjectFilters() {
   const {organisationList} = useOrgProjectOrganisationList()
   const {statusList} = useOrgProjectStatusList()
   const {categoryFilters} = useOrgProjectCategoriesList()
+  // include separate categories filters to total filter count
+  const {activeCnt:totFilterCnt} = useCategoryFilterCnt({
+    categoryFilters,
+    categories_json,
+    // provide base count without categories_json
+    baseCnt: categories_json ? filterCnt - 1 : filterCnt
+  })
 
   const keywords = decodeJsonParam(keywords_json, [])
   const domains = decodeJsonParam(domains_json, [])
@@ -45,14 +53,14 @@ export default function OrgProjectFilters() {
 
   // debugger
   function clearDisabled() {
-    if (filterCnt && filterCnt > 0) return false
+    if (totFilterCnt && totFilterCnt > 0) return false
     return true
   }
 
   return (
     <>
       <FilterHeader
-        filterCnt={filterCnt}
+        filterCnt={totFilterCnt}
         disableClear={clearDisabled()}
         resetFilters={()=>resetFilters('projects')}
       />

@@ -28,7 +28,7 @@ export default function ReleaseNavButton({year, selected, release_cnt, link}: Re
 
   return (
     <Link
-      data-testId="release-year-button"
+      data-testid="release-year-button"
       role="button"
       scroll={false}
       href={link}
