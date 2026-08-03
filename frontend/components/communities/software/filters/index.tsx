@@ -54,9 +54,13 @@ export default function CommunitySoftwareFilters({
 
   // console.group('CommunitySoftwareFilters')
   // console.log('filterCnt...', filterCnt)
-  // console.log('categoryFilters...', categoryFilters)
   // console.log('totFilterCnt...', totFilterCnt)
-  // console.log('activeCnt...', activeCnt)
+  // console.log('keywordsList...', keywordsList)
+  // console.log('languagesList...', languagesList)
+  // console.log('licensesList...', licensesList)
+  // console.log('categoryList...', categoryList)
+  // console.log('categoryEntry...', categoryEntry)
+  // console.log('categoryFilters...', categoryFilters)
   // console.groupEnd()
 
   // debugger
