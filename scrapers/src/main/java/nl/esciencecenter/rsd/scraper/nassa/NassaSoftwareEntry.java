@@ -174,9 +174,9 @@ public class NassaSoftwareEntry {
 		root.addProperty("code_platform", CodePlatformProvider.GITHUB.toDatabaseString());
 		root.addProperty("scraping_disabled_reason", "This is a NASSA module which is not a repository root");
 
-		if (license != null) {
-			SpdxLicense spdxLicense = licenseMap.get(license);
-			if (spdxLicense != null) {
+		{
+			SpdxLicense spdxLicense;
+			if (license != null && (spdxLicense = licenseMap.get(license)) != null) {
 				root.addProperty("license_value", spdxLicense.licenseId());
 				root.addProperty("license_name", spdxLicense.name());
 				root.addProperty("license_url", spdxLicense.reference());
