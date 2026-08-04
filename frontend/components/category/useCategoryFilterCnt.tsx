@@ -30,19 +30,10 @@ export default function useCategoryFilterCnt({categoryFilters,categories_json,ba
   if (categories.length === 0) return {activeCnt: baseCnt}
   if (categories.length === 1) return {activeCnt: baseCnt + 1}
 
-  // count how many category filters are used
-  // let activeCnt = categories.reduce((acc,val)=>{
-  //   categoryFilters.forEach((filter)=>{
-  //     const found = filter.options.find((option)=>option.category===val)
-  //     if (found) acc+=1
-  //   })
-  //   return acc
-  // },0)
-
   let activeCnt = categoryFilters.reduce((acc,filter)=>{
     // loop categories until first found in the filter
     categories.some((val)=>{
-      const found = filter.options.find((option)=>option.category===val)
+      const found = filter.options.some((option)=>option.category===val)
       // increase active filter cnt
       if (found) {
         acc+=1

@@ -7,97 +7,26 @@
 
 'use client'
 
-import {decodeJsonParam} from '~/utils/extractQueryParam'
-import useCategoryFilterCnt from '~/components/category/useCategoryFilterCnt'
-import useQueryChange from '~/components/organisation/projects/useQueryChange'
-import KeywordsFilter from '~/components/filter/KeywordsFilter'
-import FilterHeader from '~/components/filter/FilterHeader'
-import ProgrammingLanguagesFilter from '~/components/filter/ProgrammingLanguagesFilter'
-import LicensesFilter from '~/components/filter/LicensesFilter'
-import CategoriesFilter from '~/components/filter/CategoriesFilter'
-
 import OrgOrderSoftwareBy from './OrgOrderSoftwareBy'
-import useSoftwareParams from './useSoftwareParams'
 import useOrgSoftwareKeywordsList from './useOrgSoftwareKeywordsList'
 import useOrgSoftwareLicensesList from './useOrgSoftwareLicensesList'
 import useOrgSoftwareLanguagesList from './useOrgSoftwareLanguagesList'
 import useOrgSoftwareCategoriesList from './useOrgSoftwareCategoriesList'
+import SharedSoftwareFilters from './SharedSoftwareFilters'
 
 export default function OrgSoftwareFilters() {
-  const {resetFilters,handleQueryChange} = useQueryChange()
-  const {filterCnt,keywords_json,prog_lang_json,licenses_json,categories_json} = useSoftwareParams()
   const {keywordsList} = useOrgSoftwareKeywordsList()
   const {languagesList} = useOrgSoftwareLanguagesList()
   const {licensesList} = useOrgSoftwareLicensesList()
   const {categoryFilters} = useOrgSoftwareCategoriesList()
-  // include separate categories filters to total filter count
-  const {activeCnt:totFilterCnt} = useCategoryFilterCnt({
-    categoryFilters,
-    categories_json,
-    // provide base count without categories_json
-    baseCnt: categories_json ? filterCnt - 1 : filterCnt
-  })
-
-  const keywords = decodeJsonParam(keywords_json, [])
-  const prog_lang = decodeJsonParam(prog_lang_json, [])
-  const licenses= decodeJsonParam(licenses_json,[])
-  const categories = decodeJsonParam(categories_json,[])
-
-  // console.group('OrgSoftwareFilters')
-  // console.log('categories...', categories)
-  // console.log('categoryFilters...', categoryFilters)
-  // console.groupEnd()
-
-  // debugger
-  function clearDisabled() {
-    if (totFilterCnt && totFilterCnt > 0) return false
-    return true
-  }
 
   return (
-    <>
-      <FilterHeader
-        filterCnt={totFilterCnt}
-        disableClear={clearDisabled()}
-        resetFilters={()=>resetFilters('software')}
-      />
-      {/* Order by */}
-      <OrgOrderSoftwareBy />
-      {/* Keywords */}
-      <div>
-        <KeywordsFilter
-          keywords={keywords}
-          keywordsList={keywordsList}
-          handleQueryChange={handleQueryChange}
-        />
-      </div>
-      {/* Program languages */}
-      <div>
-        <ProgrammingLanguagesFilter
-          prog_lang={prog_lang}
-          languagesList={languagesList}
-          handleQueryChange={handleQueryChange}
-        />
-      </div>
-      {/* Licenses */}
-      <div>
-        <LicensesFilter
-          licenses={licenses}
-          licensesList={licensesList}
-          handleQueryChange={handleQueryChange}
-        />
-      </div>
-      {/* Custom organisation categories */}
-      {categoryFilters.map(filter=>
-        <div key={filter?.short_name}>
-          <CategoriesFilter
-            title={filter?.short_name}
-            categories={categories}
-            categoryList={filter.options}
-            handleQueryChange={handleQueryChange}
-          />
-        </div>
-      )}
-    </>
+    <SharedSoftwareFilters
+      keywordsList={keywordsList}
+      languagesList={languagesList}
+      licensesList={licensesList}
+      categoryFilters={categoryFilters}
+      OrderSoftwareComponent={<OrgOrderSoftwareBy />}
+    />
   )
 }
