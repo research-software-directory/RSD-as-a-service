@@ -146,6 +146,14 @@ SPDX-License-Identifier: Apache-2.0
 			<version>2.6</version>
 		</dependency>
 
+		<!-- Source: https://mvnrepository.com/artifact/io.xberg/html-to-markdown -->
+		<dependency>
+			<groupId>io.xberg</groupId>
+			<artifactId>html-to-markdown</artifactId>
+			<version>3.10.0</version>
+			<scope>compile</scope>
+		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
 		<dependency>

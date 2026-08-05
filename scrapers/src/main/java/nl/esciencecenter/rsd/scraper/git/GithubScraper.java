@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpResponse;
 import java.time.Instant;
 import java.util.List;
@@ -56,7 +57,7 @@ public class GithubScraper implements GitScraper {
 
 	/**
 	 * Returns the basic data of the repository.
-	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service
+	 * Example URL: <a href="https://api.github.com/repos/research-software-directory/RSD-as-a-service">https://api.github.com/repos/research-software-directory/RSD-as-a-service</a>
 	 */
 	@Override
 	public BasicGitData basicData() throws IOException, InterruptedException, RsdResponseException {
@@ -96,7 +97,7 @@ public class GithubScraper implements GitScraper {
 
 	/**
 	 * Returns JSON as a String with the amount of lines written in each language.
-	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service/languages
+	 * Example URL: <a href="https://api.github.com/repos/research-software-directory/RSD-as-a-service/languages">https://api.github.com/repos/research-software-directory/RSD-as-a-service/languages</a>
 	 */
 	@Override
 	public String languages() throws IOException, InterruptedException, RsdResponseException {
@@ -128,7 +129,7 @@ public class GithubScraper implements GitScraper {
 
 	/**
 	 * Returns  all contributors commit activity.
-	 * https://docs.github.com/en/rest/reference/metrics#get-all-contributor-commit-activity=
+	 * <a href="https://docs.github.com/en/rest/reference/metrics#get-all-contributor-commit-activity=">GitHub documetation</a>.
 	 * Requesting commit activity requires a GitHub authentication token.
 	 * <p>
 	 * The returned string represents a JsonArray with one entry per contributor. THe information
@@ -147,7 +148,7 @@ public class GithubScraper implements GitScraper {
 	 * ]
 	 * }
 	 * <p>
-	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service/stats/contributors
+	 * Example URL: <a href="https://api.github.com/repos/research-software-directory/RSD-as-a-service/stats/contributors">https://api.github.com/repos/research-software-directory/RSD-as-a-service/stats/contributors</a>
 	 */
 	@Override
 	public CommitsPerWeek contributions() throws IOException, InterruptedException, RsdResponseException {
@@ -229,6 +230,40 @@ public class GithubScraper implements GitScraper {
 		}
 	}
 
+	/**
+	 *
+	 * Retrieve the URL of the raw README file.
+	 * Example URL: <a href="https://api.github.com/repos/research-software-directory/RSD-as-a-service/readme">https://api.github.com/repos/research-software-directory/RSD-as-a-service/readme</a>.
+	 *
+	 * @return the URL of the raw README of the repo if present
+	 */
+	public Optional<URI> rawReadmeUrl() throws IOException, InterruptedException, RsdResponseException {
+		HttpResponse<String> httpResponse = getAsHttpResponse(
+			BASE_API_URL + "/repos/" + organisation + "/" + repo + "/readme"
+		);
+
+		int status = httpResponse.statusCode();
+		if (status == 404) {
+			throw new RsdResponseException(
+				404,
+				httpResponse.uri(),
+				httpResponse.body(),
+				"Not found, is the repository URL correct?"
+			);
+		} else if (status == 403) {
+			throw new RsdRateLimitException(
+				403,
+				httpResponse.uri(),
+				httpResponse.body(),
+				"Rate limit for GitHub probably reached"
+			);
+		} else if (status != 200) {
+			throw new RsdResponseException(status, httpResponse.uri(), httpResponse.body(), "Unexpected response");
+		} else {
+			return parseReadmeUrl(httpResponse.body());
+		}
+	}
+
 	static CommitsPerWeek parseCommits(String json) {
 		CommitsPerWeek commits = new CommitsPerWeek();
 		JsonArray commitsPerContributor = JsonParser.parseString(json).getAsJsonArray();
@@ -285,5 +320,20 @@ public class GithubScraper implements GitScraper {
 		} else {
 			return Utils.getAsHttpResponse(url);
 		}
+	}
+
+	static Optional<URI> parseReadmeUrl(String json) {
+		JsonObject root = JsonParser.parseString(json).getAsJsonObject();
+		JsonElement rawReadmeUrlJson = root.get("download_url");
+
+		if (
+			rawReadmeUrlJson == null ||
+			!rawReadmeUrlJson.isJsonPrimitive() ||
+			!rawReadmeUrlJson.getAsJsonPrimitive().isString()
+		) {
+			return Optional.empty();
+		}
+
+		return Optional.of(URI.create(rawReadmeUrlJson.getAsString()));
 	}
 }
