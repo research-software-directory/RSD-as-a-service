@@ -7,6 +7,7 @@ import {ssrSoftwareParams} from '~/utils/extractQueryParam'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 import FiltersPanel from '~/components/filter/FiltersPanel'
 import PaginationLinkApp from '~/components/layout/PaginationLinkApp'
+import {loadCategoryEntry} from '~/components/category/apiCategories'
 import {CommunityRequestStatus, getSoftwareForCommunity} from '~/components/communities/software/apiCommunitySoftware'
 import {
   comSoftwareCategoriesFilter,
@@ -48,7 +49,8 @@ export default async function CommunitySoftware({
     keywordsList,
     languagesList,
     licensesList,
-    categoryList
+    categoryList,
+    categoryEntry
   ] = await Promise.all([
     getSoftwareForCommunity({
       community:communityId,
@@ -103,6 +105,10 @@ export default async function CommunitySoftware({
       licenses,
       categories,
       token
+    }),
+    loadCategoryEntry({
+      community: communityId,
+      allow_software: true
     })
   ])
 
@@ -131,6 +137,7 @@ export default async function CommunitySoftware({
           languagesList={languagesList}
           licensesList={licensesList}
           categoryList={categoryList}
+          categoryEntry={categoryEntry}
         />
       </FiltersPanel>
       <div className="flex-1">
@@ -141,6 +148,7 @@ export default async function CommunitySoftware({
           languagesList={languagesList}
           licensesList={licensesList}
           categoryList={categoryList}
+          categoryEntry={categoryEntry}
         />
         {/* software overview/content */}
         <CommunitySoftwareOverview

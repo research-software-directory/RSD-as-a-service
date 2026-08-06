@@ -20,8 +20,8 @@ import useSmallScreen from '~/config/useSmallScreen'
 
 type ConfirmDeleteModalProps = {
   open: boolean,
-  title: string,
-  body: JSX.Element | JSX.Element[],
+  title?: string,
+  body?: JSX.Element | JSX.Element[],
   onCancel: () => void,
   onDelete: () => void,
   // when passed it is used to require additional confirmation

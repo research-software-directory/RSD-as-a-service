@@ -1,104 +1,40 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 'use client'
 
-import {decodeJsonParam} from '~/utils/extractQueryParam'
-import useHandleQueryChange from '~/utils/useHandleQueryChange'
-import FilterHeader from '~/components/filter/FilterHeader'
-import KeywordsFilter, {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
-import LicensesFilter, {LicensesFilterOption} from '~/components/filter/LicensesFilter'
-import ProgrammingLanguagesFilter, {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
-import CategoriesFilter, {CategoryOption} from '~/components/filter/CategoriesFilter'
-
-import useSoftwareParams from '~/components/organisation/software/filters/useSoftwareParams'
+import {CategoryEntry} from '~/types/Category'
+import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
+import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
+import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
+import {CategoryOption} from '~/components/filter/CategoriesFilter'
+import SharedSoftwareFilters from '~/components/organisation/software/filters/SharedSoftwareFilters'
 import OrderCommunitySoftwareBy from './OrderCommunitySoftwareBy'
-import useCommunityHasCategories from './useCommunityHasCategories'
-import useResetFilters from './useResetFilters'
+import useComSoftwareCategoriesList from './useComSoftwareCategoriesList'
 
 type CommunitySoftwareFiltersProps = {
   keywordsList: KeywordFilterOption[]
   languagesList: LanguagesFilterOption[]
   licensesList: LicensesFilterOption[]
   categoryList: CategoryOption[]
+  categoryEntry: CategoryEntry[]
 }
 
 export default function CommunitySoftwareFilters({
-  keywordsList,languagesList,licensesList,categoryList
+  keywordsList,languagesList,licensesList,categoryList,categoryEntry
 }:CommunitySoftwareFiltersProps) {
-  const hasCategories = useCommunityHasCategories()
-  const {handleQueryChange} = useHandleQueryChange()
-  const {resetFilters} = useResetFilters()
-  // extract query params
-  const {
-    filterCnt,keywords_json,prog_lang_json,
-    licenses_json,categories_json
-  } = useSoftwareParams()
-
-  // decode query params
-  const keywords = decodeJsonParam(keywords_json, [])
-  const prog_lang = decodeJsonParam(prog_lang_json, [])
-  const licenses= decodeJsonParam(licenses_json,[])
-  const categories= decodeJsonParam(categories_json,[])
-
-  // console.group('CommunitySoftwareFilters')
-  // console.log('hasCategories...', hasCategories)
-  // console.log('categoryList...', categoryList)
-  // console.groupEnd()
-
-  // debugger
-  function clearDisabled() {
-    if (filterCnt && filterCnt > 0) return false
-    return true
-  }
+  // split category tree into separate filters
+  const {categoryFilters} = useComSoftwareCategoriesList({categoryList,categoryEntry})
 
   return (
-    <>
-      <FilterHeader
-        filterCnt={filterCnt}
-        disableClear={clearDisabled()}
-        resetFilters={()=>resetFilters('software')}
-      />
-      {/* Order by */}
-      <OrderCommunitySoftwareBy />
-      {/* Keywords */}
-      <div>
-        <KeywordsFilter
-          keywords={keywords}
-          keywordsList={keywordsList}
-          handleQueryChange={handleQueryChange}
-        />
-      </div>
-      {/* Program languages */}
-      <div>
-        <ProgrammingLanguagesFilter
-          prog_lang={prog_lang}
-          languagesList={languagesList}
-          handleQueryChange={handleQueryChange}
-        />
-      </div>
-      {/* Licenses */}
-      <div>
-        <LicensesFilter
-          licenses={licenses}
-          licensesList={licensesList}
-          handleQueryChange={handleQueryChange}
-        />
-      </div>
-      {/* Custom community categories */}
-      {hasCategories ?
-        <div>
-          <CategoriesFilter
-            title="Categories"
-            categories={categories}
-            categoryList={categoryList}
-            handleQueryChange={handleQueryChange}
-          />
-        </div>
-        :null
-      }
-    </>
+    <SharedSoftwareFilters
+      keywordsList={keywordsList}
+      languagesList={languagesList}
+      licensesList={licensesList}
+      categoryFilters={categoryFilters}
+      OrderSoftwareComponent={<OrderCommunitySoftwareBy />}
+    />
   )
 }
