@@ -3,7 +3,7 @@
 --
 -- SPDX-License-Identifier: Apache-2.0
 
-CREATE OR REPLACE FUNCTION software_import(
+CREATE FUNCTION software_import(
 	community_slug VARCHAR(200),
 	slug VARCHAR(200),
 	brand_name VARCHAR(200),
@@ -217,11 +217,13 @@ BEGIN
 		THEN
 			INSERT INTO category (
 				community,
+				allow_software,
 				short_name,
 				name
 			)
 			VALUES (
 				community_id,
+				TRUE,
 				top_level_category_value,
 				top_level_category_value
 			)
