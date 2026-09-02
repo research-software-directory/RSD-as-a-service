@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,11 +9,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -28,10 +28,10 @@ public class MainMentions {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainMentions.class);
 
-	public static void main(String[] args) {
-		LOGGER.info("Start scraping mentions");
+	static void main() {
+		LOGGER.info("Start harvesting mentions");
 
-		long t1 = System.currentTimeMillis();
+		Instant tic = Instant.now();
 
 		PostgrestMentionRepository localMentionRepository = new PostgrestMentionRepository(Config.backendBaseUrl());
 		Collection<RsdMentionIds> mentionsToScrape = localMentionRepository.leastRecentlyScrapedMentions(
@@ -85,15 +85,24 @@ public class MainMentions {
 			.map(Map.Entry::getKey)
 			.map(Doi::fromString)
 			.toList();
-		Collection<ExternalMentionRecord> scrapedDataciteMentions = List.of();
-		try {
-			scrapedDataciteMentions = new DataciteMentionRepository().mentionData(dataciteDois);
-		} catch (RuntimeException e) {
-			Exception exceptionToSave = new Exception(
-				"Failed scraping the following DataCite DOIs: " + dataciteDois,
-				e
-			);
-			Utils.saveExceptionInDatabase("DataCite mention scraper", "mention", null, exceptionToSave);
+		Collection<ExternalMentionRecord> scrapedDataciteMentions = new ArrayList<>(dataciteDois.size());
+		DataciteConnector dataciteConnector = Config.crossrefContactEmail()
+			.map(DataciteConnector::new)
+			.orElseGet(DataciteConnector::new);
+		for (Doi dataciteDoi : dataciteDois) {
+			try {
+				scrapedDataciteMentions.add(dataciteConnector.harvestMention(dataciteDoi));
+			} catch (Exception e) {
+				Exception exceptionToSave = new Exception(
+					"Failed scraping the following DataCite DOI: " + dataciteDois,
+					e
+				);
+				Utils.saveExceptionInDatabase("DataCite mention scraper", "mention", null, exceptionToSave);
+
+				if (e instanceof InterruptedException) {
+					return;
+				}
+			}
 		}
 		for (ExternalMentionRecord scrapedMention : scrapedDataciteMentions) {
 			Doi doi = scrapedMention.doi();
@@ -210,8 +219,8 @@ public class MainMentions {
 			}
 		}
 
-		long time = System.currentTimeMillis() - t1;
-		LOGGER.info("Done scraping mentions ({} ms.)", time);
+		Instant toc = Instant.now();
+		LOGGER.info("Done harvesting mentions ({} ms.)", Duration.between(tic, toc).toMillis());
 	}
 
 	static Map<String, String> parseJsonDoiSources(String jsonSources) {

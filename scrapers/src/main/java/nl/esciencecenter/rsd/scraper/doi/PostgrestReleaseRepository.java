@@ -61,7 +61,7 @@ public class PostgrestReleaseRepository {
 		);
 
 		// Then update the release_version table.
-		// For each scraped or existing version as a mention, we need to know its id of the mention table and the ids (plural, because multiple software entries can have the same concept DOI) of the software to which it belongs.
+		// For each scraped or existing version as a mention, we need to know its ID of the mention table and the IDs (plural, because multiple software entries can have the same concept DOI) of the software to which it belongs.
 		Map<Doi, Collection<UUID>> conceptDoiToSoftwareIds = new HashMap<>();
 		for (ReleaseData release : releaseData) {
 			Collection<UUID> softwareIds = conceptDoiToSoftwareIds.computeIfAbsent(release.conceptDoi, k ->
