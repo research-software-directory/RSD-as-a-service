@@ -9,11 +9,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.net.URI;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import nl.esciencecenter.rsd.scraper.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,12 +42,48 @@ public class DataCiteReleaseRepository {
 		    }
 		  }
 		}""";
+	private static final String DOI_URL_UNFORMATTED = "https://api.datacite.org/dois/%s";
 
 	// editorconfig-checker-enable
 
+	/**
+	 * Harvest the version mentions of a collection of DOIs. See e.g.
+	 * <a href="https://support.zenodo.org/help/en-gb/1-upload-deposit/97-what-is-doi-versioning">
+	 * this Zenodo explanation.
+	 * </a>
+	 * <br>
+	 * <br>
+	 * An example of a concept DOI with versions is <code>10.5281/zenodo.6379973</code>.
+	 * Its versions can be found in
+	 * <a href="https://api.datacite.org/dois/10.5281/zenodo.6379973">
+	 * this REST endpoint
+	 * </a>
+	 * under the <code>versions</code> key.
+	 *
+	 * @param conceptDois The (concept) DOIs that should have their versions harvested. These DOIs should be registered at DataCite. See the link above for an explanation of concept DOIs.
+	 * This should not be null, but null elements in the collection can be present and will be ignored.
+	 * @return a map that lists for each DOI in the input its versions as mentions
+	 */
 	public Map<Doi, Collection<ExternalMentionRecord>> getVersionedDois(Collection<Doi> conceptDois) {
 		if (conceptDois.isEmpty()) {
 			return Collections.emptyMap();
+		}
+
+		Map<Doi, Collection<ExternalMentionRecord>> result = HashMap.newHashMap(conceptDois.size());
+		try (ExecutorService threadPool = Executors.newFixedThreadPool(10)) {
+			for (Doi conceptDoi : conceptDois) {
+				if (conceptDoi == null) {
+					continue;
+				}
+
+				Callable<Collection<ExternalMentionRecord>> getVersionMentionsTask = () -> {
+					URI url = URI.create(DOI_URL_UNFORMATTED.formatted(conceptDoi.toUrlEncodedString()));
+					HttpResponse<String> response = Utils.getAsHttpResponse(url);
+					Collection<Doi> versionDois = parseVersionDois(response.body());
+					// TODO
+					return null;
+				};
+			}
 		}
 
 		String query = QUERY_UNFORMATTED.formatted(DataciteMentionRepository.joinDoisForGraphqlQuery(conceptDois));
@@ -55,6 +96,30 @@ public class DataCiteReleaseRepository {
 			"application/json"
 		);
 		return parseJson(responseJson);
+	}
+
+	static Collection<Doi> parseVersionDois(String json) {
+		JsonObject root = JsonParser.parseString(json).getAsJsonObject();
+		JsonArray doiJsonArray = root
+			.getAsJsonObject("data")
+			.getAsJsonObject("relationships")
+			.getAsJsonObject("versions")
+			.getAsJsonArray("data");
+
+		Collection<Doi> result = new ArrayList<>(doiJsonArray.size());
+		for (JsonElement element : doiJsonArray) {
+			JsonObject dataObject = element.getAsJsonObject();
+			if (!"dois".equals(dataObject.getAsJsonPrimitive("type").getAsString())) {
+				continue;
+			}
+
+			String rawDoi = dataObject.getAsJsonPrimitive("id").getAsString();
+			if (Doi.isValid(rawDoi)) {
+				result.add(Doi.fromString(rawDoi));
+			}
+		}
+
+		return result;
 	}
 
 	Map<Doi, Collection<ExternalMentionRecord>> parseJson(String json) {
