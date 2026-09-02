@@ -304,6 +304,10 @@ public class Utils {
 	}
 
 	public static void saveExceptionInDatabase(String serviceName, String tableName, UUID referenceId, Exception e) {
+		if (e instanceof RsdResponseException re) {
+			saveExceptionInDatabase(serviceName, tableName, referenceId, re);
+			return;
+		}
 		JsonObject logData = basicData(serviceName, tableName, referenceId, e);
 
 		postAsAdmin(Config.backendBaseUrl() + "/backend_log", logData.toString());
