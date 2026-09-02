@@ -96,8 +96,7 @@ print(response.json())
         data = {"slug": "test-software", "brand_name": "TEST-Software", "description": "My new software entry"}
         headers = {
             'Authorization': f'Bearer {accessToken}',
-            'Content-Type': "application/json",
-            "Prefer": "return=representation"
+            'Content-Type': "application/json"
             }
 
         response = requests.post(url, json=data, headers=headers)
