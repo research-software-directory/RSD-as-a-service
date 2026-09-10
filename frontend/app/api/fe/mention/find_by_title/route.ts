@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,13 +10,12 @@ import {getUserFromToken} from '~/auth/getSessionServerSide'
 import logger from '~/utils/logger'
 import {createJsonHeaders, getBaseUrl, promiseWithTimeout} from '~/utils/fetchHelpers'
 import {crossrefItemToMentionItem, getCrossrefItemsByTitle} from '~/utils/getCrossref'
-import {dataCiteGraphQLItemToMentionItem, getDataciteItemsByTitleGraphQL} from '~/utils/getDataCite'
+import {getDataciteItemsByTitleRest} from '~/utils/getDataCite'
 import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
 import {sortBySearchFor} from '~/utils/sortFn'
 import {getOpenalexMentionsByTitle} from '~/utils/getOpenalex'
 import {MentionItemProps} from '~/types/Mention'
 import {CrossrefSelectItem} from '~/types/Crossref'
-import {WorkResponse} from '~/types/Datacite'
 import {getUserSettings} from '~/components/user/ssrUserSettings'
 
 const crossrefTimeoutSec = 30
@@ -90,7 +90,7 @@ async function findPublicationByTitle({id, searchFor, token, relationType}: {
 }) {
   const promises: Promise<any>[] = [
     promiseWithTimeout(getCrossrefItemsByTitle(searchFor), crossrefTimeoutSec),
-    getDataciteItemsByTitleGraphQL(searchFor),
+    getDataciteItemsByTitleRest(searchFor),
     getOpenalexMentionsByTitle(searchFor),
     searchForAvailableMentions({
       id,
@@ -115,14 +115,12 @@ async function findPublicationByTitle({id, searchFor, token, relationType}: {
   } else {
     logger(`api/fe/mention/find_by_title.findPublicationByTitle: Crossref request timeout after ${crossrefTimeoutSec}sec.`, 'warn')
   }
-  // convert datacite responses to MentionItems
+
   let dataciteItems: MentionItemProps[] = []
   if (datacite.status === 'fulfilled') {
-    dataciteItems = datacite?.value.map((item: WorkResponse) => {
-      return dataCiteGraphQLItemToMentionItem(item)
-    })
+    dataciteItems = datacite.value
   } else {
-    logger(`api/fe/mention/find_by_title.findPublicationByTitle: Datacite request failed ${datacite.reason}`, 'warn')
+    logger(`api/fe/mention/find_by_title.findPublicationByTitle: DataCite request failed ${datacite.reason}`, 'warn')
   }
 
   let openalexMentions: MentionItemProps[] = []

@@ -1,18 +1,14 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {MentionItemProps} from '~/types/Mention'
 import {crossrefItemToMentionItem} from './getCrossref'
-import {
-  dataCiteGraphQLItemToMentionItem,
-  getDataciteItemByDoiGraphQL,
-  getDataciteItemsByDoiGraphQL
-} from './getDataCite'
+import {getDataciteItemByDoi, getDataciteItemsByDoi} from './getDataCite'
 import logger from './logger'
 import {getOpenalexItemByDoi, getOpenalexItemsByDoi, openalexItemToMentionItem} from '~/utils/getOpenalex'
 
@@ -117,37 +113,16 @@ export async function getItemsFromCrossref(dois: string[]) {
 }
 
 async function getItemFromDatacite(doi: string) {
-  const resp = await getDataciteItemByDoiGraphQL(doi)
-
-  if (resp.status === 200) {
-    const mention = dataCiteGraphQLItemToMentionItem(resp.message)
-    return {
-      status: 200,
-      message: mention
-    }
-  }
-  // return error message
-  return resp
+  return await getDataciteItemByDoi(doi)
 }
 
 export async function getItemsFromDatacite(dois: string[]) {
-  const mentions: MentionItemProps[] = []
-  if (dois.length === 0) {
-    return mentions
+  const resp = await getDataciteItemsByDoi(dois)
+  if (resp.status !== 200) {
+    logger(`getItemsFromDatacite...failed...${resp.status} ${resp.message}`)
   }
-  const resp = await getDataciteItemsByDoiGraphQL(dois)
 
-  if (resp.status === 200) {
-    for (const dataciteMention of resp.message) {
-      const mention = dataCiteGraphQLItemToMentionItem(dataciteMention)
-      mentions.push(mention)
-    }
-    return mentions
-  }
-  // return error message
-  // return resp
-  logger(`getItemsFromDatacite...failed...${resp.status} ${resp.message}`)
-  return mentions
+  return resp
 }
 
 async function getItemFromOpenalex(doi: string) {

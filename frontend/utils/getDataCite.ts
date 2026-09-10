@@ -6,92 +6,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {DataciteWorkGraphQLResponse, DataciteWorksGraphQLResponse, WorkResponse} from '~/types/Datacite'
+import {DataciteMultipleWorksRestResponse, DataciteRestWork, DataciteSingleWorkRestResponse,} from '~/types/Datacite'
 import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 import {createJsonHeaders, extractRespFromGraphQL, extractReturnMessage} from './fetchHelpers'
 import logger from './logger'
 import {makeDoiRedirectUrl} from './getDOI'
 
-function graphQLDoiQuery(doi:string) {
-  const gql = `{
-    work(id: "${doi}"){
-      doi,
-      type,
-      types{
-        resourceType
-      },
-      sizes,
-    	version,
-      titles(first: 1){
-        title
-      },
-      descriptions(first:1){
-        description
-      },
-      publisher {
-        name
-      },
-      publicationYear,
-      creators{
-        givenName,
-          familyName,
-          affiliation{
-          name
-        }
-      },
-      contributors{
-        givenName,
-          familyName,
-          affiliation{
-          name
-        }
-      }
-    }
-  }`
-  return gql
-}
-
-function graphQLDoisQuery(dois: string[]) {
-  const doisString = dois.map(doi => `"${doi}"`).join(',')
-  const gql = `{
-    works(ids: [${doisString}], first: 10000) {
-      nodes {
-        doi,
-        type,
-        types{
-          resourceType
-        },
-        sizes,
-        version,
-        titles(first: 1){
-          title
-        },
-        descriptions(first:1){
-          description
-        },
-        publisher {
-          name
-        },
-        publicationYear,
-        creators{
-          givenName,
-            familyName,
-            affiliation{
-            name
-          }
-        },
-        contributors{
-          givenName,
-            familyName,
-            affiliation{
-            name
-          }
-        }
-      }
-    }
-  }`
-  return gql
-}
 
 function gqlConceptDoiQuery(doi: string) {
   const gql =`{
@@ -106,118 +26,71 @@ function gqlConceptDoiQuery(doi: string) {
   return gql
 }
 
-function gqlWorksByTitleQuery(title: string) {
-  const gql = `{
-    works(query:"titles.title:${title}",first:10){
-      nodes{
-        doi,
-        type,
-        types{
-          resourceType
-        },
-        sizes,
-    	  version,
-        titles(first: 1){
-          title
-        },
-        descriptions(first:1){
-          description
-        },
-        publisher {
-          name
-        },
-        publicationYear,
-        creators{
-          givenName,
-            familyName,
-            affiliation{
-            name
-          }
-        },
-        contributors{
-          givenName,
-            familyName,
-            affiliation{
-            name
-          }
-        }
-      }
-    }
-  }
-  `
-  return gql
-}
 
-function extractAuthors(item: WorkResponse) {
+function extractRestAuthors(item: DataciteRestWork): string {
   const authors: string[] = []
   // extract info from creators
-  if (item.creators) {
-    item.creators.forEach(author => {
+  if (item.attributes.creators) {
+    item.attributes.creators.forEach(author => {
       if (author.givenName && author.familyName) {
         authors.push(`${author.givenName} ${author.familyName}`)
       }
     })
   }
   // extract info from contributors
-  if (item.contributors) {
-    item.contributors.forEach(author => {
+  if (item.attributes.contributors) {
+    item.attributes.contributors.forEach(author => {
       if (author.givenName && author.familyName) {
         authors.push(`${author.givenName} ${author.familyName}`)
       }
     })
   }
+
   if (authors.length > 0) {
     return authors.join(', ')
   }
+
   return ''
 }
 
-export function dataCiteGraphQLItemToMentionItem(item: WorkResponse) {
-  const mention: MentionItemProps = {
+
+export function dataCiteRestItemToMentionItem(item: DataciteRestWork): MentionItemProps {
+  const attributes = item.attributes
+
+  return {
     id: null,
-    doi: item.doi,
-    url: makeDoiRedirectUrl(item.doi),
-    title: item.titles[0].title,
-    authors: extractAuthors(item),
-    publisher: item.publisher.name,
-    publication_year: item.publicationYear,
+    doi: attributes.doi,
+    url: makeDoiRedirectUrl(attributes.doi),
+    title: attributes.titles[0].title,
+    authors: extractRestAuthors(item),
+    publisher: attributes.publisher,
+    publication_year: attributes.publicationYear,
     journal: null,
     page: null,
     image_url: null,
-    mention_type: dataciteToRsdType(item),
+    mention_type: dataciteRestToRsdType(item),
     source: 'DataCite',
     note: null,
     openalex_id: null
   }
-  return mention
 }
 
-export async function getDataciteItemByDoiGraphQL(doi: string) {
+export async function getDataciteItemByDoi(doi: string) {
   try {
-    const query = graphQLDoiQuery(doi)
-    const url = 'https://api.datacite.org/graphql'
+    const url = `https://api.datacite.org/dois/${encodeURIComponent(doi)}`
 
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: createJsonHeaders(),
-      body: JSON.stringify({
-        operationName: null,
-        variables:{},
-        query,
-      }),
-    })
+    const resp = await fetch(url)
 
     if (resp.status === 200) {
-      const json: DataciteWorkGraphQLResponse = await resp.json()
+      const json: DataciteSingleWorkRestResponse = await resp.json()
       return {
-        status:200,
-        message:json.data.work,
+        status: 200,
+        message: dataCiteRestItemToMentionItem(json.data),
       }
     }
-    const error = await extractReturnMessage(resp)
-    return error
+    return await extractReturnMessage(resp)
   } catch (e: any) {
-    logger(`getDataciteItemsByDoiGraphQL: ${e?.message}`, 'error')
+    logger(`getDataciteItemByDoi: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message,
@@ -225,32 +98,26 @@ export async function getDataciteItemByDoiGraphQL(doi: string) {
   }
 }
 
-export async function getDataciteItemsByDoiGraphQL(dois: string[]) {
+export async function getDataciteItemsByDoi(dois: string[]) {
   try {
-    const query = graphQLDoisQuery(dois)
-    const url = 'https://api.datacite.org/graphql'
+    const promises: Promise<any>[] = []
+    const doiToResult: Map<string, any> = new Map()
 
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: createJsonHeaders(),
-      body: JSON.stringify({
-        operationName: null,
-        variables:{},
-        query,
-      }),
-    })
+    for (const doi of dois) {
+      const getItemPromise = getDataciteItemByDoi(doi)
+        .then(item => doiToResult.set(doi, item))
+        .catch(error => doiToResult.set(doi, {status: 500, message: error}))
 
-    if (resp.status === 200) {
-      const json = await resp.json()
-      return {
-        status:200,
-        message:json.data.works.nodes,
-      }
+      promises.push(getItemPromise)
     }
-    const error = await extractReturnMessage(resp)
-    return error
+
+    await Promise.allSettled(promises)
+    return {
+      status: 200,
+      message: doiToResult
+    }
   } catch (e: any) {
-    logger(`getDataciteItemsByDoiGraphQL: ${e?.message}`, 'error')
+    logger(`getDataciteItemsByDoi: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message,
@@ -258,29 +125,30 @@ export async function getDataciteItemsByDoiGraphQL(dois: string[]) {
   }
 }
 
-export async function getDataciteItemsByTitleGraphQL(title: string) {
+export async function getDataciteItemsByTitleRest(title: string): Promise<MentionItemProps[]> {
   try {
-    const query = gqlWorksByTitleQuery(title.replace(':', '\\\\:'))
-    const url = 'https://api.datacite.org/graphql'
+    // https://docs.opensearch.org/latest/query-dsl/full-text/query-string/#reserved-characters
+    const reservedStrings = ['+','-','=','&&','||','>','<','!','(',')','{','}','[',']','^','"','~','*','?',':','\\','/']
+    const titleEncoded = encodeURIComponent(title)
+    const searchUrl = `https://api.datacite.org/dois?query=titles.title:"${titleEncoded}"`
 
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: createJsonHeaders(),
-      body: JSON.stringify({
-        operationName: null,
-        variables: {},
-        query,
-      }),
-    })
+    // const query = gqlWorksByTitleQuery(title.replace(':', '\\\\:'))
+
+    const resp = await fetch(searchUrl)
     if (resp.status === 200) {
-      const json: DataciteWorksGraphQLResponse = await resp.json()
-      if (json.data.works && json.data.works.nodes) return json.data.works.nodes
-      return []
+      const json: DataciteMultipleWorksRestResponse = await resp.json()
+      const result: MentionItemProps[] = []
+
+      for (const work of json.data) {
+        result.push(dataCiteRestItemToMentionItem(work))
+      }
+
+      return result
     }
-    logger(`getDataciteItemsByTitleGraphQL: ${resp.status}: ${resp?.statusText}`, 'warn')
+    logger(`getDataciteItemsByTitleRest: ${resp.status}: ${resp?.statusText}`, 'warn')
     return []
   } catch (e: any) {
-    logger(`getDataciteItemsByTitleGraphQL: ${e?.message}`, 'error')
+    logger(`getDataciteItemsByTitleRest: ${e?.message}`, 'error')
     return []
   }
 }
@@ -309,16 +177,15 @@ export async function getSoftwareVersionInfoForDoi(doi: string) {
   }
 }
 
-function dataciteToRsdType(item: WorkResponse): MentionTypeKeys {
-  switch (item.type.trim().toLowerCase()) {
-  // additional validation using resourceType
-    case 'audiovisual':
-      return rsdTypeFromResourceType(item.types.resourceType)
+
+function dataciteRestToRsdType(item: DataciteRestWork): MentionTypeKeys {
+  switch (item.attributes.types.resourceTypeGeneral.trim().toLowerCase()) {
+    // additional validation using resourceType
     case 'text':
-      return rsdTypeFromResourceType(item.types.resourceType)
+      return rsdTypeFromResourceType(item.attributes.types.resourceType)
     default:
-    // by default using type value
-      return rsdTypeFromResourceType(item.type)
+      // by default using type value
+      return rsdTypeFromResourceType(item.attributes.types.resourceTypeGeneral)
   }
 }
 
