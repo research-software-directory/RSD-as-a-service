@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
@@ -19,18 +19,16 @@ const mockProps = {
   disabled: true
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mockGetSoftwareVersionInfoForDoi = jest.fn(props => Promise.resolve({
-  status: 200,
-  data: {
-    software: {
-      versionOfCount: 1
-    }
-  }
-} as any))
-jest.mock('~/utils/getDataCite', () => ({
-  getSoftwareVersionInfoForDoi: jest.fn(props=>mockGetSoftwareVersionInfoForDoi(props))
-}))
+const mockGetSoftwareVersionInfoForDoi = jest.fn()
+
+jest.mock('~/utils/getDataCite', () => {
+  const originalModule = jest.requireActual('~/utils/getDataCite')
+  return ({
+    __esModule: true, // Use it when dealing with esModules
+    ...originalModule,
+    getDataciteItemByDoi: jest.fn(props=>mockGetSoftwareVersionInfoForDoi(props))
+  })
+})
 
 beforeEach(() => {
   jest.clearAllMocks()
@@ -61,26 +59,27 @@ it('enabled validate DOI button', () => {
 })
 
 it('shows valid concept DOI message', async() => {
+  const doi = '10.1017/9781009085809'
   // provide DOI
-  mockProps.doi = '10.1017/9781009085809'
+  mockProps.doi = doi
   mockProps.disabled = false
   // mock response for valid Concept DOI
   mockGetSoftwareVersionInfoForDoi.mockResolvedValueOnce({
     status: 200,
-    'data': {
-      'software': {
-        'relatedIdentifiers': [
-          {
-            'relationType': 'IsSupplementTo',
-            'relatedIdentifierType': 'URL',
-            'relatedIdentifier': 'https://github.com/UtrechtUniversity/animal-sounds/tree/v0.0.1-alpha'
-          },
-          {
-            'relationType': 'HasVersion',
-            'relatedIdentifierType': 'DOI',
-            'relatedIdentifier': '10.5281/zenodo.7137567'
-          }
-        ]
+    message: {
+      attributes: {
+        doi: doi
+      }
+      ,
+      relationships: {
+        versionOf: {
+          data: [
+            {
+              id: doi,
+              type: 'dois'
+            }
+          ]
+        }
       }
     }
   })
@@ -101,27 +100,28 @@ it('shows valid concept DOI message', async() => {
 })
 
 it('calls onUpdate with concept DOI when version DOI provided', async() => {
+  const doi = '10.1017/9781009085809'
   // provide DOI
-  mockProps.doi = '10.1017/9781009085809'
+  mockProps.doi = doi
   mockProps.disabled = false
   const conceptDOI = '10.5281/zenodo.7137566'
   // mock response for valid Concept DOI
   mockGetSoftwareVersionInfoForDoi.mockResolvedValueOnce({
     status: 200,
-    'data': {
-      'software': {
-        'relatedIdentifiers': [
-          {
-            'relationType': 'IsSupplementTo',
-            'relatedIdentifierType': 'URL',
-            'relatedIdentifier': 'https://github.com/UtrechtUniversity/animal-sounds/tree/v0.0.1-alpha'
-          },
-          {
-            'relationType': 'IsVersionOf',
-            'relatedIdentifierType': 'DOI',
-            'relatedIdentifier': '10.5281/zenodo.7137566'
-          }
-        ]
+    message: {
+      attributes: {
+        doi: doi
+      }
+      ,
+      relationships: {
+        versionOf: {
+          data: [
+            {
+              id: conceptDOI,
+              type: 'dois'
+            }
+          ]
+        }
       }
     }
   })
