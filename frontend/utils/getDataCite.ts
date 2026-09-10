@@ -6,50 +6,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {DataciteWorkGraphQLResponse, DataciteWorksGraphQLResponse, WorkResponse} from '~/types/Datacite'
+import {DataciteWorkRestResponse, DataciteWorksGraphQLResponse, WorkResponse} from '~/types/Datacite'
 import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 import {createJsonHeaders, extractRespFromGraphQL, extractReturnMessage} from './fetchHelpers'
 import logger from './logger'
 import {makeDoiRedirectUrl} from './getDOI'
 
-function graphQLDoiQuery(doi:string) {
-  const gql = `{
-    work(id: "${doi}"){
-      doi,
-      type,
-      types{
-        resourceType
-      },
-      sizes,
-    	version,
-      titles(first: 1){
-        title
-      },
-      descriptions(first:1){
-        description
-      },
-      publisher {
-        name
-      },
-      publicationYear,
-      creators{
-        givenName,
-          familyName,
-          affiliation{
-          name
-        }
-      },
-      contributors{
-        givenName,
-          familyName,
-          affiliation{
-          name
-        }
-      }
-    }
-  }`
-  return gql
-}
 
 function graphQLDoisQuery(dois: string[]) {
   const doisString = dois.map(doi => `"${doi}"`).join(',')
@@ -148,7 +110,7 @@ function gqlWorksByTitleQuery(title: string) {
   return gql
 }
 
-function extractAuthors(item: WorkResponse) {
+function extractGraphqlAuthors(item: WorkResponse) {
   const authors: string[] = []
   // extract info from creators
   if (item.creators) {
@@ -172,19 +134,45 @@ function extractAuthors(item: WorkResponse) {
   return ''
 }
 
+function extractRestAuthors(item: DataciteWorkRestResponse): string {
+  const authors: string[] = []
+  // extract info from creators
+  if (item.data.attributes.creators) {
+    item.data.attributes.creators.forEach(author => {
+      if (author.givenName && author.familyName) {
+        authors.push(`${author.givenName} ${author.familyName}`)
+      }
+    })
+  }
+  // extract info from contributors
+  if (item.data.attributes.contributors) {
+    item.data.attributes.contributors.forEach(author => {
+      if (author.givenName && author.familyName) {
+        authors.push(`${author.givenName} ${author.familyName}`)
+      }
+    })
+  }
+
+  if (authors.length > 0) {
+    return authors.join(', ')
+  }
+
+  return ''
+}
+
 export function dataCiteGraphQLItemToMentionItem(item: WorkResponse) {
   const mention: MentionItemProps = {
     id: null,
     doi: item.doi,
     url: makeDoiRedirectUrl(item.doi),
     title: item.titles[0].title,
-    authors: extractAuthors(item),
+    authors: extractGraphqlAuthors(item),
     publisher: item.publisher.name,
     publication_year: item.publicationYear,
     journal: null,
     page: null,
     image_url: null,
-    mention_type: dataciteToRsdType(item),
+    mention_type: dataciteGraphqlToRsdType(item),
     source: 'DataCite',
     note: null,
     openalex_id: null
@@ -192,32 +180,43 @@ export function dataCiteGraphQLItemToMentionItem(item: WorkResponse) {
   return mention
 }
 
-export async function getDataciteItemByDoiGraphQL(doi: string) {
-  try {
-    const query = graphQLDoiQuery(doi)
-    const url = 'https://api.datacite.org/graphql'
+export function dataCiteRestItemToMentionItem(item: DataciteWorkRestResponse): MentionItemProps {
+  const attributes = item.data.attributes
 
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: createJsonHeaders(),
-      body: JSON.stringify({
-        operationName: null,
-        variables:{},
-        query,
-      }),
-    })
+  return {
+    id: null,
+    doi: attributes.doi,
+    url: makeDoiRedirectUrl(attributes.doi),
+    title: attributes.titles[0].title,
+    authors: extractRestAuthors(item),
+    publisher: attributes.publisher,
+    publication_year: attributes.publicationYear,
+    journal: null,
+    page: null,
+    image_url: null,
+    mention_type: dataciteRestToRsdType(item),
+    source: 'DataCite',
+    note: null,
+    openalex_id: null
+  }
+}
+
+export async function getDataciteItemByDoi(doi: string) {
+  try {
+    const url = `https://api.datacite.org/dois/${encodeURIComponent(doi)}`
+
+    const resp = await fetch(url)
 
     if (resp.status === 200) {
-      const json: DataciteWorkGraphQLResponse = await resp.json()
+      const json: DataciteWorkRestResponse = await resp.json()
       return {
-        status:200,
-        message:json.data.work,
+        status: 200,
+        message: dataCiteRestItemToMentionItem(json),
       }
     }
-    const error = await extractReturnMessage(resp)
-    return error
+    return await extractReturnMessage(resp)
   } catch (e: any) {
-    logger(`getDataciteItemsByDoiGraphQL: ${e?.message}`, 'error')
+    logger(`getDataciteItemByDoi: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message,
@@ -309,7 +308,7 @@ export async function getSoftwareVersionInfoForDoi(doi: string) {
   }
 }
 
-function dataciteToRsdType(item: WorkResponse): MentionTypeKeys {
+function dataciteGraphqlToRsdType(item: WorkResponse): MentionTypeKeys {
   switch (item.type.trim().toLowerCase()) {
   // additional validation using resourceType
     case 'audiovisual':
@@ -319,6 +318,17 @@ function dataciteToRsdType(item: WorkResponse): MentionTypeKeys {
     default:
     // by default using type value
       return rsdTypeFromResourceType(item.type)
+  }
+}
+
+function dataciteRestToRsdType(item: DataciteWorkRestResponse): MentionTypeKeys {
+  switch (item.data.attributes.types.resourceTypeGeneral.trim().toLowerCase()) {
+    // additional validation using resourceType
+    case 'text':
+      return rsdTypeFromResourceType(item.data.attributes.types.resourceType)
+    default:
+      // by default using type value
+      return rsdTypeFromResourceType(item.data.attributes.types.resourceTypeGeneral)
   }
 }
 
