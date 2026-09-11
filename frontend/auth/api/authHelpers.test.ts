@@ -1,19 +1,21 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
 import {
-  getRedirectUrl,
-  getAuthorisationEndpoint, RedirectToProps,
+  claimOrganisationMaintainerInvite,
   claimProjectMaintainerInvite,
   claimSoftwareMaintainerInvite,
-  claimOrganisationMaintainerInvite
+  getAuthorisationEndpoint,
+  getRedirectUrl,
+  RedirectToProps
 } from './authHelpers'
 
 // based on return values from test surfconext endpoint
@@ -146,7 +148,6 @@ it('claimProjectMaintainerInvite calls expected endpoint', async () => {
   await claimProjectMaintainerInvite({
     id: expectedId,
     token: 'TEST_TOKEN',
-    frontend: true
   })
 
   // validate api call
@@ -224,7 +225,6 @@ it('claimSoftwareMaintainerInvite calls expected endpoint', async () => {
   await claimSoftwareMaintainerInvite({
     id: expectedId,
     token: 'TEST_TOKEN',
-    frontend: true
   })
 
   // validate api call
@@ -302,7 +302,6 @@ it('claimOrganisationMaintainerInvite calls expected endpoint', async () => {
   await claimOrganisationMaintainerInvite({
     id: expectedId,
     token: 'TEST_TOKEN',
-    frontend: true
   })
 
   // validate api call

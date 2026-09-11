@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,6 +13,7 @@ beforeEach(() => {
 })
 
 it('content security policy header for development', () => {
+  // @ts-expect-error workaround to get security upgrades (Next.js 16.3.4) working
   process.env.NODE_ENV = 'development'
 
   const nonce = 'abc'
@@ -23,6 +25,7 @@ it('content security policy header for development', () => {
 })
 
 it('content security policy header for production', () => {
+  // @ts-expect-error workaround to get security upgrades (Next.js 16.3.4) working
   process.env.NODE_ENV = 'production'
 
   const nonce = 'abc'

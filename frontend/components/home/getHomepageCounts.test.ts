@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,7 +27,7 @@ it('makes call to api', async () => {
   // mock response
   mockResolvedValueOnce(mockResponse)
   // get counts
-  const counts = await getHomepageCounts(true)
+  const counts = await getHomepageCounts()
   // validate counts received propely
   expect(counts).toEqual(mockResponse)
   // validate call
@@ -41,7 +42,7 @@ it('returns null values on error', async () => {
     statusText: 'This is test errors'
   })
   // get counts
-  const counts = await getHomepageCounts(true)
+  const counts = await getHomepageCounts()
   // validate counts received propely
   expect(counts).toEqual({
     software_cnt: null,
