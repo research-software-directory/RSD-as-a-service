@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,6 +14,7 @@ import CookieConsentMatomo from './CookieConsentMatomo'
 import {usePathname,useSearchParams} from 'next/navigation'
 // mock matomo script function
 const mockSetValue = jest.fn()
+// @ts-expect-error workaround to get security upgrades (Next.js 16.3.4) working
 window._paq = {push:mockSetValue} // NOSONAR
 // mock document title
 document.title='test title'
@@ -27,6 +29,7 @@ it('should not render if no matomo.id provided', () => {
     consent: null
   }
   // mock / route
+  // @ts-expect-error workaround to get security upgrades (Next.js 16.3.4) working
   usePathname.mockReturnValue('/')
   render(<CookieConsentMatomo matomo={matomo} />)
   const consentModal = screen.queryByTestId('cookie-consent-matomo')
@@ -41,6 +44,7 @@ it('should not render on cookies route', () => {
     consent: null
   }
   // mock /cookies route
+  // @ts-expect-error workaround to get security upgrades (Next.js 16.3.4) working
   usePathname.mockReturnValue('/cookies')
   //  route="/cookies"
   render(<CookieConsentMatomo matomo={matomo} />)
@@ -54,6 +58,7 @@ it('should render Accept and Decline buttons when id present and consent missing
     consent: null
   }
   // mock / route
+  // @ts-expect-error workaround to get security upgrades (Next.js 16.3.4) working
   usePathname.mockReturnValue('/')
   render(<CookieConsentMatomo matomo={matomo} />)
   const consentModal = screen.getByTestId('cookie-consent-matomo')
@@ -81,8 +86,10 @@ it('should pass route change to matomo using setValue',()=>{
     consent: true
   }
   // return / path
+  // @ts-expect-error workaround to get security upgrades (Next.js 16.3.4) working
   usePathname.mockReturnValue('/')
   // return search params
+  // @ts-expect-error workaround to get security upgrades (Next.js 16.3.4) working
   useSearchParams.mockReturnValue(['search'])
 
   // render

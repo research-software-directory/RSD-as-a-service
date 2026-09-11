@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {daysDiff, isoStrToDate, olderThanXDays, getTimeAgoSince} from './dateFn'
+import {daysDiff, getTimeAgoSince, isoStrToDate, olderThanXDays} from './dateFn'
 
 describe('dateFn.daysDiff',()=>{
   it('calculates days in past diff > 2',()=>{
@@ -26,6 +28,7 @@ describe('dateFn.daysDiff',()=>{
   })
 
   it('returns null if no date provided',()=>{
+    // @ts-expect-error wrong argument type on purpose to see if undefined is returned
     const diff = daysDiff('')
     expect(diff).toBe(undefined)
   })
@@ -58,6 +61,7 @@ describe('dateFn.olderThanXDays',()=>{
     expect(value).toEqual(false)
   })
   it('returns true for undefined',()=>{
+    // @ts-expect-error wrong argument type on purpose to see if true is returned
     const value = olderThanXDays(undefined,7)
     expect(value).toEqual(true)
   })

@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,6 +14,7 @@ const mockObserve = jest.fn()
 const mockUnobserve = jest.fn()
 // you can also pass the mock implementation
 // to jest.fn as an argument
+// @ts-expect-error workaround to get security upgrades (Next.js 16.3.4) working
 window.IntersectionObserver = jest.fn(() => ({
   observe:mockObserve,
   unobserve:mockUnobserve,

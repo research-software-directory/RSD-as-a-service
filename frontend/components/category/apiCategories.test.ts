@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,13 +14,13 @@ jest.mock('~/components/category/apiCategories',()=>jest.requireActual('~/compon
 
 
 it('generates the category tree correctly', () => {
-  const grandChild1: CategoryEntry = {id: 'grandChild1', parent: 'child1', short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}}
-  const grandChild2: CategoryEntry = {id: 'grandChild2', parent: 'child1', short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}}
-  const grandChild3: CategoryEntry = {id: 'grandChild3', parent: 'child2', short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}}
-  const grandChild4: CategoryEntry = {id: 'grandChild4', parent: 'child2', short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}}
-  const child1: CategoryEntry = {id: 'child1', parent: 'parent', short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}}
-  const child2: CategoryEntry = {id: 'child2', parent: 'parent', short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}}
-  const parent: CategoryEntry = {id: 'parent', parent: null, short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}}
+  const grandChild1: CategoryEntry = {id: 'grandChild1', parent: 'child1', short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}, status: 'other'}
+  const grandChild2: CategoryEntry = {id: 'grandChild2', parent: 'child1', short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}, status: 'other'}
+  const grandChild3: CategoryEntry = {id: 'grandChild3', parent: 'child2', short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}, status: 'other'}
+  const grandChild4: CategoryEntry = {id: 'grandChild4', parent: 'child2', short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}, status: 'other'}
+  const child1: CategoryEntry = {id: 'child1', parent: 'parent', short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}, status: 'other'}
+  const child2: CategoryEntry = {id: 'child2', parent: 'parent', short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}, status: 'other'}
+  const parent: CategoryEntry = {id: 'parent', parent: null, short_name: '', name: '', community: null, provenance_iri: null, organisation: null, allow_projects: false, allow_software:false, properties: {}, status: 'other'}
 
   const entries = [
     parent,

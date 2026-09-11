@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -21,6 +22,7 @@ import {
   updateBadgeContent,
   addBadgeForSoftware
 } from '~/components/software/apiSoftware'
+import {BadgeForSoftware} from '~/types/SoftwareTypes'
 
 // 1. Mock the API layer methods
 jest.mock('~/components/software/apiSoftware', () => ({
@@ -36,9 +38,23 @@ jest.mock('~/auth/AuthProvider', () => ({useSession: jest.fn()}))
 jest.mock('~/components/snackbar/useSnackbar', () => jest.fn())
 
 const mockShowErrorMessage = jest.fn()
-const mockInitialBadges = [
-  {id: 'b1', badge_url: 'https://img.a', position: 1},
-  {id: 'b2', badge_url: 'https://img.b', position: 2}
+const mockInitialBadges: BadgeForSoftware[] = [
+  {
+    id: 'b1',
+    badge_url: 'https://img.a',
+    position: 1,
+    software: '',
+    alt_text: null,
+    link_url: null
+  },
+  {
+    id: 'b2',
+    badge_url: 'https://img.b',
+    position: 2,
+    software: '',
+    alt_text: null,
+    link_url: null
+  }
 ]
 
 // 3. Create a wrapper component providing react-hook-form context

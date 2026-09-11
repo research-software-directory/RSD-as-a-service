@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -52,7 +53,7 @@ describe('~/app/(container)/cookies/page',()=>{
 
   it('renders cookies page with anonymous statistics checkbox ON', async() => {
     // MOCK MATOMO_ID
-    global.process.env.MATOMO_ID=9 //NOSONAR
+    global.process.env.MATOMO_ID='9' //NOSONAR
     // resolve async component
     const ResolvedPage = await CookiesPage()
 
@@ -76,9 +77,10 @@ describe('~/app/(container)/cookies/page',()=>{
 
   it('renders cookies page with anonymous statistics checkbox OFF', async() => {
     // mock first response (mtm_consent)
-    mockGetCookies.mockReturnValueOnce({key:'mtm_consent',value:false})
+    // @ts-expect-error workaround to get security upgrades (Next.js 16.3.4) working
+    mockGetCookies.mockReturnValueOnce({key:'mtm_consent',value: false})
     // MOCK MATOMO_ID
-    global.process.env.MATOMO_ID=9 //NOSONAR
+    global.process.env.MATOMO_ID='9' //NOSONAR
     // resolve async component
     const ResolvedPage = await CookiesPage()
 
