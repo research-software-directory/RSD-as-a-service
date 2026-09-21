@@ -54,9 +54,18 @@ const customJestConfig = {
 
   // ignore .next folder
   modulePathIgnorePatterns: ['.next'],
-  // d3 solution that does not work
-  // transformIgnorePatterns: ['/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)'],
+
 }
 
-// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-module.exports = createJestConfig(customJestConfig)
+// customJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
+// use async wrapper to override next/jest defaults:
+module.exports = async () => {
+  const makeConfig = await createJestConfig(customJestConfig)()
+
+  // Force Jest to compile the 'cookie' package
+  makeConfig.transformIgnorePatterns = [
+    '/node_modules/(?!cookie/)',
+  ]
+
+  return makeConfig
+}
