@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2024 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -94,25 +94,6 @@ export function extractErrorMessages(responses: {status: number, message: string
   return errors
 }
 
-
-type GrapQLResponse = {
-  data?: any,
-  errors?:any
-}
-
-export async function extractRespFromGraphQL(resp: Response) {
-  const json: GrapQLResponse = await resp.json()
-  if (json?.errors && json.errors.length > 0) {
-    return {
-      status: 500,
-      message: json.errors[0]?.message ?? 'Unknown error'
-    }
-  }
-  return {
-    status: 200,
-    data: json?.data ?? undefined
-  }
-}
 
 export function getBaseUrl() {
   const baseUrl = process.env.POSTGREST_URL || '/api/v1'
