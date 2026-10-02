@@ -78,6 +78,7 @@ export default function RemoveAccount() {
       if (resp.status === 200) {
         // forward to logout route (with full reload)
         // it removes cookies and resets the authContext
+        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
         location.href = '/logout'
       } else {
         showErrorMessage(`Failed to remove account ${user?.account}. ${resp.message}`)

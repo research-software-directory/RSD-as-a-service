@@ -5,7 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {type NextRequest} from 'next/server'
-import {parse} from 'cookie'
+import {parseCookie} from 'cookie'
 
 import logger from '~/utils/logger'
 import {createSession} from '~/auth/getSessionServerSide'
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest){
       const raw_cookies = resp.headers.get('set-cookie')
       let rsd_token = null
       if (raw_cookies) {
-        rsd_token = parse(raw_cookies)?.rsd_token
+        rsd_token = parseCookie(raw_cookies)?.rsd_token
       }
       if (rsd_token && raw_cookies) {
         const session = await createSession(rsd_token)
