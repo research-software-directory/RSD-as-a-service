@@ -1,18 +1,18 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {
+  composeUrl,
   createJsonHeaders,
-  extractReturnMessage,
   extractErrorMessages,
-  extractRespFromGraphQL,
+  extractReturnMessage,
   getBaseUrl,
-  promiseWithTimeout,
-  composeUrl
+  promiseWithTimeout
 } from './fetchHelpers'
 
 
@@ -35,7 +35,7 @@ it('creates fetch header WITH token', () => {
 })
 
 it('extracts OK response message and returns id for [200, 201, 204, 206]', async() => {
-  // all these are OK and simplyfied to 200
+  // all these are OK and simplified to 200
   const statuses = [200, 201, 204, 206]
 
   for (const status of statuses) {
@@ -122,34 +122,6 @@ it('extracts error messages from response array', async () => {
 
   // we have one 200 resp in the array
   expect(errors.length).toEqual(statuses.length-1)
-})
-
-it('extractRespFromGraphQL OK response', async () => {
-  const data = 'GraphQL data returned'
-  const resp: any = {
-    status:200,
-    statusText: 'OK',
-    json: () => Promise.resolve({data})
-  }
-
-  const result = await extractRespFromGraphQL(resp)
-  expect(result.status).toEqual(resp.status)
-  expect(result.data).toEqual(data)
-})
-
-it('extractRespFromGraphQL error response', async () => {
-  const message = 'First GraphQL error message'
-  const resp: any = {
-    status: 200,
-    statusText: 'OK',
-    json: () => Promise.resolve({errors: [{message}]})
-  }
-
-  const result = await extractRespFromGraphQL(resp)
-  // always returns 500
-  expect(result.status).toEqual(500)
-  // extracts first error message
-  expect(result.message).toEqual(message)
 })
 
 it('getBaseUrl', () => {

@@ -11,7 +11,7 @@ import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import FactCheckIcon from '@mui/icons-material/FactCheck'
 
-import {getSoftwareVersionInfoForDoi} from '~/utils/getDataCite'
+import {extractConceptDoi, getDataciteItemByDoi} from '~/utils/getDataCite'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {config} from './config'
 
@@ -21,24 +21,15 @@ type ValidateConceptDoiProps = {
   disabled: boolean
 }
 
-type DataciteWorkType = {
-  relatedIdentifiers: {
-    relationType: string,
-    relatedIdentifierType: string,
-    relatedIdentifier: string,
-  }[]
-}
-
 export default function ValidateConceptDoi({doi, onUpdate, disabled}: ValidateConceptDoiProps) {
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const [loading, setLoading] = useState(false)
 
   async function validateDoi() {
     setLoading(true)
-    const info = await getSoftwareVersionInfoForDoi(doi)
-    if (info?.status === 200) {
-      const {software} = info.data
-      const conceptDoi = extractConceptDoi(software)
+    const dataciteMention = await getDataciteItemByDoi(doi)
+    if (dataciteMention?.status === 200) {
+      const conceptDoi = extractConceptDoi(dataciteMention.message)
       if (conceptDoi === null || conceptDoi === doi) {
         showSuccessMessage(`The DOI ${doi} is a valid Concept DOI`)
       } else {
@@ -46,16 +37,9 @@ export default function ValidateConceptDoi({doi, onUpdate, disabled}: ValidateCo
         onUpdate(conceptDoi)
       }
     } else {
-      showErrorMessage(`Failed to retrieve info for DOI: ${doi}. ${info?.message ?? ''}`)
+      showErrorMessage(`Failed to retrieve info for DOI: ${doi}. ${dataciteMention?.message ?? ''}`)
     }
     setLoading(false)
-  }
-
-  function extractConceptDoi(dataciteWork: DataciteWorkType) {
-    for (const relatedIdentifier of dataciteWork.relatedIdentifiers) {
-      if(relatedIdentifier.relationType === 'IsVersionOf' && relatedIdentifier.relatedIdentifierType === 'DOI' && relatedIdentifier.relatedIdentifier) return relatedIdentifier.relatedIdentifier
-    }
-    return null
   }
 
   function renderStartIcon() {

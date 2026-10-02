@@ -1,18 +1,14 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {MentionItemProps} from '~/types/Mention'
 import {crossrefItemToMentionItem} from './getCrossref'
-import {
-  dataCiteGraphQLItemToMentionItem,
-  getDataciteItemByDoiGraphQL,
-  getDataciteItemsByDoiGraphQL
-} from './getDataCite'
+import {dataCiteRestItemToMentionItem, getDataciteItemByDoi, getDataciteItemsByDoi} from './getDataCite'
 import logger from './logger'
 import {getOpenalexItemByDoi, getOpenalexItemsByDoi, openalexItemToMentionItem} from '~/utils/getOpenalex'
 
@@ -117,37 +113,53 @@ export async function getItemsFromCrossref(dois: string[]) {
 }
 
 async function getItemFromDatacite(doi: string) {
-  const resp = await getDataciteItemByDoiGraphQL(doi)
+  try {
+    const harvestResult = await getDataciteItemByDoi(doi)
 
-  if (resp.status === 200) {
-    const mention = dataCiteGraphQLItemToMentionItem(resp.message)
+    if (harvestResult.status === 200) {
+      return {
+        status: 200,
+        message: dataCiteRestItemToMentionItem(harvestResult.message)
+      }
+    }
+
+    return harvestResult
+  } catch (e: any) {
     return {
-      status: 200,
-      message: mention
+      status: 500,
+      message: e
     }
   }
-  // return error message
-  return resp
 }
 
 export async function getItemsFromDatacite(dois: string[]) {
-  const mentions: MentionItemProps[] = []
-  if (dois.length === 0) {
-    return mentions
-  }
-  const resp = await getDataciteItemsByDoiGraphQL(dois)
-
-  if (resp.status === 200) {
-    for (const dataciteMention of resp.message) {
-      const mention = dataCiteGraphQLItemToMentionItem(dataciteMention)
-      mentions.push(mention)
+  try {
+    const harvestResult = await getDataciteItemsByDoi(dois)
+    if (harvestResult.status !== 200) {
+      logger(`getItemsFromDatacite...failed...${harvestResult.status} ${harvestResult.message}`)
+      return harvestResult
     }
-    return mentions
+
+    const resultMap = new Map()
+    harvestResult.message.forEach((value: any, key: any) => {
+      if (value.status === 200) {
+        const mention = dataCiteRestItemToMentionItem(value.message)
+        resultMap.set(key, {status: 200, message: mention})
+      } else {
+        resultMap.set(key, value)
+      }
+    })
+
+    return {
+      status: 200,
+      message: resultMap
+    }
+  } catch (e: any) {
+    return {
+      status: 500,
+      message: e
+    }
   }
-  // return error message
-  // return resp
-  logger(`getItemsFromDatacite...failed...${resp.status} ${resp.message}`)
-  return mentions
 }
 
 async function getItemFromOpenalex(doi: string) {

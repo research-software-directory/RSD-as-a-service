@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -113,20 +113,32 @@ export async function validateInputList(doiList: string[], mentions: MentionItem
     })
 
     // get mentions from datacite
-    const dataciteMentions = await getItemsFromDatacite(dataciteDois)
+    const dataciteMentionsReport = await getItemsFromDatacite(dataciteDois)
     // update mention results
-    dataciteMentions.forEach(mention => {
-      if (mention.doi !== null) {
-        const doi = mention.doi.toLowerCase()
-        mentionResultPerDoi.set(doi, {
-          doi,
-          status: 'valid',
-          source: 'DataCite',
-          include: true,
-          mention
-        })
-      }
-    })
+    if (dataciteMentionsReport.status === 200) {
+      const doiToItem = dataciteMentionsReport.message
+      doiToItem.forEach((mentionReport: any, doi: string) => {
+        const lowerDoi = doi.toLowerCase()
+        if (mentionReport.status !== 200) {
+          mentionResultPerDoi.set(lowerDoi, {
+            doi: lowerDoi,
+            status: 'unknown',
+            source: 'DataCite',
+            include: false,
+            mention: undefined
+          })
+        } else {
+          mentionResultPerDoi.set(lowerDoi, {
+            doi: lowerDoi,
+            status: 'valid',
+            source: 'DataCite',
+            include: true,
+            mention: mentionReport.message
+          })
+        }
+
+      })
+    }
 
     const openalexMentions = await getItemsFromOpenAlex(openalexDois)
     openalexMentions.forEach(mention => {
