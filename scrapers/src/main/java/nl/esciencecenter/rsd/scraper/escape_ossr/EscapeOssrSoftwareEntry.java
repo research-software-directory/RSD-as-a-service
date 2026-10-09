@@ -303,7 +303,7 @@ public class EscapeOssrSoftwareEntry {
 
 		JsonArray keywordsArray = new JsonArray(keywords.size());
 		for (String keyword : keywords) {
-			keywordsArray.add((keyword));
+			keywordsArray.add(keyword);
 		}
 		root.add("keywords_array", keywordsArray);
 

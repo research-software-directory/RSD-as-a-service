@@ -68,7 +68,7 @@ public class Config {
 
 		try {
 			String value = System.getenv(name);
-			return (value == null || value.isBlank()) ? Optional.empty() : Optional.of(value.strip());
+			return value == null || value.isBlank() ? Optional.empty() : Optional.of(value.strip());
 		} catch (Exception e) {
 			LOGGER.warn("Failed to retrieve environment variable: {}", name, e);
 			return Optional.empty();
