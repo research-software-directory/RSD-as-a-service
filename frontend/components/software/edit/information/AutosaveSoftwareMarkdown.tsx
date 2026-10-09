@@ -53,6 +53,8 @@ export default function AutosaveSoftwareMarkdown() {
   // console.log('description_url...', description_url)
   // console.log('dirtyDesc...', dirtyDesc)
   // console.log('isValid...', isValid)
+  // console.log('errDescriptionUrl...', errDescriptionUrl)
+  // console.log('errDescription...', errDescription)
   // console.groupEnd()
 
   function shouldSave({name, value}: SaveInfo) {
@@ -83,8 +85,9 @@ export default function AutosaveSoftwareMarkdown() {
     // collect data to save
     const data = {
       description_type,
-      description_url,
-      description
+      // clear incorrect values in case of error
+      description_url: errDescriptionUrl ? null : description_url,
+      description: errDescription ? null : description
     }
     if (name === 'description' ||
       name === 'description_url' ||
