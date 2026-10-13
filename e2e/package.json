@@ -34,10 +34,7 @@
   "author": "Dusan Mijatovic",
   "license": "Apache 2.0",
   "devDependencies": {
-    "@playwright/test": "1.57.0",
-    "@types/node": "25.0.8",
-    "@typescript-eslint/eslint-plugin": "8.53.0",
-    "@typescript-eslint/parser": "8.53.0",
-    "eslint": "9.39.2"
+    "@playwright/test": "1.63.0",
+    "@types/node": "26.6.4"
   }
 }

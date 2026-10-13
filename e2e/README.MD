@@ -104,7 +104,7 @@ npm install -D eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
 
 When adding organisations or references to research publications for software (mentions) and projects (input/output) RSD needs to make api calls to ror.org, doi.org, crossref and datacite api's. These calls prove to be "heavy" and less reliable when executed as e2e tests in CI.
 
-To improve e2e tests reliability and reduce dependency on external api availability the json response can be generated once and then reused during test. The json data is saved in mocks/data folder. 
+To improve e2e tests reliability and reduce dependency on external api availability the json response can be generated once and then reused during test. The json data is saved in mocks/data folder.
 
 ### How to generate data files
 

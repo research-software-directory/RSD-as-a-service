@@ -6,8 +6,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 import {expect} from '@playwright/test'
 import {generateFileName, saveFile} from './save'
 
@@ -27,9 +25,9 @@ export async function addCitation(page, input: string, waitForResponse: string) 
   // start new search
   const findMention = await page.locator('#async-autocomplete').first()
   await Promise.all([
-    // then wait untill options list is shown
+    // then wait until options list is shown
     // page.waitForSelector('#async-autocomplete-listbox'),
-    // change to wait untill network traffic settles
+    // change to wait until network traffic settles
     page.waitForLoadState('networkidle'),
     // page.waitForSelector('#async-autocomplete-option-1'),
     findMention.fill(input),
@@ -50,7 +48,7 @@ export async function addCitation(page, input: string, waitForResponse: string) 
   ])
 
   // validate mention item added
-  // retry untill test pass
+  // retry until test pass
   await expect(async () => {
     const count = await page.getByTestId('mention-item-base')
       .filter({
@@ -68,7 +66,7 @@ export async function addCitation(page, input: string, waitForResponse: string) 
 
 async function listenForDoiCalls(page,input:string) {
   // monitor api calls
-  // console.log('input...', input)
+  // console.log('listenForDoiCalls: input...', input)
   await page.route(`https://doi.org/doiRA/${input}`, async route => {
     // const url = route.request().url()
     // console.log('doi.org...url...', url)
@@ -76,14 +74,15 @@ async function listenForDoiCalls(page,input:string) {
     // mock route response with local data file
     await route.fulfill({path:filename})
   })
-  await page.route(`https://api.crossref.org/works/${input}`, async route => {
+  // crossref api calls moved to next backend
+  await page.route(`http://localhost/api/fe/mention/crossref?doi=${input}`, async route => {
     // const url = route.request().url()
     // console.log('crossref...url...', url)
     const filename = `mocks/data/crossref_${generateFileName(input)}.json`
     // mock route response with local data file
     await route.fulfill({path: filename})
   })
-  await page.route('https://api.datacite.org/graphql', async route => {
+  await page.route(`https://api.datacite.org/dois/${encodeURIComponent(input)}`, async route => {
     // const url = route.request().url()
     // console.log('datacite...url...', url)
     const filename = `mocks/data/datacite_${generateFileName(input)}.json`
@@ -108,7 +107,7 @@ export async function saveCitation(page, input: string, waitForResponse: string)
   // start new search
   const findMention = await page.locator('#async-autocomplete').first()
   await Promise.all([
-    // then wait untill options list is shown
+    // then wait until options list is shown
     page.waitForSelector('#async-autocomplete-listbox'),
     findMention.fill(input),
   ])
@@ -155,7 +154,8 @@ export async function generateJsonFromApiCalls(page, input: string) {
     // continue
     route.continue()
   })
-  await page.route(`https://api.crossref.org/works/${input}`, async route => {
+  // crossref api calls moved to next backend
+  await page.route(`http://localhost/api/fe/mention/crossref?doi=${input}`, async route => {
     // const url = route.request().url()
     // console.log('crossref...url...', url)
     const resp = await route.fetch()
@@ -167,7 +167,7 @@ export async function generateJsonFromApiCalls(page, input: string) {
     // continue
     route.continue()
   })
-  await page.route('https://api.datacite.org/graphql', async route => {
+  await page.route(`https://api.datacite.org/dois/${encodeURIComponent(input)}`, async route => {
     // const url = route.request().url()
     // console.log('datacite...url...', url)
     const resp = await route.fetch()
