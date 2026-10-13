@@ -12,8 +12,8 @@ SPDX-License-Identifier: Apache-2.0
 
 <!--editorconfig-checker-disable-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<!--editorconfig-checker-enable-->
 	<modelVersion>4.0.0</modelVersion>
 
@@ -102,7 +102,7 @@ SPDX-License-Identifier: Apache-2.0
 		<dependency>
 			<groupId>io.javalin</groupId>
 			<artifactId>javalin</artifactId>
-			<version>7.2.2</version>
+			<version>7.2.3</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
@@ -116,14 +116,14 @@ SPDX-License-Identifier: Apache-2.0
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>2.0.18</version>
+			<version>2.0.20</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
 		<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
-			<version>4.5.2</version>
+			<version>4.6.1</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
@@ -137,7 +137,7 @@ SPDX-License-Identifier: Apache-2.0
 		<dependency>
 			<groupId>com.nimbusds</groupId>
 			<artifactId>oauth2-oidc-sdk</artifactId>
-			<version>11.33</version>
+			<version>11.38.2</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
@@ -151,7 +151,7 @@ SPDX-License-Identifier: Apache-2.0
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.5.34</version>
+			<version>1.6.5</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
@@ -180,7 +180,7 @@ SPDX-License-Identifier: Apache-2.0
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-crypto</artifactId>
-			<version>7.0.5</version>
+			<version>7.0.7</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
@@ -193,8 +193,8 @@ SPDX-License-Identifier: Apache-2.0
 		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on -->
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk15to18</artifactId>
-			<version>1.84</version>
+			<artifactId>bcprov-jdk18on</artifactId>
+			<version>1.86</version>
 		</dependency>
 	</dependencies>
 

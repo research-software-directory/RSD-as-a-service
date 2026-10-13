@@ -31,7 +31,7 @@ public class ProxyWithAccessTokenHandler implements Handler {
 	@Override
 	public void handle(@NotNull Context ctx) throws IOException, InterruptedException {
 		String path = ctx.path().substring("/api/v2".length());
-		String fullUrl = Config.backendBaseUrl() + path + ((ctx.queryString() != null) ? "?" + ctx.queryString() : "");
+		String fullUrl = Config.backendBaseUrl() + path + (ctx.queryString() != null ? "?" + ctx.queryString() : "");
 
 		HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(URI.create(fullUrl));
 

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -124,10 +124,10 @@ public class MainCitations {
 			LOGGER.info(
 				"Scraping for {} done. OpenAlex: {} ms. Saving mentions {} ms. Saving citations {} ms. Total {} ms.",
 				citationData.doi(),
-				(t2 - t1),
-				(t3 - t2),
-				(t4 - t3),
-				(t4 - t1)
+				t2 - t1,
+				t3 - t2,
+				t4 - t3,
+				t4 - t1
 			);
 		}
 	}

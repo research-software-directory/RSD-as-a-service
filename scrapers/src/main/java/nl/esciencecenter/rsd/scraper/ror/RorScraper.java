@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -47,21 +47,20 @@ public class RorScraper {
 			JsonObject firstAddressJson = addressesJson.get(0).getAsJsonObject().getAsJsonObject("geonames_details");
 
 			JsonElement countryJson = firstAddressJson.get("country_name");
-			String country = (countryJson != null && countryJson.isJsonPrimitive())
-				? countryJson.getAsJsonPrimitive().getAsString()
-				: null;
+			String country =
+				countryJson != null && countryJson.isJsonPrimitive()
+					? countryJson.getAsJsonPrimitive().getAsString()
+					: null;
 
 			String city = firstAddressJson.getAsJsonPrimitive("name").getAsString();
 
 			JsonElement latJson = firstAddressJson.get("lat");
-			Double lat = (latJson != null && latJson.isJsonPrimitive())
-				? latJson.getAsJsonPrimitive().getAsDouble()
-				: null;
+			Double lat =
+				latJson != null && latJson.isJsonPrimitive() ? latJson.getAsJsonPrimitive().getAsDouble() : null;
 
 			JsonElement lonJson = firstAddressJson.get("lng");
-			Double lon = (lonJson != null && lonJson.isJsonPrimitive())
-				? lonJson.getAsJsonPrimitive().getAsDouble()
-				: null;
+			Double lon =
+				lonJson != null && lonJson.isJsonPrimitive() ? lonJson.getAsJsonPrimitive().getAsDouble() : null;
 
 			JsonArray linksJson = parsedJson.getAsJsonArray("links");
 			String wikipediaUrl = null;

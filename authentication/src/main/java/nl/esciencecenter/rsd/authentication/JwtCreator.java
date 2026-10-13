@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2024 - 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -58,7 +58,7 @@ public class JwtCreator {
 			.withClaim("iss", RSD_AUTH_ROLE)
 			.withClaim("role", RSD_USER_ROLE)
 			.withClaim("account", accountID)
-			.withClaim("type", "access_token_" + ((tokenID != null) ? tokenID : ""))
+			.withClaim("type", "access_token_" + (tokenID != null ? tokenID : ""))
 			.withExpiresAt(new Date(System.currentTimeMillis() + FIFTEEN_MINUTES_IN_MILLISECOND))
 			.sign(signingAlgorithm);
 	}
