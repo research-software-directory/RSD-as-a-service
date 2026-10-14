@@ -59,7 +59,7 @@ public class PostgrestAccount implements Account {
 				providerUrlEncoded
 		);
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-		String token = jwtCreator.createAdminJwt();
+		String token = jwtCreator.createAnonymousAdminJwt();
 		String responseLogin = getAsAdmin(queryUri, token);
 		JsonArray accountsWithSub = JsonParser.parseString(responseLogin).getAsJsonArray();
 		// Because of the UNIQUE(provider, sub) constraint on the login_for_account table, this should never happen
@@ -131,7 +131,7 @@ public class PostgrestAccount implements Account {
 		Optional<AccountInfo> maybeExistingAccount = getAccountIfExists(openIdInfo, provider);
 
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-		String token = jwtCreator.createAdminJwt();
+		String token = jwtCreator.createAnonymousAdminJwt();
 		AccountInfo accountInfo;
 
 		if (maybeExistingAccount.isPresent()) {
@@ -177,7 +177,7 @@ public class PostgrestAccount implements Account {
 			backendUri + "/account_invite?select=uses_left,expires_at&id=eq.%s".formatted(inviteId)
 		);
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-		String token = jwtCreator.createAdminJwt();
+		String token = jwtCreator.createAnonymousAdminJwt();
 
 		String response = getAsAdmin(accountInviteUrl, token);
 
@@ -221,7 +221,7 @@ public class PostgrestAccount implements Account {
 		Objects.requireNonNull(accountId);
 		URI accountUrl = URI.create(backendUri + "/admin_account?account_id=eq.%s".formatted(accountId));
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-		String token = jwtCreator.createAdminJwt();
+		String token = jwtCreator.createAnonymousAdminJwt();
 
 		String response = getAsAdmin(accountUrl, token);
 		return parseIsAdminResponse(accountId, response);
@@ -248,7 +248,7 @@ public class PostgrestAccount implements Account {
 	public void coupleLogin(UUID accountId, OpenIdInfo openIdInfo, OpenidProvider provider)
 		throws IOException, InterruptedException, RsdResponseException {
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-		String adminJwt = jwtCreator.createAdminJwt();
+		String adminJwt = jwtCreator.createAnonymousAdminJwt();
 		createLoginForAccount(accountId, openIdInfo, provider, backendUri, adminJwt);
 	}
 

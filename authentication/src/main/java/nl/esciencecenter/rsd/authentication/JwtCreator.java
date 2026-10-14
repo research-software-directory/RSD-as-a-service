@@ -34,6 +34,12 @@ public class JwtCreator {
 		this.signingAlgorithm = Algorithm.HMAC256(signingSecret);
 	}
 
+	/**
+	 * Create a JWT that should be returned to the user (by the means of an HTTP cookie).
+	 *
+	 * @param accountInfo the user account for which to create the JWT
+	 * @return the JWT for the user
+	 */
 	String createUserJwt(AccountInfo accountInfo) {
 		return JWT.create()
 			.withClaim("iss", RSD_AUTH_ROLE)
@@ -45,7 +51,13 @@ public class JwtCreator {
 			.sign(signingAlgorithm);
 	}
 
-	public String createAdminJwt() {
+	/**
+	 * Create a JWT that should be used by this module to make admin requests to PostgREST.
+	 * The JWT should never be returned to the user
+	 *
+	 * @return an admin JWT for internal usage only
+	 */
+	public String createAnonymousAdminJwt() {
 		return JWT.create()
 			.withClaim("iss", RSD_AUTH_ROLE)
 			.withClaim("role", RSD_ADMIN_ROLE)
@@ -53,6 +65,14 @@ public class JwtCreator {
 			.sign(signingAlgorithm);
 	}
 
+	/**
+	 * Create a JWT that is used to proxy the request of the user, who should have a valid access token,
+	 * to PostgREST. The JWT should not be returned to the user.
+	 *
+	 * @param accountID the user's account ID
+	 * @param tokenID the ID of the access token
+	 * @return a non-admin JWT that is used for proxying the user's request to PostgREST
+	 */
 	public String createAccessTokenJwt(String accountID, String tokenID) {
 		return JWT.create()
 			.withClaim("iss", RSD_AUTH_ROLE)
