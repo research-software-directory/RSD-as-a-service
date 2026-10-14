@@ -15,6 +15,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
@@ -22,12 +24,19 @@ import java.util.UUID;
 
 public class JwtCreator {
 
-	static final long ONE_HOUR_IN_MILLISECONDS = 3600_000L; // 60 * 60 * 1000
-	static final long FIFTEEN_MINUTES_IN_MILLISECOND = 900_000L;
-	private final Algorithm signingAlgorithm;
+	private static final long ONE_HOUR_IN_MILLISECONDS = 3600_000L; // 60 * 60 * 1000
+	private static final Duration JWT_LIFESPAN = Duration.ofHours(1);
+	private static final Duration JWT_ACCESS_TOKEN_LIFESPAN = Duration.ofMinutes(15);
+
+	private static final String JWT_ROLE_KEY = "role";
+	private static final String JWT_ACCOUNT_KEY = "account";
+	private static final String JWT_NAME_KEY = "name";
+	private static final String JWT_DATA_KEY = "data";
 	private static final String RSD_ADMIN_ROLE = "rsd_admin";
 	private static final String RSD_USER_ROLE = "rsd_user";
 	private static final String RSD_AUTH_ROLE = "rsd_auth";
+
+	private final Algorithm signingAlgorithm;
 
 	public JwtCreator(String signingSecret) {
 		Objects.requireNonNull(signingSecret);
@@ -42,12 +51,12 @@ public class JwtCreator {
 	 */
 	String createUserJwt(AccountInfo accountInfo) {
 		return JWT.create()
-			.withClaim("iss", RSD_AUTH_ROLE)
-			.withClaim("role", accountInfo.isAdmin() ? RSD_ADMIN_ROLE : RSD_USER_ROLE)
-			.withClaim("account", accountInfo.account().toString())
-			.withClaim("name", accountInfo.name())
-			.withClaim("data", accountInfo.data())
-			.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
+			.withIssuer(RSD_AUTH_ROLE)
+			.withClaim(JWT_ROLE_KEY, accountInfo.isAdmin() ? RSD_ADMIN_ROLE : RSD_USER_ROLE)
+			.withClaim(JWT_ACCOUNT_KEY, accountInfo.account().toString())
+			.withClaim(JWT_NAME_KEY, accountInfo.name())
+			.withClaim(JWT_DATA_KEY, accountInfo.data())
+			.withExpiresAt(Instant.now().plus(JWT_LIFESPAN))
 			.sign(signingAlgorithm);
 	}
 
@@ -59,9 +68,9 @@ public class JwtCreator {
 	 */
 	public String createAnonymousAdminJwt() {
 		return JWT.create()
-			.withClaim("iss", RSD_AUTH_ROLE)
-			.withClaim("role", RSD_ADMIN_ROLE)
-			.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
+			.withIssuer(RSD_AUTH_ROLE)
+			.withClaim(JWT_ROLE_KEY, RSD_ADMIN_ROLE)
+			.withExpiresAt(Instant.now().plus(JWT_LIFESPAN))
 			.sign(signingAlgorithm);
 	}
 
@@ -75,17 +84,17 @@ public class JwtCreator {
 	 */
 	public String createAccessTokenJwt(String accountID, String tokenID) {
 		return JWT.create()
-			.withClaim("iss", RSD_AUTH_ROLE)
-			.withClaim("role", RSD_USER_ROLE)
-			.withClaim("account", accountID)
+			.withIssuer(RSD_AUTH_ROLE)
+			.withClaim(JWT_ROLE_KEY, RSD_USER_ROLE)
+			.withClaim(JWT_ACCOUNT_KEY, accountID)
 			.withClaim("type", "access_token_" + (tokenID != null ? tokenID : ""))
-			.withExpiresAt(new Date(System.currentTimeMillis() + FIFTEEN_MINUTES_IN_MILLISECOND))
+			.withExpiresAt(Instant.now().plus(JWT_ACCESS_TOKEN_LIFESPAN))
 			.sign(signingAlgorithm);
 	}
 
 	String refreshToken(String token) throws IOException, InterruptedException, RsdResponseException {
 		DecodedJWT oldJwt = JWT.decode(token);
-		UUID accountId = UUID.fromString(oldJwt.getClaim("account").asString());
+		UUID accountId = UUID.fromString(oldJwt.getClaim(JWT_ACCOUNT_KEY).asString());
 		boolean isAdmin = new PostgrestAccount(Config.backendBaseUrl()).isAdmin(accountId);
 		String payloadEncoded = oldJwt.getPayload();
 		String payloadDecoded = Main.decode(payloadEncoded);
@@ -93,7 +102,7 @@ public class JwtCreator {
 		Map<String, ?> claimsMap = gson.<Map<String, ?>>fromJson(payloadDecoded, Map.class);
 		return JWT.create()
 			.withPayload(claimsMap)
-			.withClaim("role", isAdmin ? RSD_ADMIN_ROLE : RSD_USER_ROLE)
+			.withClaim(JWT_ROLE_KEY, isAdmin ? RSD_ADMIN_ROLE : RSD_USER_ROLE)
 			.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
 			.sign(signingAlgorithm);
 	}
