@@ -11,25 +11,23 @@
 package nl.esciencecenter.rsd.authentication;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.google.gson.Gson;
-import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 public class JwtCreator {
 
-	private static final long ONE_HOUR_IN_MILLISECONDS = 3600_000L; // 60 * 60 * 1000
 	private static final Duration JWT_LIFESPAN = Duration.ofHours(1);
 	private static final Duration JWT_ACCESS_TOKEN_LIFESPAN = Duration.ofMinutes(15);
 
 	private static final String JWT_ROLE_KEY = "role";
-	private static final String JWT_ACCOUNT_KEY = "account";
+	static final String JWT_ACCOUNT_KEY = "account";
 	private static final String JWT_NAME_KEY = "name";
 	private static final String JWT_DATA_KEY = "data";
 	private static final String RSD_ADMIN_ROLE = "rsd_admin";
@@ -92,18 +90,27 @@ public class JwtCreator {
 			.sign(signingAlgorithm);
 	}
 
-	String refreshToken(String token) throws IOException, InterruptedException, RsdResponseException {
-		DecodedJWT oldJwt = JWT.decode(token);
-		UUID accountId = UUID.fromString(oldJwt.getClaim(JWT_ACCOUNT_KEY).asString());
-		boolean isAdmin = new PostgrestAccount(Config.backendBaseUrl()).isAdmin(accountId);
-		String payloadEncoded = oldJwt.getPayload();
-		String payloadDecoded = Main.decode(payloadEncoded);
-		Gson gson = new Gson();
-		Map<String, ?> claimsMap = gson.<Map<String, ?>>fromJson(payloadDecoded, Map.class);
-		return JWT.create()
-			.withPayload(claimsMap)
-			.withClaim(JWT_ROLE_KEY, isAdmin ? RSD_ADMIN_ROLE : RSD_USER_ROLE)
-			.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
+	/**
+	 * Generate a new token with the same payload as the old token, updating the expiry date and role.
+	 * This method does <strong>not</strong> verify the old token.
+	 *
+	 * @param oldToken the JWT to refresh
+	 * @param isCurrentlyAdmin a flag to indicate if the user is currently an admin
+	 * @return a refreshed token
+	 */
+	String refreshToken(String oldToken, boolean isCurrentlyAdmin) {
+		DecodedJWT oldJwt = JWT.decode(oldToken);
+		Map<String, Claim> oldClaims = oldJwt.getClaims();
+		JWTCreator.Builder builder = JWT.create();
+		Map<String, Object> oldClaimsCopy = new HashMap<>();
+		for (Map.Entry<String, Claim> claimEntry : oldClaims.entrySet()) {
+			oldClaimsCopy.put(claimEntry.getKey(), claimEntry.getValue().as(Object.class));
+		}
+
+		return builder
+			.withPayload(oldClaimsCopy)
+			.withClaim(JWT_ROLE_KEY, isCurrentlyAdmin ? RSD_ADMIN_ROLE : RSD_USER_ROLE)
+			.withExpiresAt(Instant.now().plus(JWT_LIFESPAN))
 			.sign(signingAlgorithm);
 	}
 }
