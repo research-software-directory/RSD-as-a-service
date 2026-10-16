@@ -7,14 +7,6 @@
 
 import {isProperUrl} from '~/utils/fetchHelpers'
 
-async function isValidUrl(url:string){
-  // validate url syntax first
-  if (isProperUrl(url)===false){
-    return 'Invalid url. Please improve your input'
-  }
-  return true
-}
-
 const config = {
   modalTitle:'Remote RSD',
   label: {
@@ -34,7 +26,7 @@ const config = {
       required: 'Valid URL is required.',
       // we do not show error message for this one, we use only maxLength value
       maxLength: {value: 200, message: 'Maximum length is 200'},
-      validate: isValidUrl
+      validate: isProperUrl
     }
   },
   active: {

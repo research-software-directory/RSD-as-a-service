@@ -123,10 +123,13 @@ export async function promiseWithTimeout<T>(
 // Validate url string is syntactically correct
 export function isProperUrl(url:string){
   try{
+    //url should start with https://
+    if (url.startsWith('https://') === false) return 'Url should start with https://'
+    //now create new URL
     new URL(url)
     return true
   }catch{
-    return false
+    return 'Invalid url. Please improve your input'
   }
 }
 

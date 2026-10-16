@@ -69,10 +69,11 @@ export async function GET(request: NextRequest) {
     }
 
     // validation 2: check if url syntax is correct
-    if (isProperUrl(url)===false){
+    const valid = isProperUrl(url)
+    if (valid!==true){
       return Response.json({
         'status': 400,
-        'message': 'Not a valid url. Please validate your input.'
+        'message': valid
       },{
         status: 200,
         statusText: 'OK'
