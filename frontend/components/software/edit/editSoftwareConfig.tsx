@@ -74,14 +74,7 @@ export const softwareInformation = {
       required: 'Valid markdown URL is required',
       maxLength: {value: 200, message: 'Maximum length is 200'},
       // custom validation function for correct url syntax
-      validate: (url:string)=>{
-        // return error message if not correct url syntax
-        if (!isProperUrl(url)){
-          return 'Invalid url. Please improve your input'
-        }
-        // has correct url syntax
-        return true
-      }
+      validate: isProperUrl
     }
   },
   pageStatus: {

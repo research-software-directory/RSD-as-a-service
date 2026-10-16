@@ -53,6 +53,8 @@ export default function AutosaveSoftwareMarkdown() {
   // console.log('description_url...', description_url)
   // console.log('dirtyDesc...', dirtyDesc)
   // console.log('isValid...', isValid)
+  // console.log('errDescriptionUrl...', errDescriptionUrl)
+  // console.log('errDescription...', errDescription)
   // console.groupEnd()
 
   function shouldSave({name, value}: SaveInfo) {
@@ -86,12 +88,17 @@ export default function AutosaveSoftwareMarkdown() {
       description_url,
       description
     }
+
     if (name === 'description' ||
       name === 'description_url' ||
       name === 'description_type'
     ) {
       data[name] = value
-    }
+    } else return
+
+    // ignore incorrect values when error
+    if (errDescriptionUrl) delete data.description_url
+    if (errDescription) delete data.description
 
     const resp = await patchSoftwareTable({
       id,
