@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,6 +20,13 @@ public class JwtVerifier {
 		this.signingSecret = Objects.requireNonNull(signingSecret);
 	}
 
+	/**
+	 * Verify a JWT.
+	 *
+	 * @param token the JWT to verify
+	 * @return a verified and decoded JWT
+	 * @throws JWTVerificationException when the JWT is not valid (e.g. it is expired or tempered with or <code>null</code>)
+	 */
 	DecodedJWT verify(String token) {
 		if (token == null) {
 			throw new JWTVerificationException("Token was null");
