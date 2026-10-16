@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM node:24.14.1-trixie-slim
+FROM node:26.12.0-trixie-slim
 WORKDIR /usr/app
 COPY ./package.json /usr/app
 RUN npm install
