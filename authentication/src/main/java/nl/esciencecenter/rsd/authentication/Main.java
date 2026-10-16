@@ -40,7 +40,7 @@ public class Main {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 	private static final String LOGIN_FAILED_PATH = "/login/failed";
 
-	public static void main(String[] args) {
+	static void main() {
 		RsdProviders rsdProviders = new RsdProviders();
 		Javalin app = Javalin.create(c -> {
 			c.concurrency.useVirtualThreads = false;

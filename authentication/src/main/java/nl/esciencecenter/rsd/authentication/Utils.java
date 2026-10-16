@@ -72,7 +72,7 @@ public class Utils {
 			}
 			try {
 				return extractAuthUrlFromWellKnownData(response.body());
-			} catch (RuntimeException e) {
+			} catch (RuntimeException _) {
 				throw new RsdResponseException(
 					response.statusCode(),
 					response.uri(),

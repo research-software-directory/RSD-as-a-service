@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -77,7 +77,7 @@ public class RsdProviders {
 					LOGGER.warn("Provider {} is misconfigured because no well-known URL was found", openidProvider);
 					continue;
 				}
-			} catch (URISyntaxException ignored) {
+			} catch (URISyntaxException _) {
 				accessMethodOrderMap.put(openidProvider, OpenidProviderAccessMethod.MISCONFIGURED);
 				LOGGER.warn("Provider {} is misconfigured because it has an invalid well-known URL", openidProvider);
 				continue;
@@ -211,7 +211,7 @@ public class RsdProviders {
 			OpenidProvider openidProvider;
 			try {
 				openidProvider = OpenidProvider.valueOf(providerSplit[0].toLowerCase());
-			} catch (IllegalArgumentException e) {
+			} catch (IllegalArgumentException _) {
 				continue;
 			}
 
@@ -226,7 +226,7 @@ public class RsdProviders {
 			OpenidProviderAccessMethod accessMethod;
 			try {
 				accessMethod = OpenidProviderAccessMethod.valueOf(providerSplit[1]);
-			} catch (IllegalArgumentException e) {
+			} catch (IllegalArgumentException _) {
 				result.put(
 					openidProvider,
 					new OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod.MISCONFIGURED, i)
@@ -236,7 +236,7 @@ public class RsdProviders {
 
 			final int iCopy = i;
 			// duplicate entries are considered to be misconfigured
-			result.compute(openidProvider, (_key, oldValue) ->
+			result.compute(openidProvider, (_, oldValue) ->
 				oldValue == null
 					? new OpenidProviderAccessMethodOrder(accessMethod, iCopy)
 					: new OpenidProviderAccessMethodOrder(OpenidProviderAccessMethod.MISCONFIGURED, iCopy)
