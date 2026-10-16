@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
@@ -72,7 +72,7 @@ public class Utils {
 			}
 			try {
 				return extractAuthUrlFromWellKnownData(response.body());
-			} catch (RuntimeException e) {
+			} catch (RuntimeException _) {
 				throw new RsdResponseException(
 					response.statusCode(),
 					response.uri(),
@@ -161,7 +161,7 @@ public class Utils {
 	public static String getAsAdmin(String uri) throws IOException, InterruptedException, RsdResponseException {
 		String signingSecret = Config.jwtSigningSecret();
 		JwtCreator jwtCreator = new JwtCreator(signingSecret);
-		String jwtString = jwtCreator.createAdminJwt();
+		String jwtString = jwtCreator.createAnonymousAdminJwt();
 
 		HttpRequest request = HttpRequest.newBuilder()
 			.GET()

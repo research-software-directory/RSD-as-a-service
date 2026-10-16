@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Paula Stock (GFZ) <paula.stock@gfz.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -15,6 +15,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.IOException;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import nl.esciencecenter.rsd.authentication.Config;
@@ -41,7 +42,7 @@ public class AccessTokenVerifier {
 			throw new RsdAccessTokenException("Access token is invalid");
 		}
 
-		if (ZonedDateTime.now().isAfter(accessToken.expiresAt())) {
+		if (Instant.now().isAfter(accessToken.expiresAt().toInstant())) {
 			throw new RsdAccessTokenException("Access token is expired");
 		}
 
