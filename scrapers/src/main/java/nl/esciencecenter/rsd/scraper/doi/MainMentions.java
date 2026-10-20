@@ -200,6 +200,12 @@ public class MainMentions {
 		for (ExternalMentionRecord scrapedMention : scrapedOpenalexMentions) {
 			OpenalexId openalexId = scrapedMention.openalexId();
 			UUID id = openalexIdToId.get(openalexId);
+			// this shouldn't normally happen, but the data-generation script has
+			// OpenAlex mentions without storing an OpenAlex ID
+			if (id == null) {
+				id = doiToId.get(scrapedMention.doi());
+			}
+
 			RsdMentionRecord mentionToUpdate = new RsdMentionRecord(id, scrapedMention, now);
 			try {
 				localMentionRepository.updateMention(mentionToUpdate, true);
