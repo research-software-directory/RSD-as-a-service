@@ -45,6 +45,9 @@ class UtilsTest {
 	@CsvSource(
 		value = {
 			"abc,abc",
+			"ABC,abc",
+			"123,123",
+			"09AbC123,09abc123",
 			" abc,abc",
 			" abc ,abc",
 			" abc,abc",
@@ -57,6 +60,10 @@ class UtilsTest {
 			"a@b,a-b",
 			"a!@#$%^&*()_b,a-b",
 			"aBc D,abc-d",
+			"a-b!@#$%^&,a-b",
+			"!@#$%^&a-b,a-b",
+			"!@#$%^&a-b!@#$%^&,a-b",
+			"---AB----,ab",
 		},
 		ignoreLeadingAndTrailingWhitespace = false
 	)

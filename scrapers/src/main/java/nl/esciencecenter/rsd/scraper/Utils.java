@@ -65,7 +65,7 @@ public class Utils {
 	 * leading, trailing and more than one duplicate dashes have been removed
 	 */
 	public static String slugify(String s) {
-		return s.toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9]+", "-").replaceAll("^-+", "").replaceAll("-+$", "");
+		return s.toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9]+", "-").replaceAll("^-", "").replaceAll("-$", "");
 	}
 
 	/**
