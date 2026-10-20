@@ -20,6 +20,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -59,7 +61,7 @@ public class PostgrestAccount implements Account {
 				providerUrlEncoded
 		);
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-		String token = jwtCreator.createAdminJwt();
+		String token = jwtCreator.createAnonymousAdminJwt();
 		String responseLogin = getAsAdmin(queryUri, token);
 		JsonArray accountsWithSub = JsonParser.parseString(responseLogin).getAsJsonArray();
 		// Because of the UNIQUE(provider, sub) constraint on the login_for_account table, this should never happen
@@ -131,7 +133,7 @@ public class PostgrestAccount implements Account {
 		Optional<AccountInfo> maybeExistingAccount = getAccountIfExists(openIdInfo, provider);
 
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-		String token = jwtCreator.createAdminJwt();
+		String token = jwtCreator.createAnonymousAdminJwt();
 		AccountInfo accountInfo;
 
 		if (maybeExistingAccount.isPresent()) {
@@ -177,7 +179,7 @@ public class PostgrestAccount implements Account {
 			backendUri + "/account_invite?select=uses_left,expires_at&id=eq.%s".formatted(inviteId)
 		);
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-		String token = jwtCreator.createAdminJwt();
+		String token = jwtCreator.createAnonymousAdminJwt();
 
 		String response = getAsAdmin(accountInviteUrl, token);
 
@@ -205,7 +207,7 @@ public class PostgrestAccount implements Account {
 		JsonObject inviteObject = jsonArray.get(0).getAsJsonObject();
 
 		ZonedDateTime expiresAt = ZonedDateTime.parse(inviteObject.getAsJsonPrimitive("expires_at").getAsString());
-		if (expiresAt.isBefore(ZonedDateTime.now())) {
+		if (expiresAt.toInstant().isBefore(Instant.now())) {
 			throw new RsdAccountInviteException("The invite with ID %s is expired".formatted(inviteId));
 		}
 
@@ -221,7 +223,7 @@ public class PostgrestAccount implements Account {
 		Objects.requireNonNull(accountId);
 		URI accountUrl = URI.create(backendUri + "/admin_account?account_id=eq.%s".formatted(accountId));
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-		String token = jwtCreator.createAdminJwt();
+		String token = jwtCreator.createAnonymousAdminJwt();
 
 		String response = getAsAdmin(accountUrl, token);
 		return parseIsAdminResponse(accountId, response);
@@ -248,7 +250,7 @@ public class PostgrestAccount implements Account {
 	public void coupleLogin(UUID accountId, OpenIdInfo openIdInfo, OpenidProvider provider)
 		throws IOException, InterruptedException, RsdResponseException {
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-		String adminJwt = jwtCreator.createAdminJwt();
+		String adminJwt = jwtCreator.createAnonymousAdminJwt();
 		createLoginForAccount(accountId, openIdInfo, provider, backendUri, adminJwt);
 	}
 
@@ -288,7 +290,7 @@ public class PostgrestAccount implements Account {
 		loginForAccountData.addProperty("provider", provider.toString());
 		loginForAccountData.addProperty(
 			"last_login_date",
-			ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+			ZonedDateTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 		);
 		URI createLoginUri = URI.create(backendUri + "/login_for_account");
 
@@ -370,7 +372,7 @@ public class PostgrestAccount implements Account {
 		loginForAccountData.addProperty("home_organisation", openIdInfo.organisation());
 		loginForAccountData.addProperty(
 			"last_login_date",
-			ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+			ZonedDateTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 		);
 		String resultingJson = loginForAccountData.toString();
 

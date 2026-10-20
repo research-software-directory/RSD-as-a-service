@@ -19,7 +19,6 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +40,7 @@ public class Main {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 	private static final String LOGIN_FAILED_PATH = "/login/failed";
 
-	public static void main(String[] args) {
+	static void main() {
 		RsdProviders rsdProviders = new RsdProviders();
 		Javalin app = Javalin.create(c -> {
 			c.concurrency.useVirtualThreads = false;
@@ -150,10 +149,15 @@ public class Main {
 					String tokenToVerify = ctx.cookie("rsd_token");
 					String signingSecret = Config.jwtSigningSecret();
 					JwtVerifier verifier = new JwtVerifier(signingSecret);
-					verifier.verify(tokenToVerify);
+					DecodedJWT decodedAndVerifiedJwt = verifier.verify(tokenToVerify);
+
+					UUID accountId = UUID.fromString(
+						decodedAndVerifiedJwt.getClaim(JwtCreator.JWT_ACCOUNT_KEY).asString()
+					);
+					boolean isAdmin = new PostgrestAccount(Config.backendBaseUrl()).isAdmin(accountId);
 
 					JwtCreator jwtCreator = new JwtCreator(signingSecret);
-					String token = jwtCreator.refreshToken(tokenToVerify);
+					String token = jwtCreator.refreshToken(tokenToVerify, isAdmin);
 					setJwtCookie(ctx, token);
 				} catch (RuntimeException ex) {
 					LOGGER.error("RuntimeException", ex);
@@ -389,10 +393,6 @@ public class Main {
 		} else {
 			ctx.redirect("/", HttpStatus.SEE_OTHER);
 		}
-	}
-
-	static String decode(String base64UrlEncoded) {
-		return new String(Base64.getUrlDecoder().decode(base64UrlEncoded));
 	}
 
 	public static String extractAccountFromCookie(Context ctx) {

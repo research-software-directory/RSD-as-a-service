@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2025 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -66,7 +66,7 @@ public class GithubLogin implements Login {
 
 		try {
 			return extractAccessToken(body);
-		} catch (RsdParseException e) {
+		} catch (RsdParseException _) {
 			throw new RsdResponseException(
 				response.statusCode(),
 				response.uri(),
@@ -113,7 +113,7 @@ public class GithubLogin implements Login {
 
 		try {
 			return extractUserInfo(response.body());
-		} catch (RsdParseException e) {
+		} catch (RsdParseException _) {
 			throw new RsdResponseException(
 				response.statusCode(),
 				response.uri(),
