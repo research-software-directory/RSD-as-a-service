@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,7 +7,9 @@ package nl.esciencecenter.rsd.scraper.git;
 
 import com.google.gson.JsonParser;
 import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Objects;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
@@ -15,6 +17,7 @@ import nl.esciencecenter.rsd.scraper.Utils;
 public class FourTuGitScraper implements GitScraper {
 
 	private final String repoUrl;
+	private static final Duration HTTP_TIMEOUT = Duration.ofSeconds(90);
 
 	public FourTuGitScraper(String repoUrl) {
 		this.repoUrl = Objects.requireNonNull(repoUrl);
@@ -28,8 +31,7 @@ public class FourTuGitScraper implements GitScraper {
 	// Example URL: https://data.4tu.nl/v3/datasets/454afe4e-08aa-4333-b6e8-7db7cebd0f83.git/languages
 	@Override
 	public String languages() throws IOException, InterruptedException, RsdResponseException {
-		String url = repoUrl + "/languages";
-		HttpResponse<String> response = Utils.getAsHttpResponse(url);
+		HttpResponse<String> response = getRequest("/languages");
 		return switch (response.statusCode()) {
 			case 404 -> throw new RsdResponseException(
 				404,
@@ -50,8 +52,7 @@ public class FourTuGitScraper implements GitScraper {
 	// Example URL: https://data.4tu.nl/v3/datasets/454afe4e-08aa-4333-b6e8-7db7cebd0f83.git/contributors
 	@Override
 	public CommitsPerWeek contributions() throws IOException, InterruptedException, RsdResponseException {
-		String url = repoUrl + "/contributors";
-		HttpResponse<String> response = Utils.getAsHttpResponse(url);
+		HttpResponse<String> response = getRequest("/contributors");
 		return switch (response.statusCode()) {
 			case 404 -> throw new RsdResponseException(
 				404,
@@ -72,8 +73,7 @@ public class FourTuGitScraper implements GitScraper {
 	// Example URL: https://data.4tu.nl/v3/datasets/454afe4e-08aa-4333-b6e8-7db7cebd0f83.git/contributors
 	@Override
 	public Integer contributorCount() throws IOException, InterruptedException, RsdResponseException {
-		String url = repoUrl + "/contributors";
-		HttpResponse<String> response = Utils.getAsHttpResponse(url);
+		HttpResponse<String> response = getRequest("/contributors");
 		return switch (response.statusCode()) {
 			case 404 -> throw new RsdResponseException(
 				404,
@@ -89,5 +89,9 @@ public class FourTuGitScraper implements GitScraper {
 				"Unexpected response when downloading 4TU commit history"
 			);
 		};
+	}
+
+	private HttpResponse<String> getRequest(String path) throws IOException, InterruptedException {
+		return Utils.getAsHttpResponse(URI.create(repoUrl + path), HTTP_TIMEOUT);
 	}
 }
