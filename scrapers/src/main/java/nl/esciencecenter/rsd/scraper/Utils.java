@@ -148,15 +148,7 @@ public class Utils {
 	 */
 	public static HttpResponse<String> getAsHttpResponse(URI uri, String... headers)
 		throws IOException, InterruptedException {
-		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder().GET().timeout(DEFAULT_TIMEOUT).uri(uri);
-		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
-			httpRequestBuilder.headers(headers);
-		}
-		HttpRequest request = httpRequestBuilder.build();
-
-		try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()) {
-			return client.send(request, HttpResponse.BodyHandlers.ofString());
-		}
+		return getAsHttpResponse(uri, DEFAULT_TIMEOUT, headers);
 	}
 
 	/**
@@ -171,6 +163,29 @@ public class Utils {
 	public static HttpResponse<String> getAsHttpResponse(String uri, String... headers)
 		throws IOException, InterruptedException {
 		return getAsHttpResponse(URI.create(uri), headers);
+	}
+
+	/**
+	 * Performs a GET request with given headers and timeout and returns the entire http response.
+	 *
+	 * @param uri The encoded URI
+	 * @param timeout the timeout of the HTTP request
+	 * @param headers (Optional) Variable amount of headers. Number of arguments must be a multiple of two.
+	 * @return The response as a String.
+	 * @throws IOException when the underlying HTTP request throws it
+	 * @throws InterruptedException when this operation is interrupted
+	 */
+	public static HttpResponse<String> getAsHttpResponse(URI uri, Duration timeout, String... headers)
+		throws IOException, InterruptedException {
+		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder().GET().timeout(timeout).uri(uri);
+		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
+			httpRequestBuilder.headers(headers);
+		}
+		HttpRequest request = httpRequestBuilder.build();
+
+		try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()) {
+			return client.send(request, HttpResponse.BodyHandlers.ofString());
+		}
 	}
 
 	/**
