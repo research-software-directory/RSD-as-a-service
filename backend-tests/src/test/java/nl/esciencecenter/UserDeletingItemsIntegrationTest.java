@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,7 +19,7 @@ public class UserDeletingItemsIntegrationTest {
 		String softwareSlug = Commons.createUUID();
 		String softwareId = RestAssured.given()
 			.header(SetupAllTests.adminAuthHeader)
-			.header(Commons.requestEntry)
+			.header(Commons.returnRepresentationHeader)
 			.contentType(ContentType.JSON)
 			.body(
 				"{\"slug\": \"%s\", \"is_published\": true, \"brand_name\": \"test software\"}".formatted(softwareSlug)
@@ -53,7 +53,7 @@ public class UserDeletingItemsIntegrationTest {
 		String softwareSlug = Commons.createUUID();
 		String softwareId = RestAssured.given()
 			.header(user.authHeader)
-			.header(Commons.requestEntry)
+			.header(Commons.returnRepresentationHeader)
 			.contentType(ContentType.JSON)
 			.body(
 				"{\"slug\": \"%s\", \"is_published\": true, \"brand_name\": \"test software\"}".formatted(softwareSlug)
@@ -88,7 +88,7 @@ public class UserDeletingItemsIntegrationTest {
 		String projectSlug = Commons.createUUID();
 		String projectId = RestAssured.given()
 			.header(user.authHeader)
-			.header(Commons.requestEntry)
+			.header(Commons.returnRepresentationHeader)
 			.contentType(ContentType.JSON)
 			.body("{\"slug\": \"%s\", \"is_published\": true, \"title\": \"test project\"}".formatted(projectSlug))
 			.when()
@@ -121,7 +121,7 @@ public class UserDeletingItemsIntegrationTest {
 		String organisationSlug = Commons.createUUID();
 		String organisationId = RestAssured.given()
 			.header(user.authHeader)
-			.header(Commons.requestEntry)
+			.header(Commons.returnRepresentationHeader)
 			.contentType(ContentType.JSON)
 			.body("{\"slug\": \"%s\", \"name\": \"test organisation\"}".formatted(organisationSlug))
 			.when()
@@ -152,7 +152,7 @@ public class UserDeletingItemsIntegrationTest {
 		String communitySlug = Commons.createUUID();
 		String communityId = RestAssured.given()
 			.header(SetupAllTests.adminAuthHeader)
-			.header(Commons.requestEntry)
+			.header(Commons.returnRepresentationHeader)
 			.contentType(ContentType.JSON)
 			.body("{\"slug\": \"%s\", \"name\": \"test community\"}".formatted(communitySlug))
 			.when()

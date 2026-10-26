@@ -80,7 +80,7 @@ public class AuthenticationIntegrationTest {
 		String getStartedUrl = "https://www.example.com";
 		String patchedGetStartedUrl = RestAssured.given()
 			.header(user.authHeader)
-			.header(Commons.requestEntry)
+			.header(Commons.returnRepresentationHeader)
 			.contentType(ContentType.JSON)
 			.body("{\"get_started_url\": \"%s\"}".formatted(getStartedUrl))
 			.when()
@@ -382,7 +382,7 @@ public class AuthenticationIntegrationTest {
 
 		return RestAssured.given()
 			.header(SetupAllTests.adminAuthHeader)
-			.header(Commons.requestEntry)
+			.header(Commons.returnRepresentationHeader)
 			.contentType(ContentType.JSON)
 			.body(obj.toString())
 			.when()

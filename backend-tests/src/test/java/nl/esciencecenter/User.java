@@ -36,7 +36,7 @@ public class User {
 
 		String accountId = RestAssured.given()
 			.header(adminAuthHeader)
-			.header(Commons.requestEntry)
+			.header(Commons.returnRepresentationHeader)
 			.when()
 			.post("account")
 			.then()
@@ -78,7 +78,7 @@ public class User {
 
 		String softwareId = RestAssured.given()
 			.header(authHeader)
-			.header(Commons.requestEntry)
+			.header(Commons.returnRepresentationHeader)
 			.contentType(ContentType.JSON)
 			.body(softwareJson.toString())
 			.when()
@@ -98,7 +98,7 @@ public class User {
 
 		String softwareId = RestAssured.given()
 			.header(accessTokenHeader)
-			.header(Commons.requestEntry)
+			.header(Commons.returnRepresentationHeader)
 			.contentType(ContentType.JSON)
 			.body(softwareJson.toString())
 			.when()
@@ -151,7 +151,7 @@ public class User {
 
 		return RestAssured.given()
 			.cookie(authCookie)
-			.header(Commons.requestEntry)
+			.header(Commons.returnRepresentationHeader)
 			.contentType(ContentType.JSON)
 			.body(body)
 			.when()
