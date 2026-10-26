@@ -9,7 +9,7 @@
 # ----------------------------------------
 # 1. Install dependencies only when needed
 # ----------------------------------------
-FROM node:26.12.0-trixie-slim AS deps
+FROM node:26.12.1-trixie-slim AS deps
 
 WORKDIR /app
 
