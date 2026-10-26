@@ -47,7 +47,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
-          java-version: '25.0.3'
+          java-version: '25.0.4'
           cache: 'maven'
 
       - name: Download PR Artifacts

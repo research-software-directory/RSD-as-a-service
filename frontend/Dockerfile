@@ -13,7 +13,7 @@
 # ----------------------------------------
 # 1. Install dependencies only when needed
 # ----------------------------------------
-FROM node:26.12.0-trixie-slim AS deps
+FROM node:26.12.1-trixie-slim AS deps
 
 WORKDIR /app
 
@@ -48,7 +48,7 @@ RUN npm run build
 # ----------------------------------------
 # 3. Production image (standalone mode)
 # ----------------------------------------
-FROM node:26.12.0-trixie-slim AS runner
+FROM node:26.12.1-trixie-slim AS runner
 
 # optional install updates
 # RUN apt-get upgrade -y
