@@ -47,7 +47,7 @@ public class Mention {
 
 		String mentionId = RestAssured.given()
 			.header(user.authHeader)
-			.header(Commons.requestEntry)
+			.header(Commons.returnRepresentationHeader)
 			.contentType(ContentType.JSON)
 			.body(bodyJson)
 			.when()

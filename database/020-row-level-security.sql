@@ -224,6 +224,22 @@ CREATE POLICY admin_all_rights ON repository_url TO rsd_admin
 	WITH CHECK (TRUE);
 
 
+ALTER TABLE repository_url_for_software ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON repository_url_for_software FOR SELECT TO rsd_web_anon, rsd_user
+	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_insert ON repository_url_for_software FOR INSERT TO rsd_user
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY maintainer_delete ON repository_url_for_software FOR DELETE TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON repository_url_for_software TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
 ALTER TABLE package_manager ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY anyone_can_read ON package_manager FOR SELECT TO rsd_web_anon, rsd_user
@@ -469,6 +485,20 @@ CREATE POLICY maintainer_all_rights ON team_member TO rsd_user
 	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON team_member TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+ALTER TABLE testimonial_for_project ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON testimonial_for_project FOR SELECT TO rsd_web_anon, rsd_user
+	USING (project IN (SELECT id FROM project));
+
+CREATE POLICY maintainer_all_rights ON testimonial_for_project TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()))
+	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON testimonial_for_project TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 

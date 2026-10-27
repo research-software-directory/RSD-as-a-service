@@ -84,7 +84,7 @@ public class AccessTokenIntegrationTest {
 
 		RestAssured.given()
 			.header(new Header("Authorization", "bearer " + fakeAccessToken))
-			.header(Commons.requestEntry)
+			.header(Commons.returnRepresentationHeader)
 			.contentType(ContentType.JSON)
 			.body(User.createSoftwareJson(brandName).toString())
 			.when()
