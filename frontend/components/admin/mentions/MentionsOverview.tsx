@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2024 - 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,8 +13,7 @@ import Pagination from '~/components/pagination/Pagination'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
-
-const uuidRegex = /^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/
+import {uuidRegex} from '~/utils/uuid'
 
 export default function MentionsOverview() {
   const [mentionList, setMentionList] = useState([])

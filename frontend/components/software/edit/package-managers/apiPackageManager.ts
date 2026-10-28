@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
@@ -14,6 +14,7 @@ import {createJsonHeaders, extractErrorMessages, extractReturnMessage, getBaseUr
 import {BasicApiParams, paginationUrlParams} from '~/utils/postgrestUrl'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {PackageManagerSettings, packageManagerSettings, PackageManagerTypes} from './config'
+import {uuidRegex} from '~/utils/uuid'
 
 export type NewPackageManager = {
   id: string | null
@@ -237,9 +238,17 @@ export async function getPackageManagers({page,rows,searchFor,orderBy,token}:Bas
 
     if (searchFor){
       const encodedSearch = encodeURIComponent(searchFor)
-      query+=`&or=(url.ilike."*${encodedSearch}*",download_count_scraping_disabled_reason.ilike."*${encodedSearch}*",reverse_dependency_count_scraping_disabled_reason.ilike."*${encodedSearch}*")`
+
+      let orQuery = `&or=(url.ilike."*${encodedSearch}*",download_count_scraping_disabled_reason.ilike."*${encodedSearch}*",reverse_dependency_count_scraping_disabled_reason.ilike."*${encodedSearch}*"`
+
+      if (uuidRegex.test(searchFor)) {
+        orQuery += `,id.eq.${searchFor}`
+      }
+
+      orQuery += ')'
+      query += orQuery
     }
-    // add paginations params
+    // add pagination params
     query+=paginationUrlParams({rows,page})
 
     const url = `${getBaseUrl()}${query}`
