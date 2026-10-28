@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,6 +9,7 @@ import {BasicApiParams, paginationUrlParams} from '~/utils/postgrestUrl'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import {RepositoryUrl} from '~/components/software/edit/repositories/apiRepositories'
+import {uuidRegex} from '~/utils/uuid'
 
 
 export async function getRepositoryUrl({page,rows,searchFor,orderBy,token}:BasicApiParams){
@@ -23,9 +25,16 @@ export async function getRepositoryUrl({page,rows,searchFor,orderBy,token}:Basic
 
     if (searchFor){
       const encodedSearch = encodeURIComponent(searchFor)
-      query+=`&or=(url.ilike."*${encodedSearch}*",scraping_disabled_reason.ilike."*${encodedSearch}*")`
+      let orQuery = `&or=(url.ilike."*${encodedSearch}*",scraping_disabled_reason.ilike."*${encodedSearch}*"`
+
+      if (uuidRegex.test(searchFor)) {
+        orQuery += `,id.eq.${searchFor}`
+      }
+
+      orQuery += ')'
+      query += orQuery
     }
-    // add paginations params
+    // add pagination params
     query+=paginationUrlParams({rows,page})
 
     const url = `${getBaseUrl()}${query}`
