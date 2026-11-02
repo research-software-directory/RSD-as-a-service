@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2025 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,7 +16,7 @@ import {deleteRepository, getRepositoryUrl, patchRepositoryTable} from './apiAdm
 export default function useAdminRepos() {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find repository by url')
+  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find repository by URL or ID')
   const [loading, setLoading] = useState(true)
   const [repositories, setRepositories] = useState<RepositoryUrl[]>([])
 

@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,6 +11,7 @@ import logger from '~/utils/logger'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
+import {uuidRegex} from '~/utils/uuid'
 
 type getKeywordApiParams = {
   token: string,
@@ -30,7 +32,11 @@ export async function getKeywords({page, rows, token, searchFor, orderBy}: getKe
   try {
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
-      query+=`&keyword=ilike.*${searchFor}*`
+      if (uuidRegex.test(searchFor)) {
+        query += `&or=(keyword.ilike.*${searchFor}*,id.eq.${searchFor})`
+      } else {
+        query += `&keyword=ilike.*${searchFor}*`
+      }
     }
     if (orderBy) {
       query+=`&order=${orderBy}`

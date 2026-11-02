@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2025 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +18,7 @@ import {
 export default function useAdminPacMan() {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find package manager by url')
+  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find package manager by URL or ID')
   const [managers, setManagers] = useState<PackageManager[]>([])
   const [loading, setLoading] = useState(true)
 
