@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -151,7 +151,11 @@ public class MainContributors {
 					String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 					if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
 
-					Integer scrapedContributorData = new GitlabScraper(apiUrl, projectPath).contributorCount();
+					Integer scrapedContributorData = new GitlabScraper(
+						apiUrl,
+						projectPath,
+						Config.apiCredentialsGitlab()
+					).contributorCount();
 					ContributorDatabaseData updatedData = new ContributorDatabaseData(
 						new BasicRepositoryData(contributorData.software(), null),
 						scrapedContributorData,
