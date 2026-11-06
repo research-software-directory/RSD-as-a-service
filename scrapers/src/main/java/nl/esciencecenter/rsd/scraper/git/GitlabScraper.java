@@ -14,11 +14,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
@@ -26,33 +24,32 @@ import nl.esciencecenter.rsd.scraper.Utils;
 
 public class GitlabScraper implements GitScraper {
 
+	private static final String PRIVATE_TOKEN_HEADER_KEY = "PRIVATE-TOKEN";
+	private static final String PROJECTS_PATH = "/projects/";
 	private final String projectPath;
 	private final String apiUri;
 	private final String graphqlUri;
 	private final CommitsPerWeek commitsPerWeek;
 	private final ZonedDateTime lastCommitHistoryTimestamp;
+	private final Optional<String> apiToken;
 
 	/**
 	 * A GitLab scraper for API version 4.
 	 *
 	 * @param gitLabApiUrl The API Url without a version, e.g. https://<gitlab_instance_url>/api
 	 * @param projectPath  The full path to the project
+	 * @param apiToken The API token of gitlab.com, will be ignored if a different instance is used
 	 */
-	public GitlabScraper(String gitLabApiUrl, String projectPath) {
-		this.projectPath = projectPath.endsWith(".git")
-			? projectPath.substring(0, projectPath.length() - 4)
-			: projectPath;
-		this.apiUri = gitLabApiUrl + "/v4";
-		this.graphqlUri = gitLabApiUrl + "/graphql";
-		this.lastCommitHistoryTimestamp = null;
-		this.commitsPerWeek = new CommitsPerWeek();
+	public GitlabScraper(String gitLabApiUrl, String projectPath, Optional<String> apiToken) {
+		this(gitLabApiUrl, projectPath, null, new CommitsPerWeek(), apiToken);
 	}
 
 	public GitlabScraper(
 		String gitLabApiUrl,
 		String projectPath,
 		ZonedDateTime lastCommitHistoryTimestamp,
-		CommitsPerWeek existingCommitsPerWeek
+		CommitsPerWeek existingCommitsPerWeek,
+		Optional<String> apiToken
 	) {
 		this.projectPath = projectPath.endsWith(".git")
 			? projectPath.substring(0, projectPath.length() - 4)
@@ -61,6 +58,7 @@ public class GitlabScraper implements GitScraper {
 		this.graphqlUri = gitLabApiUrl + "/graphql";
 		this.lastCommitHistoryTimestamp = lastCommitHistoryTimestamp;
 		this.commitsPerWeek = existingCommitsPerWeek == null ? new CommitsPerWeek() : existingCommitsPerWeek;
+		this.apiToken = gitLabApiUrl.startsWith("https://gitlab.com/") ? apiToken : Optional.empty();
 	}
 
 	/**
@@ -74,7 +72,7 @@ public class GitlabScraper implements GitScraper {
 	 */
 	@Override
 	public BasicGitData basicData() throws IOException, InterruptedException, RsdResponseException {
-		String response = Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "?license=True");
+		String response = getRequestBodyOnly("?license=True");
 
 		return parseBasicData(response, checkIfArchived());
 	}
@@ -89,7 +87,7 @@ public class GitlabScraper implements GitScraper {
 	 */
 	@Override
 	public String languages() throws IOException, InterruptedException, RsdResponseException {
-		return Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "/languages");
+		return getRequestBodyOnly("/languages");
 	}
 
 	/**
@@ -113,24 +111,9 @@ public class GitlabScraper implements GitScraper {
 		String page = "1";
 		boolean done = false;
 		while (!done) {
-			HttpRequest request = HttpRequest.newBuilder()
-				.GET()
-				.uri(
-					URI.create(
-						apiUri +
-							"/projects/" +
-							Utils.urlEncode(projectPath) +
-							"/repository/commits?per_page=100&order=default&page=" +
-							page +
-							since
-					)
-				)
-				.timeout(Duration.ofSeconds(30))
-				.build();
-			HttpResponse<String> response;
-			try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()) {
-				response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			}
+			HttpResponse<String> response = getRequestAsHttpResponse(
+				"/repository/commits?per_page=100&order=default&page=" + page + since
+			);
 			if (response.statusCode() == 429) throw new RsdRateLimitException(
 				429,
 				response.uri(),
@@ -156,9 +139,7 @@ public class GitlabScraper implements GitScraper {
 	// Example URL: https://gitlab.com/api/v4/projects/gitlab-org%2Fgitlab-shell/repository/contributors
 	@Override
 	public Integer contributorCount() throws IOException, InterruptedException, RsdResponseException {
-		HttpResponse<String> httpResponse = Utils.getAsHttpResponse(
-			apiUri + "/projects/" + Utils.urlEncode(projectPath) + "/repository/contributors"
-		);
+		HttpResponse<String> httpResponse = getRequestAsHttpResponse("/repository/contributors");
 
 		if (httpResponse.statusCode() == 429) throw new RsdRateLimitException(
 			429,
@@ -186,9 +167,7 @@ public class GitlabScraper implements GitScraper {
 	 * @return the URL of the raw README of the repo if present
 	 */
 	public Optional<URI> rawReadmeUrl() throws IOException, InterruptedException, RsdResponseException {
-		HttpResponse<String> httpResponse = Utils.getAsHttpResponse(
-			apiUri + "/projects/" + Utils.urlEncode(projectPath)
-		);
+		HttpResponse<String> httpResponse = getRequestAsHttpResponse("");
 
 		int status = httpResponse.statusCode();
 		if (httpResponse.statusCode() == 429) throw new RsdRateLimitException(
@@ -236,7 +215,7 @@ public class GitlabScraper implements GitScraper {
 		);
 		JsonObject body = new JsonObject();
 		body.addProperty("query", graphqlQuery);
-		String response = Utils.post(graphqlUri, body.toString(), "Content-Type", "application/json");
+		String response = postGraphqlRequestBodyOnly(body.toString());
 		return parseArchivedResponse(response);
 	}
 
@@ -270,6 +249,53 @@ public class GitlabScraper implements GitScraper {
 		Integer forkCount = jsonObject.getAsJsonPrimitive("forks_count").getAsInt();
 
 		return new BasicGitData(archived, license, starCount, forkCount, null);
+	}
+
+	private String getRequestBodyOnly(String path) throws IOException, InterruptedException, RsdResponseException {
+		Objects.requireNonNull(path);
+
+		if (apiToken.isPresent()) {
+			return Utils.get(
+				apiUri + PROJECTS_PATH + Utils.urlEncode(projectPath) + path,
+				PRIVATE_TOKEN_HEADER_KEY,
+				apiToken.get()
+			);
+		} else {
+			return Utils.get(apiUri + PROJECTS_PATH + Utils.urlEncode(projectPath) + path);
+		}
+	}
+
+	private HttpResponse<String> getRequestAsHttpResponse(String path) throws IOException, InterruptedException {
+		Objects.requireNonNull(path);
+
+		if (apiToken.isPresent()) {
+			return Utils.getAsHttpResponse(
+				apiUri + PROJECTS_PATH + Utils.urlEncode(projectPath) + path,
+				PRIVATE_TOKEN_HEADER_KEY,
+				apiToken.get()
+			);
+		} else {
+			return Utils.getAsHttpResponse(apiUri + PROJECTS_PATH + Utils.urlEncode(projectPath) + path);
+		}
+	}
+
+	private String postGraphqlRequestBodyOnly(String body) {
+		Objects.requireNonNull(body);
+
+		String contentTypeHeaderKey = "Content-Type";
+		String contentTypeHeaderValue = "application/json";
+		if (apiToken.isPresent()) {
+			return Utils.post(
+				graphqlUri,
+				body,
+				PRIVATE_TOKEN_HEADER_KEY,
+				apiToken.get(),
+				contentTypeHeaderKey,
+				contentTypeHeaderValue
+			);
+		} else {
+			return Utils.post(graphqlUri, body, contentTypeHeaderKey, contentTypeHeaderValue);
+		}
 	}
 
 	/**

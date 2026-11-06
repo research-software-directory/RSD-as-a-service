@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdContributor;
 import nl.esciencecenter.rsd.scraper.RsdParsingException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
@@ -217,7 +218,11 @@ public class EscapeOssrSoftwareEntry {
 					path = path.substring(0, path.length() - 1);
 				}
 
-				GitlabScraper gitScraper = new GitlabScraper("https://" + uri.getHost() + "/api", path);
+				GitlabScraper gitScraper = new GitlabScraper(
+					"https://" + uri.getHost() + "/api",
+					path,
+					Config.apiCredentialsGitlab()
+				);
 				yield gitScraper.rawReadmeUrl();
 			}
 			case null, default -> Optional.empty();

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -55,7 +55,11 @@ public class MainProgrammingLanguages {
 					String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 					if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
 
-					String scrapedLanguages = new GitlabScraper(apiUrl, projectPath).languages();
+					String scrapedLanguages = new GitlabScraper(
+						apiUrl,
+						projectPath,
+						Config.apiCredentialsGitlab()
+					).languages();
 					LanguagesData updatedData = new LanguagesData(
 						new BasicRepositoryData(programmingLanguageData.software(), null),
 						scrapedLanguages,

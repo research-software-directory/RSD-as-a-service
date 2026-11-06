@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 - 2025 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2025 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -142,7 +142,11 @@ public class MainBasicData {
 					String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 					if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
 
-					BasicGitData scrapedBasicData = new GitlabScraper(apiUrl, projectPath).basicData();
+					BasicGitData scrapedBasicData = new GitlabScraper(
+						apiUrl,
+						projectPath,
+						Config.apiCredentialsGitlab()
+					).basicData();
 					BasicGitDatabaseData updatedData = new BasicGitDatabaseData(basicData, scrapedBasicData, scrapedAt);
 					softwareInfoRepository.saveBasicData(updatedData);
 				} catch (RsdRateLimitException e) {
