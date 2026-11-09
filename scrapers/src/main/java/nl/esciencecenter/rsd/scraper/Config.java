@@ -212,6 +212,15 @@ public class Config {
 	}
 
 	/**
+	 * Get the API credentials for GitLab.
+	 *
+	 * @return the API credentials for GitLab (default unset).
+	 */
+	public static Optional<String> apiCredentialsGitlab() {
+		return getOptionalEnv("API_CREDENTIALS_GITLAB");
+	}
+
+	/**
 	 * Get the IO key for libraries.io.
 	 *
 	 * @return the IO key for libraries.io (default unset).
