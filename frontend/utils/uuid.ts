@@ -3,4 +3,4 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export const uuidRegex = /^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/
+export const uuidRegex = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i
