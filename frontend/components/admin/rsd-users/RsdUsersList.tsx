@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 - 2026 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -144,7 +144,7 @@ export default function RsdUsersList({
         <LockUserModal
           account={{
             id: modal.lock?.account.id,
-            lock_account: modal?.lock?.account.locked_account ? true : false,
+            lock_account: !!modal?.lock?.account.locked_account,
             admin_facing_reason: modal?.lock?.account.locked_account?.admin_facing_reason ?? null,
             user_facing_reason: modal?.lock?.account.locked_account?.user_facing_reason ?? null,
           }}

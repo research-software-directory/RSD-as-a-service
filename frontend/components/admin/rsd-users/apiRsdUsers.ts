@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2023 - 2026 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 - 2026 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -27,30 +27,35 @@ type getLoginApiParams = {
 export async function getRsdAccounts({page,rows,token,searchFor,adminsOnly,lockedOnly,inactiveDays}:getLoginApiParams) {
   try {
     // pagination
-    let query = 'select=id,login_for_account(id,provider,name,email,home_organisation,last_login_date),login_for_account_text_filter:login_for_account!inner(),login_for_account_inactivity_filter:login_for_account!inner()'
-    query += `,admin_account!${adminsOnly ? 'inner' : 'left'}(account_id),locked_account!${lockedOnly ? 'inner' : 'left'}(*)${paginationUrlParams({rows, page})}`
+    let selectBuilder = 'select=id,login_for_account(id,provider,name,email,home_organisation,last_login_date)'
+    selectBuilder += `,admin_account!${adminsOnly ? 'inner' : 'left'}(account_id),locked_account!${lockedOnly ? 'inner' : 'left'}(*)`
+    let otherBuilder = ''
 
     if (inactiveDays > 0) {
+      selectBuilder += ',login_for_account_inactivity_filter:login_for_account!left()'
       const then = new Date()
       then.setDate(then.getDate() - inactiveDays)
-      query += `&login_for_account_inactivity_filter.or=(last_login_date.is.null,last_login_date.lt.${then.toISOString()})`
+      otherBuilder += `&login_for_account_inactivity_filter.or=(last_login_date.is.null,last_login_date.lt.${then.toISOString()})`
     }
     // search
     if (searchFor) {
       if (/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(searchFor)) {
         // if searchFor is a UUID we search by account ID
-        query += `&id=eq.${searchFor}`
+        otherBuilder += `&id=eq.${searchFor}`
       } else if (orcidRegex.test(searchFor)) {
+        selectBuilder += ',login_for_account_text_filter:login_for_account!inner()'
         // else if searchFor is an ORCID we search on login_for_account sub
-        query += `&login_for_account_text_filter.sub=eq.${searchFor}&login_for_account_text_filter.provider=eq.orcid`
+        otherBuilder += `&login_for_account_text_filter.sub=eq.${searchFor}&login_for_account_text_filter.provider=eq.orcid`
       } else {
+        selectBuilder += ',login_for_account_text_filter:login_for_account!inner()'
         const encodedSearch = encodeURIComponent(searchFor)
         // else we search by name, email or organisation
-        query += `&login_for_account_text_filter.or=(name.ilike."*${encodedSearch}*",email.ilike."*${encodedSearch}*",home_organisation.ilike."*${encodedSearch}*")`
+        otherBuilder += `&login_for_account_text_filter.or=(name.ilike."*${encodedSearch}*",email.ilike."*${encodedSearch}*",home_organisation.ilike."*${encodedSearch}*")`
       }
     }
     // complete url
-    const url = `${getBaseUrl()}/account?${query}`
+    const paginationQuery = `${paginationUrlParams({rows, page})}`
+    const url = `${getBaseUrl()}/account?${selectBuilder + otherBuilder + paginationQuery}`
 
     // console.group('getRsdAccounts')
     // console.log('url...', url)
