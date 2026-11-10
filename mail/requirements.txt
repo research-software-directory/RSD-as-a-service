@@ -5,9 +5,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 annotated-types==0.7.0
-dnspython==2.7.0
+dnspython==2.9.2
 email_validator==2.2.0
-idna==3.10
+idna==3.20
 pika==1.3.2
 pydantic==2.10.3
 pydantic_core==2.27.1
