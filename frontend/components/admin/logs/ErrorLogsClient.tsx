@@ -26,7 +26,6 @@ export default function ErrorLogsClient() {
   const {loading, logs, loadLogs, deleteLog, deleteOldLogs} = useLogs({orderBy})
   // here we pass deleteLog method to columns
   const columns = createColumns(deleteLog)
-  // const [columns, setColumns] = useState<Column<BackendLog, keyof BackendLog>[]>(cols ?? [])
 
   // update columns order
   if (orderBy) {
@@ -45,16 +44,12 @@ export default function ErrorLogsClient() {
     })
   }
 
-  // useEffect(()=>{
-  //   setColumns(cols)
-  // },[deleteLog])
-
   return (
     <section className="flex-1 overflow-hidden">
       <div className="flex-1 flex py-8 md:py-0 flex-col xl:flex-row justify-start xl:items-center">
         <div className="flex-1 flex justify-start">
           <DeleteOldLogsBtn
-            onDelete={()=>deleteOldLogs()}
+            onDelete={deleteOldLogs}
             disabled={logs.length===0}
           />
           <Searchbox />
