@@ -138,6 +138,9 @@ export default function AutosaveFundingOrganisations({id,items}:FundingOrganisat
                 title={item.name}
                 label={item.name}
                 onDelete={() => onRemoveOgranisation(pos)}
+                sx={{
+                  maxWidth: '21rem'
+                }}
               />
             </div>
           )
