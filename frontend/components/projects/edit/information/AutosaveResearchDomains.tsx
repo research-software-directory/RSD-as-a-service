@@ -252,10 +252,6 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
                     title={item.description}
                     key={item.key}
                     value={item.key}
-                    sx={{
-                    // maxWidth: '30rem',
-                      whiteSpace: 'break-spaces'
-                    }}
                   >
                     {item.name}
                   </MenuItem>
@@ -287,9 +283,6 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
                 level: 'l3'
               })
             }}
-            sx={{
-              // maxWidth: '20rem',
-            }}
             disabled={l2Selected ? false : true}
           >
             {l3Domains
@@ -301,11 +294,6 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
                     title={item.description}
                     key={item.key}
                     value={item.key}
-                    sx={{
-                    // maxWidth: 'calc(100% - 4rem)',
-                    // maxWidth:'20rem',
-                      whiteSpace: 'break-spaces'
-                    }}
                   >
                     {item.name}
                   </MenuItem>

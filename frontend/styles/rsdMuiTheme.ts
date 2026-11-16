@@ -357,17 +357,6 @@ function applyThemeConfig({colors, action, typography}: ThemeConfig) {
           },
         },
       },
-      MuiDialog: {
-        styleOverrides: {
-          // Target the actual container box of the dialog content
-          // paper: ({theme}) => ({
-          //   // Mobile configuration (default / extra-small viewports up)
-          //   width: '100%',
-          //   // Keep small safe-margins on mobile screen edges
-          //   margin: theme.spacing(2)
-          // }),
-        },
-      },
       // 1. DialogTitle Overrides
       MuiDialogTitle: {
         styleOverrides: {
@@ -413,6 +402,39 @@ function applyThemeConfig({colors, action, typography}: ThemeConfig) {
             justifyContent: 'flex-start',
             gap:'1rem',
           }),
+        },
+      },
+      // 1. Fix non wrapping long select menu options
+      MuiSelect: {
+        defaultProps: {
+          autoWidth: false,
+          MenuProps: {
+            slotProps: {
+              paper: {
+                sx: {
+                  // constrain dropdown menu to the exact width of select box
+                  width: 0,
+                },
+              },
+            },
+          },
+        },
+        styleOverrides: {
+          // wrap long items for selected item
+          select: {
+            whiteSpace: 'normal',
+            textOverflow: 'clip',
+            overflow: 'visible',
+          },
+        },
+      },
+      // 2. Fix non wrapping long select menu options
+      MuiMenuItem: {
+        styleOverrides: {
+          root: {
+            // wrap all long items in the menu list
+            whiteSpace: 'normal'
+          },
         },
       },
     },
