@@ -8,7 +8,8 @@ import {
   Control, FieldValues,
   Path, useFormState,
   useWatch, UseFormSetError,
-  UseFormClearErrors, get
+  UseFormClearErrors, get,
+  FieldErrors, FieldError,
 } from 'react-hook-form'
 
 export type AsyncValidatorFn<T> = (value: T) => Promise<string | boolean | undefined>
@@ -47,10 +48,10 @@ export function useAsyncFieldValidation<TFieldValues extends FieldValues>({
   const {errors, dirtyFields} = useFormState({control, name})
 
   // Use 'get' to safely parse flat paths from deep objects
-  const fieldError = get(errors, name)
-  const isDirty = !!get(dirtyFields, name)
+  const fieldError = get<FieldErrors<TFieldValues>, FieldError | undefined>(errors, name)
+  const isDirty = Boolean(get(dirtyFields, name))
 
-  const hasSyncError = fieldError && fieldError.type !== 'async'
+  const hasSyncError = Boolean(fieldError && fieldError.type !== 'async')
 
   useEffect(() => {
     // exit if sync errors exist or field hasn't been changed by the user
