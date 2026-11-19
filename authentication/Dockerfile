@@ -15,7 +15,7 @@ RUN mvn dependency:go-offline
 COPY ./src ./src
 RUN mvn package --offline
 
-FROM eclipse-temurin:25.0.4.1_1-jre-noble
+FROM eclipse-temurin:25.0.5_8-jre-noble
 WORKDIR /usr/myjava
 COPY --from=builder /usr/mymaven/target/*-jar-with-dependencies.jar auth.jar
 CMD java -cp auth.jar nl.esciencecenter.rsd.authentication.Main
