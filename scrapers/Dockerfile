@@ -13,7 +13,7 @@ RUN mvn dependency:go-offline
 COPY ./src ./src
 RUN mvn package --offline
 
-FROM eclipse-temurin:25.0.4.1_1-jre-noble
+FROM eclipse-temurin:25.0.5_8-jre-noble
 WORKDIR /usr/myjava
 RUN apt-get update && apt-get --yes install cron nano
 COPY jobs.cron /etc/cron.d/jobs.cron
