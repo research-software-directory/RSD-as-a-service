@@ -13,7 +13,7 @@ RUN mvn dependency:go-offline
 COPY ./src ./src
 RUN mvn package --offline
 
-FROM eclipse-temurin:25.0.5_8-jre-noble
+FROM eclipse-temurin:25.0.5.1_2-jre-noble
 WORKDIR /usr/myjava
 COPY --from=builder /usr/mymaven/target/*-jar-with-dependencies.jar background-services.jar
 CMD java -cp background-services.jar nl.esciencecenter.rsd.Main
