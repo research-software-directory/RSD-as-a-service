@@ -22,6 +22,7 @@ public class User {
 	String jwtToken;
 
 	Header authHeader;
+	boolean isAdmin;
 	Cookie authCookie;
 
 	String accessToken;
@@ -29,7 +30,23 @@ public class User {
 
 	static Header adminAuthHeader;
 
-	static User create(boolean hasAgreedTerms) {
+	public Header getAuthHeader() {
+		return authHeader;
+	}
+
+	public String getAccountId() {
+		return accountId;
+	}
+
+	public boolean getIsAdmin() {
+		return isAdmin;
+	}
+
+	public static Header getAdminAuthHeader() {
+		return adminAuthHeader;
+	}
+
+	public static User create(boolean hasAgreedTerms, boolean isAdmin) {
 		if (adminAuthHeader == null) {
 			throw new RuntimeException("User.adminAuthHeader is not initialized.");
 		}
@@ -44,7 +61,28 @@ public class User {
 			.extract()
 			.path("[0].id");
 
-		return new User(accountId, hasAgreedTerms);
+		JsonObject userProfileData = new JsonObject();
+		userProfileData.addProperty("account", accountId);
+		userProfileData.addProperty("given_names", "test");
+		userProfileData.addProperty("family_names", "user");
+		userProfileData.addProperty("email_address", "test@example.com");
+		userProfileData.addProperty("is_public", true);
+
+		RestAssured.given()
+			.header(adminAuthHeader)
+			.header(Commons.returnRepresentationHeader)
+			.contentType(ContentType.JSON)
+			.body(userProfileData.toString())
+			.when()
+			.post("user_profile")
+			.then()
+			.statusCode(201);
+
+		return new User(accountId, hasAgreedTerms, isAdmin);
+	}
+
+	public static User create(boolean hasAgreedTerms) {
+		return create(hasAgreedTerms, false);
 	}
 
 	/**
@@ -52,7 +90,7 @@ public class User {
 	 * @return a user that has accepted the terms and conditions
 	 */
 	static User create() {
-		return create(true);
+		return create(true, false);
 	}
 
 	User agreeTerms() {
@@ -71,7 +109,7 @@ public class User {
 		return this;
 	}
 
-	SoftwareMetadata createSoftwareV1(String brandName) {
+	public SoftwareMetadata createSoftwareV1(String brandName) {
 		JsonObject softwareJson = createSoftwareJson(brandName);
 		String slug = softwareJson.getAsJsonPrimitive("slug").getAsString();
 		String shortStatement = softwareJson.getAsJsonPrimitive("short_statement").getAsString();
@@ -159,9 +197,10 @@ public class User {
 	}
 
 	// To create User objects use create() instead.
-	private User(String accountId, boolean hasAgreedTerms) {
+	User(String accountId, boolean hasAgreedTerms, boolean isAdmin) {
 		this.accountId = accountId;
-		jwtToken = createJwtToken(accountId);
+		this.isAdmin = isAdmin;
+		jwtToken = createJwtToken(accountId, isAdmin);
 		authHeader = new Header("Authorization", "bearer " + jwtToken);
 		authCookie = new Cookie.Builder("rsd_token", jwtToken).build();
 
@@ -170,14 +209,16 @@ public class User {
 		}
 	}
 
-	static String createJwtToken(String accountId) {
+	static String createJwtToken(String accountId, boolean isAdmin) {
 		String secret = System.getenv("PGRST_JWT_SECRET");
 		Algorithm signingAlgorithm = Algorithm.HMAC256(secret);
+
+		String role = isAdmin ? "rsd_admin" : "rsd_user";
 
 		return JWT.create()
 			.withClaim("account", accountId)
 			.withClaim("iss", "rsd_test")
-			.withClaim("role", "rsd_user")
+			.withClaim("role", role)
 			.withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // expires in one hour
 			.sign(signingAlgorithm);
 	}
