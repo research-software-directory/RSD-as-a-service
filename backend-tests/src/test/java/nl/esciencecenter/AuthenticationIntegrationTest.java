@@ -37,6 +37,7 @@ public class AuthenticationIntegrationTest {
 
 		String actualAccountId = RestAssured.given()
 			.header(adminUser.adminAuthHeader)
+			.queryParam("account_id", "eq." + adminUser.accountId)
 			.when()
 			.get("admin_account")
 			.then()
