@@ -78,6 +78,21 @@ public class User {
 			.then()
 			.statusCode(201);
 
+		if (isAdmin) {
+			JsonObject adminAccountData = new JsonObject();
+			adminAccountData.addProperty("account_id", accountId);
+
+			RestAssured.given()
+				.header(adminAuthHeader)
+				.header(Commons.returnRepresentationHeader)
+				.contentType(ContentType.JSON)
+				.body(adminAccountData.toString())
+				.when()
+				.post("admin_account")
+				.then()
+				.statusCode(201);
+		}
+
 		return new User(accountId, hasAgreedTerms, isAdmin);
 	}
 
