@@ -30,18 +30,22 @@ public class User {
 
 	static Header adminAuthHeader;
 
+	// public so that tests in other packages can use it
 	public Header getAuthHeader() {
 		return authHeader;
 	}
 
+	// public so that tests in other packages can use it
 	public String getAccountId() {
 		return accountId;
 	}
 
+	// public so that tests in other packages can use it
 	public boolean getIsAdmin() {
 		return isAdmin;
 	}
 
+	// public so that tests in other packages can use it
 	public static Header getAdminAuthHeader() {
 		return adminAuthHeader;
 	}
@@ -124,6 +128,7 @@ public class User {
 		return this;
 	}
 
+	// public so that tests in other packages can use it
 	public SoftwareMetadata createSoftwareV1(String brandName) {
 		JsonObject softwareJson = createSoftwareJson(brandName);
 		String slug = softwareJson.getAsJsonPrimitive("slug").getAsString();
