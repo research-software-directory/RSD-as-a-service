@@ -22,7 +22,13 @@ public class Commons {
 	static final String apiV2Url =
 		System.getenv("AUTH_URL") == null ? "http://localhost:80/api/v2" : System.getenv("API_V2_URL");
 
-	static String createUUID() {
+	// public so that tests in other packages can use it
+	public static Header getReturnRepresentationHeader() {
+		return returnRepresentationHeader;
+	}
+
+	// public so that tests in other packages can use it
+	public static String createUUID() {
 		return UUID.randomUUID().toString();
 	}
 

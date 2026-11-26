@@ -32,6 +32,23 @@ public class AuthenticationIntegrationTest {
 	}
 
 	@Test
+	void whenCreatingAdminUserAccount_thenAccountIdInAdminAccountTable() {
+		User adminUser = User.create(true, true);
+
+		String actualAccountId = RestAssured.given()
+			.header(adminUser.adminAuthHeader)
+			.queryParam("account_id", "eq." + adminUser.accountId)
+			.when()
+			.get("admin_account")
+			.then()
+			.statusCode(200)
+			.extract()
+			.path("[0].account_id");
+
+		Assertions.assertEquals(adminUser.accountId, actualAccountId);
+	}
+
+	@Test
 	void givenUserWithoutAgreeingOnTerms_whenCreatingSoftware_thenNotAllowed() {
 		User user = User.create(false);
 
